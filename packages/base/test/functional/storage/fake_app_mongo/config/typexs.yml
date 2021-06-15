@@ -1,0 +1,15 @@
+app:
+  name: fake_app_mongo
+
+
+
+
+storage:
+  default:
+    synchronize: true
+    type: mongodb
+    database: typexs
+    useNewUrlParser: true
+    useUnifiedTopology: true
+    # logging: all
+    # logger: simple-console

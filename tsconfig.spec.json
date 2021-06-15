@@ -1,0 +1,27 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "build/out-tsc/spec",
+    "moduleResolution": "node",
+    "types": [
+      "jasmine",
+      "node"
+    ],
+    "paths": {
+      "core-js/es7/reflect": [
+        "node_modules/core-js/proposals/reflect-metadata"
+      ]
+    }
+  },
+  "files": [
+    "src/app/test.ts",
+    "src/app/polyfills.ts",
+    "packages/ng/src/browser.ts",
+    "packages/base-ng/src/public_api.ts"
+  ],
+  "include": [
+    "src/app/**/*.spec.ts",
+    "src/modules/**/*.spec.ts",
+    "src/modules/**/*.d.ts"
+  ]
+}

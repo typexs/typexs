@@ -1,0 +1,92 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "importHelpers": true,
+    "lib": [
+      "dom",
+      "es5",
+      "es6"
+    ],
+    "esModuleInterop": true,
+    "outDir": "./build/compiled",
+    "target": "es6",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "rootDir": ".",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "preserveConstEnums": true,
+    "pretty": true,
+    "declaration": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "stripInternal": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "baseUrl": "./",
+    "paths": {
+      "@typexs/base-ng": [
+        "./build/packages/base-ng/out/*",
+        "./build/packages/base-ng/out"
+      ],
+      "@typexs/base-ng/*": [
+        "./build/packages/base-ng/out/*",
+        "./build/packages/base-ng/out"
+      ],
+      "@typexs/ng-forms/*": [
+        "./build/packages/ng-forms/out/*",
+        "./build/packages/ng-forms/out"
+      ],
+      "@typexs/ng-forms": [
+        "./build/packages/ng-forms/out/*",
+        "./build/packages/ng-forms/out"
+      ],
+      "@typexs/storage-ng/*": [
+        "./build/packages/storage-ng/out/*",
+        "./build/packages/storage-ng/out"
+      ],
+      "@typexs/storage-ng": [
+        "./build/packages/storage-ng/out/*",
+        "./build/packages/storage-ng/out"
+      ],
+      "@typexs/ng-router-menu/*": [
+        "./build/packages/ng-router-menu/out/*",
+        "./build/packages/ng-router-menu/out"
+      ],
+      "@typexs/ng-router-menu": [
+        "./build/packages/ng-router-menu/out/*",
+        "./build/packages/ng-router-menu/out"
+      ],
+      "@typexs/ng-theme-base": [
+        "./build/packages/ng-theme-base/out/*",
+        "./build/packages/ng-theme-base/out"
+      ],
+      "@typexs/ng-theme-base": [
+        "./build/packages/ng-theme-base/out/*",
+        "./build/packages/ng-theme-base/out"
+      ],
+      "@typexs/tasks-ng": [
+        "./build/packages/tasks-ng/out/*",
+        "./build/packages/tasks-ng/out"
+      ],
+      "@typexs/tasks-ng": [
+        "./build/packages/tasks-ng/out/*",
+        "./build/packages/tasks-ng/out"
+      ]
+    }
+  },
+  "exclude": [
+    "archive",
+    "build",
+    "dist",
+    "tmp",
+    "src/**/files",
+    "node_modules"
+  ],
+  "compileOnSave": true
+}

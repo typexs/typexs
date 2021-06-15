@@ -1,0 +1,10 @@
+{
+  "name": "json-schema",
+  "version": "0.0.1",
+  "typexs": {
+    "name": "json-schema"
+  },
+  "dependencies": {
+    "@typexs/base": "latest"
+  }
+}

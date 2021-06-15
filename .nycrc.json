@@ -1,0 +1,23 @@
+{
+  "extension": [
+    ".ts",
+    ".tsx"
+  ],
+  "exclude": [
+    "**/*.d.ts",
+    "tmp/",
+    "build/"
+  ],
+  "require": [
+    "ts-node/register"
+  ],
+  "reporter": [
+    "html",
+    "json",
+    "lcovonly"
+  ],
+  "report-dir": "coverage/backend",
+  "sourceMap": true,
+  "instrument": true,
+  "cache": false
+}
