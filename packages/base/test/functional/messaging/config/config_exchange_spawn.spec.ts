@@ -35,9 +35,12 @@ class MessagingSpec {
 
       modules: <any>{
         paths: [
-          __dirname + '/../../../..'
+          __dirname + '/../../../../..'
         ],
-        disableCache: true
+        disableCache: true,
+        include: [
+          '**/packages/base**'
+        ]
       }
     });
     await bootstrap.activateLogger();

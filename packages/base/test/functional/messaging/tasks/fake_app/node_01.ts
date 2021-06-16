@@ -17,7 +17,15 @@ import {Bootstrap} from '../../../../../src/Bootstrap';
         loggers: [{name: '*', level: 'debug', transports: [{console: {}}]}]
       },
 
-      modules: {paths: [__dirname + '/../../../../..']},
+      modules: {
+        paths: [
+          __dirname + '/../../../../../..'
+        ],
+        disableCache: true,
+        include: [
+          '**/packages/base**'
+        ]
+      },
       storage: {default: TEST_STORAGE_OPTIONS},
       eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
       workers: {

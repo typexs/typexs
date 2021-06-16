@@ -37,10 +37,10 @@ class MessagingSpec {
 
         modules: <any>{
           paths: [
-            __dirname + '/../../../..'
+            __dirname + '/../../../../..'
           ],
           include: [
-            '**/@typexs{,**/}*'
+            '**/packages/base**'
           ],
           disableCache: true
         }
@@ -228,7 +228,7 @@ class MessagingSpec {
       {
         'isFile': true,
         'path': 'node_01.ts',
-        'size': 2028,
+        'size': 2156
       },
       {
         'isFile': true,
