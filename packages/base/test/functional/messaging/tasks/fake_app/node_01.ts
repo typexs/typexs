@@ -3,6 +3,7 @@ import {Config} from '@allgemein/config';
 import {ITypexsOptions} from '../../../../../src/libs/ITypexsOptions';
 import {SPAWN_TIMEOUT, TEST_STORAGE_OPTIONS} from '../../../config';
 import {Bootstrap} from '../../../../../src/Bootstrap';
+import {REMOTE_LOG_DIR} from '../config';
 
 (async function () {
   const LOG_EVENT = !!process.argv.find(x => x === '--enable_log');
@@ -34,8 +35,8 @@ import {Bootstrap} from '../../../../../src/Bootstrap';
           {name: 'TaskQueueWorker', access: 'allow'}
         ]
       },
-      tasks: {logdir: __dirname + '/logs'},
-      filesystem: {paths: ['.']}
+      tasks: {logdir: REMOTE_LOG_DIR + '/logs'},
+      filesystem: {paths: [REMOTE_LOG_DIR]}
     });
   bootstrap.activateLogger();
   bootstrap.activateErrorHandling();
@@ -46,7 +47,8 @@ import {Bootstrap} from '../../../../../src/Bootstrap';
   process.send('startup');
 
 
-  const timeout = parseInt(Config.get('argv.timeout', SPAWN_TIMEOUT), 0);
+  // eslint-disable-next-line radix
+  const timeout = parseInt(Config.get('argv.timeout', SPAWN_TIMEOUT));
   /*
   let commands = bootstrap.getCommands();
   expect(commands.length).to.be.gt(0);

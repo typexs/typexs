@@ -34,4 +34,4 @@ workers:
 
 
 tasks:
-  logdir: ./logs2
+  logdir: /tmp/txs-tasks/fake_app/logs

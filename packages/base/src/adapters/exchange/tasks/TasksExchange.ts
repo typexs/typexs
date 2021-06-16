@@ -152,9 +152,7 @@ export class TasksExchange extends AbstractExchange<TasksRequest, TasksResponse>
             } else {
               response.logFileContent = '';
             }
-
           }
-
           break;
 
         case 'logfile_path':
@@ -163,6 +161,8 @@ export class TasksExchange extends AbstractExchange<TasksRequest, TasksResponse>
           if (!request.relative && PlatformUtils.fileExist(logFilePath)) {
             response.logFilePath = logFilePath;
           } else if (request.relative && PlatformUtils.fileExist(Config.get(CFG_KEY_APP_PATH) + '/' + logFilePath)) {
+            response.logFilePath = logFilePath;
+          } else if (request.relative && PlatformUtils.fileExist(logFilePath)) {
             response.logFilePath = logFilePath;
           } else {
             throw new Error(`file for runner ${request.runnerId} not found`);

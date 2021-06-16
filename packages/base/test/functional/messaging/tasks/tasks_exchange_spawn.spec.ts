@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
 import {suite, test} from '@testdeck/mocha';
 import * as path from 'path';
+import * as fsExtra from 'fs-extra';
+
 import {Bootstrap} from '../../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
 import {TestHelper} from '../../TestHelper';
@@ -11,6 +13,8 @@ import {TasksExchange} from '../../../../src/adapters/exchange/tasks/TasksExchan
 import {TaskExecutor} from '../../../../src/libs/tasks/TaskExecutor';
 import {TaskFuture} from '../../../../src/libs/tasks/worker/execute/TaskFuture';
 import {FileSystemExchange} from '../../../../src/adapters/exchange/filesystem/FileSystemExchange';
+import {LOCAL_LOG_DIR, REMOTE_LOG_DIR} from './config';
+import {PlatformUtils} from '@allgemein/base';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -23,15 +27,32 @@ class MessagingSpec {
 
 
   static async before() {
+    if (!PlatformUtils.fileExist(LOCAL_LOG_DIR + '/logs')) {
+      PlatformUtils.mkdir(LOCAL_LOG_DIR + '/logs');
+
+    }
+    if (!PlatformUtils.fileExist(REMOTE_LOG_DIR + '/logs')) {
+      PlatformUtils.mkdir(REMOTE_LOG_DIR + '/logs');
+    }
+
+    await fsExtra.copy(
+      __dirname + '/fake_app/files/taskmonitor-abcdef-fake_app.log',
+      LOCAL_LOG_DIR + '/logs/taskmonitor-abcdef-fake_app.log');
+    await fsExtra.copy(
+      __dirname + '/fake_app/files/taskmonitor-abcdef-remote_fakeapp01.log',
+      REMOTE_LOG_DIR + '/logs/taskmonitor-abcdef-remote_fakeapp01.log');
+
     Bootstrap.reset();
     Config.clear();
     spawned = SpawnHandle.do(__dirname + '/fake_app/node_01.ts').start(LOG_EVENT);
 
     const appdir = path.join(__dirname, 'fake_app');
 
-    bootstrap = await Bootstrap.configure(
+    bootstrap = await Bootstrap.configure(<any>
       {
         app: {
+          nodeId: 'fake_app',
+          name: 'fake_app',
           path: appdir
         },
         logging: {
@@ -49,6 +70,14 @@ class MessagingSpec {
             '**/packages/base**'
           ]
         },
+        tasks: {
+          logdir: LOCAL_LOG_DIR + '/logs'
+        },
+        filesystem: {
+          paths: [
+            LOCAL_LOG_DIR
+          ]
+        }
       }
     );
     await bootstrap.activateLogger();
@@ -76,7 +105,7 @@ class MessagingSpec {
     const exchange = Injector.get(TasksExchange);
     const results = await exchange.getLogFilePath('abcdef', {filterErrors: true, skipLocal: true});
     expect(results).to.have.length(1);
-    expect(results[0]).to.be.eq(__dirname + '/fake_app/logs/taskmonitor-abcdef-remote_fakeapp01.log');
+    expect(results[0]).to.be.eq(REMOTE_LOG_DIR + '/logs/taskmonitor-abcdef-remote_fakeapp01.log');
   }
 
 
@@ -86,8 +115,8 @@ class MessagingSpec {
     const results = await exchange.getLogFilePath('abcdef', {filterErrors: true});
     expect(results).to.have.length(2);
     expect(results.sort()).to.be.deep.eq([
-      __dirname + '/fake_app/logs/taskmonitor-abcdef-remote_fakeapp01.log',
-      __dirname + '/fake_app/logs2/taskmonitor-abcdef-fake_app.log'
+      REMOTE_LOG_DIR + '/logs/taskmonitor-abcdef-remote_fakeapp01.log',
+      LOCAL_LOG_DIR + '/logs/taskmonitor-abcdef-fake_app.log'
     ].sort());
   }
 
@@ -102,8 +131,8 @@ class MessagingSpec {
       new2[x] = results[x];
     });
     expect(new2).to.be.deep.eq({
-      'fake_app:0': __dirname + '/fake_app/logs2/taskmonitor-abcdef-fake_app.log',
-      'remote_fakeapp01:0': __dirname + '/fake_app/logs/taskmonitor-abcdef-remote_fakeapp01.log',
+      'fake_app:0': LOCAL_LOG_DIR + '/logs/taskmonitor-abcdef-fake_app.log',
+      'remote_fakeapp01:0': REMOTE_LOG_DIR + '/logs/taskmonitor-abcdef-remote_fakeapp01.log',
     });
   }
 
@@ -134,7 +163,7 @@ class MessagingSpec {
     const exchange = Injector.get(TasksExchange);
     const results = await exchange.getLogFilePath('abcdef', {filterErrors: true, skipLocal: true, relative: true});
     expect(results).to.have.length(1);
-    expect(results[0]).to.be.eq('logs/taskmonitor-abcdef-remote_fakeapp01.log');
+    expect(results[0]).to.be.eq(REMOTE_LOG_DIR + '/logs/taskmonitor-abcdef-remote_fakeapp01.log');
 
     const fsExchange = Injector.get(FileSystemExchange);
     const content = await fsExchange.file({path: results[0], skipLocal: true});
