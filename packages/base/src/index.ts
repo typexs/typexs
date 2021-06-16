@@ -68,6 +68,7 @@ export {SystemInfoResponse} from './libs/system/SystemInfoResponse';
 export {TypeOrmConnectionWrapper} from './libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
 export {TypeOrmEntityController} from './libs/storage/framework/typeorm/TypeOrmEntityController';
 export {TypeOrmStorageRef} from './libs/storage/framework/typeorm/TypeOrmStorageRef';
+export {TypeOrmSqlConditionsBuilder} from './libs/storage/framework/typeorm/TypeOrmSqlConditionsBuilder';
 
 
 // export {EntitySchemaColumnOptions} from './libs/storage/EntitySchemaColumnOptions';
@@ -78,6 +79,14 @@ export {Storage} from './libs/storage/Storage';
 export {StorageRef} from './libs/storage/StorageRef';
 export {AbstractSchemaHandler} from './libs/storage/AbstractSchemaHandler';
 
+export {IUpdateOp} from './libs/storage/framework/IUpdateOp';
+export {IUpdateOptions} from './libs/storage/framework/IUpdateOptions';
+export {IDeleteOp} from './libs/storage/framework/IDeleteOp';
+export {IDeleteOptions} from './libs/storage/framework/IDeleteOptions';
+export {ISaveOp} from './libs/storage/framework/ISaveOp';
+export {ISaveOptions} from './libs/storage/framework/ISaveOptions';
+export {IFindOp} from './libs/storage/framework/IFindOp';
+export {IFindOptions} from './libs/storage/framework/IFindOptions';
 
 export {IDistributedQueryWorkerOptions} from './libs/distributed_storage/IDistributedQueryWorkerOptions';
 export {DistributedStorageEntityController} from './libs/distributed_storage/DistributedStorageEntityController';
@@ -138,5 +147,6 @@ export {BaseUtils} from './libs/utils/BaseUtils';
 export {DomainUtils} from './libs/utils/DomainUtils';
 export {ConfigUtils} from './libs/utils/ConfigUtils';
 export {MatchUtils} from './libs/utils/MatchUtils';
+export {DateUtils} from './libs/utils/DateUtils';
 
 export {Bootstrap} from './Bootstrap';

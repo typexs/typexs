@@ -30,6 +30,14 @@
     ],
     "baseUrl": "./",
     "paths": {
+      "@typexs/base": [
+        "./build/packages/base/out/*",
+        "./build/packages/base/out"
+      ],
+      "@typexs/base/*": [
+        "./build/packages/base/out/*",
+        "./build/packages/base/out"
+      ],
       "@typexs/base-ng": [
         "./build/packages/base-ng/out/*",
         "./build/packages/base-ng/out"

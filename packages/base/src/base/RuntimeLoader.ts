@@ -127,9 +127,7 @@ export class RuntimeLoader implements IRuntimeLoader {
     }
 
     const moduleRegistryOptions: IModuleRegistryOptions = {
-      packageFilter: (json: any) => {
-        return intersection(Object.keys(json), modulePackageJsonKeys).length > 0 && this.isEnabled(json.name);
-      },
+      packageFilter: (json: any) => intersection(Object.keys(json), modulePackageJsonKeys).length > 0 && this.isEnabled(json.name),
       module: module,
       paths: modulPaths,
       pattern: this.options.subModulPattern ? this.options.subModulPattern : [],

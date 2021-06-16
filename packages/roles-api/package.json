@@ -1,0 +1,19 @@
+{
+  "name": "@typexs/roles-api",
+  "version": "0.0.0-PLACEHOLDER",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/typexs/typexs.git"
+  },
+  "author": "Robert Kania",
+  "license": "MIT",
+  "peerDependencies": {
+    "@cezaryrk/minimatch": "^3.0.4"
+  },
+  "private": true,
+  "typexs": {
+    "name": "roles-api"
+  }
+}

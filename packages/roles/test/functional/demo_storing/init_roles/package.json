@@ -1,0 +1,10 @@
+{
+  "name": "app_init_roles",
+  "version": "1.0.0",
+  "dependencies": {
+
+  },
+  "typexs": {
+    "name": "app_init_roles"
+  }
+}

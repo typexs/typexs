@@ -12,9 +12,7 @@
     "ts-node/register"
   ],
   "reporter": [
-    "html",
-    "json",
-    "lcovonly"
+    "json"
   ],
   "report-dir": "coverage/backend",
   "sourceMap": true,

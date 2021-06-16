@@ -1,0 +1,20 @@
+
+
+initialise:
+
+  permissions:
+    - demo permission one
+    - demo permission two
+    - permission: demo permission three
+      description: Demo permission for three
+
+  roles:
+    - role: demo_role
+      label: Demo role
+      permissions:
+        - '*'
+        - demo permission one
+        - demo permission three
+        - extra permission one
+        - permission: extra permission two
+          description: This is an extra permission
