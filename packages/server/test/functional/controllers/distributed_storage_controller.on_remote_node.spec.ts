@@ -157,10 +157,10 @@ class DistributedStorageControllerSpec {
       API_CTRL_DISTRIBUTED_STORAGE_SAVE_ENTITY
         .replace(':nodeId', 'fake_app_node')
         .replace(':name', _.snakeCase(DistributedRandomData.name)),
-      {
-        json: d,
-        responseType: 'json'
-      }
+    {
+      json: d,
+      responseType: 'json'
+    }
     );
 
     expect(res).to.not.be.null;
@@ -192,10 +192,10 @@ class DistributedStorageControllerSpec {
         API_CTRL_DISTRIBUTED_STORAGE_SAVE_ENTITY
           .replace(':nodeId', 'fake_app_node_not')
           .replace(':name', _.snakeCase(DistributedRandomData.name)),
-        {
-          json: {},
-          responseType: 'json'
-        }
+      {
+        json: {},
+        responseType: 'json'
+      }
       );
       expect(true).to.be.false;
     } catch (e) {
@@ -237,10 +237,10 @@ class DistributedStorageControllerSpec {
       API_CTRL_DISTRIBUTED_STORAGE_SAVE_ENTITY
         .replace(':nodeId', 'fake_app_node')
         .replace(':name', _.snakeCase(DistributedRandomData.name)),
-      {
-        json: [d1, d2],
-        responseType: 'json'
-      }
+    {
+      json: [d1, d2],
+      responseType: 'json'
+    }
     );
 
     expect(res).to.not.be.null;
@@ -377,7 +377,9 @@ class DistributedStorageControllerSpec {
       'boolNeg': false,
       'id': 1,
       'short': 'short name 1',
-      'long': 'long long long very long long long long very long long long long very long long long long very long long long long very long ',
+      'long':
+        'long long long very long long long long very long long long ' +
+        'long very long long long long very long long long long very long ',
       'numValue': 100,
       'floatValue': 0.893,
       'date': '2020-02-01T23:00:00.000Z',
@@ -411,7 +413,16 @@ class DistributedStorageControllerSpec {
       id: 6,
       short: 'short name 6',
       long:
-        'long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long ',
+        'long long long very long long long long very long long long long very long long ' +
+        'long long very long long long long very long long long long very long long long ' +
+        'long very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long very ' +
+        'long long long long very long long long long very long long long long very long ' +
+        'long long long very long long long long very long long long long very long long ' +
+        'long long very long long long long very long long long long very long long long ' +
+        'long very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long very ' +
+        'long long long long very long ',
       numValue: 600,
       floatValue: 5.3580000000000005,
       date: '2020-07-11T22:00:00.000Z',
@@ -656,8 +667,8 @@ class DistributedStorageControllerSpec {
         .replace(':nodeId', 'fake_app_node')
         .replace(':name', _.snakeCase(DistributedRandomData.name)) +
       '?query=' + JSON.stringify(
-        {$and: [{long: 'test delete'}, {id: {$gte: 105}}]}),
-      {responseType: 'json'}
+      {$and: [{long: 'test delete'}, {id: {$gte: 105}}]}),
+    {responseType: 'json'}
     );
     expect(res).to.not.be.null;
     res = res.body;

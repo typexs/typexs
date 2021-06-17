@@ -5,6 +5,7 @@
   ],
   "exclude": [
     "**/*.d.ts",
+    "test/",
     "tmp/",
     "build/"
   ],
@@ -12,11 +13,9 @@
     "ts-node/register"
   ],
   "reporter": [
-    "html",
-    "json",
-    "lcovonly"
+    "json"
   ],
-  "report-dir": "coverage/base",
+  "report-dir": "../../coverage/base",
   "sourceMap": true,
   "instrument": true,
   "cache": false
