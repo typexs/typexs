@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "npx gulp test",
-    "posttest": "npx nyc report --reporter=json && npx codecov -f coverage/**/*.json",
+    "posttest": "npx codecov -f coverage/**/*.json",
     "ng": "npx ng",
     "start": "npx concurrently \"npx ng serve\" \"npx typexs server --nodeId server\"",
     "build": "npx ng build --prod",

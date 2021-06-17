@@ -15,6 +15,7 @@
   "reporter": [
     "json"
   ],
+  "temp-dir": "/tmp/typexs/.nyc-output/schema",
   "report-dir": "../../coverage/schema",
   "sourceMap": true,
   "instrument": true,
