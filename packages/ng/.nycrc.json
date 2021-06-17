@@ -1,0 +1,23 @@
+{
+  "extension": [
+    ".ts",
+    ".tsx"
+  ],
+  "exclude": [
+    "**/*.d.ts",
+    "test/",
+    "tmp/",
+    "build/"
+  ],
+  "require": [
+    "ts-node/register"
+  ],
+  "reporter": [
+    "json"
+  ],
+  "temp-dir": "/tmp/typexs/.nyc-output/ng",
+  "report-dir": "../../coverage/ng",
+  "sourceMap": true,
+  "instrument": true,
+  "cache": false
+}

@@ -15,6 +15,7 @@
   "reporter": [
     "json"
   ],
+  "temp-dir": "/tmp/typexs/.nyc-output/roles",
   "report-dir": "../../coverage/roles",
   "sourceMap": true,
   "instrument": true,

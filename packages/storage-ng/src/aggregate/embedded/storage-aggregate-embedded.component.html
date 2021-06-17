@@ -1,0 +1,19 @@
+<div class="card-embedded">
+
+  <txs-free-query-input
+    *ngIf="options.freeQueryBuilder"
+    mode="aggregate"
+    (queryState)="onQueryAction($event)"
+  >
+  </txs-free-query-input>
+
+  <txs-datatable
+    #datatable
+    [columns]="columns"
+    [options]="options"
+    [(params)]="params"
+    (doQuery)="doAggregate($event)"
+  ></txs-datatable>
+
+</div>
+

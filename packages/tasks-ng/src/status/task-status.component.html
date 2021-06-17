@@ -1,0 +1,130 @@
+<div class="container-fluid " *ngIf="taskLog">
+  <div>
+    <div class="refresh float-right">
+      <button class="btn btn-light btn-sm" (click)="update()">
+        <div>
+          <i class="icon icon-refresh" *ngIf="!running"></i>
+          <i class="icon icon-spinner fa-spin" *ngIf="running"></i>
+        </div>
+      </button>
+    </div>
+    <div class="row detail-tables">
+
+      <div class="col-md-auto mr-2">
+        <table class="table table-responsive detail-table table-borderless">
+          <tbody>
+          <tr>
+            <th>Task-ID</th>
+            <td>#{{taskLog.tasksId}}</td>
+          </tr>
+          <tr>
+            <th>Taskname</th>
+            <td>{{taskLog.taskName}}</td>
+          </tr>
+          <tr>
+            <th>Caller (nodeId)</th>
+            <td>{{taskLog.nodeId}}</td>
+          </tr>
+          <tr>
+            <th>Runner (respId)</th>
+            <td>{{taskLog.respId}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-auto mr-2">
+        <table class="table table-responsive detail-table table-borderless">
+          <tbody>
+          <tr>
+            <th>Progress</th>
+            <td>{{taskLog.progress / taskLog.total | percent : '1.1-1' }}</td>
+          </tr>
+          <tr>
+            <th>Running / Done</th>
+            <td>
+                <span class="badge"
+                      [ngClass]="{'badge-warning':!taskLog.running,'badge-success':taskLog.running}">{{taskLog.running}}</span>
+              /
+              <span class="badge"
+                    [ngClass]="{'badge-warning':!taskLog.done,'badge-success':taskLog.done}">{{taskLog.done}}</span>
+            </td>
+          </tr>
+          <tr>
+            <th>State</th>
+            <td>
+                <span class="badge badge" [ngClass]="{
+                  'badge-warning':taskLog.done,
+                  'badge-success':taskLog.done && !taskLog.hasError,
+                  'badge-danger':taskLog.done && taskLog.hasError}">{{taskLog.state}}</span>
+            </td>
+          </tr>
+          <tr>
+            <th>Errored</th>
+            <td>{{taskLog.hasError}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-md-auto mr-2">
+        <table class="table table-responsive detail-table table-borderless">
+          <tbody>
+          <tr>
+            <th>Created</th>
+            <td>{{taskLog.created | date:'dd.MM.yyyy HH:mm:ss.SSS'}}</td>
+          </tr>
+          <tr>
+            <th>Started</th>
+            <td>{{taskLog.started | date:'dd.MM.yyyy HH:mm:ss.SSS'}}</td>
+          </tr>
+          <tr>
+            <th>Stopped</th>
+            <td>{{taskLog.stopped | date:'dd.MM.yyyy HH:mm:ss.SSS'}}</td>
+          </tr>
+          <tr>
+            <th>Duration</th>
+            <td class="text-right">{{taskLog.duration }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="task-content-container pt-2 pb-2">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link" [ngClass]="{active:contentContainer == 'log'}" (click)="contentContainer = 'log'">Log</a>
+      </li>
+
+      <!--    <li class="nav-item">-->
+      <!--      <a class="nav-link" [ngClass]="{active:contentContainer == 'error'}"-->
+      <!--         (click)="contentContainer = 'error'">Error</a>-->
+      <!--    </li>-->
+      <li class="nav-item">
+        <a class="nav-link" [ngClass]="{active:contentContainer == 'json'}"
+           (click)="contentContainer = 'json'">JSON</a>
+      </li>
+    </ul>
+
+    <div [ngSwitch]="contentContainer" class="tab-content">
+      <div *ngSwitchCase="'log'">
+        <txs-task-log-viewer [runnerId]="runnerId" [nodeId]="nodeId" [running]="running"></txs-task-log-viewer>
+      </div>
+
+      <!--
+      <div *ngSwitchCase="'error'">
+        <div class="alert alert-danger rounded" *ngIf="logError">
+          <pre class="language-shell">{{logError}}</pre>
+        </div>
+      </div>
+  -->
+      <div *ngSwitchCase="'json'">
+        <pre class="language-json">{{taskLog | json}}</pre>
+      </div>
+
+
+    </div>
+  </div>
+</div>

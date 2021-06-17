@@ -1,0 +1,16 @@
+<div class="form-group">
+  <div>
+    <div class="form-row">
+      <div class="col-1" *ngIf="showNr()">Nr</div>
+      <div class="col" *ngFor="let column of columns"><strong>{{column.label}}</strong></div>
+      <div class="col-1" *ngIf="!isFixed()">Ops</div>
+    </div>
+    <ng-container #content></ng-container>
+
+  </div>
+  <div *ngIf="!isFixed()">
+    <button (click)="addRow()" class="btn btn-primary">Add row</button>
+  </div>
+
+</div>
+

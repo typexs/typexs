@@ -1,9 +1,7 @@
 {
   "extends": [
     "plugin:@typescript-eslint/recommended",
-    "eslint:recommended",
-    "prettier",
-    "prettier/@typescript-eslint"
+    "eslint:recommended"
   ],
   "env": {
     "browser": true,
@@ -16,13 +14,11 @@
     "sourceType": "module"
   },
   "plugins": [
-    "prettier",
     "eslint-plugin-import",
     "@angular-eslint/eslint-plugin",
     "@typescript-eslint"
   ],
   "rules": {
-    "prettier/prettier": "error",
     "@angular-eslint/component-class-suffix": "error",
     "@angular-eslint/component-selector": [
       "error",

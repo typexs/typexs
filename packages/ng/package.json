@@ -1,0 +1,50 @@
+{
+  "name": "@typexs/ng",
+  "version": "0.0.0-PLACEHOLDER",
+  "description": "Angular for typexs",
+  "main": "index.ts",
+  "browser": "browser.ts",
+  "scripts": {
+    "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
+    "posttest": "nyc report --reporter=json"
+  },
+  "directories": {
+    "doc": "docs/de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/typexs/ng.git"
+  },
+  "author": "Robert Kania",
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "framework",
+    "commons",
+    "typescript",
+    "typexs"
+  ],
+  "bugs": {
+    "url": "https://gitlab.com/typexs/ng/issues"
+  },
+  "homepage": "https://gitlab.com/typexs/ng#readme",
+  "dependencies": {
+    "@typexs/roles-api": "0.0.0-PLACEHOLDER"
+  },
+  "peerDependencies": {
+    "@typexs/base": "0.0.0-PLACEHOLDER",
+    "@typexs/schema": "0.0.0-PLACEHOLDER"
+  },
+  "devDependencies": {
+    "glob": "7.1.7",
+    "rxjs": "6.6.7",
+    "@angular/core": "12.0.3",
+    "@angular/router": "12.0.3",
+    "@angular/platform-browser": "12.0.3",
+    "@angular/platform-browser-dynamic": "12.0.3",
+    "@testdeck/mocha": "0.1.2",
+    "@typexs/schema": "0.0.0-PLACEHOLDER",
+    "chai": "4.3.4",
+    "class-validator": "0.12.2"
+  }
+}

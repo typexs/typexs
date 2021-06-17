@@ -1,0 +1,50 @@
+<div class="card">
+  <div class="card-header">
+    <h3>Tasks</h3>
+  </div>
+
+  <div class="card-body">
+
+    <div class="container-fluid">
+      <h5 class="mb-3">Active workers</h5>
+
+      <div class="alert alert-danger" *ngIf="!hasWorkerNodes()">
+        No active workers are in the network, tasks can't be executed.
+      </div>
+
+      <ul>
+        <li *ngFor="let x of getWorkerNodes()">
+          <div>"{{x.nodeId}}" on {{x.hostname}}</div>
+        </li>
+      </ul>
+
+    </div>
+
+    <hr>
+
+    <div class="container-fluid">
+      <h5 class="mb-3 mt-2">Task list</h5>
+      <div class="row" >
+        <div class="col-md-2 mt-2"><strong>Name</strong></div>
+        <div class="col-md-4 mt-2"><strong>Description</strong></div>
+        <div class="col-md-2 mt-2"><strong>Type</strong></div>
+        <div class="col-md-2 mt-2"><strong>Allowed on</strong></div>
+        <div class="col-md-auto mt-2"><strong>Ops</strong></div>
+      </div>
+      <div class="row border border-light rounded " *ngFor="let task of tasks">
+        <div class="col-md-2 mt-2">{{task.name}}</div>
+        <div class="col-md-4 mt-2">{{task.description ? task.description : '---'}}</div>
+        <div class="col-md-2 mt-2">{{task.getType()}}</div>
+        <div class="col-md-2 mt-2">
+          <ul class="list-unstyled">
+            <li *ngFor="let nodeid of task.nodeIds">{{nodeid}}</li>
+          </ul>
+        </div>
+        <div class="col-md-auto mt-1">
+          <a class="btn btn-sm btn-primary" [routerLink]="[baseUrl(),'run',task.machineName]">Execute</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

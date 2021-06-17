@@ -1,0 +1,15 @@
+<ng-container [ngSwitch]="enableLayout">
+  <div *ngSwitchCase="false">
+    <router-outlet></router-outlet>
+  </div>
+  <div *ngSwitchDefault>
+    <bat-admin-layout
+      [baseRouterLink]="'/admin'"
+      [menuOptions]="{base: 'admin'}"
+      [title]="'TypeXs'"
+      [userRouterLinks]="{logout:'/user/logout',profile:'/user/profile'}"
+    >
+      <router-outlet></router-outlet>
+    </bat-admin-layout>
+  </div>
+</ng-container>

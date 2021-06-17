@@ -1,0 +1,65 @@
+<div class="dataview-container">
+  <!-- Registry -->
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="queryService">Service</label>
+        <select id="queryService" class="form-control" name="queryService" [(ngModel)]="serviceIdx"
+                (change)="onServiceSelect($event)">
+          <option *ngFor="let service of services; let i = index" value="{{i}}">{{service.name}}</option>
+        </select>
+      </div>
+      <div class="form-group col-md-6" *ngIf="entities.length > 0">
+        <label for="entities">Entities</label>
+        <select id="entities" class="form-control" name="entities" [(ngModel)]="entityIdx"
+                (change)="onEntitySelect($event)">
+          <option *ngFor="let entityRef of entities; let i = index" value="{{i}}">{{entityRef.name}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row" *ngIf="entityIdx >= 0 && serviceIdx >= 0">
+      <div class="col-md-12">
+        <button class="btn btn-sm btn-primary" (click)="add()">Add</button>
+      </div>
+    </div>
+    <div class="row" *ngFor="let field of fieldRefs; let i = index">
+      <div class="form-group col-md-3">
+        <label for="fld_{{i}}_name">Name</label>
+        <input class="form-control" id="fld_{{i}}_name" type="text" name="name" [(ngModel)]="fieldRefs[i].name"/>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="fld_{{i}}_path">Path</label>
+        <input class="form-control" id="fld_{{i}}_path" type="text" name="path" [(ngModel)]="fieldRefs[i].path"/>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="fld_{{i}}_type">Type</label>
+        <input class="form-control" id="fld_{{i}}_type" type="readonly" name="type" [(ngModel)]="fieldRefs[i].type"/>
+      </div>
+      <div class="form-group col-md-3">
+        <button class="btn btn-sm btn-primary" (click)="update()">Update</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Storage entry -->
+  <!-- Storage -->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        <div id="my_dataviz"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <pre class="small">{{entries | json}}</pre>
+      </div>
+      <div class="col-md-6">
+        <pre class="small">{{filtered | json}}</pre>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

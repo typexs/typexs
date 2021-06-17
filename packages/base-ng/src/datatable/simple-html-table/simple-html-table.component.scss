@@ -1,0 +1,65 @@
+.table-container {
+  overflow-x: auto;
+}
+
+
+@function fa-content($fa-var) {
+  @return unquote("\"#{ $fa-var }\"");
+}
+
+$fa-var-sort-down: \f0dd;
+$fa-var-sort: \f0dc;
+$fa-var-sort-up: \f0de;
+$fa-var-filter: \f0b0;
+$fa-var-times: \f00d;
+
+.field-sortable {
+
+  .sort-control {
+    display: inline-block;
+    cursor: pointer;
+    // position: absolute;
+  }
+}
+
+.field-filterable {
+
+  .filter-control {
+    display: inline-block;
+    cursor: pointer;
+    // position: absolute;
+  }
+}
+
+.icon {
+  &.icon-sort {
+    &:before {
+      content: fa-content($fa-var-sort);
+    }
+  }
+
+  &.icon-sort-asc {
+    &:before {
+      content: fa-content($fa-var-sort-up);
+    }
+  }
+
+  &.icon-sort-desc {
+    &:before {
+      content: fa-content($fa-var-sort-down);
+    }
+  }
+
+  &.icon-filter {
+    &:before {
+      content: fa-content($fa-var-filter);
+    }
+  }
+
+  &.icon-close {
+    &:before {
+      content: fa-content($fa-var-times);
+    }
+  }
+
+}

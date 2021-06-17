@@ -1,0 +1,17 @@
+
+
+<div class="row" (click)="toggle()">
+  <div class="col-md">{{node.nodeId}}</div>
+  <div class="col-md">{{node.hostname}}</div>
+  <div class="col-md">{{node.machineId}}</div>
+  <div class="col-md">{{node.started_at | date:'dd.MM.yyyy HH:mm'}}</div>
+  <div class="col-md">{{selectContext(node, 'tasks').length}}</div>
+  <div class="col-md">{{selectContext(node, 'workers').length}}</div>
+
+</div>
+<div class="row" [hidden]="collapsed">
+  <pre>
+    {{node | json }}
+  </pre>
+</div>
+

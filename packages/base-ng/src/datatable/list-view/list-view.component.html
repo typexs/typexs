@@ -1,0 +1,33 @@
+<div class="list-view-container">
+
+  <txs-pager *ngIf="options.enablePager"
+             [name]="options.pagerId"
+             [pager]="pager"
+             (pageChange)="updateRows($event)">
+  </txs-pager>
+
+
+  <div class="list-container">
+    <div class="row" *ngFor="let row of rows">
+      <div class="col-md-12">
+
+        <txs-view [instance]="row"
+                  [allowViewModeSwitch]="allowViewModeSwitch"
+                  [mode]="viewMode">
+          <div txsViewFallback>
+            <txs-simple-json [instance]="row"></txs-simple-json>
+          </div>
+        </txs-view>
+      </div>
+    </div>
+  </div>
+
+
+  <txs-pager *ngIf="options.enablePager"
+             [name]="options.pagerId"
+             [pager]="pager"
+             frameSize="5"
+             (pageChange)="updateRows($event)">
+  </txs-pager>
+
+</div>

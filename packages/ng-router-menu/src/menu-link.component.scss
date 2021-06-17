@@ -1,0 +1,16 @@
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.nav-group-label{
+  font-weight: bold;
+}
+
+
+a.nav-link.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+

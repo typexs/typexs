@@ -1,0 +1,20 @@
+<bat-card [title]="'Embedded Content'">
+  <h4>Test 01:</h4>
+
+  <ng-template #inline>
+    <span>something is embedded</span>
+  </ng-template>
+
+  <div [embedded]="inline">
+
+  </div>
+
+  <hr>
+
+  <h4>Test 02:</h4>
+
+  <div embedded2>
+    <span>It the inner content ;)</span>
+  </div>
+
+</bat-card>

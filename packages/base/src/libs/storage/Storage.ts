@@ -213,8 +213,7 @@ export class Storage {
         object = JSON.parse(content);
         Object.defineProperty(object, '__SOURCE__', {value: path});
       } else if (/\.(t|j)s$/.test(path)) {
-        // require
-        const mod = require(path.replace(/\.(t|j)s$/, ''));
+        const mod = await import(path.replace(/\.(t|j)s$/, ''));
         object = [];
         keys(mod).map(x => {
           const value = mod[x];

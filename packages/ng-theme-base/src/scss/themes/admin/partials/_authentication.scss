@@ -1,0 +1,161 @@
+.auth-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  min-height: 100vh;
+  min-width: 100%;
+
+
+  .btn-auth-gen {
+    .btn-icon {
+      width: 140px;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 45px;
+
+      small {
+        font-size: 15px;
+      }
+    }
+  }
+
+  .input-group {
+    background: transparent;
+  }
+
+  .card {
+    margin-bottom: 0;
+  }
+
+  a,
+  p > a {
+    color: $theme-heading-color;
+    font-weight: 600;
+  }
+
+  > div {
+    z-index: 5;
+  }
+
+  .auth-content {
+    position: relative;
+    padding: 15px;
+    width: 390px;
+    z-index: 5;
+
+    &.multyform,
+    &.subscribe {
+      width: 750px;
+    }
+  }
+
+  @media only screen and (max-width: 768px) {
+    max-width: 360px;
+
+  }
+  @media only screen and (max-width: 575px) {
+    .card {
+      .card-body {
+        padding: 30px 15px;
+      }
+    }
+  }
+
+  .auth-icon {
+    font-size: 30px;
+
+    &:before {
+      background: $theme-color-reverse;
+      background-clip: text;
+      text-fill-color: transparent;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  &.offline {
+    background-image: none;
+
+    &:before {
+      display: none;
+    }
+  }
+
+  .auth-bg {
+    .r {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+
+      &:first-child {
+        top: -100px;
+        right: -100px;
+        background: $theme-color;
+      }
+
+      &:last-child {
+        left: -100px;
+        bottom: -100px;
+        background: $theme-color2;
+
+      }
+
+      &.s {
+        width: 20px;
+        height: 20px;
+
+        &:nth-child(2) {
+          top: 150px;
+          right: -150px;
+          background: $primary-color;
+        }
+
+        &:nth-child(3) {
+          left: -150px;
+          bottom: 150px;
+          background: $success-color;
+        }
+      }
+
+      &:nth-child(odd) {
+        animation: floating 7s infinite;
+      }
+
+      &:nth-child(even) {
+        animation: floating 9s infinite;
+      }
+    }
+  }
+}
+
+.auth-tabs {
+  .card {
+  }
+
+  .nav-pills {
+  }
+
+  .tab-content {
+    overflow: hidden;
+    position: relative;
+
+    .auth-icon {
+      position: absolute;
+      font-size: 180px;
+      transform: rotate(-30deg);
+      z-index: 1;
+      bottom: 0;
+      right: 0;
+      opacity: 0.2;
+    }
+    .tab-pane > * {
+      position: relative;
+      z-index: 5;
+    }
+  }
+}

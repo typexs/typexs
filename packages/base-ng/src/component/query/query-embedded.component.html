@@ -1,0 +1,19 @@
+<div class="query-view">
+
+  <txs-free-query-input
+    *ngIf="options.freeQueryBuilder"
+    (queryState)="onQueryAction($event)"
+  >
+  </txs-free-query-input>
+
+  <txs-datatable
+    #datatable
+    [component]="componentClass"
+    [columns]="columns"
+    [options]="options"
+    [(params)]="params"
+    (doQuery)="doQuery($event)"
+  ></txs-datatable>
+
+</div>
+

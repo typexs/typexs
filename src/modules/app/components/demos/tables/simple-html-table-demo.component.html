@@ -1,0 +1,22 @@
+<bat-card title="Tables">
+
+  <h5>Simple HTML Table</h5>
+
+  <div class="form-group">
+    <label for="maxRows">Max rows</label>
+    <input [(ngModel)]="maxRows" (ngModelChange)="update('maxRows',$event)"  type="text" class="form-control"
+           id="maxRows">
+  </div>
+
+
+  <txs-datatable
+    [component]="simpleTableComp"
+    [columns]="columns"
+    [maxRows]="maxRows"
+    [rows]="rows"
+    [options]="options"
+    (doQuery)="doQuery($event)"
+  ></txs-datatable>
+
+
+</bat-card>

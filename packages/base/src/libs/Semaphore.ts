@@ -1,7 +1,7 @@
 /**
  * https://gist.github.com/Gericop/e33be1f201cf242197d9c4d0a1fa7335
  */
-import {EventEmitter} from 'events';
+import { EventEmitter } from 'events';
 
 /**
  * TODO move this to sometimes to @allgemein/base
@@ -17,7 +17,8 @@ export class Semaphore extends EventEmitter {
   /**
    * Waiting queue
    */
-  private waiting: { resolve: Function, err: Function }[] = [];
+  // eslint-disable-next-line no-unused-vars
+  private waiting: { resolve: (value?: any) => void; err: (reason?: any) => void }[] = [];
 
   private readonly max: number;
   private readonly name: string;
@@ -50,7 +51,7 @@ export class Semaphore extends EventEmitter {
       });
     } else {
       return new Promise((resolve, err) => {
-        this.waiting.push({resolve: resolve, err: err});
+        this.waiting.push({ resolve: resolve, err: err });
       });
     }
   }
@@ -95,7 +96,7 @@ export class Semaphore extends EventEmitter {
     if (this.counter === 0) {
       return Promise.resolve();
     } else {
-      let timer: NodeJS.Timeout = null;
+      let timer: any = null;
       return new Promise((resolve, reject) => {
         const fn = () => {
           clearTimeout(timer);

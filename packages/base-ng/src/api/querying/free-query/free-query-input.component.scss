@@ -1,0 +1,40 @@
+textarea.query-input {
+  width: 100%;
+  border-radius: .3em;
+  border: 1px solid lightgrey;
+  padding: .4em;
+}
+
+
+@function fa-content($fa-var) {
+  @return unquote("\"#{ $fa-var }\"");
+}
+
+$fa-var-eye: \f06e;
+$fa-var-eye-slash: \f070;
+
+
+.icon {
+  &.icon-eye {
+    &:before {
+      content: fa-content($fa-var-eye);
+    }
+  }
+
+  &.icon-eye-slash {
+    &:before {
+      content: fa-content($fa-var-eye-slash);
+    }
+  }
+
+}
+
+.form-group {
+  position: relative;
+}
+
+.query-view-toggle {
+  position: absolute;
+  top: 2.5rem;
+  right: 1rem;
+}

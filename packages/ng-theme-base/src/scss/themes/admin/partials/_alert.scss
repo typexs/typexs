@@ -1,0 +1,30 @@
+@import "../mixins/alert";
+
+.alert {
+  position: relative;
+  padding: 15px 20px;
+  border-radius: 0;
+}
+
+.alert-link {
+  font-weight: 600;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.alert-dismissible {
+  padding-right: 40px;
+
+  .close {
+    padding: 14px 10px;
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .alert-#{$color} {
+    @include alert-variant(theme-color-level($color, $alert-bg-level), theme-color-level($color, $alert-border-level), theme-color-level($color, $alert-color-level));
+  }
+}

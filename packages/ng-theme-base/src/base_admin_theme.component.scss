@@ -1,0 +1,54 @@
+
+
+.badge-success {
+  color: #fff;
+  background-color: #28a745;
+}
+.badge-border-white{
+  font-size: 80%;
+  border: 1px solid;
+  //top: 0px;
+}
+
+.badge-danger {
+  color: #fff;
+  background-color: #dc3545;
+}
+
+.badge-secondary {
+  color: #fff;
+  background-color: #6c757d;
+}
+
+
+
+.badge-warning {
+  color: #212529;
+  background-color: #ffc107;
+}
+
+.badge-online {
+  @extend .badge-success;
+}
+
+.badge-offline {
+  @extend .badge-secondary;
+}
+
+.badge-initial {
+  @extend .badge-warning;
+}
+
+.btn-online {
+  @extend .badge-success;
+}
+
+.btn-offline {
+  @extend .badge-secondary;
+}
+
+.btn-initial {
+  @extend .badge-warning;
+}
+
+

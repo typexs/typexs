@@ -1,0 +1,30 @@
+<div class="card-embedded">
+
+
+  <div class="form-group" *ngIf="options.entityTypeSelection">
+    <label for="entityName">Entity name</label>
+    <input type="text"
+           class="form-control" id="entityName"
+           placeholder="Entity name"
+           (change)="changeEntityName()"
+           [(ngModel)]="entityName"
+    >
+  </div>
+
+
+  <txs-free-query-input *ngIf="options.freeQueryBuilder"
+    (queryState)="onQueryAction($event)"
+  >
+  </txs-free-query-input>
+
+  <txs-datatable
+    #datatable
+    [component]="componentClass"
+    [columns]="columns"
+    [options]="options"
+    [(params)]="params"
+    (doQuery)="doQuery($event)"
+  ></txs-datatable>
+
+</div>
+

@@ -1,0 +1,26 @@
+<div class="book-wrapper">
+  <h5>Book (view mode: {{viewMode}})</h5>
+  <div class="container" *ngIf="viewMode === 'teaser'">
+    {{instance.title}} <span
+    *ngIf="instance.author">by {{instance.author.firstName}} {{instance.author.lastName}}</span>
+  </div>
+  <div class="container" *ngIf="viewMode !== 'teaser'">
+    <div class="row">
+      <div class="col-md-6">
+        <span class="title">Title</span>
+      </div>
+      <div class="col-md-6">
+        {{instance.title}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <span class="title">Author</span>
+      </div>
+      <div class="col-md-6">
+        <span *ngIf="instance.author">{{instance.author.firstName}} {{instance.author.lastName}}</span>
+
+      </div>
+    </div>
+  </div>
+</div>

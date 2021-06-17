@@ -1,0 +1,6 @@
+
+
+ng:
+  app: ./src/app
+  generated: ./src/app/generated
+  public: ./public

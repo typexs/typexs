@@ -1,0 +1,20 @@
+<div class="card">
+  <div class="card-header">
+    <div class="float-right">
+      <a class="btn btn-sm btn-primary" [routerLink]="[getNgUrlPrefix(),name,'query' ]">Query</a>
+      <a class="btn btn-sm btn-primary" [routerLink]="[getNgUrlPrefix(),'types' ]">Types</a>
+    </div>
+    <h3>{{new ? 'Create' : 'Edit'}} entity "{{name}}"</h3>
+  </div>
+  <div class="card-body">
+    <div *ngIf="!ready">
+      Waiting ...
+    </div>
+    <div *ngIf="ready">
+      <div *ngIf="error" class="error">{{error}}</div>
+      <txs-form *ngIf="instance" formName="entity-create-form'"
+                [registry]="getRegistry()"
+                [instance]="instance" (ngSubmit)="onSubmit($event)"></txs-form>
+    </div>
+  </div>
+</div>

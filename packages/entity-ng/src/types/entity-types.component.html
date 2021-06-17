@@ -1,0 +1,44 @@
+<div class="card">
+  <div class="card-header">
+    <h3>Entity Types</h3>
+  </div>
+  <div class="card-body">
+      <table class="table hover">
+        <thead>
+        <tr>
+          <th>Schema</th>
+          <th>Name</th>
+          <th>name</th>
+          <th>Options</th>
+          <th>Ops</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="let entityDef of getEntityRefs()">
+          <td>{{entityDef.getClassRef().getSchema()}}</td>
+          <td>{{entityDef.name}}</td>
+          <td>{{entityDef.name}}</td>
+          <td>
+            <details>
+              <summary>JSON</summary>
+              <pre class="language-json">{{entityDef.getOptions() | json}}</pre>
+            </details>
+          </td>
+          <td>
+            <a class="btn btn-primary"
+               [routerLink]="[entityService.getNgUrlPrefix(),entityDef.name,'query']">Query</a>
+            <a class="btn btn-success"
+               [routerLink]="[entityService.getNgUrlPrefix(),entityDef.name,'create']">New</a>
+            <a class="btn btn-warning"
+               [routerLink]="[entityService.getNgUrlPrefix(),entityDef.name,'structure']">Schema</a>
+            <!--
+            <button class="btn btn-warning">Edit</button>
+            <button class="btn btn-danger">Delete</button>
+            -->
+          </td>
+        </tr>
+        </tbody>
+      </table>
+  </div>
+</div>

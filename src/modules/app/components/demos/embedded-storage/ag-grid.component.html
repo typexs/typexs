@@ -1,0 +1,76 @@
+<bat-card title="Embedded Storage">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6">
+        <pre class="language-js">{{simpleItemParams | json}}</pre>
+      </div>
+      <div class="col-md-6">
+        <pre class="language-js">{{simpleQueryModul | json}}</pre>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <form (ngSubmit)="doSubmit()" *ngIf="entityRef">
+          <table class="table table-borderless">
+            <tr>
+              <td>
+                Sort
+              </td>
+              <td>
+                <select
+                  class="form-control"
+                  [(ngModel)]="simpleQueryModul.sort"
+                  [ngModelOptions]="{standalone:true}">
+                  <option value=""></option>
+                  <option *ngFor="let prop of entityRef.getPropertyRefs()">{{prop.name}}</option>
+                </select>
+              </td>
+              <td>
+                <select
+                  class="form-control"
+                  [(ngModel)]="simpleQueryModul.sortDir"
+                  [ngModelOptions]="{standalone:true}">
+                  <option value=""></option>
+                  <option value="asc">asc</option>
+                  <option value="desc">desc</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Filter
+              </td>
+              <td>
+                <select
+                  class="form-control"
+                  [(ngModel)]="simpleQueryModul.filterKey"
+                  [ngModelOptions]="{standalone:true}">
+                  <option value=""></option>
+                  <option *ngFor="let prop of entityRef.getPropertyRefs()">{{prop.name}}</option>
+
+                </select>
+              </td>
+              <td>
+                <input
+                  class="form-control"
+                  [(ngModel)]="simpleQueryModul.filterValue"
+                  [ngModelOptions]="{standalone:true}">
+              </td>
+            </tr>
+          </table>
+          <button class="btn btn-info" (click)="doSubmit()">Execute</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <txs-storage-query-embedded
+    #simpleItem01
+    [name]="simpleItemName"
+    [options]="simpleItemOptions"
+    [(params)]="simpleItemParams"
+  >
+  </txs-storage-query-embedded>
+
+</bat-card>

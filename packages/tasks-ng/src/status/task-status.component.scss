@@ -1,0 +1,32 @@
+.task-content-container {
+
+}
+
+.detail-tables {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-bottom: 30px;
+
+  .detail-table.table {
+    td, th {
+      font-size: .9rem;
+    }
+  }
+
+  .detail-table.table td {
+    border: 0;
+    padding: 4px 0;
+  }
+
+
+  .detail-table.table th:first-child {
+    padding-left: 0;
+    width: 10rem;
+  }
+
+  .detail-table.table th {
+    border: 0;
+    padding: 4px 0;
+  }
+}

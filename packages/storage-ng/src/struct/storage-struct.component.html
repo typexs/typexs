@@ -1,0 +1,105 @@
+<div class="card">
+  <div class="card-header">
+    <h3>Entity structure {{entityRef ? entityRef.name : ''}}</h3>
+  </div>
+  <div class="card-body">
+
+    <div *ngIf="entityRef">
+      Options:
+      <pre class="language-js">{{ entityRef.getOptions() | json }}</pre>
+
+      <div *ngIf="propertyRefs.length > 0">
+        <h3>Properties</h3>
+        <table class="table hover">
+          <thead>
+          <tr>
+            <th>Source</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Cardinality</th>
+            <th>Options</th>
+            <th>Validator</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let propertyRef of propertyRefs">
+            <td>{{propertyRef.ref.getClassRef().name}}</td>
+            <td>
+              <span class="{{ 'level-' + propertyRef.level}}"></span>
+              {{ propertyRef.ref.name }}
+            </td>
+            <td>
+              <div *ngIf="propertyRef.ref.isReference()">
+                <a
+                  [routerLink]="[storageService.getNgUrlPrefix(),propertyRef.ref.getTargetRef().name,'structure']"
+                  routerLinkActive="true">
+                  {{type(propertyRef.ref)}}{{propertyRef.ref.isCollection() ? '[]' : ''}}
+                </a>
+              </div>
+              <div *ngIf="!propertyRef.ref.isReference()">
+                {{type(propertyRef.ref)}}{{propertyRef.ref.isCollection() ? '[]' : ''}}
+              </div>
+            </td>
+
+            <td>{{cardinality(propertyRef.ref)}}</td>
+            <td>
+              <details>
+                <summary>JSON</summary>
+                <pre class="language-json">{{options(propertyRef.ref) | json}}</pre>
+              </details>
+            </td>
+            <td>
+              <details>
+                <summary>JSON</summary>
+                <pre class="language-json">{{validator(propertyRef.ref) | json}}</pre>
+              </details>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="referrerProps.length > 0">
+        <h3>Referring properties</h3>
+        <table class="table hover">
+          <thead>
+          <tr>
+            <th>Name</th>
+            <th>Source</th>
+            <th>Type</th>
+
+            <th>Cardinality</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let propertyRef of referrerProps">
+            <td>
+              {{ propertyRef.name }}
+            </td>
+            <td>
+              <a [routerLink]="[storageService.getNgUrlPrefix(),propertyRef.getClassRef().name,'structure']"
+                 routerLinkActive="active">
+                {{propertyRef.getClassRef().getClass().name}}</a>
+            </td>
+            <td>
+              <div *ngIf="propertyRef.isReference()">
+                <a [routerLink]="[storageService.getNgUrlPrefix(),propertyRef.getTargetRef().name,'structure']"
+                   routerLinkActive="active">
+                  {{type(propertyRef)}}{{propertyRef.isCollection() ? '[]' : ''}}
+                </a>
+              </div>
+              <div *ngIf="!propertyRef.isReference()">
+                {{type(propertyRef)}}{{propertyRef.isCollection() ? '[]' : ''}}
+              </div>
+            </td>
+
+            <td>{{propertyRef.getOptions('cardinality', 1)}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+

@@ -4,7 +4,8 @@
     "lib": [
       "dom",
       "es5",
-      "es6"
+      "es6",
+      "es2016"
     ],
     "esModuleInterop": true,
     "outDir": "./build/compiled",
@@ -29,32 +30,6 @@
     ],
     "baseUrl": "./",
     "paths": {
-      "@typexs/base": [
-        "./packages/base/src/*",
-        "./packages/base/src",
-      ],
-      "@typexs/base/*": [
-        "./packages/base/src/*",
-        "./packages/base/src",
-      ],
-
-      "@typexs/base-ng/*": [
-        "./packages/base-ng/src/*",
-        "./packages/base-ng/src"
-      ],
-      "@typexs/ng-forms/*": [
-        "./packages/ng-forms/src/*",
-        "./packages/ng-forms/src"
-      ],
-      "@typexs/storage-ng/*": [
-        "./packages/storage-ng/src/*",
-        "./packages/storage-ng/src"
-      ],
-      "@typexs/ng-router-menu/*": [
-        "./packages/ng-router-menu/src/*",
-        "./packages/ng-router-menu/src"
-      ],
-
     }
   },
   "exclude": [

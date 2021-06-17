@@ -1,0 +1,62 @@
+<div class="simple-html-table-container">
+
+  <txs-pager *ngIf="options.enablePager"
+             [name]="options.pagerId"
+             [pager]="pager"
+             (pageChange)="updateRows($event)">
+  </txs-pager>
+
+
+  <div class="table-container">
+    <table class="table">
+      <thead>
+      <tr>
+        <th class="col-md-auto" *ngFor="let column of columns">
+          <div
+            [ngClass]="{'field-sortable' : column.sorting, 'field-filterable' : column.filter}"
+          >
+            {{ column.label }}
+            <div class="float-right">
+              <div class="sort-control" *ngIf="column.sorting" (click)="doSort(column)">
+                <i class="icon"
+                   [ngClass]="{'icon-sort-asc': isSorted(column,'asc'),'icon-sort-desc': isSorted(column,'desc'),'icon-sort': isSorted(column,'none')}"></i>
+              </div>
+              <div class="filter-control" *ngIf="column.filter" (click)="openFilter(column)">
+                <i class="icon icon-filter"></i>
+              </div>
+            </div>
+          </div>
+          <div class="filter-popup" *ngIf="column.filter && filterOpened == column.field">
+            <form (ngSubmit)="closeFilter(column)">
+              <div class="form-group">
+                <label [for]="column.field">{{column.label}}</label>
+                <input [(ngModel)]="filterValue" type="text" class="form-control"
+                       [id]="column.field" [ngModelOptions]="{standalone:true}">
+              </div>
+              <div class="close" (click)="closeFilter(column)">
+                <i class="icon icon-close"></i>
+              </div>
+            </form>
+          </div>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let row of rows">
+        <td class="col-md-auto" *ngFor="let column of columns">
+          <txs-simple-html-cell [column]="column" [row]="row"></txs-simple-html-cell>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <txs-pager *ngIf="options.enablePager"
+             [name]="options.pagerId"
+             [pager]="pager"
+             frameSize="5"
+             (pageChange)="updateRows($event)">
+  </txs-pager>
+
+</div>

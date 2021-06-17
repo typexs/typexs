@@ -1,0 +1,44 @@
+<bat-card title="Menu Demo">
+  <h4>Show full menu</h4>
+
+  <div>
+    <pre class="language-html">
+      &lt;menu options="&#123; base: 'menu' }">&lt;/menu>
+    </pre>
+    <p>Show menu starting from path 'menu'.</p>
+
+    <div class="btn-group-sm" *ngIf="has()">
+      <button class="btn btn-primary" (click)="mas.switch('menu-item-2')">
+        Link 2
+        [{{ mas && mas.entry['menu-item-2.disabled'] && mas.entry['menu-item-2.disabled'].getValue() ? 'disabled' : 'no disabled'  }}
+        ]
+      </button>
+      <button class="btn btn-primary" (click)="mas.switch('menu-item-2','show')">
+        Link 2
+        [{{ mas && mas.entry['menu-item-2.show'] && mas.entry['menu-item-2.show'].getValue() ? 'show' : 'no show' }}]
+      </button>
+    </div>
+    <menu [options]="{ base: 'menu' }"></menu>
+  </div>
+
+  <hr/>
+
+  <h4>Show menu with groups</h4>
+
+  <div class="demo-menu-grouped">
+    <div class="btn-group-sm" *ngIf="hasGrouped()">
+      <button class="btn btn-primary" (click)="mas.switch('menu_grouped', 'disabled')">
+        Group
+        [{{ mas && mas.entry['menu_grouped.disabled'] && mas.entry['menu_grouped.disabled'].getValue() ? 'disabled' : 'no disabled'  }}
+        ]
+      </button>
+      <button class="btn btn-primary" (click)="mas.switch('menu_grouped', 'show')">
+        Group
+        [{{ mas && mas.entry['menu_grouped.show'] && mas.entry['menu_grouped.show'].getValue() ? 'show' : 'no show'  }}
+        ]
+      </button>
+    </div>
+    <menu [options]="{ base: 'menu-grouped' }"></menu>
+  </div>
+
+</bat-card>

@@ -1,0 +1,48 @@
+<bat-card title="Pager">
+  <h4>Simple pager for 10 items</h4>
+
+  <txs-pager
+    totalPages="10"
+    (pageChange)="onPageChange($event)">
+  </txs-pager>
+
+    <h4>Simple pager for 10 items with 2 instances</h4>
+
+  <txs-pager
+    name="pager2"
+    totalPages="20"
+    (pageChange)="onPageChange($event)">
+  </txs-pager>
+
+  <txs-pager
+    name="pager2"
+    totalPages="20"
+    (pageChange)="onPageChange($event)">
+  </txs-pager>
+
+  <h4>Simple pager for 10 items with current page</h4>
+
+  <pre *ngIf="pager3">
+    currentPage = {{pager3.currentPage}}
+    frameSize = {{pager3.pages}}
+  </pre>
+
+  <txs-pager
+    name="pager3"
+    [currentPage]="currentPage_3"
+    totalPages="10"
+    (pageChange)="onPageChange($event)">
+  </txs-pager>
+
+  <h4>Simple pager for 100 items with current page</h4>
+
+  <txs-pager
+    name="pager4"
+    [currentPage]="currentPage_3"
+    frameSize="5"
+    totalPages="100"
+    (pageChange)="onPageChange($event)">
+  </txs-pager>
+
+
+</bat-card>

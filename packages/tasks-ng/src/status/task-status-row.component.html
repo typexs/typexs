@@ -1,0 +1,14 @@
+<div class="row rounded border  bg-{{state()}} border-{{state()}}" *ngIf="taskLog">
+  <div class="col-md mt-2">{{taskLog.tasksId}}</div>
+  <div class="col-md mt-2">{{taskLog.respId}}</div>
+  <div class="col-md mt-2">{{taskLog.taskName}}</div>
+  <div class="col-md mt-2">{{taskLog.state}}</div>
+  <div class="col-md mt-2">{{taskLog.duration / 1000}}s</div>
+  <div class="col-md mt-2">{{taskLog.started | date:"HH:mm:ss.SSS"}}</div>
+  <div class="col-md mt-2">{{taskLog.stopped | date:"HH:mm:ss.SSS"}}</div>
+  <div class="col-md mt-2">{{taskLog.started | date:"dd.MM.yyyy"}}</div>
+
+  <div class="col-md-auto mt-1"><a class="btn btn-sm btn-info"
+                                   [routerLink]="[baseUrl(),'status',taskLog.respId, taskLog.tasksId]">
+    Status</a></div>
+</div>

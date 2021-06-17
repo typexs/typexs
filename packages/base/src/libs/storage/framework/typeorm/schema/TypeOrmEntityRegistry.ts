@@ -61,27 +61,27 @@ import {K_IDENTIFIER, K_NULLABLE} from '../../../Constants';
 
 
 export type TYPEORM_METADATA_KEYS = 'tables' |
-  'trees' |
-  'entityRepositories' |
-  'transactionEntityManagers' |
-  'transactionRepositories' |
-  'namingStrategies' |
-  'entitySubscribers' |
-  'indices' |
-  'uniques' |
-  'checks' |
-  'exclusions' |
-  'columns' |
-  'generations' |
-  'relations' |
-  'joinColumns' |
-  'joinTables' |
-  'entityListeners' |
-  'relationCounts' |
-  'relationIds' |
-  'embeddeds' |
-  'inheritances' |
-  'discriminatorValues';
+'trees' |
+'entityRepositories' |
+'transactionEntityManagers' |
+'transactionRepositories' |
+'namingStrategies' |
+'entitySubscribers' |
+'indices' |
+'uniques' |
+'checks' |
+'exclusions' |
+'columns' |
+'generations' |
+'relations' |
+'joinColumns' |
+'joinTables' |
+'entityListeners' |
+'relationCounts' |
+'relationIds' |
+'embeddeds' |
+'inheritances' |
+'discriminatorValues';
 
 const typeormMetadataKeys: TYPEORM_METADATA_KEYS[] = [
   'tables',
@@ -306,11 +306,11 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         }
         break;
       case 'tables':
-        // const tableMetadataArgs = args[0] as TableMetadataArgs;
-        // foundEntity = this._find(tableMetadataArgs.target);
-        // if (!foundEntity) {
-        //   this.createEntity(tableMetadataArgs);
-        // }
+      // const tableMetadataArgs = args[0] as TableMetadataArgs;
+      // foundEntity = this._find(tableMetadataArgs.target);
+      // if (!foundEntity) {
+      //   this.createEntity(tableMetadataArgs);
+      // }
         break;
     }
   }
@@ -545,7 +545,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
                   name: [options.propertyName, refIdName].map(x => snakeCase(x)).join('_')
                 });
               } else if ((<RelationMetadataArgs>typeOrmOptions).relationType === 'many-to-many') {
-                // const revPropName = camelCase([(options.target as any).name, options.propertyName].join('_'));
+              // const revPropName = camelCase([(options.target as any).name, options.propertyName].join('_'));
                 const ids = this.metadatastore.columns.filter(x => x.target === options.target && x.options.primary);
                 let idName = null;
                 if (ids.length === 1) {
@@ -588,8 +588,8 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
 
   createPropertyByArgs(type: 'column' | 'relation' | 'embedded',
-                       args: ColumnMetadataArgs | RelationMetadataArgs | EmbeddedMetadataArgs,
-                       recursive: boolean = false) {
+    args: ColumnMetadataArgs | RelationMetadataArgs | EmbeddedMetadataArgs,
+    recursive: boolean = false) {
     const propertyOptions: ITypeOrmPropertyOptions = {
       metadata: args,
       target: args.target as any,
@@ -620,8 +620,8 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
     const entity = this.create<TypeOrmEntityRef>(METATYPE_ENTITY, entityOptions);
     const properties: TypeOrmPropertyRef[] = <TypeOrmPropertyRef[]>concat(
       map(this.metadatastore.columns
-          .filter(c => c.target === fn.target),
-        c => this.createPropertyByArgs('column', c)),
+        .filter(c => c.target === fn.target),
+      c => this.createPropertyByArgs('column', c)),
       map(this.metadatastore.filterRelations(fn.target),
         c => this.createPropertyByArgs('relation', c))
     );
@@ -655,9 +655,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
 
   getEntityRefByName(name: string): TypeOrmEntityRef {
-    return this.find(METATYPE_ENTITY, (e: TypeOrmEntityRef) => {
-      return e.machineName === snakeCase(name);
-    });
+    return this.find(METATYPE_ENTITY, (e: TypeOrmEntityRef) => e.machineName === snakeCase(name));
   }
 
 
@@ -696,9 +694,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
       return this.filter(METATYPE_PROPERTY,
         (x: TypeOrmPropertyRef) => x.getSourceRef().id() === entity.getClassRef().id());
     } else {
-      return this.filter(METATYPE_PROPERTY, (x: TypeOrmPropertyRef) => {
-        return x.getSourceRef().id() === entity.id();
-      });
+      return this.filter(METATYPE_PROPERTY, (x: TypeOrmPropertyRef) => x.getSourceRef().id() === entity.id());
     }
   }
 
@@ -709,31 +705,31 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
   fromJsonSchema(json: any, options?: IJsonSchemaUnserializeOptions) {
     return JsonSchema.unserialize(json, defaults(options || {}, {
-        namespace: this.namespace,
-        collector: [
-          {
-            type: METATYPE_PROPERTY,
-            key: 'type',
-            fn: (key: string, data: any, options: IParseOptions) => {
-              const type = ['string', 'number', 'boolean', 'date', 'float', 'array', 'object'];
-              const value = data[key];
-              if (value && type.includes(value)) {
-                const cls = TypeOrmUtils.getJsObjectType(value);
-                if (cls === String) {
-                  if (data['format'] === 'date' || data['format'] === 'date-time') {
-                    return Date;
-                  }
+      namespace: this.namespace,
+      collector: [
+        {
+          type: METATYPE_PROPERTY,
+          key: 'type',
+          fn: (key: string, data: any, options: IParseOptions) => {
+            const type = ['string', 'number', 'boolean', 'date', 'float', 'array', 'object'];
+            const value = data[key];
+            if (value && type.includes(value)) {
+              const cls = TypeOrmUtils.getJsObjectType(value);
+              if (cls === String) {
+                if (data['format'] === 'date' || data['format'] === 'date-time') {
+                  return Date;
                 }
-                return cls;
-              } else if (data['$ref']) {
-                const className = data['$ref'].split('/').pop();
-                return ClassRef.get(className, this.namespace).getClass(true);
               }
-              return ClassRef.get(data[key], this.namespace).getClass(true);
+              return cls;
+            } else if (data['$ref']) {
+              const className = data['$ref'].split('/').pop();
+              return ClassRef.get(className, this.namespace).getClass(true);
             }
+            return ClassRef.get(data[key], this.namespace).getClass(true);
           }
-        ]
-      })
+        }
+      ]
+    })
     );
   }
 

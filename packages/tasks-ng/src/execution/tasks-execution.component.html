@@ -1,0 +1,74 @@
+<div class="card" *ngIf="taskRef">
+  <div class="card-header">
+    <h3>Task {{taskRef.name}} execution</h3>
+  </div>
+  <div class="card-body">
+    <div class="form-group">
+      <label for="nodeid">Ziel-System(e)</label>
+      <select id="nodeid"
+              class="form-control"
+              [(ngModel)]="nodeIds"
+              name="nodeids"
+              multiple="true"
+      >
+        <option *ngFor="let obj of taskRef.nodeInfos" [value]="obj.nodeId">{{obj.nodeId}}</option>
+      </select>
+    </div>
+
+    <div class="parameters" *ngIf="properties.length > 0">
+      <h5>Parameters</h5>
+
+      <div *ngFor="let prop of properties">
+        <div class="form-group" *ngIf="!hasValueProvider(prop)">
+          <label [for]="prop.id()">{{prop.name}}</label>
+          <input id="{{prop.id()}}"
+                 type="text"
+                 class="form-control"
+                 placeholder="Placeholder ..."
+                 [required]="isRequired(prop)"
+                 [(ngModel)]="parameters[prop.machineName]"
+                 name="{{ prop.name }}"
+          >
+        </div>
+        <div class="form-group" *ngIf="hasValueProvider(prop)">
+          <label [for]="prop.id()">{{prop.name}}</label>
+          <select id="{{ prop.id() }}"
+                  class="form-control"
+                  [required]="isRequired(prop)"
+                  [(ngModel)]="parameters[prop.machineName]"
+                  name="{{ prop.name }}"
+                  [multiple]="prop.isCollection()"
+          >
+            <option *ngFor="let obj of _cachedValues[prop.name]" [value]="obj">{{obj}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+
+    <div>
+      <h5>Exec</h5>
+      NoteIds:{{nodeIds | json}}
+      Parameters:{{parameters | json}}
+    </div>
+
+
+    <button class="btn btn-info"
+            (click)="execute()"
+            [attr.disabled]="!done ? null : true">
+      <div>Execute <i class="icon icon-spinner fa-spin" *ngIf="waiting"></i></div>
+    </button>
+
+    <button class="btn btn-info" (click)="reset()" [attr.disabled]="done ? null : true">
+      Reset
+    </button>
+
+    <div *ngIf="events">
+      <div *ngFor="let event of events">
+        <div *ngFor="let targetId of event.targetIds">
+          <txs-task-status-row [runnerId]="event.id" [nodeId]="targetId"></txs-task-status-row>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

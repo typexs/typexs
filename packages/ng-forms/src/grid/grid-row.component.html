@@ -1,0 +1,6 @@
+<div class="col-1" *ngIf="getGrid().showNr()">{{idx}}</div>
+<ng-container #content></ng-container>
+<div class="col-1" *ngIf="!getGrid().isFixed()">
+  <button class="btn btn-info" (click)="removeRow()">X</button>
+</div>
+

@@ -1,0 +1,25 @@
+<div *ngIf="!isEmpty()">
+  <div *ngIf="getProperty().isCollection()">
+    <ul>
+      <li *ngFor="let entry of getValue()">
+        <a [routerLink]="[
+          getUrlPrefix(),
+          getProperty().getTargetRef().name,
+          'view',
+          buildLookupConditions( entry) ]">
+          {{  labelHandler(entry) }}
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="!getProperty().isCollection()">
+    <a
+      [routerLink]="[
+        getUrlPrefix(),
+        getProperty().getTargetRef().name, 'view',
+        buildLookupConditions(getValue())
+        ]">
+      {{ labelHandler(getValue()) }}
+    </a>
+  </div>
+</div>

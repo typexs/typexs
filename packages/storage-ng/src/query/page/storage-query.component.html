@@ -1,0 +1,32 @@
+<div class="card">
+  <div class="card-header">
+    <h3>Storage entity list</h3>
+  </div>
+  <div class="card-body">
+
+    <div>
+      <div class="grid-choice">
+        <div class="grid-selection d-sm-inline-block" *ngFor="let viewType of viewTypes">
+          <a class="btn btn-light btn-sm" (click)="switchLayout(viewType)">
+            <i class="fa fa-list"></i>{{viewType.extra.label}}
+          </a>
+        </div>
+      </div>
+
+      <div class="options">
+        <div><label>Options</label></div>
+        <div class="form-check">
+          <input id="option-raw" type="checkbox" class="form-check-input" name="raw" (change)="switchQueryOption('raw')">
+          <label for="option-raw" class="form-check-label">raw</label>
+        </div>
+      </div>
+    </div>
+
+    <txs-storage-query-embedded
+      [name]="name"
+      [options]="options"
+      [componentClass]="gridComponentClass">
+    </txs-storage-query-embedded>
+
+  </div>
+</div>

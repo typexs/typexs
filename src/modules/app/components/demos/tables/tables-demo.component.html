@@ -1,0 +1,33 @@
+<bat-card title="Tables">
+
+  <h5>Simple HTML Table</h5>
+
+  <txs-simple-html-table
+    [columns]="staticdata_1.columns"
+    [rows]="staticdata_1.rows"
+  ></txs-simple-html-table>
+
+  <h5>Simple HTML Table (over wrapper)</h5>
+
+  <txs-datatable
+    [component]="simpleTableComp"
+    [columns]="staticdata_1.columns"
+    [rows]="staticdata_1.rows"
+  ></txs-datatable>
+
+  <h5>Ag Grid</h5>
+
+  <txs-ag-grid class="mt-2 mb-2"
+    [columns]="staticdata_1.columns"
+    [rows]="staticdata_1.rows"
+  ></txs-ag-grid>
+
+  <h5>Ag Grid (over wrapper)</h5>
+
+  <txs-datatable class="mt-2 mb-2"
+    [component]="agGridComp"
+    [columns]="staticdata_1.columns"
+    [rows]="staticdata_1.rows"
+  ></txs-datatable>
+
+</bat-card>

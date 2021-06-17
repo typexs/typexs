@@ -1,0 +1,22 @@
+<div class="json-wrapper language-js" *ngIf="isLoaded()">
+
+  <div class="json-header">
+    <div>
+      <label><a [routerLink]="url()">{{label()}}</a> </label>
+    </div>
+    <div class="badge badge-primary">{{type()}}</div>
+  </div>
+
+
+  <div *ngIf="getOption('elem.reload', false)">
+    <div class="reload d-inline-block" (click)="reload()">
+      <div>
+        <i class="icon icon-refresh" *ngIf="!loading"></i>
+        <i class="icon icon-spinner fa-spin" *ngIf="loading"></i>
+      </div>
+    </div>
+
+  </div>
+
+  <pre class="language-js">{{ instance | json }}</pre>
+</div>

@@ -2,10 +2,10 @@
   "name": "@typexs/roles",
   "version": "0.0.0-PLACEHOLDER",
   "description": "",
-  "main": "index.js",
-  "browser": "browser.js",
+  "main": "./index.ts",
+  "browser": "./browser.ts",
   "scripts": {
-    "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",    
+    "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
     "posttest": "nyc report --reporter=json"
   },
   "repository": {

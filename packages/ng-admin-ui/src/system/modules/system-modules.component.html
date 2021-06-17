@@ -1,0 +1,38 @@
+<div class="card">
+  <div class="card-header">
+    <h3>Modules</h3>
+  </div>
+  <div class="card-body">
+
+      <table class="table hover">
+        <thead>
+        <tr>
+          <th></th>
+          <th>Modulname</th>
+          <th>Version</th>
+          <th>Dependencies</th>
+          <th>Internal</th>
+          <th>Weight</th>
+          <!--        <th>JSON</th>-->
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr *ngFor="let systemModule of modules">
+          <td>{{systemModule.enabled}}</td>
+          <td>{{systemModule.name}}</td>
+          <td>{{systemModule.version}}</td>
+          <td>
+          <span *ngFor="let name of objectKeys(systemModule.dependencies)">
+            {{name}}: {{systemModule.dependencies[name]}}
+          </span>
+          </td>
+          <td>{{systemModule.internal}}</td>
+          <td>{{systemModule.weight}}</td>
+          <!--<td>{{systemModule | json}}</td>-->
+        </tr>
+
+        </tbody>
+      </table>
+  </div>
+</div>

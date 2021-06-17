@@ -2,8 +2,8 @@
   "name": "@typexs/server",
   "version": "0.0.0-PLACEHOLDER",
   "description": "Servers for typexs",
-  "main": "index.js",
-  "browser": "browser.js",
+  "main": "./index.ts",
+  "browser": "./browser.ts",
   "directories": {
     "doc": "docs/de"
   },

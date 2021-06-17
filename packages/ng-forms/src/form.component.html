@@ -1,0 +1,14 @@
+<div class="form-container">
+  <form (ngSubmit)="onSubmit($event)" [name]="name">
+    <div class="form-alerts" *ngIf="channel">
+      <txs-alert [channel]="channel"></txs-alert>
+    </div>
+    <ng-container #content></ng-container>
+
+    <div class="btn-form-ops">
+      <button *ngFor="let button of options.buttons"
+              type="{{button.type == 'restore' ? 'button' : button.type }}" class="btn btn-primary" (click)="onButton(button.key,$event)" >{{button.label}}</button>
+    </div>
+
+  </form>
+</div>

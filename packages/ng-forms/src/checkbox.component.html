@@ -1,0 +1,18 @@
+<div class="form-check" [ngSwitch]="labelDisplay">
+  <input id="{{id}}"
+         type="{{type}}"
+         class="form-check-input {{data.checked(name) ? data.valid(name) ? 'is-valid' : 'is-invalid' : '' }}"
+         placeholder="{{name}}"
+         [checked]="isChecked"
+         [(ngModel)]="isChecked"
+         [name]="name"
+         [attr.readonly]="isReadOnly"
+         [value]="defaultValue">
+  <label *ngSwitchCase="'top'"  for="{{id}}" class="form-check-label">{{label}}</label>
+  <small *ngIf="help" id="{{name}}Help" class="form-text text-muted">{{help}}</small>
+  <div [hidden]="!(data.checked(name) && !data.valid(name))" class="invalid-feedback">
+    <ul>
+      <li *ngFor="let message of data.messages(name)" class="message-type {{ message.type }}">{{ message.content }}</li>
+    </ul>
+  </div>
+</div>

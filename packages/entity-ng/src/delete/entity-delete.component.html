@@ -1,0 +1,28 @@
+<div class="card">
+  <div class="card-header">
+    <h3>Delete entity "{{name}}"</h3>
+
+  </div>
+  <div class="card-body">
+    <div *ngIf="!ready">
+      Waiting ...
+    </div>
+
+    <div class="text-success" *ngIf="deleted">
+      The record was deleted.
+    </div>
+
+    <pre>
+      {{ instance | json }}
+    </pre>
+
+    <div *ngIf="!deleted">
+      <a class="btn btn-danger" (click)="doDelete()">Delete</a>
+      <a class="btn btn-warning" (click)="doAbort()">Abort</a>
+    </div>
+
+    <div *ngIf="deleted">
+      <a class="btn btn-primary" [routerLink]="[entityService.getNgUrlPrefix(),name,'query']">Query</a>
+    </div>
+  </div>
+</div>

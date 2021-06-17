@@ -1,0 +1,61 @@
+@import "../../scss/themes/admin/variables";
+
+$red: $danger-color;
+$yellow: $warning-color;
+$blue: $info-color;
+$green: $success-color;
+
+@keyframes slidein {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideout {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@mixin keyframes($animationName) {
+  animation: .3s ease-out 0s 1 forwards $animationName;
+}
+
+:host {
+  position: fixed;
+  top: 60px;
+  right: 0;
+  z-index: 500;
+}
+
+.message-container {
+  transform-origin: top right;
+
+  @include keyframes(slidein);
+  &.closing {
+    @include keyframes(slideout);
+  }
+  font-size: .8em;
+  position: relative;
+  padding: 1rem;
+  margin: .75rem 0;
+  width: 27rem;
+}
+
+.close {
+}
+
+.heading {
+  display: block;
+  font-weight: bold;
+}
+
+.alert-error{
+
+}

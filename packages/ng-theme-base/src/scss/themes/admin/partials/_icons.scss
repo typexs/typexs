@@ -1,0 +1,234 @@
+
+.fas {
+  font-family: $font-family-fa-icon;
+  font-weight: 900;
+}
+
+
+menu-link {
+  .icon {
+    &:before {
+      margin-right: .3rem;
+    }
+  }
+}
+
+.icon {
+  @extend %fa-icon;
+  @extend .fas;
+  vertical-align: 0;
+
+
+  &.icon-admin {
+    &:before {
+      content: fa-content($fa-var-chalkboard);
+    }
+  }
+
+  &.icon-admin-settings {
+    &:before {
+      content: fa-content($fa-var-wrench);
+    }
+  }
+
+  &.icon-admin-system-nodes {
+    &:before {
+      content: fa-content($fa-var-network-wired);
+    }
+  }
+
+  &.icon-admin-system-modules {
+    &:before {
+      content: fa-content($fa-var-cubes);
+    }
+  }
+
+  &.icon-admin-system-routes {
+
+    &:before {
+      content: fa-content($fa-var-route);
+    }
+  }
+
+  &.icon-admin-system-storages {
+    &:before {
+      content: fa-content($fa-var-database);
+    }
+  }
+
+  &.icon-admin-system-config {
+    &:before {
+      content: fa-content($fa-var-cog);
+    }
+  }
+
+  &.icon-admin-ng {
+    font-family: 'Font Awesome 5 Brands';
+
+    &:before {
+      content: fa-content($fa-var-angular);
+    }
+  }
+
+  &.icon-admin-ng-routes {
+    &:before {
+      content: fa-content($fa-var-route);
+    }
+  }
+
+  &.icon-admin-tasks-list {
+    &:before {
+      content: fa-content($fa-var-tasks);
+    }
+  }
+
+  &.icon-admin-tasks-logs {
+    &:before {
+      content: fa-content($fa-var-list);
+    }
+  }
+
+  &.icon-admin-entity {
+    &:before {
+      content: fa-content($fa-var-project-diagram);
+    }
+  }
+
+
+  &.icon-admin-entity-types {
+    &:before {
+      content: fa-content($fa-var-list);
+    }
+  }
+
+
+  &.icon-admin-storage-types {
+    &:before {
+      content: fa-content($fa-var-list);
+    }
+  }
+
+  &.icon-admin-storage-backends {
+    &:before {
+      content: fa-content($fa-var-database);
+    }
+  }
+
+  // Default
+
+  &.icon-bell {
+    &:before {
+      content: fa-content($fa-var-bell);
+    }
+  }
+
+
+  &.icon-trending-up {
+    &:before {
+      content: fa-content($fa-var-thumbs-up);
+    }
+  }
+
+
+  &.icon-more-horizontal {
+    &:before {
+      content: fa-content($fa-var-grip-horizontal);
+    }
+  }
+
+  &.icon-maximize {
+    &:before {
+      content: fa-content($fa-var-window-maximize);
+    }
+  }
+
+  &.icon-settings {
+    &:before {
+      content: fa-content($fa-var-cog);
+    }
+  }
+
+  &.icon-user {
+    &:before {
+      content: fa-content($fa-var-user);
+    }
+  }
+
+
+  &.icon-logout {
+    &:before {
+      content: fa-content($fa-var-sign-out-alt);
+    }
+  }
+
+  &.icon-mail {
+    &:before {
+      content: fa-content($fa-var-mail-bulk);
+    }
+  }
+
+  &.icon-lock {
+    &:before {
+      content: fa-content($fa-var-lock);
+    }
+  }
+
+  &.icon-page-home {
+    &:before {
+      content: fa-content($fa-var-home);
+    }
+  }
+
+  &.icon-admin-user {
+    &:before {
+      content: fa-content($fa-var-cog);
+    }
+  }
+
+  &.icon-logo {
+    &:before {
+      margin-right: 0;
+      content: fa-content($fa-var-th);
+    }
+  }
+
+  &.icon-data-view {
+    &:before {
+      content: fa-content($fa-var-file);
+    }
+  }
+
+  &.icon-data-edit {
+    &:before {
+      content: fa-content($fa-var-edit);
+    }
+  }
+
+  &.icon-data-delete {
+    &:before {
+      content: fa-content($fa-var-trash);
+    }
+  }
+
+
+  &.icon-refresh {
+    &:before {
+      content: fa-content($fa-var-redo);
+    }
+  }
+
+
+
+  &.icon-spinner {
+    &:before {
+      content: fa-content($fa-var-spinner);
+    }
+  }
+
+  &.icon-spinner {
+    @extend .fa-spin !optional;
+  }
+
+
+
+}

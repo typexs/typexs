@@ -1,0 +1,27 @@
+<li class="nav-item txs-menu-caption" *ngIf="isCaptionShown() | async">
+  <label>
+    <span class="txs-micon"><i class="icon" [ngClass]="icon()"></i></span>
+    <span class="txs-mtext" [class.disabled]="(isDisabled$ | async)">{{entry.label}}</span>
+  </label>
+</li>
+
+<li class="nav-item"
+    *ngIf="(isShown$ | async)"
+    routerLinkActive="active">
+
+  <a *ngIf="!isCaption()"
+     [routerLink]="'/'+entry.path"
+     class="nav-link"
+     routerLinkActive="active"
+     [class.disabled]="(isDisabled$ | async)">
+    <span class="txs-micon"><i class="icon" [ngClass]="icon()"></i></span>
+    <span class="txs-mtext">{{entry.label}}</span>
+  </a>
+
+  <ul class="txs-submenu" *ngIf="hasChildren() && !(isDisabled$ | async)">
+    <ng-container *ngFor="let subEntry of entry.children">
+      <menu-link [entry]="subEntry"></menu-link>
+    </ng-container>
+  </ul>
+
+</li>

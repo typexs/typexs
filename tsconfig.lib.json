@@ -1,0 +1,54 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@typexs/base": [
+        "./packages/base/src/browser"
+      ],
+      "@typexs/base/*": [
+        "./packages/base/src/*"
+      ],
+      "@typexs/server": [
+        "./packages/server/src/browser",
+      ],
+      "@typexs/server/*": [
+        "./packages/server/src/*"
+      ],
+      "@typexs/schema": [
+        "./packages/schema/src/browser",
+      ],
+      "@typexs/schema/*": [
+        "./packages/schema/src/*",
+      ],
+      "@typexs/ng": [
+        "./packages/ng/src/browser",
+      ],
+      "@typexs/ng/*": [
+        "./packages/ng/src/*",
+      ],
+      "@typexs/roles": [
+        "./packages/roles/src/browser",
+      ],
+      "@typexs/roles/*": [
+        "./packages/roles/src/*",
+      ],
+      "@typexs/base-ng/*": [
+        "./packages/base-ng/src/*"
+      ],
+      "@typexs/base-ng": [
+        "./packages/base-ng/src/public_api"
+      ],
+      "@typexs/ng-forms/*": [
+        "./packages/ng-forms/src/*"
+      ],
+      "@typexs/storage-ng/*": [
+        "./packages/storage-ng/src/*"
+      ],
+      "@typexs/ng-router-menu/*": [
+        "./packages/ng-router-menu/src/*"
+      ],
+
+    }
+  }
+
+}

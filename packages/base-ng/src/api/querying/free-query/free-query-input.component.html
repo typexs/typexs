@@ -1,0 +1,66 @@
+<div class="free-query-input modal-open">
+  <div class="text-right" *ngIf="enableHistory">
+    <button class="btn btn-light" (click)="toggleHistory()">
+      <div><i class="icon fa-history"></i></div>
+    </button>
+    <!--    [class.show]="historyToggle" *ngIf="historyToggle"-->
+    <div class="modal-backdrop fade" [class.show]="historyToggle" *ngIf="historyToggle"
+    >
+    </div>
+    <div class="modal  fade" [class.show]="historyToggle" *ngIf="historyToggle" (click)="toggleHistory()">
+      <div class="modal-dialog modal-lg" (click)="stop($event)">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">History</h5>
+            <button type="button" class="close"
+                    (click)="toggleHistory()"
+                    data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body container">
+            <div class="row" *ngFor="let entry of history.reverse()" (click)="selectEntry(entry)">
+              <div class="col-md-2">{{entry.mode}}</div>
+              <div class="col-md-10">
+                <pre>{{entry.text}}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="textarea-entity-query" class="txs-title">Query:</label>
+    <textarea id="textarea-entity-query" class="query-input"
+              rows="{{this.lines}}" cols="128"
+              placeholder="{{ mode === 'query' ? ' placeholder for mango query string ... ' : ' placeholder for mango aggregation string ... '}}"
+              [(ngModel)]="freeTextQuery"
+              (ngModelChange)="onQueryInput($event)"></textarea>
+    <div class="query-view-toggle"
+         (click)="enabled = !enabled">
+      <i class="icon"
+         [ngClass]="{'icon-eye':enabled, 'icon-eye-slash':!enabled}"></i>
+    </div>
+  </div>
+  <div *ngIf="freeTextQueryError.length > 0">
+    <ul class="list-group">
+      <li *ngFor="let error of freeTextQueryError" class="list-group-item list-group-item-warning">{{error}}</li>
+    </ul>
+  </div>
+
+  <div *ngIf="jsonQuery && enabled" class="alert alert-success">
+    <div class="row">
+      <div class="col-md-6">
+        <p class="txs-title">Mango-JSON</p>
+        <pre class="language-js">{{ getQuery() | json }}</pre>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="btn-group" *ngIf="jsonQuery && freeTextQueryError.length === 0">
+    <button class="btn btn-info" (click)="doQuery()">Execute query</button>
+    <button class="btn btn-warning" (click)="doResetQuery()">Reset query</button>
+  </div>
+</div>

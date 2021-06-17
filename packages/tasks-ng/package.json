@@ -1,0 +1,40 @@
+{
+  "$schema": "../../node_modules/ng-packagr/package.schema.json",
+  "name": "@typexs/tasks-ng",
+  "version": "0.0.0-PLACEHOLDER",
+  "description": "Angular for typexs",
+  "main": "./public_api.ts",
+  "directories": {
+    "doc": "docs/de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/typexs/ng.git"
+  },
+  "author": "Robert Kania",
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "framework",
+    "commons",
+    "typescript",
+    "typexs"
+  ],
+  "bugs": {
+    "url": "https://gitlab.com/typexs/ng/issues"
+  },
+  "homepage": "https://gitlab.com/typexs/ng#readme",
+  "peerDependencies": {
+    "@typexs/base": "0.0.0-PLACEHOLDER",
+    "@typexs/base-ng": "0.0.0-PLACEHOLDER",
+    "@typexs/ng-forms": "0.0.0-PLACEHOLDER",
+    "@typexs/storage-ng": "0.0.0-PLACEHOLDER"
+  },
+  "devDependencies": {
+    "@angular/core": "12.0.3",
+    "@angular/forms": "12.0.3",
+    "@angular/common": "12.0.3",
+    "@angular/router": "12.0.3",
+    "rxjs": "6.6.7"
+  }
+}

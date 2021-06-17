@@ -1,0 +1,46 @@
+<div class="card">
+  <div class="card-header">
+    <h3>Entity Types</h3>
+  </div>
+  <div class="card-body">
+
+    <table class="table hover">
+      <thead>
+      <tr>
+        <th>Namespace</th>
+        <th>Schema</th>
+        <th>Name</th>
+        <th>Klassname</th>
+        <th>Options</th>
+        <th>Ops</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      <tr *ngFor="let entityRef of getEntityRefs()">
+        <td>{{entityRef.getNamespace()}}</td>
+        <td>{{entityRef.getOptions('schema').join(', ')}}</td>
+        <td>{{entityRef.name}}</td>
+        <td>{{entityRef.getClass().name}}</td>
+        <td>
+          <details>
+            <summary>JSON</summary>
+            <pre class="language-json">{{entityRef.getOptions() | json}}</pre>
+          </details>
+        </td>
+        <td>
+          <a class="btn btn-primary" *ngIf="storageService.isSupported('query')"
+             [routerLink]="[storageService.getNgUrlPrefix(),entityRef.name,'query']">Query</a>
+          <a class="btn btn-secondary" *ngIf="storageService.isSupported('aggregate')"
+             [routerLink]="[storageService.getNgUrlPrefix(),entityRef.name,'aggregate']">Aggregate</a>
+          <a class="btn btn-success" *ngIf="storageService.isSupported('save')"
+             [routerLink]="[storageService.getNgUrlPrefix(),entityRef.name,'create']">New</a>
+          <a class="btn btn-warning" *ngIf="storageService.isSupported('metadata')"
+             [routerLink]="[storageService.getNgUrlPrefix(),entityRef.name,'structure']">Schema</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>

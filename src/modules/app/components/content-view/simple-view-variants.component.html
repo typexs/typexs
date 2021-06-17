@@ -1,0 +1,49 @@
+<div class="card">
+  <div class="card-header">
+    <h3>Simple views</h3>
+  </div>
+
+
+  <div class="card-body">
+
+    <h4>Simple view for class Person</h4>
+
+
+    <txs-view [instance]="person1"></txs-view>
+
+    <hr/>
+
+    <h4>Simple view for unknown class (empty)</h4>
+
+
+    <txs-view [instance]="unknown1"></txs-view>
+
+    <hr/>
+
+    <h4>Simple view for unknown class with json fallback</h4>
+
+    <txs-view [instance]="unknown1">
+      <div txsViewFallback>
+        <pre class="language-js">{{ unknown1 | json }}</pre>
+      </div>
+    </txs-view>
+
+    <hr/>
+
+    <h4>Simple view for class Book with mode switch</h4>
+
+    <div>
+      <select [(ngModel)]="book1Context">
+        <option value="default">Default</option>
+        <option value="teaser">Teaser</option>
+        <option value="full">Full</option>
+      </select>
+    </div>
+    <txs-view [instance]="book1" [mode]="book1Context"></txs-view>
+
+    <hr/>
+
+  </div>
+
+
+</div>

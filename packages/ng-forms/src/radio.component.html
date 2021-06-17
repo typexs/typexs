@@ -1,0 +1,34 @@
+<fieldset class="form-group">
+  <legend>{{label}}</legend>
+
+  <div class="form-check">
+    <input id="{{id}}_1"
+           type="{{type}}"
+           class="form-check-input {{data.checked(name) ? data.valid(name) ? 'is-valid' : 'is-invalid' : '' }}"
+           placeholder="{{name}}"
+           [checked]="isChecked"
+           name="{{ name }}"
+           value="true"
+           [attr.readonly]="isReadOnly">
+    <label for="{{id}}_1" class="form-check-label">{{on}}</label>
+  </div>
+  <div class="form-check">
+    <input id="{{id}}_2"
+           type="{{type}}"
+           class="form-check-input {{data.checked(name) ? data.valid(name) ? 'is-valid' : 'is-invalid' : '' }}"
+           placeholder="{{name}}"
+           [checked]="!isChecked"
+           name="{{ name }}"
+           value="true"
+           [attr.readonly]="isReadOnly">
+    <label for="{{id}}_2" class="form-check-label">{{off}}</label>
+  </div>
+
+  <small *ngIf="help" id="{{name}}Help" class="form-text text-muted">{{help}}</small>
+  <div [hidden]="!(data.checked(name) && !data.valid(name))" class="invalid-feedback">
+    <ul>
+      <li *ngFor="let message of data.messages(name)" class="message-type {{ message.type }}">{{ message.content }}
+      </li>
+    </ul>
+  </div>
+</fieldset>

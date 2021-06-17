@@ -1,0 +1,90 @@
+<bat-card title="Nodes">
+
+  <div *ngIf="getInfoService().node$ && getInfoService().info$ | async">
+
+    <div class="col-sm-12">
+      <h5 class="mb-3">Info</h5>
+      <hr>
+
+      <div class="row" *ngIf="getInfoService().node$ && getInfoService().info$ | async ">
+        <div class="col-xl-4">
+          <h5 class="mb-2">Node</h5>
+          <div class="row">
+            <div class="col-xl-12">
+              <div class="align-items-center float-left">NodeId</div>
+              <div class="align-items-center float-right">{{getInfoService().getNodeValue().nodeId}}</div>
+            </div>
+            <div class="col-xl-12">
+              <div class="align-items-center float-left">MachineId:</div>
+              <div class="align-items-center float-right">{{getInfoService().getNodeValue().machineId}}</div>
+            </div>
+            <div class="col-xl-12">
+              <div class="align-items-center float-left">Hostname:</div>
+              <div class="align-items-center float-right">{{getInfoService().getNodeValue().hostname}}</div>
+            </div>
+            <div class="col-xl-12">
+              <div class="align-items-center float-left">Arch:</div>
+              <div class="align-items-center float-right">{{getInfoService().getRuntimeInfoValue().arch}}</div>
+            </div>
+            <div class="col-xl-12">
+              <div class="align-items-center float-left">Release:</div>
+              <div class="align-items-center float-right">{{getInfoService().getRuntimeInfoValue().release}}</div>
+            </div>
+            <div class="col-xl-12">
+              <div class="align-items-center float-left">Load</div>
+              <div class="align-items-center float-right">
+                {{getInfoService().getRuntimeInfoValue().loadavg[0] | number}}
+                {{getInfoService().getRuntimeInfoValue().loadavg[1]  | number}}
+                {{getInfoService().getRuntimeInfoValue().loadavg[2]  | number}}
+              </div>
+            </div>
+            <div class="col-xl-12">
+              <div class="align-items-center float-left">Memory</div>
+              <div class="align-items-center float-right">
+                {{(getInfoService().getRuntimeInfoValue().memory.total - getInfoService().getRuntimeInfoValue().memory.free) / 1024 / 1024 | number}}GB
+              </div>
+            </div>
+            <div class="col-xl-12">
+              <div class="align-items-center float-left">Uptime</div>
+              <div class="align-items-center float-right">{{getInfoService().getRuntimeInfoValue().uptime}}s</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-4">
+          <h5 class="mb-2">CPU</h5>
+          <div class="row" *ngFor="let cpu of this.getInfoService().getRuntimeInfoValue().cpus">
+            <div class="col-xl-6">
+              <div>{{cpu.model}}</div>
+            </div>
+            <div class="col-xl-6">
+              <div class="align-items-center float-right">{{cpu.speed}}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-4">
+          <h5 class="mb-2">Network</h5>
+          <div class="row" *ngFor="let netkey of networks()">
+            <div class="col-xl-4">
+              <div>{{netkey}}</div>
+            </div>
+            <div class="col-xl-8">
+              <div *ngFor="let e of networkEntries(netkey)">{{e.family}}: {{e.address}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-sm-12">
+      <h5 class="mb-3 mt-3">Nodes</h5>
+      <hr>
+      <system-node-info [node]="getInfoService().getNodeValue()"></system-node-info>
+      <system-node-info [node]="node" *ngFor="let node of getInfoService().getNodesValue()"></system-node-info>
+    </div>
+
+
+  </div>
+</bat-card>

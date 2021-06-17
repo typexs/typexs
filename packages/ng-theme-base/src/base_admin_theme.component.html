@@ -1,0 +1,190 @@
+<bat-notify
+  [options]="notifyOptions"
+></bat-notify>
+<div bat-wrapper>
+
+  <!-- [ Pre-loader ] start -->
+
+  <div class="txs-loader-bg" *ngIf="requestCount > 0">
+    <div class="txs-loader-track">
+      <div class="txs-loader-fill"></div>
+    </div>
+  </div>
+
+  <!-- [ Pre-loader ] End -->
+
+
+  <!-- [ navigation menu ] start -->
+  <nav class="txs-navbar">
+
+    <div class="navbar-wrapper">
+      <div class="navbar-brand header-logo">
+        <a [routerLink]="baseRouterLink" class="b-brand">
+          <div class="b-bg">
+            <i class="icon icon-logo"></i>
+          </div>
+          <span class="b-title">{{title}}</span>
+        </a>
+
+        <a [txs-toggle]="['on',{'.txs-navbar':'navbar-collapsed'}]"
+           class="mobile-menu" id="mobile-collapse">
+          <span></span>
+        </a>
+      </div>
+
+      <div class="navbar-content scroll-div">
+        <menu [options]="menuOptions"></menu>
+      </div>
+
+    </div>
+  </nav>
+  <!-- [ navigation menu ] end -->
+
+
+  <!-- [ Header ] start -->
+  <!-- TODO enable or disable header -->
+  <header class="navbar txs-header navbar-expand-lg navbar-light">
+
+    <div class="m-header">
+      <a class="mobile-menu" id="mobile-collapse1" href="#"><span></span></a>
+      <a [routerLink]="baseRouterLink" class="b-brand">
+        <div class="b-bg">
+          <i class="icon icon-trending-up"></i>
+        </div>
+        <span class="b-title">{{title}}</span>
+      </a>
+    </div>
+
+    <a class="mobile-menu" id="mobile-header">
+      <i class="icon icon-more-horizontal"></i>
+    </a>
+
+    <div class="collapse navbar-collapse">
+
+      <ul class="navbar-nav mr-auto">
+        <li *ngIf="(appStateService.isAdmin | async) && requestCount > 0">
+          <span class="badge badge-secondary"><i class="icon icon-spinner fa-spin"></i> {{requestCount}}</span>
+        </li>
+        <ng-content select="header-left-list-entries"></ng-content>
+      </ul>
+
+      <ul class="navbar-nav ml-auto">
+        <ng-content select="header-right-list-entries"></ng-content>
+        <li *ngIf="!(appStateService.isAdmin | async)">
+          <p class="btn btn-sm btn-{{getBackendService().getState() | async}}">
+            {{getBackendService().getState() | async}}
+            <span class="badge badge-success badge-border-white">{{getSystemService().nodesCount}}</span>
+          </p>
+        </li>
+        <li *ngIf="(appStateService.isAdmin | async)">
+          <div class="dropdown drp-user">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <p class="btn btn-sm btn-{{getBackendService().getState() | async}}">
+                {{getBackendService().getState() | async}}
+                <span class="badge badge-success badge-border-white">{{getSystemService().nodesCount}}</span>
+              </p>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right  profile-notification">
+              <div class="pro-head">
+                <span>Nodes</span>
+              </div>
+              <div class="pro-body">
+                <div class="container">
+                  <div class="row" *ngFor="let n of getSystemService().allNodes">
+                    <div class="col-md-4">{{n.hostname}}</div>
+                    <div class="col-md-3">{{n.nodeId}}</div>
+                    <div class="col-md-5">{{n.started_at | date:'dd.MM.yyyy HH:mm'}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li *ngIf="appStateService.isAuthenticated() && viewContext != 'admin'">
+          <a *ngIf="(appStateService.isAdmin | async)" routerLink="/admin">
+            <i class="icon icon-admin-user"></i>
+            Admin
+          </a>
+        </li>
+        <li *ngIf="viewContext == 'admin'">
+          <a routerLink="/">
+            <i class="icon icon-page-home"></i>
+            Home
+          </a>
+        </li>
+        <li *ngIf="appStateService.isAuthenticated()">
+          <div class="dropdown drp-user">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <i class="icon  icon-settings"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right profile-notification">
+              <div class="pro-head">
+                <span>{{user ? user.username : 'loading ...'}}</span>
+                <a [routerLink]="userRouterLinks.logout" class="dud-logout" title="Logout">
+                  <i class="icon icon-logout"></i>
+                </a>
+              </div>
+              <ul class="pro-body">
+                <li>
+                  <a [routerLink]="userRouterLinks.profile" class="dropdown-item">
+                    <i class="icon icon-user"></i> Profile
+                  </a>
+                </li>
+                <ng-content select="header-profile-entries"></ng-content>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </header>
+  <!-- [ Header ] end -->
+
+
+  <!-- [ Main Content ] start -->
+  <div class="txs-main-container">
+    <div class="txs-wrapper">
+      <div class="txs-content">
+        <div class="txs-inner-content">
+          <!-- [ breadcrumb ] start -->
+          <!--
+          <div class="page-header">
+            <div class="page-block">
+              <div class="row align-items-center">
+                <div class="col-md-12">
+                  <div class="page-header-title">
+                    <h5 class="m-b-10">Navbar-Fixed Layout</h5>
+                  </div>
+                  <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html"><i class="icon icon-home"></i></a></li>
+                    <li class="breadcrumb-item"><a href="#">Page Layouts</a></li>
+                    <li class="breadcrumb-item"><a href="#">Vertical</a></li>
+                    <li class="breadcrumb-item"><a href="#">Navbar-Fixed Layout</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          -->
+          <!-- [ breadcrumb ] end -->
+          <div class="main-body">
+            <div class="page-wrapper">
+              <!-- [ Main Content ] start -->
+              <div class="row">
+                <!-- [ fixed-menu ] start -->
+                <div class="col-sm-12">
+                  <ng-content></ng-content>
+                  <!-- <router-outlet></router-outlet> -->
+                </div>
+                <!-- [ fixed-menu ] end -->
+              </div>
+              <!-- [ Main Content ] end -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- [ Main Content ] end -->
+
+</div>
