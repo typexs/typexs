@@ -24,11 +24,12 @@ export class EntityViewPageComponent implements OnInit {
 
   error: any = null;
 
-  constructor(private route: ActivatedRoute,
-              private resolver: EntityResolverService) {
+  constructor(
+    private route: ActivatedRoute,
+    private resolver: EntityResolverService) {
   }
 
-  label() {
+  label(): string {
     if (this.instance) {
       if (isFunction(this.instance[C_LABEL])) {
         return this.instance[C_LABEL];
@@ -74,7 +75,7 @@ export class EntityViewPageComponent implements OnInit {
     service.get(this.name, this.id, opts).subscribe(x => {
       this.instance = x;
       this.ready = true;
-    }, error1 => {
+    }, () => {
       this.error = `Can't find entity type for ${this.name}.`;
     });
 

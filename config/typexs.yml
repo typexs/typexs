@@ -1,0 +1,47 @@
+app:
+  name: typexs-ng
+
+
+storage:
+  default:
+    synchronize: true
+    type: sqlite
+    # database: ':memory:'
+    database: 'tmp/db_${app.name}_server.db'
+#    logger: simple-console
+#    logging: all
+    connectOnStartup: true
+
+modules:
+  paths:
+    - ./demo/
+
+eventbus:
+  default:
+    adapter: redis
+    extra:
+      host: 127.0.0.1
+      port: 6379
+
+logging:
+  enable: true
+  level: debug
+  transports:
+    - console: {}
+  loggers:
+    - name: '*'
+      enable: true
+      level: debug
+      transports:
+        - console: {}
+
+filesystem:
+  paths:
+    - ./tmp/accessible/
+    - /tmp/tasklog
+
+
+config:
+  anonymous:
+    allow: true
+  permissions: []

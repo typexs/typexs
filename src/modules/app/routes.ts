@@ -10,7 +10,7 @@ import {PagerDemoComponent} from './pager-demo/pager-demo.component';
 import {LogoutComponent} from './dummy/logout/logout.component';
 import {ProfileComponent} from './dummy/profile/profile.component';
 import {NotificationDemoComponent} from './components/demos/notification/notification-demo.component';
-import {InputDemoComponent} from './components/demos/form-input/input-demo.component';
+import {InputDemoComponent} from './components/forms/input/input-demo.component';
 import {TablesDemoComponent} from './components/demos/tables/tables-demo.component';
 import {SimpleHtmlTableDemoComponent} from './components/demos/tables/simple-html-table-demo.component';
 import {StorageModule} from '@typexs/storage-ng';

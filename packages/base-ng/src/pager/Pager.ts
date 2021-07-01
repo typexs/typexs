@@ -1,7 +1,7 @@
-import {range} from 'lodash';
-import {ActivatedRoute, Router} from '@angular/router';
-import {PagerAction} from './PagerAction';
-import {EventEmitter} from 'events';
+import { range } from 'lodash';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PagerAction } from './PagerAction';
+import { EventEmitter } from 'events';
 
 
 export class Pager extends EventEmitter {
@@ -32,7 +32,7 @@ export class Pager extends EventEmitter {
    */
   pages: number[] = [];
 
-  wait: NodeJS.Timer;
+  wait: any;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute, id: string = 'dummy') {
     super();

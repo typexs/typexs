@@ -14,13 +14,11 @@
     }
   },
   "files": [
-    "src/app/test.ts",
-    "src/app/polyfills.ts",
-    "packages/ng/src/browser.ts",
-    "packages/base-ng/src/public_api.ts"
+    "src/demo-app/test.ts",
+    "src/demo-app/polyfills.ts"
   ],
   "include": [
-    "src/app/**/*.spec.ts",
+    "src/demo-app/**/*.spec.ts",
     "src/modules/**/*.spec.ts",
     "src/modules/**/*.d.ts"
   ]

@@ -1,0 +1,35 @@
+<div class="card-embedded">
+
+
+  <txs-search-query-form
+    *ngIf="options.freeQueryBuilder"
+    (queryState)="onQueryAction($event)">
+  </txs-search-query-form>
+
+  <div class="facets div-container">
+    <div class="div-header" (click)="showFilter = !showFilter">
+      <p class="label">Filter <i class="fa fa-arrow-alt-circle-down"
+                                 [ngClass]="{'fa-arrow-alt-circle-down': showFilter, 'fa-arrow-alt-circle-up': !showFilter}"></i>
+      </p>
+    </div>
+    <div class="div-body collapse" [ngClass]="{'show': showFilter}">
+      <div class="d-flex flex-sm-row justify-content-sm-start align-content-stretch">
+        <div *ngFor="let facet of facets">
+          <txs-search-facet class="facet-item" [facet]="facet" (change)="onFacet($event)"></txs-search-facet>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <txs-datatable
+    #datatable
+    [component]="componentClass"
+    [columns]="columns"
+    [options]="options"
+    [(params)]="params"
+    (doQuery)="doQuery($event)">
+  </txs-datatable>
+
+</div>
+

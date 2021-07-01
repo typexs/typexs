@@ -1,0 +1,27 @@
+{
+  "name": "@typexs/search",
+  "version": "0.0.0-PLACEHOLDER",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "@typexs/base": "0.0.0-PLACEHOLDER",
+    "@typexs/schema": "0.0.0-PLACEHOLDER"
+  },
+  "typexs": {
+    "name": "search",
+    "declareLibs": [
+      {
+        "topic": "index.types",
+        "refs": [
+          "adapters/storage/index/*IndexType.*",
+          "src/adapters/storage/index/*IndexType.*"
+        ]
+      }
+    ]
+  }
+}

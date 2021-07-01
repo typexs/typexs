@@ -1,0 +1,35 @@
+
+
+tasks:
+  logdir: ./tmp/tasklog
+  access:
+    - task: '*'
+      access: allow
+#    - task: '*'
+#      access: deny
+#    - task: simple_task
+#      access: allow
+
+workers:
+  access:
+    - name: '*'
+      access: allow
+
+server:
+  default:
+    type: web
+    framework: express
+    host: localhost
+    port: 4500
+    routes:
+      - type: routing_controller
+        context: api
+        routePrefix: api
+      - type: static_files
+        routePrefix: public
+        path: public
+
+
+filesystem:
+  paths:
+    - ./tmp

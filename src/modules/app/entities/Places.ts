@@ -1,4 +1,5 @@
-import {Select, Text} from '@typexs/ng';
+import {Text} from '@typexs/ng/lib/forms/decorators/Text';
+import {Select} from '@typexs/ng/lib/forms/decorators/Select';
 import {Property} from '@typexs/schema/libs/decorators/Property';
 
 

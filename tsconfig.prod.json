@@ -38,6 +38,14 @@
         "./build/packages/base/out/*",
         "./build/packages/base/out"
       ],
+      "@typexs/ng": [
+        "./build/packages/ng/out/*",
+        "./build/packages/ng/out"
+      ],
+      "@typexs/ng/*": [
+        "./build/packages/ng/out/*",
+        "./build/packages/ng/out"
+      ],
       "@typexs/base-ng": [
         "./build/packages/base-ng/out/*",
         "./build/packages/base-ng/out"
@@ -74,7 +82,7 @@
         "./build/packages/ng-theme-base/out/*",
         "./build/packages/ng-theme-base/out"
       ],
-      "@typexs/ng-theme-base": [
+      "@typexs/ng-theme-base/*": [
         "./build/packages/ng-theme-base/out/*",
         "./build/packages/ng-theme-base/out"
       ],
@@ -82,7 +90,7 @@
         "./build/packages/tasks-ng/out/*",
         "./build/packages/tasks-ng/out"
       ],
-      "@typexs/tasks-ng": [
+      "@typexs/tasks-ng/*": [
         "./build/packages/tasks-ng/out/*",
         "./build/packages/tasks-ng/out"
       ]

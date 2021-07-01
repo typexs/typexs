@@ -1,6 +1,6 @@
-import {Observable} from 'rxjs';
-import {ISelectOption} from './ISelectOption';
-import {IPropertyRef} from '@allgemein/schema-api';
+import { Observable } from 'rxjs';
+import { IPropertyRef } from '@allgemein/schema-api';
+import { ISelectOption } from '@typexs/ng/lib/forms/elements/ISelectOption';
 
 
 export interface ISelectOptionsService {

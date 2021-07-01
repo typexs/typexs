@@ -9,6 +9,7 @@ export class FormService {
 
   cache: any = {};
 
+  // eslint-disable-next-line no-unused-vars
   constructor(private componentRegistry: ComponentRegistryService) {
   }
 

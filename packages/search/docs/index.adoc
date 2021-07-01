@@ -1,0 +1,8 @@
+# @typexs/search
+
+
+## Config
+
+## Task
+
+* index {--entityNames names,?}

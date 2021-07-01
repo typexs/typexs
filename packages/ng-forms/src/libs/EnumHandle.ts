@@ -34,6 +34,7 @@ export class EnumHandle {
       // set default
       _enum = 'EntityOptionsService';
     }
+    console.log(_enum);
 
     if (isArray(_enum)) {
       return _enum;

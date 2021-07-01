@@ -58,7 +58,7 @@
     "@allgemein/http": "^1.2.0",
     "@allgemein/mango-expressions": "~1.1.1",
     "@allgemein/moduls": "^1.6.5",
-    "@allgemein/packaging": "^1.2.4",
+    "@allgemein/packaging": "^1.2.13",
     "@allgemein/schema-api": "^1.4.5",
     "@angular-devkit/build-angular": "12.0.3",
     "@angular-devkit/core": "12.0.3",
@@ -186,5 +186,8 @@
     "yargs": "^17.0.1",
     "zone.js": "~0.11.4"
   },
-  "private": true
+  "private": true,
+  "typexs": {
+    "name": "typexs"
+  }
 }

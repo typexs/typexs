@@ -21,7 +21,7 @@ export class DistributedStorageQueryEmbeddedComponent
   extends AbstractQueryEmbeddedComponent {
 
   @Input()
-  entityName: string;
+  iEntityName: string;
 
   @Input()
   options: IDSOptions = DEFAULT_DS_OPTIONS;
@@ -33,25 +33,25 @@ export class DistributedStorageQueryEmbeddedComponent
   }
 
   // reset loading entity
-  ngOnInit() {
+  ngOnInit(): void {
     // pass entity name to name
-    if (this.entityName && !this.name) {
-      this.name = this.entityName;
+    if (this.iEntityName && !this.name) {
+      this.name = this.iEntityName;
     }
     if (!this.params) {
       this.params = {};
     }
 
     this.applyInitialOptions();
-    if (this.entityName && !this.options.entityTypeSelection) {
+    if (this.iEntityName && !this.options.entityTypeSelection) {
       setTimeout(() => {
         this.requery();
       });
     }
   }
 
-  changeEntityName() {
-    this.name = this.entityName;
+  changeEntityName(): void {
+    this.name = this.iEntityName;
   }
 
 

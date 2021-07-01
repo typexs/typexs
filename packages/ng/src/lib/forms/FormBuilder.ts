@@ -6,6 +6,8 @@ import {Form} from './elements';
 import {ResolveDataValue} from './ResolveDataValue';
 import {ComponentRegistry} from '../views/ComponentRegistry';
 import {NoFormTypeDefinedError} from '../exceptions/NoFormTypeDefinedError';
+import { K_VIRTUAL } from '../Constants';
+import { K_FORM, K_NAME, K_READONLY, K_SELECT, K_TEXT } from '../../../../ng-forms/src/constants';
 
 export class FormBuilder {
 
@@ -36,21 +38,21 @@ export class FormBuilder {
 
     if (!this.form) {
       // this.schema = EntityRegistry.getSchema(entity.object.getSchema());
-      this.form = formObject = this.registry.createHandle('form');
-      formObject.handle('name', entity.id());
+      this.form = formObject = this.registry.createHandle(K_FORM);
+      formObject.handle(K_NAME, entity.id());
       formObject.handle('binding', entity);
     } else if ((<AbstractRef><any>entity).metaType === METATYPE_PROPERTY) {
       // TODO support also other types
       const property: IPropertyRef = <IPropertyRef>entity;
 
-      let formType = <string>property.getOptions(<any>'form'); // || 'text';
+      let formType = property.getOptions(K_FORM); // || 'text';
       if (!formType) {
         // TODO Defaults for the field
         if (property.isIdentifier()) {
-          formType = 'readonly';
+          formType = K_READONLY;
         } else if (property.isReference()) {
           if (property.getTargetRef().hasEntityRef()) {
-            formType = 'select';
+            formType = K_SELECT;
           } else {
             formType = 'grid';
           }
@@ -58,10 +60,10 @@ export class FormBuilder {
           if (property['getType'] && property['getType']() === 'boolean') {
             formType = 'checkbox';
           } else {
-            formType = 'text';
+            formType = K_TEXT;
           }
         }
-        property.setOption('form', formType);
+        property.setOption(K_FORM, formType);
       }
 
       const methodName = 'for' + capitalize(formType);
@@ -84,7 +86,7 @@ export class FormBuilder {
     const nextLevel = options.level + 1;
     if ((<AbstractRef><any>entity).metaType === METATYPE_ENTITY) {
       if (options.level === 0 || formObject.isStruct()) {
-        const properties = (<IEntityRef>entity).getPropertyRefs().filter(x => !x.getOptions('virtual', false));
+        const properties = (<IEntityRef>entity).getPropertyRefs().filter(x => !x.getOptions(K_VIRTUAL, false));
         for (const property of properties) {
           const childObject = this._buildFormObject(property, formObject, {level: nextLevel});
           formObject.insert(childObject);
@@ -102,7 +104,7 @@ export class FormBuilder {
           this._buildFormObject(entity, formObject, {level: nextLevel});
         } else {
           // insert property form elements
-          const properties = property.getTargetRef().getPropertyRefs().filter(x => !x.getOptions('virtual', false));
+          const properties = property.getTargetRef().getPropertyRefs().filter(x => !x.getOptions(K_VIRTUAL, false));
           for (const property of properties) {
             const childObject = this._buildFormObject(property, formObject, {level: nextLevel});
             formObject.insert(childObject);
@@ -142,8 +144,8 @@ export class FormBuilder {
 
 
   private forReadonly(formType: string, property: IPropertyRef) {
-    const input = this._forInput('text', property);
-    input.handle('readonly', true);
+    const input = this._forInput(K_TEXT, property);
+    input.handle(K_READONLY, true);
     return input;
   }
 
@@ -161,7 +163,7 @@ export class FormBuilder {
 
 
   private _applyValues(formObject: FormObject, property: IPropertyRef) {
-    formObject.handle('name', property.name);
+    formObject.handle(K_NAME, property.name);
     formObject.handle('id', property.id());
     formObject.handle('label', /*property.label() ? property.label() :*/ capitalize(property.name));
     formObject.handle('binding', property);

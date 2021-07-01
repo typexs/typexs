@@ -1,10 +1,10 @@
-import {get, isArray, set} from 'lodash';
-import {DataContainer} from '@allgemein/schema-api';
-import {ClassRef, METATYPE_PROPERTY} from '@allgemein/schema-api';
-import {Expressions} from '@allgemein/expressions';
-import {FormObject, isFormObject, NoFormTypeDefinedError, Context} from '@typexs/ng';
-import {Component, ComponentFactoryResolver, Inject, Injector} from '@angular/core';
-import {AbstractComponent, UrlHelper} from '@typexs/base-ng';
+import { get, isArray, set } from 'lodash';
+import { ClassRef, DataContainer, METATYPE_PROPERTY } from '@allgemein/schema-api';
+import { Expressions } from '@allgemein/expressions';
+import { Context, FormObject, isFormObject, NoFormTypeDefinedError } from '@typexs/ng';
+import { Component, ComponentFactoryResolver, Inject, Injector } from '@angular/core';
+import { AbstractComponent, UrlHelper } from '@typexs/base-ng';
+import { K_READONLY } from '../constants';
 
 @Component({
   template: ''
@@ -22,8 +22,9 @@ export class AbstractFormComponent<T extends FormObject> extends AbstractCompone
 
   _value: any = null;
 
-  constructor(@Inject(Injector) public injector: Injector,
-              @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver) {
+  constructor(
+    @Inject(Injector) public injector: Injector,
+    @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver) {
     super(injector, r);
     this.construct();
   }
@@ -59,7 +60,7 @@ export class AbstractFormComponent<T extends FormObject> extends AbstractCompone
 
 
   get isReadOnly() {
-    return this.getInstance()?.isReadonly() ? 'readonly' : null;
+    return this.getInstance()?.isReadonly() ? K_READONLY : null;
   }
 
 
@@ -168,15 +169,13 @@ export class AbstractFormComponent<T extends FormObject> extends AbstractCompone
 
   build(form: FormObject): AbstractComponent<T>[] {
     const comp: AbstractComponent<T>[] = [];
-    form.getChildren().forEach(formObject => {
+    for (const formObject of form.getChildren()) {
       // console.log(formObject);
       if (isFormObject(formObject)) {
-
         const handle = this.getComponentRegistry().getOrCreateDef(formObject.type);
         if (handle && handle.component) {
           if (this.vc) {
-            const factory = this.r.resolveComponentFactory(<any>handle.component);
-            const ref = this.vc.createComponent(factory);
+            const ref = this.createComponentView(<any>handle.component);
             const instance = <AbstractFormComponent<any>>ref.instance;
             instance.data = this.data;
             instance.setData(formObject, this.context);
@@ -189,7 +188,7 @@ export class AbstractFormComponent<T extends FormObject> extends AbstractCompone
           throw new NoFormTypeDefinedError(formObject.type);
         }
       }
-    });
+    }
     return comp;
   }
 

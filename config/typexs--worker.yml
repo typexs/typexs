@@ -1,0 +1,20 @@
+
+
+storage:
+  default:
+    database: 'tmp/db_${app.name}_worker.db'
+
+tasks:
+  logdir: /tmp/tasklog
+  access:
+    - task: '*'
+      access: 'allow'
+
+workers:
+  access:
+    - name: '*'
+      access: allow
+
+filesystem:
+  paths:
+    - ./tmp

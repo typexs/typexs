@@ -1,12 +1,11 @@
-import {cloneDeep, find} from 'lodash';
-import {Component, ComponentFactoryResolver, EventEmitter, Injector, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormService} from './form.service';
-import {Form, ViewComponent} from '@typexs/ng';
-import {EntityResolverService, IMessage, MessageChannel} from '@typexs/base-ng';
-import {IFormOptions} from './IFormOptions';
-import {AbstractFormComponent} from './component/AbstractFormComponent';
-import {DataContainer} from '@allgemein/schema-api';
-import {RegistryFactory} from '@allgemein/schema-api';
+import { cloneDeep, find } from 'lodash';
+import { Component, ComponentFactoryResolver, EventEmitter, Injector, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormService } from './form.service';
+import { Form, ViewComponent } from '@typexs/ng';
+import { EntityResolverService, IMessage, MessageChannel } from '@typexs/base-ng';
+import { IFormOptions } from './IFormOptions';
+import { AbstractFormComponent } from './component/AbstractFormComponent';
+import { DataContainer, RegistryFactory } from '@allgemein/schema-api';
 
 
 @ViewComponent('form')
@@ -43,8 +42,8 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
         key: 'reset',
         label: 'Reset',
         type: 'restore'
-      },
-    ],
+      }
+    ]
   };
 
 
@@ -61,10 +60,13 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
 
   formObject: any;
 
-  constructor(private formService: FormService,
-              public injector: Injector,
-              public r: ComponentFactoryResolver,
-              private resolver: EntityResolverService
+  constructor(
+    // eslint-disable-next-line no-unused-vars
+    private formService: FormService,
+    public injector: Injector,
+    public r: ComponentFactoryResolver,
+    // eslint-disable-next-line no-unused-vars
+    private resolver: EntityResolverService
   ) {
     super(injector, r);
     // TODO ...
@@ -111,7 +113,7 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
         this.channel.publish(null);
       }
       await this.data.validate();
-      this.ngSubmit.emit({event: $event, data: this.data});
+      this.ngSubmit.emit({ event: $event, data: this.data });
 
     }
     return false;
@@ -127,7 +129,7 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
     this.instance = cloneDeep(this.original);
 
     this.reset();
-    this.ngReset.emit({event: $event, data: this.data});
+    this.ngReset.emit({ event: $event, data: this.data });
     return false;
   }
 
@@ -139,7 +141,7 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
     } else if (btn.type === 'restore') {
       return this.onReset($event);
     } else {
-      this.ngButton.emit({button: btn, event: $event, data: this.data});
+      this.ngButton.emit({ button: btn, event: $event, data: this.data });
     }
     return false;
   }

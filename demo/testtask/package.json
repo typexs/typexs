@@ -1,0 +1,10 @@
+{
+  "name": "testtask",
+  "version": "1.0.0",
+  "dependencies": {
+    
+  },
+  "typexs": {
+    "name": "testtask"
+  }
+}

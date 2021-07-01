@@ -1,14 +1,16 @@
-import {filter, find, first, isArray, isEmpty, isFunction, keys} from 'lodash';
-import {Component, ComponentFactoryResolver, Inject, Injector, ViewChild, ViewContainerRef} from '@angular/core';
-import {ComponentRegistryService} from './component-registry.service';
-import {Log} from '../lib/log/Log';
-import {NotYetImplementedError} from '@allgemein/base';
-import {ClassType} from '@allgemein/schema-api';
-import {IInstanceableComponent} from './IInstanceableComponent';
-import {C_DEFAULT} from '../constants';
-import {Context, isTreeObject, TreeObject} from '@typexs/ng';
+import { filter, find, first, isArray, isEmpty, isFunction, keys, remove } from 'lodash';
+import { Component, ComponentFactoryResolver, ComponentRef, Inject, Injector, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { ComponentRegistryService } from './component-registry.service';
+import { Log } from '../lib/log/Log';
+import { NotYetImplementedError } from '@allgemein/base';
+import { ClassType } from '@allgemein/schema-api';
+import { IInstanceableComponent } from './IInstanceableComponent';
+import { C_DEFAULT, M_getViewContext, M_setViewContext, PROP_METADATA } from '../constants';
+import { Context, isTreeObject, TreeObject } from '@typexs/ng';
 
-const PROP_METADATA = '__prop__metadata__';
+
+let INC = 0;
+
 
 @Component({
   // selector: 'txs-abstract-component',
@@ -22,13 +24,15 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
 
   _instance: T;
 
-  @ViewChild('content', {read: ViewContainerRef, static: true})
+  @ViewChild('content', { read: ViewContainerRef, static: true })
   vc: ViewContainerRef;
 
   _created = false;
 
+  _components: ComponentRef<any>[] = [];
+
   constructor(@Inject(Injector) public injector: Injector,
-              @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver) {
+    @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver) {
     this.construct();
   }
 
@@ -57,7 +61,7 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
   }
 
   buildComponentForObject(content: any) {
-    const context = this['getViewContext'] ? this['getViewContext']() : C_DEFAULT;
+    const context = this[M_getViewContext] ? this[M_getViewContext]() : C_DEFAULT;
     const obj = this.getComponentRegistry().getComponentForObject(content, context);
     if (obj && obj.component) {
       return this.buildComponent(obj.component as any, content);
@@ -79,13 +83,29 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
     return null;
   }
 
+  /**
+   * Dynamically create a component view
+   * @param cmptType
+   */
+  createComponentView<T>(cmptType: Type<T>) {
+    const factory = this.r.resolveComponentFactory(cmptType);
+    const ref = this.getViewContainerRef().createComponent(factory);
+    const ID = INC++;
+    Object.defineProperty(ref, 'ID', { value: ID, enumerable: true });
+    this._components.push(ref);
+    ref.onDestroy((function(ID: number) {
+      return () => remove(this._components, r => r['ID'] === ID);
+    })(ID));
+    return ref;
+  }
+
 
   buildComponent(component: ClassType<IInstanceableComponent<T>>, content: any) {
     if (this.getViewContainerRef()) {
-      const factory = this.r.resolveComponentFactory(component);
-      const compRef = this.getViewContainerRef().createComponent(factory);
+      const compRef = this.createComponentView(component);
       const instance = <IInstanceableComponent<T>>compRef.instance;
       let metadata: { [k: string]: any } = null;
+      // eslint-disable-next-line no-prototype-builtins
       if (instance.constructor.hasOwnProperty(PROP_METADATA)) {
         metadata = instance.constructor[PROP_METADATA];
       }
@@ -106,20 +126,19 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
       // }
 
       // pass changing context
-      if (this['setViewContext'] && instance.setViewContext) {
-        const fn = this['setViewContext'].bind(this);
-        this['setViewContext'] = (context: string) => {
+      if (this[M_setViewContext] && instance.setViewContext) {
+        const fn = this[M_setViewContext].bind(this);
+        this[M_setViewContext] = (context: string) => {
           fn(context);
           instance.setViewContext(context);
         };
         // pass data
-        if (this['getViewContext']) {
-          instance.setViewContext(this['getViewContext']());
+        if (this[M_getViewContext]) {
+          instance.setViewContext(this[M_getViewContext]());
         }
       }
 
       // passing through input parameters
-
       for (const prop of this.inputKeys) {
         // instance[prop] = this[prop];
         try {
@@ -136,7 +155,7 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
         const refs = instance.build(content);
 
         if (metadata) {
-          keys(metadata).forEach(key => {
+          for (const key of keys(metadata)) {
             const v = metadata[key];
             if (!isEmpty(v)) {
 
@@ -153,11 +172,9 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
                     instance[key + '2'] = filter(refs, ref => ref.constructor === propDecorator.selector);
                   }
                 }
-              } else {
-                // console.error('can\'t resolve metadata', instance.constructor, key, v);
               }
             }
-          });
+          }
         }
       }
       return instance;
@@ -183,8 +200,8 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
 
 
   reset() {
-    if (this.vc) {
-      this.vc.clear();
+    if (this.getViewContainerRef()) {
+      this.getViewContainerRef().clear();
     }
   }
 

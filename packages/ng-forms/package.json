@@ -25,6 +25,8 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
+    "@typexs/base-ng": "0.0.0-PLACEHOLDER",
+    "@typexs/ng": "0.0.0-PLACEHOLDER"
   },
   "devDependencies": {
     "@angular/core": "12.0.3",

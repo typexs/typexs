@@ -47,6 +47,7 @@
         "accessibility": "explicit"
       }
     ],
+    "no-unused-vars": "off",
     "@typescript-eslint/member-delimiter-style": [
       "error",
       {

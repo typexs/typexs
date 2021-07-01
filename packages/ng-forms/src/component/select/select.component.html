@@ -1,0 +1,20 @@
+<div class="form-group select-wrapper" [ngSwitch]="labelDisplay">
+  <label *ngSwitchCase="'top'" for="{{id}}">{{label}}</label>
+  <select id="{{id}}"
+          class="form-control {{data.checked(name) ? data.valid(name) ? 'is-valid' : 'is-invalid' : '' }}"
+          [(ngModel)]="value"
+          name="{{ name }}"
+          [attr.readonly]="isReadOnly"
+          [multiple]="supportsMultiple"
+  >
+    <option *ngFor="let obj of cachedOptions" [value]="obj.value">{{obj.label}}</option>
+  </select>
+  <small *ngIf="help" id="{{name}}Help" class="form-text text-muted">{{help}}</small>
+  <div [hidden]="!(data.checked(name) && !data.valid(name))" class="invalid-feedback">
+    <ul>
+      <li *ngFor="let message of data.messages(name)" class="message-validator-{{ message.type }}">
+        {{ message.content }}
+      </li>
+    </ul>
+  </div>
+</div>

@@ -4,3 +4,5 @@ export const C_DEFAULT = 'default';
 export const __REGISTRY__ = '__NS__';
 
 export const PERMISSION_ACCESS_ADMIN_UI = 'access admin ui';
+
+export const K_VIRTUAL = 'virtual';

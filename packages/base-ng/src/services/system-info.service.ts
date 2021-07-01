@@ -1,5 +1,5 @@
-import {orderBy, remove} from 'lodash';
-import {Injectable} from '@angular/core';
+import { orderBy, remove } from 'lodash';
+import { Injectable } from '@angular/core';
 import {
   API_CTRL_SERVER_CONFIG,
   API_CTRL_SERVER_ROUTES,
@@ -9,16 +9,16 @@ import {
   API_CTRL_SYSTEM_RUNTIME_NODES,
   API_CTRL_SYSTEM_RUNTIME_REMOTE_INFOS,
   API_CTRL_SYSTEM_STORAGES,
-  API_CTRL_SYSTEM_WORKERS,
-  IRoute
-} from '@typexs/server';
-import {IModule, IStorageOptions, ITypexsOptions} from '@typexs/base';
-import {SystemNodeInfo} from '@typexs/base/entities/SystemNodeInfo';
-import {IWorkerInfo} from '@typexs/base/libs/worker/IWorkerInfo';
-import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
-import {NodeRuntimeInfo} from '@typexs/base/libs/system/NodeRuntimeInfo';
-import {filter as rFilter} from 'rxjs/operators';
-import {BackendService} from '../api/backend/backend.service';
+  API_CTRL_SYSTEM_WORKERS
+} from '@typexs/server/libs/Constants';
+import { IModule, IStorageOptions, ITypexsOptions } from '@typexs/base';
+import { SystemNodeInfo } from '@typexs/base/entities/SystemNodeInfo';
+import { IWorkerInfo } from '@typexs/base/libs/worker/IWorkerInfo';
+import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
+import { NodeRuntimeInfo } from '@typexs/base/libs/system/NodeRuntimeInfo';
+import { filter as rFilter } from 'rxjs/operators';
+import { BackendService } from '../api/backend/backend.service';
+import { IRoute } from '../api/backend/IRoute';
 
 
 @Injectable()
@@ -202,36 +202,36 @@ export class SystemInfoService {
   }
 
   loadRuntimeInfo(callback?: (err: Error, info: NodeRuntimeInfo) => void) {
-    return this.backendClientService.callApi(API_CTRL_SYSTEM_RUNTIME_INFO, {handle: callback});
+    return this.backendClientService.callApi(API_CTRL_SYSTEM_RUNTIME_INFO, { handle: callback });
   }
 
   loadRuntimeNode(callback?: (err: Error, node: SystemNodeInfo) => void) {
-    return this.backendClientService.callApi(API_CTRL_SYSTEM_RUNTIME_NODE, {handle: callback});
+    return this.backendClientService.callApi(API_CTRL_SYSTEM_RUNTIME_NODE, { handle: callback });
   }
 
   loadRuntimeNodes(callback?: (err: Error, nodes: SystemNodeInfo[]) => void) {
-    return this.backendClientService.callApi(API_CTRL_SYSTEM_RUNTIME_NODES, {handle: callback});
+    return this.backendClientService.callApi(API_CTRL_SYSTEM_RUNTIME_NODES, { handle: callback });
   }
 
   loadModules(callback?: (err: Error, modules: IModule[]) => void) {
-    return this.backendClientService.callApi(API_CTRL_SYSTEM_MODULES, {handle: callback});
+    return this.backendClientService.callApi(API_CTRL_SYSTEM_MODULES, { handle: callback });
   }
 
   loadStorages(callback?: (err: Error, storageOptions: IStorageOptions[]) => void) {
-    return this.backendClientService.callApi(API_CTRL_SYSTEM_STORAGES, {handle: callback});
+    return this.backendClientService.callApi(API_CTRL_SYSTEM_STORAGES, { handle: callback });
   }
 
   loadConfig(callback?: (err: Error, config: ITypexsOptions[]) => void) {
-    return this.backendClientService.callApi(API_CTRL_SERVER_CONFIG, {handle: callback});
+    return this.backendClientService.callApi(API_CTRL_SERVER_CONFIG, { handle: callback });
   }
 
   loadRoutes(callback?: (err: Error, routes: IRoute[]) => void) {
-    return this.backendClientService.callApi(API_CTRL_SERVER_ROUTES, {handle: callback});
+    return this.backendClientService.callApi(API_CTRL_SERVER_ROUTES, { handle: callback });
   }
 
 
   loadWorkers(callback?: (err: Error, workerInfos: IWorkerInfo[]) => void) {
-    return this.backendClientService.callApi(API_CTRL_SYSTEM_WORKERS, {handle: callback});
+    return this.backendClientService.callApi(API_CTRL_SYSTEM_WORKERS, { handle: callback });
   }
 
 
