@@ -1,5 +1,5 @@
 import {IIndexStorageRefOptions} from '../IIndexStorageRefOptions';
-import {IEntityRef} from 'commons-schema-api';
+import {IEntityRef} from '@allgemein/schema-api';
 
 
 export interface IElasticIndexOptions {

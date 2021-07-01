@@ -1,4 +1,4 @@
-import {ClassType} from 'commons-schema-api';
+import {ClassType} from '@allgemein/schema-api';
 import {IStorageRef} from '@typexs/base';
 
 export interface IIndexType {

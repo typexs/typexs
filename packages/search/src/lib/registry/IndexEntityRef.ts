@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {AbstractRef, ClassRef, IBuildOptions, IEntityRef} from 'commons-schema-api';
+import {AbstractRef, ClassRef, IBuildOptions, IEntityRef} from '@allgemein/schema-api';
 import {C_INDEX} from '../Constants';
 import {IIndexEntityRefOptions} from '../IIndexEntityRefOptions';
 import {ClassUtils} from '@allgemein/base';

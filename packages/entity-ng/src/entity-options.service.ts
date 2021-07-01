@@ -1,10 +1,11 @@
-import {Injectable} from '@angular/core';
-import {EntityService} from './entity.service';
-import {EntityRef, K_STORABLE, PropertyRef} from '@typexs/schema';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {ISelectOption, ISelectOptionsService} from '@typexs/ng-forms';
-import {IClassRef, IEntityRef} from '@allgemein/schema-api';
-import {Log} from '@typexs/base-ng';
+import { Injectable } from '@angular/core';
+import { EntityService } from './entity.service';
+import { EntityRef, K_STORABLE, PropertyRef } from '@typexs/schema';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { ISelectOptionsService } from '@typexs/ng-forms';
+import { ISelectOption } from '@typexs/ng/lib/forms/elements/ISelectOption';
+import { IClassRef, IEntityRef } from '@allgemein/schema-api';
+import { Log } from '@typexs/base-ng';
 
 @Injectable()
 export class EntityOptionsService implements ISelectOptionsService {
@@ -29,7 +30,7 @@ export class EntityOptionsService implements ISelectOptionsService {
 
     if (storeable && propertyDef.getTargetRef().hasEntityRef()) {
       const entityDef = <EntityRef>propertyDef.getTargetRef().getEntityRef();
-      this.entityService.query(entityDef.name, null, {limit: limit}).subscribe(
+      this.entityService.query(entityDef.name, null, { limit: limit }).subscribe(
         result => {
           if (result) {
             const _entities: ISelectOption[] = [];

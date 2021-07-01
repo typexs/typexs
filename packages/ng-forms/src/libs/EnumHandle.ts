@@ -1,15 +1,10 @@
 import {get, has, isArray, isFunction, isNull, isString} from 'lodash';
 import {Observable} from 'rxjs';
-
-
 import {Injector} from '@angular/core';
-
 import {Context, FormObject} from '@typexs/ng';
-import {ISelectOption} from './ISelectOption';
 import {ISelectOptionsService} from './ISelectOptionsService';
 import {DataContainer} from '@allgemein/schema-api';
-
-// import {EntityOptionsService} from '../../entity/entity-options.service';
+import { ISelectOption } from '@typexs/ng/lib/forms/elements';
 
 
 export class EnumHandle {

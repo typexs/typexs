@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import {CLS_DEF, IEntityController, NotYetImplementedError} from '@typexs/base';
 import {ElasticStorageRef} from './ElasticStorageRef';
-import {IClassRef} from 'commons-schema-api';
+import {IClassRef} from '@allgemein/schema-api';
 import {ElasticConnection} from './ElasticConnection';
 import {SaveOp} from './ops/SaveOp';
 import {FindOp} from './ops/FindOp';

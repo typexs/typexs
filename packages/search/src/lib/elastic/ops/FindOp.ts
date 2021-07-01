@@ -1,16 +1,16 @@
 import * as _ from 'lodash';
-import {JsonUtils} from '@allgemein/base';
-import {ClassType} from 'commons-schema-api';
-import {ElasticEntityController} from '../ElasticEntityController';
-import {IFindOp} from '@typexs/base/libs/storage/framework/IFindOp';
-import {NotYetImplementedError, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET} from '@typexs/base';
-import {IndexElasticApi} from '../../../api/IndexElastic.api';
-import {ElasticMangoWalker} from '../ElasticMangoWalker';
-import {IndexEntityRef} from '../../registry/IndexEntityRef';
-import {ES_IDFIELD, XS_P_$AGGREGATION, XS_P_$FACETS, XS_P_$INDEX, XS_P_$MAX_SCORE, XS_P_$SCORE} from '../../Constants';
-import {IElasticFieldDef} from '../IElasticFieldDef';
-import {IElasticFindOptions} from './IElasticFindOptions';
-import {OpsHelper} from './OpsHelper';
+import { JsonUtils } from '@allgemein/base';
+import { ClassType } from '@allgemein/schema-api';
+import { ElasticEntityController } from '../ElasticEntityController';
+import { IFindOp } from '@typexs/base/libs/storage/framework/IFindOp';
+import { NotYetImplementedError, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
+import { IndexElasticApi } from '../../../api/IndexElastic.api';
+import { ElasticMangoWalker } from '../ElasticMangoWalker';
+import { IndexEntityRef } from '../../registry/IndexEntityRef';
+import { ES_IDFIELD, XS_P_$AGGREGATION, XS_P_$FACETS, XS_P_$INDEX, XS_P_$MAX_SCORE, XS_P_$SCORE } from '../../Constants';
+import { IElasticFieldDef } from '../IElasticFieldDef';
+import { IElasticFindOptions } from './IElasticFindOptions';
+import { OpsHelper } from './OpsHelper';
 
 
 export class FindOp<T> implements IFindOp<T> {
@@ -52,9 +52,10 @@ export class FindOp<T> implements IFindOp<T> {
    * @param findConditions
    * @param options
    */
-  async run(entityType: Function | string | ClassType<T> | (Function | string | ClassType<T>)[],
-            findConditions?: any,
-            options?: IElasticFindOptions): Promise<T[]> {
+  async run(
+    entityType: Function | string | ClassType<T> | (Function | string | ClassType<T>)[],
+    findConditions?: any,
+    options?: IElasticFindOptions): Promise<T[]> {
     this.entityTypes = _.isArray(entityType) ? entityType : [entityType];
     const indexEntityRefs = OpsHelper.getIndexTypes(this.controller, this.entityTypes);
 
@@ -124,17 +125,17 @@ export class FindOp<T> implements IFindOp<T> {
       } else {
         if (this.options.onEmptyConditions) {
           switch (this.options.onEmptyConditions) {
-            case 'match_all':
-              opts.body.query = {match_all: {}};
-              break;
-            case 'match_none':
-              opts.body.query = {match_none: {}};
-              break;
+          case 'match_all':
+            opts.body.query = { match_all: {} };
+            break;
+          case 'match_none':
+            opts.body.query = { match_none: {} };
+            break;
           }
         }
       }
 
-      if (!!opts.body.query) {
+      if (opts.body.query) {
         // do this only when query present
         if (!_.isNull(this.options.limit) && _.isNumber(this.options.limit)) {
           opts.size = this.options.limit;
@@ -203,7 +204,7 @@ export class FindOp<T> implements IFindOp<T> {
 
       let recordCount = 0;
       let maxScore = 0;
-      const {body} = await client.search(opts);
+      const { body } = await client.search(opts);
       if (_.has(body, 'hits')) {
         const hits = body.hits;
         maxScore = hits.max_score;
@@ -223,7 +224,7 @@ export class FindOp<T> implements IFindOp<T> {
                 // if (!_.has(_source, '_id')) {
                 //   object = indexEntityRef.build<T>(correctedType);
                 // } else {
-                object = indexEntityRef.build<T>(correctedType, {createAndCopy: true});
+                object = indexEntityRef.build<T>(correctedType, { createAndCopy: true });
                 // }
               }
             }

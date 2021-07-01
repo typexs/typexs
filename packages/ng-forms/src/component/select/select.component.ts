@@ -2,10 +2,10 @@ import { get, has, isArray, isString } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { Option, SelectHandle, ViewComponent } from '@typexs/ng';
 import { AbstractFormComponent } from '../AbstractFormComponent';
-import { ISelectOption } from '../../libs/ISelectOption';
 import { EnumHandle } from '../../libs/EnumHandle';
 import { isObservable } from 'rxjs';
 import { K_LABEL, K_VALUE } from '../../constants';
+import { ISelectOption } from '@typexs/ng/lib/forms/elements/ISelectOption';
 
 
 @ViewComponent('select')

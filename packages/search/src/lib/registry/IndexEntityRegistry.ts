@@ -1,4 +1,4 @@
-import {AbstractRef, IEntityRef, ILookupRegistry, IPropertyRef, LookupRegistry} from 'commons-schema-api';
+import {AbstractRef, IEntityRef, ILookupRegistry, IPropertyRef, LookupRegistry} from '@allgemein/schema-api';
 import {C_INDEX} from './../Constants';
 import {IndexEntityRef} from './IndexEntityRef';
 import {XS_TYPE_ENTITY} from 'commons-schema-api/browser';

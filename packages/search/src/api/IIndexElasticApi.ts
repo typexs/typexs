@@ -1,9 +1,9 @@
-import {IndexEntityRef} from '../lib/registry/IndexEntityRef';
-import {IFindOp} from '@typexs/base/libs/storage/framework/IFindOp';
-import {IUpdateOp} from '@typexs/base/libs/storage/framework/IUpdateOp';
-import {IDeleteOp} from '@typexs/base/libs/storage/framework/IDeleteOp';
-import {IAggregateOp} from '@typexs/base/libs/storage/framework/IAggregateOp';
-import {ISaveOp} from '@typexs/base/libs/storage/framework/ISaveOp';
+import { IndexEntityRef } from '../lib/registry/IndexEntityRef';
+import { IFindOp } from '@typexs/base/libs/storage/framework/IFindOp';
+import { IUpdateOp } from '@typexs/base/libs/storage/framework/IUpdateOp';
+import { IDeleteOp } from '@typexs/base/libs/storage/framework/IDeleteOp';
+import { IAggregateOp } from '@typexs/base/libs/storage/framework/IAggregateOp';
+import { ISaveOp } from '@typexs/base/libs/storage/framework/ISaveOp';
 
 export interface IIndexElasticApi {
 
@@ -13,7 +13,7 @@ export interface IIndexElasticApi {
 
   doBeforeIndexRepositoryCreate?(indexData: any, types: IndexEntityRef[]): void;
 
-  prepareBeforeSave?<T>(className: string, object: T);
+  prepareBeforeSave?<T>(className: string, object: T): void;
 
   doBeforeSave?<T>(object: T[] | T, op: ISaveOp<T>): void;
 

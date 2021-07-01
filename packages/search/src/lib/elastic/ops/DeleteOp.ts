@@ -1,15 +1,14 @@
 import * as _ from 'lodash';
-
-import {ClassType} from 'commons-schema-api';
-import {IDeleteOp} from '@typexs/base/libs/storage/framework/IDeleteOp';
-import {ElasticEntityController} from '../ElasticEntityController';
-import {IElasticDeleteOptions} from './IElasticDeleteOptions';
-import {IndexElasticApi} from '../../../api/IndexElastic.api';
-import {OpsHelper} from './OpsHelper';
-import {ElasticUtils} from '../ElasticUtils';
-import {ClassUtils} from '@allgemein/base';
-import {ElasticMangoWalker} from '../ElasticMangoWalker';
-import {IElasticFieldDef} from '../IElasticFieldDef';
+import { ClassType } from '@allgemein/schema-api';
+import { IDeleteOp } from '@typexs/base/libs/storage/framework/IDeleteOp';
+import { ElasticEntityController } from '../ElasticEntityController';
+import { IElasticDeleteOptions } from './IElasticDeleteOptions';
+import { IndexElasticApi } from '../../../api/IndexElastic.api';
+import { OpsHelper } from './OpsHelper';
+import { ElasticUtils } from '../ElasticUtils';
+import { ClassUtils } from '@allgemein/base';
+import { ElasticMangoWalker } from '../ElasticMangoWalker';
+import { IElasticFieldDef } from '../IElasticFieldDef';
 
 
 export class DeleteOp<T> implements IDeleteOp<T> {
@@ -46,8 +45,8 @@ export class DeleteOp<T> implements IDeleteOp<T> {
 
 
   async run(object: T[] | T | ClassType<T>,
-            conditions: any = null,
-            options: IElasticDeleteOptions = {}): Promise<number> {
+    conditions: any = null,
+    options: IElasticDeleteOptions = {}): Promise<number> {
     this.removable = object;
     this.conditions = conditions;
     _.defaults(options, {
@@ -75,7 +74,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
   }
 
   private async removeByCondition(object: ClassType<T>, condition: any,
-                                  options: IElasticDeleteOptions = {}) {
+    options: IElasticDeleteOptions = {}) {
     if (!condition) {
       throw new Error('condition for update selection is empty');
     }
@@ -118,7 +117,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
       const results = await client.deleteByQuery(opts);
       count = _.get(results, 'body.deleted', 0);
       if (this.options.refresh) {
-        await client.indices.refresh({index: _.uniq(indices)});
+        await client.indices.refresh({ index: _.uniq(indices) });
       }
 
     } catch (e) {
@@ -159,7 +158,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
       affected = results.map(x => x.body).reduce((p, c) => c.result === 'deleted' ? ++p : p, 0);
 
       if (this.options.refresh) {
-        await client.indices.refresh({index: _.uniq(indices)});
+        await client.indices.refresh({ index: _.uniq(indices) });
       }
 
       // TODO refresh?

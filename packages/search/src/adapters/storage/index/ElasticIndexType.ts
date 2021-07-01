@@ -1,5 +1,5 @@
 import {IIndexType} from '../../../lib/IIndexType';
-import {ClassType} from 'commons-schema-api';
+import {ClassType} from '@allgemein/schema-api';
 import {IStorageRef} from '@typexs/base';
 import {ElasticStorageRef} from '../../../lib/elastic/ElasticStorageRef';
 

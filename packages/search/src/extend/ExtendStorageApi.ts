@@ -8,7 +8,7 @@ import {ClassUtils} from '@allgemein/base';
 import {EventBus} from 'commons-eventbus';
 import {IndexRuntimeStatus} from '../lib/IndexRuntimeStatus';
 import {IndexEvent} from '../lib/events/IndexEvent';
-import {ClassType} from 'commons-schema-api';
+import {ClassType} from '@allgemein/schema-api';
 import {IndexElasticApi} from '../api/IndexElastic.api';
 
 @UseAPI(StorageApi)

@@ -1,16 +1,13 @@
-import {ClassType} from 'commons-schema-api';
-import {JsonUtils} from '@allgemein/base';
+import { ClassType } from '@allgemein/schema-api';
 import * as _ from 'lodash';
-import {IUpdateOp} from '@typexs/base/libs/storage/framework/IUpdateOp';
-import {ElasticEntityController} from '../ElasticEntityController';
-import {IElasticUpdateOptions} from './IElasticUpdateOptions';
-import {IndexElasticApi} from '../../../api/IndexElastic.api';
-import {OpsHelper} from './OpsHelper';
-import {IndexEntityRef} from '../../registry/IndexEntityRef';
-import {IElasticFieldDef} from '../IElasticFieldDef';
-import {ElasticMangoWalker} from '../ElasticMangoWalker';
-import {XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET} from '@typexs/base';
-import {XS_P_$AGGREGATION, XS_P_$FACETS, XS_P_$INDEX, XS_P_$MAX_SCORE, XS_P_$SCORE} from '../../Constants';
+import { IUpdateOp } from '@typexs/base/libs/storage/framework/IUpdateOp';
+import { ElasticEntityController } from '../ElasticEntityController';
+import { IElasticUpdateOptions } from './IElasticUpdateOptions';
+import { IndexElasticApi } from '../../../api/IndexElastic.api';
+import { OpsHelper } from './OpsHelper';
+import { IndexEntityRef } from '../../registry/IndexEntityRef';
+import { IElasticFieldDef } from '../IElasticFieldDef';
+import { ElasticMangoWalker } from '../ElasticMangoWalker';
 
 
 export class UpdateOp<T> implements IUpdateOp<T> {
@@ -53,9 +50,9 @@ export class UpdateOp<T> implements IUpdateOp<T> {
   }
 
   async run(entityType: Function | string | ClassType<T> | (Function | string | ClassType<T>)[],
-            condition: any,
-            update: any,
-            options?: IElasticUpdateOptions): Promise<number> {
+    condition: any,
+    update: any,
+    options?: IElasticUpdateOptions): Promise<number> {
     if (!condition) {
       throw new Error('condition for update selection is empty');
     }
@@ -116,7 +113,7 @@ export class UpdateOp<T> implements IUpdateOp<T> {
 
       // let recordCount = 0;
       // let maxScore = 0;
-      const {body} = await client.updateByQuery(opts);
+      const { body } = await client.updateByQuery(opts);
       // if (_.has(body, 'hits')) {
       //   const hits = body.hits;
       //   maxScore = hits.max_score;

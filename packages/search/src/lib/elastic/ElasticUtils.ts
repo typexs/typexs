@@ -1,6 +1,6 @@
 import {IndexEntityRegistry} from '../registry/IndexEntityRegistry';
 import {IndexEntityRef} from '../registry/IndexEntityRef';
-import {ClassRef, IClassRef, IEntityRef} from 'commons-schema-api';
+import {ClassRef, IClassRef, IEntityRef} from '@allgemein/schema-api';
 import {IElasticFieldDef} from './IElasticFieldDef';
 import {ClassUtils} from '@allgemein/base';
 

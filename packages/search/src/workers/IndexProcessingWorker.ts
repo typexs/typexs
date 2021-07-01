@@ -1,7 +1,7 @@
 import {Inject, Injector, IWorker} from '@typexs/base';
 import {EventBus, subscribe} from 'commons-eventbus';
 import {IndexEvent} from '../lib/events/IndexEvent';
-import {ClassRef} from 'commons-schema-api';
+import {ClassRef} from '@allgemein/schema-api';
 import {IIndexData} from '../lib/events/IIndexData';
 import {IndexProcessingQueue} from '../lib/events/IndexProcessingQueue';
 import {IndexRuntimeStatus} from '../lib/IndexRuntimeStatus';

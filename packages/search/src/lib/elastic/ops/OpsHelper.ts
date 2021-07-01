@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import {ElasticEntityController} from '../ElasticEntityController';
-import {ClassType} from 'commons-schema-api';
+import {ClassType} from '@allgemein/schema-api';
 import {IndexEntityRef} from '../../registry/IndexEntityRef';
 import {MatchUtils} from '@typexs/base/libs/utils/MatchUtils';
 
