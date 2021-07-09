@@ -1,15 +1,7 @@
-import {
-  defaults, find, isArray, isEmpty, isFunction, isNumber, intersection,
-  get, clone, upperFirst, isNull, keys, values, isString, filter, merge, isPlainObject,
-  concat, kebabCase, has, snakeCase, isRegExp, orderBy, remove, first, set, assign,
-  capitalize, isUndefined
-} from 'lodash';
-import {Component, HostBinding, Input} from '@angular/core';
-
-
-
-import {SystemNodeInfo} from '@typexs/base/entities/SystemNodeInfo';
-import {INodeInfo} from '@typexs/base/libs/system/INodeInfo';
+import { find } from 'lodash';
+import { Component, Input } from '@angular/core';
+import { SystemNodeInfo } from '@typexs/base/entities/SystemNodeInfo';
+import { INodeInfo } from '@typexs/base/libs/system/INodeInfo';
 
 
 @Component({

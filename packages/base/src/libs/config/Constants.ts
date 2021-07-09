@@ -13,11 +13,11 @@ import {
   K_CLS_STORAGE_TYPES,
   K_CLS_USE_API
 } from '../Constants';
-import {IRuntimeLoaderOptions} from '../../base/IRuntimeLoaderOptions';
-import {K_CLS_TASKS} from '../tasks/Constants';
-import {K_CLS_WORKERS} from '../worker/Constants';
-import {IStorageOptions} from '../storage/IStorageOptions';
-import {ITypexsOptions} from '../ITypexsOptions';
+import { IRuntimeLoaderOptions } from '../../base/IRuntimeLoaderOptions';
+import { K_CLS_TASKS } from '../tasks/Constants';
+import { K_CLS_WORKERS } from '../worker/Constants';
+import { IStorageOptions } from '../storage/IStorageOptions';
+import { ITypexsOptions } from '../ITypexsOptions';
 
 /**
  * Command options
@@ -42,10 +42,12 @@ export const NAMESPACE_CONFIG = 'config';
  */
 export const DEFAULT_CONFIG_LOAD_ORDER = [
   {
-    type: 'file', file: '${argv.configfile}'
+    type: 'file',
+    file: '${argv.configfile}'
   },
   {
-    type: 'file', file: '${env.configfile}'
+    type: 'file',
+    file: '${env.configfile}'
   },
   {
     type: 'file',
@@ -58,13 +60,18 @@ export const DEFAULT_CONFIG_LOAD_ORDER = [
       'typexs--${os.hostname}',
       'typexs--${argv.nodeId}',
       'typexs--${os.hostname}--${argv.nodeId}',
+      '${app.name}/typexs',
+      '${app.name}/typexs--${argv.nodeId}',
       '${os.hostname}/typexs',
       '${os.hostname}/typexs--${argv.nodeId}'
     ]
   },
   {
     type: 'file',
-    file: {dirname: './config', filename: '${app.name}'},
+    file: {
+      dirname: './config',
+      filename: '${app.name}'
+    },
     pattern: [
       'secrets',
       'secrets--${os.hostname}',
@@ -185,8 +192,7 @@ export const DEFAULT_RUNTIME_OPTIONS: IRuntimeLoaderOptions = {
       topic: K_CLS_ENTITIES_DEFAULT,
       refs: [
         'entities', 'src/entities',
-        'shared/entities', 'src/shared/entities',
-        'modules/*/entities', 'src/modules/*/entities'
+        'shared/entities', 'src/shared/entities'
       ]
     },
     {
@@ -206,7 +212,7 @@ export const DEFAULT_RUNTIME_OPTIONS: IRuntimeLoaderOptions = {
       refs: [
         'adapters/exchange/*/*Exchange.*', 'src/adapters/exchange/*/*Exchange.*'
       ]
-    },
+    }
   ]
 };
 
@@ -228,7 +234,7 @@ export const DEFAULT_TYPEXS_OPTIONS: ITypexsOptions = {
 
   modules: {},
 
-  logging: {enable: false},
+  logging: { enable: false },
 
   storage: {
     'default': DEFAULT_STORAGE_OPTIONS

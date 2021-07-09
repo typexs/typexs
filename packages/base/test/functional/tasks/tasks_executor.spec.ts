@@ -1,21 +1,21 @@
 import * as _ from 'lodash';
-import {suite, test, timeout} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {SimpleTaskPromise} from './tasks/SimpleTaskPromise';
-import {TestHelper} from '../TestHelper';
-import {TaskExecutor} from '../../../src/libs/tasks/TaskExecutor';
-import {TEST_STORAGE_OPTIONS} from '../config';
-import {IEventBusConfiguration} from 'commons-eventbus';
-import {SpawnHandle} from '../SpawnHandle';
-import {TaskRequestFactory} from '../../../src/libs/tasks/worker/TaskRequestFactory';
-import {ITaskRunnerResult} from '../../../src/libs/tasks/ITaskRunnerResult';
-import {TaskEvent} from '../../../src/libs/tasks/worker/TaskEvent';
-import {Bootstrap} from '../../../src/Bootstrap';
-import {ITypexsOptions} from '../../../src/libs/ITypexsOptions';
-import {Injector} from '../../../src/libs/di/Injector';
-import {StorageRef} from '../../../src/libs/storage/StorageRef';
-import {TaskLog} from '../../../src/entities/TaskLog';
-import {C_STORAGE_DEFAULT} from '../../../src/libs/Constants';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { SimpleTaskPromise } from './tasks/SimpleTaskPromise';
+import { TestHelper } from '../TestHelper';
+import { TaskExecutor } from '../../../src/libs/tasks/TaskExecutor';
+import { TEST_STORAGE_OPTIONS } from '../config';
+import { IEventBusConfiguration } from 'commons-eventbus';
+import { SpawnHandle } from '../SpawnHandle';
+import { TaskRequestFactory } from '../../../src/libs/tasks/worker/TaskRequestFactory';
+import { ITaskRunnerResult } from '../../../src/libs/tasks/ITaskRunnerResult';
+import { TaskEvent } from '../../../src/libs/tasks/worker/TaskEvent';
+import { Bootstrap } from '../../../src/Bootstrap';
+import { ITypexsOptions } from '../../../src/libs/ITypexsOptions';
+import { Injector } from '../../../src/libs/di/Injector';
+import { StorageRef } from '../../../src/libs/storage/StorageRef';
+import { TaskLog } from '../../../src/entities/TaskLog';
+import { C_STORAGE_DEFAULT } from '../../../src/libs/Constants';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -33,25 +33,25 @@ class TasksSpec {
 
     const nodeId = 'system_0';
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
         app: {
           name: 'test',
           nodeId: nodeId,
           path: __dirname + '/fake_app_task_exec'
         },
-        logging: {enable: LOG_EVENT, level: 'debug', loggers: [{name: '*', level: 'debug'}]},
-        modules: {paths: [__dirname + '/../../..']},
-        storage: {default: TEST_STORAGE_OPTIONS},
+        logging: { enable: LOG_EVENT, level: 'debug', loggers: [{ name: '*', level: 'debug' }] },
+        modules: { paths: [__dirname + '/../../..'] },
+        storage: { default: TEST_STORAGE_OPTIONS },
         eventbus: {
           default: <IEventBusConfiguration>{
-            adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}
+            adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 }
           }
         },
         workers: {
           access: [
-            {name: 'TaskQueueWorker', access: 'allow'},
-            {name: 'ExchangeMessageWorker', access: 'allow'}
+            { name: 'TaskQueueWorker', access: 'allow' },
+            { name: 'ExchangeMessageWorker', access: 'allow' }
           ]
         }
       });
@@ -99,7 +99,7 @@ class TasksSpec {
       {},
       {
         isLocal: true,
-        skipTargetCheck: true,
+        skipTargetCheck: true
       }).run() as ITaskRunnerResult;
 
     expect(data.results).to.not.be.empty;
@@ -115,7 +115,7 @@ class TasksSpec {
     // Check if tasks status was saved correctly
     //
     const storageRef = Injector.get(C_STORAGE_DEFAULT) as StorageRef;
-    const found = await storageRef.getController().findOne(TaskLog, {tasksId: runnerId});
+    const found = await storageRef.getController().findOne(TaskLog, { tasksId: runnerId });
 
     expect(found).to.be.instanceOf(TaskLog);
     expect(found).to.deep.include({
@@ -130,7 +130,7 @@ class TasksSpec {
       total: 100,
       done: true,
       running: false,
-      weight: 0,
+      weight: 0
 
     });
   }
@@ -147,7 +147,7 @@ class TasksSpec {
         {},
         {
           targetId: 'system_0',
-          skipTargetCheck: true,
+          skipTargetCheck: true
         })
       .run() as ITaskRunnerResult[];
 
@@ -165,7 +165,7 @@ class TasksSpec {
     // Check if tasks status was saved correctly
     //
     const storageRef = Injector.get(C_STORAGE_DEFAULT) as StorageRef;
-    const found = await storageRef.getController().findOne(TaskLog, {tasksId: runnerId});
+    const found = await storageRef.getController().findOne(TaskLog, { tasksId: runnerId });
 
     expect(found).to.be.instanceOf(TaskLog);
     expect(found).to.deep.include({
@@ -180,7 +180,7 @@ class TasksSpec {
       total: 100,
       done: true,
       running: false,
-      weight: 0,
+      weight: 0
 
     });
   }
@@ -198,7 +198,7 @@ class TasksSpec {
         {
           waitForRemoteResults: false,
           targetId: 'system_0',
-          skipTargetCheck: true,
+          skipTargetCheck: true
         })
       .run() as TaskEvent[];
 
@@ -225,7 +225,7 @@ class TasksSpec {
           {},
           {
             targetId: 'not_there',
-            skipTargetCheck: true,
+            skipTargetCheck: true
           })
         .run() as ITaskRunnerResult[];
       expect(true).to.be.false;
@@ -247,7 +247,7 @@ class TasksSpec {
         {
           waitForRemoteResults: true,
           targetId: 'remote01',
-          skipTargetCheck: true,
+          skipTargetCheck: true
         })
       .run() as ITaskRunnerResult[];
 
@@ -265,7 +265,7 @@ class TasksSpec {
     // Task shouldn't be local
     //
     const storageRef = Injector.get(C_STORAGE_DEFAULT) as StorageRef;
-    const found = await storageRef.getController().findOne(TaskLog, {tasksId: runnerId});
+    const found = await storageRef.getController().findOne(TaskLog, { tasksId: runnerId });
     expect(found).to.be.null;
 
     //
@@ -306,7 +306,7 @@ class TasksSpec {
         {
           waitForRemoteResults: true,
           targetIds: ['remote01'],
-          skipTargetCheck: true,
+          skipTargetCheck: true
         })
       .run() as ITaskRunnerResult[];
 
@@ -325,14 +325,16 @@ class TasksSpec {
     const factory = Injector.get(TaskRequestFactory);
     const exchange = factory.executeRequest();
     // exchange.
-    const message = await exchange.create([
+    const message = await exchange.create(
+      [
         'simple_task_promise'
       ],
       {},
       {
         targetIds: ['remote01'],
-        skipTargetCheck: true,
-      });
+        skipTargetCheck: true
+      }
+    );
     const future = await message.future();
     const events = await message.run() as TaskEvent[];
 
@@ -363,7 +365,7 @@ class TasksSpec {
           waitForRemoteResults: true,
           remote: true,
           executeOnMultipleNodes: 3,
-          skipTargetCheck: true,
+          skipTargetCheck: true
         })
       .run() as ITaskRunnerResult[];
 
@@ -391,7 +393,7 @@ class TasksSpec {
           waitForRemoteResults: true,
           remote: true,
           randomWorkerSelection: true,
-          skipTargetCheck: true,
+          skipTargetCheck: true
         })
       .run() as ITaskRunnerResult[];
 
@@ -423,7 +425,7 @@ class TasksSpec {
           {},
           {
             targetId: 'remote01',
-            skipTargetCheck: true,
+            skipTargetCheck: true
             // timeout: 30000
           })
         .run() as ITaskRunnerResult[];
@@ -443,10 +445,10 @@ class TasksSpec {
         [
           'simple_in_out_task'
         ],
-        {income: 'hallo welt '},
+        { income: 'hallo welt ' },
         {
           targetId: 'remote01',
-          skipTargetCheck: true,
+          skipTargetCheck: true
           // timeout: 30000
         })
       .run() as ITaskRunnerResult[];
@@ -455,8 +457,8 @@ class TasksSpec {
     const data = entry.shift();
     expect(data.results).to.have.length(1);
     expect(data.results.shift()).to.deep.include({
-      incoming: {income: 'hallo welt '},
-      outgoing: {output: 'hallo welt hallo welt hallo welt'},
+      incoming: { income: 'hallo welt ' },
+      outgoing: { output: 'hallo welt hallo welt hallo welt' }
     });
 
   }
@@ -473,7 +475,7 @@ class TasksSpec {
           executionConcurrency: 1,
           waitForRemoteResults: true,
           targetId: 'system_0',
-          skipTargetCheck: true,
+          skipTargetCheck: true
         })
       .run();
 
@@ -487,7 +489,7 @@ class TasksSpec {
           executionConcurrency: 1,
           waitForRemoteResults: true,
           targetId: 'system_0',
-          skipTargetCheck: true,
+          skipTargetCheck: true
         })
       .run();
 
@@ -515,7 +517,7 @@ class TasksSpec {
         {
           executionConcurrency: 1,
           isLocal: true,
-          skipTargetCheck: true,
+          skipTargetCheck: true
         })
       .run();
 
@@ -528,7 +530,7 @@ class TasksSpec {
         {
           executionConcurrency: 1,
           isLocal: true,
-          skipTargetCheck: true,
+          skipTargetCheck: true
         })
       .run();
 
@@ -604,7 +606,7 @@ class TasksSpec {
         {},
         {
           remote: true,
-          skipTargetCheck: true,
+          skipTargetCheck: true
         })
       .run() as ITaskRunnerResult[];
 
@@ -612,7 +614,7 @@ class TasksSpec {
     const entry = data.shift();
     const data1 = entry.results.shift();
     expect(data1).to.be.deep.include({
-      has_error: true,
+      has_error: true
     });
 
     expect(data1.error).to.be.deep.include({
@@ -633,13 +635,13 @@ class TasksSpec {
         ],
         {},
         {
-          isLocal: true,
+          isLocal: true
         })
       .run() as ITaskRunnerResult;
 
     const data1 = entry.results.shift();
     expect(data1).to.be.deep.include({
-      has_error: true,
+      has_error: true
     });
 
     expect(data1.error).to.be.deep.include({

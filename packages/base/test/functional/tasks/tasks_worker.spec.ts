@@ -1,28 +1,28 @@
 import * as _ from 'lodash';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
 
-import {Bootstrap} from '../../../src/Bootstrap';
-import {Container} from 'typedi';
-import {Config} from '@allgemein/config';
-import {TEST_STORAGE_OPTIONS} from '../config';
-import {EventBus, IEventBusConfiguration, subscribe} from 'commons-eventbus';
-import {TaskQueueWorker} from '../../../src/workers/TaskQueueWorker';
-import {SimpleWorkerTask} from './tasks/SimpleWorkerTask';
-import {TaskEvent} from '../../../src/libs/tasks/worker/TaskEvent';
-import {TestHelper} from '../TestHelper';
-import {SpawnHandle} from '../SpawnHandle';
-import {TaskCommand} from '../../../src/commands/TaskCommand';
-import {SimpleTaskWithLog} from './tasks/SimpleTaskWithLog';
-import {TaskRequestFactory} from '../../../src/libs/tasks/worker/TaskRequestFactory';
-import {TaskMonitorWorker} from '../../../src/workers/TaskMonitorWorker';
-import {ITypexsOptions} from '../../../src/libs/ITypexsOptions';
-import {Tasks} from '../../../src/libs/tasks/Tasks';
-import {Workers} from '../../../src/libs/worker/Workers';
-import {C_STORAGE_DEFAULT} from '../../../src/libs/Constants';
-import {TaskLog} from '../../../src/entities/TaskLog';
-import {StorageRef} from '../../../src/libs/storage/StorageRef';
-import {Injector} from '../../../src/libs/di/Injector';
+import { Bootstrap } from '../../../src/Bootstrap';
+import { Container } from 'typedi';
+import { Config } from '@allgemein/config';
+import { TEST_STORAGE_OPTIONS } from '../config';
+import { EventBus, IEventBusConfiguration, subscribe } from 'commons-eventbus';
+import { TaskQueueWorker } from '../../../src/workers/TaskQueueWorker';
+import { SimpleWorkerTask } from './tasks/SimpleWorkerTask';
+import { TaskEvent } from '../../../src/libs/tasks/worker/TaskEvent';
+import { TestHelper } from '../TestHelper';
+import { SpawnHandle } from '../SpawnHandle';
+import { TaskCommand } from '../../../src/commands/TaskCommand';
+import { SimpleTaskWithLog } from './tasks/SimpleTaskWithLog';
+import { TaskRequestFactory } from '../../../src/libs/tasks/worker/TaskRequestFactory';
+import { TaskMonitorWorker } from '../../../src/workers/TaskMonitorWorker';
+import { ITypexsOptions } from '../../../src/libs/ITypexsOptions';
+import { Tasks } from '../../../src/libs/tasks/Tasks';
+import { Workers } from '../../../src/libs/worker/Workers';
+import { C_STORAGE_DEFAULT } from '../../../src/libs/Constants';
+import { TaskLog } from '../../../src/entities/TaskLog';
+import { StorageRef } from '../../../src/libs/storage/StorageRef';
+import { Injector } from '../../../src/libs/di/Injector';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -50,13 +50,13 @@ class TasksWorkerSpec {
   async 'run manuell task by triggering event on local worker'() {
     const NODEID = 'worker';
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
-        app: {name: 'test', nodeId: NODEID},
-        logging: {enable: LOG_EVENT, level: 'debug'},
-        modules: {paths: [__dirname + '/../../..'], disableCache: true},
-        storage: {default: TEST_STORAGE_OPTIONS},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
+        app: { name: 'test', nodeId: NODEID },
+        logging: { enable: LOG_EVENT, level: 'debug' },
+        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        storage: { default: TEST_STORAGE_OPTIONS },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } }
         // workers: {access: [{name: 'TaskMonitorWorker', access: 'allow'}]}
       });
     bootstrap.activateLogger();
@@ -109,21 +109,19 @@ class TasksWorkerSpec {
     await worker.queue.pause();
     // await worker.queue.await();
     expect(events).to.have.length(4);
-    expect(events.map(e => {
-      return {state: e.state, result: e.data ? e.data.results[0].result : null};
-    })).to.deep.eq([
-      {state: 'enqueue', result: null},
-      {state: 'enqueue', result: null},
-      {state: 'started', result: null},
+    expect(events.map(e => ({ state: e.state, result: e.data ? e.data.results[0].result : null }))).to.deep.eq([
+      { state: 'enqueue', result: null },
+      { state: 'enqueue', result: null },
+      { state: 'started', result: null },
       // {state: 'running', result: null},
-      {state: 'stopped', result: 'test'}
+      { state: 'stopped', result: 'test' }
     ]);
 
     events = [];
 
     const taskEvent2 = new TaskEvent();
     taskEvent2.nodeId = NODEID;
-    taskEvent2.taskSpec = {name: ref.name, incomings: {data: 'pass test'}};
+    taskEvent2.taskSpec = { name: ref.name, incomings: { data: 'pass test' } };
     const res2 = await EventBus.post(taskEvent2);
     const work2 = _.find(res2[0], (x: any) => x && x.nodeId === NODEID);
     expect(work2.nodeId).to.be.eq(NODEID);
@@ -133,13 +131,11 @@ class TasksWorkerSpec {
     worker.queue.resume();
     await TestHelper.waitFor(() => events.length >= 4);
     expect(events).to.have.length(4);
-    expect(events.map(e => {
-      return {state: e.state, result: e.data ? e.data.results[0].result : null};
-    })).to.deep.eq([
-      {state: 'enqueue', result: null},
-      {state: 'enqueue', result: null},
-      {state: 'started', result: null},
-      {state: 'stopped', result: 'test'}
+    expect(events.map(e => ({ state: e.state, result: e.data ? e.data.results[0].result : null }))).to.deep.eq([
+      { state: 'enqueue', result: null },
+      { state: 'enqueue', result: null },
+      { state: 'started', result: null },
+      { state: 'stopped', result: 'test' }
     ]);
 
 
@@ -153,14 +149,14 @@ class TasksWorkerSpec {
   @test
   async 'run local job with execution request'() {
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
-        app: {name: 'test', nodeId: 'worker'},
-        logging: {enable: LOG_EVENT, level: 'debug'},
-        modules: {paths: [__dirname + '/../../..'], disableCache: true},
-        storage: {default: TEST_STORAGE_OPTIONS},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
-        workers: {access: [{name: 'TaskQueueWorker', access: 'allow'}]}
+        app: { name: 'test', nodeId: 'worker' },
+        logging: { enable: LOG_EVENT, level: 'debug' },
+        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        storage: { default: TEST_STORAGE_OPTIONS },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } },
+        workers: { access: [{ name: 'TaskQueueWorker', access: 'allow' }] }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -179,7 +175,7 @@ class TasksWorkerSpec {
       className: 'TaskQueueWorker',
       statistics:
         {
-          stats: {all: 0, done: 0, running: 0, enqueued: 0, active: 0},
+          stats: { all: 0, done: 0, running: 0, enqueued: 0, active: 0 },
           paused: false,
           idle: true,
           occupied: false,
@@ -204,7 +200,7 @@ class TasksWorkerSpec {
     await EventBus.register(z);
 
     const tasks: Tasks = Injector.get(Tasks.NAME);
-    const ref = tasks.addTask(SimpleWorkerTask, null, {worker: true});
+    const ref = tasks.addTask(SimpleWorkerTask, null, { worker: true });
 
     const execReq = Injector.get(TaskRequestFactory).executeRequest();
     const results = await execReq.create([ref.name]).run();
@@ -226,7 +222,7 @@ class TasksWorkerSpec {
         'worker'
       ],
       'respId': 'worker',
-      'errors': [],
+      'errors': []
     });
   }
 
@@ -234,13 +230,13 @@ class TasksWorkerSpec {
   @test
   async 'run job on remote worker'() {
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
-        app: {name: 'test', nodeId: 'system', path: __dirname + '/fake_app'},
-        logging: {enable: LOG_EVENT, level: 'debug'},
-        modules: {paths: [__dirname + '/../../..'], disableCache: true},
-        storage: {default: TEST_STORAGE_OPTIONS},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}}
+        app: { name: 'test', nodeId: 'system', path: __dirname + '/fake_app' },
+        logging: { enable: LOG_EVENT, level: 'debug' },
+        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        storage: { default: TEST_STORAGE_OPTIONS },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -291,22 +287,18 @@ class TasksWorkerSpec {
     await bootstrap.shutdown();
 
     expect(events).to.have.length.gte(4);
-    expect(events.map(x => {
-      return {state: x.state, respId: x.respId};
-    })).to.deep.eq([
-      {state: 'proposed', respId: undefined},
-      {state: 'enqueue', respId: 'fakeapp01'},
-      {state: 'started', respId: 'fakeapp01'},
-      {state: 'stopped', respId: 'fakeapp01'}
+    expect(events.map(x => ({ state: x.state, respId: x.respId }))).to.deep.eq([
+      { state: 'proposed', respId: undefined },
+      { state: 'enqueue', respId: 'fakeapp01' },
+      { state: 'started', respId: 'fakeapp01' },
+      { state: 'stopped', respId: 'fakeapp01' }
     ]);
-    const x = events.map(x => {
-      return {result: x.data ? x.data.results[0].result : null};
-    });
+    const x = events.map(x => ({ result: x.data ? x.data.results[0].result : null }));
     expect(x).to.deep.eq([
-      {result: null},
-      {result: null},
-      {result: null},
-      {result: {res: 'okay', value: 'someValueEntry'}}
+      { result: null },
+      { result: null },
+      { result: null },
+      { result: { res: 'okay', value: 'someValueEntry' } }
     ]);
   }
 
@@ -314,13 +306,13 @@ class TasksWorkerSpec {
   @test
   async 'run job on remote worker, but without necessary parameters'() {
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
-        app: {name: 'test', nodeId: 'system', path: __dirname + '/fake_app'},
-        logging: {enable: LOG_EVENT, level: 'debug'},
-        modules: {paths: [__dirname + '/../../..'], disableCache: true},
-        storage: {default: TEST_STORAGE_OPTIONS},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}}
+        app: { name: 'test', nodeId: 'system', path: __dirname + '/fake_app' },
+        logging: { enable: LOG_EVENT, level: 'debug' },
+        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        storage: { default: TEST_STORAGE_OPTIONS },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -367,16 +359,14 @@ class TasksWorkerSpec {
     await bootstrap.shutdown();
 
     expect(events).to.have.length(2);
-    expect(events.map(x => {
-      return {state: x.state};
-    })).to.deep.eq([{state: 'proposed'}, {state: 'request_error'}]);
+    expect(events.map(x => ({ state: x.state }))).to.deep.eq([{ state: 'proposed' }, { state: 'request_error' }]);
     const e = events.pop();
     expect(e.state).to.eq('request_error');
     expect(e.respId).to.eq('fakeapp01');
     expect(e.errors).to.have.length(1);
     expect(e.errors).to.deep.eq([{
       context: 'required_parameter',
-      data: {required: 'someValue'},
+      data: { required: 'someValue' },
       message: 'The required value is not passed.'
     }]);
   }
@@ -385,13 +375,13 @@ class TasksWorkerSpec {
   @test
   async 'run job direct on remote worker'() {
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
-        app: {name: 'test', nodeId: 'system', path: __dirname + '/fake_app'},
-        logging: {enable: LOG_EVENT, level: 'debug'},
-        modules: {paths: [__dirname + '/../../..'], disableCache: true},
-        storage: {default: TEST_STORAGE_OPTIONS},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}}
+        app: { name: 'test', nodeId: 'system', path: __dirname + '/fake_app' },
+        logging: { enable: LOG_EVENT, level: 'debug' },
+        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        storage: { default: TEST_STORAGE_OPTIONS },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -465,26 +455,20 @@ class TasksWorkerSpec {
     expect(events_02).to.have.length(1);
     expect(events_03).to.have.length(1);
 
-    expect(events_01.map(x => {
-      return {state: x.state, respId: x.respId};
-    })).to.deep.eq([
-      {state: 'enqueue', respId: 'fakeapp01'},
-      {state: 'started', respId: 'fakeapp01'},
-      {state: 'stopped', respId: 'fakeapp01'}
+    expect(events_01.map(x => ({ state: x.state, respId: x.respId }))).to.deep.eq([
+      { state: 'enqueue', respId: 'fakeapp01' },
+      { state: 'started', respId: 'fakeapp01' },
+      { state: 'stopped', respId: 'fakeapp01' }
     ]);
 
-    expect(events_02.map(x => {
-      return {state: x.state, respId: x.respId};
-    })).to.deep.eq([
-      {state: 'proposed', respId: undefined},
+    expect(events_02.map(x => ({ state: x.state, respId: x.respId }))).to.deep.eq([
+      { state: 'proposed', respId: undefined }
     ]);
 
-    expect(events_01.map(x => {
-      return {result: x.data ? x.data.results[0].result : null};
-    })).to.deep.eq([
-      {result: null},
-      {result: null},
-      {result: {res: 'okay', value: 'valueSome'}}
+    expect(events_01.map(x => ({ result: x.data ? x.data.results[0].result : null }))).to.deep.eq([
+      { result: null },
+      { result: null },
+      { result: { res: 'okay', value: 'valueSome' } }
     ]);
   }
 
@@ -497,14 +481,14 @@ class TasksWorkerSpec {
     await handle.started;
 
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
-        app: {name: 'test', nodeId: 'event', path: __dirname + '/fake_app'},
-        logging: {enable: LOG_EVENT, level: 'debug', loggers: [{name: '*', level: 'debug'}]},
-        modules: {paths: [__dirname + '/../../..'], disableCache: true},
-        storage: {default: TEST_STORAGE_OPTIONS},
+        app: { name: 'test', nodeId: 'event', path: __dirname + '/fake_app' },
+        logging: { enable: LOG_EVENT, level: 'debug', loggers: [{ name: '*', level: 'debug' }] },
+        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        storage: { default: TEST_STORAGE_OPTIONS },
         // cache: {bins: {default: 'redis1'}, adapter: {redis1: {type: 'redis', host: '127.0.0.1', port: 6379}}},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}}
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -553,14 +537,14 @@ class TasksWorkerSpec {
   @test
   async 'monitor local task execution'() {
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
-        app: {name: 'test', nodeId: 'worker'},
-        logging: {enable: LOG_EVENT, level: 'debug'},
-        modules: {paths: [__dirname + '/../../..'], disableCache: true},
-        storage: {default: TEST_STORAGE_OPTIONS},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
-        workers: {access: [{name: 'Task*Worker', access: 'allow'}]}
+        app: { name: 'test', nodeId: 'worker' },
+        logging: { enable: LOG_EVENT, level: 'debug' },
+        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        storage: { default: TEST_STORAGE_OPTIONS },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } },
+        workers: { access: [{ name: 'Task*Worker', access: 'allow' }] }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -583,7 +567,7 @@ class TasksWorkerSpec {
     await EventBus.register(l);
 
     const tasks: Tasks = Container.get(Tasks.NAME);
-    const ref = tasks.addTask(SimpleTaskWithLog, null, {worker: true});
+    const ref = tasks.addTask(SimpleTaskWithLog, null, { worker: true });
 
     const execReq = Container.get(TaskRequestFactory).executeRequest();
     const results = await execReq.create([ref.name]).run();
@@ -612,7 +596,7 @@ class TasksWorkerSpec {
         'worker'
       ],
       'respId': 'worker',
-      'errors': [],
+      'errors': []
     });
   }
 

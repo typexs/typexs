@@ -176,7 +176,7 @@ class TasksSpec {
     expect(taskRef.getIncomings().map(x => x.storingName)).to.be.deep.eq(['incoming', 'param_list']);
 
     const runner = new TaskRunner(tasks, ['simple_task_with_args']);
-    const req = runner.getRequiredIncomings();
+    const req = runner.getIncomingParameters();
     expect(req.map(x => x.storingName)).to.be.deep.eq(['incoming', 'param_list']);
 
     await runner.setIncoming('incoming', 'is_incomed;)');
@@ -201,7 +201,7 @@ class TasksSpec {
     expect(taskRef.getIncomings().map(x => x.getOptions('default'))).to.be.deep.eq(['SomeValue', ['asd', 'bfr']]);
 
     const runner = new TaskRunner(tasks, ['simple_task_with_default_args']);
-    const req = runner.getRequiredIncomings();
+    const req = runner.getIncomingParameters();
     expect(req.map(x => x.storingName)).to.be.deep.eq(['value', 'list']);
 
     const data = await runner.run();
@@ -219,7 +219,7 @@ class TasksSpec {
     expect(taskRef.getIncomings().map(x => x.getOptions('default'))).to.be.deep.eq(['SomeValue', ['asd', 'bfr']]);
 
     const runner = new TaskRunner(tasks, ['simple_task_with_default_args']);
-    const req = runner.getRequiredIncomings();
+    const req = runner.getIncomingParameters();
     expect(req.map(x => x.storingName)).to.be.deep.eq(['value', 'list']);
 
     const data = await runner.run();

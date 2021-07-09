@@ -1,15 +1,15 @@
 // process.env['SQL_LOG'] = 'X';
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
 import * as _ from 'lodash';
-import {TestHelper} from './TestHelper';
-import {TEST_STORAGE_OPTIONS} from './config';
-import {TypeOrmConnectionWrapper} from '@typexs/base';
-import {RegistryFactory} from '@allgemein/schema-api';
-import {NAMESPACE_BUILT_ENTITY} from '../../src/libs/Constants';
-import {EntityRegistry} from '../../src/libs/EntityRegistry';
-import {getMetadataArgsStorage} from 'typeorm';
+import { TestHelper } from './TestHelper';
+import { TEST_STORAGE_OPTIONS } from './config';
+import { TypeOrmConnectionWrapper } from '@typexs/base';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
+import { EntityRegistry } from '../../src/libs/EntityRegistry';
+import { getMetadataArgsStorage } from 'typeorm';
 
 let registry: EntityRegistry;
 
@@ -321,27 +321,27 @@ class SqlSchemaPredefinedJoinBidirectSpec {
 
     expect(s).to.deep.eq({
       value: 'Hallo',
-      contents: [{text: 'halo', blobid: 1}],
-      '$state': {isValidated: true, isSuccessValidated: true},
+      contents: [{ text: 'halo', blobid: 1 }],
+      '$state': { isValidated: true, isSuccessValidated: true },
       id: 1
     });
 
     const tContentHolder: any[] = await c.connection.query('SELECT * FROM content_holder;');
 
-    expect(tContentHolder).to.deep.eq([{id: 1, value: 'Hallo'}]);
+    expect(tContentHolder).to.deep.eq([{ id: 1, value: 'Hallo' }]);
     const tBlobs: any[] = await c.connection.query('SELECT * FROM blobs;');
 
-    expect(tBlobs).to.deep.eq([{blobid: 1, text: 'halo'}]);
+    expect(tBlobs).to.deep.eq([{ blobid: 1, text: 'halo' }]);
     const tRBlobs: any[] = await c.connection.query('SELECT * FROM r_blobs;');
-    expect(tRBlobs).to.deep.eq([{rblobid: 1, table_name: 'content_holder', table_id: 1, blobid: 1}]);
+    expect(tRBlobs).to.deep.eq([{ rblobid: 1, table_name: 'content_holder', table_id: 1, blobid: 1 }]);
 
 
-    const f = await xsem.find(ContentHolder, {id: 1});
+    const f = await xsem.find(ContentHolder, { id: 1 });
     expect(f).to.have.length(1);
     const f01 = f[0];
     expect(f01).to.deep.eq({
       value: 'Hallo',
-      contents: [{text: 'halo', blobid: 1}],
+      contents: [{ text: 'halo', blobid: 1 }],
       id: 1
     });
 
@@ -382,7 +382,7 @@ class SqlSchemaPredefinedJoinBidirectSpec {
     await entityController.save(role);
 
     const results = await connectionWrapper.connection.query('SELECT * FROM r_belongsto_2;');
-    const permissions = await entityController.find(Permission, null, {limit: 0});
+    const permissions = await entityController.find(Permission, null, { limit: 0 });
 
     await connectionWrapper.close();
     expect(results).to.have.length(1000);
@@ -437,7 +437,7 @@ class SqlSchemaPredefinedJoinBidirectSpec {
 
 
     const results = await connectionWrapper.connection.query('SELECT * FROM r_belongsto_2;');
-    const permissions = await entityController.find(Permission, null, {limit: 0});
+    const permissions = await entityController.find(Permission, null, { limit: 0 });
 
     await connectionWrapper.close();
     expect(results).to.have.length(1000);

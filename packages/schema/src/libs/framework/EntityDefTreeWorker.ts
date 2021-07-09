@@ -1,9 +1,8 @@
-import {EntityRef} from '../registry/EntityRef';
-import {PropertyRef} from '../registry/PropertyRef';
-import {EntityRegistry} from '../EntityRegistry';
+import { EntityRef } from '../registry/EntityRef';
+import { PropertyRef } from '../registry/PropertyRef';
 import * as _ from 'lodash';
-import {IDataExchange} from './IDataExchange';
-import {IClassRef} from '@allgemein/schema-api';
+import { IDataExchange } from './IDataExchange';
+import { IClassRef } from '@allgemein/schema-api';
 
 interface IQEntry {
   def: EntityRef | PropertyRef | IClassRef;
@@ -45,11 +44,13 @@ export abstract class EntityDefTreeWorker {
   abstract leaveEntity(entityDef: EntityRef, propertyDef: PropertyRef, sources: IDataExchange<any>): Promise<IDataExchange<any>>;
 
 
-  protected async onEntity(entityDef: EntityRef,
-                           referPropertyDef?: PropertyRef,
-                           sources?: IDataExchange<any>): Promise<IDataExchange<any>> {
+  protected async onEntity(
+    entityDef: EntityRef,
+    referPropertyDef?: PropertyRef,
+    sources?: IDataExchange<any>
+  ): Promise<IDataExchange<any>> {
 
-    const def: IQEntry = {def: entityDef, sources: sources, refer: referPropertyDef};
+    const def: IQEntry = { def: entityDef, sources: sources, refer: referPropertyDef };
     this.queue.push(def);
     def.result = await this.visitEntity(entityDef, referPropertyDef, sources);
     if (!(_.has(def.result, 'abort') && def.result.abort)) {
@@ -77,8 +78,8 @@ export abstract class EntityDefTreeWorker {
 
 
   abstract visitDataProperty(propertyDef: PropertyRef,
-                             sourceDef: PropertyRef | EntityRef | IClassRef,
-                             sources: IDataExchange<any>, targets: IDataExchange<any>): void;
+    sourceDef: PropertyRef | EntityRef | IClassRef,
+    sources: IDataExchange<any>, targets: IDataExchange<any>): void;
 
   onDataProperty(propertyDef: PropertyRef, previous: IQEntry) {
     this.visitDataProperty(propertyDef, previous.def, previous.sources, previous.result);
@@ -86,15 +87,15 @@ export abstract class EntityDefTreeWorker {
 
 
   abstract visitEntityReference(sourceDef: PropertyRef | EntityRef | IClassRef,
-                                propertyDef: PropertyRef,
-                                entityDef: EntityRef,
-                                sources: IDataExchange<any>): Promise<IDataExchange<any>>;
+    propertyDef: PropertyRef,
+    entityDef: EntityRef,
+    sources: IDataExchange<any>): Promise<IDataExchange<any>>;
 
   abstract leaveEntityReference(sourceDef: PropertyRef | EntityRef | IClassRef,
-                                propertyDef: PropertyRef,
-                                entityDef: EntityRef,
-                                sources: IDataExchange<any>,
-                                visitResult: IDataExchange<any>): Promise<IDataExchange<any>>;
+    propertyDef: PropertyRef,
+    entityDef: EntityRef,
+    sources: IDataExchange<any>,
+    visitResult: IDataExchange<any>): Promise<IDataExchange<any>>;
 
 
   async onEntityReference(property: PropertyRef, previous: IQEntry): Promise<void> {
@@ -132,18 +133,18 @@ export abstract class EntityDefTreeWorker {
   }
 
   abstract visitObjectReference(sourceDef: PropertyRef | EntityRef | IClassRef,
-                                propertyDef: PropertyRef,
-                                classRef: IClassRef,
-                                sources: IDataExchange<any>): Promise<IDataExchange<any>>;
+    propertyDef: PropertyRef,
+    classRef: IClassRef,
+    sources: IDataExchange<any>): Promise<IDataExchange<any>>;
 
   abstract leaveObjectReference(sourceDef: PropertyRef | EntityRef | IClassRef,
-                                propertyDef: PropertyRef,
-                                classRef: IClassRef,
-                                sources: IDataExchange<any>): Promise<IDataExchange<any>>;
+    propertyDef: PropertyRef,
+    classRef: IClassRef,
+    sources: IDataExchange<any>): Promise<IDataExchange<any>>;
 
   private async onObjectReference(property: PropertyRef, previous: IQEntry): Promise<void> {
     const classDef = property.targetRef;
-    const def: IQEntry = {def: classDef, sources: previous.result, refer: property};
+    const def: IQEntry = { def: classDef, sources: previous.result, refer: property };
     this.queue.push(def);
     def.result = await this.visitObjectReference(previous.def, property, classDef, previous.result);
     const status = _.get(def.result, 'status', null);
@@ -169,12 +170,12 @@ export abstract class EntityDefTreeWorker {
 
 
   abstract visitExternalReference(sourceDef: PropertyRef | EntityRef | IClassRef,
-                                  propertyDef: PropertyRef,
-                                  classRef: IClassRef, sources: IDataExchange<any>): Promise<IDataExchange<any>>;
+    propertyDef: PropertyRef,
+    classRef: IClassRef, sources: IDataExchange<any>): Promise<IDataExchange<any>>;
 
   abstract leaveExternalReference(sourceDef: PropertyRef | EntityRef | IClassRef,
-                                  propertyDef: PropertyRef,
-                                  classRef: IClassRef, sources: IDataExchange<any>): Promise<IDataExchange<any>>;
+    propertyDef: PropertyRef,
+    classRef: IClassRef, sources: IDataExchange<any>): Promise<IDataExchange<any>>;
 
   // private async onExternalProperty(property: PropertyRef, previous: IQEntry): Promise<void> {
   //   const classDef = property.propertyRef;
@@ -202,7 +203,7 @@ export abstract class EntityDefTreeWorker {
 
 
   async walk(entityDef: EntityRef, sources?: any[]): Promise<any> {
-    const result = await this.onEntity(entityDef, null, {next: sources});
+    const result = await this.onEntity(entityDef, null, { next: sources });
     return result.next;
   }
 
@@ -215,7 +216,7 @@ export abstract class EntityDefTreeWorker {
 
 
   private async onProperty(propertyDef: PropertyRef, previous: IQEntry): Promise<any> {
-    this.queue.push({def: propertyDef});
+    this.queue.push({ def: propertyDef });
     const res: any = await this.onInternalProperty(propertyDef, previous);
     // if (propertyDef.isAppended()) {
     //   res = await this.onInternalProperty(propertyDef, previous);

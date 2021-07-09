@@ -51,7 +51,7 @@ export class Bootstrap {
   private constructor(options: ITypexsOptions = {}) {
     options = options || {};
     // this.options = defaults(options, cloneDeep(DEFAULT_TYPEXS_OPTIONS));
-    this.configLoader = new ConfigLoader(defaults(options, cloneDeep(DEFAULT_TYPEXS_OPTIONS)));
+    this.configLoader = new ConfigLoader(defaults(options, cloneDeep(DEFAULT_TYPEXS_OPTIONS)), options);
     // this.initConfigSources();
   }
 
@@ -235,6 +235,7 @@ export class Bootstrap {
     //
     // Override nodeId if given
     //
+    // const appNodeId = Config.get('app.nodeId', Config.get('argv.nodeId', null));
     const appNodeId = Config.get('app.nodeId', Config.get('argv.nodeId', null));
     this.nodeId = appNodeId ? appNodeId : this.nodeId;
 
@@ -372,6 +373,7 @@ export class Bootstrap {
     return this;
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   async execCommand(clazz: Function, argv: any) {
     const command: ICommand = Injector.get(clazz);
     return await command.handler(argv);

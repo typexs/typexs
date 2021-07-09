@@ -1,3 +1,4 @@
+/* eslint-disable */
 'use strict';
 
 const gulp = require('gulp');
@@ -14,7 +15,6 @@ const playbook = yaml.load(fs.readFileSync(playbookFilename, 'utf8'));
 // const outputDir = (playbook.output || {}).dir || './build/public'
 const outputDir = './build/docs';
 const serverConfig = { name: 'Preview Site', livereload: livereload, port: 5005, root: outputDir };
-console.log(serverConfig);
 const antoraArgs = ['--playbook', playbookFilename];
 // const watchPatterns = playbook.content.sources.filter((source) => !source.url.includes(':')).reduce((accum, source) => {
 //   // accum.push(`${source.url}/${source.start_path ? source.start_path + '/' : ''}antora.yml`)
@@ -49,7 +49,7 @@ gulp.task('docs-generate', generate);
 
 function swallowError(error) {
   // If you want details of the error in the console
-  console.log(error.toString());
+  console.error(error);
   this.emit('end');
 }
 
@@ -57,21 +57,9 @@ function serve(done) {
   connect.server(serverConfig, function() {
     this.server.on('close', done);
     watch(watchPatterns, generate);
-    watch(['./build/**'], series('html')).on('error', swallowError);
+    watch(['./build/**'], { usePolling: true }, series('html')).on('error', swallowError);
   });
 }
 
-
-//
-// gulp.task('doc-generate', generate);
-//
-//
-// gulp.task('doc-watch-and-reload', function(){
-//   watch(watchPatterns, generate).pipe(connect.reload());
-// });
-//
-// gulp.task('doc-server', function() {
-//   return connect.server(serverConfig);
-// });
 
 gulp.task('watch-doc', series(generate, serve));

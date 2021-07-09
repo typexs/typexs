@@ -1,5 +1,5 @@
 import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Injector, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET} from '@typexs/base';
+import { Bootstrap, Injector, REGISTRY_TYPEORM, TypeOrmEntityRegistry, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
 import {K_ROUTE_CONTROLLER, Server, XS_P_$URL} from '@typexs/server';
 import * as _ from 'lodash';
 import {expect} from 'chai';
@@ -9,8 +9,9 @@ import {HttpFactory, IHttp} from '@allgemein/http';
 import {
   API_CTRL_ENTITY_FIND_ENTITY,
   API_CTRL_ENTITY_GET_ENTITY,
-  API_CTRL_ENTITY_SAVE_ENTITY
+  API_CTRL_ENTITY_SAVE_ENTITY, NAMESPACE_BUILT_ENTITY
 } from '../../../src/libs/Constants';
+import { RegistryFactory } from '@allgemein/schema-api';
 
 const settingsTemplate: any = {
   storage: {
@@ -78,8 +79,10 @@ class ApiserverSpec {
 
 
   static async before() {
+    RegistryFactory.reset();
+    // TypeOrmEntityRegistry.reset();
     TestHelper.resetTypeorm();
-    Bootstrap.reset();
+    // Bootstrap.reset();
 
     const settings = _.clone(settingsTemplate);
     http = await HttpFactory.create();
@@ -106,6 +109,7 @@ class ApiserverSpec {
     }
 
     Bootstrap.reset();
+    RegistryFactory.reset();
 
   }
 

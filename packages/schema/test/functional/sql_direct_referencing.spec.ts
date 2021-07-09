@@ -3,7 +3,7 @@ import '../../src/libs/decorators/register';
 import {suite, test} from '@testdeck/mocha';
 import {expect} from 'chai';
 import * as _ from 'lodash';
-import {StorageRef, TypeOrmConnectionWrapper} from '@typexs/base';
+import { StorageRef, TypeOrmConnectionWrapper, TypeOrmEntityRegistry } from '@typexs/base';
 import {EntityController} from '../../src/libs/EntityController';
 import {TestHelper} from './TestHelper';
 import {TEST_STORAGE_OPTIONS} from './config';
@@ -13,9 +13,7 @@ import {NAMESPACE_BUILT_ENTITY} from '../../src/libs/Constants';
 
 const FINDOPT = {
   hooks: {
-    abortCondition: (entityRef: any, propertyDef: any, results: any, op: any) => {
-      return op.entityDepth > 1;
-    }
+    abortCondition: (entityRef: any, propertyDef: any, results: any, op: any) => op.entityDepth > 1
   }
 };
 
@@ -30,6 +28,7 @@ class SqlDirectReferencingSpec {
   }
 
   static after() {
+    TypeOrmEntityRegistry.reset();
     RegistryFactory.reset();
   }
 
@@ -39,14 +38,14 @@ class SqlDirectReferencingSpec {
 
 
 
-  async connect(options: any): Promise<{ ref: StorageRef, controller: EntityController }> {
+  async connect(options: any): Promise<{ ref: StorageRef; controller: EntityController }> {
     return TestHelper.connect(options);
   }
 
   @test
   async 'entity referencing property E-P-E over property table'() {
     const options = _.clone(TEST_STORAGE_OPTIONS);
-//    (<any>options).name = 'direct_property';
+    //    (<any>options).name = 'direct_property';
 
     const Author = require('./schemas/default/Author').Author;
     const Book = require('./schemas/default/Book').Book;
@@ -104,7 +103,7 @@ class SqlDirectReferencingSpec {
   @test
   async 'entity referencing through embedded mode E-P-E (test embed and idKey)'() {
     const options = _.clone(TEST_STORAGE_OPTIONS);
-//    (<any>options).name = 'direct_property';
+    //    (<any>options).name = 'direct_property';
 
     const Course = require('./schemas/default/Course').Course;
     const Periode = require('./schemas/default/Periode').Periode;
@@ -117,10 +116,10 @@ class SqlDirectReferencingSpec {
     const c = await ref.connect();
 
     let course_save_1 = new Course();
-// embed test
+    // embed test
     course_save_1.periode = new Periode();
     course_save_1.periode.year = 2018;
-// idKey test
+    // idKey test
     course_save_1.periode_alt = new Periode();
     course_save_1.periode_alt.year = 2019;
     course_save_1 = await xsem.save(course_save_1, {validate: false});
@@ -135,7 +134,7 @@ class SqlDirectReferencingSpec {
   @test
   async 'entity referencing through embedded mode E-P-O'() {
     const options = _.clone(TEST_STORAGE_OPTIONS);
-//    (<any>options).name = 'direct_property';
+    //    (<any>options).name = 'direct_property';
 
     const Course2 = require('./schemas/default/Course2').Course2;
     const Literatur = require('./schemas/default/Literatur').Literatur;
@@ -150,11 +149,11 @@ class SqlDirectReferencingSpec {
     course2_save_1.literatur.titel = 'Bürgeliches Gesetzbuch';
     course2_save_1.literatur.titelid = 'BGB';
     course2_save_1 = await xsem.save(course2_save_1, {validate: false});
-    //// console.log(course2_save_1);
+    /// / console.log(course2_save_1);
 
     const courses_found = await xsem.find(Course2, {id: 1}, FINDOPT);
     const course2_find_1 = courses_found.shift();
-    //// console.log(course2_find_1);
+    /// / console.log(course2_find_1);
 
     expect(course2_find_1).to.deep.eq(course2_save_1);
     await c.close();
@@ -163,7 +162,7 @@ class SqlDirectReferencingSpec {
   @test
   async 'entity referencing through embedded mode E-P-O-P-O'() {
     const options = _.clone(TEST_STORAGE_OPTIONS);
-//    (<any>options).name = 'direct_property';
+    //    (<any>options).name = 'direct_property';
 
     const EDR = require('./schemas/default/EDR').EDR;
     const EDR_Object_DR = require('./schemas/default/EDR_Object_DR').EDR_Object_DR;

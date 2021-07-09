@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import '../../src/libs/decorators/register';
 import {suite, test} from '@testdeck/mocha';
 import * as _ from 'lodash';

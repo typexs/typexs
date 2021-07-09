@@ -1,27 +1,26 @@
 import * as _ from 'lodash';
-import {TaskRef} from './TaskRef';
-import {TaskExchangeRef} from './TaskExchangeRef';
-import {ClassLoader, PlatformUtils} from '@allgemein/base';
-import {Config} from '@allgemein/config';
-import {ITaskRunnerOptions} from './ITaskRunnerOptions';
-import {TaskRequestFactory} from './worker/TaskRequestFactory';
-import {ITaskExectorOptions} from './ITaskExectorOptions';
-import {K_CLS_TASKS, TASK_RUNNER_SPEC} from './Constants';
-import {RuntimeLoader} from '../../base/RuntimeLoader';
-import {Tasks} from './Tasks';
-import {Log} from '../logging/Log';
-import {TaskRunner} from './TaskRunner';
-import {TaskRunnerRegistry} from './TaskRunnerRegistry';
-import {IWorkerInfo} from '../worker/IWorkerInfo';
-import {TaskQueueWorker} from '../../workers/TaskQueueWorker';
-import {System} from '../system/System';
-import {Injector} from '../di/Injector';
-import {DateUtils} from '../utils/DateUtils';
+import { Config } from '@allgemein/config';
+
+import { TaskRef } from './TaskRef';
+import { TaskExchangeRef } from './TaskExchangeRef';
+import { ClassLoader, PlatformUtils } from '@allgemein/base';
+import { ITaskRunnerOptions } from './ITaskRunnerOptions';
+import { TaskRequestFactory } from './worker/TaskRequestFactory';
+import { ITaskExectorOptions } from './ITaskExectorOptions';
+import { CL_TASK_QUEUE_WORKER, CL_TASK_RUNNER_REGISTRY, K_CLS_TASKS, TASK_RUNNER_SPEC } from './Constants';
+import { RuntimeLoader } from '../../base/RuntimeLoader';
+import { Tasks } from './Tasks';
+import { Log } from '../logging/Log';
+import { TaskRunner } from './TaskRunner';
+import { IWorkerInfo } from '../worker/IWorkerInfo';
+import { System } from '../system/System';
+import { Injector } from '../di/Injector';
+import { DateUtils } from '../utils/DateUtils';
 
 
 export class TasksHelper {
 
-  static getRequiredIncomings(tasks: TaskRef[], withoutPassThrough: boolean = false): TaskExchangeRef[] {
+  static getIncomingParameters(tasks: TaskRef[], withoutPassThrough: boolean = false): TaskExchangeRef[] {
     const incoming: TaskExchangeRef[] = [];
     tasks.map(t => {
       t.getIncomings().map(x => {
@@ -44,7 +43,7 @@ export class TasksHelper {
       if (!('name' in task) || !_.isFunction(task['exec'])) {
         throw new Error('task ' + klass + ' has no name');
       }
-      tasks.addTask(klass, null, {worker: hasWorker});
+      tasks.addTask(klass, null, { worker: hasWorker });
     }
   }
 
@@ -62,18 +61,24 @@ export class TasksHelper {
 
 
   static runner(tasks: Tasks, name: TASK_RUNNER_SPEC | TASK_RUNNER_SPEC[], options: ITaskRunnerOptions) {
+
+    const getTaskName = (def: any) => {
+      let taskName = null;
+      if (_.isString(def)) {
+        taskName = def;
+      } else if (def.name) {
+        taskName = def.name;
+      } else {
+        throw new Error('unknown def');
+      }
+      return taskName;
+    };
+
     if (_.isArray(name)) {
       const names = [];
       for (let i = 0; i < name.length; i++) {
         const def = name[i];
-        let taskName = null;
-        if (_.isString(def)) {
-          taskName = def;
-        } else if (def.name) {
-          taskName = def.name;
-        } else {
-          throw new Error('unknown def');
-        }
+        const taskName = getTaskName(def);
         if (!tasks.contains(taskName)) {
           throw new Error('task ' + taskName + ' not exists');
         }
@@ -81,14 +86,7 @@ export class TasksHelper {
       }
       return new TaskRunner(tasks, names, options);
     } else {
-      let taskName = null;
-      if (_.isString(name)) {
-        taskName = name;
-      } else if (name.name) {
-        taskName = name.name;
-      } else {
-        throw new Error('unknown def');
-      }
+      const taskName = getTaskName(name);
 
       if (tasks.contains(taskName)) {
         return new TaskRunner(tasks, [name], options);
@@ -98,7 +96,9 @@ export class TasksHelper {
   }
 
 
-  static getTaskLogFile(runnerId: string, nodeId: string, relative: boolean = false, options: { parseDate: boolean } = {parseDate: true}) {
+  static getTaskLogFile(
+    runnerId: string, nodeId: string, relative: boolean = false, options: { parseDate: boolean } = { parseDate: true }
+  ) {
     const appPath = Config.get('app.path');
     let logdir =
       Config.get('tasks.logdir',
@@ -109,6 +109,7 @@ export class TasksHelper {
       const date = new Date();
       const regex = /%(\w+)/ig;
       let res = null;
+      // eslint-disable-next-line no-cond-assign
       while (res = regex.exec(logdir)) {
         try {
           const part = DateUtils.format(res[1], date);
@@ -136,17 +137,34 @@ export class TasksHelper {
     );
   }
 
+
+  /**
+   * Return task names from task specification
+   *
+   * @param taskSpec
+   */
   static getTaskNames(taskSpec: TASK_RUNNER_SPEC[]) {
     return taskSpec.map(x => _.isString(x) ? x : x.name);
   }
 
 
+  /**
+   * Extract task relevant parameters from passed keys
+   * @param argv
+   */
   static extractOptions(argv: ITaskExectorOptions) {
-    const keys: string[] = [
-      'executionConcurrency', 'skipRequiredThrow', 'skipTargetCheck',
-      'targetId', 'targetIds', 'isLocal', 'waitForRemoteResults',
-      'remote', 'executeOnMultipleNodes',
-      'randomRemoteNodeSelection', 'timeout'
+    const keys: (keyof ITaskExectorOptions)[] = [
+      'executionConcurrency',
+      'skipRequiredThrow',
+      'skipTargetCheck',
+      'targetId',
+      'targetIds',
+      'isLocal',
+      'waitForRemoteResults',
+      'remote',
+      'executeOnMultipleNodes',
+      'randomRemoteNodeSelection',
+      'timeout'
     ];
 
     const options = {};
@@ -198,9 +216,10 @@ export class TasksHelper {
     const isRemote = _.get(options, 'remote', false);
     const skipTargetCheck = _.get(options, 'skipTargetCheck', false);
 
+    // check if concurrency is restricted
     if (options.executionConcurrency) {
       if (options.executionConcurrency !== 0) {
-        const registry = Injector.get(TaskRunnerRegistry.NAME) as TaskRunnerRegistry;
+        const registry = Injector.get(CL_TASK_RUNNER_REGISTRY) as any;
         const counts = registry.getLocalTaskCounts(taskNames);
         if (!_.isEmpty(counts)) {
           const max = _.max(_.values(counts));
@@ -234,22 +253,16 @@ export class TasksHelper {
     } else if (isLocal) {
 
       if (localPossible) {
-        const runnerOptions: any = {
+        const runnerOptions: ITaskRunnerOptions = {
           parallel: 5,
-          dry_mode: _.get(argv, 'dry-outputMode', false),
+          dryMode: _.get(argv, 'dry-outputMode', _.get(argv, 'dryMode', false)),
           local: true
         };
 
-        // add parameters
-        const parameters: any = {};
-        _.keys(argv).map(k => {
-          if (!/^_/.test(k)) {
-            parameters[_.snakeCase(k)] = argv[k];
-          }
-        });
+        const parameters = TasksHelper.getTaskParameters(argv);
 
         // validate arguments
-        const props = TasksHelper.getRequiredIncomings(taskSpec.map(x => _.isString(x) ? x : x.name).map(t => tasksReg.get(t)));
+        const props = TasksHelper.getIncomingParameters(taskSpec.map(x => _.isString(x) ? x : x.name).map(t => tasksReg.get(t)));
         if (props.length > 0) {
           for (const p of props) {
             if (!_.has(parameters, p.storingName) && !_.has(parameters, p.name)) {
@@ -268,14 +281,9 @@ export class TasksHelper {
         }
 
         const runner = TasksHelper.runner(tasksReg, taskSpec, runnerOptions);
-        for (const p in parameters) {
-          if (parameters.hasOwnProperty(p)) {
-            await runner.setIncoming(p, parameters[p]);
-          }
-        }
+        await runner.setIncomings(parameters);
         try {
-          const results = await runner.run();
-          return results;
+          return await runner.run();
         } catch (err) {
           Log.error(err);
         }
@@ -291,10 +299,20 @@ export class TasksHelper {
     return _.concat([], [system.node], system.nodes)
       .filter(n => {
         const x = _.find(n.contexts, c => c.context === 'workers');
-        return _.get(x, 'workers', []).find((y: IWorkerInfo) => y.className === TaskQueueWorker.NAME);
+        return _.get(x, 'workers', []).find((y: IWorkerInfo) => y.className === CL_TASK_QUEUE_WORKER);
       }).map(x => x.nodeId);
 
   }
 
+
+  static getTaskParameters(argv: any = {}) {
+    const parameters: any = {};
+    _.keys(argv).map(k => {
+      if (!/^_/.test(k)) {
+        parameters[_.snakeCase(k)] = argv[k];
+      }
+    });
+    return parameters;
+  }
 
 }

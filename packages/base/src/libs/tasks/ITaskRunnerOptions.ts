@@ -53,4 +53,9 @@ export interface ITaskRunnerOptions {
    * Ignore creation of task logfile
    */
   disableLogFile?: boolean;
+
+  /**
+   * Ignore incoming parameter which are not declared
+   */
+  ignoreUndeclaredIncomings?: boolean;
 }

@@ -1,21 +1,21 @@
-import {Inject} from 'typedi';
-import {Tasks} from './Tasks';
-import {TaskRunnerRegistry} from './TaskRunnerRegistry';
-import {TASK_RUNNER_SPEC} from './Constants';
-import {ITaskExectorOptions} from './ITaskExectorOptions';
+import { Inject } from 'typedi';
+import { Tasks } from './Tasks';
+import { TaskRunnerRegistry } from './TaskRunnerRegistry';
+import { TASK_RUNNER_SPEC } from './Constants';
+import { ITaskExectorOptions } from './ITaskExectorOptions';
 import * as _ from 'lodash';
-import {ILoggerApi} from '../../libs/logging/ILoggerApi';
-import {Log} from '../../libs/logging/Log';
-import {TaskRequestFactory} from './worker/TaskRequestFactory';
-import {TasksHelper} from './TasksHelper';
-import {EventEmitter} from 'events';
-import {ITaskRunnerOptions} from './ITaskRunnerOptions';
-import {TaskEvent} from './worker/TaskEvent';
-import {EventBus, subscribe, unsubscribe} from 'commons-eventbus';
-import {TaskFuture} from './worker/execute/TaskFuture';
-import {ITaskRunnerResult} from './ITaskRunnerResult';
-import {IError} from '../exceptions/IError';
-import {Bootstrap} from '../../Bootstrap';
+import { ILoggerApi } from '../../libs/logging/ILoggerApi';
+import { Log } from '../../libs/logging/Log';
+import { TaskRequestFactory } from './worker/TaskRequestFactory';
+import { TasksHelper } from './TasksHelper';
+import { EventEmitter } from 'events';
+import { ITaskRunnerOptions } from './ITaskRunnerOptions';
+import { TaskEvent } from './worker/TaskEvent';
+import { EventBus, subscribe, unsubscribe } from 'commons-eventbus';
+import { TaskFuture } from './worker/execute/TaskFuture';
+import { ITaskRunnerResult } from './ITaskRunnerResult';
+import { IError } from '../exceptions/IError';
+import { Bootstrap } from '../../Bootstrap';
 
 /**
  * Class controlling local or remote tasks execution.
@@ -80,7 +80,7 @@ export class TaskExecutor extends EventEmitter {
   logger: ILoggerApi = Log.getLoggerFor(TaskExecutor);
 
   setOptions(options: ITaskExectorOptions) {
-    const _opts = options || {skipTargetCheck: false};
+    const _opts = options || { skipTargetCheck: false };
     this.passedOptions = _.clone(_opts);
     this.options = _opts;
     _.defaults(this.options, DEFAULT_TASK_EXEC);
@@ -162,7 +162,7 @@ export class TaskExecutor extends EventEmitter {
           const max = _.max(_.values(counts));
           if (max >= this.options.executionConcurrency) {
             this.logger.warn(
-              `task command: ` +
+              'task command: ' +
               `maximal concurrent process of ${this.taskNames} reached (${max} < ${this.options.executionConcurrency}).`);
             this.executeable = false;
           }
@@ -196,24 +196,12 @@ export class TaskExecutor extends EventEmitter {
       const options: ITaskRunnerOptions = {
         parallel: 5,
         dryMode: _.get(this.options, 'dry-outputMode', false),
-        local: true,
+        local: true
       };
 
-      // add parameters
-      const parameters: any = {};
-      _.keys(this.params).map(k => {
-        // TODO why this check?
-        if (!/^_/.test(k)) {
-          parameters[_.snakeCase(k)] = this.params[k];
-        }
-      });
-
+      const parameters = TasksHelper.getTaskParameters(this.params);
       const runner = TasksHelper.runner(this.tasks, this.spec, options);
-      for (const p in parameters) {
-        if (parameters.hasOwnProperty(p)) {
-          await runner.setIncoming(p, parameters[p]);
-        }
-      }
+      await runner.setIncomings(parameters);
       return runner.run();
     } else {
       this.logger.error('There are no tasks: ' + this.spec.join(', '));

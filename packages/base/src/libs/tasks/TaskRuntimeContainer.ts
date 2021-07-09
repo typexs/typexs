@@ -50,6 +50,9 @@ export class TaskRuntimeContainer implements ITaskRuntimeContainer {
   }
 
 
+  /**
+   * Impl. of interface ITaskRuntimeContainer
+   */
   addTask(name: string, incomings?: any): Promise<TaskState> {
     const taskRun = this.$_run_.getRunner().createTaskRun(name, incomings);
     this.$_run_.getRunner().enqueue(taskRun);
@@ -57,6 +60,28 @@ export class TaskRuntimeContainer implements ITaskRuntimeContainer {
   }
 
 
+  /**
+   * Impl. of interface ITaskRuntimeContainer
+   */
+  getIncomings(){
+    return this.$_run_.getIncomings();
+  }
+
+  /**
+   * Impl. of interface ITaskRuntimeContainer
+   */
+  getOutgoings(){
+    return this.$_run_.getOutgoings();
+  }
+
+
+  getUndeclaredIncomingNames(): string[] {
+    return this.$_run_.getRunner().getUndeclaredIncomingNames();
+  }
+
+  /**
+   * Impl. of interface ITaskRuntimeContainer
+   */
   progress(nr: number) {
     this.$progress = nr;
     this.$_run_.update();

@@ -13,9 +13,7 @@ import {NAMESPACE_BUILT_ENTITY} from '../../src/libs/Constants';
 
 const FINDOPT = {
   hooks: {
-    abortCondition: (entityRef: any, propertyDef: any, results: any, op: any) => {
-      return op.entityDepth > 1;
-    }
+    abortCondition: (entityRef: any, propertyDef: any, results: any, op: any) => op.entityDepth > 1
   }
 };
 
@@ -48,7 +46,7 @@ class SqlIndirectReferencingSpec {
   async 'entity lifecycle for integrated property'() {
 
     const options = _.clone(TEST_STORAGE_OPTIONS);
-//    (<any>options).name = 'direct_property';
+    //    (<any>options).name = 'direct_property';
 
 
     const Author = require('./schemas/default/Author').Author;

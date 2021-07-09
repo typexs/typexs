@@ -39,6 +39,11 @@
     "@angular-eslint/no-output-on-prefix": "error",
     "@angular-eslint/no-output-rename": "error",
     "@angular-eslint/use-pipe-transform-interface": "error",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/ban-types": [
+      "off"
+    ],
     "@typescript-eslint/consistent-type-definitions": "error",
     "@typescript-eslint/dot-notation": "off",
     "@typescript-eslint/explicit-member-accessibility": [
@@ -47,7 +52,6 @@
         "accessibility": "explicit"
       }
     ],
-    "no-unused-vars": "off",
     "@typescript-eslint/member-delimiter-style": [
       "error",
       {
@@ -95,6 +99,9 @@
     ],
     "@typescript-eslint/type-annotation-spacing": "error",
     "@typescript-eslint/unified-signatures": "error",
+    "no-useless-escape": "off",
+    "no-unused-vars": "off",
+    "no-var-requires": "off",
     "arrow-body-style": "error",
     "brace-style": [
       "error",

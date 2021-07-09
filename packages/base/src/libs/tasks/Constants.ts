@@ -3,6 +3,15 @@ export const XS_TYPE_BINDING_SUBELEM = 'entity_ref_has_subelement';
 export const XS_TYPE_BINDING_TASK_GROUP = 'task_group_binding';
 export const XS_TYPE_BINDING_TASK_DEPENDS_ON = 'task_dependency_binding';
 
+/**
+ * Classname of TaskQueueWorker
+ */
+export const CL_TASK_QUEUE_WORKER = 'TaskQueueWorker';
+/**
+ * Classname of TaskRunnerRegistry
+ */
+export const CL_TASK_RUNNER_REGISTRY = 'TaskRunnerRegistry';
+
 
 export const TASKRUN_STATE_NEXT = 'next';
 export const TASKRUN_STATE_RUN = 'run';

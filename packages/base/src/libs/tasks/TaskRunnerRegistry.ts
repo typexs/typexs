@@ -2,24 +2,24 @@
  * Registers all running tasks in the local node
  */
 import * as _ from 'lodash';
-import {TaskRunner} from './TaskRunner';
-import {TASK_RUNNER_SPEC, TASKRUN_STATE_FINISHED} from './Constants';
-import {Counters} from '../helper/Counters';
-import {ITaskRunnerOptions} from './ITaskRunnerOptions';
-import {Tasks} from './Tasks';
-import {Inject} from 'typedi';
-import {TaskRunnerEvent} from './TaskRunnerEvent';
-import {EventBus, subscribe} from 'commons-eventbus';
-import {ITaskRunnerStatus} from './ITaskRunnerStatus';
-import {SystemNodeInfo} from '../../entities/SystemNodeInfo';
-import {Log} from '../../libs/logging/Log';
+import { Inject } from 'typedi';
+import { EventBus, subscribe } from 'commons-eventbus';
+import { TaskRunner } from './TaskRunner';
+import { CL_TASK_RUNNER_REGISTRY, TASK_RUNNER_SPEC, TASKRUN_STATE_FINISHED } from './Constants';
+import { Counters } from '../helper/Counters';
+import { ITaskRunnerOptions } from './ITaskRunnerOptions';
+import { Tasks } from './Tasks';
+import { TaskRunnerEvent } from './TaskRunnerEvent';
+import { ITaskRunnerStatus } from './ITaskRunnerStatus';
+import { SystemNodeInfo } from '../../entities/SystemNodeInfo';
+import { Log } from '../../libs/logging/Log';
 
 /**
  * Node specific registry for TaskRunner which is initalized as singleton in Activator.
  */
 export class TaskRunnerRegistry {
 
-  public static NAME = TaskRunnerRegistry.name;
+  public static NAME = CL_TASK_RUNNER_REGISTRY;
 
   @Inject(Tasks.NAME)
   tasks: Tasks;

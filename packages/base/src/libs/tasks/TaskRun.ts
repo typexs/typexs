@@ -1,11 +1,11 @@
 import * as _ from 'lodash';
-import {TaskRef} from './TaskRef';
-import {TaskRuntimeContainer} from './TaskRuntimeContainer';
-import {TaskRunner} from './TaskRunner';
-import {TaskExchangeRef} from './TaskExchangeRef';
-import {ClassUtils, NotSupportedError} from '@allgemein/base';
-import {ITaskRunResult} from './ITaskRunResult';
-import {TaskState} from './TaskState';
+import { TaskRef } from './TaskRef';
+import { TaskRuntimeContainer } from './TaskRuntimeContainer';
+import { TaskRunner } from './TaskRunner';
+import { TaskExchangeRef } from './TaskExchangeRef';
+import { ClassUtils, NotSupportedError } from '@allgemein/base';
+import { ITaskRunResult } from './ITaskRunResult';
+import { TaskState } from './TaskState';
 
 export class TaskRun {
 
@@ -27,21 +27,22 @@ export class TaskRun {
 
   private $wrapper: TaskRuntimeContainer;
 
-  readonly status: TaskState = new TaskState();
+  readonly status: TaskState;
 
   /**
-   * Incoming values for this task
+   *
+   * @param runner
+   * @param taskRef
+   * @param incomings - initial parameters
    */
-  incomings: { [k: string]: any } = {};
-
-
   constructor(runner: TaskRunner, taskRef: TaskRef, incomings: any = {}) {
+    this.status = new TaskState();
     this.nr = runner.taskInc();
     this.$root = false;
     this.$runner = runner;
     // taskRefs that should run after this taskRef
     this.dependencyTaskNames = taskRef.dependencies();
-    this.incomings = incomings;
+    this.status.incoming = incomings;
 
     // taskRef that should run before this taskRef! (passing values!!!)
     this.subTaskNames = taskRef.subtasks();
@@ -55,6 +56,18 @@ export class TaskRun {
 
   }
 
+
+  getIncomings() {
+    return this.status.incoming;
+  }
+
+  setIncomings(incomings: any) {
+    this.status.incoming = incomings;
+  }
+
+  getOutgoings() {
+    return this.status.outgoing;
+  }
 
   getTaskName() {
     return this.$taskRef.name;
@@ -96,7 +109,7 @@ export class TaskRun {
     const props = this.taskRef().getIncomings();
     if (props.length > 0) {
       for (const p of props) {
-        if (!_.has(this.incomings, p.storingName) && !_.has(this.incomings, p.name)) {
+        if (!_.has(this.getIncomings(), p.storingName) && !_.has(this.getIncomings(), p.name)) {
 
           if (p.isOptional()) {
             const msg = this.taskRef().name + ' optional parameter "' + p.name + '" not found.';
@@ -117,11 +130,10 @@ export class TaskRun {
 
 
   async start(done: (err: Error, res: any) => void, incoming: { [k: string]: any }) {
-
-
+    // parameter for tasks will be passed by value
     incoming = _.clone(incoming) || {};
-    _.assign(incoming, this.incomings); // Overwrite with initial incomings
-    this.incomings = incoming;
+    _.assign(incoming, this.getIncomings()); // Overwrite with initial incomings
+    this.setIncomings(_.clone(incoming));
 
     try {
       this.validateRequiredParameters();
@@ -133,11 +145,12 @@ export class TaskRun {
     this.status.running = true;
     this.status.start = new Date();
     this.$runner.api().onStart(this);
-
+    // this.status.incoming = _.clone(incoming);
 
     if (this.$runner.$dry_mode) {
       this.$wrapper.logger().debug('dry taskRef start: ' + this.taskRef().name);
-      const func = function (d: Function) {
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      const func = function(d: Function) {
         d();
       };
       func.call(this.$wrapper, done);
@@ -145,9 +158,6 @@ export class TaskRun {
       this.$wrapper.logger().debug('taskRef start: ' + this.taskRef().name);
       const outgoings: TaskExchangeRef[] = this.taskRef().getOutgoings();
 
-      this.status.incoming = _.clone(incoming);
-
-      // let _incoming = this.$incoming;
       const runtimeReference = this.taskRef().getRuntime();
       if (runtimeReference) {
         incoming[runtimeReference.name] = this.$wrapper;
@@ -209,9 +219,7 @@ export class TaskRun {
     this.status.running = false;
     this.status.stop = new Date();
     this.status.calcDuration();
-
     this.$runner.api().onStop(this);
-
     this.$wrapper.done();
     this.getRunner().emit('task_' + this.nr + '_done');
   }
@@ -249,17 +257,19 @@ export class TaskRun {
   }
 
 
-  stats() {
+  stats(): ITaskRunResult {
     const stats: ITaskRunResult = _.clone(this.status);
-    if (stats.error && stats.error instanceof Error) {
-      const stacks = stats.error.stack ? stats.error.stack.split('\n') : [];
-      let idxStop = stacks.findIndex(x => /at TaskRun/.test(x));
-      idxStop = idxStop > 0 ? idxStop : 10;
-      stats.error = {
-        message: stats.error.message,
-        className: ClassUtils.getClassName(stats.error as any),
-        stack: stats.error.stack.split('\n').filter((value, index) => index < idxStop)
-      };
+    if (stats.error) {
+      if (stats.error instanceof Error) {
+        const stacks = stats.error.stack ? stats.error.stack.split('\n') : [];
+        let idxStop = stacks.findIndex(x => /at TaskRun/.test(x));
+        idxStop = idxStop > 0 ? idxStop : 10;
+        stats.error = {
+          message: stats.error.message,
+          className: ClassUtils.getClassName(stats.error as any),
+          stack: stats.error.stack.split('\n').filter((value, index) => index < idxStop)
+        };
+      }
     }
     return _.merge(stats, this.$wrapper.stats());
   }

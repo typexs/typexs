@@ -92,6 +92,7 @@ class StorageGeneralSpec {
     let storageRef: TypeOrmStorageRef = storageManager.forClass('module_entity');
     expect(storageRef.name).to.eq(C_DEFAULT);
 
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const TestEntity = require('./../fake_app/entities/TestEntity').TestEntity;
     const classRef = ClassRef.get(TestEntity, 'dummy');
     storageRef = storageManager.forClass(classRef);

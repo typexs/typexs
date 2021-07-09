@@ -1,13 +1,13 @@
 import * as _ from 'lodash';
-import {AbstractMessage} from '../../../messaging/AbstractMessage';
-import {Tasks} from '../../Tasks';
-import {TaskEvent} from '../TaskEvent';
-import {TASK_RUNNER_SPEC} from '../../Constants';
-import {ITaskExecutionRequestOptions} from '../ITaskExecutionRequestOptions';
-import {TaskRef} from '../../TaskRef';
-import {TasksHelper} from '../../TasksHelper';
-import {System} from '../../../../libs/system/System';
-import {TaskFuture} from './TaskFuture';
+import { AbstractMessage } from '../../../messaging/AbstractMessage';
+import { Tasks } from '../../Tasks';
+import { TaskEvent } from '../TaskEvent';
+import { TASK_RUNNER_SPEC } from '../../Constants';
+import { ITaskExecutionRequestOptions } from '../ITaskExecutionRequestOptions';
+import { TaskRef } from '../../TaskRef';
+import { TasksHelper } from '../../TasksHelper';
+import { System } from '../../../../libs/system/System';
+import { TaskFuture } from './TaskFuture';
 
 export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent> {
 
@@ -26,11 +26,13 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
   }
 
 
-  create(taskSpec: TASK_RUNNER_SPEC[],
-         parameters: any = {},
-         options: ITaskExecutionRequestOptions = {
-           targetIds: [], skipTargetCheck: false
-         }) {
+  create(
+    taskSpec: TASK_RUNNER_SPEC[],
+    parameters: any = {},
+    options: ITaskExecutionRequestOptions = {
+      targetIds: [],
+      skipTargetCheck: false
+    }) {
     this.requestOptions = options;
     this.timeout = _.get(options, 'timeout', 10000);
 
@@ -117,7 +119,7 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
   }
 
   async future(filter: (event: TaskEvent) => boolean =
-                 (event: TaskEvent) => event.state !== 'running') {
+    (event: TaskEvent) => event.state !== 'running') {
     const future = new TaskFuture({
       eventId: this.event.id,
       filter: filter

@@ -1,31 +1,26 @@
-import {IStorageOptions} from '../../IStorageOptions';
-import {SqliteConnectionOptions} from 'typeorm/driver/sqlite/SqliteConnectionOptions';
-import {assign, defaults, has, isArray, isEmpty, isFunction, isObjectLike, isString, remove, snakeCase} from 'lodash';
-import {C_DEFAULT, ClassUtils, NotYetImplementedError, PlatformUtils, TodoException} from '@allgemein/base';
-import {Config} from '@allgemein/config';
-import {K_WORKDIR} from '../../../Constants';
-import {BaseUtils} from '../../../utils/BaseUtils';
-import {Log} from '../../../logging/Log';
-import {AbstractSchemaHandler} from '../../AbstractSchemaHandler';
-import {EntitySchema} from 'typeorm/entity-schema/EntitySchema';
-import {Connection, ConnectionOptions, EntityOptions, getConnectionManager, getMetadataArgsStorage} from 'typeorm';
-import {TableMetadataArgs} from 'typeorm/metadata-args/TableMetadataArgs';
-import {ClassRef, ClassType, IClassRef, IEntityRef, IJsonSchema, RegistryFactory} from '@allgemein/schema-api';
-import {DEFAULT_STORAGEREF_OPTIONS} from '../../Constants';
-import {TypeOrmEntityController} from './TypeOrmEntityController';
-import {TypeOrmConnectionWrapper} from './TypeOrmConnectionWrapper';
-import {StorageRef} from '../../StorageRef';
-import {ICollection} from '../../ICollection';
-import {BaseConnectionOptions} from 'typeorm/connection/BaseConnectionOptions';
-import {
-  EVENT_STORAGE_ENTITY_ADDED,
-  EVENT_STORAGE_REF_PREPARED,
-  EVENT_STORAGE_REF_SHUTDOWN,
-  REGISTRY_TYPEORM
-} from './Constants';
-import {ColumnMetadataArgs} from 'typeorm/metadata-args/ColumnMetadataArgs';
-import {isEntityRef} from '@allgemein/schema-api/api/IEntityRef';
-import {TypeOrmEntityRegistry} from './schema/TypeOrmEntityRegistry';
+import { IStorageOptions } from '../../IStorageOptions';
+import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
+import { assign, defaults, has, isArray, isEmpty, isFunction, isObjectLike, isString, remove, snakeCase } from 'lodash';
+import { C_DEFAULT, ClassUtils, NotYetImplementedError, PlatformUtils, TodoException } from '@allgemein/base';
+import { Config } from '@allgemein/config';
+import { K_WORKDIR } from '../../../Constants';
+import { BaseUtils } from '../../../utils/BaseUtils';
+import { Log } from '../../../logging/Log';
+import { AbstractSchemaHandler } from '../../AbstractSchemaHandler';
+import { EntitySchema } from 'typeorm/entity-schema/EntitySchema';
+import { Connection, ConnectionOptions, EntityOptions, getConnectionManager, getMetadataArgsStorage } from 'typeorm';
+import { TableMetadataArgs } from 'typeorm/metadata-args/TableMetadataArgs';
+import { ClassRef, ClassType, IClassRef, IEntityRef, IJsonSchema, RegistryFactory } from '@allgemein/schema-api';
+import { DEFAULT_STORAGEREF_OPTIONS } from '../../Constants';
+import { TypeOrmEntityController } from './TypeOrmEntityController';
+import { TypeOrmConnectionWrapper } from './TypeOrmConnectionWrapper';
+import { StorageRef } from '../../StorageRef';
+import { ICollection } from '../../ICollection';
+import { BaseConnectionOptions } from 'typeorm/connection/BaseConnectionOptions';
+import { EVENT_STORAGE_ENTITY_ADDED, EVENT_STORAGE_REF_PREPARED, EVENT_STORAGE_REF_SHUTDOWN, REGISTRY_TYPEORM } from './Constants';
+import { ColumnMetadataArgs } from 'typeorm/metadata-args/ColumnMetadataArgs';
+import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
+import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
 
 
 export class TypeOrmStorageRef extends StorageRef {
@@ -58,7 +53,7 @@ export class TypeOrmStorageRef extends StorageRef {
 
 
   constructor(options: IStorageOptions & BaseConnectionOptions) {
-    super(defaults(options, {entities: []}));
+    super(defaults(options, { entities: [] }));
 
     // Apply some unchangeable and fixed options
     // options = Utils.merge(options, FIX_STORAGE_OPTIONS);
@@ -81,7 +76,7 @@ export class TypeOrmStorageRef extends StorageRef {
         let found = false;
         for (const test of possibleFiles) {
           if (PlatformUtils.fileExist(test) || PlatformUtils.fileExist(PlatformUtils.directory(test))) {
-            options = BaseUtils.merge(options, {type: 'sqlite', database: test});
+            options = BaseUtils.merge(options, { type: 'sqlite', database: test });
             found = true;
           }
         }
@@ -125,10 +120,11 @@ export class TypeOrmStorageRef extends StorageRef {
 
 
   private static getClassName(x: string | EntitySchema | Function) {
-    return ClassUtils.getClassName(x instanceof EntitySchema ? x.options.target : x);
+    return ClassRef.getClassName(x instanceof EntitySchema ? x.options.target : x);
   }
 
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   private static machineName(x: string | EntitySchema | Function) {
     return snakeCase(this.getClassName(x));
   }
@@ -210,10 +206,15 @@ export class TypeOrmStorageRef extends StorageRef {
   }
 
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   registerEntityRef(type: string | Function | EntitySchema | IEntityRef) {
     let entityRef: IEntityRef = type as IEntityRef;
     if (!isEntityRef(type)) {
       entityRef = this.getEntityRef(type instanceof EntitySchema ? type.options.target : type);
+    }
+
+    if (!entityRef) {
+      throw new Error('no entity ref for ' + type + ' found');
     }
 
     // apply storage name as schema
@@ -243,7 +244,7 @@ export class TypeOrmStorageRef extends StorageRef {
           mode: 'objectId',
           propertyName: '_id',
           target: cls,
-          options: {primary: true, name: '_id'},
+          options: { primary: true, name: '_id' }
         });
       }
 
@@ -343,7 +344,7 @@ export class TypeOrmStorageRef extends StorageRef {
   }
 
   getRegistry() {
-    return RegistryFactory.get(REGISTRY_TYPEORM);
+    return RegistryFactory.get(REGISTRY_TYPEORM) as TypeOrmEntityRegistry;
   }
 
 
@@ -389,6 +390,7 @@ export class TypeOrmStorageRef extends StorageRef {
   }
 
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   getEntityClass(ref: IClassRef | string | Function | ClassType<any>) {
     if (isString(ref)) {
       const _ref = snakeCase(ref);
@@ -483,7 +485,7 @@ export class TypeOrmStorageRef extends StorageRef {
 
 
   async remove(wrapper: TypeOrmConnectionWrapper) {
-    remove(this.connections, {inc: wrapper.inc});
+    remove(this.connections, { inc: wrapper.inc });
 
   }
 

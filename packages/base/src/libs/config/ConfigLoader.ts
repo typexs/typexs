@@ -1,5 +1,5 @@
-import {has, isObject, isString, snakeCase} from 'lodash';
-import {Config, IConfigOptions, IOptions} from '@allgemein/config';
+import { has, isEmpty, isObject, isString, keys, snakeCase } from 'lodash';
+import { Config, IConfigData, IConfigOptions, IOptions } from '@allgemein/config';
 import {
   DefaultNamespacedRegistry,
   IClassRef,
@@ -9,17 +9,18 @@ import {
   METATYPE_PROPERTY,
   RegistryFactory
 } from '@allgemein/schema-api';
-import {NAMESPACE_CONFIG} from './Constants';
-import {ConfigLoadOrder} from './ConfigLoadOrder';
-import {ITypexsOptions} from '../ITypexsOptions';
-import {Log} from '../logging/Log';
-import {PlatformUtils} from '@allgemein/base';
-import {CONFIG_NAMESPACE} from '../Constants';
-import {BaseUtils} from '../utils/BaseUtils';
-import {IActivator} from '../../api/IActivator';
-import {isClassRef} from '@allgemein/schema-api/api/IClassRef';
-import {Injector} from '../di/Injector';
-import {CACHE_NAME, ICache} from '../cache/ICache';
+import { NAMESPACE_CONFIG } from './Constants';
+import { ConfigLoadOrder } from './ConfigLoadOrder';
+import { ITypexsOptions } from '../ITypexsOptions';
+import { Log } from '../logging/Log';
+import { PlatformUtils } from '@allgemein/base';
+import { CONFIG_NAMESPACE } from '../Constants';
+import { BaseUtils } from '../utils/BaseUtils';
+import { IActivator } from '../../api/IActivator';
+import { isClassRef } from '@allgemein/schema-api/api/IClassRef';
+import { Injector } from '../di/Injector';
+import { CACHE_NAME, ICache } from '../cache/ICache';
+import { InterpolationSupport } from '@allgemein/config/supports/InterpolationSupport';
 
 let ajv: any = null;
 const BIN_CONFIG_SCHEMA = 'config.schema';
@@ -27,6 +28,8 @@ const BIN_CONFIG_SCHEMA = 'config.schema';
 export class ConfigLoader {
 
   static NAME = ConfigLoader.name;
+
+  private passedConfiguration: any = {};
 
   private configuration: ITypexsOptions;
 
@@ -36,8 +39,9 @@ export class ConfigLoader {
 
   private CONFIG_LOADED = false;
 
-  constructor(configuration: any = {}) {
+  constructor(configuration: any = {}, passed: any = {}) {
     this.configuration = configuration || {};
+    this.passedConfiguration = passed;
     this.initConfigSources();
   }
 
@@ -187,7 +191,7 @@ export class ConfigLoader {
   async validate(data: any, path: string = null): Promise<{ valid: boolean; errors: any[] }> {
     const fn = await this.validateFunction(path);
     const result = fn(data);
-    return {valid: result, errors: fn.errors};
+    return { valid: result, errors: fn.errors };
   }
 
 
@@ -218,7 +222,7 @@ export class ConfigLoader {
 
     // check if it is an file
     try {
-      let additionalData = null;
+      let additionalData: IConfigData = null;
 
       if (isString(c)) {
         // can be file or JSON with config
@@ -235,13 +239,21 @@ export class ConfigLoader {
           }
 
           if (PlatformUtils.fileExist(configfile)) {
-            this.configOptions.configs.push({type: 'file', file: configfile});
+            this.configOptions.configs.push({ type: 'file', file: configfile });
           } else {
             // INFO that file couldn't be loaded, because it doesn't exist
           }
         }
       } else if (isObject(c)) {
         additionalData = c;
+      }
+
+      if (!isEmpty(additionalData) && keys(additionalData).length > 0) {
+        InterpolationSupport.exec(this.configOptions, additionalData);
+      }
+
+      if (!isEmpty(this.passedConfiguration) && keys(this.passedConfiguration).length > 0) {
+        InterpolationSupport.exec(this.configOptions, this.passedConfiguration);
       }
 
       this.configOptions = Config.options(this.configOptions);

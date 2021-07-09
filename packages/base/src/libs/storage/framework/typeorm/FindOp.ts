@@ -102,6 +102,7 @@ export class FindOp<T> implements IFindOp<T> {
   }
 
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   private async find(entityType: Function | string | ClassType<T>, findConditions?: any): Promise<T[]> {
     let connection: TypeOrmConnectionWrapper = null;
     let results: T[] = [];

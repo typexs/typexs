@@ -77,7 +77,7 @@ src/*.metadata.json
 
 
 docker/*/local
-
+deployments/*/local
 
 dist/
 test/build/

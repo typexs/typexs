@@ -54,4 +54,5 @@ export const C_CONFIG_FILTER_KEYS = [
   'token'
 ];
 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type CLS_DEF<T> = string | Function | ClassType<T> | IClassRef;

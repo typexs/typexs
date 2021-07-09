@@ -1,18 +1,12 @@
-import {
-  defaults, find, isArray, isEmpty, isFunction, isNumber, intersection,
-  get, clone, upperFirst, isNull, keys, values, isString, filter, merge, isPlainObject,
-  concat, kebabCase, has, snakeCase, isRegExp, orderBy, remove, first, set, assign,
-  capitalize, isUndefined
-} from 'lodash';
-import {Component, OnInit} from '@angular/core';
+import { find, keys } from 'lodash';
+import { Component, OnInit } from '@angular/core';
 
 
-
-import {SystemInfoService} from '@typexs/base-ng';
-import {INodeInfo} from '@typexs/base/libs/system/INodeInfo';
-import {SystemNodeInfo} from '@typexs/base/entities/SystemNodeInfo';
-import {interval, Subscription} from 'rxjs';
-import {mergeMap} from 'rxjs/operators';
+import { SystemInfoService } from '@typexs/base-ng';
+import { INodeInfo } from '@typexs/base/libs/system/INodeInfo';
+import { SystemNodeInfo } from '@typexs/base/entities/SystemNodeInfo';
+import { interval, Subscription } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
 
 @Component({
@@ -61,7 +55,8 @@ export class SystemNodesComponent implements OnInit {
         .pipe(
           mergeMap(x => this.infoService.refresh())
         )
-        .subscribe(x => {});
+        .subscribe(x => {
+        });
   }
 
 

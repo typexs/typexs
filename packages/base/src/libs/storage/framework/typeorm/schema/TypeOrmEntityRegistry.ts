@@ -659,6 +659,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
   }
 
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   getEntityRefFor(instance: string | object | Function, skipNsCheck: boolean = false): TypeOrmEntityRef {
     if (!instance) {
       return null;

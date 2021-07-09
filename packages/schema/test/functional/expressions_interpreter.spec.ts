@@ -1,10 +1,10 @@
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {TestHelper} from './TestHelper';
-import {StorageRef} from '@typexs/base';
-import {ExpressionInterpreter} from '@allgemein/expressions';
-import {EntityController} from '../../src/libs/EntityController';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { TestHelper } from './TestHelper';
+import { StorageRef } from '@typexs/base';
+import { ExpressionInterpreter } from '@allgemein/expressions';
+import { EntityController } from '../../src/libs/EntityController';
 
 
 @suite('functional/conditions_interpreter')
@@ -14,7 +14,7 @@ class ExpressionsInterpreterSpec {
     TestHelper.resetTypeorm();
   }
 
-  async connect(options: any): Promise<{ ref: StorageRef, controller: EntityController }> {
+  async connect(options: any): Promise<{ ref: StorageRef; controller: EntityController }> {
     return TestHelper.connect(options);
   }
 
@@ -25,7 +25,7 @@ class ExpressionsInterpreterSpec {
     const cond = interpreter.interprete(conditions_string);
     const json = cond.toJson();
     expect(json).to.deep.eq({
-      'test': {'$eq': 'searchfor'}
+      'test': { '$eq': 'searchfor' }
     });
   }
 
@@ -37,7 +37,7 @@ class ExpressionsInterpreterSpec {
     const cond = interpreter.interprete(conditions_string);
     const json = cond.toJson();
     expect(json).to.deep.eq({
-      'testnr': {$eq: 1}
+      'testnr': { $eq: 1 }
     });
   }
 
@@ -51,8 +51,8 @@ class ExpressionsInterpreterSpec {
     const json = cond.toJson();
     expect(json).to.deep.eq({
       '$and': [
-        {testnr: {$eq: 1}},
-        {test: {$eq: 'searchfor'}},
+        { testnr: { $eq: 1 } },
+        { test: { $eq: 'searchfor' } }
       ]
     });
   }
@@ -66,8 +66,8 @@ class ExpressionsInterpreterSpec {
     const json = cond.toJson();
     expect(json).to.deep.eq({
       '$or': [
-        {testnr: {$eq: 1}},
-        {test: {$eq: 'searchfor'}},
+        { testnr: { $eq: 1 } },
+        { test: { $eq: 'searchfor' } }
       ]
     });
   }
@@ -81,9 +81,9 @@ class ExpressionsInterpreterSpec {
     const json = cond.toJson();
     expect(json).to.deep.eq({
       '$and': [
-        {testnr: {$eq: 1}},
-        {test: {$eq: 'searchfor'}},
-        {'adc.def': {$eq: 1}},
+        { testnr: { $eq: 1 } },
+        { test: { $eq: 'searchfor' } },
+        { 'adc.def': { $eq: 1 } }
       ]
     });
   }
@@ -98,9 +98,9 @@ class ExpressionsInterpreterSpec {
     const json = cond.toJson();
     expect(json).to.deep.eq({
       '$or': [
-        {testnr: {$eq: 1}},
-        {test: {$eq: 'searchfor'}},
-        {'adc.def': {$eq: 1}},
+        { testnr: { $eq: 1 } },
+        { test: { $eq: 'searchfor' } },
+        { 'adc.def': { $eq: 1 } }
       ]
     });
   }
@@ -116,11 +116,11 @@ class ExpressionsInterpreterSpec {
       '$or': [
         {
           '$and': [
-            {'testnr': {'$eq': 1}},
-            {'test': {'$eq': 'searchfor'}}
+            { 'testnr': { '$eq': 1 } },
+            { 'test': { '$eq': 'searchfor' } }
           ]
         },
-        {'adc.def': {'$eq': 1}}
+        { 'adc.def': { '$eq': 1 } }
       ]
     });
   }
@@ -136,8 +136,8 @@ class ExpressionsInterpreterSpec {
     const json = cond.toJson();
     expect(json).to.deep.eq({
       '$and': [
-        {testnr: {$eq: 1}},
-        {test: {$eq: 'searchfor'}},
+        { testnr: { $eq: 1 } },
+        { test: { $eq: 'searchfor' } }
       ]
     });
   }
@@ -153,8 +153,8 @@ class ExpressionsInterpreterSpec {
     let json = cond.toJson();
     expect(json).to.deep.eq({
       '$and': [
-        {testnr: {$eq: 1}},
-        {test: {$eq: 'searchfor'}},
+        { testnr: { $eq: 1 } },
+        { test: { $eq: 'searchfor' } }
       ]
     });
 
@@ -166,8 +166,8 @@ class ExpressionsInterpreterSpec {
     json = cond.toJson();
     expect(json).to.deep.eq({
       '$and': [
-        {testnr: {$eq: 1}},
-        {test: {$eq: 'searchfor'}},
+        { testnr: { $eq: 1 } },
+        { test: { $eq: 'searchfor' } }
       ]
     });
 
@@ -178,8 +178,8 @@ class ExpressionsInterpreterSpec {
     json = cond.toJson();
     expect(json).to.deep.eq({
       '$and': [
-        {testnr: {$eq: 1}},
-        {test: {$eq: 'searchfor'}},
+        { testnr: { $eq: 1 } },
+        { test: { $eq: 'searchfor' } }
       ]
     });
   }
@@ -194,7 +194,7 @@ class ExpressionsInterpreterSpec {
 
     const json = cond.toJson();
     expect(json).to.deep.eq(
-      {test: {$like: 'searchfor'}}
+      { test: { $like: 'searchfor' } }
     );
   }
 
@@ -208,7 +208,7 @@ class ExpressionsInterpreterSpec {
 
     let json = cond.toJson();
     expect(json).to.deep.eq(
-      {test: {$in: ['searchfor']}}
+      { test: { $in: ['searchfor'] } }
     );
 
     // let obj = {test:'searchfor'};
@@ -222,7 +222,7 @@ class ExpressionsInterpreterSpec {
 
     json = cond.toJson();
     expect(json).to.deep.eq(
-      {test: {$in: ['searchfor', 3]}}
+      { test: { $in: ['searchfor', 3] } }
     );
 
 

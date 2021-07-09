@@ -54,7 +54,6 @@ export class TestHelper {
 
 
   static typeOrmReset() {
-//    PlatformTools.getGlobalVariable().typeormMetadataArgsStorage = null;
 
     const e: string[] = ['SystemNodeInfo', 'TaskLog'];
     _.keys(getMetadataArgsStorage()).forEach(x => {

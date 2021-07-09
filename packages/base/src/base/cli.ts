@@ -1,16 +1,20 @@
 import 'reflect-metadata';
 
-import {Bootstrap} from './../Bootstrap';
-import {ConfigHandler} from '@allgemein/config';
-import {ICommand} from '../libs/commands/ICommand';
+import { set } from 'lodash';
+
+import { Bootstrap } from './../Bootstrap';
+import { ConfigHandler } from '@allgemein/config';
+import { ICommand } from '../libs/commands/ICommand';
 import * as yargs from 'yargs';
-import {CommandModule} from 'yargs';
+import { CommandModule } from 'yargs';
 
 
 export async function cli(): Promise<Bootstrap> {
   try {
-    require('yargonaut')
-      .style('blue')
+    // eslint-disable-next-line @typescript-eslint/no-var-requires,@typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const yargonaut = await import('yargonaut');
+    yargonaut.style('blue')
       .style('yellow', 'required')
       .helpStyle('green')
       .errorsStyle('red');
@@ -18,7 +22,7 @@ export async function cli(): Promise<Bootstrap> {
   }
   // todo ... make this configurable
   // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-// need be done at this point, if not,  ConfigHandler has an undefined a
+  // need be done at this point, if not,  ConfigHandler has an undefined a
 
   let cfg = {};
   try {
@@ -29,6 +33,31 @@ export async function cli(): Promise<Bootstrap> {
   } catch (e) {
 
   }
+
+  // pass app name to initial configuration
+
+  const idx: number[] = [];
+  process.argv.map((value, index) => {
+    if (value.startsWith('-D')) {
+      idx.push(index);
+    }
+  });
+  if (idx.length > 0) {
+    for (const _idx of idx) {
+      if (_idx > -1) {
+        const key = process.argv[_idx].replace('-D', '');
+        let next = null;
+        if (process.argv.length > (_idx + 1)) {
+          const value = process.argv[_idx + 1];
+          if (!value.startsWith('-')) {
+            next = value;
+          }
+        }
+        set(cfg, key, next ? next : true);
+      }
+    }
+  }
+
   ConfigHandler.reload();
   const bootstrap = Bootstrap.configure(cfg);
 
@@ -47,7 +76,6 @@ export async function cli(): Promise<Bootstrap> {
 
     if (command.builder) {
       c.builder = command.builder.bind(command);
-
       // c.handler = () => selectedCommand = command;
     }
     yargs2.command(c);

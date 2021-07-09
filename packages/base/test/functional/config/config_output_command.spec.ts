@@ -1,13 +1,13 @@
 // process.env.SQL_LOG = '1';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {Bootstrap, ICommand} from '../../../src';
-import {Config} from '@allgemein/config';
-import {join} from 'path';
-import {hostname} from 'os';
-import {keys, uniqBy} from 'lodash';
-import {ConfigOutputCommand} from '../../../src/commands/ConfigOutputCommand';
-import {Console} from '../../../src/libs/logging/Console';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { Bootstrap, ICommand } from '../../../src';
+import { Config } from '@allgemein/config';
+import { join } from 'path';
+import { hostname } from 'os';
+import { keys, uniqBy } from 'lodash';
+import { ConfigOutputCommand } from '../../../src/commands/ConfigOutputCommand';
+import { Console } from '../../../src/libs/logging/Console';
 import {
   LOAD_ORDER_ONLY,
   OPTIONS_ONLY,
@@ -30,7 +30,7 @@ class ConfigOutputCommandSpec {
     Config.clear();
     appdir = join(__dirname, 'app', 'commands');
     bootstrap = await Bootstrap.configure({
-      app: {path: appdir},
+      app: { path: appdir },
       modules: <any>{
         disableCache: true,
         paths: [__dirname + '/../../..']
@@ -70,7 +70,7 @@ class ConfigOutputCommandSpec {
   @test
   async 'config output for specific path'() {
     const command = commands.find(e => e.constructor.name === ConfigOutputCommand.name);
-    const result = await command.handler({key: 'app'});
+    const result = await command.handler({ key: 'app' });
     expect(result).to.deep.eq({
       'name': 'config-commands',
       'path': appdir
@@ -80,7 +80,7 @@ class ConfigOutputCommandSpec {
   @test
   async 'output config schema only'() {
     const command = commands.find(e => e.constructor.name === ConfigOutputCommand.name);
-    const result = await command.handler({[SCHEMA_ONLY]: true});
+    const result = await command.handler({ [SCHEMA_ONLY]: true });
     expect(result).to.deep.include({
       '$ref': '#/definitions/Config',
       '$schema': 'http://json-schema.org/draft-07/schema#'
@@ -91,7 +91,7 @@ class ConfigOutputCommandSpec {
   @test
   async 'output used config files only'() {
     const command = commands.find(e => e.constructor.name === ConfigOutputCommand.name);
-    const result = await command.handler({[USED_FILES_ONLY]: true});
+    const result = await command.handler({ [USED_FILES_ONLY]: true });
     expect(result).to.deep.eq([
       {
         'dirname': join(appdir, 'config'),
@@ -105,7 +105,7 @@ class ConfigOutputCommandSpec {
   @test
   async 'output used config options'() {
     const command = commands.find(e => e.constructor.name === ConfigOutputCommand.name);
-    const result = await command.handler({[OPTIONS_ONLY]: true});
+    const result = await command.handler({ [OPTIONS_ONLY]: true });
     expect(keys(result)).to.deep.eq([
       'fileSupport',
       'configs',
@@ -117,7 +117,7 @@ class ConfigOutputCommandSpec {
   @test
   async 'output all config sources only'() {
     const command = commands.find(e => e.constructor.name === ConfigOutputCommand.name);
-    const result = await command.handler({[USED_SOURCES_ONLY]: true});
+    const result = await command.handler({ [USED_SOURCES_ONLY]: true });
     expect(uniqBy(result.map((x: any) => {
       delete x.data;
       return x;
@@ -149,11 +149,11 @@ class ConfigOutputCommandSpec {
   @test
   async 'output config load order only'() {
     const command = commands.find(e => e.constructor.name === ConfigOutputCommand.name);
-    const result = await command.handler({[LOAD_ORDER_ONLY]: true});
+    const result = await command.handler({ [LOAD_ORDER_ONLY]: true });
     expect(result).to.deep.eq([
-      {type: 'system', state: true},
-      {type: 'file', file: '${argv.configfile}', state: false},
-      {type: 'file', file: '${env.configfile}', state: false},
+      { type: 'system', state: true },
+      { type: 'file', file: '${argv.configfile}', state: false },
+      { type: 'file', file: '${env.configfile}', state: false },
       {
         type: 'file',
         file: {
@@ -166,6 +166,8 @@ class ConfigOutputCommandSpec {
           'typexs--' + hostname() + '',
           'typexs--${argv.nodeId}',
           'typexs--' + hostname() + '--${argv.nodeId}',
+          '${app.name}/typexs',
+          '${app.name}/typexs--${argv.nodeId}',
           '' + hostname() + '/typexs',
           '' + hostname() + '/typexs--${argv.nodeId}'
         ],
@@ -214,7 +216,7 @@ class ConfigOutputCommandSpec {
   @test
   async 'validate config schema against loaded configuration'() {
     const command = commands.find(e => e.constructor.name === ConfigOutputCommand.name);
-    const result = await command.handler({[VALIDATE_ONLY]: true});
+    const result = await command.handler({ [VALIDATE_ONLY]: true });
     expect(result).to.deep.eq({
       'errors': null,
       'valid': true

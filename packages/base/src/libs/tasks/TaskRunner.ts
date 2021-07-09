@@ -1,8 +1,8 @@
-import {clone, defaults, get, isError, isString, isUndefined, orderBy, set, snakeCase} from 'lodash';
-import {EventEmitter} from 'events';
-import {Tasks} from './Tasks';
-import {TaskRun} from './TaskRun';
-import {Log} from '../logging/Log';
+import { clone, defaults, get, isError, isString, isUndefined, keys, orderBy, set, snakeCase } from 'lodash';
+import { EventEmitter } from 'events';
+import { Tasks } from './Tasks';
+import { TaskRun } from './TaskRun';
+import { Log } from '../logging/Log';
 import {
   TASK_RUNNER_SPEC,
   TASK_STATES,
@@ -13,21 +13,21 @@ import {
   TASKRUN_STATE_RUN,
   TASKRUN_STATE_UPDATE
 } from './Constants';
-import {ITaskRunnerResult} from './ITaskRunnerResult';
-import {Bootstrap} from '../../Bootstrap';
-import {Invoker} from '../../base/Invoker';
-import {TasksHelper} from './TasksHelper';
-import {ILoggerApi} from '../logging/ILoggerApi';
-import {Readable, Writable} from 'stream';
-import {ITaskRunnerOptions} from './ITaskRunnerOptions';
-import {CryptUtils} from '@allgemein/base';
-import {TasksApi} from '../../api/Tasks.api';
-import {TaskRunnerRegistry} from './TaskRunnerRegistry';
-import {TaskRunnerEvent} from './TaskRunnerEvent';
-import {EventBus} from 'commons-eventbus';
-import {Injector} from '../di/Injector';
-import {StreamLogger} from '../logging/StreamLogger';
-import {DateUtils} from '../utils/DateUtils';
+import { ITaskRunnerResult } from './ITaskRunnerResult';
+import { Bootstrap } from '../../Bootstrap';
+import { Invoker } from '../../base/Invoker';
+import { TasksHelper } from './TasksHelper';
+import { ILoggerApi } from '../logging/ILoggerApi';
+import { Readable, Writable } from 'stream';
+import { ITaskRunnerOptions } from './ITaskRunnerOptions';
+import { CryptUtils } from '@allgemein/base';
+import { TasksApi } from '../../api/Tasks.api';
+import { TaskRunnerRegistry } from './TaskRunnerRegistry';
+import { TaskRunnerEvent } from './TaskRunnerEvent';
+import { EventBus } from 'commons-eventbus';
+import { Injector } from '../di/Injector';
+import { StreamLogger } from '../logging/StreamLogger';
+import { DateUtils } from '../utils/DateUtils';
 
 /**
  * Container for single or multiple task execution
@@ -76,11 +76,14 @@ export class TaskRunner extends EventEmitter {
 
   $duration: number;
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   $finish: Function = null;
 
   $incoming: any = {};
 
   $outgoing: any = {};
+
+  undeclaredIncomingNames: string[] = [];
 
   state: TASK_STATES = 'proposed';
 
@@ -95,7 +98,10 @@ export class TaskRunner extends EventEmitter {
   readStream: Readable;
 
 
-  constructor(registry: Tasks, names: TASK_RUNNER_SPEC[], options: ITaskRunnerOptions = null) {
+  constructor(
+    registry: Tasks,
+    names: TASK_RUNNER_SPEC[],
+    options: ITaskRunnerOptions = null) {
     super();
     const nodeId = options && options.nodeId ? options.nodeId : Bootstrap.getNodeId();
     this.$options = options || <any>{};
@@ -128,46 +134,9 @@ export class TaskRunner extends EventEmitter {
 
     this.todoNrs = this.$tasks.map(x => x.nr);
     this.loggerName = 'task-runner-' + this.id;
-    const startDate = DateUtils.toISO(this.$start);
 
     this.initStreams();
-
-    // const overrideOptions: ILoggerOptions =
-    //   Log._().getLoggerOptionsFor(this.loggerName) || {};
-    // assign(overrideOptions,
-    //   {
-    //     enable: true,
-    //     prefix: this.loggerName,
-    //     force: true
-    //   });
-    // if (!Log.enable) {
-    //   // disable transports when general logs are disabled
-    //   overrideOptions.transports = [];
-    // }
-    //
-    //
-    // this.taskLogger = Log._().createLogger(this.loggerName,
-    //   {
-    //     taskStart: startDate,
-    //     taskId: this.id,
-    //     taskNames: this.todoNrs.join('--')
-    //   },
-    //   overrideOptions);
-
-    this.taskLogger = new StreamLogger(
-      this.loggerName,
-      {
-        writeStream: this.getWriteStream(),
-        enable: true,
-        prefix: this.loggerName,
-        force: true,
-        parameters: {
-          taskStart: startDate,
-          taskId: this.id,
-          taskNames: this.todoNrs.join('--')
-        }
-      }
-    );
+    this.initTaskLogger();
 
     this.on(TASKRUN_STATE_FINISHED, this.finish.bind(this));
     this.on(TASKRUN_STATE_NEXT, this.next.bind(this));
@@ -192,8 +161,12 @@ export class TaskRunner extends EventEmitter {
     this.fireStateEvent();
   }
 
-
+  /**
+   * Initialize streams for input and output communication with runnings tasks
+   * @private
+   */
   private initStreams() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     this.readStream = new Readable({
       read(size: number) {
@@ -210,12 +183,36 @@ export class TaskRunner extends EventEmitter {
   }
 
 
+  /**
+   * Initialize task logger
+   *
+   * @private
+   */
+  private initTaskLogger() {
+    const startDate = DateUtils.toISO(this.$start);
+    this.taskLogger = new StreamLogger(
+      this.loggerName,
+      {
+        writeStream: this.getWriteStream(),
+        enable: true,
+        prefix: this.loggerName,
+        force: true,
+        parameters: {
+          taskStart: startDate,
+          taskId: this.id,
+          taskNames: this.todoNrs.join('--')
+        }
+      }
+    );
+  }
+
+
   fireStateEvent() {
     if (!this.event) {
       this.event = new TaskRunnerEvent();
       this.event.id = this.id;
       this.event.nr = this.nr;
-      this.event.nodeId = Bootstrap.getNodeId();
+      this.event.nodeId = this.getOption('nodeId', 'unknown');
     }
 
     this.event.state = this.state;
@@ -277,20 +274,50 @@ export class TaskRunner extends EventEmitter {
    *
    * @param itersect
    */
-  getRequiredIncomings(withoutPassThrough: boolean = false) {
-    return TasksHelper.getRequiredIncomings(this.$tasks.map(tr => tr.taskRef()), withoutPassThrough);
+  getIncomingParameters(withoutPassThrough: boolean = false) {
+    return TasksHelper.getIncomingParameters(this.$tasks.map(tr => tr.taskRef()), withoutPassThrough);
   }
 
-
-  async setIncoming(key: string, value: any) {
-    const ref = this.getRequiredIncomings().find(i => i.storingName === snakeCase(key));
-    if (ref) {
-      set(this.$incoming, ref.storingName, await ref.convert(value));
-    } else {
-      this.getLogger().warn('no required incoming parameter found for ' + key);
+  /**
+   * Set incomings variables
+   *
+   * @param parameters
+   */
+  async setIncomings(parameters: any) {
+    if (parameters) {
+      const paramNames = keys(parameters);
+      for (const paramName of paramNames) {
+        await this.setIncoming(paramName, parameters[paramName]);
+      }
     }
   }
 
+  /**
+   * Set incoming variables or if not declared pass to parameters
+   *
+   * @param key
+   * @param value
+   */
+  async setIncoming(key: string, value: any) {
+    const ref = this.getIncomingParameters().find(i => i.storingName === snakeCase(key));
+    if (ref) {
+      set(this.$incoming, ref.storingName, await ref.convert(value));
+    } else {
+      if (!this.$options.ignoreUndeclaredIncomings) {
+        this.undeclaredIncomingNames.push(key);
+        set(this.$incoming, key, value);
+      } else {
+        this.getLogger().warn('no declared incoming parameter found for ' + key);
+      }
+    }
+  }
+
+  /**
+   * Return undeclared parameter names which are not part on incomings
+   */
+  getUndeclaredIncomingNames() {
+    return this.undeclaredIncomingNames;
+  }
 
   /**
    * Check if subtask or depending tasks are ready
@@ -367,6 +394,7 @@ export class TaskRunner extends EventEmitter {
 
 
   next() {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     if (this.$finished) {
       return;
@@ -398,6 +426,7 @@ export class TaskRunner extends EventEmitter {
 
 
   taskRun(taskRun: TaskRun) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const nr = taskRun.nr; // taskRef().name;
 
@@ -414,7 +443,7 @@ export class TaskRunner extends EventEmitter {
     }
     this.todoNrs.splice(idx, 1);
 
-    const doneCallback = function (err: Error, res: any) {
+    const doneCallback = function(err: Error, res: any) {
       if (err) {
         self.taskLogger.error(err);
       }
@@ -470,6 +499,7 @@ export class TaskRunner extends EventEmitter {
   }
 
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   async run(cb?: Function): Promise<ITaskRunnerResult> {
     this.$finish = cb;
 
@@ -492,6 +522,7 @@ export class TaskRunner extends EventEmitter {
   }
 
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
   runDry(cb?: Function): Promise<ITaskRunnerResult> {
     this.$dry_mode = true;
     this.$finish = cb;
