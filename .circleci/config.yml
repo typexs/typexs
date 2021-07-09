@@ -36,7 +36,7 @@ jobs:
           name: Start container
           command: |
             set -x
-            docker-compose -f docker/testing/docker-compose.yml up -d
+            docker-compose -f deployments/testing/docker-compose.yml up -d
 
       - run:
           name: Wait for containers to start
