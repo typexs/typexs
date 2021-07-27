@@ -1,6 +1,6 @@
-import {assign, clone, defaults, get, has, isArray, isBoolean, isFunction, isObject, isUndefined} from 'lodash';
-import {TaskRef} from './TaskRef';
-import {MetaArgs, NotYetImplementedError} from '@allgemein/base';
+import { assign, clone, defaults, get, has, isArray, isBoolean, isFunction, isObject, isUndefined } from 'lodash';
+import { TaskRef } from './TaskRef';
+import { MetaArgs, NotYetImplementedError } from '@allgemein/base';
 import {
   AbstractRef,
   ClassRef,
@@ -13,19 +13,19 @@ import {
   METATYPE_ENTITY,
   METATYPE_PROPERTY
 } from '@allgemein/schema-api';
-import {K_CLS_TASK_DESCRIPTORS, XS_TYPE_BINDING_TASK_DEPENDS_ON, XS_TYPE_BINDING_TASK_GROUP} from './Constants';
-import {TaskExchangeRef} from './TaskExchangeRef';
-import {ITasksConfig} from './ITasksConfig';
-import {ITaskRefOptions} from './ITaskRefOptions';
-import {ITaskInfo} from './ITaskInfo';
-import {ITaskPropertyRefOptions} from './ITaskPropertyRefOptions';
-import {NullTaskRef} from './NullTaskRef';
-import {MatchUtils} from '../utils/MatchUtils';
-import {Binding} from '@allgemein/schema-api/lib/registry/Binding';
-import {AbstractRegistry} from '@allgemein/schema-api/lib/registry/AbstractRegistry';
-import {isEntityRef} from '@allgemein/schema-api/api/IEntityRef';
-import {isClassRef} from '@allgemein/schema-api/api/IClassRef';
-import {IJsonSchemaSerializeOptions} from '@allgemein/schema-api/lib/json-schema/IJsonSchemaSerializeOptions';
+import { K_CLS_TASK_DESCRIPTORS, XS_TYPE_BINDING_TASK_DEPENDS_ON, XS_TYPE_BINDING_TASK_GROUP } from './Constants';
+import { TaskExchangeRef } from './TaskExchangeRef';
+import { ITasksConfig } from './ITasksConfig';
+import { ITaskRefOptions } from './ITaskRefOptions';
+import { ITaskInfo } from './ITaskInfo';
+import { ITaskPropertyRefOptions } from './ITaskPropertyRefOptions';
+import { NullTaskRef } from './NullTaskRef';
+import { MatchUtils } from '../utils/MatchUtils';
+import { Binding } from '@allgemein/schema-api/lib/registry/Binding';
+import { AbstractRegistry } from '@allgemein/schema-api/lib/registry/AbstractRegistry';
+import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
+import { isClassRef } from '@allgemein/schema-api/api/IClassRef';
+import { IJsonSchemaSerializeOptions } from '@allgemein/schema-api/lib/json-schema/IJsonSchemaSerializeOptions';
 
 
 export class Tasks extends AbstractRegistry implements IJsonSchema {
@@ -37,10 +37,10 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
 
   nodeId: string;
 
-  config: ITasksConfig = {access: []};
+  config: ITasksConfig = { access: [] };
 
 
-  setConfig(config: ITasksConfig = {nodeId: null, access: []}) {
+  setConfig(config: ITasksConfig = { nodeId: null, access: [] }) {
     this.config = config;
     this.nodeId = get(config, 'nodeId');
   }
@@ -85,9 +85,7 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
 
 
   infos(withRemote: boolean = false): ITaskInfo[] {
-    return this.getEntries(withRemote).map((x: TaskRef) => {
-      return x.info();
-    });
+    return this.getEntries(withRemote).map((x: TaskRef) => x.info());
   }
 
 
@@ -95,7 +93,7 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
     if (this.containsTask(name)) {
       return this.find(METATYPE_ENTITY, (t: TaskRef) => t.name === name);
     }
-    const task = this.addTask(name, null, {group: true, namespace: this.namespace});
+    const task = this.addTask(name, null, { group: true, namespace: this.namespace });
     return task;
   }
 
@@ -136,26 +134,27 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
   }
 
 
-  createTaskRef(options: ITaskRefOptions & ITaskInfo & { title?: string, taskName?: string, nodeId?: string }) {
+  createTaskRef(options: ITaskRefOptions & ITaskInfo & { title?: string; taskName?: string; nodeId?: string }) {
     let ref: any = null;
     const target = options.target;
     delete options.target;
     if (!options.remote) {
-      ref = new TaskRef(options.taskName, target, assign(options, {namespace: this.namespace}));
+      ref = new TaskRef(options.taskName, target, assign(options, { namespace: this.namespace }));
     } else {
       // TODO
       // this.addRemoteTask(options.taskName, classRef.getClass(true), options);
-      ref = new TaskRef(options.taskName, null, assign(options, {remote: true, namespace: this.namespace}));
+      ref = new TaskRef(options.taskName, null, assign(options, { remote: true, namespace: this.namespace }));
     }
     return ref;
   }
 
 
-  create<T>(context: string,
-            options:
-              ITaskRefOptions &
-              ITaskInfo &
-              { title?: string, taskName?: string, nodeId?: string } | ITaskPropertyRefOptions): T {
+  create<T>(
+    context: string,
+    options:
+    ITaskRefOptions &
+    ITaskInfo &
+    { title?: string; taskName?: string; nodeId?: string } | ITaskPropertyRefOptions): T {
     let ref: any = null;
     if (context === METATYPE_ENTITY) {
       ref = this.createTaskRef(options) as TaskRef;
@@ -173,9 +172,9 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
 
 
   addTask(name: string | object | Function,
-          fn: object | Function = null,
-          options: ITaskRefOptions = null,
-          withProperties: boolean = true): TaskRef {
+    fn: object | Function = null,
+    options: ITaskRefOptions = null,
+    withProperties: boolean = true): TaskRef {
     // const task = new TaskRef(name, fn, defaults(options, {namespace: this.namespace}));
     let opts = {};
 
@@ -201,9 +200,9 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
 
 
   addRemoteTask(nodeId: string,
-                info: ITaskInfo,
-                hasWorker: boolean = false,
-                withProperties: boolean = true
+    info: ITaskInfo,
+    hasWorker: boolean = false,
+    withProperties: boolean = true
   ): TaskRef {
     // const task = new TaskRef(info, null, {remote: true, namespace: this.namespace});
     const opts: any = {
@@ -316,7 +315,7 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
     if (this.contains(name)) {
       return this.get(name);
     }
-    const task = this.addTask(name, function (done: Function) {
+    const task = this.addTask(name, function(done: Function) {
       done();
     });
 
@@ -370,7 +369,7 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
 
 
   fromJsonSchema(orgJson: any): Promise<TaskRef | TaskRef[]> {
-    return JsonSchema.unserialize(orgJson, {namespace: this.namespace}) as Promise<TaskRef | TaskRef[]>;
+    return JsonSchema.unserialize(orgJson, { namespace: this.namespace }) as Promise<TaskRef | TaskRef[]>;
   }
 
 

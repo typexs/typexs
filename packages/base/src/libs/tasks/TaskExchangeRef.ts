@@ -124,30 +124,6 @@ export class TaskExchangeRef extends AbstractRef implements IPropertyRef {
     throw new NotYetImplementedError();
   }
 
-
-  // toJson() {
-  //   const o = super.toJson();
-  //   o.descriptor = _.cloneDeep(this.descriptor);
-  //   TreeUtils.walk(o.descriptor, (v: WalkValues) => {
-  //     if (_.isString(v.key) && _.isFunction(v.value)) {
-  //       v.parent[v.key] = ClassUtils.getClassName(v.value);
-  //       if (v.key === 'propertyType' && _.isEmpty(v.parent[v.key])) {
-  //         v.parent[v.key] = ClassUtils.getClassName(v.value());
-  //       } else if (v.key === 'valueProvider') {
-  //         if (!_.isFunction(v.value)) {
-  //           // if value provider contains only of values, pass this
-  //           v.parent[v.key] = v.value;
-  //         } else {
-  //           // backend returned data, set classname
-  //
-  //         }
-  //       }
-  //     } else if (_.isString(v.key) && _.isUndefined(v.value)) {
-  //       delete v.parent[v.key];
-  //     }
-  //   });
-  //   return o;
-  // }
   /**
    * Return a class ref for passing string, Function or class ref
    *

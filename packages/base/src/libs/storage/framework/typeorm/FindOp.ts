@@ -145,7 +145,6 @@ export class FindOp<T> implements IFindOp<T> {
                 );
               }
             }
-
           }
         }
       }
@@ -163,7 +162,7 @@ export class FindOp<T> implements IFindOp<T> {
 
       if (_.isNull(this.options.sort)) {
         entityRef.getPropertyRefs().filter(x => x.isIdentifier()).forEach(x => {
-          qb.addOrderBy(TypeOrmUtils.aliasKey(qb, x.storingName), 'ASC');
+          qb.addOrderBy(TypeOrmUtils.aliasKey(qb, x.name), 'ASC');
         });
       } else {
         _.keys(this.options.sort).forEach(sortKey => {
@@ -172,8 +171,7 @@ export class FindOp<T> implements IFindOp<T> {
         });
       }
 
-      const q = qb.getSql();
-
+      // const q = qb.getSql();
       results = this.options.raw ? await qb.getRawMany() : await qb.getMany();
       results[XS_P_$COUNT] = recordCount;
       results[XS_P_$OFFSET] = this.options.offset;

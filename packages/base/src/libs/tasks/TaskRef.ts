@@ -163,9 +163,7 @@ export class TaskRef extends AbstractRef implements IEntityRef {
 
   static dependsOn(src: string, dest: string, namespace: string = C_TASKS) {
     const registry = RegistryFactory.get(namespace);
-    const f = registry.find(<any>XS_TYPE_BINDING_TASK_DEPENDS_ON, (a: Binding) => {
-      return (a.source === src && a.target === dest);
-    });
+    const f = registry.find(<any>XS_TYPE_BINDING_TASK_DEPENDS_ON, (a: Binding) => (a.source === src && a.target === dest));
 
     if (!f) {
       const b = new Binding();
@@ -181,9 +179,7 @@ export class TaskRef extends AbstractRef implements IEntityRef {
 
   static group(src: string, dest: string, namespace: string = C_TASKS) {
     const registry = RegistryFactory.get(namespace);
-    const f = registry.find(<any>XS_TYPE_BINDING_TASK_GROUP, (a: Binding) => {
-      return (a.source === src && a.target === dest);
-    });
+    const f = registry.find(<any>XS_TYPE_BINDING_TASK_GROUP, (a: Binding) => (a.source === src && a.target === dest));
 
     if (!f) {
       const b = new Binding();
