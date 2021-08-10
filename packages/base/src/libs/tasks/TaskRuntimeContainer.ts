@@ -59,6 +59,13 @@ export class TaskRuntimeContainer implements ITaskRuntimeContainer {
     return taskRun.asPromise();
   }
 
+  /**
+   * Impl. of interface ITaskRuntimeContainer
+   */
+  getIncomingsOfRunner(){
+    return this.$_run_.getRunner().$incoming;
+  }
+
 
   /**
    * Impl. of interface ITaskRuntimeContainer

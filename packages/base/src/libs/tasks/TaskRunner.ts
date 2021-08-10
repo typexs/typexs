@@ -268,6 +268,12 @@ export class TaskRunner extends EventEmitter {
     return this.$tasks.map(x => x.getTaskName());
   }
 
+  /**
+   * Get all incomings passed to runner
+   */
+  getIncomings() {
+    return this.$incoming;
+  }
 
   /**
    * Get all necassary incoming parameter
