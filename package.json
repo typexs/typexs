@@ -44,6 +44,7 @@
     "@typexs/ng-forms": "file:./packages/ng-forms/src",
     "@typexs/ng-router-menu": "file:./packages/ng-router-menu/src",
     "@typexs/ng-theme-base": "file:./packages/ng-theme-base/src",
+    "@typexs/notification": "file:./packages/notification/src",
     "@typexs/roles": "file:./packages/roles/src",
     "@typexs/roles-api": "file:./packages/roles-api/src",
     "@typexs/schema": "file:./packages/schema/src",
