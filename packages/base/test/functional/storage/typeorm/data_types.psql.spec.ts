@@ -68,6 +68,14 @@ class StorageRefDataTypesPsqlSpec {
 
   }
 
+  @test
+  async 'date'() {
+    const metaStore = getMetadataArgsStorage();
+    const columns = metaStore.filterColumns(ClassRef.get('WithDate').getClass());
+    expect(columns).to.have.length(5);
+    expect(columns.map(x => x.options.type)).to.be.deep.eq(['int', 'date', 'date', Date, Date]);
+
+  }
 
   static async after() {
     if (bootstrap) {

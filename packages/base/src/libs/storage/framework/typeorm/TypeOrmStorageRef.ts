@@ -132,10 +132,10 @@ export class TypeOrmStorageRef extends StorageRef {
   async initialize(): Promise<boolean> {
     // register used entities, TODO better way to register with annotation @Entity (from typeorm)
     if (has(this.getOptions(), 'entities') && isArray(this.getDeclaredEntities())) {
+      const reg = this.getRegistry();
 
       for (let i = 0; i < this.getDeclaredEntities().length; i++) {
         const type = this.getDeclaredEntities()[i];
-
         if (isObjectLike(type)) {
           if (has(type, '$schema')) {
             const SOURCE = type['__SOURCE__'];

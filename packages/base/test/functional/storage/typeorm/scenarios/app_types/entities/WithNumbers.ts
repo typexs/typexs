@@ -1,5 +1,5 @@
 import { Entity, Namespace, Property } from '@allgemein/schema-api';
-import { REGISTRY_TYPEORM } from '../../../../../../../src';
+import { REGISTRY_TYPEORM } from '../../../../../../../src/libs/storage/framework/typeorm/Constants';
 
 /**
  * Using schema api

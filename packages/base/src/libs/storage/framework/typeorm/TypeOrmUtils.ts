@@ -21,8 +21,8 @@ export class TypeOrmUtils {
    * @param name
    */
   static getJsObjectType(name: JS_DATA_TYPES) {
-    if (['string', 'number', 'boolean', 'date', 'object', 'array'].includes(name.toLowerCase())) {
-      switch (name.toLowerCase() as (JS_DATA_TYPES | 'array')) {
+    if (['string', 'number', 'boolean', 'date', 'object', 'array', 'date:created', 'date:updated'].includes(name.toLowerCase())) {
+      switch (name.toLowerCase() as (JS_DATA_TYPES | 'array' | 'date:created' | 'date:updated')) {
         case 'string':
           return String;
         case 'number':
@@ -30,6 +30,8 @@ export class TypeOrmUtils {
         case 'boolean':
           return Boolean;
         case 'date':
+        case 'date:created':
+        case 'date:updated':
           return Date;
         case 'object':
           return Object;
@@ -87,7 +89,6 @@ export class TypeOrmUtils {
   static toJsonType(type: ColumnType): JS_DATA_TYPES {
     switch (type) {
       case 'timetz':
-
       case 'smalldatetime':
       case 'datetime':
       case 'datetime2':

@@ -401,7 +401,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
       let generated: GeneratedMetadataArgs = null;
       let tableType = 'column';
       let isArray = !isUndefined(options.cardinality) && isNumber(options.cardinality) && options.cardinality !== 1;
-
+      let columnType = 'regular';
       // correct type for typeorm
       let clsRef: IClassRef = null;
       const definedType = options.type;
@@ -419,6 +419,12 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
               clsRef = ClassRef.get(options.type, this.namespace);
               clsType = clsRef.getClass(true);
             }
+          }
+        } else if (clsType === Date) {
+          if (options.type === 'date:created') {
+            columnType = 'createDate';
+          } else if (options.type === 'date:updated') {
+            columnType = 'updateDate';
           }
         } else if (clsType === Array) {
           isArray = true;
@@ -475,6 +481,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           clsType = definedType;
         } else {
           typeOrmOptions.options.type = clsType;
+
         }
 
         typeOrmOptions.options.name = snakeCase(typeOrmOptions.propertyName);
@@ -499,7 +506,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
             throw new NotYetImplementedError('TODO');
           }
         } else if (tableType === 'column') {
-          typeOrmOptions.mode = 'regular';
+          typeOrmOptions.mode = columnType;
         }
 
         if (typeOrmOptions.new) {
