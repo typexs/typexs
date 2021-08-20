@@ -20,20 +20,20 @@ class StorageControllerAggregatePostgresSpec extends StorageAcontrollerAggregate
       .initBefore(
         StorageControllerAggregatePostgresSpec,
         {
-        storage: {
-          default: {
-            synchronize: true,
-            type: 'postgres',
-            database: 'txsbase',
-            username: 'txsbase',
-            password: '',
-            host: '127.0.0.1',
-            port: 5436,
+          storage: {
+            default: {
+              synchronize: true,
+              type: 'postgres',
+              database: 'txsbase',
+              username: 'txsbase',
+              password: '',
+              host: '127.0.0.1',
+              port: 5436,
             // logging: 'all',
             // logger: 'simple-logger'
+            }
           }
-        }
-      });
+        });
   }
 
   static async after() {

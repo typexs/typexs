@@ -1,19 +1,28 @@
-import {TypeOrmEntityRef} from './schema/TypeOrmEntityRef';
-import {ColumnType, QueryBuilder} from 'typeorm';
+import { TypeOrmEntityRef } from './schema/TypeOrmEntityRef';
+import { ColumnType, QueryBuilder } from 'typeorm';
 import * as _ from 'lodash';
-import {TypeOrmEntityRegistry} from './schema/TypeOrmEntityRegistry';
-import {JS_DATA_TYPES} from '@allgemein/schema-api';
+import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
+import { JS_DATA_TYPES } from '@allgemein/schema-api';
 
 
 export class TypeOrmUtils {
+
+  static getSupportedTypes() {
+    return JS_DATA_TYPES.concat(<any[]>['bignumber']);
+  }
+
+
+  static isSupportedType(t: string) {
+    return this.getSupportedTypes().includes(t.toLowerCase() as any);
+  }
 
   /**
    * Return object class for primative string representation
    * @param name
    */
-  static getJsObjectType(name: string) {
-    if (['string', 'number', 'boolean', 'date', 'float', 'array', 'object'].includes(name.toLowerCase())) {
-      switch (name.toLowerCase()) {
+  static getJsObjectType(name: JS_DATA_TYPES) {
+    if (['string', 'number', 'boolean', 'date', 'object', 'array'].includes(name.toLowerCase())) {
+      switch (name.toLowerCase() as (JS_DATA_TYPES | 'array')) {
         case 'string':
           return String;
         case 'number':
@@ -22,14 +31,11 @@ export class TypeOrmUtils {
           return Boolean;
         case 'date':
           return Date;
-        case 'float':
-          return Number;
-        case 'array':
-          return Array;
         case 'object':
           return Object;
+        case 'array':
+          return Array;
       }
-
 
     }
     return null;

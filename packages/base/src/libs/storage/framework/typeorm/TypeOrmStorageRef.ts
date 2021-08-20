@@ -1,7 +1,7 @@
 import { IStorageOptions } from '../../IStorageOptions';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 import { assign, defaults, has, isArray, isEmpty, isFunction, isObjectLike, isString, remove, snakeCase } from 'lodash';
-import { C_DEFAULT, ClassUtils, NotYetImplementedError, PlatformUtils, TodoException } from '@allgemein/base';
+import { C_DEFAULT, NotYetImplementedError, PlatformUtils, TodoException } from '@allgemein/base';
 import { Config } from '@allgemein/config';
 import { K_WORKDIR } from '../../../Constants';
 import { BaseUtils } from '../../../utils/BaseUtils';
@@ -228,6 +228,15 @@ export class TypeOrmStorageRef extends StorageRef {
     const cls = entityRef.getClassRef().getClass();
     const columns = getMetadataArgsStorage().filterColumns(cls);
     // convert unknown types
+
+    columns.forEach(x => {
+      if (x.mode === 'regular') {
+        const type = x.options.type;
+        const resolved = this.getSchemaHandler().translateToStorageType(type, x.options.length as any);
+        x.options.type = resolved.type;
+      }
+    });
+
 
     // change unknown types to convert json
     this.applyObjectToStringifiedJsonConversion(columns);
@@ -462,7 +471,7 @@ export class TypeOrmStorageRef extends StorageRef {
   }
 
 
-  wrap(conn ?: Connection): TypeOrmConnectionWrapper {
+  wrap(conn?: Connection): TypeOrmConnectionWrapper {
     let wrapper: TypeOrmConnectionWrapper = null;
     if ((this.isSingleConnection() && this.connections.length === 0) || !this.isSingleConnection()) {
       if (conn) {

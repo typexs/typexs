@@ -17,8 +17,8 @@ import {
   map,
   snakeCase
 } from 'lodash';
-import {ITypeOrmEntityOptions, TypeOrmEntityRef} from './TypeOrmEntityRef';
-import {TableMetadataArgs} from 'typeorm/metadata-args/TableMetadataArgs';
+import { ITypeOrmEntityOptions, TypeOrmEntityRef } from './TypeOrmEntityRef';
+import { TableMetadataArgs } from 'typeorm/metadata-args/TableMetadataArgs';
 import {
   AbstractRef,
   ClassRef,
@@ -41,47 +41,47 @@ import {
   METATYPE_ENTITY,
   METATYPE_PROPERTY,
   METATYPE_SCHEMA,
-  RegistryFactory,
+  RegistryFactory
 } from '@allgemein/schema-api';
-import {C_DEFAULT, ClassUtils, NotSupportedError, NotYetImplementedError} from '@allgemein/base';
-import {ITypeOrmPropertyOptions, TypeOrmPropertyRef} from './TypeOrmPropertyRef';
-import {RelationMetadataArgs} from 'typeorm/metadata-args/RelationMetadataArgs';
-import {ColumnMetadataArgs} from 'typeorm/metadata-args/ColumnMetadataArgs';
-import {MetadataArgsStorage} from 'typeorm/metadata-args/MetadataArgsStorage';
-import {EmbeddedMetadataArgs} from 'typeorm/metadata-args/EmbeddedMetadataArgs';
-import {TypeOrmUtils} from '../TypeOrmUtils';
-import {isClassRef} from '@allgemein/schema-api/api/IClassRef';
-import {REGISTRY_TYPEORM} from '../Constants';
-import {isEntityRef} from '@allgemein/schema-api/api/IEntityRef';
-import {GeneratedMetadataArgs} from 'typeorm/metadata-args/GeneratedMetadataArgs';
-import {Log} from '../../../../logging/Log';
-import {getMetadataArgsStorage} from 'typeorm';
-import {IJsonSchemaSerializeOptions} from '@allgemein/schema-api/lib/json-schema/IJsonSchemaSerializeOptions';
-import {K_IDENTIFIER, K_NULLABLE} from '../../../Constants';
+import { C_DEFAULT, ClassUtils, NotSupportedError, NotYetImplementedError } from '@allgemein/base';
+import { ITypeOrmPropertyOptions, TypeOrmPropertyRef } from './TypeOrmPropertyRef';
+import { RelationMetadataArgs } from 'typeorm/metadata-args/RelationMetadataArgs';
+import { ColumnMetadataArgs } from 'typeorm/metadata-args/ColumnMetadataArgs';
+import { MetadataArgsStorage } from 'typeorm/metadata-args/MetadataArgsStorage';
+import { EmbeddedMetadataArgs } from 'typeorm/metadata-args/EmbeddedMetadataArgs';
+import { TypeOrmUtils } from '../TypeOrmUtils';
+import { isClassRef } from '@allgemein/schema-api/api/IClassRef';
+import { REGISTRY_TYPEORM } from '../Constants';
+import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
+import { GeneratedMetadataArgs } from 'typeorm/metadata-args/GeneratedMetadataArgs';
+import { Log } from '../../../../logging/Log';
+import { getMetadataArgsStorage } from 'typeorm';
+import { IJsonSchemaSerializeOptions } from '@allgemein/schema-api/lib/json-schema/IJsonSchemaSerializeOptions';
+import { K_IDENTIFIER, K_NULLABLE } from '../../../Constants';
 
 
 export type TYPEORM_METADATA_KEYS = 'tables' |
-'trees' |
-'entityRepositories' |
-'transactionEntityManagers' |
-'transactionRepositories' |
-'namingStrategies' |
-'entitySubscribers' |
-'indices' |
-'uniques' |
-'checks' |
-'exclusions' |
-'columns' |
-'generations' |
-'relations' |
-'joinColumns' |
-'joinTables' |
-'entityListeners' |
-'relationCounts' |
-'relationIds' |
-'embeddeds' |
-'inheritances' |
-'discriminatorValues';
+  'trees' |
+  'entityRepositories' |
+  'transactionEntityManagers' |
+  'transactionRepositories' |
+  'namingStrategies' |
+  'entitySubscribers' |
+  'indices' |
+  'uniques' |
+  'checks' |
+  'exclusions' |
+  'columns' |
+  'generations' |
+  'relations' |
+  'joinColumns' |
+  'joinTables' |
+  'entityListeners' |
+  'relationCounts' |
+  'relationIds' |
+  'embeddeds' |
+  'inheritances' |
+  'discriminatorValues';
 
 const typeormMetadataKeys: TYPEORM_METADATA_KEYS[] = [
   'tables',
@@ -133,18 +133,19 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
     try {
       this.metadatastore = getMetadataArgsStorage();
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       const self = this;
       for (const key of typeormMetadataKeys) {
         if (this.metadatastore[key]['__txs']) {
           continue;
         }
         this.metadatastore[key]['__txs'] = true;
-        this.metadatastore[key].push = function (...args: any[]) {
+        this.metadatastore[key].push = function(...args: any[]) {
           const result = Array.prototype.push.bind(this)(...args);
           self.emit('metadata_push', key, ...args);
           return result;
         };
-        this.metadatastore[key].splice = function (start: number, deletecount?: number) {
+        this.metadatastore[key].splice = function(start: number, deletecount?: number) {
           const result = Array.prototype.splice.bind(this)(start, deletecount);
           self.emit('metadata_splice', key, result, start, deletecount);
           return result;
@@ -306,11 +307,11 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         }
         break;
       case 'tables':
-      // const tableMetadataArgs = args[0] as TableMetadataArgs;
-      // foundEntity = this._find(tableMetadataArgs.target);
-      // if (!foundEntity) {
-      //   this.createEntity(tableMetadataArgs);
-      // }
+        // const tableMetadataArgs = args[0] as TableMetadataArgs;
+        // foundEntity = this._find(tableMetadataArgs.target);
+        // if (!foundEntity) {
+        //   this.createEntity(tableMetadataArgs);
+        // }
         break;
     }
   }
@@ -403,17 +404,21 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
       // correct type for typeorm
       let clsRef: IClassRef = null;
+      const definedType = options.type;
       let clsType: Function = options.type;
       if (isString(options.type)) {
-        clsType = TypeOrmUtils.getJsObjectType(options.type);
+        clsType = TypeOrmUtils.getJsObjectType(options.type as any);
         if (!clsType) {
-          tableType = 'relation';
-          clsRef = ClassRef.find(options.type);
-          if (clsRef) {
-            clsType = clsRef.getClass();
-          } else {
-            clsRef = ClassRef.get(options.type, this.namespace);
-            clsType = clsRef.getClass(true);
+          if (!TypeOrmUtils.isSupportedType(options.type)) {
+            // is an local type, so it is a relation
+            tableType = 'relation';
+            clsRef = ClassRef.find(options.type);
+            if (clsRef) {
+              clsType = clsRef.getClass();
+            } else {
+              clsRef = ClassRef.get(options.type, this.namespace);
+              clsType = clsRef.getClass(true);
+            }
           }
         } else if (clsType === Array) {
           isArray = true;
@@ -463,7 +468,15 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         if (!typeOrmOptions.options) {
           typeOrmOptions.options = {};
         }
-        typeOrmOptions.options.type = clsType;
+
+        if (!clsType) {
+          typeOrmOptions.options.type = definedType;
+          typeOrmOptions.options.resolve = true;
+          clsType = definedType;
+        } else {
+          typeOrmOptions.options.type = clsType;
+        }
+
         typeOrmOptions.options.name = snakeCase(typeOrmOptions.propertyName);
 
         defaults(typeOrmOptions, {
@@ -479,7 +492,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           if (ids.length === 1) {
             refIdName = ids.shift().name;
             reversePropName = camelCase([(options.target as any).name, options.propertyName].join('_'));
-            typeOrmOptions.inverseSideProperty = function (reversePropName) {
+            typeOrmOptions.inverseSideProperty = function(reversePropName) {
               return (x: any) => x[reversePropName];
             }(reversePropName);
           } else {
@@ -545,7 +558,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
                   name: [options.propertyName, refIdName].map(x => snakeCase(x)).join('_')
                 });
               } else if ((<RelationMetadataArgs>typeOrmOptions).relationType === 'many-to-many') {
-              // const revPropName = camelCase([(options.target as any).name, options.propertyName].join('_'));
+                // const revPropName = camelCase([(options.target as any).name, options.propertyName].join('_'));
                 const ids = this.metadatastore.columns.filter(x => x.target === options.target && x.options.primary);
                 let idName = null;
                 if (ids.length === 1) {
@@ -620,8 +633,8 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
     const entity = this.create<TypeOrmEntityRef>(METATYPE_ENTITY, entityOptions);
     const properties: TypeOrmPropertyRef[] = <TypeOrmPropertyRef[]>concat(
       map(this.metadatastore.columns
-        .filter(c => c.target === fn.target),
-      c => this.createPropertyByArgs('column', c)),
+          .filter(c => c.target === fn.target),
+        c => this.createPropertyByArgs('column', c)),
       map(this.metadatastore.filterRelations(fn.target),
         c => this.createPropertyByArgs('relation', c))
     );
@@ -706,31 +719,31 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
   fromJsonSchema(json: any, options?: IJsonSchemaUnserializeOptions) {
     return JsonSchema.unserialize(json, defaults(options || {}, {
-      namespace: this.namespace,
-      collector: [
-        {
-          type: METATYPE_PROPERTY,
-          key: 'type',
-          fn: (key: string, data: any, options: IParseOptions) => {
-            const type = ['string', 'number', 'boolean', 'date', 'float', 'array', 'object'];
-            const value = data[key];
-            if (value && type.includes(value)) {
-              const cls = TypeOrmUtils.getJsObjectType(value);
-              if (cls === String) {
-                if (data['format'] === 'date' || data['format'] === 'date-time') {
-                  return Date;
+        namespace: this.namespace,
+        collector: [
+          {
+            type: METATYPE_PROPERTY,
+            key: 'type',
+            fn: (key: string, data: any, options: IParseOptions) => {
+              const type = ['string', 'number', 'boolean', 'date', 'float', 'array', 'object'];
+              const value = data[key];
+              if (value && type.includes(value)) {
+                const cls = TypeOrmUtils.getJsObjectType(value);
+                if (cls === String) {
+                  if (data['format'] === 'date' || data['format'] === 'date-time') {
+                    return Date;
+                  }
                 }
+                return cls;
+              } else if (data['$ref']) {
+                const className = data['$ref'].split('/').pop();
+                return ClassRef.get(className, this.namespace).getClass(true);
               }
-              return cls;
-            } else if (data['$ref']) {
-              const className = data['$ref'].split('/').pop();
-              return ClassRef.get(className, this.namespace).getClass(true);
+              return ClassRef.get(data[key], this.namespace).getClass(true);
             }
-            return ClassRef.get(data[key], this.namespace).getClass(true);
           }
-        }
-      ]
-    })
+        ]
+      })
     );
   }
 

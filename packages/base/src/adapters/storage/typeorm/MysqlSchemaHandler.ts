@@ -45,56 +45,50 @@ export class MysqlSchemaHandler extends AbstractSchemaHandler {
   }
 
 
-  translateToStorageType(jsType: string, length: number = null): IDBType {
-    const type: IDBType = {
-      type: null,
-      variant: null,
-      sourceType: null,
-      length: length
-    };
 
-    const split = jsType.split(':');
-    type.sourceType = <JS_DATA_TYPES>split.shift();
-    if (split.length > 0) {
-      type.variant = split.shift();
-    }
-
-    switch (type.sourceType) {
+  resolveTypeToStorage(sourceType: string, opts?: any) {
+    let type = null;
+    switch (sourceType) {
       case 'string':
-        type.type = 'text';
-        if (type.length && type.length > 0) {
-          type.type = 'varchar';
+        type = 'text';
+        if (opts.length && opts.length > 0) {
+          type = 'varchar';
         }
         break;
       case 'text':
-        type.type = 'text';
+        type = 'text';
         break;
       case 'boolean':
-        type.type = 'boolean';
+        type = 'boolean';
         break;
       case 'number':
-        type.type = 'int';
+        type = 'int';
+        break;
+      case 'bigint':
+      case 'bignumber':
+        type = 'bigint';
         break;
       case 'double':
-        type.type = 'double';
+      case 'float':
+        type = 'double';
         break;
       case 'time':
-        type.type = 'time';
+        type = 'time';
         break;
       case 'date':
-        type.type = 'date';
-        if (type.variant) {
-          type.type = 'datetime';
+        type = 'date';
+        if (opts.variant) {
+          type = 'datetime';
         }
         break;
       case 'datetime':
-        type.type = 'datetime';
+        type = 'datetime';
         break;
       case 'timestamp':
-        type.type = 'timestamp';
+        type = 'timestamp';
         break;
       case 'json':
-        type.type = 'json';
+        type = 'json';
         break;
 
     }

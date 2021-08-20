@@ -1,8 +1,6 @@
-import {AbstractSchemaHandler} from '../../../libs/storage/AbstractSchemaHandler';
+import { AbstractSchemaHandler } from '../../../libs/storage/AbstractSchemaHandler';
 import * as _ from 'lodash';
-import {IDBType} from '../../../libs/storage/IDBType';
-import {JS_DATA_TYPES} from '@allgemein/schema-api';
-import {NotYetImplementedError} from '@allgemein/base';
+import { NotYetImplementedError } from '@allgemein/base';
 
 
 export class PostgresSchemaHandler extends AbstractSchemaHandler {
@@ -12,19 +10,11 @@ export class PostgresSchemaHandler extends AbstractSchemaHandler {
 
   initOnceByType() {
     super.initOnceByType();
-    this.registerOperationHandle('year', (field: string) => {
-      return 'EXTRACT(YEAR FROM ' + field + ')';
-    });
-    this.registerOperationHandle('month', (field: string) => {
-      return 'EXTRACT(MONTH FROM ' + field + ')';
-    });
-    this.registerOperationHandle('day', (field: string) => {
-      return 'EXTRACT(DAY FROM ' + field + ')';
-    });
+    this.registerOperationHandle('year', (field: string) => 'EXTRACT(YEAR FROM ' + field + ')');
+    this.registerOperationHandle('month', (field: string) => 'EXTRACT(MONTH FROM ' + field + ')');
+    this.registerOperationHandle('day', (field: string) => 'EXTRACT(DAY FROM ' + field + ')');
 
-    this.registerOperationHandle('timestamp', (field: string) => {
-      return 'EXTRACT(EPOCH FROM ' + field + ')';
-    });
+    this.registerOperationHandle('timestamp', (field: string) => 'EXTRACT(EPOCH FROM ' + field + ')');
 
 
     const fn = {
@@ -47,7 +37,7 @@ export class PostgresSchemaHandler extends AbstractSchemaHandler {
       },
       dateToString:
         (field: string, format: string = '%Y-%m-%d %H:%M:%S' /* +, timezone: any, onNull: any */) =>
-          'strftime(\'' + format + '\', ' + field + ')',
+          'strftime(\'' + format + '\', ' + field + ')'
     };
 
     _.keys(fn).forEach(x => {
@@ -74,60 +64,56 @@ export class PostgresSchemaHandler extends AbstractSchemaHandler {
   }
 
 
-  translateToStorageType(jsType: string, length: number = null): IDBType {
-    const type: IDBType = {
-      type: null,
-      variant: null,
-      sourceType: null,
-      length: length
-    };
-
-    const split = jsType.split(':');
-    type.sourceType = <JS_DATA_TYPES>split.shift();
-    if (split.length > 0) {
-      type.variant = split.shift();
-    }
-
-    switch (type.sourceType) {
+  resolveTypeToStorage(sourceType: string, opts?: any) {
+    let type = null;
+    switch (sourceType) {
       case 'string':
-        type.type = 'text';
-        if (type.length && type.length > 0) {
-          type.type = 'varchar';
+        type = 'text';
+        if (opts.length && opts.length > 0) {
+          type = 'varchar';
         }
         break;
       case 'text':
-        type.type = 'text';
+        type = 'text';
         break;
       case 'boolean':
-        type.type = 'boolean';
+        type = 'boolean';
         break;
       case 'number':
-        type.type = 'int';
+        type = 'int';
         break;
       case 'double':
-        type.type = 'float8';
+      case 'float':
+        type = 'float8';
+        break;
+      case 'bigint':
+      case 'bignumber':
+        type = 'bigint';
         break;
       case 'time':
-        type.type = 'time';
+        type = 'time';
         break;
       case 'date':
-        type.type = 'date';
-        if (type.variant) {
-          type.type = 'timestamp with time zone';
+        type = 'date';
+        if (opts.variant) {
+          type = 'timestamp with time zone';
         }
         break;
       case 'datetime':
-        type.type = 'timestamp with time zone';
+        type = 'timestamp with time zone';
         break;
       case 'timestamp':
-        type.type = 'timestamp with time zone';
+        type = 'timestamp with time zone';
         break;
+      case 'object':
+      case 'array':
       case 'json':
-        type.type = 'jsonb';
+        type = 'jsonb';
         break;
 
     }
     return type;
   }
+
 
 }

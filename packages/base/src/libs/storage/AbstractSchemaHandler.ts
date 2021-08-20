@@ -1,11 +1,12 @@
 import * as _ from 'lodash';
-import {IDBType} from './IDBType';
-import {JS_DATA_TYPES} from '@allgemein/schema-api';
-import {ICollection} from './ICollection';
-import {ICollectionProperty} from './ICollectionProperty';
-import {NotSupportedError} from '@allgemein/base';
-import {TypeOrmStorageRef} from './framework/typeorm/TypeOrmStorageRef';
-import {Config} from '@allgemein/config';
+import { isFunction } from 'lodash';
+import { IDBType } from './IDBType';
+import { JS_DATA_TYPES } from '@allgemein/schema-api';
+import { ICollection } from './ICollection';
+import { ICollectionProperty } from './ICollectionProperty';
+import { ClassUtils, NotSupportedError } from '@allgemein/base';
+import { TypeOrmStorageRef } from './framework/typeorm/TypeOrmStorageRef';
+import { Config } from '@allgemein/config';
 
 
 export abstract class AbstractSchemaHandler {
@@ -108,7 +109,7 @@ export abstract class AbstractSchemaHandler {
       divide: (fieldsValues: string[]) => fieldsValues.join(' / '),
       dateToString: (field: string, format: string, timezone: any, onNull: any) => {
         throw new NotSupportedError('dateToString operation not supported');
-      },
+      }
     };
 
     _.keys(fn).forEach(x => {
@@ -214,7 +215,7 @@ export abstract class AbstractSchemaHandler {
     return _.get(AbstractSchemaHandler.typeMap, this.type, {});
   }
 
-  translateToStorageType(jsType: string, length: number = null): IDBType {
+  translateToStorageType(jsType: string | Function, length: number = null): IDBType {
     const type: IDBType = {
       type: null,
       variant: null,
@@ -222,58 +223,68 @@ export abstract class AbstractSchemaHandler {
       length: length
     };
 
-    const split = jsType.split(':');
+    const definedType: string = isFunction(jsType) ? ClassUtils.getClassName(jsType).toLowerCase() : jsType as string;
+
+    const split = definedType.split(':');
     type.sourceType = <JS_DATA_TYPES | 'array'>split.shift();
     if (split.length > 0) {
       type.variant = split.shift();
     }
 
-
     const mapType = this.getTypeMap()[type.sourceType];
-    if (!!mapType) {
+    if (mapType) {
       type.type = mapType;
     } else {
-      switch (type.sourceType) {
-        case 'string':
-          type.type = 'varchar';
-          break;
-        case 'text':
-          type.type = 'text';
-          break;
-        case 'boolean':
-          type.type = 'int';
-          break;
-        case 'number':
-          type.type = 'int';
-          break;
-        case 'double':
-          type.type = 'numeric';
-          break;
-        case 'time':
-          type.type = 'datetime';
-          break;
-        case 'date':
-          type.type = 'datetime';
-          break;
-        case 'datetime':
-          type.type = 'datetime';
-          break;
-        case 'timestamp':
-          type.type = 'datetime';
-          break;
-        case 'json':
-          type.type = 'json';
-          break;
-        case 'object':
-          type.type = 'object';
-          break;
-        case 'array':
-          type.type = 'array';
-          break;
-
+      type.type = this.resolveTypeToStorage(type.sourceType, type);
+      if (!type.type) {
+        // nothing found passing source type
+        type.type = type.sourceType;
       }
     }
 
+    return type;
+  }
+
+  resolveTypeToStorage(sourceType: string, opts?: any) {
+    let type = null;
+    switch (sourceType) {
+      case 'string':
+        type = 'varchar';
+        break;
+      case 'text':
+        type = 'text';
+        break;
+      case 'boolean':
+        type = 'int';
+        break;
+      case 'number':
+        type = 'int';
+        break;
+      case 'double':
+        type = 'numeric';
+        break;
+      case 'time':
+        type = 'datetime';
+        break;
+      case 'date':
+        type = 'datetime';
+        break;
+      case 'datetime':
+        type = 'datetime';
+        break;
+      case 'timestamp':
+        type = 'datetime';
+        break;
+      case 'json':
+        type = 'json';
+        break;
+      case 'object':
+        type = 'object';
+        break;
+      case 'array':
+        type = 'array';
+        break;
+    }
     return type;
   }
 
