@@ -1,0 +1,36 @@
+
+# Configuration
+
+```yml
+mail:
+  addr1:
+     host: localhost
+     port: 21
+     user: abc
+     password: abc
+
+notifications:
+  mail_on_task_finish:
+    type: mail
+    # @allgemein/expression / @allgemein/mango-expressions
+    eventClass:
+    - TaskRunnerEvent
+    filter:
+    # predefined variable
+    - taskNames:
+        $include:
+           - meintask
+    - $or:
+        - state: stopped
+        - state: errored
+    mail:
+        config: addr1
+        # static address or list or data path/cursor {storage.xyz/type[query]} or system user
+        to: address
+        # static address or list or data path/cursor {storage.xyz/type[query]} or system user
+        from: address
+        # static content or  file with content or list or data path {storage.xyz/type[query]}
+        # content can be interpolated with values from $event
+        content: content
+
+```

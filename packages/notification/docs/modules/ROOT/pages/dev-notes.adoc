@@ -1,0 +1,64 @@
+# @typexs/notification
+
+
+Types of notification
+
+* Gitlab alerts / issues
+* Mail
+* Twitter
+* Slack
+* Webex Teams
+
+
+Use EventBus Events for receiving notifications from different sources.
+Describe how to react on specified incoming events.
+
+Filter incoming event stream:
+
+* by event type / class
+* by event parameters
+
+
+Define some generic events:
+
+* NotifyEvent
+
+Existing events in other modules:
+
+* TaskEvent
+
+
+---
+
+Workflow:
+
+* note: use an event dispatcher to distribute messages
+* subscribe on all events
+
+
+Notes:
+
+* Create an Event Registry
+* async trigger conditions when
+** trigger start
+** listening for conditions
+** trigger finish
+** trigger abort
+** trigger continue
+** example:
+*** some task starts, +
+collect some kinds of events, +
+tasks stops, +
+trigger action
+
+
+
+[plantuml]
+....
+
+(*) -> "action"
+"action" -> "event"
+event -> trigger
+trigger --> action
+
+....

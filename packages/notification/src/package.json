@@ -1,0 +1,14 @@
+{
+  "name": "@typexs/eventbus-logging",
+  "version": "0.0.0-PLACEHOLDER",
+  "main": "index.js",
+  "browser": "browser.js",
+  "private": true,
+  "typexs": {
+    "name": "pipeline"
+  },
+  "peerDependencies": {
+    "@typexs/base": "*",
+    "winston-transport": "^4.4.0"
+  }
+}
