@@ -173,6 +173,19 @@ export class TaskExecutor extends EventEmitter {
     return this;
   }
 
+  /**
+   * Tells if the task will be executed locally, can be used after "create" method
+   */
+  isLocally() {
+    return this.options.isLocal;
+  }
+
+  /**
+   * Return all options for this task execution
+   */
+  getOptions() {
+    return this.options;
+  }
 
   async run(asFuture: boolean = false): Promise<ITaskRunnerResult | ITaskRunnerResult[] | TaskFuture | TaskEvent[]> {
     if (!this.executeable) {

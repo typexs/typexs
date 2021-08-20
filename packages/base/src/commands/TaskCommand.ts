@@ -71,7 +71,7 @@ export class TaskCommand implements ICommand {
       if (!start) {
         continue;
       }
-      if (process.argv[i].match(/^\-\-/)) {
+      if (process.argv[i].match(/^-/)) {
         // parameter
         notask = true;
       } else {

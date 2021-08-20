@@ -51,7 +51,10 @@ export async function cli(): Promise<Bootstrap> {
           const value = process.argv[_idx + 1];
           if (!value.startsWith('-')) {
             next = value;
+            process.argv.splice(_idx, 2);
           }
+        } else {
+          process.argv.splice(_idx, 1);
         }
         set(cfg, key, next ? next : true);
       }

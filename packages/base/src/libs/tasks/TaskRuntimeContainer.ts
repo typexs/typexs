@@ -63,7 +63,7 @@ export class TaskRuntimeContainer implements ITaskRuntimeContainer {
    * Impl. of interface ITaskRuntimeContainer
    */
   getIncomingsOfRunner(){
-    return this.$_run_.getRunner().$incoming;
+    return this.$_run_.getRunner().getIncomings();
   }
 
 

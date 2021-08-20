@@ -38,6 +38,11 @@ export interface ITaskRuntimeContainer {
   getIncomings(): any;
 
   /**
+   * Return all incoming parameter passed to the task runner
+   */
+  getIncomingsOfRunner(): any;
+
+  /**
    * Return all declared outgoing parameter for this task
    */
   getOutgoings(): any;
