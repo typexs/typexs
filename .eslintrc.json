@@ -121,7 +121,8 @@
     "import/no-deprecated": "warn",
     "indent": [
       "error",
-      2
+      2,
+      {"SwitchCase":  1}
     ],
     "@typescript-eslint/indent": [
       "error",
