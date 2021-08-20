@@ -1,27 +1,27 @@
-import {RBelongsTo2} from './RBelongsTo2';
-import {Permission} from './Permission';
-import {And, Eq, Key, Value} from '@allgemein/expressions';
-import {Schema} from '../../../../src/libs/decorators/Schema';
-import {Entity} from '../../../../src/libs/decorators/Entity';
-import {Property} from '../../../../src/libs/decorators/Property';
-import {From, Join, To} from '../../../../src/libs/descriptors/JoinDesc';
-import {Asc} from '../../../../src/libs/descriptors/OrderDesc';
+import { RBelongsTo2 } from './RBelongsTo2';
+import { Permission } from './Permission';
+import { And, Eq, Key, Value } from '@allgemein/expressions';
+import { Schema } from '../../../../src/libs/decorators/Schema';
+import { Entity } from '../../../../src/libs/decorators/Entity';
+import { Property } from '../../../../src/libs/decorators/Property';
+import { From, Join, To } from '../../../../src/libs/descriptors/JoinDesc';
+import { Asc } from '../../../../src/libs/descriptors/OrderDesc';
 
 
-@Schema({name: 'role_permissions'})
+@Schema({ name: 'role_permissions' })
 @Entity()
 export class Role {
 
-  @Property({type: 'number', auto: true})
+  @Property({ type: 'number', auto: true })
   id: number;
 
-  @Property({type: 'string', typeorm: {unique: true}})
+  @Property({ type: 'string', typeorm: { unique: true } })
   rolename: string;
 
-  @Property({type: 'string', nullable: true})
+  @Property({ type: 'string', nullable: true })
   displayName: string;
 
-  @Property({type: 'boolean'})
+  @Property({ type: 'boolean' })
   disabled: boolean = false;
 
   @Property({
@@ -38,10 +38,10 @@ export class Role {
   permissions: Permission[];
 
 
-  @Property({type: 'date:created'})
+  @Property({ type: 'date:created' })
   created_at: Date;
 
-  @Property({type: 'date:updated'})
+  @Property({ type: 'date:updated' })
   updated_at: Date;
 
 
