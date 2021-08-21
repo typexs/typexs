@@ -33,7 +33,14 @@ class StorageGeneralSpec {
   async 'mass connections on psql'() {
     bootstrap = await Bootstrap.setConfigSources([{type: 'system'}]).configure({
       app: {path: '.'},
-      modules: {paths: [__dirname + '/../../../..']},
+      modules: {
+        paths: [
+          __dirname + '/../../../..'
+        ],
+        include:[
+          '**/@typexs/base/**'
+        ]
+      },
       storage: {
         default: {
           synchronize: true,

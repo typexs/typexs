@@ -30,13 +30,13 @@ export class Permission implements IPermissionDef {
   @Property({
     type: 'Role', cardinality: 0,
     join: Join(RBelongsTo, [
-        From(Eq('refid', Key('id'))),
-        To(Eq('id', Key('ownerid')))
-      ],
-      And(
-        Eq('ownertab', Value('role')),
-        Eq('reftab', Value('permission'))),
-      [Asc(Key('sort')), Asc(Key('id'))])
+      From(Eq('refid', Key('id'))),
+      To(Eq('id', Key('ownerid')))
+    ],
+    And(
+      Eq('ownertab', Value('role')),
+      Eq('reftab', Value('permission'))),
+    [Asc(Key('sort')), Asc(Key('id'))])
   })
   roles: Role[];
 

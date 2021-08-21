@@ -238,7 +238,7 @@ export abstract class AbstractSchemaHandler {
       type.type = this.resolveTypeToStorage(type.sourceType, type);
       if (!type.type) {
         // nothing found passing source type
-        type.type = type.sourceType;
+        type.type = jsType;
       }
     }
 
@@ -255,7 +255,7 @@ export abstract class AbstractSchemaHandler {
         type = 'text';
         break;
       case 'boolean':
-        type = 'int';
+        type = 'boolean';
         break;
       case 'number':
         type = 'int';
@@ -275,15 +275,15 @@ export abstract class AbstractSchemaHandler {
       case 'timestamp':
         type = 'datetime';
         break;
-      case 'json':
-        type = 'json';
-        break;
-      case 'object':
-        type = 'object';
-        break;
-      case 'array':
-        type = 'array';
-        break;
+      // case 'json':
+      //   type = 'json';
+      //   break;
+      // case 'object':
+      //   type = 'object';
+      //   break;
+      // case 'array':
+      //   type = 'array';
+      //   break;
     }
     return type;
   }

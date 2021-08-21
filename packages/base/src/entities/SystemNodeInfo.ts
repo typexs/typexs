@@ -1,8 +1,7 @@
 import * as _ from 'lodash';
-import {Column, Entity, Index, PrimaryColumn} from 'typeorm';
-import {INodeInfo} from '../libs/system/INodeInfo';
-import {IsNotEmpty} from '@allgemein/schema-api/decorators/validate/IsNotEmpty';
-import {Required} from '@allgemein/schema-api';
+import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
+import { INodeInfo } from '../libs/system/INodeInfo';
+import { Required } from '@allgemein/schema-api';
 
 
 @Entity()
@@ -11,12 +10,12 @@ export class SystemNodeInfo {
   /**
    * Combined key of hostname and nodeId
    */
-  @PrimaryColumn()
+  @PrimaryColumn({ length: 128 })
   key: string;
 
   @Required()
   @Index()
-  @Column()
+  @Column({ length: 128 })
   machineId: string;
 
   @Required()
@@ -37,26 +36,24 @@ export class SystemNodeInfo {
   @Column()
   instNr: number = 0;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   isBackend: boolean;
 
   @Column()
   state: string; // 'startup' | 'offline' | 'register' | 'unregister' | 'idle' | 'active';
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   started_at: Date = new Date();
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   updated_at: Date;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   finished: Date;
 
   contexts: INodeInfo[] = [];
 
   active: boolean = false;
-
-
 
 
   getRuntime() {
@@ -72,7 +69,7 @@ export class SystemNodeInfo {
     }
   }
 
-  eqNode(x: { nodeId: string, instNr: number }) {
+  eqNode(x: { nodeId: string; instNr: number }) {
     return this.nodeId === x.nodeId && x.instNr === this.instNr;
   }
 

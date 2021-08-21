@@ -4,7 +4,9 @@ import { expect } from 'chai';
 import { Config } from '@allgemein/config';
 import { getMetadataArgsStorage } from 'typeorm';
 import { Bootstrap, StorageRef } from '../../../../src';
-import { ClassRef } from '@allgemein/schema-api';
+import { WithNumbers } from './scenarios/app_types/entities/WithNumbers';
+import { WithJson } from './scenarios/app_types/entities/WithJson';
+import { WithDate } from './scenarios/app_types/entities/WithDate';
 
 
 let bootstrap: Bootstrap = null;
@@ -53,7 +55,7 @@ class StorageRefDataTypesPsqlSpec {
   @test
   async 'bigint'() {
     const metaStore = getMetadataArgsStorage();
-    const columns = metaStore.filterColumns(ClassRef.get('WithNumbers').getClass());
+    const columns = metaStore.filterColumns(WithNumbers);
     expect(columns).to.have.length(3);
     expect(columns.map(x => x.options.type)).to.be.deep.eq(['int', 'bigint', 'bigint']);
 
@@ -62,20 +64,20 @@ class StorageRefDataTypesPsqlSpec {
   @test
   async 'json'() {
     const metaStore = getMetadataArgsStorage();
-    const columns = metaStore.filterColumns(ClassRef.get('WithJson').getClass());
+    const columns = metaStore.filterColumns(WithJson);
     expect(columns).to.have.length(5);
     expect(columns.map(x => x.options.type)).to.be.deep.eq(['int', 'jsonb', 'jsonb', 'jsonb', 'jsonb']);
-
   }
+
 
   @test
   async 'date'() {
     const metaStore = getMetadataArgsStorage();
-    const columns = metaStore.filterColumns(ClassRef.get('WithDate').getClass());
+    const columns = metaStore.filterColumns(WithDate);
     expect(columns).to.have.length(5);
     expect(columns.map(x => x.options.type)).to.be.deep.eq(['int', 'date', 'date', Date, Date]);
-
   }
+
 
   static async after() {
     if (bootstrap) {

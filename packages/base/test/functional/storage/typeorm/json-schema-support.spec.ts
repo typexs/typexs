@@ -1,18 +1,18 @@
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
 import * as _ from 'lodash';
-import {Car} from './entities/Car';
-import {RegistryFactory} from '@allgemein/schema-api';
-import {TypeOrmEntityRegistry} from '../../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
-import {TypeOrmEntityRef} from '../../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRef';
-import {REGISTRY_TYPEORM} from '../../../../src/libs/storage/framework/typeorm/Constants';
-import {Invoker} from '../../../../src/base/Invoker';
-import {Injector} from '../../../../src/libs/di/Injector';
-import {TypeOrmStorageRef} from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
-import {TEST_STORAGE_OPTIONS} from '../../config';
-import {IStorageOptions} from '../../../../src/libs/storage/IStorageOptions';
-import {BaseConnectionOptions} from 'typeorm/connection/BaseConnectionOptions';
-import {TreeUtils} from '@allgemein/base';
+import { Car } from './entities/Car';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { TypeOrmEntityRegistry } from '../../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
+import { TypeOrmEntityRef } from '../../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRef';
+import { REGISTRY_TYPEORM } from '../../../../src/libs/storage/framework/typeorm/Constants';
+import { Invoker } from '../../../../src/base/Invoker';
+import { Injector } from '../../../../src/libs/di/Injector';
+import { TypeOrmStorageRef } from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
+import { TEST_STORAGE_OPTIONS } from '../../config';
+import { IStorageOptions } from '../../../../src/libs/storage/IStorageOptions';
+import { BaseConnectionOptions } from 'typeorm/connection/BaseConnectionOptions';
+import { TreeUtils } from '@allgemein/base';
 
 let registry: TypeOrmEntityRegistry = null;
 let storageOptions: IStorageOptions & BaseConnectionOptions = null;
@@ -44,6 +44,12 @@ class JsonSchemaSupportSpec {
     expect(regEntityDef.getPropertyRefs()).to.have.length(3);
     const data = regEntityDef.toJsonSchema();
     const data_x = JSON.parse(JSON.stringify(data));
+    // correct for mfull testing
+    await TreeUtils.walkAsync(data_x, x => {
+      if (x.key === 'type' && (x.value === 'varchar' || x.value === 'int')) {
+        delete x.parent[x.key];
+      }
+    });
     expect(data_x).to.deep.eq({
       $schema: 'http://json-schema.org/draft-07/schema#',
       definitions: {
@@ -51,7 +57,7 @@ class JsonSchemaSupportSpec {
           $id: '#Car',
           title: 'Car',
           type: 'object',
-          metadata: {type: 'regular'},
+          metadata: { type: 'regular' },
           'schema': [
             'default'
           ],
@@ -61,18 +67,18 @@ class JsonSchemaSupportSpec {
               metadata: {
                 propertyName: 'id',
                 mode: 'regular',
-                options: {primary: true}
+                options: { primary: true }
               },
               tableType: 'column'
             },
             name: {
               type: 'string',
-              metadata: {propertyName: 'name', mode: 'regular', options: {}},
+              metadata: { propertyName: 'name', mode: 'regular', options: {} },
               tableType: 'column'
             },
             driver: {
               type: 'array',
-              items: {'$ref': '#/definitions/Driver'},
+              items: { '$ref': '#/definitions/Driver' },
               metadata: {
                 propertyName: 'driver',
                 isLazy: false,
@@ -87,7 +93,7 @@ class JsonSchemaSupportSpec {
           $id: '#Driver',
           title: 'Driver',
           type: 'object',
-          metadata: {type: 'regular'},
+          metadata: { type: 'regular' },
           'schema': [
             'default'
           ],
@@ -97,18 +103,18 @@ class JsonSchemaSupportSpec {
               metadata: {
                 propertyName: 'id',
                 mode: 'regular',
-                options: {primary: true}
+                options: { primary: true }
               },
               tableType: 'column'
             },
             firstName: {
               type: 'string',
-              metadata: {propertyName: 'firstName', mode: 'regular', options: {}},
+              metadata: { propertyName: 'firstName', mode: 'regular', options: {} },
               tableType: 'column'
             },
             lastName: {
               type: 'string',
-              metadata: {propertyName: 'lastName', mode: 'regular', options: {}},
+              metadata: { propertyName: 'lastName', mode: 'regular', options: {} },
               tableType: 'column'
             },
             car: {
@@ -161,14 +167,14 @@ class JsonSchemaSupportSpec {
           properties: {
             id: {
               type: 'number',
-              identifier: true,
+              identifier: true
             },
             firstName: {
-              type: 'string',
+              type: 'string'
             },
             lastName: {
-              type: 'string',
-            },
+              type: 'string'
+            }
           }
         }
       },

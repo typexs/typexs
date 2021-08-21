@@ -50,7 +50,7 @@ export class MysqlSchemaHandler extends AbstractSchemaHandler {
     let type = null;
     switch (sourceType) {
       case 'string':
-        type = 'text';
+        type = 'varchar';
         if (opts.length && opts.length > 0) {
           type = 'varchar';
         }
@@ -87,6 +87,8 @@ export class MysqlSchemaHandler extends AbstractSchemaHandler {
       case 'timestamp':
         type = 'timestamp';
         break;
+      // case 'object':
+      // case 'array':
       case 'json':
         type = 'json';
         break;

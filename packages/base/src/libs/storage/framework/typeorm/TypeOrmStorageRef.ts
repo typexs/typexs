@@ -1,6 +1,6 @@
 import { IStorageOptions } from '../../IStorageOptions';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
-import { assign, defaults, has, isArray, isEmpty, isFunction, isObjectLike, isString, remove, snakeCase } from 'lodash';
+import { assign, defaults, get, has, isArray, isEmpty, isFunction, isObjectLike, isString, remove, set, snakeCase } from 'lodash';
 import { C_DEFAULT, NotYetImplementedError, PlatformUtils, TodoException } from '@allgemein/base';
 import { Config } from '@allgemein/config';
 import { K_WORKDIR } from '../../../Constants';
@@ -171,7 +171,7 @@ export class TypeOrmStorageRef extends StorageRef {
         } else {
           // check if correctly annotated
           const entryExists = getMetadataArgsStorage().tables.find(x => x.target === type);
-          if (!!entryExists) {
+          if (entryExists) {
             this.registerEntityRef(type);
           }
 
@@ -232,8 +232,18 @@ export class TypeOrmStorageRef extends StorageRef {
     columns.forEach(x => {
       if (x.mode === 'regular') {
         const type = x.options.type;
-        const resolved = this.getSchemaHandler().translateToStorageType(type, x.options.length as any);
-        x.options.type = resolved.type;
+        if (this.getSchemaHandler()) {
+          if (!has(x.options, 'backupType')) {
+            set(x.options, 'backupType', type);
+            const resolved = this.getSchemaHandler()
+              .translateToStorageType(type, x.options.length as any);
+            x.options.type = resolved.type;
+          } else {
+            const resolved = this.getSchemaHandler()
+              .translateToStorageType(get(x.options, 'backupType'), x.options.length as any);
+            x.options.type = resolved.type;
+          }
+        }
       }
     });
 
@@ -540,9 +550,7 @@ export class TypeOrmStorageRef extends StorageRef {
 
   private removeFromConnectionManager() {
     const name = this.name;
-    remove(getConnectionManager()['connections'], (connection) => {
-      return connection.name === name;
-    });
+    remove(getConnectionManager()['connections'], (connection) => connection.name === name);
   }
 
 
