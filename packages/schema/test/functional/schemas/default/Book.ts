@@ -3,8 +3,6 @@ import {Property} from '../../../../src/libs/decorators/Property';
 import {Entity} from '../../../../src/libs/decorators/Entity';
 import {Required} from '@allgemein/schema-api';
 
-// import {IsDefined} from 'class-validator';
-
 
 @Entity()
 export class Book {

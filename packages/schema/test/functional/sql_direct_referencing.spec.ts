@@ -9,6 +9,8 @@ import {TestHelper} from './TestHelper';
 import {TEST_STORAGE_OPTIONS} from './config';
 import {ILookupRegistry, RegistryFactory} from '@allgemein/schema-api';
 import {NAMESPACE_BUILT_ENTITY} from '../../src/libs/Constants';
+import { EntityRegistry } from '../../src';
+import { inspect } from 'util';
 
 
 const FINDOPT = {
@@ -18,7 +20,7 @@ const FINDOPT = {
 };
 
 
-let registry: ILookupRegistry;
+let registry: EntityRegistry;
 
 @suite('functional/sql_direct_referencing')
 class SqlDirectReferencingSpec {
@@ -324,6 +326,7 @@ class SqlDirectReferencingSpec {
     const Car = require('./schemas/direct_property/Car').Car;
     const Skil = require('./schemas/direct_property/Skil').Skil;
     const Driver = require('./schemas/direct_property/Driver').Driver;
+    // registry.reload([Car, Skil]);
     registry.getEntityRefFor(Car);
     registry.getEntityRefFor(Skil);
     // registry.getEntityRefFor(Driver);
@@ -347,6 +350,7 @@ class SqlDirectReferencingSpec {
     car_save_1.driver.skill.label = 'ASD';
     car_save_1.driver.skill.quality = 123;
 
+
     car_save_1 = await xsem.save(car_save_1, {validate: false});
     // console.log(car_save_1);
 
@@ -354,6 +358,7 @@ class SqlDirectReferencingSpec {
     // console.log(inspect(cars_found, false, 10));
 
     const car_find_1 = cars_found.shift();
+    car_save_1.drivers = [];
     expect(car_save_1).to.deep.eq(car_find_1);
 
     await c.close();
@@ -379,6 +384,7 @@ class SqlDirectReferencingSpec {
 
 
     let car_save_1 = new Car();
+    car_save_1.driver = null;
     car_save_1.producer = 'Volvo';
 
     const driver1 = new Driver();
@@ -402,7 +408,7 @@ class SqlDirectReferencingSpec {
 
     const cars_found = await xsem.find(Car, {id: 1}, FINDOPT);
     const car_find_1 = cars_found.shift();
-    // console.log(inspect(car_find_1, false, 10));
+    console.log(inspect(car_find_1, false, 10));
     expect(car_save_1).to.deep.eq(car_find_1);
 
     await c.close();
