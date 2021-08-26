@@ -1,18 +1,17 @@
-import {IProperty} from './IProperty';
-import {assign, capitalize, find, isArray, isBoolean, isFunction, isNull, isNumber, isString, isUndefined, snakeCase} from 'lodash';
-import {EntityRef} from './EntityRef';
+import { IProperty } from './IProperty';
+import { assign, capitalize, find, isArray, isBoolean, isFunction, isNull, isNumber, isString, isUndefined, snakeCase } from 'lodash';
+import { EntityRef } from './EntityRef';
 
-import {DefaultPropertyRef, IBuildOptions, IClassRef, JS_PRIMATIVE_TYPES, METATYPE_PROPERTY} from '@allgemein/schema-api';
-import {NotSupportedError, NotYetImplementedError} from '@typexs/base';
-import {ExprDesc} from '@allgemein/expressions';
-import {OrderDesc} from '../../libs/descriptors/OrderDesc';
-import {K_NULLABLE, K_STORABLE} from '../Constants';
-import {DateUtils} from '@typexs/base';
-import {isEntityRef} from '@allgemein/schema-api/api/IEntityRef';
-import {isClassRef} from '@allgemein/schema-api/api/IClassRef';
+import { DefaultPropertyRef, IBuildOptions, IClassRef, JS_PRIMATIVE_TYPES, METATYPE_PROPERTY } from '@allgemein/schema-api';
+import { DateUtils, NotSupportedError, NotYetImplementedError } from '@typexs/base';
+import { ExprDesc } from '@allgemein/expressions';
+import { OrderDesc } from '../../libs/descriptors/OrderDesc';
+import { K_NULLABLE, K_STORABLE } from '../Constants';
+import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
+import { isClassRef } from '@allgemein/schema-api/api/IClassRef';
 
 
-export class PropertyRef extends DefaultPropertyRef/*AbstractRef implements IPropertyRef*/ {
+export class PropertyRef extends DefaultPropertyRef/* AbstractRef implements IPropertyRef*/ {
 
   // readonly cardinality: number = 1;
 
@@ -36,7 +35,7 @@ export class PropertyRef extends DefaultPropertyRef/*AbstractRef implements IPro
   }
 
   constructor(options: IProperty) {
-    super(assign(options, {metaType: METATYPE_PROPERTY}));
+    super(assign(options, { metaType: METATYPE_PROPERTY }));
     let targetRef = null;
     if (!options.type && !options.propertyClass) {
       throw new NotSupportedError(`property ${this.name} has no defined type nor property class`);
@@ -62,7 +61,7 @@ export class PropertyRef extends DefaultPropertyRef/*AbstractRef implements IPro
       //   this.propertyRef = this.getClassRefFor(options.propertyClass, METATYPE_CLASS_REF);
     }
 
-    if (!targetRef && !this.dataType /*&& !this.propertyRef*/) {
+    if (!targetRef && !this.dataType /* && !this.propertyRef*/) {
       throw new NotSupportedError('No primative or complex data type given: ' + JSON.stringify(options));
     }
 
@@ -125,6 +124,13 @@ export class PropertyRef extends DefaultPropertyRef/*AbstractRef implements IPro
 
   getJoin() {
     return this.getOptions('join', null);
+  }
+
+  /**
+   * Return generated join class representing the table
+   */
+  getJoinRef() {
+    return this.joinRef;
   }
 
   hasOrder() {

@@ -24,6 +24,7 @@ import { ClassRef, IClassRef, ILookupRegistry, METATYPE_CLASS_REF, RegistryFacto
 import { ExprDesc } from '@allgemein/expressions';
 import { EntityRegistry } from '../../EntityRegistry';
 import { MetadataArgsStorage } from 'typeorm/metadata-args/MetadataArgsStorage';
+import { C_CLASS_WRAPPED } from './Constants';
 
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -51,6 +52,9 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
     this.storageRef = storageRef;
     this.schemaDef = schemaDef;
     this.registry = RegistryFactory.get(REGISTRY_TYPEORM);
+    if (!this.schemaDef) {
+      throw new Error('not schema found for mapper of storage ref "' + storageRef.name + '"');
+    }
   }
 
   getMetadata(): MetadataArgsStorage {
@@ -217,6 +221,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
         const clazz = this.handleCreatePropertyClass(propertyRef, pName);
         this.attachPrimaryKeys(sourceRef, propertyRef, clazz);
         this.attachTargetKeys(propertyRef, targetRef, clazz);
+
         return { next: clazz };
       }
     } else if (sourceRef instanceof ClassRef) {
@@ -303,6 +308,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
         this.attachTargetKeys(propertyDef, classRef, storeClass);
         return { next: this.handleCreateObjectClass(classRef) };
       } else {
+        propertyDef.getJoinRef().setOption(C_CLASS_WRAPPED, true);
         return { next: storeClass };
       }
     } else if (sourceRef instanceof ClassRef) {
@@ -311,6 +317,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
       } else {
         const storeClass = this.handleCreatePropertyClass(propertyDef, _.capitalize(propertyDef.name) + classRef.className);
         this.attachPropertyPrimaryKeys(storeClass);
+        propertyDef.getJoinRef().setOption(C_CLASS_WRAPPED, true);
         return { next: storeClass };
       }
     }
@@ -460,23 +467,22 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
       annotation = this.ColumnDef(propertyRef, altPropertyName, skipIdentifier);
     } else if (_.isPlainObject(propertyRef)) {
       switch (type) {
-      case 'primary-generated':
-        annotation = PrimaryGeneratedColumn(propertyRef);
-        break;
-      case 'primary':
-        annotation = PrimaryColumn(propertyRef);
-        break;
-      case 'regular':
-        annotation = Column(propertyRef);
-        break;
-      case 'created':
-        annotation = CreateDateColumn(propertyRef);
-        break;
-      case 'updated':
-        annotation = UpdateDateColumn(propertyRef);
-        break;
+        case 'primary-generated':
+          annotation = PrimaryGeneratedColumn(propertyRef);
+          break;
+        case 'primary':
+          annotation = PrimaryColumn(propertyRef);
+          break;
+        case 'regular':
+          annotation = Column(propertyRef);
+          break;
+        case 'created':
+          annotation = CreateDateColumn(propertyRef);
+          break;
+        case 'updated':
+          annotation = UpdateDateColumn(propertyRef);
+          break;
       }
-
     } else {
       throw new NotYetImplementedError();
     }
@@ -534,6 +540,14 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
     // this is the default variant!
     // create an generic id
     this.createColumnIfNotExists('primary-generated', refTargetClass, 'id', { name: 'id', type: 'int' });
+
+    // TODO maybe put property to
+    // this.schemaDef.getRegistry().create(METATYPE_PROPERTY, <IPropertyOptions>{
+    //   target: refTargetClass,
+    //   identifier: true,
+    //   propertyName: 'id',
+    //   type: Number
+    // });
 
     let [sourceId, sourceName] = this.nameResolver.forSource(XS_P_TYPE);
     this.createColumnIfNotExists('regular', refTargetClass, sourceId, { name: sourceName, type: 'varchar', length: 64 });

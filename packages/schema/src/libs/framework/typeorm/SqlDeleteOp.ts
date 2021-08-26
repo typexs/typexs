@@ -11,9 +11,7 @@ import {IDeleteOp} from '@typexs/base';
 import {IDeleteOptions} from '@typexs/base';
 
 
-export interface IDeleteData extends IDataExchange<any[]> {
-
-}
+export type IDeleteData = IDataExchange<any[]>;
 
 export class SqlDeleteOp<T> extends EntityDefTreeWorker implements IDeleteOp<T> {
 
@@ -52,42 +50,42 @@ export class SqlDeleteOp<T> extends EntityDefTreeWorker implements IDeleteOp<T> 
   }
 
   async visitEntityReference(sourceDef: EntityRef | ClassRef,
-                             propertyDef: PropertyRef,
-                             entityDef: EntityRef, sources: IDeleteData): Promise<IDeleteData> {
+    propertyDef: PropertyRef,
+    entityDef: EntityRef, sources: IDeleteData): Promise<IDeleteData> {
     this.entityDepth++;
     return sources;
   }
 
   leaveEntityReference(sourceDef: EntityRef | ClassRef,
-                       propertyDef: PropertyRef,
-                       entityDef: EntityRef, sources: IDeleteData, visitResult: IDeleteData): Promise<IDeleteData> {
+    propertyDef: PropertyRef,
+    entityDef: EntityRef, sources: IDeleteData, visitResult: IDeleteData): Promise<IDeleteData> {
     this.entityDepth--;
     return null;
   }
 
 
   visitExternalReference(sourceDef: EntityRef | ClassRef,
-                         propertyDef: PropertyRef,
-                         classRef: ClassRef, sources: IDeleteData): Promise<IDeleteData> {
+    propertyDef: PropertyRef,
+    classRef: ClassRef, sources: IDeleteData): Promise<IDeleteData> {
     return null;
   }
 
   leaveExternalReference(sourceDef: EntityRef | ClassRef,
-                         propertyDef: PropertyRef,
-                         classRef: ClassRef, sources: IDeleteData): Promise<IDeleteData> {
+    propertyDef: PropertyRef,
+    classRef: ClassRef, sources: IDeleteData): Promise<IDeleteData> {
     return null;
   }
 
 
   visitObjectReference(sourceDef: EntityRef | ClassRef,
-                       propertyDef: PropertyRef,
-                       classRef: ClassRef, sources: IDeleteData): Promise<IDeleteData> {
+    propertyDef: PropertyRef,
+    classRef: ClassRef, sources: IDeleteData): Promise<IDeleteData> {
     return undefined;
   }
 
   leaveObjectReference(sourceDef: EntityRef | ClassRef,
-                       propertyDef: PropertyRef,
-                       classRef: ClassRef, sources: IDeleteData): Promise<IDeleteData> {
+    propertyDef: PropertyRef,
+    classRef: ClassRef, sources: IDeleteData): Promise<IDeleteData> {
     return undefined;
   }
 

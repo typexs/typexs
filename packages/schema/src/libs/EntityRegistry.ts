@@ -1,13 +1,14 @@
-import {defaults, isArray, isEmpty, keys, snakeCase} from 'lodash';
-import {SchemaRef} from './registry/SchemaRef';
-import {PropertyRef} from './registry/PropertyRef';
-import {EntityRef} from './registry/EntityRef';
-import {IProperty} from './registry/IProperty';
-import {IEntity} from './registry/IEntity';
-import {ISchema} from './registry/ISchema';
+import { defaults, isArray, isEmpty, keys, snakeCase } from 'lodash';
+import { SchemaRef } from './registry/SchemaRef';
+import { PropertyRef } from './registry/PropertyRef';
+import { EntityRef } from './registry/EntityRef';
+import { IProperty } from './registry/IProperty';
+import { IEntity } from './registry/IEntity';
+import { ISchema } from './registry/ISchema';
 import {
   ClassRef,
   DefaultNamespacedRegistry,
+  IAbstractOptions,
   IClassRef,
   IEntityRef,
   IJsonSchema,
@@ -21,17 +22,18 @@ import {
   METATYPE_CLASS_REF,
   METATYPE_EMBEDDABLE,
   METATYPE_ENTITY,
+  METATYPE_NAMESPACE,
   METATYPE_PROPERTY,
   METATYPE_SCHEMA,
   RegistryFactory,
   XS_DEFAULT_SCHEMA
 } from '@allgemein/schema-api';
-import {NAMESPACE_BUILT_ENTITY} from './Constants';
-import {IObject} from './registry/IObject';
-import {getJsObjectType} from './Helper';
+import { NAMESPACE_BUILT_ENTITY } from './Constants';
+import { IObject } from './registry/IObject';
+import { getJsObjectType } from './Helper';
 
 
-export class EntityRegistry extends DefaultNamespacedRegistry /*AbstractRegistry*/ implements IJsonSchema {
+export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistry*/ implements IJsonSchema {
 
 
   constructor(namespace: string) {
@@ -57,7 +59,7 @@ export class EntityRegistry extends DefaultNamespacedRegistry /*AbstractRegistry
   prepare() {
     const schema = this.find(METATYPE_SCHEMA, (x: ISchemaRef) => x.name === XS_DEFAULT_SCHEMA);
     if (!schema) {
-      const defaultSchema = this.create(METATYPE_SCHEMA, {name: XS_DEFAULT_SCHEMA});
+      const defaultSchema = this.create(METATYPE_SCHEMA, { name: XS_DEFAULT_SCHEMA });
       this.add(METATYPE_SCHEMA, defaultSchema);
     }
     super.prepare();
@@ -66,12 +68,14 @@ export class EntityRegistry extends DefaultNamespacedRegistry /*AbstractRegistry
   reload(entries?: Function[]) {
     this.clear();
     if (isEmpty(entries)) {
-      MetadataRegistry.$().getMetadata().filter(x => x.namespace === this.namespace &&
+      MetadataRegistry.$().getMetadata().filter(x =>
+        // x.namespace === this.namespace &&
         [METATYPE_ENTITY, METATYPE_EMBEDDABLE, METATYPE_CLASS_REF, METATYPE_SCHEMA].includes(x.metaType)).forEach(x => {
         this.onAdd(x.metaType as METADATA_TYPE, x);
       });
     } else {
-      MetadataRegistry.$().getMetadata().filter(x => x.namespace === this.namespace &&
+      MetadataRegistry.$().getMetadata().filter(x =>
+        // x.namespace === this.namespace &&
         [METATYPE_ENTITY, METATYPE_EMBEDDABLE, METATYPE_CLASS_REF, METATYPE_SCHEMA].includes(x.metaType) &&
         entries.includes(x.target as Function)).forEach(x => {
         this.onAdd(x.metaType as METADATA_TYPE, x);
@@ -101,11 +105,18 @@ export class EntityRegistry extends DefaultNamespacedRegistry /*AbstractRegistry
       // if namespace not present skipping
       if (context !== METATYPE_PROPERTY) {
         // only properties should be pass and check if entity already exists
-        return;
+        const namespace = MetadataRegistry.$().find(METATYPE_NAMESPACE, (x: IAbstractOptions) => x.target === options.target);
+        if (namespace && namespace.attributes.namespace === this.namespace) {
+          options.namespace = namespace.attributes.namespace;
+        } else {
+          return;
+        }
+
       }
     }
 
-    const entityRef = options.target ? this.find(METATYPE_ENTITY, (x: EntityRef) => x.getClass() === options.target) as IEntityRef : null;
+    const classRef = options.target ? this.find(METATYPE_CLASS_REF, (x: IClassRef) => x.getClass() === options.target) as IClassRef : null;
+    const entityRef = classRef ? classRef.getEntityRef() : null;
     if (context === METATYPE_ENTITY) {
       if (!entityRef) {
         this.create(METATYPE_ENTITY, options as IEntity);
@@ -124,11 +135,11 @@ export class EntityRegistry extends DefaultNamespacedRegistry /*AbstractRegistry
         find = this.create(context, options);
       }
       if (entityRef && find) {
-        this.addSchemaToEntityRef(find, entityRef, {override: true, onlyDefault: true});
+        this.addSchemaToEntityRef(find, entityRef, { override: true, onlyDefault: true });
       }
     } else if (context === METATYPE_PROPERTY) {
       // check if already processed and
-      if (entityRef) {
+      if (classRef) {
         const propertyRef = this.find(context, (x: EntityRef) => x.getClass() === options.target && x.name === options.propertyName);
         if (!propertyRef) {
           const properties = MetadataRegistry.$()
@@ -141,13 +152,13 @@ export class EntityRegistry extends DefaultNamespacedRegistry /*AbstractRegistry
         }
       }
     } else if (context === METATYPE_EMBEDDABLE) {
-      const find = this.find(METATYPE_CLASS_REF, (c: IClassRef) =>
-        c.getClass() === options.target
-      ) as IClassRef;
-      if (!find) {
+      // const find = this.find(METATYPE_CLASS_REF, (c: IClassRef) =>
+      //   c.getClass() === options.target
+      // ) as IClassRef;
+      if (!classRef) {
         this.create(context, options);
       } else {
-        const refOptions = find.getOptions();
+        const refOptions = classRef.getOptions();
         defaults(refOptions, options);
       }
     }
@@ -197,7 +208,7 @@ export class EntityRegistry extends DefaultNamespacedRegistry /*AbstractRegistry
         .getByContextAndTarget(METATYPE_SCHEMA, entityRef.getClass()) as ISchema[];
       if (metaSchemaOptionsForEntity.length > 0) {
         for (const schemaOptions of metaSchemaOptionsForEntity) {
-          this.addSchemaToEntityRef(schemaOptions.name, entityRef as IEntityRef, {override: true, onlyDefault: true});
+          this.addSchemaToEntityRef(schemaOptions.name, entityRef as IEntityRef, { override: true, onlyDefault: true });
         }
       } else {
         // no schema options add to 'default'
@@ -228,9 +239,7 @@ export class EntityRegistry extends DefaultNamespacedRegistry /*AbstractRegistry
   }
 
   getSchemaRefByName(name: string): SchemaRef {
-    return this.find(METATYPE_SCHEMA, (e: SchemaRef) => {
-      return e.machineName === snakeCase(name);
-    });
+    return this.find(METATYPE_SCHEMA, (e: SchemaRef) => e.machineName === snakeCase(name));
   }
 
   getEntityRefFor(fn: string | object | Function, skipNsCheck?: boolean): EntityRef {
@@ -238,48 +247,44 @@ export class EntityRegistry extends DefaultNamespacedRegistry /*AbstractRegistry
   }
 
   getEntityRefByName(name: string): EntityRef {
-    return this.find(METATYPE_ENTITY, (e: EntityRef) => {
-      return e.machineName === snakeCase(name);
-    });
+    return this.find(METATYPE_ENTITY, (e: EntityRef) => e.machineName === snakeCase(name));
   }
 
   getPropertyRefsFor(entity: EntityRef | IClassRef): PropertyRef[] {
     if (entity instanceof EntityRef) {
       return this.filter(METATYPE_PROPERTY, (x: PropertyRef) => x.object.id() === entity.getClassRef().id());
     } else {
-      return this.filter(METATYPE_PROPERTY, (x: PropertyRef) => {
-        return x.object.id() === entity.id();
-      });
+      return this.filter(METATYPE_PROPERTY, (x: PropertyRef) => x.object.id() === entity.id());
     }
   }
 
   fromJsonSchema(json: any, options?: IJsonSchemaUnserializeOptions) {
     return JsonSchema.unserialize(json, defaults(options || {}, {
-        namespace: this.namespace,
-        collector: [
-          {
-            type: METATYPE_PROPERTY,
-            key: 'type',
-            fn: (key: string, data: any, options: IParseOptions) => {
-              const type = ['string', 'number', 'boolean', 'date', 'float', 'array', 'object'];
-              const value = data[key];
-              if (value && type.includes(value)) {
-                const cls = getJsObjectType(value);
-                if (cls === String) {
-                  if (data['format'] === 'date' || data['format'] === 'date-time') {
-                    return Date;
-                  }
+      namespace: this.namespace,
+      collector: [
+        {
+          type: METATYPE_PROPERTY,
+          key: 'type',
+          fn: (key: string, data: any, options: IParseOptions) => {
+            const type = ['string', 'number', 'boolean', 'date', 'float', 'array', 'object'];
+            const value = data[key];
+            if (value && type.includes(value)) {
+              const cls = getJsObjectType(value);
+              if (cls === String) {
+                if (data['format'] === 'date' || data['format'] === 'date-time') {
+                  return Date;
                 }
-                return cls;
-              } else if (data['$ref']) {
-                const className = data['$ref'].split('/').pop();
-                return ClassRef.get(className, this.namespace).getClass(true);
               }
-              return ClassRef.get(data[key], this.namespace).getClass(true);
+              return cls;
+            } else if (data['$ref']) {
+              const className = data['$ref'].split('/').pop();
+              return ClassRef.get(className, this.namespace).getClass(true);
             }
+            return ClassRef.get(data[key], this.namespace).getClass(true);
           }
-        ]
-      })
+        }
+      ]
+    })
     );
   }
 

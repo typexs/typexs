@@ -37,7 +37,7 @@ export class SqlHelper {
     entityRef: EntityRef,
     propertyRef: PropertyRef,
     conditions: any,
-    opts: { orSupport?: boolean, limit?: number, offset?: number, sort?: any, mode?: 'delete' | 'select' } & IFindOptions) {
+    opts: { orSupport?: boolean; limit?: number; offset?: number; sort?: any; mode?: 'delete' | 'select' } & IFindOptions) {
 
     let queue = [];
     const limit = opts.limit;
