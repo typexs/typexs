@@ -5,7 +5,7 @@ import { PropertyRef } from '../../registry/PropertyRef';
 import { EntityRef } from '../../registry/EntityRef';
 import { __PROPERTY__, XS_P_PROPERTY, XS_P_PROPERTY_ID, XS_P_SEQ_NR, XS_P_TYPE } from '../../Constants';
 import * as _ from 'lodash';
-import { assign, find, get, has, isEmpty, remove, isArray } from 'lodash';
+import { assign, find, get, has, isArray, isEmpty, remove } from 'lodash';
 import { SqlHelper } from './SqlHelper';
 import { JoinDesc } from '../../descriptors/JoinDesc';
 import { EntityRegistry } from '../../EntityRegistry';
@@ -799,7 +799,18 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
 
       // identify removed relations
       if (!isEmpty(sources.join) && !isEmpty(previousRelations)) {
-        const toUpdate = remove(previousRelations, x => !!find(sources.join, x));
+        const toUpdate = remove(previousRelations, x => {
+          // remove generated id
+          const id = x['id'];
+          delete x['id'];
+          const res = find(sources.join, x);
+          if (res) {
+            res.id = id;
+            return true;
+          } else {
+            return false;
+          }
+        });
       }
 
       if (!isEmpty(previousRelations)) {
