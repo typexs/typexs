@@ -655,7 +655,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
         // FIXED 210827 join will be saved later
         // joinObjs = await this.c.manager.save(propertyDef.joinRef.getClass(), joinObjs);
 
-        const targets: ISaveData = {
+        const ret: ISaveData = {
           next: targetObjects,
           join: joinObjs,
           target: sources.next,
@@ -663,7 +663,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
           abort: targetObjects.length === 0
         };
 
-        return targets;
+        return ret;
 
       } else if (sourceDef instanceof ClassRef) {
         // for O-PO

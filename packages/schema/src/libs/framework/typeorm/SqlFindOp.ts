@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { assign, keys } from 'lodash';
+import { assign, isNumber, keys } from 'lodash';
 import { EntityDefTreeWorker } from '../EntityDefTreeWorker';
 import { EntityController } from '../../EntityController';
 import { IFindOp, NotYetImplementedError, TypeOrmConnectionWrapper } from '@typexs/base';
@@ -456,11 +456,19 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
   ): [IBinding<any, any>[], any[]] {
     const sourcePropsIds = this.getIdentifierPropertiesFor(sourceRef);
     const targetIdProps = this.getIdentifierPropertiesFor(targetRef);
+    const [sourceSeqNrId, dummy] = this.em.nameResolver().forSource(XS_P_SEQ_NR);
     const lookups: IBinding<any, any>[] = [];
     const conditions = [];
     for (const result of results) {
       const condition: any = {};
-      const lookup: IBinding<any, any> = { source: {}, target: {} };
+      const lookup: IBinding<any, any> = {
+        source: {},
+        target: {}
+      };
+
+      if (result[sourceSeqNrId]) {
+        lookup.sourceSeqNr = result[sourceSeqNrId];
+      }
 
       sourcePropsIds.forEach(prop => {
         const [sourceId] = this.em.nameResolver().forSource(prop);
@@ -770,10 +778,11 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
 
     for (let x = 0; x < sources.lookup.length; x++) {
       const lookup = sources.lookup[x];
-      const target = _.find(sources.target, lookup.source);
-      const attachObjs = _.filter(sources.next, lookup.target);
-      for (const attachObj of attachObjs) {
-        const seqNr = attachObj[sourceSeqNrId];
+      if (lookup.source && lookup.target) {
+        const target = _.find(sources.target, lookup.source);
+        const attachObj = _.find(sources.next, lookup.target);
+        // for (const attachObj of attachObjs) {
+        const seqNr = isNumber(lookup.sourceSeqNr) ? lookup.sourceSeqNr : null;
 
         const newObject = classRef.create(false);
         classProp.forEach(p => {
@@ -781,6 +790,19 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         });
 
         setTargetValueForProperty(propertyRef, target, newObject, seqNr);
+      } else {
+        const target = sources.target[x];
+        const attachObjs = _.filter(sources.next, lookup);
+        for (const attachObj of attachObjs) {
+          const seqNr = attachObj[sourceSeqNrId];
+
+          const newObject = classRef.create(false);
+          classProp.forEach(p => {
+            newObject[p.name] = p.get(attachObj);
+          });
+          setTargetValueForProperty(propertyRef, target, newObject, seqNr);
+        }
+
       }
     }
     // return;
