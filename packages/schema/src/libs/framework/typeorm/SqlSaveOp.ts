@@ -652,7 +652,8 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
           }
         }
 
-        joinObjs = await this.c.manager.save(propertyDef.joinRef.getClass(), joinObjs);
+        // FIXED 210827 join will be saved later
+        // joinObjs = await this.c.manager.save(propertyDef.joinRef.getClass(), joinObjs);
 
         const targets: ISaveData = {
           next: targetObjects,
@@ -797,7 +798,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
       }
 
       // identify removed relations
-      if (!isEmpty(sources.join)) {
+      if (!isEmpty(sources.join) && !isEmpty(previousRelations)) {
         const toUpdate = remove(previousRelations, x => !!find(sources.join, x));
       }
 
