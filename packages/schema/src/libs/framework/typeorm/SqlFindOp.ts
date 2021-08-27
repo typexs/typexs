@@ -466,7 +466,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         target: {}
       };
 
-      if (result[sourceSeqNrId]) {
+      if (isNumber(result[sourceSeqNrId])) {
         lookup.sourceSeqNr = result[sourceSeqNrId];
       }
 
