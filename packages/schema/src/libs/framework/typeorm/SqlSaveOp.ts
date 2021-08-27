@@ -5,7 +5,7 @@ import { PropertyRef } from '../../registry/PropertyRef';
 import { EntityRef } from '../../registry/EntityRef';
 import { __PROPERTY__, XS_P_PROPERTY, XS_P_PROPERTY_ID, XS_P_SEQ_NR, XS_P_TYPE } from '../../Constants';
 import * as _ from 'lodash';
-import { assign, find, get, isEmpty, remove } from 'lodash';
+import { assign, find, get, has, isEmpty, remove, isArray } from 'lodash';
 import { SqlHelper } from './SqlHelper';
 import { JoinDesc } from '../../descriptors/JoinDesc';
 import { EntityRegistry } from '../../EntityRegistry';
@@ -516,12 +516,24 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
         if (_.isEmpty(targets)) {
           continue;
         }
-        for (const target of targets) {
-          condition.applyOn(target, source);
-
+        if (propertyDef.isCollection()) {
+          if (isArray(targets)) {
+            for (const target of targets) {
+              condition.applyOn(target, source);
+              notNullProps.forEach(notNullProp => {
+                if (!_.has(target, notNullProp)) {
+                  target[notNullProp] = '0';
+                }
+              });
+            }
+          } else {
+            throw new Error('property value must be an array: ' + JSON.stringify(targets));
+          }
+        } else {
+          condition.applyOn(targets, source);
           notNullProps.forEach(notNullProp => {
-            if (!_.has(target, notNullProp)) {
-              target[notNullProp] = '0';
+            if (!has(targets, notNullProp)) {
+              targets[notNullProp] = '0';
             }
           });
         }
@@ -698,13 +710,13 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
         // FIXED 210827 join will be saved later
         // joinObjs = await this.c.manager.save(propertyDef.joinRef.getClass(), joinObjs);
 
-        const targets: ISaveData = {
+        const ret: ISaveData = {
           next: targetObjects,
           join: joinObjs,
           map: map,
           abort: targetObjects.length === 0
         };
-        return targets;
+        return ret;
       }
     } else if (propertyDef.isEmbedded()) {
       // save targets
@@ -727,12 +739,12 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
 
       joinObjs = await this.c.manager.save(targetClass, targetObjects);
 
-      const targets: ISaveData = {
+      const ret: ISaveData = {
         next: joinObjs,
         target: sources.next,
         abort: targetObjects.length === 0
       };
-      return targets;
+      return ret;
     } else {
 
       // not my own property
