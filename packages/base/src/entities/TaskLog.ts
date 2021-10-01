@@ -65,13 +65,13 @@ export class TaskLog {
   @Column({nullable: true})
   weight: number;
 
-  @Column({nullable: true})
+  @Column({type: 'datetime', nullable: true})
   created: Date;
 
-  @Column({nullable: true})
+  @Column({type: 'datetime', nullable: true})
   started: Date;
 
-  @Column({nullable: true})
+  @Column({type: 'datetime', nullable: true})
   stopped: Date;
 
   @Column({nullable: true})
