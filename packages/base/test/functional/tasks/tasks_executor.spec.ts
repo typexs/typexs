@@ -232,7 +232,7 @@ class TasksSpec {
     } catch (e) {
       error = e;
     }
-    expect(error.message).to.be.eq('no enqueue responses arrived');
+    expect(error.message).to.be.eq('No enqueue responses arrived');
 
   }
 
