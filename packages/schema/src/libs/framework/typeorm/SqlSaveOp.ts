@@ -802,7 +802,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
         const toUpdate = remove(previousRelations, x => {
           // remove generated id
           const id = x['id'];
-          delete x['id'];
+          // delete x['id'];
           const res = find(sources.join, x);
           if (res) {
             res.id = id;
