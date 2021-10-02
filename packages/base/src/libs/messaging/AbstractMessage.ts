@@ -46,9 +46,9 @@ export abstract class AbstractMessage<REQ extends AbstractEvent, RES extends Abs
   protected options: IMessageOptions;
 
   constructor(system: System,
-              reqClass: ClassType<REQ>,
-              resClass: ClassType<RES>,
-              options: IMessageOptions = {}) {
+    reqClass: ClassType<REQ>,
+    resClass: ClassType<RES>,
+    options: IMessageOptions = {}) {
     super();
     this.system = system;
     this.reqClass = reqClass;
@@ -104,7 +104,7 @@ export abstract class AbstractMessage<REQ extends AbstractEvent, RES extends Abs
 
   async send(req: REQ): Promise<any[]> {
     this.start = new Date();
-    this.targetIds = !!this.targetIds ? this.targetIds : [];
+    this.targetIds = this.targetIds ? this.targetIds : [];
     if (_.isEmpty(this.targetIds)) {
       this.targetIds = this.getSystem().nodes.map(n => n.nodeId);
     }
@@ -225,7 +225,6 @@ export abstract class AbstractMessage<REQ extends AbstractEvent, RES extends Abs
 
 
   ready() {
-    const self = this;
     return new Promise((resolve, reject) => {
       const t = setTimeout(() => {
         this.emit('postprocess', new Error('timeout error [' + this.timeout +

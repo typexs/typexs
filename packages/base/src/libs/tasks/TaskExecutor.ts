@@ -225,25 +225,33 @@ export class TaskExecutor extends EventEmitter {
 
   async executeOnWorker(asFuture: boolean = false) {
     this.logger.debug(this.taskNames + ' before request fire');
-    let execReq = this.requestFactory.executeRequest();
+    let executeRequest = this.requestFactory.executeRequest();
     const options = _.clone(this.options);
     if (this.targetIds) {
       options.targetIds = this.targetIds;
     }
-    execReq = execReq.create(
+    executeRequest = executeRequest.create(
       this.spec,
       this.params,
       options
     );
     let future: TaskFuture = null;
     if (this.options.waitForRemoteResults) {
-      future = await execReq.future();
+      future = await executeRequest.future();
     }
 
-    const enqueueEvents = await execReq.run();
+    const enqueueEvents = await executeRequest.run();
     if (enqueueEvents && enqueueEvents.length === 0) {
       // ERROR!!! NO RESPONSE
-      throw new Error('no enqueue responses arrived');
+      if (!options.skipThrow) {
+        throw new Error('No enqueue responses arrived');
+      } else {
+        this.logger.warn(
+          'Skipping throw enabled, so do not throw ' +
+          '"no enqueue response arrived. Probably no ExchangeMessageWorker missing"'
+        );
+        return null;
+      }
     } else if (enqueueEvents && enqueueEvents.length > 0) {
       if (enqueueEvents[0].state === 'request_error') {
         if (_.isArray(enqueueEvents[0].errors) && enqueueEvents[0].errors.length > 0) {
