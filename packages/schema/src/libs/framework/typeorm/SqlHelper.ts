@@ -1,12 +1,12 @@
-import {PropertyRef} from '../../registry/PropertyRef';
-import {INameResolver} from '../INameResolver';
+import { PropertyRef } from '../../registry/PropertyRef';
+import { INameResolver } from '../INameResolver';
 import * as _ from 'lodash';
-import {SqlConditionsBuilder} from './SqlConditionsBuilder';
-import {TypeOrmConnectionWrapper, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET} from '@typexs/base';
-import {EntityRef} from '../../../libs/registry/EntityRef';
-import {IFindOptions} from '../IFindOptions';
-import {__CLASS__, __NS__, IClassRef} from '@allgemein/schema-api';
-import {OrderDesc} from '../../descriptors/OrderDesc';
+import { SqlConditionsBuilder } from './SqlConditionsBuilder';
+import { TypeOrmConnectionWrapper, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
+import { EntityRef } from '../../../libs/registry/EntityRef';
+import { IFindOptions } from '../IFindOptions';
+import { __CLASS__, __NS__, IClassRef } from '@allgemein/schema-api';
+import { OrderDesc } from '../../descriptors/OrderDesc';
 
 const ignoreKeys = [__NS__, __CLASS__].map(x => x.toLowerCase());
 
@@ -67,7 +67,7 @@ export class SqlHelper {
       let qb: any = null;
       if (cond) {
         const builder = new SqlConditionsBuilder<T>(connection.manager, entityRef, connection.getStorageRef(), mode);
-        builder.build(opts.orSupport && _.isArray(cond) ? {$or: cond} : cond);
+        builder.build(opts.orSupport && _.isArray(cond) ? { $or: cond } : cond);
         qb = builder.getQueryBuilder() as any;
       } else {
         qb = connection.manager.getRepository(entityRef.object.getClass()).createQueryBuilder();
@@ -118,7 +118,11 @@ export class SqlHelper {
     }
 
     if (mode === 'delete') {
-      return Promise.all(promises);
+      if (promises.length > 0) {
+        return Promise.all(promises);
+      } else {
+        return [];
+      }
     }
 
     if (multipart) {
