@@ -288,7 +288,6 @@ export class Bootstrap {
     process.on('SIGTERM', () => {
       Log.info('Caught interrupt signal [SIGTERM]');
       this.shutdown().then(x => process.exit());
-
     });
   }
 
