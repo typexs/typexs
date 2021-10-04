@@ -96,6 +96,7 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter {
       try {
         const res = await this.processor.do(worker.workload(), this);
         worker.setResult(res);
+        this._done++;
       } catch (e) {
         this._error++;
         this.logger.error(e);
