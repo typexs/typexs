@@ -2,6 +2,7 @@
  * https://gist.github.com/Gericop/e33be1f201cf242197d9c4d0a1fa7335
  */
 import { EventEmitter } from 'events';
+import { setMaxListeners } from 'cluster';
 
 /**
  * TODO move this to sometimes to @allgemein/base
@@ -25,6 +26,7 @@ export class Semaphore extends EventEmitter {
 
   constructor(max: number, name: string = null) {
     super();
+    setMaxListeners(1000);
     this.max = max;
     this.name = name;
   }
