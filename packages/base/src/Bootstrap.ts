@@ -1,36 +1,29 @@
-import {cloneDeep, defaults, filter, get, has, isFunction} from 'lodash';
-import {Log} from './libs/logging/Log';
-import {Config, IConfigOptions, IOptions} from '@allgemein/config';
-import {RuntimeLoader} from './base/RuntimeLoader';
-import {IActivator} from './api/IActivator';
-import {IModule} from './api/IModule';
-import {IStorageOptions, K_STORAGE} from './libs/storage/IStorageOptions';
-import {Storage} from './libs/storage/Storage';
-import {CryptUtils, MetaArgs, PlatformUtils} from '@allgemein/base';
-import {
-  CONFIG_NAMESPACE,
-  K_CLS_ACTIVATOR,
-  K_CLS_API,
-  K_CLS_BOOTSTRAP,
-  K_CLS_COMMANDS,
-  K_CLS_USE_API
-} from './libs/Constants';
-import {IBootstrap} from './api/IBootstrap';
-import {ClassesLoader} from '@allgemein/moduls';
-import {ITypexsOptions} from './libs/ITypexsOptions';
-import {Invoker} from './base/Invoker';
-import {IShutdown} from './api/IShutdown';
-import {System} from './libs/system/System';
-import {ICommand} from './libs/commands/ICommand';
-import {LockFactory} from './libs/LockFactory';
-import {Injector} from './libs/di/Injector';
-import {EntityControllerRegistry} from './libs/storage/EntityControllerRegistry';
-import {IRuntimeLoader} from './libs/core/IRuntimeLoader';
-import {WinstonLoggerJar} from './libs/logging/WinstonLoggerJar';
-import {DEFAULT_LOGGER_OPTIONS} from './libs/logging/Constants';
-import {RegistryFactory} from '@allgemein/schema-api';
-import {DEFAULT_TYPEXS_OPTIONS} from './libs/config/Constants';
-import {ConfigLoader} from './libs/config/ConfigLoader';
+import { cloneDeep, defaults, filter, get, has, isFunction } from 'lodash';
+import { Log } from './libs/logging/Log';
+import { Config, IConfigOptions, IOptions } from '@allgemein/config';
+import { RuntimeLoader } from './base/RuntimeLoader';
+import { IActivator } from './api/IActivator';
+import { IModule } from './api/IModule';
+import { IStorageOptions, K_STORAGE } from './libs/storage/IStorageOptions';
+import { Storage } from './libs/storage/Storage';
+import { CryptUtils, MetaArgs, PlatformUtils } from '@allgemein/base';
+import { CONFIG_NAMESPACE, K_CLS_ACTIVATOR, K_CLS_API, K_CLS_BOOTSTRAP, K_CLS_COMMANDS, K_CLS_USE_API } from './libs/Constants';
+import { IBootstrap } from './api/IBootstrap';
+import { ClassesLoader } from '@allgemein/moduls';
+import { ITypexsOptions } from './libs/ITypexsOptions';
+import { Invoker } from './base/Invoker';
+import { IShutdown } from './api/IShutdown';
+import { System } from './libs/system/System';
+import { ICommand } from './libs/commands/ICommand';
+import { LockFactory } from './libs/LockFactory';
+import { Injector } from './libs/di/Injector';
+import { EntityControllerRegistry } from './libs/storage/EntityControllerRegistry';
+import { IRuntimeLoader } from './libs/core/IRuntimeLoader';
+import { WinstonLoggerJar } from './libs/logging/WinstonLoggerJar';
+import { DEFAULT_LOGGER_OPTIONS } from './libs/logging/Constants';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { DEFAULT_TYPEXS_OPTIONS } from './libs/config/Constants';
+import { ConfigLoader } from './libs/config/ConfigLoader';
 
 /**
  * Bootstrap controls the stages of application startup. From configuration to full startup for passed command.
@@ -166,7 +159,7 @@ export class Bootstrap {
    */
   activateLogger(): Bootstrap {
     Log.prefix = this.getNodeId() + ' ';
-    Log.options(this.getConfiguration().logging || {enable: false});
+    Log.options(this.getConfiguration().logging || { enable: false });
     return this;
   }
 
@@ -283,18 +276,19 @@ export class Bootstrap {
 
 
   private addShutdownEvents() {
-    process.on('exit', async (code) => {
-      await this.shutdown(code);
+    process.on('exit', (code) => {
+      this.shutdown(code);
     });
-    process.on('SIGINT', async () => {
+    process.on('SIGINT', () => {
       Log.info('Caught interrupt signal [SIGINT]');
-      await this.shutdown();
-      process.exit();
+      this.shutdown().then(x => {
+        process.exit();
+      });
     });
-    process.on('SIGTERM', async () => {
+    process.on('SIGTERM', () => {
       Log.info('Caught interrupt signal [SIGTERM]');
-      await this.shutdown();
-      process.exit();
+      this.shutdown().then(x => process.exit());
+
     });
   }
 

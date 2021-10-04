@@ -223,9 +223,9 @@ export class TaskRunner extends EventEmitter {
     this.event.finished = this.$tasks.filter(x => this.doneNrs.includes(x.nr)).map(x => x.getTaskName());
 
     const event = clone(this.event);
-    setTimeout(async () => {
+    setTimeout(() => {
       try {
-        await EventBus.postAndForget(event);
+        EventBus.postAndForget(event);
       } catch (e) {
         Log.error(e);
       }
@@ -513,7 +513,7 @@ export class TaskRunner extends EventEmitter {
 
     return new Promise((resolve, reject) => {
       // TODO timeout?
-      this.once(TASKRUN_STATE_FINISH_PROMISE, async (x: any) => {
+      this.once(TASKRUN_STATE_FINISH_PROMISE, (x: any) => {
         if (isError(x)) {
           this.api().onError(this);
           reject(x);
