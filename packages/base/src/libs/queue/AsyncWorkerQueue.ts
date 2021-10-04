@@ -1,13 +1,14 @@
 import * as _ from 'lodash';
-import {EventEmitter} from 'events';
-import {IAsyncQueueOptions} from './IAsyncQueueOptions';
-import {IQueueProcessor} from './IQueueProcessor';
-import {IQueueWorkload} from './IQueueWorkload';
-import {QueueJob} from './QueueJob';
-import {Log} from '../logging/Log';
-import {IAsyncQueueStats} from './IAsyncQueueStats';
-import {ILoggerApi} from '../logging/ILoggerApi';
-import {E_DO_PROCESS, E_DRAIN, E_ENQUEUE, E_NO_RUNNING_JOBS} from './Constants';
+import { remove } from 'lodash';
+import { EventEmitter } from 'events';
+import { IAsyncQueueOptions } from './IAsyncQueueOptions';
+import { IQueueProcessor } from './IQueueProcessor';
+import { IQueueWorkload } from './IQueueWorkload';
+import { QueueJob } from './QueueJob';
+import { Log } from '../logging/Log';
+import { IAsyncQueueStats } from './IAsyncQueueStats';
+import { ILoggerApi } from '../logging/ILoggerApi';
+import { E_DO_PROCESS, E_DRAIN, E_ENQUEUE, E_NO_RUNNING_JOBS } from './Constants';
 
 
 const ASYNC_QUEUE_DEFAULT: IAsyncQueueOptions = {
@@ -40,11 +41,11 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter {
   logger: ILoggerApi;
 
 
-  constructor(processor: IQueueProcessor<T>, options: IAsyncQueueOptions = {name: 'none'}) {
+  constructor(processor: IQueueProcessor<T>, options: IAsyncQueueOptions = { name: 'none' }) {
     super();
     this.setMaxListeners(10000);
     this.options = _.defaults(options, ASYNC_QUEUE_DEFAULT);
-    this.logger = _.get(this.options, 'logger', Log.getLoggerFor(AsyncWorkerQueue, {prefix: this.options.name}));
+    this.logger = _.get(this.options, 'logger', Log.getLoggerFor(AsyncWorkerQueue, { prefix: this.options.name }));
     this.processor = processor;
     this.on(E_DO_PROCESS, this.process.bind(this));
     this.on(E_ENQUEUE, this.enqueue.bind(this));
@@ -77,7 +78,7 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter {
   }
 
 
-  private process() {
+  private async process() {
     // ignore if is paused
     if (this._paused) {
       return;
@@ -86,34 +87,48 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter {
     if (!this.isOccupied() && this.enqueued() > 0) {
       // room for additional job
       const worker = this.worker.shift();
-      const self = this;
-      self.active.push(worker);
+      this.active.push(worker);
 
       this.runningTasks++;
-      Promise.resolve(worker)
-        .then((_worker) => {
-          self._inc++;
-          _worker.doStart();
-          return _worker;
-        })
-        .then(async (_worker) => {
-          const res = await self.processor.do(_worker.workload(), self);
-          _worker.setResult(res);
-          return _worker;
-        })
-        .then((_worker) => {
-          _.remove(self.active, _worker);
-          _worker.doStop();
-          self._done++;
-          self.next();
-        })
-        .catch((err) => {
-          _.remove(self.active, worker);
-          worker.doStop(err);
-          self._error++;
-          self.next();
-          this.logger.error(err);
-        });
+
+      this._inc++;
+      worker.doStart();
+      try {
+        const res = await this.processor.do(worker.workload(), this);
+        worker.setResult(res);
+      } catch (e) {
+        this._error++;
+        this.logger.error(e);
+      } finally {
+        remove(this.active, x => x === worker);
+        worker.doStop();
+        this.next();
+      }
+
+      // Promise.resolve(worker)
+      //   .then((_worker) => {
+      //     this._inc++;
+      //     _worker.doStart();
+      //     return _worker;
+      //   })
+      //   .then(async (_worker) => {
+      //     const res = await this.processor.do(_worker.workload(), this);
+      //     _worker.setResult(res);
+      //     return _worker;
+      //   })
+      //   .then((_worker) => {
+      //     _.remove(this.active, _worker);
+      //     _worker.doStop();
+      //     this._done++;
+      //     this.next();
+      //   })
+      //   .catch((err) => {
+      //     _.remove(this.active, worker);
+      //     worker.doStop(err);
+      //     this._error++;
+      //     this.next();
+      //     this.logger.error(err);
+      //   });
 
     } else {
       if (this.amount() === 0) {
@@ -147,11 +162,9 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter {
    * all processed queue is empty
    */
   await(): Promise<void> {
-    const self = this;
-
     return new Promise<void>((resolve) => {
-      if (self.amount() > 0) {
-        self.once(E_DRAIN, function () {
+      if (this.amount() > 0) {
+        this.once(E_DRAIN, function() {
           resolve();
         });
       } else {
@@ -204,22 +217,21 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter {
     return this.runningTasks >= this.options.concurrent;
   }
 
-// TODO impl
+  // TODO impl
   pause(): Promise<boolean> {
-    const self = this;
     this._paused = true;
     return new Promise((resolve) => {
-      if (self.isRunning()) {
-        self.once(E_NO_RUNNING_JOBS, () => {
-          resolve(self._paused);
+      if (this.isRunning()) {
+        this.once(E_NO_RUNNING_JOBS, () => {
+          resolve(this._paused);
         });
       } else {
-        resolve(self._paused);
+        resolve(this._paused);
       }
     });
   }
 
-// TODO impl
+  // TODO impl
   resume() {
     this._paused = false;
     for (let i = 0; i < this.options.concurrent; i++) {
