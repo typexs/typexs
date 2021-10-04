@@ -48,8 +48,7 @@ export class RedisCacheAdapter implements ICacheAdapter {
   async get(key: string, bin: string, options: ICacheSetOptions): Promise<any> {
     await this.client.connect();
     const _key = this.cacheKey(bin, key);
-    const res = await this.client.get(_key, options);
-    return res;
+    return this.client.get(_key, options);
   }
 
 

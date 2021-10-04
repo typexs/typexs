@@ -13,14 +13,14 @@
  *
  *
  */
-import {defaultsDeep, isPlainObject, keys} from 'lodash';
-import {ICacheAdapter} from './ICacheAdapter';
-import {ClassType} from '@allgemein/schema-api';
-import {ICacheConfig} from './ICacheConfig';
-import {ICacheGetOptions, ICacheSetOptions} from './ICacheOptions';
-import {CacheBin} from './CacheBin';
-import {C_DEFAULT} from '@allgemein/base';
-import {CACHE_NAME, ICache} from './ICache';
+import { defaultsDeep, isPlainObject, keys } from 'lodash';
+import { ICacheAdapter } from './ICacheAdapter';
+import { ClassType } from '@allgemein/schema-api';
+import { ICacheConfig } from './ICacheConfig';
+import { ICacheGetOptions, ICacheSetOptions } from './ICacheOptions';
+import { CacheBin } from './CacheBin';
+import { C_DEFAULT } from '@allgemein/base';
+import { CACHE_NAME, ICache } from './ICache';
 
 
 export const DEFAULT_OPTIONS: ICacheConfig = {
@@ -37,7 +37,7 @@ export class Cache implements ICache {
 
   private options: ICacheConfig = DEFAULT_OPTIONS;
 
-  private adapterClasses: { type: string, clazz: ClassType<ICacheAdapter> }[] = [];
+  private adapterClasses: { type: string; clazz: ClassType<ICacheAdapter> }[] = [];
 
   private adapters: { [k: string]: ICacheAdapter } = {};
 
@@ -53,13 +53,13 @@ export class Cache implements ICache {
   }
 
 
-  async get<T>(key: string, bin: string = C_DEFAULT, options?: ICacheGetOptions): Promise<T> {
+  get<T>(key: string, bin: string = C_DEFAULT, options?: ICacheGetOptions): Promise<T> {
     const cacheBin = this.getBin(bin);
     return cacheBin.get(key, bin, options);
   }
 
 
-  async set<T>(key: string, value: T, bin: string = C_DEFAULT, options?: ICacheSetOptions): Promise<T> {
+  set<T>(key: string, value: T, bin: string = C_DEFAULT, options?: ICacheSetOptions): Promise<T> {
     const cacheBin = this.getBin(bin);
     return cacheBin.set(key, value, bin, options);
   }
@@ -80,7 +80,7 @@ export class Cache implements ICache {
       if (!entry) {
         entry = this.adapterClasses.find(c => c.type === 'memory');
         adapter = Reflect.construct(entry.clazz, []);
-        await adapter.configure(key, {type: 'memory', nodeId: nodeId});
+        await adapter.configure(key, { type: 'memory', nodeId: nodeId });
         this.adapters[key] = adapter;
       } else {
         adapter = Reflect.construct(entry.clazz, []);
@@ -97,7 +97,7 @@ export class Cache implements ICache {
       const entry = this.adapterClasses.find(c => c.type === 'memory');
       if (entry) {
         const adapter: ICacheAdapter = Reflect.construct(entry.clazz, []);
-        await adapter.configure(C_DEFAULT, {type: 'memory', nodeId: nodeId});
+        await adapter.configure(C_DEFAULT, { type: 'memory', nodeId: nodeId });
         this.adapters[C_DEFAULT] = adapter;
       }
     }
@@ -151,10 +151,8 @@ export class Cache implements ICache {
 
   shutdown() {
     const p = [];
-    for (const k in this.adapters) {
-      if (this.adapters.hasOwnProperty(k)) {
-        p.push(this.adapters[k].shutdown());
-      }
+    for (const k of keys(this.adapters)) {
+      p.push(this.adapters[k].shutdown());
     }
     return Promise.all(p);
   }

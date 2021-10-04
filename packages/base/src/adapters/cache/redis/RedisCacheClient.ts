@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
-import {ClientOpts, createClient, RedisClient} from 'redis';
-import {IRedisCacheClient} from './IRedisCacheClient';
-import {ICacheGetOptions, ICacheSetOptions} from '../../../libs/cache/ICacheOptions';
+import { ClientOpts, createClient, RedisClient } from 'redis';
+import { IRedisCacheClient } from './IRedisCacheClient';
+import { ICacheGetOptions, ICacheSetOptions } from '../../../libs/cache/ICacheOptions';
 
 
 export class RedisCacheClient implements IRedisCacheClient {
@@ -98,6 +98,7 @@ export class RedisCacheClient implements IRedisCacheClient {
           resolve(reply);
         }
       });
+      // eslint-disable-next-line prefer-spread
       this.client.set.apply(this.client, args);
     });
   }

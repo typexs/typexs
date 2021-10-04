@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import { Inject } from 'typedi';
 import { EventBus, subscribe } from 'commons-eventbus';
 import { ClassUtils } from '@allgemein/base';
-
 import { Bootstrap } from '../Bootstrap';
 import { TaskEvent } from './../libs/tasks/worker/TaskEvent';
 import { Log } from '../libs/logging/Log';

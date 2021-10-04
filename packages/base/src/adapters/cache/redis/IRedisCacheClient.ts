@@ -1,4 +1,4 @@
-import {ICacheGetOptions, ICacheSetOptions} from "../../../libs/cache/ICacheOptions";
+import { ICacheGetOptions, ICacheSetOptions } from '../../../libs/cache/ICacheOptions';
 
 export interface IRedisCacheClient {
 
