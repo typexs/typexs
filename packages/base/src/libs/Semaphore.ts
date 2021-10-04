@@ -17,7 +17,7 @@ export class Semaphore extends EventEmitter {
   /**
    * Waiting queue
    */
-    // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line no-unused-vars
   private waiting: { resolve: (value?: any) => void; err: (reason?: any) => void }[] = [];
 
   private readonly max: number;
