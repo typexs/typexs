@@ -106,13 +106,13 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
                 },
                 message: 'The required value is not passed.'
               });
-              this.logger.error('task worker: necessery parameter "' + p.name + '" for ' + taskNames.join(', ') + ' not found');
+              this.logger.error('task worker: necessery parameter "' + p.name + '" for ' + JSON.stringify(taskNames) + ' not found');
             }
           }
         }
         if (optional.length > 0) {
           this.logger.warn(
-            'task worker: optional parameters "' + optional.join(', ') + '" for ' + JSON.stringify(taskNames.join(', ')) + ' not found'
+            'task worker: optional parameters "' + optional.join(', ') + '" for ' + JSON.stringify(taskNames) + ' not found'
           );
         }
       }
