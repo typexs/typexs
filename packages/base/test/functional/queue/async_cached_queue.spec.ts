@@ -1,16 +1,12 @@
-// Reference @testdeck/mocha's global definitions:
-
-import {suite, test, slow, timeout, pending} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {IQueueWorkload} from '../../../src/libs/queue/IQueueWorkload';
-import {IQueueProcessor} from '../../../src/libs/queue/IQueueProcessor';
-import {AsyncWorkerQueue} from '../../../src/libs/queue/AsyncWorkerQueue';
-import {QueueJob} from '../../../src/libs/queue/QueueJob';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { IQueueWorkload } from '../../../src/libs/queue/IQueueWorkload';
+import { IQueueProcessor } from '../../../src/libs/queue/IQueueProcessor';
+import { AsyncWorkerQueue } from '../../../src/libs/queue/AsyncWorkerQueue';
+import { QueueJob } from '../../../src/libs/queue/QueueJob';
+import { Cache } from '../../../src/libs/cache/Cache';
+import { MemoryCacheAdapter } from '../../../src';
 import { TestHelper } from '../TestHelper';
-
-// describe('',() => {})
-
-// (function(){})()
 
 class Workload implements IQueueWorkload {
 
@@ -21,8 +17,8 @@ class Processor implements IQueueProcessor<Workload> {
 
   do(workLoad: Workload): Promise<void> {
     // doing something with the workload
-    return new Promise<void>(function (resolve) {
-      setTimeout(function () {
+    return new Promise<void>(function(resolve) {
+      setTimeout(function() {
         resolve();
       }, 100);
     });
@@ -34,21 +30,32 @@ class Processor implements IQueueProcessor<Workload> {
   }
 }
 
+let cache: Cache = null;
 
-@suite('functional/queue/async')
-class AsyncQueueTests {
+@suite('functional/queue/async-cached-queue')
+class AsyncCacheQueueTests {
+
+  async before() {
+    cache = new Cache();
+    await cache.register(MemoryCacheAdapter);
+    await cache.configure('mem-cache', {});
+  }
+
+  async after() {
+    if (cache) {
+      await cache.shutdown();
+    }
+  }
 
 
   @test
   async enqueueSingleWorkloadAndWaitUntilAllDone() {
     const p = new Processor();
-    const q = new AsyncWorkerQueue<Workload>(p);
+    const q = new AsyncWorkerQueue<Workload>(p, { cache: cache });
     await q.pause();
     expect(q.isPaused()).to.eq(true);
 
     q.push(new Workload());
-    await TestHelper.waitFor(() => q.doingEnqueueing() === 0);
-    expect(q.amount()).to.eq(1);
     q.resume();
     expect(q.isPaused()).to.eq(false);
     expect(q.amount()).to.eq(1);
@@ -62,13 +69,15 @@ class AsyncQueueTests {
   async enqueueMultipleWorkloadAndWaitUntilAllDone() {
     const parallel: number = 5;
     const p = new Processor();
-    const q = new AsyncWorkerQueue<Workload>(p, {name: 'enqueue_test', concurrent: parallel});
+    const q = new AsyncWorkerQueue<Workload>(p, { name: 'enqueue_test', concurrent: parallel, cache: cache });
 
     for (let i = 0; i < 20; i++) {
       q.push(new Workload());
       expect(q.amount()).to.greaterThan(0);
       expect(q.running()).to.lessThan(parallel + 1);
     }
+
+    // await TestHelper.waitFor(() => q.doingEnqueueing() === 0);
 
     await q.await();
     expect(q.running()).to.eq(0);
@@ -79,11 +88,12 @@ class AsyncQueueTests {
   @test
   async enqueueSingleWorkloadAndWaitUntilWorkIsDone() {
     const p = new Processor();
-    const q = new AsyncWorkerQueue<Workload>(p);
+    const q = new AsyncWorkerQueue<Workload>(p, { cache: cache });
     await q.pause();
     expect(q.isPaused()).to.eq(true);
 
     const jobRef = await q.push(new Workload());
+    await TestHelper.waitFor(() => q.doingEnqueueing() === 0);
     expect(q.amount()).to.eq(1);
     let job = await jobRef.get();
     expect(job.isEnqueued()).to.eq(true);

@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import { ClientOpts, createClient, RedisClient } from 'redis';
 import { IRedisCacheClient } from './IRedisCacheClient';
 import { ICacheGetOptions, ICacheSetOptions } from '../../../libs/cache/ICacheOptions';
+import { Serializer } from '../../../libs/cache/Serializer';
 
 
 export class RedisCacheClient implements IRedisCacheClient {
@@ -63,12 +64,16 @@ export class RedisCacheClient implements IRedisCacheClient {
   }
 
   serialize(v: any) {
-    return JSON.stringify(v);
+    try {
+      return Serializer.serialize(v);
+    } catch (e) {
+      return null;
+    }
   }
 
   unserialize(v: any) {
     try {
-      return JSON.parse(v);
+      return Serializer.deserialize(v);
     } catch (e) {
       return null;
     }

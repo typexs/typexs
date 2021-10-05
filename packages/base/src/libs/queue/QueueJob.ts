@@ -1,15 +1,17 @@
-import {IQueueWorkload} from './IQueueWorkload';
-import {IQueue} from './IQueue';
-import {CryptUtils} from '@allgemein/base';
+import { IQueueWorkload } from './IQueueWorkload';
+import { IQueue } from './IQueue';
+import { CryptUtils } from '@allgemein/base';
+import { QJ_ENQUEUED, QJ_START, QJ_STOP } from './Constants';
+import { IdObject } from './IdObject';
 
 
-export class QueueJob<T extends IQueueWorkload> {
+export class QueueJob<T extends IQueueWorkload> implements IdObject {
 
   private static _INC = 0;
 
   private _id: string;
 
-  private _queue: IQueue;
+  // private _queue: IQueue;
 
   private _workload: T;
 
@@ -25,11 +27,15 @@ export class QueueJob<T extends IQueueWorkload> {
 
   private _result: any = null;
 
-  constructor(queue: IQueue, workload: T) {
+  constructor(/* queue: IQueue, */workload: T) {
     this._workload = workload;
-    this._queue = queue;
+    // this._queue = queue;
     this._id = CryptUtils.shorthash((new Date()).getTime() + '' + (QueueJob._INC++));
-    this._queue.once(this.jobEventName('stop'), this.onDone.bind(this));
+    // this._queue.once(this.jobEventName('stop'), this.onDone.bind(this));
+  }
+
+  prepare(queue: IQueue) {
+    queue.once(this.jobEventName(QJ_STOP), this.onDone.bind(this, queue));
   }
 
   public get id(): string {
@@ -40,10 +46,10 @@ export class QueueJob<T extends IQueueWorkload> {
     return this._workload;
   }
 
-  public enqueued(): Promise<QueueJob<T>> {
+  public enqueued(queue: IQueue): Promise<QueueJob<T>> {
     return new Promise((resolve) => {
       if (!this._enqueued) {
-        this._queue.once(this.jobEventName('enqueued'), (job: QueueJob<T>) => {
+        queue.once(this.jobEventName(QJ_ENQUEUED), (job: QueueJob<T>) => {
           resolve(job);
         });
       } else {
@@ -64,13 +70,17 @@ export class QueueJob<T extends IQueueWorkload> {
     return this._error;
   }
 
+  setError(v: any) {
+    this._error = v;
+  }
+
   /**
    * Wait till the job is begins
    */
-  public starting(): Promise<QueueJob<T>> {
+  public starting(queue: IQueue): Promise<QueueJob<T>> {
     return new Promise((resolve) => {
       if (!this._start) {
-        this._queue.once(this.jobEventName('start'), () => {
+        queue.once(this.jobEventName(QJ_START), () => {
           resolve(this);
         });
       } else {
@@ -83,10 +93,10 @@ export class QueueJob<T extends IQueueWorkload> {
   /**
    * Wait till the job is finished
    */
-  public done(): Promise<QueueJob<T>> {
+  public done(queue: IQueue): Promise<QueueJob<T>> {
     return new Promise((resolve, reject) => {
       if (!this._stop) {
-        this._queue.once(this.jobEventName('stop'), (err: Error = null) => {
+        queue.once(this.jobEventName(QJ_STOP), (err: Error = null) => {
           if (err) {
             reject(err);
           } else {
@@ -103,27 +113,30 @@ export class QueueJob<T extends IQueueWorkload> {
   /**
    * Fire event that the job was enqueued
    */
-  public doEnqueue() {
+  public async doEnqueue(queue: IQueue) {
     this._enqueued = new Date();
-    this._queue.emit(this.jobEventName('enqueued'), this);
+    await queue.set(this);
+    queue.emit(this.jobEventName(QJ_ENQUEUED), this);
   }
 
   /**
    * Fire event that the job was started
    */
-  public doStart() {
+  public async doStart(queue: IQueue) {
     this._start = new Date();
-    this._queue.emit(this.jobEventName('start'));
+    await queue.set(this);
+    queue.emit(this.jobEventName(QJ_START));
   }
 
   /**
    * Fire event that the job was stopped
    */
-  public doStop(err: Error = null) {
+  public async doStop(queue: IQueue, err: Error = null) {
     this._error = err;
     this._stop = new Date();
     this._duration = this._stop.getTime() - this._start.getTime();
-    this._queue.emit(this.jobEventName('stop'), err);
+    await queue.set(this);
+    queue.emit(this.jobEventName(QJ_STOP), err);
   }
 
   /**
@@ -151,22 +164,21 @@ export class QueueJob<T extends IQueueWorkload> {
   /**
    * Fired when the job is finished
    */
-  private onDone() {
-    this.finalize();
+  private onDone(queue: IQueue) {
+    this.finalize(queue);
   }
 
 
   /**
    * Clear references to the _queue object
    */
-  finalize() {
+  finalize(queue: IQueue) {
     if (!this._stop) {
-      this.doStop();
+      this.doStop(queue);
     }
-    this._queue.removeAllListeners(this.jobEventName('start'));
-    this._queue.removeAllListeners(this.jobEventName('stop'));
-    this._queue.removeAllListeners(this.jobEventName('enqueued'));
-    this._queue = null;
+    queue.removeAllListeners(this.jobEventName(QJ_START));
+    queue.removeAllListeners(this.jobEventName(QJ_STOP));
+    queue.removeAllListeners(this.jobEventName(QJ_ENQUEUED));
   }
 
 

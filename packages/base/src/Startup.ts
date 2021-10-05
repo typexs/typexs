@@ -1,12 +1,12 @@
-import {isArray} from 'lodash';
-import {Config} from '@allgemein/config';
-import {EventBus, IEventBusConfiguration} from 'commons-eventbus';
-import {Inject} from 'typedi';
-import {IBootstrap} from './api/IBootstrap';
-import {IShutdown} from './api/IShutdown';
-import {RuntimeLoader} from './base/RuntimeLoader';
-import {Cache} from './libs/cache/Cache';
-import {ICacheConfig} from './libs/cache/ICacheConfig';
+import { isArray, keys } from 'lodash';
+import { Config } from '@allgemein/config';
+import { EventBus, IEventBusConfiguration } from 'commons-eventbus';
+import { Inject } from 'typedi';
+import { IBootstrap } from './api/IBootstrap';
+import { IShutdown } from './api/IShutdown';
+import { RuntimeLoader } from './base/RuntimeLoader';
+import { Cache } from './libs/cache/Cache';
+import { ICacheConfig } from './libs/cache/ICacheConfig';
 import {
   C_CONFIG,
   C_EVENTBUS,
@@ -15,19 +15,19 @@ import {
   K_CLS_EXCHANGE_MESSAGE,
   K_CLS_SCHEDULE_ADAPTER_FACTORIES
 } from './libs/Constants';
-import {Log} from './libs/logging/Log';
-import {IScheduleDef} from './libs/schedule/IScheduleDef';
-import {Scheduler} from './libs/schedule/Scheduler';
-import {System} from './libs/system/System';
-import {Tasks} from './libs/tasks/Tasks';
-import {TasksHelper} from './libs/tasks/TasksHelper';
-import {WatcherRegistry} from './libs/watchers/WatcherRegistry';
-import {Workers} from './libs/worker/Workers';
-import {ExchangeMessageRegistry} from './libs/messaging/ExchangeMessageRegistry';
-import {ConfigUtils} from './libs/utils/ConfigUtils';
-import {TaskRunnerRegistry} from './libs/tasks/TaskRunnerRegistry';
-import {TaskQueueWorker} from './workers/TaskQueueWorker';
-import {Injector} from './libs/di/Injector';
+import { Log } from './libs/logging/Log';
+import { IScheduleDef } from './libs/schedule/IScheduleDef';
+import { Scheduler } from './libs/schedule/Scheduler';
+import { System } from './libs/system/System';
+import { Tasks } from './libs/tasks/Tasks';
+import { TasksHelper } from './libs/tasks/TasksHelper';
+import { WatcherRegistry } from './libs/watchers/WatcherRegistry';
+import { Workers } from './libs/worker/Workers';
+import { ExchangeMessageRegistry } from './libs/messaging/ExchangeMessageRegistry';
+import { ConfigUtils } from './libs/utils/ConfigUtils';
+import { TaskRunnerRegistry } from './libs/tasks/TaskRunnerRegistry';
+import { TaskQueueWorker } from './workers/TaskQueueWorker';
+import { Injector } from './libs/di/Injector';
 
 
 export class Startup implements IBootstrap, IShutdown {
@@ -71,12 +71,10 @@ export class Startup implements IBootstrap, IShutdown {
   private eventbus() {
     const bus: { [name: string]: IEventBusConfiguration } = Config.get(C_EVENTBUS, false);
     if (bus) {
-      for (const name in bus) {
-        if (bus.hasOwnProperty(name)) {
-          const busCfg: IEventBusConfiguration = bus[name];
-          busCfg.name = name;
-          const x = EventBus.$().addConfiguration(busCfg);
-        }
+      for (const name of keys(bus)) {
+        const busCfg: IEventBusConfiguration = bus[name];
+        busCfg.name = name;
+        const x = EventBus.$().addConfiguration(busCfg);
       }
     }
   }
@@ -95,7 +93,7 @@ export class Startup implements IBootstrap, IShutdown {
     for (const cls of this.loader.getClasses(K_CLS_CACHE_ADAPTER)) {
       await this.cache.register(<any>cls);
     }
-    const cache: ICacheConfig = Config.get('cache');
+    const cache: ICacheConfig = Config.get('cache', {});
     await this.cache.configure(this.system.node.nodeId, cache);
     await this.cache.set([C_CONFIG, this.system.node.nodeId].join(C_KEY_SEPARATOR), ConfigUtils.clone());
 

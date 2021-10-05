@@ -72,7 +72,6 @@ export class Cache implements ICache {
       this.options = config;
     }
 
-
     for (const key of keys(this.options.adapter)) {
       const adapterConfig = this.options.adapter[key];
       let entry = this.adapterClasses.find(c => c.type === adapterConfig.type);

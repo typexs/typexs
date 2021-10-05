@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { remove } from 'lodash';
+import { isArray, remove } from 'lodash';
 import { EventEmitter } from 'events';
 import { IAsyncQueueOptions } from './IAsyncQueueOptions';
 import { IQueueProcessor } from './IQueueProcessor';
@@ -8,7 +8,12 @@ import { QueueJob } from './QueueJob';
 import { Log } from '../logging/Log';
 import { IAsyncQueueStats } from './IAsyncQueueStats';
 import { ILoggerApi } from '../logging/ILoggerApi';
-import { E_DO_PROCESS, E_DRAIN, E_ENQUEUE, E_NO_RUNNING_JOBS } from './Constants';
+import { E_CLEANUP, E_DO_PROCESS, E_DRAIN, E_ENQUEUE, E_NO_RUNNING_JOBS } from './Constants';
+import { IQueueArray } from './IQueueArray';
+import { CacheArray } from './CacheArray';
+import { IQueue } from './IQueue';
+import { DefaultArray } from './DefaultArray';
+import { QueueJobRef } from './QueueJobRef';
 
 
 const ASYNC_QUEUE_DEFAULT: IAsyncQueueOptions = {
@@ -17,28 +22,34 @@ const ASYNC_QUEUE_DEFAULT: IAsyncQueueOptions = {
 };
 
 
-export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter {
+export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter implements IQueue {
 
 
-  _inc = 0;
+  private _inc = 0;
 
-  _done = 0;
+  private _done = 0;
 
-  _error = 0;
+  private _error = 0;
 
-  _paused = false;
+  private _paused = false;
 
-  options: IAsyncQueueOptions;
+  private enqueueing = 0;
 
-  processor: IQueueProcessor<T>;
+  private options: IAsyncQueueOptions;
 
-  runningTasks = 0;
+  private processor: IQueueProcessor<T>;
 
-  worker: Array<QueueJob<T>> = [];
+  private runningTasks = 0;
 
-  active: Array<QueueJob<T>> = [];
+  private all: IQueueArray<QueueJob<T>>;
 
-  logger: ILoggerApi;
+  private worker: string[] = [];
+
+  private done: { id: string; ts: number }[] = [];
+
+  private active: Array<QueueJob<T>> = [];
+
+  private logger: ILoggerApi;
 
 
   constructor(processor: IQueueProcessor<T>, options: IAsyncQueueOptions = { name: 'none' }) {
@@ -47,16 +58,40 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter {
     this.options = _.defaults(options, ASYNC_QUEUE_DEFAULT);
     this.logger = _.get(this.options, 'logger', Log.getLoggerFor(AsyncWorkerQueue, { prefix: this.options.name }));
     this.processor = processor;
+    if (this.options.cache) {
+      // this.worker = new CacheArray(this.options.cache, QueueJob);
+      this.all = new CacheArray(this.options.cache, QueueJob);
+    } else {
+      // this.worker = new DefaultArray<QueueJob<T>>();
+      this.all = new DefaultArray<QueueJob<T>>();
+    }
     this.on(E_DO_PROCESS, this.process.bind(this));
     this.on(E_ENQUEUE, this.enqueue.bind(this));
     this.on(E_DRAIN, this.drained.bind(this));
+    this.on(E_CLEANUP, this.cleanup.bind(this));
   }
 
-  private next() {
-    this.runningTasks--;
 
-    this.logger.debug('inc=' + this._inc + ' done=' + this._done + ' error=' + this._error +
-      ' running=' + this.running() + ' todo=' + this.enqueued() + ' active=' + this.active.length);
+  private cleanup() {
+    const end = (new Date().getTime()) - 60000;
+    const removed = remove(this.done, x => x.ts <= end);
+
+    for (const r of removed) {
+      this.all.remove(r.id);
+    }
+  }
+
+
+  private next() {
+    // TODO idle?
+    this.logger.debug(
+      'inc=' + this._inc + ' ' +
+      'done=' + this._done + ' ' +
+      'error=' + this._error + ' ' +
+      'running=' + this.running() + ' ' +
+      'todo=' + this.enqueued() + ' ' +
+      'active=' + this.active.length
+    );
     if (this.isPaused()) {
       if (!this.isRunning()) {
         this.emit(E_NO_RUNNING_JOBS);
@@ -86,78 +121,91 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter {
 
     if (!this.isOccupied() && this.enqueued() > 0) {
       // room for additional job
-      const worker = this.worker.shift();
+      this.runningTasks++;
+      const workerId: string = this.worker.shift();
+      const worker: QueueJob<T> = await this.get(workerId);
+      // if (isArray(this.worker)) {
+      //   worker = this.worker.shift();
+      // } else {
+      //   worker = await this.worker.shift();
+      // }
+
+      worker.prepare(this);
       this.active.push(worker);
 
-      this.runningTasks++;
 
       this._inc++;
-      worker.doStart();
+      await worker.doStart(this);
+      let error = null;
       try {
-        const res = await this.processor.do(worker.workload(), this);
+        const workload = await worker.workload();
+        const res = await this.processor.do(workload, this);
         worker.setResult(res);
         this._done++;
       } catch (e) {
+        error = e;
+        worker.setError(e);
         this._error++;
         this.logger.error(e);
       } finally {
-        remove(this.active, x => x === worker);
-        worker.doStop();
+        remove(this.active, x => x.id === worker.id);
+        await worker.doStop(this, error);
+        this.done.push({ id: workerId, ts: (new Date().getTime()) });
+        this.runningTasks--;
         this.next();
       }
-
-      // Promise.resolve(worker)
-      //   .then((_worker) => {
-      //     this._inc++;
-      //     _worker.doStart();
-      //     return _worker;
-      //   })
-      //   .then(async (_worker) => {
-      //     const res = await this.processor.do(_worker.workload(), this);
-      //     _worker.setResult(res);
-      //     return _worker;
-      //   })
-      //   .then((_worker) => {
-      //     _.remove(this.active, _worker);
-      //     _worker.doStop();
-      //     this._done++;
-      //     this.next();
-      //   })
-      //   .catch((err) => {
-      //     _.remove(this.active, worker);
-      //     worker.doStop(err);
-      //     this._error++;
-      //     this.next();
-      //     this.logger.error(err);
-      //   });
-
-    } else {
       if (this.amount() === 0) {
         // notthing to do
         this.emit(E_DRAIN);
       } else {
-        // worker exists and occupied
+        if (this._inc % 20 === 0) {
+          this.emit(E_CLEANUP);
+        }
       }
     }
   }
 
 
-  private enqueue(job: QueueJob<T>) {
-    this.worker.push(job);
-    job.doEnqueue();
-    this.fireProcess();
+  private async enqueue(job: QueueJob<T>) {
+    this.enqueueing++;
+    let error = null;
+    if (isArray(this.all)) {
+      this.all.push(job);
+    } else {
+      try {
+        await this.all.push(job);
+      } catch (e) {
+        this.logger.error(e);
+        error = e;
+      }
+    }
+    this.enqueueing--;
+    if (!error) {
+      this.worker.push(job.id);
+      await job.doEnqueue(this);
+      this.fireProcess();
+    }
   }
+
 
   private drained() {
     if (this.processor.onEmpty) {
       this.processor.onEmpty();
     }
+    this.emit(E_CLEANUP);
   }
 
   private fireProcess() {
     this.emit(E_DO_PROCESS);
   }
 
+  get(id: string): Promise<QueueJob<T>> | QueueJob<T> {
+    return this.all.get(id);
+  }
+
+  set(x: QueueJob<T>) {
+    return this.all.set(x);
+  }
 
   /**
    * all processed queue is empty
@@ -181,11 +229,11 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter {
    * @param entry
    * @returns {QueueJob<T>}
    */
-  push(entry: T): QueueJob<T> {
-    const _entry: QueueJob<T> = new QueueJob(this, entry);
-    // let $p = _entry.enqueued();
+  push(entry: T): QueueJobRef<T> {
+    const _entry: QueueJob<T> = new QueueJob(entry);
+    const id = _entry.id;
     this.emit(E_ENQUEUE, _entry);
-    return _entry;
+    return new QueueJobRef<T>(this, id);
   }
 
 
@@ -193,13 +241,16 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter {
     return this.runningTasks;
   }
 
+  doingEnqueueing() {
+    return this.enqueueing;
+  }
 
   enqueued() {
     return this.worker.length;
   }
 
   amount() {
-    return this.running() + this.enqueued();
+    return this.running() + this.enqueued() + this.doingEnqueueing();
   }
 
   isPaused() {
@@ -247,8 +298,18 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter {
     await this.pause();
     this.logger = null;
     this.processor = null;
-    this.worker.map(jobs => jobs.finalize());
-    this.active.map(jobs => jobs.finalize());
+
+    await Promise.all(this.worker.map(async k => {
+      (await this.get(k)).finalize(this);
+    }));
+
+    // if (isArray(this.worker)) {
+    //   this.worker.map(jobs => jobs.finalize(this));
+    // } else {
+    //   await this.worker.map(jobs => jobs.finalize(this));
+    // }
+
+    this.active.map(jobs => jobs.finalize(this));
     this.worker = null;
     this.active = null;
     this.removeAllListeners();

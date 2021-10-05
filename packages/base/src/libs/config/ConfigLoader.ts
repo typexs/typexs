@@ -91,7 +91,7 @@ export class ConfigLoader {
 
 
   // async initSchema() {
-  //   await JsonSchema.unserialize(CONFIG_SCHEMA, {namespace: NAMESPACE_CONFIG, className: 'Config'});
+  //   await JsonSchema.deserialize(CONFIG_SCHEMA, {namespace: NAMESPACE_CONFIG, className: 'Config'});
   // }
 
   /**

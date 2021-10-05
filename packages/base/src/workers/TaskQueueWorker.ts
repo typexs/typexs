@@ -17,6 +17,7 @@ import { AsyncWorkerQueue } from '../libs/queue/AsyncWorkerQueue';
 import { ILoggerApi } from '../libs/logging/ILoggerApi';
 import { ITaskQueueWorkerOptions } from '../libs/tasks/worker/ITaskQueueWorkerOptions';
 import { TaskRunnerRegistry } from '../libs/tasks/TaskRunnerRegistry';
+import { Cache } from '../libs/cache/Cache';
 
 
 export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker {
@@ -31,8 +32,8 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
 
   queue: AsyncWorkerQueue<ITaskWorkload>;
 
-  // @Inject(Tasks.NAME)
-  // tasks: Tasks;
+  @Inject(Cache.NAME)
+  cache: Cache;
 
   @Inject(TaskRunnerRegistry.NAME)
   taskRunnerRegistry: TaskRunnerRegistry;
@@ -47,7 +48,11 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
     }
 
     this.nodeId = Bootstrap.getNodeId();
-    this.queue = new AsyncWorkerQueue<ITaskWorkload>(this, { ...options, logger: this.logger });
+    this.queue = new AsyncWorkerQueue<ITaskWorkload>(this, {
+      logger: this.logger,
+      cache: this.cache,
+      ...options
+    });
     await EventBus.register(this);
     this.logger.debug('Task worker: waiting for tasks ...');
   }
@@ -86,10 +91,12 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
       const props = TasksHelper.getIncomingParameters(TasksHelper.getTaskNames(taskNames).map(t => this.getTasksRegistry().get(t)));
       if (props.length > 0) {
         parameters = event.parameters;
+        const optional = [];
         for (const p of props) {
           if (!_.has(parameters, p.storingName) && !_.has(parameters, p.name)) {
             if (p.isOptional()) {
-              this.logger.warn('task worker: optional parameter "' + p.name + '" for ' + taskNames.join(', ') + ' not found');
+
+              optional.push(p.name);
             } else {
               event.state = 'request_error';
               event.errors.push(<IError>{
@@ -102,6 +109,11 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
               this.logger.error('task worker: necessery parameter "' + p.name + '" for ' + taskNames.join(', ') + ' not found');
             }
           }
+        }
+        if (optional.length > 0) {
+          this.logger.warn(
+            'task worker: optional parameters "' + optional.join(', ') + '" for ' + JSON.stringify(taskNames.join(', ')) + ' not found'
+          );
         }
       }
 
