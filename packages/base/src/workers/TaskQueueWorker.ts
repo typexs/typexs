@@ -73,7 +73,7 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
     // const usedMem = os.
     const mem = process.memoryUsage();
 
-    if (this.heapSize.downgrade > mem.heapUsed) {
+    if (this.heapSize.downgrade < mem.heapUsed) {
       this.queue.speedDown();
     } else {
       this.queue.speedUp();
