@@ -1,7 +1,8 @@
-import * as _ from 'lodash';
+import { cloneDeep, has, isArray, isEmpty, isString } from 'lodash';
 import { Inject } from 'typedi';
 import { EventBus, subscribe } from 'commons-eventbus';
 import { ClassUtils } from '@allgemein/base';
+import { freemem, totalmem } from 'os';
 import { Bootstrap } from '../Bootstrap';
 import { TaskEvent } from './../libs/tasks/worker/TaskEvent';
 import { Log } from '../libs/logging/Log';
@@ -58,6 +59,20 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
   }
 
 
+  onNext() {
+    // const usedMem = os.
+    const mem = process.memoryUsage();
+    this.logger.debug(
+      `memory: heap = ${this.memStr(mem.heapUsed)} / ${this.memStr(mem.heapTotal)} ` +
+      `| free = ${this.memStr(freemem())} | total = ${this.memStr(totalmem())} | rss = ${this.memStr(mem.rss)} ` +
+      `| external = ${this.memStr(mem.external)}`
+    );
+  }
+
+  memStr(mem: number){
+    return (Math.round(mem / 1024 / 1024 * 100) / 100) + ' MB';
+  }
+
   getTasksRegistry() {
     return this.taskRunnerRegistry.tasks;
   }
@@ -79,13 +94,13 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
     event.topic = 'data';
 
     let parameters: any = null;
-    let taskNames = _.isArray(event.taskSpec) ? event.taskSpec : [event.taskSpec];
+    let taskNames = isArray(event.taskSpec) ? event.taskSpec : [event.taskSpec];
 
 
     // filter not allowed tasks
-    taskNames = taskNames.filter(t => (_.isString(t) &&
-      this.getTasksRegistry().access(t)) || (!_.isString(t) && this.getTasksRegistry().access(t.name)));
-    if (!_.isEmpty(taskNames)) {
+    taskNames = taskNames.filter(t => (isString(t) &&
+      this.getTasksRegistry().access(t)) || (!isString(t) && this.getTasksRegistry().access(t.name)));
+    if (!isEmpty(taskNames)) {
 
       // validate arguments
       const props = TasksHelper.getIncomingParameters(TasksHelper.getTaskNames(taskNames).map(t => this.getTasksRegistry().get(t)));
@@ -93,7 +108,7 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
         parameters = event.parameters;
         const optional = [];
         for (const p of props) {
-          if (!_.has(parameters, p.storingName) && !_.has(parameters, p.name)) {
+          if (!has(parameters, p.storingName) && !has(parameters, p.name)) {
             if (p.isOptional()) {
 
               optional.push(p.name);
@@ -146,16 +161,6 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
   async do(workLoad: ITaskWorkload, queue?: AsyncWorkerQueue<any>): Promise<any> {
     const e = workLoad.event;
     let results: ITaskRunnerResult = null;
-    // const runner = new TaskRunner(
-    //   this.tasks,
-    //   workLoad.names,
-    //   {
-    //     id: e.id,
-    //     callerId: e.nodeId,
-    //     nodeId: this.nodeId,
-    //     targetIds: e.targetIds,
-    //     local: false
-    //   });
     const taskOptions = {
       id: e.id,
       callerId: e.nodeId,
@@ -166,8 +171,7 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
     const runner = this.taskRunnerRegistry.createNewRunner(workLoad.names, taskOptions);
     runner.getReadStream().on('data', (x: any) => {
       e.topic = 'log';
-      e.log = x.toString().split('\n').filter((x: string) => !_.isEmpty(x));
-
+      e.log = x.toString().split('\n').filter((x: string) => !isEmpty(x));
       this.fireState(e);
     });
 
@@ -208,7 +212,7 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
 
 
   fireState(e: TaskEvent): TaskEvent {
-    const _e = _.cloneDeep(e);
+    const _e = cloneDeep(e);
     _e.reqEventId = e.id;
     _e.respId = this.nodeId;
     _e.nodeId = this.nodeId;

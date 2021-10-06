@@ -1,12 +1,12 @@
-
-
-import {IQueueWorkload} from "./IQueueWorkload";
-import {AsyncWorkerQueue} from "./AsyncWorkerQueue";
+import { IQueueWorkload } from './IQueueWorkload';
+import { AsyncWorkerQueue } from './AsyncWorkerQueue';
 
 
 export interface IQueueProcessor<T extends IQueueWorkload> {
 
-    do(workLoad: T, queue?:AsyncWorkerQueue<any>): Promise<any>;
+  do(workLoad: T, queue?: AsyncWorkerQueue<any>): Promise<any>;
 
-    onEmpty?(): Promise<void>
+  onEmpty?(): Promise<void>;
+
+  onNext?(): void;
 }

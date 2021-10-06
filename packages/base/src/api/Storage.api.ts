@@ -1,13 +1,9 @@
-import {IStorageApi} from './IStorageApi';
-import {ClassType} from '@allgemein/schema-api';
-import {IFindOptions} from '../libs/storage/framework/IFindOptions';
-import {IUpdateOptions} from '../libs/storage/framework/IUpdateOptions';
-import {ISaveOptions} from '../libs/storage/framework/ISaveOptions';
-import {IFindOp} from '../libs/storage/framework/IFindOp';
-import {IUpdateOp} from '../libs/storage/framework/IUpdateOp';
-import {IDeleteOp} from '../libs/storage/framework/IDeleteOp';
-import {IAggregateOp} from '../libs/storage/framework/IAggregateOp';
-import {ISaveOp} from '../libs/storage/framework/ISaveOp';
+import { IStorageApi } from './IStorageApi';
+import { IFindOp } from '../libs/storage/framework/IFindOp';
+import { IUpdateOp } from '../libs/storage/framework/IUpdateOp';
+import { IDeleteOp } from '../libs/storage/framework/IDeleteOp';
+import { IAggregateOp } from '../libs/storage/framework/IAggregateOp';
+import { ISaveOp } from '../libs/storage/framework/ISaveOp';
 
 
 export class StorageApi implements IStorageApi {

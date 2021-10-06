@@ -27,4 +27,9 @@ export interface IAsyncQueueOptions {
    */
   cache?: ICache;
 
+  /**
+   * Cleanup task timeout
+   */
+  cleanupTimeout?: number;
+
 }

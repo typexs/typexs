@@ -1,5 +1,4 @@
-import * as _ from 'lodash';
-import { isArray, remove } from 'lodash';
+import { defaults, get, isArray, remove } from 'lodash';
 import { EventEmitter } from 'events';
 import { IAsyncQueueOptions } from './IAsyncQueueOptions';
 import { IQueueProcessor } from './IQueueProcessor';
@@ -18,7 +17,8 @@ import { QueueJobRef } from './QueueJobRef';
 
 const ASYNC_QUEUE_DEFAULT: IAsyncQueueOptions = {
   name: 'none',
-  concurrent: 5
+  concurrent: 5,
+  cleanupTimeout: 60000
 };
 
 
@@ -51,12 +51,17 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
 
   private logger: ILoggerApi;
 
+  private concurrent: number = 5;
+
+  private maxConcurrent: number = 5;
+
 
   constructor(processor: IQueueProcessor<T>, options: IAsyncQueueOptions = { name: 'none' }) {
     super();
     this.setMaxListeners(10000);
-    this.options = _.defaults(options, ASYNC_QUEUE_DEFAULT);
-    this.logger = _.get(this.options, 'logger', Log.getLoggerFor(AsyncWorkerQueue, { prefix: this.options.name }));
+    this.options = defaults(options, ASYNC_QUEUE_DEFAULT);
+    this.concurrent = this.maxConcurrent = this.options.concurrent;
+    this.logger = get(this.options, 'logger', Log.getLoggerFor(AsyncWorkerQueue, { prefix: this.options.name }));
     this.processor = processor;
     if (this.options.cache) {
       // this.worker = new CacheArray(this.options.cache, QueueJob);
@@ -73,7 +78,7 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
 
 
   private cleanup() {
-    const end = (new Date().getTime()) - 60000;
+    const end = (new Date().getTime()) - this.options.cleanupTimeout;
     const removed = remove(this.done, x => x.ts <= end);
 
     for (const r of removed) {
@@ -92,6 +97,11 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
       'todo=' + this.enqueued() + ' ' +
       'active=' + this.active.length
     );
+
+    if (this.processor.onNext) {
+      this.processor.onNext();
+    }
+
     if (this.isPaused()) {
       if (!this.isRunning()) {
         this.emit(E_NO_RUNNING_JOBS);
@@ -99,7 +109,23 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
     } else {
       this.fireProcess();
     }
+  }
 
+
+  getConcurrent() {
+    return this.concurrent;
+  }
+
+  speedUp() {
+    if (this.concurrent < this.maxConcurrent) {
+      this.concurrent++;
+    }
+  }
+
+  speedDown() {
+    if (this.concurrent > 1) {
+      this.concurrent--;
+    }
   }
 
   status(): IAsyncQueueStats {
@@ -266,7 +292,7 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
   }
 
   isOccupied() {
-    return this.runningTasks >= this.options.concurrent;
+    return this.runningTasks >= this.getConcurrent();
   }
 
   // TODO impl
@@ -286,7 +312,7 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
   // TODO impl
   resume() {
     this._paused = false;
-    for (let i = 0; i < this.options.concurrent; i++) {
+    for (let i = 0; i < this.getConcurrent(); i++) {
       this.fireProcess();
     }
   }
@@ -302,12 +328,6 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
     await Promise.all(this.worker.map(async k => {
       (await this.get(k)).finalize(this);
     }));
-
-    // if (isArray(this.worker)) {
-    //   this.worker.map(jobs => jobs.finalize(this));
-    // } else {
-    //   await this.worker.map(jobs => jobs.finalize(this));
-    // }
 
     this.active.map(jobs => jobs.finalize(this));
     this.worker = null;
