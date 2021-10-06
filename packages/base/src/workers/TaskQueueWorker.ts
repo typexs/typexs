@@ -1,4 +1,4 @@
-import { cloneDeep, has, isArray, isEmpty, isString } from 'lodash';
+import { cloneDeep, defaults, has, isArray, isEmpty, isString } from 'lodash';
 import { Inject } from 'typedi';
 import { EventBus, subscribe } from 'commons-eventbus';
 import { ClassUtils } from '@allgemein/base';
@@ -19,6 +19,7 @@ import { ILoggerApi } from '../libs/logging/ILoggerApi';
 import { ITaskQueueWorkerOptions } from '../libs/tasks/worker/ITaskQueueWorkerOptions';
 import { TaskRunnerRegistry } from '../libs/tasks/TaskRunnerRegistry';
 import { Cache } from '../libs/cache/Cache';
+import { getHeapStatistics } from 'v8';
 
 
 export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker {
@@ -33,6 +34,8 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
 
   queue: AsyncWorkerQueue<ITaskWorkload>;
 
+  options: ITaskQueueWorkerOptions;
+
   @Inject(Cache.NAME)
   cache: Cache;
 
@@ -41,6 +44,10 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
 
   logger: ILoggerApi = Log.getLoggerFor(TaskQueueWorker);
 
+  heapSize: {
+    limit?: number;
+    downgrade?: number;
+  } = {};
 
   async prepare(options: ITaskQueueWorkerOptions = { name: 'task_worker_queue' }) {
     if (this.queue) {
@@ -48,11 +55,14 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
       return;
     }
 
+    this.options = defaults(options, <ITaskQueueWorkerOptions>{ speedDownThreshold: 80 });
+    this.heapSize.limit = getHeapStatistics().heap_size_limit;
+    this.heapSize.downgrade = getHeapStatistics().heap_size_limit * (this.options.speedDownThreshold / 100.0);
     this.nodeId = Bootstrap.getNodeId();
     this.queue = new AsyncWorkerQueue<ITaskWorkload>(this, {
       logger: this.logger,
       cache: this.cache,
-      ...options
+      ...this.options
     });
     await EventBus.register(this);
     this.logger.debug('Task worker: waiting for tasks ...');
@@ -62,14 +72,22 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
   onNext() {
     // const usedMem = os.
     const mem = process.memoryUsage();
+
+    if (this.heapSize.downgrade > mem.heapUsed) {
+      this.queue.speedDown();
+    } else {
+      this.queue.speedUp();
+    }
+
     this.logger.debug(
-      `memory: heap = ${this.memStr(mem.heapUsed)} / ${this.memStr(mem.heapTotal)} ` +
+      `memory: heap = ${this.memStr(mem.heapUsed)} / ${this.memStr(mem.heapTotal)} / ` +
+      `${this.memStr(this.heapSize.downgrade)} / ${this.memStr(this.heapSize.limit)} ` +
       `| free = ${this.memStr(freemem())} | total = ${this.memStr(totalmem())} | rss = ${this.memStr(mem.rss)} ` +
-      `| external = ${this.memStr(mem.external)}`
+      `| external = ${this.memStr(mem.external)} | ${this.queue.getConcurrent()}`
     );
   }
 
-  memStr(mem: number){
+  memStr(mem: number) {
     return (Math.round(mem / 1024 / 1024 * 100) / 100) + ' MB';
   }
 
