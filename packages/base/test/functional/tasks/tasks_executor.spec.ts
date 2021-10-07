@@ -108,7 +108,7 @@ class TasksSpec {
     expect(x.name).to.be.eq(_.snakeCase('SimpleTaskPromise'));
     expect(x.result).to.be.eq('test');
 
-    await TestHelper.wait(100);
+    await TestHelper.wait(1000);
     const runnerId = data.id;
 
     //
@@ -154,12 +154,11 @@ class TasksSpec {
     expect(data).to.have.length(1);
     const entry = data.shift();
     expect(entry.results).to.not.be.empty;
-    const x = entry.results.find(
-      (x: any) => x.name === _.snakeCase('SimpleTaskPromise'));
+    const x = entry.results.find((x: any) => x.name === _.snakeCase('SimpleTaskPromise'));
     expect(x.name).to.be.eq(_.snakeCase('SimpleTaskPromise'));
     expect(x.result).to.be.eq('test');
 
-    await TestHelper.wait(100);
+    await TestHelper.wait(1000);
     const runnerId = entry.id;
     //
     // Check if tasks status was saved correctly

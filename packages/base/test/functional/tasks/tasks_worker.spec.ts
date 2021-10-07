@@ -26,7 +26,7 @@ import { Injector } from '../../../src/libs/di/Injector';
 import { TaskProposeEvent } from '../../../src/libs/tasks/event/TaskProposeEvent';
 
 
-const LOG_EVENT = TestHelper.logEnable(true);
+const LOG_EVENT = TestHelper.logEnable(false);
 let bootstrap: Bootstrap = null;
 
 @suite('functional/tasks/tasks_worker')

@@ -1,47 +1,93 @@
-import {ITaskRunnerResult} from '../ITaskRunnerResult';
-import * as _ from 'lodash';
-import {ITaskRunResult} from '../ITaskRunResult';
-import {StorageRef} from '../../storage/StorageRef';
-import {TaskLog} from '../../../entities/TaskLog';
-import {Semaphore} from '../../Semaphore';
-import {LockFactory} from '../../LockFactory';
+import { ITaskRunnerResult } from '../ITaskRunnerResult';
+import { ITaskRunResult } from '../ITaskRunResult';
+import { StorageRef } from '../../storage/StorageRef';
+import { TaskLog } from '../../../entities/TaskLog';
+import { Semaphore } from '../../Semaphore';
+import { LockFactory } from '../../LockFactory';
+import { concat, find, get, isArray, remove } from 'lodash';
 
 export class TasksStorageHelper {
 
 
   static semaphores: { [k: string]: Semaphore } = {};
 
+  static timeouts: { [k: string]: any } = {};
 
   static getLockFactory() {
     return LockFactory.$();
   }
 
-
-  static async save(taskRunnerResults: ITaskRunnerResult,
-    storageRef: StorageRef) {
-
-    let semaphore = null;
-    if (!this.semaphores[taskRunnerResults.id]) {
-      this.semaphores[taskRunnerResults.id] = this.getLockFactory().semaphore(1);
-      semaphore = this.semaphores[taskRunnerResults.id];
+  /**
+   * Can get results from local and remote worker processes and should save the statuses
+   *
+   * @param result
+   * @param storageRef
+   */
+  static async save(result: ITaskRunnerResult, storageRef: StorageRef) {
+    let semaphore: Semaphore = null;
+    if (!this.semaphores[result.id]) {
+      this.semaphores[result.id] = this.getLockFactory().semaphore(1);
+      semaphore = this.semaphores[result.id];
     } else {
-      semaphore = this.semaphores[taskRunnerResults.id];
+      semaphore = this.semaphores[result.id];
     }
     await semaphore.acquire();
+    await this.saveRunnerResults(result, storageRef);
+    semaphore.release();
 
-    const logs: TaskLog[] = await storageRef
-      .getController()
-      .find(TaskLog, {tasksId: taskRunnerResults.id});
+    if (!semaphore.isReserved()) {
+      // cleanup
+      setTimeout(() => {
+        semaphore.purge();
+        this.getLockFactory().remove(semaphore);
+        delete this.semaphores[result.id];
+      });
+    }
+  }
+
+
+  /**
+   * Can get results from local and remote worker processes and should save the statuses
+   *
+   * @param result
+   * @param storageRef
+   */
+  static saveEnvelopedInTimeout(result: ITaskRunnerResult, storageRef: StorageRef) {
+    if (this.timeouts[result.id]) {
+      this.clearTimeout(result.id);
+    }
+    this.timeouts[result.id] = setTimeout(async () => {
+      try {
+        await this.save(result, storageRef);
+      } catch (e) {
+      }
+    }, 50);
+  }
+
+
+  static clearTimeout(id: string) {
+    clearTimeout(this.timeouts[id]);
+    delete this.timeouts[id];
+
+  }
+
+  static async saveRunnerResults(taskRunnerResults: ITaskRunnerResult,
+    storageRef: StorageRef) {
+
+    const controller = storageRef.getController();
+    // get all log entries with this task runner id and for all workers/nodes
+    const logs: TaskLog[] = await controller.find(TaskLog, { tasksId: taskRunnerResults.id });
 
     let toremove: TaskLog[] = [];
-    const taskNames = _.isArray(taskRunnerResults.tasks) ? taskRunnerResults.tasks : [taskRunnerResults.tasks];
-    const results = _.get(taskRunnerResults, 'results', null);
+    const taskNames = isArray(taskRunnerResults.tasks) ? taskRunnerResults.tasks : [taskRunnerResults.tasks];
+    const results = get(taskRunnerResults, 'results', null);
     for (const targetId of taskRunnerResults.targetIds) {
       for (const taskName of taskNames) {
-        const existsAll = _.remove(logs, l => l.taskName === taskName && l.respId === targetId);
+        // foreach nodes where task is running check if taskName
+        const existsAll = remove(logs, l => l.taskName === taskName && l.respId === targetId);
         let exists = existsAll.shift();
         if (existsAll.length > 0) {
-          toremove = _.concat(toremove, existsAll);
+          toremove = concat(toremove, existsAll);
         }
         if (!exists) {
           exists = new TaskLog();
@@ -55,7 +101,7 @@ export class TasksStorageHelper {
         exists.state = taskRunnerResults.state;
 
         if (results) {
-          const result: ITaskRunResult = _.find(results, r => r.name === taskName);
+          const result: ITaskRunResult = find(results, r => r.name === taskName);
           exists.taskNr = result.nr;
           exists.hasError = result.has_error;
           // exists.errors = JSON.stringify(result.error);
@@ -65,9 +111,9 @@ export class TasksStorageHelper {
           exists.duration = result.duration;
           exists.progress = result.progress;
           exists.total = result.total;
-          exists.done = _.get(result, 'done', false);
-          exists.running = _.get(result, 'running', false);
-          exists.weight = _.get(result, 'weight', -1);
+          exists.done = get(result, 'done', false);
+          exists.running = get(result, 'running', false);
+          exists.weight = get(result, 'weight', -1);
 
           exists.data = <any>{
             results: result.result,
@@ -85,20 +131,12 @@ export class TasksStorageHelper {
       // TODO notify a push api if it exists
     }
 
-    await storageRef.getController().save(logs);
+    await controller.save(logs);
 
     if (toremove.length > 0) {
-      await storageRef.getController().remove(toremove);
+      await controller.remove(toremove);
     }
 
-    semaphore.release();
-
-    if (!semaphore.isReserved()) {
-      // cleanup
-      semaphore.purge();
-      this.getLockFactory().remove(semaphore);
-      delete this.semaphores[taskRunnerResults.id];
-    }
   }
 
   //

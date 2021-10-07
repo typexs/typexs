@@ -1,13 +1,13 @@
-import {Inject} from 'typedi';
-import {UseAPI} from '../decorators/UseAPI';
-import {TasksApi} from '../api/Tasks.api';
-import {ITasksApi} from '../api/ITasksApi';
-import {TaskRunner} from '../libs/tasks/TaskRunner';
-import {TaskRun} from '../libs/tasks/TaskRun';
-import {TasksStorageHelper} from '../libs/tasks/helper/TasksStorageHelper';
-import {C_STORAGE_DEFAULT} from '../libs/Constants';
-import {Cache} from '../libs/cache/Cache';
-import {StorageRef} from '../libs/storage/StorageRef';
+import { Inject } from 'typedi';
+import { UseAPI } from '../decorators/UseAPI';
+import { TasksApi } from '../api/Tasks.api';
+import { ITasksApi } from '../api/ITasksApi';
+import { TaskRunner } from '../libs/tasks/TaskRunner';
+import { TaskRun } from '../libs/tasks/TaskRun';
+import { TasksStorageHelper } from '../libs/tasks/helper/TasksStorageHelper';
+import { C_STORAGE_DEFAULT } from '../libs/Constants';
+import { Cache } from '../libs/cache/Cache';
+import { StorageRef } from '../libs/storage/StorageRef';
 
 
 @UseAPI(TasksApi)
@@ -57,9 +57,9 @@ export class TasksStorageExtension implements ITasksApi {
       }
 
       const results = _runner.collectStats();
-      return TasksStorageHelper.save(results, this.storageRef);
+      TasksStorageHelper.saveEnvelopedInTimeout(results, this.storageRef);
     }
-    return null;
+    // return null;
   }
 
 }

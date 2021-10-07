@@ -8,6 +8,8 @@ import {EventBus} from 'commons-eventbus';
 import {ITaskFutureOptions} from './ITaskFutureOptions';
 import {ITaskRunnerResult} from '../../ITaskRunnerResult';
 import { TaskEvent } from '../../event/TaskEvent';
+import { TaskProposeEvent } from '../../event/TaskProposeEvent';
+import { AbstractTaskEvent } from '../../event/AbstractTaskEvent';
 
 
 const future_finished = 'future_finished';
@@ -24,7 +26,7 @@ export class TaskFuture extends EventEmitter {
 
   private targetResults: { [k: string]: ITaskRunnerResult } = {};
 
-  private events: TaskEvent[] = [];
+  private events: AbstractTaskEvent[] = [];
 
   private finished: boolean = false;
 
@@ -44,6 +46,7 @@ export class TaskFuture extends EventEmitter {
 
   async register() {
     subscribe(TaskEvent)(this, 'onTaskEvent');
+    subscribe(TaskProposeEvent)(this, 'onTaskEvent');
     await EventBus.register(this);
   }
 
@@ -52,6 +55,7 @@ export class TaskFuture extends EventEmitter {
     try {
       await EventBus.unregister(this);
       unsubscribe(this, TaskEvent, 'onTaskEvent');
+      unsubscribe(this, TaskProposeEvent, 'onTaskEvent');
     } catch (e) {
     }
   }

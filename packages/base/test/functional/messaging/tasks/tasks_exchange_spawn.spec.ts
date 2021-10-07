@@ -192,18 +192,18 @@ class MessagingSpec {
     });
     expect(results).to.have.length(1);
     expect(results[0]).to.be.deep.include({
-        '__nodeId__': 'remote_fakeapp01',
-        'error': {
-          'message': 'file for runner abcdef2 not found',
-          'name': 'Error'
-        },
-        'instNr': 0,
-        'nodeId': 'remote_fakeapp01',
-        'op': 'logfile_path',
-        'targetIds': [
-          'fake_app',
-        ]
-      }
+      '__nodeId__': 'remote_fakeapp01',
+      'error': {
+        'message': 'file for runner abcdef2 not found',
+        'name': 'Error'
+      },
+      'instNr': 0,
+      'nodeId': 'remote_fakeapp01',
+      'op': 'logfile_path',
+      'targetIds': [
+        'fake_app',
+      ]
+    }
     );
   }
 
@@ -222,7 +222,7 @@ class MessagingSpec {
           remote: true
         })
       .run(true) as TaskFuture;
-    await TestHelper.wait(500);
+    await TestHelper.wait(1000);
 
     const exchange = Injector.get(TasksExchange);
     const duringRun = await exchange.getStatus(future.getRunnerId(), {
@@ -230,9 +230,10 @@ class MessagingSpec {
       skipLocal: true
     });
 
+    await TestHelper.wait(1000);
 
     await future.await();
-    await TestHelper.wait(500);
+    await TestHelper.wait(1000);
 
     const afterRun = await exchange.getStatus(future.getRunnerId(), {
       filterErrors: false,

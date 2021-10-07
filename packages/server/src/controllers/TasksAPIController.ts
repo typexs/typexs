@@ -97,9 +97,9 @@ export class TasksAPIController {
     PERMISSION_ALLOW_TASK_GET_METADATA_PATTERN])
   @Get(_API_CTRL_TASK_GET_METADATA_VALUE)
   taskMetadataValueProvider(@Param('taskName') taskName: string,
-                            @Param('incomingName') incomingName: string,
-                            @QueryParam('values') values: any = null,
-                            @QueryParam('hint') hint: any = null) {
+    @Param('incomingName') incomingName: string,
+    @QueryParam('values') values: any = null,
+    @QueryParam('hint') hint: any = null) {
     if (!this.tasks.contains(taskName)) {
       throw new HttpError(404, 'No task with this name found');
     }
@@ -142,9 +142,9 @@ export class TasksAPIController {
   @Access([PERMISSION_ALLOW_TASK_EXEC, PERMISSION_ALLOW_TASK_EXEC_PATTERN])
   @Get(_API_CTRL_TASK_EXEC)
   async executeTask(@Param('taskName') taskName: string,
-                    @QueryParam('params') parameters: any = {},
-                    @QueryParam('targetIds') targetIds: string[] = [],
-                    @QueryParam('options') options: ITaskExectorOptions = {}) {
+    @QueryParam('params') parameters: any = {},
+    @QueryParam('targetIds') targetIds: string[] = [],
+    @QueryParam('options') options: ITaskExectorOptions = {}) {
     // arguments
     // const execReq = this.taskFactory.executeRequest();
     options = _.defaults(options, <ITaskExectorOptions>{
@@ -212,11 +212,11 @@ export class TasksAPIController {
   @Access(PERMISSION_ALLOW_TASK_LOG)
   @Get(_API_CTRL_TASK_LOG)
   async getLogContent(@Param('nodeId') nodeId: string,
-                      @Param('runnerId') runnerId: string,
-                      @QueryParam('limit') limitLine: number = null,
-                      @QueryParam('offset') offsetLine: number = null,
-                      @QueryParam('tail') tail: number = null,
-                      @QueryParam('options') options: any = {}) {
+    @Param('runnerId') runnerId: string,
+    @QueryParam('limit') limitLine: number = null,
+    @QueryParam('offset') offsetLine: number = null,
+    @QueryParam('tail') tail: number = null,
+    @QueryParam('options') options: any = {}) {
 
     let _opts = options || {};
     _opts = _.defaults(_opts, <IMessageOptions & IFileSelectOptions>{
@@ -266,7 +266,7 @@ export class TasksAPIController {
   @Access(PERMISSION_ALLOW_TASK_STATUS)
   @Get(_API_CTRL_TASK_STATUS)
   async getTaskStatus(
-    @Param('runnerId') runnerId: string,
+  @Param('runnerId') runnerId: string,
     @QueryParam('options') options: IMessageOptions = {},
   ) {
     let _opts = options || {};
@@ -296,7 +296,7 @@ export class TasksAPIController {
   @Access([PERMISSION_ALLOW_TASKS_RUNNING])
   @Get(_API_CTRL_TASKS_RUNNING_ON_NODE)
   async getRunningTasksByNode(@Param('nodeId') nodeId: string,
-                              @QueryParam('options') options: IMessageOptions = {}) {
+    @QueryParam('options') options: IMessageOptions = {}) {
 
     let _opts = options || {};
     _opts = _.defaults(_opts, <IMessageOptions>{

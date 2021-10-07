@@ -1,22 +1,22 @@
 import * as _ from 'lodash';
-import {AbstractExchange} from '../../../libs/messaging/AbstractExchange';
-import {TasksRequest} from './TasksRequest';
-import {TasksResponse} from './TasksResponse';
-import {TasksHelper} from '../../../libs/tasks/TasksHelper';
-import {NotYetImplementedError, PlatformUtils} from '@allgemein/base';
-import {TaskRunnerRegistry} from '../../../libs/tasks/TaskRunnerRegistry';
-import {Inject} from 'typedi';
-import {IMessageOptions} from '../../../libs/messaging/IMessageOptions';
-import {Config} from '@allgemein/config';
-import {CFG_KEY_APP_PATH} from '../../../libs/filesystem/Constants';
-import {FileSystemRequest} from '../filesystem/FileSystemRequest';
-import {FileSystemResponse} from '../filesystem/FileSystemResponse';
-import {IFileOptions, IFileSelectOptions} from '../filesystem/IFileOptions';
-import {FileSystemExchange} from '../filesystem/FileSystemExchange';
-import {Injector} from '../../../libs/di/Injector';
-import {C_STORAGE_DEFAULT} from '../../../libs/Constants';
-import {StorageRef} from '../../../libs/storage/StorageRef';
-import {TaskLog} from '../../../entities/TaskLog';
+import { AbstractExchange } from '../../../libs/messaging/AbstractExchange';
+import { TasksRequest } from './TasksRequest';
+import { TasksResponse } from './TasksResponse';
+import { TasksHelper } from '../../../libs/tasks/TasksHelper';
+import { NotYetImplementedError, PlatformUtils } from '@allgemein/base';
+import { TaskRunnerRegistry } from '../../../libs/tasks/TaskRunnerRegistry';
+import { Inject } from 'typedi';
+import { IMessageOptions } from '../../../libs/messaging/IMessageOptions';
+import { Config } from '@allgemein/config';
+import { CFG_KEY_APP_PATH } from '../../../libs/filesystem/Constants';
+import { FileSystemRequest } from '../filesystem/FileSystemRequest';
+import { FileSystemResponse } from '../filesystem/FileSystemResponse';
+import { IFileOptions, IFileSelectOptions } from '../filesystem/IFileOptions';
+import { FileSystemExchange } from '../filesystem/FileSystemExchange';
+import { Injector } from '../../../libs/di/Injector';
+import { C_STORAGE_DEFAULT } from '../../../libs/Constants';
+import { StorageRef } from '../../../libs/storage/StorageRef';
+import { TaskLog } from '../../../entities/TaskLog';
 
 
 export class TasksExchange extends AbstractExchange<TasksRequest, TasksResponse> {
@@ -132,17 +132,18 @@ export class TasksExchange extends AbstractExchange<TasksRequest, TasksResponse>
   async handleRequest(request: TasksRequest, response: TasksResponse) {
     response.op = request.op;
     try {
+      let logFilePath2, fsExchange, opts: IFileOptions, res, req, logFilePath, storageRef, runners;
       // todo get current running tasks
       switch (request.op) {
         case 'logfile':
           // get log path
-          const logFilePath2 = TasksHelper.getTaskLogFile(request.runnerId, this.getSystem().node.nodeId);
+          logFilePath2 = TasksHelper.getTaskLogFile(request.runnerId, this.getSystem().node.nodeId);
           // use fs exchange
-          const fsExchange = Injector.get(FileSystemExchange);
-          const opts: IFileOptions = _.clone(request.fileOptions) as IFileOptions;
+          fsExchange = Injector.get(FileSystemExchange);
+          opts = _.clone(request.fileOptions) as IFileOptions;
           opts.path = logFilePath2;
-          const req = new FileSystemRequest(opts);
-          const res = new FileSystemResponse();
+          req = new FileSystemRequest(opts);
+          res = new FileSystemResponse();
           await fsExchange.handleRequest(req, res);
           if (res.error) {
             throw res.error;
@@ -157,7 +158,7 @@ export class TasksExchange extends AbstractExchange<TasksRequest, TasksResponse>
 
         case 'logfile_path':
           // get log path
-          const logFilePath = TasksHelper.getTaskLogFile(request.runnerId, this.getSystem().node.nodeId, request.relative);
+          logFilePath = TasksHelper.getTaskLogFile(request.runnerId, this.getSystem().node.nodeId, request.relative);
           if (!request.relative && PlatformUtils.fileExist(logFilePath)) {
             response.logFilePath = logFilePath;
           } else if (request.relative && PlatformUtils.fileExist(Config.get(CFG_KEY_APP_PATH) + '/' + logFilePath)) {
@@ -171,12 +172,12 @@ export class TasksExchange extends AbstractExchange<TasksRequest, TasksResponse>
 
         case 'status':
           // get log path
-          const storageRef = Injector.get(C_STORAGE_DEFAULT) as StorageRef;
-          response.taskLog = await storageRef.getController().findOne(TaskLog, {tasksId: request.runnerId}, {cache: false});
+          storageRef = Injector.get(C_STORAGE_DEFAULT) as StorageRef;
+          response.taskLog = await storageRef.getController().findOne(TaskLog, { tasksId: request.runnerId }, { cache: false });
           break;
 
         case 'runners':
-          const runners = this.runnerRegistry.getRunners();
+          runners = this.runnerRegistry.getRunners();
           response.stats = runners.map(x => x.collectStats());
           break;
 

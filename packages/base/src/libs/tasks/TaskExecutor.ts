@@ -246,10 +246,10 @@ export class TaskExecutor extends EventEmitter {
       if (!options.skipThrow) {
         throw new Error('No enqueue responses arrived');
       } else {
-        this.logger.warn(
-          'Skipping throw enabled, so do not throw ' +
-          '"no enqueue response arrived. Probably no ExchangeMessageWorker missing"'
-        );
+        // this.logger.warn(
+        //   'Skipping throw enabled, so do not throw ' +
+        //   '"no enqueue response arrived. Probably no ExchangeMessageWorker missing"'
+        // );
         return null;
       }
     } else if (enqueueEvents && enqueueEvents.length > 0) {

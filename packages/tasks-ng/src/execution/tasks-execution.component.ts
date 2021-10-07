@@ -1,14 +1,9 @@
-import {
-  defaults, find, isArray, isEmpty, isFunction, isNumber, intersection,
-  get, clone, upperFirst, isNull, keys, values, isString, filter, merge, isPlainObject,
-  concat, kebabCase, has, snakeCase, isRegExp, orderBy, remove, first, set, assign,
-  capitalize, isUndefined
-} from 'lodash';
-import {Component, OnInit} from '@angular/core';
-import {TaskExchangeRef, TaskRef} from '@typexs/base';
-import {ActivatedRoute} from '@angular/router';
-import {BackendTasksService} from '../backend-tasks.service';
-import {TaskEvent} from '@typexs/base/libs/tasks/worker/TaskEvent';
+import { isNumber, isString } from 'lodash';
+import { Component, OnInit } from '@angular/core';
+import { TaskExchangeRef, TaskRef } from '@typexs/base';
+import { ActivatedRoute } from '@angular/router';
+import { BackendTasksService } from '../backend-tasks.service';
+import { TaskEvent } from '@typexs/base/libs/tasks/event/TaskEvent';
 
 /**
  * Executes a selected task
@@ -39,8 +34,9 @@ export class TasksExecutionComponent implements OnInit {
 
   _cachedValues: { [k: string]: any } = {};
 
-  constructor(private tasksService: BackendTasksService,
-              private route: ActivatedRoute) {
+  constructor(
+    private tasksService: BackendTasksService,
+    private route: ActivatedRoute) {
   }
 
 

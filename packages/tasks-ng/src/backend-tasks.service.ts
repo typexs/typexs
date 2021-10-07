@@ -1,5 +1,5 @@
-import {defaults, filter as _filter, find, intersection, isArray, isEmpty, isFunction, isNumber} from 'lodash';
-import {Injectable, Injector} from '@angular/core';
+import { defaults, filter as _filter, find, intersection, isArray, isEmpty, isFunction, isNumber } from 'lodash';
+import { Injectable, Injector } from '@angular/core';
 import {
   API_CTRL_TASK_EXEC,
   API_CTRL_TASK_GET_METADATA_VALUE,
@@ -7,18 +7,18 @@ import {
   API_CTRL_TASK_STATUS,
   API_CTRL_TASKS_METADATA
 } from '@typexs/server';
-import {Tasks} from '@typexs/base';
-import {combineLatest, Observable, Subject, timer} from 'rxjs';
-import {C_WORKERS} from '@typexs/base/libs/worker/Constants';
-import {AbstractQueryService, AppService, BackendService, IApiCallOptions, Log, SystemInfoService} from '@typexs/base-ng';
-import {TaskEvent} from '@typexs/base/libs/tasks/worker/TaskEvent';
-import {TaskLog} from '@typexs/base/entities/TaskLog';
-import {SystemNodeInfo} from '@typexs/base/entities/SystemNodeInfo';
-import {ExprDesc} from '@allgemein/expressions';
-import {IMessageOptions} from '@typexs/base/libs/messaging/IMessageOptions';
-import {ITaskExectorOptions} from '@typexs/base/libs/tasks/ITaskExectorOptions';
-import {filter, first, mergeMap, takeUntil, tap} from 'rxjs/operators';
-import {StorageService} from '@typexs/storage-ng';
+import { Tasks } from '@typexs/base';
+import { combineLatest, Observable, Subject, timer } from 'rxjs';
+import { C_WORKERS } from '@typexs/base/libs/worker/Constants';
+import { AbstractQueryService, AppService, BackendService, IApiCallOptions, Log, SystemInfoService } from '@typexs/base-ng';
+import { TaskEvent } from '@typexs/base/libs/tasks/event/TaskEvent';
+import { TaskLog } from '@typexs/base/entities/TaskLog';
+import { SystemNodeInfo } from '@typexs/base/entities/SystemNodeInfo';
+import { ExprDesc } from '@allgemein/expressions';
+import { IMessageOptions } from '@typexs/base/libs/messaging/IMessageOptions';
+import { ITaskExectorOptions } from '@typexs/base/libs/tasks/ITaskExectorOptions';
+import { filter, first, mergeMap, takeUntil, tap } from 'rxjs/operators';
+import { StorageService } from '@typexs/storage-ng';
 
 
 /**
@@ -44,10 +44,11 @@ export class BackendTasksService {
   workerNodes: SystemNodeInfo[] = [];
 
 
-  constructor(private backend: BackendService,
-              private infoService: SystemInfoService,
-              private appService: AppService,
-              private injector: Injector) {
+  constructor(
+    private backend: BackendService,
+    private infoService: SystemInfoService,
+    private appService: AppService,
+    private injector: Injector) {
     let serviceClass: Function = appService.getService('taskQueryService');
     if (!serviceClass || !isFunction(serviceClass)) {
       serviceClass = StorageService;
@@ -69,7 +70,7 @@ export class BackendTasksService {
         params: {
           taskName: name
         },
-        query: {params: parameters, targetIds: targetIds, options: options}
+        query: { params: parameters, targetIds: targetIds, options: options }
       });
   }
 
@@ -110,10 +111,10 @@ export class BackendTasksService {
    */
   getTaskStatus(runnerId: string, options?: IMessageOptions): Observable<TaskLog> {
     const apiOptions: IApiCallOptions = {
-      params: {runnerId: runnerId},
+      params: { runnerId: runnerId }
     };
     if (options) {
-      apiOptions.query = {options: options};
+      apiOptions.query = { options: options };
     }
     return this.backend.callApi(API_CTRL_TASK_STATUS, apiOptions);
   }
@@ -127,11 +128,11 @@ export class BackendTasksService {
    */
   taskStatus(runnerId: string, options?: IMessageOptions & { interval?: number }): Observable<TaskLog> {
     options = options || {};
-    defaults(options, {interval: 5000});
+    defaults(options, { interval: 5000 });
 
     const subject = new Subject();
     const repeat$:
-      Observable<TaskLog> =
+    Observable<TaskLog> =
       timer(0, options.interval)
         .pipe(takeUntil(subject))
         .pipe(mergeMap(x => this.getTaskStatus(runnerId, options)))
@@ -170,7 +171,7 @@ export class BackendTasksService {
       opts.tail = tail;
     }
     return this.backend.callApi(API_CTRL_TASK_LOG,
-      {params: {nodeId: nodeId, runnerId: runnerId}, query: opts});
+      { params: { nodeId: nodeId, runnerId: runnerId }, query: opts });
   }
 
 
@@ -240,7 +241,7 @@ export class BackendTasksService {
     }
 
     return this.backend.callApi(API_CTRL_TASK_GET_METADATA_VALUE, {
-      params: {taskName: taskName, incomingName: incomingName}, query: opts
+      params: { taskName: taskName, incomingName: incomingName }, query: opts
     }
     );
   }
