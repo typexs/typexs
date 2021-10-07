@@ -1,10 +1,9 @@
-import { cloneDeep, defaults, has, isArray, isEmpty, isString } from 'lodash';
+import { assign, cloneDeep, defaults, has, isArray, isEmpty, isString } from 'lodash';
 import { Inject } from 'typedi';
 import { EventBus, subscribe } from 'commons-eventbus';
 import { ClassUtils } from '@allgemein/base';
 import { freemem, totalmem } from 'os';
 import { Bootstrap } from '../Bootstrap';
-import { TaskEvent } from './../libs/tasks/worker/TaskEvent';
 import { Log } from '../libs/logging/Log';
 import { ITaskWorkload } from './../libs/tasks/worker/ITaskWorkload';
 import { ITaskRunnerResult } from '../libs/tasks/ITaskRunnerResult';
@@ -20,6 +19,8 @@ import { ITaskQueueWorkerOptions } from '../libs/tasks/worker/ITaskQueueWorkerOp
 import { TaskRunnerRegistry } from '../libs/tasks/TaskRunnerRegistry';
 import { Cache } from '../libs/cache/Cache';
 import { getHeapStatistics } from 'v8';
+import { TaskProposeEvent } from '../libs/tasks/event/TaskProposeEvent';
+import { TaskEvent } from '../libs/tasks/event/TaskEvent';
 
 
 export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker {
@@ -95,19 +96,21 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
     return this.taskRunnerRegistry.tasks;
   }
 
-  @subscribe(TaskEvent)
-  onTaskEvent(event: TaskEvent) {
-    if (event.state !== 'proposed') {
+  @subscribe(TaskProposeEvent)
+  onTaskEvent(proposeEvent: TaskProposeEvent) {
+    if (proposeEvent.state !== 'proposed') {
       return null;
     }
 
-    if (event.targetIds &&
-      event.targetIds.length > 0 &&
-      event.targetIds.indexOf(this.nodeId) === -1) {
+    if (proposeEvent.targetIds &&
+      proposeEvent.targetIds.length > 0 &&
+      proposeEvent.targetIds.indexOf(this.nodeId) === -1) {
       // not a task for me
       return null;
     }
 
+    const event = new TaskEvent();
+    assign(event, proposeEvent);
     event.respId = this.nodeId;
     event.topic = 'data';
 

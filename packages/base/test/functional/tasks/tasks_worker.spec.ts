@@ -9,7 +9,7 @@ import { TEST_STORAGE_OPTIONS } from '../config';
 import { EventBus, IEventBusConfiguration, subscribe } from 'commons-eventbus';
 import { TaskQueueWorker } from '../../../src/workers/TaskQueueWorker';
 import { SimpleWorkerTask } from './tasks/SimpleWorkerTask';
-import { TaskEvent } from '../../../src/libs/tasks/worker/TaskEvent';
+import { TaskEvent } from '../../../src/libs/tasks/event/TaskEvent';
 import { TestHelper } from '../TestHelper';
 import { SpawnHandle } from '../SpawnHandle';
 import { TaskCommand } from '../../../src/commands/TaskCommand';
@@ -23,9 +23,10 @@ import { C_STORAGE_DEFAULT } from '../../../src/libs/Constants';
 import { TaskLog } from '../../../src/entities/TaskLog';
 import { StorageRef } from '../../../src/libs/storage/StorageRef';
 import { Injector } from '../../../src/libs/di/Injector';
+import { TaskProposeEvent } from '../../../src/libs/tasks/event/TaskProposeEvent';
 
 
-const LOG_EVENT = TestHelper.logEnable(false);
+const LOG_EVENT = TestHelper.logEnable(true);
 let bootstrap: Bootstrap = null;
 
 @suite('functional/tasks/tasks_worker')
@@ -69,6 +70,7 @@ class TasksWorkerSpec {
     let events: TaskEvent[] = [];
 
     class T {
+      @subscribe(TaskProposeEvent)
       @subscribe(TaskEvent) on(e: TaskEvent) {
         // console.log(e)
         const _e = _.cloneDeep(e);
@@ -90,7 +92,7 @@ class TasksWorkerSpec {
     await EventBus.register(t);
 
     // create event to fire
-    const taskEvent = new TaskEvent();
+    const taskEvent = new TaskProposeEvent();
     taskEvent.nodeId = NODEID;
     taskEvent.taskSpec = ref.name;
     let res = await EventBus.post(taskEvent);
@@ -110,7 +112,7 @@ class TasksWorkerSpec {
     // await worker.queue.await();
     expect(events).to.have.length(4);
     expect(events.map(e => ({ state: e.state, result: e.data ? e.data.results[0].result : null }))).to.deep.eq([
-      { state: 'enqueue', result: null },
+      { state: 'proposed', result: null },
       { state: 'enqueue', result: null },
       { state: 'started', result: null },
       // {state: 'running', result: null},
@@ -119,7 +121,7 @@ class TasksWorkerSpec {
 
     events = [];
 
-    const taskEvent2 = new TaskEvent();
+    const taskEvent2 = new TaskProposeEvent();
     taskEvent2.nodeId = NODEID;
     taskEvent2.taskSpec = { name: ref.name, incomings: { data: 'pass test' } };
     const res2 = await EventBus.post(taskEvent2);
@@ -132,7 +134,7 @@ class TasksWorkerSpec {
     await TestHelper.waitFor(() => events.length >= 4);
     expect(events).to.have.length(4);
     expect(events.map(e => ({ state: e.state, result: e.data ? e.data.results[0].result : null }))).to.deep.eq([
-      { state: 'enqueue', result: null },
+      { state: 'proposed', result: null },
       { state: 'enqueue', result: null },
       { state: 'started', result: null },
       { state: 'stopped', result: 'test' }
@@ -187,6 +189,7 @@ class TasksWorkerSpec {
     const events: TaskEvent[] = [];
 
     class T02 {
+      @subscribe(TaskProposeEvent)
       @subscribe(TaskEvent) on(e: TaskEvent) {
         if (e.topic !== 'data') {
           return;
@@ -249,6 +252,7 @@ class TasksWorkerSpec {
     const events: TaskEvent[] = [];
 
     class T2 {
+      @subscribe(TaskProposeEvent)
       @subscribe(TaskEvent)
       on(e: TaskEvent) {
         // console.log(e)
@@ -266,7 +270,7 @@ class TasksWorkerSpec {
     await p.started;
     await TestHelper.wait(100);
 
-    const taskEvent = new TaskEvent();
+    const taskEvent = new TaskProposeEvent();
     taskEvent.nodeId = bootstrap.getNodeId();
     taskEvent.taskSpec = 'test';
     taskEvent.parameters = {
@@ -325,6 +329,7 @@ class TasksWorkerSpec {
     const events: TaskEvent[] = [];
 
     class T2 {
+      @subscribe(TaskProposeEvent)
       @subscribe(TaskEvent)
       on(e: TaskEvent) {
         if (e.topic !== 'data') {
@@ -342,7 +347,7 @@ class TasksWorkerSpec {
     await p.started;
     await TestHelper.wait(50);
 
-    const taskEvent = new TaskEvent();
+    const taskEvent = new TaskProposeEvent();
     taskEvent.nodeId = bootstrap.getNodeId();
     taskEvent.taskSpec = 'test';
     taskEvent.parameters = {};
@@ -393,6 +398,7 @@ class TasksWorkerSpec {
     const events: TaskEvent[] = [];
 
     class T2 {
+      @subscribe(TaskProposeEvent)
       @subscribe(TaskEvent)
       on(e: TaskEvent) {
         if (e.topic !== 'data') {
@@ -414,7 +420,7 @@ class TasksWorkerSpec {
     const infos = tasks.infos(true);
     // Log.debug(infos);
 
-    const taskEvent = new TaskEvent();
+    const taskEvent = new TaskProposeEvent();
     taskEvent.nodeId = bootstrap.getNodeId();
     taskEvent.taskSpec = 'test';
     taskEvent.targetIds = ['fakeapp01'];
@@ -426,7 +432,7 @@ class TasksWorkerSpec {
     // registered subscribers of remote nodes
     await EventBus.post(taskEvent);
 
-    const taskEvent2 = new TaskEvent();
+    const taskEvent2 = new TaskProposeEvent();
     taskEvent2.nodeId = bootstrap.getNodeId();
     taskEvent2.taskSpec = 'test';
     taskEvent2.targetIds = ['fakeapp02'];
@@ -509,6 +515,7 @@ class TasksWorkerSpec {
 
 
     class T2 {
+      @subscribe(TaskProposeEvent)
       @subscribe(TaskEvent)
       on(e: TaskEvent) {
         const _e = _.cloneDeep(e);

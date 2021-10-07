@@ -98,7 +98,7 @@ export { IValueProvider } from './libs/tasks/decorators/IValueProvider';
 export { IIncomingOptions } from './libs/tasks/decorators/IIncomingOptions';
 export { IOutgoingOptions } from './libs/tasks/decorators/IOutgoingOptions';
 
-export { TaskEvent } from './libs/tasks/worker/TaskEvent';
+export { TaskEvent } from './libs/tasks/event/TaskEvent';
 export { TaskRunnerEvent } from './libs/tasks/TaskRunnerEvent';
 
 

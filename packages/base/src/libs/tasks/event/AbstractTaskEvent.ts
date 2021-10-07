@@ -9,7 +9,7 @@ import {DateUtils} from '../../utils/DateUtils';
 /**
  * Id is the runner id
  */
-export class TaskEvent extends AbstractEvent implements IQueueWorkload {
+export abstract class AbstractTaskEvent extends AbstractEvent implements IQueueWorkload {
 
   /**
    * Name or names of task(s) to execute

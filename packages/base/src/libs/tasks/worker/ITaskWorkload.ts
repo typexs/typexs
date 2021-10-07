@@ -1,6 +1,6 @@
-import {TaskEvent} from './TaskEvent';
 import {IQueueWorkload} from '../../queue/IQueueWorkload';
 import {TASK_RUNNER_SPEC} from '../Constants';
+import { TaskEvent } from '../event/TaskEvent';
 
 export interface ITaskWorkload extends IQueueWorkload {
 

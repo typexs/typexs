@@ -10,12 +10,12 @@ import { TaskRequestFactory } from './worker/TaskRequestFactory';
 import { TasksHelper } from './TasksHelper';
 import { EventEmitter } from 'events';
 import { ITaskRunnerOptions } from './ITaskRunnerOptions';
-import { TaskEvent } from './worker/TaskEvent';
 import { EventBus, subscribe, unsubscribe } from 'commons-eventbus';
 import { TaskFuture } from './worker/execute/TaskFuture';
 import { ITaskRunnerResult } from './ITaskRunnerResult';
 import { IError } from '../exceptions/IError';
 import { Bootstrap } from '../../Bootstrap';
+import { TaskEvent } from './event/TaskEvent';
 
 /**
  * Class controlling local or remote tasks execution.

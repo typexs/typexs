@@ -24,7 +24,7 @@ import {ITypexsOptions} from '../../../../src/libs/ITypexsOptions';
   bootstrap = await bootstrap.activateStorage();
   bootstrap = await bootstrap.startup();
   process.send('startup');
-  const timeout = parseInt(Config.get('argv.timeout', SPAWN_TIMEOUT), 0);
+  const timeout = parseInt(Config.get('argv.timeout', SPAWN_TIMEOUT), 10);
 
   const t = setTimeout(async () => {
     await bootstrap.shutdown();

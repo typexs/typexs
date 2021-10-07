@@ -6,7 +6,7 @@ export class LockFactory extends EventEmitter {
 
   constructor() {
     super();
-    this.setMaxListeners(10000);
+    this.setMaxListeners(1000);
   }
 
 

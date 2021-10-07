@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import {System} from '../../system/System';
 import {EventEmitter} from 'events';
 import {EventBus, subscribe} from 'commons-eventbus';
-import {TaskEvent} from './TaskEvent';
 import {TaskQueueWorker} from '../../../workers/TaskQueueWorker';
 import {IWorkerInfo} from '../../worker/IWorkerInfo';
 import {ITaskExecutionRequestOptions} from './ITaskExecutionRequestOptions';
@@ -11,6 +10,8 @@ import {TaskRef} from '../TaskRef';
 import {Log} from '../../logging/Log';
 import {TASK_RUNNER_SPEC} from '../Constants';
 import {TasksHelper} from '../TasksHelper';
+import { TaskEvent } from '../event/TaskEvent';
+import { TaskProposeEvent } from '../event/TaskProposeEvent';
 
 
 export class TaskExecutionRequest extends EventEmitter {
@@ -42,10 +43,10 @@ export class TaskExecutionRequest extends EventEmitter {
 
 
   async run(taskSpec: TASK_RUNNER_SPEC[],
-            parameters: any = {},
-            options: ITaskExecutionRequestOptions = {
-              targetIds: [], skipTargetCheck: false
-            }): Promise<TaskEvent[]> {
+    parameters: any = {},
+    options: ITaskExecutionRequestOptions = {
+      targetIds: [], skipTargetCheck: false
+    }): Promise<TaskEvent[]> {
 
     this.timeout = _.get(options, 'timeout', 10000);
 
@@ -78,7 +79,7 @@ export class TaskExecutionRequest extends EventEmitter {
       this.targetIds = options.targetIds;
     }
 
-    this.event = new TaskEvent();
+    this.event = new TaskProposeEvent();
     this.event.nodeId = this.system.node.nodeId;
     this.event.taskSpec = taskSpec;
     this.event.targetIds = this.targetIds;

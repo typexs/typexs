@@ -9,13 +9,13 @@ import { IEventBusConfiguration } from 'commons-eventbus';
 import { SpawnHandle } from '../SpawnHandle';
 import { TaskRequestFactory } from '../../../src/libs/tasks/worker/TaskRequestFactory';
 import { ITaskRunnerResult } from '../../../src/libs/tasks/ITaskRunnerResult';
-import { TaskEvent } from '../../../src/libs/tasks/worker/TaskEvent';
 import { Bootstrap } from '../../../src/Bootstrap';
 import { ITypexsOptions } from '../../../src/libs/ITypexsOptions';
 import { Injector } from '../../../src/libs/di/Injector';
 import { StorageRef } from '../../../src/libs/storage/StorageRef';
 import { TaskLog } from '../../../src/entities/TaskLog';
 import { C_STORAGE_DEFAULT } from '../../../src/libs/Constants';
+import { TaskEvent } from '../../../src/libs/tasks/event/TaskEvent';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);

@@ -18,7 +18,7 @@ export class TasksStorageHelper {
 
 
   static async save(taskRunnerResults: ITaskRunnerResult,
-                    storageRef: StorageRef) {
+    storageRef: StorageRef) {
 
     let semaphore = null;
     if (!this.semaphores[taskRunnerResults.id]) {

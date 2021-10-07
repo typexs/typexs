@@ -10,7 +10,6 @@ import {AsyncWorkerQueue} from '../libs/queue/AsyncWorkerQueue';
 import {TasksStorageHelper} from '../libs/tasks/helper/TasksStorageHelper';
 import {TasksHelper} from '../libs/tasks/TasksHelper';
 import {IWorkerStatisitic} from '../libs/worker/IWorkerStatisitic';
-import {TaskEvent} from '../libs/tasks/worker/TaskEvent';
 import {IWorker} from '../libs/worker/IWorker';
 import {C_STORAGE_DEFAULT} from '../libs/Constants';
 import {StorageRef} from '../libs/storage/StorageRef';
@@ -18,6 +17,7 @@ import {ILoggerApi} from '../libs/logging/ILoggerApi';
 import {Log} from '../libs/logging/Log';
 import {Bootstrap} from '../Bootstrap';
 import {ITaskMonitorWorkerOptions} from '../libs/tasks/worker/ITaskMonitorWorkerOptions';
+import { TaskEvent } from '../libs/tasks/event/TaskEvent';
 
 export class TaskMonitorWorker implements IQueueProcessor<TaskEvent>, IWorker {
 

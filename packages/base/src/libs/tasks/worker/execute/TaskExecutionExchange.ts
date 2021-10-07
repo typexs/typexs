@@ -1,13 +1,14 @@
 import * as _ from 'lodash';
 import { AbstractMessage } from '../../../messaging/AbstractMessage';
 import { Tasks } from '../../Tasks';
-import { TaskEvent } from '../TaskEvent';
 import { TASK_RUNNER_SPEC } from '../../Constants';
 import { ITaskExecutionRequestOptions } from '../ITaskExecutionRequestOptions';
 import { TaskRef } from '../../TaskRef';
 import { TasksHelper } from '../../TasksHelper';
 import { System } from '../../../../libs/system/System';
 import { TaskFuture } from './TaskFuture';
+import { TaskEvent } from '../../event/TaskEvent';
+import { TaskProposeEvent } from '../../event/TaskProposeEvent';
 
 export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent> {
 
@@ -17,10 +18,10 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
 
   private passingTaskStates = ['request_error'];
 
-  private event: TaskEvent;
+  private event: TaskProposeEvent;
 
   constructor(system: System, tasks: Tasks) {
-    super(system, TaskEvent, TaskEvent);
+    super(system, TaskProposeEvent, TaskEvent);
     this.tasks = tasks;
     this.timeout = 10000;
   }
@@ -89,7 +90,7 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
       }
     }
 
-    this.event = new TaskEvent();
+    this.event = new TaskProposeEvent();
     this.event.taskSpec = taskSpec;
     for (const k of _.keys(parameters)) {
       if (!/^_/.test(k)) {
@@ -118,8 +119,7 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
     return responses;
   }
 
-  async future(filter: (event: TaskEvent) => boolean =
-    (event: TaskEvent) => event.state !== 'running') {
+  async future(filter: (event: TaskEvent) => boolean = (event: TaskEvent) => event.state !== 'running') {
     const future = new TaskFuture({
       eventId: this.event.id,
       filter: filter

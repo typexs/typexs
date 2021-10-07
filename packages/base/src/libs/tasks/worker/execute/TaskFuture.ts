@@ -4,10 +4,10 @@
 import * as _ from 'lodash';
 import {EventEmitter} from 'events';
 import {subscribe, unsubscribe} from 'commons-eventbus/browser';
-import {TaskEvent} from '../TaskEvent';
 import {EventBus} from 'commons-eventbus';
 import {ITaskFutureOptions} from './ITaskFutureOptions';
 import {ITaskRunnerResult} from '../../ITaskRunnerResult';
+import { TaskEvent } from '../../event/TaskEvent';
 
 
 const future_finished = 'future_finished';

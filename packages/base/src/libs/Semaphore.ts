@@ -25,7 +25,7 @@ export class Semaphore extends EventEmitter {
 
   constructor(max: number, name: string = null) {
     super();
-    this.setMaxListeners(1000);
+    this.setMaxListeners(10000);
     this.max = max;
     this.name = name;
   }

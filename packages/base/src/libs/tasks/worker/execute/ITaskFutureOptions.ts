@@ -1,4 +1,4 @@
-import {TaskEvent} from '../TaskEvent';
+import { TaskEvent } from '../../event/TaskEvent';
 
 export interface ITaskFutureOptions {
 
