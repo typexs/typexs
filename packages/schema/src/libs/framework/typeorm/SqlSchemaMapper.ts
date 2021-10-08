@@ -387,18 +387,18 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
     if (_.isEmpty(idProps)) {
       throw new NotYetImplementedError('no primary key is defined on ' + targetDef.machineName);
     }
-    idProps.forEach(p => {
+    idProps.forEach(property => {
       const name = propertyNames.shift();
       indexNames.push(name);
       let targetId, targetName;
       if (propertyDef.hasIdKeys()) {
         [targetId, targetName] = this.nameResolver.for(name);
       } else {
-        [targetId, targetName] = this.nameResolver.for(name, p);
+        [targetId, targetName] = this.nameResolver.for(name, property);
       }
 
-      const dataType = this.detectDataTypeFromProperty(p);
-      const propDef = _.merge({ name: targetName }, dataType);
+      const dataType = this.detectDataTypeFromProperty(property);
+      const propDef = assign(dataType, { name: targetName });
       this.createColumnIfNotExists('regular', targetClass, targetId, propDef);
     });
 
@@ -415,9 +415,9 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
 
   private ColumnDef(property: PropertyRef, name: string, skipIdentifier: boolean = false) {
     if (property.isStorable()) {
-      let def = _.clone(property.getOptions(REGISTRY_TYPEORM, {}));
+      let def = _.clone(property.getOptions() || {});
       const dbType = this.detectDataTypeFromProperty(property);
-      def = _.merge(def, { name: name }, dbType);
+      def = assign(def, dbType, { name: name });
       if (property.isNullable()) {
         def.nullable = true;
       }
@@ -568,7 +568,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
     entityDef.getPropertyRefIdentifier().forEach(property => {
       const [sourceId, sourceName] = this.nameResolver.forSource(property);
       const dbType = this.detectDataTypeFromProperty(property);
-      const def = _.merge({ name: sourceName }, dbType);
+      const def = assign(dbType, { name: sourceName });
       this.createColumnIfNotExists('regular', refTargetClass, sourceId, def);
       uniqueIndex.push(sourceId);
     });
@@ -640,11 +640,11 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
     }
 
 
-    const type: IDBType = schemaHandler.translateToStorageType(prop.dataType, prop.getOptions());
+    let type: IDBType = schemaHandler.translateToStorageType(prop.dataType, prop.getOptions());
     // {type: 'text', sourceType: <JS_DATA_TYPES>prop.dataType};
     if (prop.getOptions(REGISTRY_TYPEORM)) {
       const typeorm = prop.getOptions(REGISTRY_TYPEORM);
-      assign(type, typeorm);
+      type = assign(type, typeorm);
       // if (_.has(typeorm, 'type')) {
       //   type.type = typeorm.type;
       // }
