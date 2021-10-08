@@ -235,7 +235,7 @@ export abstract class AbstractSchemaHandler {
     if (mapType) {
       type.type = mapType;
     } else {
-      type.type = this.resolveTypeToStorage(type.sourceType, options);
+      type.type = this.resolveTypeToStorage(type.sourceType, { ...options, variant: type.variant, sourceType: type.sourceType });
       if (!type.type) {
         // nothing found passing source type
         type.type = jsType;
@@ -245,7 +245,7 @@ export abstract class AbstractSchemaHandler {
     return type;
   }
 
-  resolveTypeToStorage(sourceType: string, opts: { length?: number; [k: string]: any } = null) {
+  resolveTypeToStorage(sourceType: string, opts: { variant?: string; length?: number; [k: string]: any } = null) {
     let type = null;
     switch (sourceType) {
       case 'string':

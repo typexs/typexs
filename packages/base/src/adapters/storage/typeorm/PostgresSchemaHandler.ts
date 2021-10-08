@@ -64,12 +64,12 @@ export class PostgresSchemaHandler extends AbstractSchemaHandler {
   }
 
 
-  resolveTypeToStorage(sourceType: string, opts: { length?: number; [k: string]: any } = null) {
+  resolveTypeToStorage(sourceType: string, opts: { variant?: string; length?: number; [k: string]: any } = null) {
     let type = null;
     switch (sourceType) {
       case 'string':
         type = 'text';
-        if (opts.length && opts.length > 0) {
+        if (opts && opts.length && opts.length > 0) {
           type = 'varchar';
         }
         break;
@@ -95,7 +95,7 @@ export class PostgresSchemaHandler extends AbstractSchemaHandler {
         break;
       case 'date':
         type = 'date';
-        if (opts.variant) {
+        if (opts && opts.variant) {
           type = 'timestamp with time zone';
         }
         break;
