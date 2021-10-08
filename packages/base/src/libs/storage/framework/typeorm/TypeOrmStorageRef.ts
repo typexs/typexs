@@ -503,7 +503,7 @@ export class TypeOrmStorageRef extends StorageRef {
   }
 
 
-  async remove(wrapper: TypeOrmConnectionWrapper) {
+  remove(wrapper: TypeOrmConnectionWrapper) {
     remove(this.connections, { inc: wrapper.inc });
 
   }

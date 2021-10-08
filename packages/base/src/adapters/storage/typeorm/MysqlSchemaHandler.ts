@@ -46,7 +46,7 @@ export class MysqlSchemaHandler extends AbstractSchemaHandler {
 
 
 
-  resolveTypeToStorage(sourceType: string, opts?: any) {
+  resolveTypeToStorage(sourceType: string, opts: { length?: number; [k: string]: any } = null) {
     let type = null;
     switch (sourceType) {
       case 'string':

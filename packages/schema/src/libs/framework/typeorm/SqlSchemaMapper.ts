@@ -12,6 +12,7 @@ import {
 import { SchemaRef } from '../../registry/SchemaRef';
 import { EntityRef } from '../../registry/EntityRef';
 import * as _ from 'lodash';
+import { assign } from 'lodash';
 import { PropertyRef } from '../../registry/PropertyRef';
 import { XS_P_PROPERTY, XS_P_PROPERTY_ID, XS_P_SEQ_NR, XS_P_TYPE } from '../../Constants';
 import { SchemaUtils } from '../../SchemaUtils';
@@ -616,36 +617,40 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
 
 
   private detectDataTypeFromProperty(prop: PropertyRef): IDBType {
-
-    // handle object as json, mark for serialization
-    if (prop.dataType === 'object') {
-      return <any>{
-        // type: Object,
-        type: String,
-        stringify: true,
-        sourceType: 'object'
-      };
-    }
-    if (prop.dataType === 'array') {
-      return <any>{
-        type: String,
-        stringify: true,
-        // type: Array,
-        sourceType: 'array'
-      };
-    }
-
     const schemaHandler = this.storageRef.getSchemaHandler();
 
-    const type: IDBType = schemaHandler.translateToStorageType(prop.dataType); // {type: 'text', sourceType: <JS_DATA_TYPES>prop.dataType};
-    if (prop.getOptions('typeorm')) {
-      const typeorm = prop.getOptions('typeorm');
-      if (_.has(typeorm, 'type')) {
-        type.type = typeorm.type;
+    if (!schemaHandler.supportsJson()) {
+      // handle object as json, mark for serialization
+      if (prop.dataType === 'object') {
+        return <any>{
+          // type: Object,
+          type: String,
+          stringify: true,
+          sourceType: 'object'
+        };
       }
-      if (_.has(typeorm, 'length')) {
-        type.length = typeorm.length;
+      if (prop.dataType === 'array') {
+        return <any>{
+          type: String,
+          stringify: true,
+          // type: Array,
+          sourceType: 'array'
+        };
       }
+    }
+
+
+    const type: IDBType = schemaHandler.translateToStorageType(prop.dataType, prop.getOptions());
+    // {type: 'text', sourceType: <JS_DATA_TYPES>prop.dataType};
+    if (prop.getOptions(REGISTRY_TYPEORM)) {
+      const typeorm = prop.getOptions(REGISTRY_TYPEORM);
+      assign(type, typeorm);
+      // if (_.has(typeorm, 'type')) {
+      //   type.type = typeorm.type;
+      // }
+      // if (_.has(typeorm, 'length')) {
+      //   type.length = typeorm.length;
+      // }
     }
     return type;
   }

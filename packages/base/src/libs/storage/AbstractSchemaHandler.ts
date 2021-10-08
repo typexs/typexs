@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { isFunction } from 'lodash';
+import { get, isFunction } from 'lodash';
 import { IDBType } from './IDBType';
 import { JS_DATA_TYPES } from '@allgemein/schema-api';
 import { ICollection } from './ICollection';
@@ -215,12 +215,12 @@ export abstract class AbstractSchemaHandler {
     return _.get(AbstractSchemaHandler.typeMap, this.type, {});
   }
 
-  translateToStorageType(jsType: string | Function, length: number = null): IDBType {
+  translateToStorageType(jsType: string | Function, options: { length?: number; [k: string]: any } = null): IDBType {
     const type: IDBType = {
       type: null,
       variant: null,
       sourceType: null,
-      length: length
+      length: get(options, 'length', null)
     };
 
     const definedType: string = isFunction(jsType) ? ClassUtils.getClassName(jsType).toLowerCase() : jsType as string;
@@ -235,7 +235,7 @@ export abstract class AbstractSchemaHandler {
     if (mapType) {
       type.type = mapType;
     } else {
-      type.type = this.resolveTypeToStorage(type.sourceType, type);
+      type.type = this.resolveTypeToStorage(type.sourceType, options);
       if (!type.type) {
         // nothing found passing source type
         type.type = jsType;
@@ -245,7 +245,7 @@ export abstract class AbstractSchemaHandler {
     return type;
   }
 
-  resolveTypeToStorage(sourceType: string, opts?: any) {
+  resolveTypeToStorage(sourceType: string, opts: { length?: number; [k: string]: any } = null) {
     let type = null;
     switch (sourceType) {
       case 'string':

@@ -1,11 +1,11 @@
-import {Connection, EntityManager} from 'typeorm';
+import { Connection, EntityManager } from 'typeorm';
 import * as _ from 'lodash';
-import {IConnection} from '../../IConnection';
-import {TypeOrmStorageRef} from './TypeOrmStorageRef';
-import {Semaphore} from '../../../Semaphore';
-import {Log} from '../../../logging/Log';
-import {LockFactory} from '../../../LockFactory';
-import {EVENT_STORAGE_REF_PREPARED} from './Constants';
+import { IConnection } from '../../IConnection';
+import { TypeOrmStorageRef } from './TypeOrmStorageRef';
+import { Semaphore } from '../../../Semaphore';
+import { Log } from '../../../logging/Log';
+import { LockFactory } from '../../../LockFactory';
+import { EVENT_STORAGE_REF_PREPARED } from './Constants';
 
 
 export class TypeOrmConnectionWrapper implements IConnection {
@@ -26,8 +26,11 @@ export class TypeOrmConnectionWrapper implements IConnection {
 
   _fn: any;
 
+  locking: boolean = false;
+
 
   constructor(s: TypeOrmStorageRef, conn?: Connection) {
+    this.locking = s.isSingleConnection();
     this.storageRef = s;
     this._connection = conn;
     this.name = this.storageRef.name;
@@ -35,9 +38,8 @@ export class TypeOrmConnectionWrapper implements IConnection {
 
 
   initialize() {
-    const self = this;
-    this._fn = function () {
-      self.reload();
+    this._fn = function() {
+      this.reload();
     };
     this.storageRef.on(EVENT_STORAGE_REF_PREPARED, this._fn);
   }
@@ -129,8 +131,10 @@ export class TypeOrmConnectionWrapper implements IConnection {
 
 
   async connect(): Promise<TypeOrmConnectionWrapper> {
-    if (this.getUsage() <= 0) {
-      await this.lock.acquire();
+    if (this.getUsage() <= 0 || !this.isOpened()) {
+      if (this.locking) {
+        await this.lock.acquire();
+      }
       try {
         const connection = this.connection;
         if (!connection.isConnected) {
@@ -140,29 +144,35 @@ export class TypeOrmConnectionWrapper implements IConnection {
       } catch (err) {
         Log.error(err);
       } finally {
-        this.lock.release();
+        if (this.locking) {
+          this.lock.release();
+        }
       }
     } else {
       this.usageInc();
     }
-    return Promise.resolve(this);
+    return this;
   }
 
 
   async close(): Promise<IConnection> {
     const rest = this.usageDec();
     if (rest <= 0) {
-      await this.lock.acquire();
+      if (this.locking) {
+        await this.lock.acquire();
+      }
       try {
         await this.storageRef.remove(this);
         this.destroy();
       } catch (err) {
         Log.error(err);
       } finally {
-        this.lock.release();
+        if (this.locking) {
+          this.lock.release();
+        }
       }
     }
-    return Promise.resolve(this);
+    return this;
   }
 
 }

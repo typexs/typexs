@@ -1,9 +1,9 @@
-import {AbstractSchemaHandler} from '../../../libs/storage/AbstractSchemaHandler';
+import { AbstractSchemaHandler } from '../../../libs/storage/AbstractSchemaHandler';
 import * as _ from 'lodash';
-import {MongoQueryRunner} from 'typeorm/driver/mongodb/MongoQueryRunner';
-import {ICollection} from '../../../libs/storage/ICollection';
-import {ICollectionProperty} from '../../../libs/storage/ICollectionProperty';
-import {TypeOrmConnectionWrapper} from '../../../libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { MongoQueryRunner } from 'typeorm/driver/mongodb/MongoQueryRunner';
+import { ICollection } from '../../../libs/storage/ICollection';
+import { ICollectionProperty } from '../../../libs/storage/ICollectionProperty';
+import { TypeOrmConnectionWrapper } from '../../../libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
 
 
 export class MongoDbSchemaHandler extends AbstractSchemaHandler {
@@ -30,7 +30,7 @@ export class MongoDbSchemaHandler extends AbstractSchemaHandler {
     const cursor = this.getDB(c).listCollections(null);
     let v;
     const names: string[] = [];
-    while (v = await cursor.next()) {
+    while ((v = await cursor.next())) {
       names.push(v.name);
     }
     await c.close();
@@ -40,7 +40,7 @@ export class MongoDbSchemaHandler extends AbstractSchemaHandler {
 
   async getCollection(name: string): Promise<any> {
     const c = await this.storageRef.connect();
-    const collection = this.getDB(c).listCollections({name: name});
+    const collection = this.getDB(c).listCollections({ name: name });
     const res = await collection.next();
     await c.close();
     return res;
@@ -48,11 +48,11 @@ export class MongoDbSchemaHandler extends AbstractSchemaHandler {
 
   async getCollections(names: string[]): Promise<ICollection[]> {
     const c = await this.storageRef.connect();
-    const collections = this.getDB(c).listCollections({name: {$in: names}});
+    const collections = this.getDB(c).listCollections({ name: { $in: names } });
 
     const colls: ICollection[] = [];
     let cursor: any;
-    while (cursor = await collections.next()) {
+    while ((cursor = await collections.next())) {
       const props: ICollectionProperty[] = [];
 
       const _c: ICollection = {
