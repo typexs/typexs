@@ -68,10 +68,10 @@ export class PostgresSchemaHandler extends AbstractSchemaHandler {
     let type = null;
     switch (sourceType) {
       case 'string':
-        type = 'text';
-        if (opts && opts.length && opts.length > 0) {
-          type = 'varchar';
-        }
+        type = 'varchar';
+        // if (opts && opts.length && opts.length > 0) {
+        //   type = 'varchar';
+        // }
         break;
       case 'text':
         type = 'text';

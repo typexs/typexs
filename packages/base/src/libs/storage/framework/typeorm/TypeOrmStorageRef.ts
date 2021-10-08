@@ -236,11 +236,11 @@ export class TypeOrmStorageRef extends StorageRef {
           if (!has(x.options, 'backupType')) {
             set(x.options, 'backupType', type);
             const resolved = this.getSchemaHandler()
-              .translateToStorageType(type, x.options.length as any);
+              .translateToStorageType(type, x.options as any);
             x.options.type = resolved.type;
           } else {
             const resolved = this.getSchemaHandler()
-              .translateToStorageType(get(x.options, 'backupType'), x.options.length as any);
+              .translateToStorageType(get(x.options, 'backupType'), x.options as any);
             x.options.type = resolved.type;
           }
         }

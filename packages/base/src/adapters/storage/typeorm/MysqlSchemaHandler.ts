@@ -51,9 +51,9 @@ export class MysqlSchemaHandler extends AbstractSchemaHandler {
     switch (sourceType) {
       case 'string':
         type = 'varchar';
-        if (opts && opts.length && opts.length > 0) {
-          type = 'varchar';
-        }
+        // if (opts && opts.length && opts.length > 0) {
+        //   type = 'varchar';
+        // }
         break;
       case 'text':
         type = 'text';
