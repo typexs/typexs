@@ -1,6 +1,5 @@
-import {ICache} from '@allgemein/moduls/registry/ICache';
-import {FileUtils, NotYetImplementedError, PlatformUtils} from '@allgemein/base';
-import {Config} from '@allgemein/config';
+import { ICache } from '@allgemein/moduls/registry/ICache';
+import { FileUtils, NotYetImplementedError, PlatformUtils } from '@allgemein/base';
 
 export interface IModulRegistryCache {
 
