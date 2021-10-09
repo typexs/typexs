@@ -24,7 +24,7 @@ export class Activator implements IActivator {
   }
 
   startup(): void {
-    MetadataRegistry.$().setMaxListeners(1000);
+    MetadataRegistry.$().setMaxListeners(10000);
 
     const cache = new Cache();
     Injector.set(Cache.NAME, cache);
