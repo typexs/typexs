@@ -206,6 +206,7 @@ class EntityRegistrySpec {
       test2: string;
     }
 
+    await registry.ready();
     const entityDef = registry.getEntityRefByName('TestAnno');
     const props = entityDef.getPropertyRefs();
     expect(props).to.have.length(2);
@@ -239,6 +240,7 @@ class EntityRegistrySpec {
 
     }
 
+    await registry.ready();
     const entityDef1 = registry.getEntityRefByName('TestAnno2');
     expect(entityDef1.getOptions()).to.deep.include({hallo: 'welt'});
     const entityDef2 = registry.getEntityRefByName('TestAnno3');

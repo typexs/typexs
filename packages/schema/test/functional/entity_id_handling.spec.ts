@@ -26,6 +26,7 @@ class EntityIdHandlingSpec {
   async 'resolve entity ids from string'() {
     require('./schemas/default/Author');
     require('./schemas/default/ComplexIdsKeys');
+    await registry.ready();
 
     const entityDef = registry.getEntityRefByName('author') as EntityRef;
 

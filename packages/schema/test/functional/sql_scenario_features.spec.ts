@@ -41,7 +41,7 @@ class SqlScenarioFeaturesSpec {
     const Speed = require('./schemas/features/Speed').Speed;
 
     // registry.reload();
-
+    await registry.ready();
 
     const options = _.clone(TEST_STORAGE_OPTIONS);
     const connect = await TestHelper.connect(options);
@@ -94,7 +94,7 @@ class SqlScenarioFeaturesSpec {
     const Room = require('./schemas/integrated_property/Room').Room;
     const Equipment = require('./schemas/integrated_property/Equipment').Equipment;
     registry.reload([Room, Equipment]);
-
+    await registry.ready();
     const options = _.clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'integrated_property';
     const connect = await TestHelper.connect(options);

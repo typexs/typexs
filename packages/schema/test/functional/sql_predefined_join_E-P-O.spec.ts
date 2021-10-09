@@ -35,6 +35,8 @@ class SqlPredefinedJoinEPOSpec {
     IdentityRole = require('./schemas/join/IdentityRole').IdentityRole;
     Identity = require('./schemas/join/Identity').Identity;
 
+    await registry.ready();
+
     const options = _.clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'join';
     const connect = await TestHelper.connect(options);

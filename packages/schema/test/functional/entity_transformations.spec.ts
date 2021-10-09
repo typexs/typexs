@@ -1,10 +1,10 @@
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
 import * as _ from 'lodash';
-import {EntityRegistry} from '../../src/libs/EntityRegistry';
-import {RegistryFactory} from '@allgemein/schema-api';
-import {NAMESPACE_BUILT_ENTITY} from '../../src/libs/Constants';
+import { EntityRegistry } from '../../src/libs/EntityRegistry';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
 
 let registry: EntityRegistry;
 
@@ -24,9 +24,9 @@ class EntityTransformationsSpec {
     const Author = require('./schemas/default/Author').Author;
     const ref1 = registry.getEntityRefFor(Author);
 
-    const data = {id: 1, lastName: 'Engels', firstName: 'Friedrich'};
+    const data = { id: 1, lastName: 'Engels', firstName: 'Friedrich' };
     const entityDef = registry.getEntityRefByName('author');
-    const author = entityDef.build(data, {skipClassNamespaceInfo: true});
+    const author = entityDef.build(data, { skipClassNamespaceInfo: true });
     expect(author).to.deep.eq(data);
   }
 
@@ -41,7 +41,7 @@ class EntityTransformationsSpec {
     const p = new Permission();
     p.id = 1;
     p.permission = 'permission;)';
-    p.roles = [{id: 1, rolename: 'role1'}, {id: 2, rolename: 'role2'}];
+    p.roles = [{ id: 1, rolename: 'role1' }, { id: 2, rolename: 'role2' }];
     const entityDef = registry.getEntityRefByName('Permission');
     const permission: any = entityDef.build(p);
     expect(_.isArray(permission.roles)).to.be.true;
@@ -59,7 +59,7 @@ class EntityTransformationsSpec {
     p.id = 1;
     p.disabled = false;
     p.permission = 'permission;)';
-    p.roles = [{id: 1, rolename: 'role1'}, {id: 2, rolename: 'role2'}];
+    p.roles = [{ id: 1, rolename: 'role1' }, { id: 2, rolename: 'role2' }];
     const entityDef = registry.getEntityRefByName('Permission');
     let permission: any = entityDef.build(p);
     expect(_.isBoolean(permission.disabled)).to.be.true;
@@ -69,7 +69,7 @@ class EntityTransformationsSpec {
     p.id = 1;
     p.disabled = true;
     p.permission = 'permission;)';
-    p.roles = [{id: 1, rolename: 'role1'}, {id: 2, rolename: 'role2'}];
+    p.roles = [{ id: 1, rolename: 'role1' }, { id: 2, rolename: 'role2' }];
 
     permission = entityDef.build(p);
     expect(_.isBoolean(permission.disabled)).to.be.true;
@@ -92,9 +92,10 @@ class EntityTransformationsSpec {
     p.obj.inner.subName = 'test2';
     p.obj.inner.SubOtherVar = 1;
 
+    await registry.ready();
 
     const entityDef = registry.getEntityRefByName('EntityWithEmbedded');
-    const entityWithEmbedded: any = entityDef.build(JSON.parse(JSON.stringify(p)), {skipClassNamespaceInfo: true});
+    const entityWithEmbedded: any = entityDef.build(JSON.parse(JSON.stringify(p)), { skipClassNamespaceInfo: true });
     expect(entityWithEmbedded).to.deep.eq(p);
 
   }
@@ -118,7 +119,7 @@ class EntityTransformationsSpec {
 
 
     const entityDef = registry.getEntityRefByName('Car');
-    const entityWithEmbedded: any = entityDef.build(JSON.parse(JSON.stringify(p)), {skipClassNamespaceInfo: true});
+    const entityWithEmbedded: any = entityDef.build(JSON.parse(JSON.stringify(p)), { skipClassNamespaceInfo: true });
     expect(entityWithEmbedded).to.deep.eq(p);
 
   }

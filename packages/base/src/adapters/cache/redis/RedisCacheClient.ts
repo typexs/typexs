@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { ClientOpts, createClient, RedisClient } from 'redis';
 import { IRedisCacheClient } from './IRedisCacheClient';
 import { ICacheGetOptions, ICacheSetOptions } from '../../../libs/cache/ICacheOptions';
-import { Serializer } from '../../../libs/cache/Serializer';
+import { Serializer } from '@allgemein/base';
 
 
 export class RedisCacheClient implements IRedisCacheClient {

@@ -8,10 +8,10 @@ import * as _ from 'lodash';
 import {TaskCommand} from '../../../src/commands/TaskCommand';
 import {TEST_STORAGE_OPTIONS} from '../config';
 import {Container} from 'typedi';
-import {LockFactory} from '../../../src/libs/LockFactory';
 import {C_STORAGE_DEFAULT} from '../../../src/libs/Constants';
 import {TaskLog} from '../../../src/entities/TaskLog';
 import {StorageRef} from '../../../src/libs/storage/StorageRef';
+import { LockFactory } from '@allgemein/base';
 
 
 const stdMocks = require('std-mocks');

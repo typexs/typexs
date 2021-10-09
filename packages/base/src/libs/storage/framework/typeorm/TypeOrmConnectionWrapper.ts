@@ -2,10 +2,9 @@ import { Connection, EntityManager } from 'typeorm';
 import * as _ from 'lodash';
 import { IConnection } from '../../IConnection';
 import { TypeOrmStorageRef } from './TypeOrmStorageRef';
-import { Semaphore } from '../../../Semaphore';
 import { Log } from '../../../logging/Log';
-import { LockFactory } from '../../../LockFactory';
 import { EVENT_STORAGE_REF_PREPARED } from './Constants';
+import { LockFactory, Semaphore } from '@allgemein/base';
 
 
 export class TypeOrmConnectionWrapper implements IConnection {

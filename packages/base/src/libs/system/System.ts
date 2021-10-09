@@ -1,29 +1,23 @@
 import * as _ from 'lodash';
-import {EventBus, subscribe} from 'commons-eventbus';
-import {Log} from '../logging/Log';
-import {
-  APP_SYSTEM_DISTRIBUTED,
-  APP_SYSTEM_UPDATE_INTERVAL,
-  C_KEY_SEPARATOR,
-  C_STORAGE_DEFAULT,
-  TYPEXS_NAME
-} from '../Constants';
-import {StorageRef} from '../storage/StorageRef';
-import {Inject} from 'typedi';
-import {SystemApi} from '../../api/System.api';
-import {INodeInfo} from './INodeInfo';
-import {SystemNodeInfo} from '../../entities/SystemNodeInfo';
-import {NodeRuntimeInfo} from './NodeRuntimeInfo';
+import { EventBus, subscribe } from 'commons-eventbus';
+import { Log } from '../logging/Log';
+import { APP_SYSTEM_DISTRIBUTED, APP_SYSTEM_UPDATE_INTERVAL, C_KEY_SEPARATOR, C_STORAGE_DEFAULT, TYPEXS_NAME } from '../Constants';
+import { StorageRef } from '../storage/StorageRef';
+import { Inject } from 'typedi';
+import { SystemApi } from '../../api/System.api';
+import { INodeInfo } from './INodeInfo';
+import { SystemNodeInfo } from '../../entities/SystemNodeInfo';
+import { NodeRuntimeInfo } from './NodeRuntimeInfo';
 import * as os from 'os';
-import {SystemInfoRequestEvent} from './SystemInfoRequestEvent';
-import {SystemInfoRequest} from './SystemInfoRequest';
+import { SystemInfoRequestEvent } from './SystemInfoRequestEvent';
+import { SystemInfoRequest } from './SystemInfoRequest';
 import * as machineId from 'node-machine-id';
-import {Config} from '@allgemein/config';
-import {Invoker} from '../../base/Invoker';
-import {SystemInfoResponse} from './SystemInfoResponse';
-import {ILoggerApi} from '../logging/ILoggerApi';
-import {IEntityController} from '../storage/IEntityController';
-import {LockFactory} from '../LockFactory';
+import { Config } from '@allgemein/config';
+import { Invoker } from '../../base/Invoker';
+import { SystemInfoResponse } from './SystemInfoResponse';
+import { ILoggerApi } from '../logging/ILoggerApi';
+import { IEntityController } from '../storage/IEntityController';
+import { LockFactory } from '@allgemein/base';
 
 export class System {
 
@@ -103,10 +97,10 @@ export class System {
       const nodes = await this.controller.find(SystemNodeInfo,
         {
           $and: [
-            {state: {$ne: 'unregister'}},
-            {state: {$ne: 'offline'}},
-            {state: {$ne: 'startup'}}]
-        }, {limit: 0});
+            { state: { $ne: 'unregister' } },
+            { state: { $ne: 'offline' } },
+            { state: { $ne: 'startup' } }]
+        }, { limit: 0 });
       const filtered = nodes.filter(c => c.nodeId === nodeId && !['unregister', 'offline', 'startup'].includes(c.state));
       if (!_.isEmpty(filtered)) {
         instNr = _.max(filtered.map(x => x.instNr)) + 1;
@@ -173,7 +167,7 @@ export class System {
 
       if (nodes.length > 0) {
         try {
-          await this.controller.remove(SystemNodeInfo, {key: {$in: nodes.map(x => x.key)}});
+          await this.controller.remove(SystemNodeInfo, { key: { $in: nodes.map(x => x.key) } });
         } catch (e) {
           this.logger.error(e);
         }
@@ -229,7 +223,7 @@ export class System {
     this.info.cpus = os.cpus();
     this.info.memory = {
       total: os.totalmem(),
-      free: os.freemem(),
+      free: os.freemem()
     };
     this.info.uptime = os.uptime();
     this.info.hostname = os.hostname();
@@ -292,7 +286,7 @@ export class System {
     if (this.controller) {
       try {
         await this.controller.remove(SystemNodeInfo,
-          {$or: [{state: 'unregister'}, {state: 'offline'}, {key: this.node.key}]});
+          { $or: [{ state: 'unregister' }, { state: 'offline' }, { key: this.node.key }] });
       } catch (e) {
         this.logger.error(e);
       }
@@ -318,7 +312,7 @@ export class System {
   private async save(node: SystemNodeInfo) {
     if (this.controller) {
       try {
-        let r = await this.controller.findOne(SystemNodeInfo, {key: node.key});
+        let r = await this.controller.findOne(SystemNodeInfo, { key: node.key });
         if (r) {
           _.assign(r, node);
         } else {

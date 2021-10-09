@@ -415,7 +415,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
 
   private ColumnDef(property: PropertyRef, name: string, skipIdentifier: boolean = false) {
     if (property.isStorable()) {
-      let def = _.clone(property.getOptions() || {});
+      let def = _.clone(property.getOptions(REGISTRY_TYPEORM) || {});
       const dbType = this.detectDataTypeFromProperty(property);
       def = assign(def, dbType, { name: name });
       if (property.isNullable()) {

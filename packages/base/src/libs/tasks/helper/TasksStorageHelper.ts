@@ -2,9 +2,8 @@ import { ITaskRunnerResult } from '../ITaskRunnerResult';
 import { ITaskRunResult } from '../ITaskRunResult';
 import { StorageRef } from '../../storage/StorageRef';
 import { TaskLog } from '../../../entities/TaskLog';
-import { Semaphore } from '../../Semaphore';
-import { LockFactory } from '../../LockFactory';
 import { concat, find, get, isArray, remove } from 'lodash';
+import { LockFactory, Semaphore } from '@allgemein/base';
 
 export class TasksStorageHelper {
 

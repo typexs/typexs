@@ -31,7 +31,6 @@ export { TaskLog } from './entities/TaskLog';
 export { K_INST_ID, K_NODE_ID, C_EXCHANGE_MESSAGE } from './libs/messaging/Constants';
 export { IFileOptions, IFileSelectOptions } from './adapters/exchange/filesystem/IFileOptions';
 export * from './libs/Constants';
-export { Semaphore } from './libs/Semaphore';
 export { ITypexsOptions } from './libs/ITypexsOptions';
 
 export { ILoggerOptions } from './libs/logging/ILoggerOptions';

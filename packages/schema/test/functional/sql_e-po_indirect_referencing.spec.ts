@@ -49,8 +49,8 @@ class SqlE_PoIndirectReferencingSpec {
 
     const options = clone(TEST_STORAGE_OPTIONS);
     set(options, 'name', 'e-po-dynamic');
-    set(options, 'logger', 'simple-console');
-    set(options, 'logging', 'all');
+    // set(options, 'logger', 'simple-console');
+    // set(options, 'logging', 'all');
     const connect = await TestHelper.connect(options);
     entityController = connect.controller;
     storageRef = connect.ref;

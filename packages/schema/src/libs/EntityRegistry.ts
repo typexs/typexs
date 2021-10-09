@@ -112,12 +112,7 @@ export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistr
         }
       }
     } else if (context === METATYPE_SCHEMA) {
-      let find: ISchemaRef = this.find(context,
-        (c: ISchemaRef) => c.name === (<ISchema>options).name
-      );
-      if (!find) {
-        find = this.create(context, options);
-      }
+      const find: ISchemaRef = this.getOrCreateSchemaRefByName(options as any);
       if (entityRef && find) {
         this.addSchemaToEntityRef(find, entityRef, { override: true, onlyDefault: true });
       }
@@ -149,15 +144,15 @@ export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistr
   }
 
 
-  onUpdate() {
-    super.onUpdate();
-  }
-
-
-  onRemove(context: METADATA_TYPE, entries: (IEntity | IProperty | ISchema | IObject)[]) {
-    super.onRemove(context, entries);
-  }
-
+  // onUpdate() {
+  //   super.onUpdate();
+  // }
+  //
+  //
+  // onRemove(context: METADATA_TYPE, entries: (IEntity | IProperty | ISchema | IObject)[]) {
+  //   super.onRemove(context, entries);
+  // }
+  //
 
   /**
    * Create default property reference
@@ -243,7 +238,8 @@ export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistr
   }
 
   fromJsonSchema(json: any, options?: IJsonSchemaUnserializeOptions) {
-    return JsonSchema.unserialize(json, defaults(options || {}, {
+    return JsonSchema.unserialize(json, defaults(options || {},
+      {
         namespace: this.namespace,
         collector: [
           {

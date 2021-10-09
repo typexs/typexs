@@ -60,28 +60,29 @@ import { IJsonSchemaSerializeOptions } from '@allgemein/schema-api/lib/json-sche
 import { K_IDENTIFIER, K_NULLABLE } from '../../../Constants';
 
 
-export type TYPEORM_METADATA_KEYS = 'tables' |
-'trees' |
-'entityRepositories' |
-'transactionEntityManagers' |
-'transactionRepositories' |
-'namingStrategies' |
-'entitySubscribers' |
-'indices' |
-'uniques' |
-'checks' |
-'exclusions' |
-'columns' |
-'generations' |
-'relations' |
-'joinColumns' |
-'joinTables' |
-'entityListeners' |
-'relationCounts' |
-'relationIds' |
-'embeddeds' |
-'inheritances' |
-'discriminatorValues';
+export type TYPEORM_METADATA_KEYS =
+  'tables' |
+  'trees' |
+  'entityRepositories' |
+  'transactionEntityManagers' |
+  'transactionRepositories' |
+  'namingStrategies' |
+  'entitySubscribers' |
+  'indices' |
+  'uniques' |
+  'checks' |
+  'exclusions' |
+  'columns' |
+  'generations' |
+  'relations' |
+  'joinColumns' |
+  'joinTables' |
+  'entityListeners' |
+  'relationCounts' |
+  'relationIds' |
+  'embeddeds' |
+  'inheritances' |
+  'discriminatorValues';
 
 const typeormMetadataKeys: TYPEORM_METADATA_KEYS[] = [
   'tables',
@@ -269,9 +270,11 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
       return;
     }
 
+    let embedded: EmbeddedMetadataArgs, columnMetadata: ColumnMetadataArgs, relations: RelationMetadataArgs;
+
     switch (key) {
       case 'columns':
-        const columnMetadata = args[0] as ColumnMetadataArgs;
+        columnMetadata = args[0] as ColumnMetadataArgs;
         if (columnMetadata.target) {
           foundEntity = this._find(columnMetadata.target);
         }
@@ -284,7 +287,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         }
         break;
       case 'embeddeds':
-        const embedded = args[0] as EmbeddedMetadataArgs;
+        embedded = args[0] as EmbeddedMetadataArgs;
 
         if (embedded.target) {
           foundEntity = this._find(embedded.target);
@@ -298,7 +301,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         }
         break;
       case 'relations':
-        const relations = args[0] as RelationMetadataArgs;
+        relations = args[0] as RelationMetadataArgs;
 
         if (relations.target) {
           foundEntity = this._find(relations.target);
@@ -644,9 +647,8 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
     };
     const entity = this.create<TypeOrmEntityRef>(METATYPE_ENTITY, entityOptions);
     const properties: TypeOrmPropertyRef[] = <TypeOrmPropertyRef[]>concat(
-      map(this.metadatastore.columns
-        .filter(c => c.target === fn.target),
-      c => this.createPropertyByArgs('column', c)),
+      map(this.metadatastore.columns.filter(c => c.target === fn.target),
+        c => this.createPropertyByArgs('column', c)),
       map(this.metadatastore.filterRelations(fn.target),
         c => this.createPropertyByArgs('relation', c))
     );
@@ -730,32 +732,33 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
 
   fromJsonSchema(json: any, options?: IJsonSchemaUnserializeOptions) {
-    return JsonSchema.unserialize(json, defaults(options || {}, {
-      namespace: this.namespace,
-      collector: [
-        {
-          type: METATYPE_PROPERTY,
-          key: 'type',
-          fn: (key: string, data: any, options: IParseOptions) => {
-            const type = ['string', 'number', 'boolean', 'date', 'float', 'array', 'object'];
-            const value = data[key];
-            if (value && type.includes(value)) {
-              const cls = TypeOrmUtils.getJsObjectType(value);
-              if (cls === String) {
-                if (data['format'] === 'date' || data['format'] === 'date-time') {
-                  return Date;
+    return JsonSchema.unserialize(json, defaults(options || {},
+      {
+        namespace: this.namespace,
+        collector: [
+          {
+            type: METATYPE_PROPERTY,
+            key: 'type',
+            fn: (key: string, data: any, options: IParseOptions) => {
+              const type = ['string', 'number', 'boolean', 'date', 'float', 'array', 'object'];
+              const value = data[key];
+              if (value && type.includes(value)) {
+                const cls = TypeOrmUtils.getJsObjectType(value);
+                if (cls === String) {
+                  if (data['format'] === 'date' || data['format'] === 'date-time') {
+                    return Date;
+                  }
                 }
+                return cls;
+              } else if (data['$ref']) {
+                const className = data['$ref'].split('/').pop();
+                return ClassRef.get(className, this.namespace).getClass(true);
               }
-              return cls;
-            } else if (data['$ref']) {
-              const className = data['$ref'].split('/').pop();
-              return ClassRef.get(className, this.namespace).getClass(true);
+              return ClassRef.get(data[key], this.namespace).getClass(true);
             }
-            return ClassRef.get(data[key], this.namespace).getClass(true);
           }
-        }
-      ]
-    })
+        ]
+      })
     );
   }
 

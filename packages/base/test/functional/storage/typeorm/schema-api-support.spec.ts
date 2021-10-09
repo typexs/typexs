@@ -20,10 +20,10 @@ import {TypeOrmEntityRegistry} from '../../../../src/libs/storage/framework/type
 
 let registry: TypeOrmEntityRegistry = null;
 // tslint:disable-next-line:prefer-const
-let bootstrap: Bootstrap = null;
+const bootstrap: Bootstrap = null;
 let EntityOfSchemaApi: Function = null;
 
-let storageOptions:IStorageOptions & BaseConnectionOptions = null;
+let storageOptions: IStorageOptions & BaseConnectionOptions = null;
 
 @suite('functional/storage/typeorm/schema-api-support')
 class SchemaApiSupportSpec {
@@ -41,6 +41,7 @@ class SchemaApiSupportSpec {
     await import('./data/schema-api/entities/EntityOfSchemaApi').then(x => {
       EntityOfSchemaApi = x.EntityOfSchemaApi;
     });
+    await registry.ready();
     storageOptions = _.cloneDeep(TEST_STORAGE_OPTIONS) as IStorageOptions & BaseConnectionOptions;
   }
 

@@ -1,3 +1,4 @@
+// process.env.SQL_LOG='1';
 import {suite, test, timeout} from '@testdeck/mocha';
 import { Bootstrap, Injector, REGISTRY_TYPEORM, TypeOrmEntityRegistry, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
 import {K_ROUTE_CONTROLLER, Server, XS_P_$URL} from '@typexs/server';
