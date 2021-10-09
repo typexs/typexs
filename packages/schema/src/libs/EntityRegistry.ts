@@ -8,7 +8,6 @@ import { ISchema } from './registry/ISchema';
 import {
   ClassRef,
   DefaultNamespacedRegistry,
-  IAbstractOptions,
   IClassRef,
   IEntityRef,
   IJsonSchema,
@@ -22,7 +21,6 @@ import {
   METATYPE_CLASS_REF,
   METATYPE_EMBEDDABLE,
   METATYPE_ENTITY,
-  METATYPE_NAMESPACE,
   METATYPE_PROPERTY,
   METATYPE_SCHEMA,
   RegistryFactory,
@@ -96,23 +94,9 @@ export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistr
    * @param options
    */
   onAdd(context: METADATA_TYPE, options: IEntity | IProperty | ISchema | IObject) {
-    if (options.namespace) {
-      if (options.namespace !== this.namespace) {
-        // skip not my namespace
-        return;
-      }
-    } else {
-      // if namespace not present skipping
-      if (context !== METATYPE_PROPERTY) {
-        // only properties should be pass and check if entity already exists
-        const namespace = MetadataRegistry.$().find(METATYPE_NAMESPACE, (x: IAbstractOptions) => x.target === options.target);
-        if (namespace && namespace.attributes.namespace === this.namespace) {
-          options.namespace = namespace.attributes.namespace;
-        } else {
-          return;
-        }
 
-      }
+    if (!this.validNamespace(options)) {
+      return;
     }
 
     const classRef = options.target ? this.find(METATYPE_CLASS_REF, (x: IClassRef) => x.getClass() === options.target) as IClassRef : null;
@@ -260,31 +244,31 @@ export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistr
 
   fromJsonSchema(json: any, options?: IJsonSchemaUnserializeOptions) {
     return JsonSchema.unserialize(json, defaults(options || {}, {
-      namespace: this.namespace,
-      collector: [
-        {
-          type: METATYPE_PROPERTY,
-          key: 'type',
-          fn: (key: string, data: any, options: IParseOptions) => {
-            const type = ['string', 'number', 'boolean', 'date', 'float', 'array', 'object'];
-            const value = data[key];
-            if (value && type.includes(value)) {
-              const cls = getJsObjectType(value);
-              if (cls === String) {
-                if (data['format'] === 'date' || data['format'] === 'date-time') {
-                  return Date;
+        namespace: this.namespace,
+        collector: [
+          {
+            type: METATYPE_PROPERTY,
+            key: 'type',
+            fn: (key: string, data: any, options: IParseOptions) => {
+              const type = ['string', 'number', 'boolean', 'date', 'float', 'array', 'object'];
+              const value = data[key];
+              if (value && type.includes(value)) {
+                const cls = getJsObjectType(value);
+                if (cls === String) {
+                  if (data['format'] === 'date' || data['format'] === 'date-time') {
+                    return Date;
+                  }
                 }
+                return cls;
+              } else if (data['$ref']) {
+                const className = data['$ref'].split('/').pop();
+                return ClassRef.get(className, this.namespace).getClass(true);
               }
-              return cls;
-            } else if (data['$ref']) {
-              const className = data['$ref'].split('/').pop();
-              return ClassRef.get(className, this.namespace).getClass(true);
+              return ClassRef.get(data[key], this.namespace).getClass(true);
             }
-            return ClassRef.get(data[key], this.namespace).getClass(true);
           }
-        }
-      ]
-    })
+        ]
+      })
     );
   }
 

@@ -176,17 +176,22 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
 
   onAdd(context: METADATA_TYPE, options: ITypeOrmEntityOptions | ITypeOrmPropertyOptions | ISchemaOptions | IObjectOptions) {
-    if (options.namespace) {
-      if (options.namespace !== this.namespace) {
-        // skip not my namespace
-        return;
-      }
-    } else {
-      if (context !== METATYPE_PROPERTY) {
-        // skip if no namespace given
-        return;
-      }
+
+    if (!this.validNamespace(options)) {
+      return;
     }
+    //
+    // if (options.namespace) {
+    //   if (options.namespace !== this.namespace) {
+    //     // skip not my namespace
+    //     return;
+    //   }
+    // } else {
+    //   if (context !== METATYPE_PROPERTY) {
+    //     // skip if no namespace given
+    //     return;
+    //   }
+    // }
 
     const target = options.target;
     const tableExists = target ? this.metadatastore.tables.find(x => x.target === target) : null;
