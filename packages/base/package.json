@@ -30,14 +30,15 @@
     "@allgemein/moduls": "^1.6.5",
     "@allgemein/schema-api": "^1.5.1",
     "@cezaryrk/minimatch": "3.0.4",
+    "ajv": "^8.5.0",
     "commons-eventbus": "^0.12.2",
+    "fast-safe-stringify": "2.1.1",
+    "js-yaml": "~4.1.0",
     "luxon": "^1.27.0",
     "node-machine-id": "~1.1.12",
     "typedi": "0.8.0"
   },
   "peerDependencies": {
-    "ajv": "^8.5.0",
-    "js-yaml": "~4.1.0",
     "typeorm": "0.2.34",
     "winston": "~3.3.3",
     "yargonaut": "~1.1.4",
