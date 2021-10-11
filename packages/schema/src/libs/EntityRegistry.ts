@@ -29,6 +29,7 @@ import {
 import { NAMESPACE_BUILT_ENTITY } from './Constants';
 import { IObject } from './registry/IObject';
 import { getJsObjectType } from './Helper';
+import { Log } from '@typexs/base';
 
 
 export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistry*/ implements IJsonSchema {
@@ -163,9 +164,15 @@ export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistr
     if (keys(options).length === 0) {
       throw new Error('can\'t create property for empty options');
     }
-    options.namespace = this.namespace;
-    const prop = new PropertyRef(options);
-    return this.add(prop.metaType, prop);
+    try {
+      options.namespace = this.namespace;
+      const prop = new PropertyRef(options);
+      return this.add(prop.metaType, prop);
+
+    } catch (e) {
+      Log.error(e);
+      throw e;
+    }
   }
 
 
@@ -179,22 +186,27 @@ export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistr
     if (!options.name) {
       options.name = ClassRef.getClassName(options.target);
     }
-    const entityRef = new EntityRef(options);
-    const retRef = this.add(entityRef.metaType, entityRef);
-    const refs = entityRef.getOptions('schema', []);
-    if ((isArray(refs) && refs.length === 0) || (!isArray(refs) && !refs)) {
-      const metaSchemaOptionsForEntity = MetadataRegistry.$()
-        .getByContextAndTarget(METATYPE_SCHEMA, entityRef.getClass()) as ISchema[];
-      if (metaSchemaOptionsForEntity.length > 0) {
-        for (const schemaOptions of metaSchemaOptionsForEntity) {
-          this.addSchemaToEntityRef(schemaOptions.name, entityRef as IEntityRef, { override: true, onlyDefault: true });
+    try {
+      const entityRef = new EntityRef(options);
+      const retRef = this.add(entityRef.metaType, entityRef);
+      const refs = entityRef.getOptions('schema', []);
+      if ((isArray(refs) && refs.length === 0) || (!isArray(refs) && !refs)) {
+        const metaSchemaOptionsForEntity = MetadataRegistry.$()
+          .getByContextAndTarget(METATYPE_SCHEMA, entityRef.getClass()) as ISchema[];
+        if (metaSchemaOptionsForEntity.length > 0) {
+          for (const schemaOptions of metaSchemaOptionsForEntity) {
+            this.addSchemaToEntityRef(schemaOptions.name, entityRef as IEntityRef, { override: true, onlyDefault: true });
+          }
+        } else {
+          // no schema options add to 'default'
+          this.addSchemaToEntityRef(XS_DEFAULT_SCHEMA, entityRef as IEntityRef);
         }
-      } else {
-        // no schema options add to 'default'
-        this.addSchemaToEntityRef(XS_DEFAULT_SCHEMA, entityRef as IEntityRef);
       }
+      return retRef;
+    } catch (e) {
+      Log.error(e);
+      throw e;
     }
-    return retRef;
   }
 
   /**
@@ -204,8 +216,13 @@ export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistr
    */
   createSchemaForOptions(options: ISchema): SchemaRef {
     options.namespace = this.namespace;
-    const schemaRef = new SchemaRef(options);
-    return this.add(schemaRef.metaType, schemaRef);
+    try {
+      const schemaRef = new SchemaRef(options);
+      return this.add(schemaRef.metaType, schemaRef);
+    } catch (e) {
+      Log.error(e);
+      throw e;
+    }
   }
 
   listClassRefs() {
