@@ -29,7 +29,6 @@ import {
 import { NAMESPACE_BUILT_ENTITY } from './Constants';
 import { IObject } from './registry/IObject';
 import { getJsObjectType } from './Helper';
-import { Log } from '@typexs/base';
 
 
 export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistry*/ implements IJsonSchema {
@@ -168,9 +167,8 @@ export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistr
       options.namespace = this.namespace;
       const prop = new PropertyRef(options);
       return this.add(prop.metaType, prop);
-
     } catch (e) {
-      Log.error(e);
+      console.error(e);
       throw e;
     }
   }
@@ -220,7 +218,7 @@ export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistr
       const schemaRef = new SchemaRef(options);
       return this.add(schemaRef.metaType, schemaRef);
     } catch (e) {
-      Log.error(e);
+      console.error(e);
       throw e;
     }
   }
