@@ -202,7 +202,7 @@ export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistr
       }
       return retRef;
     } catch (e) {
-      Log.error(e);
+      console.error(e);
       throw e;
     }
   }
