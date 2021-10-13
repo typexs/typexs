@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { assign, isNumber, keys } from 'lodash';
+import { assign, isArray, isNull, isNumber, isUndefined, keys, remove } from 'lodash';
 import { EntityDefTreeWorker } from '../EntityDefTreeWorker';
 import { EntityController } from '../../EntityController';
 import { IFindOp, NotYetImplementedError, TypeOrmConnectionWrapper } from '@typexs/base';
@@ -653,8 +653,9 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
 
     for (let x = 0; x < sources.lookup.length; x++) {
       const lookup = sources.lookup[x];
+      let target = null;
       if (lookup.source && lookup.target) {
-        const target = _.find(sources.target, lookup.source);
+        target = _.find(sources.target, lookup.source);
         const attachObj = _.find(sources.next, lookup.target);
         // for (const attachObj of attachObjs) {
         const seqNr = isNumber(lookup.sourceSeqNr) ? lookup.sourceSeqNr : null;
@@ -663,10 +664,9 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         classProp.forEach(p => {
           newObject[p.name] = p.get(attachObj);
         });
-
         setTargetValueForProperty(propertyRef, target, newObject, seqNr);
       } else {
-        const target = sources.target[x];
+        target = sources.target[x];
         const attachObjs = _.filter(sources.next, lookup);
         for (const attachObj of attachObjs) {
           const seqNr = attachObj[sourceSeqNrId];
@@ -677,7 +677,10 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
           });
           setTargetValueForProperty(propertyRef, target, newObject, seqNr);
         }
+      }
 
+      if (isArray(target[propertyRef.name])) {
+        remove(target[propertyRef.name], x => isNull(x) || isUndefined(x));
       }
     }
   }

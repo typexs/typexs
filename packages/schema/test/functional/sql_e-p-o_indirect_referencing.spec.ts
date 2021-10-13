@@ -267,8 +267,8 @@ class SqlIndirectReferencingSpec {
     expect(entry).to.have.length(1);
     const result = entry.shift();
     const objects = [];
-    objects[1] = { id: objectId1, value: 'test1' };
-    objects[2] = { id: objectId2, value: 'test2' };
+    objects[0] = { id: objectId1, value: 'test1' };
+    objects[1] = { id: objectId2, value: 'test2' };
     expect(result).to.be.deep.eq({
       id: entityId,
       nr: 2,
