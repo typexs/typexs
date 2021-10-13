@@ -121,34 +121,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
       _lookups.push(joinDef.lookup(source));
       source[propertyRef.name] = propertyRef.isCollection() ? [] : null;
     }
-
-
-    // const where = Sql.conditionsToString(conditions);
     if (!_.isEmpty(conditions)) {
-
-
-      // const chunks = _.chunk(conditions, this.options.maxConditionSplitingLimit);
-      // const entityRef = this.connection.getStorageRef().getEntityRef(joinDef.joinRef.getClass());
-      // results = await Promise.all(chunks.map(chunk => {
-      //   let queryBuilder = this.connection.manager.getRepository(entityRef.getClassRef().getClass()).createQueryBuilder();
-      //   const builder = new SqlConditionsBuilder(queryBuilder, entityRef, this.connection.getStorageRef(), 'select');
-      //   builder.build({$or: chunk});
-      //   queryBuilder = builder.getQueryBuilder() as any;
-      //   return queryBuilder.getMany();
-      // }));
-      //
-      // results = _.concat([], ...results);
-      //
-      // if (results.length > 0 && joinDef.order && joinDef.order.length > 0) {
-      //   const iteree: any = [];
-      //   const orders: any = [];
-      //   joinDef.order.forEach(o => {
-      //     iteree.push(_.get(mapping, o.key.key, o.key.key));
-      //     orders.push(o.asc ? 'asc' : 'desc');
-      //   });
-      //   results = _.orderBy(results, iteree, orders);
-      // }
-
       const opts: any = { maxConditionSplitingLimit: this.options.maxConditionSplitingLimit };
       opts.orSupport = true;
       const entityRef = this.connection.getStorageRef().getEntityRef(joinDef.getJoinRef().getClass()) as EntityRef;
@@ -216,12 +189,6 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
       }
 
       setTargetValueForProperty(propertyRef, source, results);
-      // if (propertyRef.isCollection()) {
-      //   source[propertyRef.name] = results;
-      // } else {
-      //   source[propertyRef.name] = _.isEmpty(results) ? null : _.first(results);
-      // }
-
     }
     return sources;
   }
@@ -260,13 +227,6 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
       // for generated referring table
       // fetch table data and extract target references
       const sourcePropsIds = this.getIdentifierPropertiesFor(sourceRef);
-      // if (sourceRef instanceof EntityRef) {
-      //   sourcePropsIds = sourceRef.getPropertyRefIdentifier();
-      // } else if (sourceRef instanceof ClassRef) {
-      //   sourcePropsIds = this.em.schema().getPropertiesFor(sourceRef.getClass()).filter(p => p.isIdentifier());
-      // } else {
-      //   throw new NotYetImplementedError();
-      // }
 
       const [sourceTypeId, sourceTypeName] = this.em.nameResolver().forSource(XS_P_TYPE);
       const [sourceSeqNrId, sourceSeqNrName] = this.em.nameResolver().forSource(XS_P_SEQ_NR);
@@ -303,27 +263,6 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
       results = await qb.getMany();
 
       [lookups, conditions] = this.buildLookupBindingsAndQueryConditionsFor(results, sourceRef, targetDef);
-
-      //
-      // const targetIdProps = targetDef.getPropertyRefIdentifier();
-      // for (const result of results) {
-      //   const condition: any = {};
-      //   const lookup: any = { source: {}, target: {} };
-      //
-      //   sourcePropsIds.forEach(prop => {
-      //     lookup.source[prop.name] = prop.get(result);
-      //   });
-      //
-      //   targetIdProps.forEach(prop => {
-      //     const [targetId, dummy] = this.em.nameResolver().forTarget(prop);
-      //     condition[prop.storingName] = result[targetId];
-      //     lookup.target[prop.name] = prop.get(result);
-      //   });
-      //
-      //   lookups.push(lookup);
-      //   conditions.push(condition);
-      // }
-
 
     } else {
       // previous refering table, extract conditions
@@ -487,34 +426,6 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
     return [lookups, conditions];
   }
 
-  // buildLookupBindingsAndQueryConditionsFor(
-  //   results: any[],
-  //   sourceRef: IEntityRef | IClassRef,
-  //   targetRef: IEntityRef | IClassRef
-  // ): [IBinding<any, any>[], any[]] {
-  //   const sourcePropsIds = this.getIdentifierPropertiesFor(sourceRef);
-  //   const targetIdProps = this.getIdentifierPropertiesFor(targetRef);
-  //   const lookups: IBinding<any, any>[] = [];
-  //   const conditions = [];
-  //   for (const result of results) {
-  //     const condition: any = {};
-  //     const lookup: IBinding<any, any> = { source: {}, target: {} };
-  //
-  //     sourcePropsIds.forEach(prop => {
-  //       lookup.source[prop.name] = prop.get(result);
-  //     });
-  //
-  //     targetIdProps.forEach(prop => {
-  //       const [targetId, dummy] = this.em.nameResolver().forTarget(prop);
-  //       condition[prop.storingName] = result[targetId];
-  //       lookup.target[prop.name] = prop.get(result);
-  //     });
-  //
-  //     lookups.push(lookup);
-  //     conditions.push(condition);
-  //   }
-  //   return [lookups, conditions];
-  // }
 
   getIdentifierPropertiesFor(sourceRef: IEntityRef | IClassRef | EntityRef) {
     let propertyRefs: IPropertyRef[] = null;
@@ -543,12 +454,6 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         const targets = _.filter(sources.next, s => lookup(s));
 
         setTargetValueForProperty(propertyRef, source, targets);
-        // if (propertyRef.isCollection()) {
-        //   source[propertyRef.name] = targets;
-        // } else {
-        //   source[propertyRef.name] = targets.shift();
-        // }
-
       }
     } else if (propertyRef.hasJoin()) {
       await this.handleJoinDefinitionLeave(
@@ -562,18 +467,8 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
     } else if (propertyRef.hasJoinRef()) {
       // my data so handle it
       const sourcePropsIds = this.getIdentifierPropertiesFor(sourceRef);
-      // let sourcePropsIds: PropertyRef[] = null;
-      // if (sourceRef instanceof EntityRef) {
-      //   sourcePropsIds = sourceRef.getPropertyRefIdentifier();
-      // } else if (sourceRef instanceof ClassRef) {
-      //   sourcePropsIds = this.em.schema().getPropertiesFor(sourceRef.getClass());
-      // } else {
-      //   throw new NotYetImplementedError();
-      // }
-
       const targetIdProps = entityRef.getPropertyRefIdentifier();
       const [sourceTypeId, sourceTypeName] = this.em.nameResolver().forSource(XS_P_TYPE);
-      // const [sourceSeqNrId, sourceSeqNrName] = this.em.nameResolver().forSource(XS_P_SEQ_NR);
 
       for (const target of visitResult.next) {
         let lookup: any = {};
@@ -600,12 +495,6 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         }
 
         setTargetValueForProperty(propertyRef, target, result);
-
-        // if (propertyRef.isCollection()) {
-        //   target[propertyRef.name] = result;
-        // } else {
-        //   target[propertyRef.name] = _.isEmpty(result) ? null : _.first(result);
-        // }
       }
 
     } else if (propertyRef.isEmbedded()) {
@@ -640,14 +529,6 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         const seqNr = joinObj[sourceSeqNrId];
 
         setTargetValueForProperty(propertyRef, joinObj, attachObj, seqNr);
-        // if (propertyRef.isCollection()) {
-        //   if (!_.isArray(joinObj[propertyRef.name])) {
-        //     joinObj[propertyRef.name] = [];
-        //   }
-        //   joinObj[propertyRef.name][seqNr] = attachObj;
-        // } else {
-        //   joinObj[propertyRef.name] = attachObj;
-        // }
       }
     }
     return sources;
@@ -755,7 +636,6 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
 
 
     return [conditions, lookups, results];
-    // throw new NotYetImplementedError();
   }
 
   private async handleJoinOverGeneratedPropertyLeave(
@@ -763,18 +643,13 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
     propertyRef: PropertyRef,
     classRef: IClassRef,
     sources: IFindData
-    // objects: any[],
-    // lookups: any[],
-    // sources: any[]
   ) {
-    // return this.handleJoinLeave(sourceRef, propertyRef, classRef, objects, lookups, sources);
 
     if (_.isEmpty(sources.target)) {
       return;
     }
     const classProp = this.em.schema().getPropertiesFor(classRef.getClass());
     const [sourceSeqNrId, sourceSeqNrName] = this.em.nameResolver().forSource(XS_P_SEQ_NR);
-    // if (sourceRef instanceof EntityRef) {
 
     for (let x = 0; x < sources.lookup.length; x++) {
       const lookup = sources.lookup[x];
@@ -805,30 +680,6 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
 
       }
     }
-    // return;
-
-    // } else if (sourceRef instanceof ClassRef) {
-    //   // let classProp = this.entityController.schema().getPropertiesFor(classRefGet.getClass());
-    //   //        let [sourceSeqNrId, sourceSeqNrName] = this.entityController.nameResolver().forSource(XS_P_SEQ_NR);
-    //
-    //   for (let x = 0; x < sources.lookup.length; x++) {
-    //     const lookup = sources.lookup[x];
-    //     const target = sources.target[x];
-    //     const attachObjs = _.filter(sources.next, lookup);
-    //     for (const attachObj of attachObjs) {
-    //       const seqNr = attachObj[sourceSeqNrId];
-    //
-    //       const newObject = classRef.create(false);
-    //       classProp.forEach(p => {
-    //         newObject[p.name] = p.get(attachObj);
-    //       });
-    //
-    //       setTargetValueForProperty(propertyRef, target, newObject, seqNr);
-    //     }
-    //   }
-    //   return;
-    //
-    // }
   }
 
 
@@ -881,11 +732,6 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         return { next: [], target: sources.next, lookup: [], abort: true };
       }
 
-      // if (_results.length === 0) {
-      //   return { next: [], target: sources.next, lookup: [], abort: true };
-      // }
-      // return { next: _results, target: sources.next, lookup: lookups, abort: _results.length === 0 };
-
       return {
         next: results,
         target: sources.next,
@@ -899,9 +745,6 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         ).filter(p => p.isIdentifier());
       let targetName, targetId;
       const refProps = SqlHelper.getEmbeddedPropertyIds(propertyRef);
-
-      // const repo = this.connection.manager.getRepository(propertyRef.getTargetClass());
-      // const queryBuilder = repo.createQueryBuilder();
 
       const conditions: any[] = [];
       for (const extJoinObj of sources.next) {
@@ -919,16 +762,8 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
 
         lookups.push(lookup);
         conditions.push(condition);
-
-        // const query = SqlHelper.conditionToQuery(condition);
-        // if (!_.isEmpty(query)) {
-        //   queryBuilder.orWhere(query);
-        // }
-
-
       }
       // TODO macht das hier in einer Schleife Sinn???
-      // const _results = await queryBuilder.getMany();
       const _results = await this.getResultsForConditions(conditions, propertyRef.getTargetClass());
       if (_results.length === 0) {
         return { next: [], target: sources.next, lookup: [], abort: true };
@@ -1029,17 +864,11 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         const results = _.filter(sources.next, s => lookup(s));
 
         setTargetValueForProperty(propertyRef, target, results);
-        // if (propertyRef.isCollection()) {
-        //   target[propertyRef.name] = results;
-        // } else {
-        //   target[propertyRef.name] = results.shift();
-        // }
       }
       return;
     } else {
 
       if (_.get(sources, 'status.inline', false)) {
-        // inline objects already readed
         return;
       }
     }
