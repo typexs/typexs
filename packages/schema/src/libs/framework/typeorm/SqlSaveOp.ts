@@ -5,7 +5,7 @@ import { PropertyRef } from '../../registry/PropertyRef';
 import { EntityRef } from '../../registry/EntityRef';
 import { __PROPERTY__, XS_P_PROPERTY, XS_P_PROPERTY_ID, XS_P_SEQ_NR, XS_P_TYPE } from '../../Constants';
 import * as _ from 'lodash';
-import { assign, find, get, has, isArray, isEmpty, remove } from 'lodash';
+import { assign, cloneDeep, find, get, has, isArray, isEmpty, remove } from 'lodash';
 import { SqlHelper } from './SqlHelper';
 import { JoinDesc } from '../../descriptors/JoinDesc';
 import { EntityRegistry } from '../../EntityRegistry';
@@ -316,33 +316,11 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
     const joinDef: JoinDesc = propertyDef.getJoin();
     const clazz = joinDef.getJoinRef().getClass();
     const lookupConditions: any[] = collectLookupConditions(propertyDef, visitResult.target);
-    // const lookupConditions: any[] = [];
-    // const LOOKUP_KEY = this.getLookupKey(propertyDef);
-    // for (const source of visitResult.target) {
-    //   if (_.has(source, LOOKUP_KEY)) {
-    //     const lookup = source[LOOKUP_KEY];
-    //     lookupConditions.push(lookup);
-    //     delete source[LOOKUP_KEY];
-    //   }
-    // }
 
     const em = this.c.manager;
-
-
     const previousRelations = await this.fetchPreviousEntities(clazz, lookupConditions);
-    //
-    // if (!_.isEmpty(lookupConditions)) {
-    //   const removeEntityRef = this.c.getStorageRef().getEntityRef(clazz);
-    //   const opts: any = {}; // _.clone(this.options);
-    //   opts.orSupport = _.isArray(lookupConditions);
-    //   previousRelations = await SqlHelper.execQuery(
-    //     this.c,
-    //     removeEntityRef as EntityRef,
-    //     null,
-    //     lookupConditions,
-    //     opts);
-    // }
     const promises = [];
+
     if (!_.isEmpty(visitResult.join)) {
       for (const joinObj of visitResult.join) {
         const target = joinObj[PROP_KEY_TARGET];
@@ -351,15 +329,11 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
         const fn = (x: any) => _.keys(joinObj).filter(k => !k.startsWith('xs:')).reduce((p: boolean, k) => p && x[k] === joinObj[k], true);
         const found = _.remove(previousRelations, fn).shift();
         if (found) {
-          _.assign(found, joinObj);
-          _.assign(joinObj, found);
+          assign(found, joinObj);
+          assign(joinObj, found);
         }
       }
-
-
       promises.push(em.save(clazz, visitResult.join));
-
-
     }
     if (previousRelations.length > 0) {
       // remove old relations
@@ -801,9 +775,10 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
       if (!isEmpty(sources.join) && !isEmpty(previousRelations)) {
         const toUpdate = remove(previousRelations, x => {
           // remove generated id
+          const clone = cloneDeep(x);
           const id = x['id'];
-          // delete x['id'];
-          const res = find(sources.join, x);
+          delete clone['id'];
+          const res = find(sources.join, clone);
           if (res) {
             res.id = id;
             return true;

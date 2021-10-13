@@ -12,6 +12,7 @@ import { clone, set } from 'lodash';
 import { EntityController } from '../../src';
 import { inspect } from 'util';
 
+let inc = 0;
 
 const FINDOPT = {
   hooks: {
@@ -29,6 +30,13 @@ let entityController: EntityController;
 let storageRef: StorageRef;
 let connection: TypeOrmConnectionWrapper;
 
+/**
+ * Testing property where properties values are save directly in the created property table
+ *
+ * - p_xxxx_yyy
+ *   * id
+ *   * zzz of xxx
+ */
 @suite('functional/sql_e-po_indirect_referencing')
 class SqlE_PoIndirectReferencingSpec {
 
@@ -41,8 +49,6 @@ class SqlE_PoIndirectReferencingSpec {
     IntegratedObject = require('./sceanrio/e-po-dynamic/IntegratedObject').IntegratedObject;
     EntityWithIntegrated = require('./sceanrio/e-po-dynamic/EntityWithIntegrated').EntityWithIntegrated;
     EntityWithIntegratedArray = require('./sceanrio/e-po-dynamic/EntityWithIntegratedArray').EntityWithIntegratedArray;
-    // const metadata = MetadataRegistry.$().getMetadata();
-    // registry.reload([IntegratedObject, EntityWithIntegrated, EntityWithIntegratedArray]);
 
     registry.getEntityRefFor(EntityWithIntegrated);
     registry.getEntityRefFor(EntityWithIntegratedArray);
@@ -126,7 +132,8 @@ class SqlE_PoIndirectReferencingSpec {
   @test
   async 'find entity with object (one-to-one) - with element'() {
     // create scenario
-    await connection.manager.query('insert into entity_with_integrated (`nr`) values (1);');
+    const nr = inc++;
+    await connection.manager.query('insert into entity_with_integrated (`nr`) values (' + nr + ');');
     const raw = await connection.manager.query('select max(id) as maxId from entity_with_integrated;');
     const entityId = raw.shift().maxId;
     await connection.manager.query(
@@ -135,24 +142,64 @@ class SqlE_PoIndirectReferencingSpec {
       '("entity_with_integrated",' + entityId + ',0,"test");');
     // raw = await connection.manager.query('select max(id) as maxId from p_entity_with_object_object;');
 
-
     const entry = await entityController.find('EntityWithIntegrated', { id: entityId });
-    console.log(inspect(entry, false, 10));
+    // console.log(inspect(entry, false, 10));
     expect(entry).to.have.length(1);
     expect(entry.shift()).to.be.deep.eq({
       id: entityId,
-      nr: 1,
+      nr: nr,
       object: { value: 'test' }
     });
   }
 
-  @test.skip
+
+  @test
   async 'find entity with object array (one-to-many) - empty'() {
+    // create scenario
+    const nr = inc++;
+    await connection.manager.query('insert into entity_with_integrated_array (`nr`) values (' + nr + ');');
+    const raw = await connection.manager.query('select max(id) as maxId from entity_with_integrated_array;');
+    const entityId = raw.shift().maxId;
+    // await connection.manager.query(
+    //   'insert into p_entity_with_integrated_array_object ' +
+    //   '(`source_type`,`source_id`,`source_seq_nr`,`value`) values ' +
+    //   '("entity_with_integrated",' + entityId + ',0,"test");');
+    // raw = await connection.manager.query('select max(id) as maxId from p_entity_with_object_object;');
+
+
+    const entry = await entityController.find('EntityWithIntegratedArray', { id: entityId });
+    // console.log(inspect(entry, false, 10));
+    expect(entry).to.have.length(1);
+    expect(entry.shift()).to.be.deep.eq({
+      id: entityId,
+      nr: nr,
+      object: []
+    });
   }
 
-  @test.skip
+  @test
   async 'find entity with object array (one-to-many) - one entry'() {
+    // create scenario
+    const nr = inc++;
+    await connection.manager.query('insert into entity_with_integrated_array (`nr`) values (' + nr + ');');
+    // await connection.manager.query('insert into integrated_object (`value`) values ( \'test-' + nr + '\');');
+    const raw = await connection.manager.query('select max(id) as maxId from entity_with_integrated_array;');
+    const entityId = raw.shift().maxId;
+    await connection.manager.query(
+      'insert into p_entity_with_integrated_array_object ' +
+      '(`source_type`,`source_id`,`source_seq_nr`,`value`) values ' +
+      '("entity_with_integrated_array",' + entityId + ',0,"test");');
+    // raw = await connection.manager.query('select max(id) as maxId from p_entity_with_integrated_array_object;');
 
+
+    const entry = await entityController.find('EntityWithIntegratedArray', { id: entityId });
+    // console.log(inspect(entry, false, 10));
+    expect(entry).to.have.length(1);
+    expect(entry.shift()).to.be.deep.eq({
+      id: entityId,
+      nr: nr,
+      object: [{ value: 'test' }]
+    });
   }
 
   @test.skip

@@ -10,6 +10,7 @@ import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
 import { TEST_STORAGE_OPTIONS } from './config';
 import { clone, set } from 'lodash';
 import { EntityController } from '../../src';
+import { inspect } from 'util';
 
 
 const FINDOPT = {
@@ -198,15 +199,93 @@ class SqlIndirectReferencingSpec {
 
   }
 
-  @test.skip
-  async 'find entity with object array (many-to-one)'() {
+
+  @test
+  async 'find entity with object array (one-to-many) - multi entry'() {
+    await connection.manager.query('insert into entity_with_object_array (`nr`) values (2);');
+    let raw = await connection.manager.query('select max(id) as maxId from entity_with_object_array;');
+    const entityId = raw.shift().maxId;
+
+    await connection.manager.query('insert into o_dynamic_object (`value`) values ("test1");');
+    raw = await connection.manager.query('select max(id) as maxId from o_dynamic_object;');
+    const objectId1 = raw.shift().maxId;
+
+    await connection.manager.query('insert into o_dynamic_object (`value`) values ("test2");');
+    raw = await connection.manager.query('select max(id) as maxId from o_dynamic_object;');
+    const objectId2 = raw.shift().maxId;
+
+    await connection.manager.query(
+      'insert into p_entity_with_object_array_object ' +
+      '(`source_type`,`source_id`,`source_seq_nr`,`target_id`) values ' +
+      '("entity_with_object_array",' + entityId + ',0,' + objectId1 + ');');
+
+    await connection.manager.query(
+      'insert into p_entity_with_object_array_object ' +
+      '(`source_type`,`source_id`,`source_seq_nr`,`target_id`) values ' +
+      '("entity_with_object_array",' + entityId + ',1,' + objectId2 + ');');
+
+    const entry = await entityController.find('EntityWithObjectArray', { id: entityId });
+    expect(entry).to.have.length(1);
+    expect(entry.shift()).to.be.deep.eq({
+      id: entityId,
+      nr: 2,
+      object: [
+        { id: objectId1, value: 'test1' },
+        { id: objectId2, value: 'test2' }
+      ]
+    });
 
   }
+
+
+  @test
+  async 'find entity with object array (one-to-many) - multi entry - wrong seqNr'() {
+    await connection.manager.query('insert into entity_with_object_array (`nr`) values (2);');
+    let raw = await connection.manager.query('select max(id) as maxId from entity_with_object_array;');
+    const entityId = raw.shift().maxId;
+
+    await connection.manager.query('insert into o_dynamic_object (`value`) values ("test1");');
+    raw = await connection.manager.query('select max(id) as maxId from o_dynamic_object;');
+    const objectId1 = raw.shift().maxId;
+
+    await connection.manager.query('insert into o_dynamic_object (`value`) values ("test2");');
+    raw = await connection.manager.query('select max(id) as maxId from o_dynamic_object;');
+    const objectId2 = raw.shift().maxId;
+
+    await connection.manager.query(
+      'insert into p_entity_with_object_array_object ' +
+      '(`source_type`,`source_id`,`source_seq_nr`,`target_id`) values ' +
+      '("entity_with_object_array",' + entityId + ',1,' + objectId1 + ');');
+
+    await connection.manager.query(
+      'insert into p_entity_with_object_array_object ' +
+      '(`source_type`,`source_id`,`source_seq_nr`,`target_id`) values ' +
+      '("entity_with_object_array",' + entityId + ',2,' + objectId2 + ');');
+
+    const entry = await entityController.find('EntityWithObjectArray', { id: entityId });
+    // console.log(inspect(entry, false, 10));
+    expect(entry).to.have.length(1);
+    const result = entry.shift();
+    const objects = [];
+    objects[1] = { id: objectId1, value: 'test1' };
+    objects[2] = { id: objectId2, value: 'test2' };
+    expect(result).to.be.deep.eq({
+      id: entityId,
+      nr: 2,
+      object: objects
+    });
+  }
+
+
+  @test.skip
+  async 'find entity with object array (many-to-one)'() {
+  }
+
 
   @test.skip
   async 'find entity with object array (many-to-many)'() {
-
   }
+
 
   @test
   async 'save new entity with new object (one-to-one)'() {
@@ -244,13 +323,16 @@ class SqlIndirectReferencingSpec {
     });
   }
 
+
   @test.skip
   async 'update by save method (one-to-one) - value changes'() {
   }
 
+
   @test.skip
   async 'update by save method (one-to-one) - remove object'() {
   }
+
 
   @test
   async 'save new entity with new object array (one-to-many)'() {
@@ -288,16 +370,18 @@ class SqlIndirectReferencingSpec {
     expect(entry).to.deep.eq({
       id: entityObject.id,
       nr: 5,
-      object: [{
-        value: 'save-test-1',
-        id: object[0].id
-      }, {
-        value: 'save-test-2',
-        id: object[1].id
-      }]
+      object: [
+        {
+          value: 'save-test-1',
+          id: object[0].id
+        },
+        {
+          value: 'save-test-2',
+          id: object[1].id
+        }]
     });
-
   }
+
 
   @test
   async 'save entity with object array adding new entry (one-to-many)'() {
@@ -313,12 +397,15 @@ class SqlIndirectReferencingSpec {
     expect(entry).to.deep.eq({
       id: entry.id,
       nr: 6,
-      object: [{
-        value: 'save-test-3',
-        id: entry.object[0].id
-      }, {
-        value: 'save-test-5'
-      }]
+      object: [
+        {
+          value: 'save-test-3',
+          id: entry.object[0].id
+        },
+        {
+          value: 'save-test-5'
+        }
+      ]
     });
 
     entry = await entityController.save(entry) as any;
@@ -326,13 +413,16 @@ class SqlIndirectReferencingSpec {
     expect(entry).to.deep.eq({
       id: entry.id,
       nr: 6,
-      object: [{
-        value: 'save-test-3',
-        id: entry.object[0].id
-      }, {
-        value: 'save-test-5',
-        id: entry.object[1].id
-      }]
+      object: [
+        {
+          value: 'save-test-3',
+          id: entry.object[0].id
+        },
+        {
+          value: 'save-test-5',
+          id: entry.object[1].id
+        }
+      ]
     });
 
     const entityObject = (await connection.manager.query(
@@ -357,16 +447,84 @@ class SqlIndirectReferencingSpec {
       source_seq_nr: 1,
       target_id: object[1].id
     }]);
-
-
   }
+
+
+  @test
+  async 're-save entity with object array - multi value (one-to-many)'() {
+    const clazz = registry.getEntityRefFor('EntityWithObjectArray');
+    const entity = clazz.getClassRef().build({
+      nr: 7,
+      object: [
+        { value: 'save-test-7' },
+        { value: 'save-test-8' }
+      ]
+    }, { skipClassNamespaceInfo: true });
+
+    let entry = await entityController.save(entity) as any;
+    entry = await entityController.findOne(clazz.getClass(), { id: entry.id }) as any;
+    expect(entry).to.deep.eq(
+      {
+        'id': entry.id,
+        'nr': 7,
+        'object': [
+          {
+            'id': entry.object[0].id,
+            'value': 'save-test-7'
+          },
+          {
+            'id': entry.object[1].id,
+            'value': 'save-test-8'
+          }
+        ]
+      }
+    );
+
+    entry = await entityController.save(entry) as any;
+    entry = await entityController.findOne(clazz.getClass(), { id: entry.id }) as any;
+    expect(entry).to.deep.eq(
+      {
+        'id': entry.id,
+        'nr': 7,
+        'object': [
+          {
+            'id': entry.object[0].id,
+            'value': 'save-test-7'
+          },
+          {
+            'id': entry.object[1].id,
+            'value': 'save-test-8'
+          }
+        ]
+      }
+    );
+
+    const relation = (await connection.manager.query(
+      'select * from p_entity_with_object_array_object where id >= (select max(id) as maxId from p_entity_with_object_array_object) - 1;'));
+
+    expect(relation).to.deep.eq([{
+      id: relation[0].id,
+      source_type: 'entity_with_object_array',
+      source_id: entry.id,
+      source_seq_nr: 0,
+      target_id: entry.object[0].id
+    }, {
+      id: relation[1].id,
+      source_type: 'entity_with_object_array',
+      source_id: entry.id,
+      source_seq_nr: 1,
+      target_id: entry.object[1].id
+    }]);
+  }
+
 
   @test.skip
   async 'save entity with object array changing value of an entry (one-to-many)'() {
   }
 
+
   @test
-  async 'save entity with object array removing a entry (one-to-many)'() {
+  async 'save entity with object array removing last entry (one-to-many)'() {
     const clazz = registry.getEntityRefFor('EntityWithObjectArray');
     const entity = clazz.getClassRef().build({
       nr: 7,
@@ -392,10 +550,11 @@ class SqlIndirectReferencingSpec {
 
 
     const beforeRelation = (await connection.manager.query(
-      'select * from p_entity_with_object_array_object where source_id = ' + entry.id + ' and id >= (select max(id) as maxId from p_entity_with_object_array_object) - 1;'));
+      // eslint-disable-next-line max-len
+      'select * from p_entity_with_object_array_object where source_id = ' + entry.id + ';'));
 
-    const beforeObject = (await connection.manager.query(
-      'select * from o_dynamic_object where id >= (select max(id) as maxId from o_dynamic_object) - 1;'));
+    // const beforeObject = (await connection.manager.query(
+    //   'select * from o_dynamic_object where id >= (select max(id) as maxId from o_dynamic_object) - 1;'));
 
 
     entry.object.pop();
@@ -406,12 +565,14 @@ class SqlIndirectReferencingSpec {
     const afterObject = (await connection.manager.query(
       'select * from o_dynamic_object where id >= (select max(id) as maxId from o_dynamic_object) - 1;'));
     const afterRelation = (await connection.manager.query(
-      'select * from p_entity_with_object_array_object where source_id = ' + entry.id + ' and id >= (select max(id) as maxId from p_entity_with_object_array_object) - 1;'));
+      // eslint-disable-next-line max-len
+      'select * from p_entity_with_object_array_object where source_id = ' + entry.id + ';'));
     // console.log(cloneChange, entry, beforeObject, beforeRelation, afterObject, afterRelation);
 
     delete entry[STATE_KEY];
     expect(entry).to.deep.eq(cloneChange);
-    expect(beforeRelation.length).to.be.greaterThan(afterRelation.length);
+    expect(beforeRelation[0]).to.be.deep.eq(afterRelation[0]);
+    expect(beforeRelation.length - 1).to.be.eq(afterRelation.length);
     expect(afterRelation).to.be.deep.eq([{
       'id': afterRelation[0].id,
       'source_id': entry.id,
@@ -419,24 +580,64 @@ class SqlIndirectReferencingSpec {
       'source_type': 'entity_with_object_array',
       'target_id': entry.object[0].id
     }]);
-
-    //
-    // expect(entityObject).to.deep.eq({ id: entityObject.id, nr: 6 });
-    // expect(object).to.deep.eq([{ id: object[0].id, value: 'save-test-3' }, { id: object[1].id, value: 'save-test-5' }]);
-    // expect(relation).to.deep.eq([{
-    //   id: relation[0].id, source_type: 'entity_with_object_array',
-    //   source_id: entityObject.id,
-    //   source_seq_nr: 0,
-    //   target_id: object[0].id
-    // },{
-    //   id: relation[1].id, source_type: 'entity_with_object_array',
-    //   source_id: entityObject.id,
-    //   source_seq_nr: 1,
-    //   target_id: object[1].id
-    // }]);
-    //
-
   }
+
+
+  @test
+  async 'save entity with object array removing first entry (one-to-many)'() {
+    const clazz = registry.getEntityRefFor('EntityWithObjectArray');
+    const entity = clazz.getClassRef().build({
+      nr: 8,
+      object: [{ value: 'save-test-10' }, { value: 'save-test-11' }]
+    }, { skipClassNamespaceInfo: true });
+
+    let entry = await entityController.save(entity) as any;
+    delete entry[STATE_KEY];
+    expect(entry).to.deep.eq({
+      id: entry.id,
+      nr: 8,
+      object: [
+        {
+          value: 'save-test-10',
+          id: entry.object[0].id
+        },
+        {
+          value: 'save-test-11',
+          id: entry.object[1].id
+        }
+      ]
+    });
+
+
+    const beforeRelation = (await connection.manager.query(
+      // eslint-disable-next-line max-len
+      'select * from p_entity_with_object_array_object where source_id = ' + entry.id + ';'));
+
+    entry.object.shift();
+    const cloneChange = clone(entry);
+    entry = await entityController.save(entry) as any;
+    entry = await entityController.findOne(clazz.getClass(), { id: entry.id });
+
+    // const afterObject = (await connection.manager.query(
+    //   'select * from o_dynamic_object where id >= (select max(id) as maxId from o_dynamic_object) - 1;'));
+    const afterRelation = (await connection.manager.query(
+      // eslint-disable-next-line max-len
+      'select * from p_entity_with_object_array_object where source_id = ' + entry.id + ';'));
+
+    delete entry[STATE_KEY];
+    expect(entry).to.deep.eq(cloneChange);
+    expect(beforeRelation.length - 1).to.be.eq(afterRelation.length);
+    expect(afterRelation).to.be.deep.eq([{
+      'id': afterRelation[0].id,
+      'source_id': entry.id,
+      'source_seq_nr': 0,
+      'source_type': 'entity_with_object_array',
+      'target_id': entry.object[0].id
+    }]);
+    beforeRelation[1].source_seq_nr = 0;
+    expect(beforeRelation[1]).to.be.deep.eq(afterRelation[0]);
+  }
+
 
   @test.skip
   async 'update entity with object'() {
