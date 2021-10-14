@@ -25,7 +25,7 @@ export const K_CLS_TASK_DESCRIPTORS = 'task_descriptors';
 
 
 export type TASK_STATES = 'enqueue' | 'proposed' | 'started' | 'stopped' | 'running' | 'errored' | 'request_error';
-export type TASK_RUNNER_SPEC = string | { name: string, incomings: any };
+export type TASK_RUNNER_SPEC = string | { name: string; incomings?: any };
 export type TASK_PROPERTY_TYPE = 'runtime' | 'incoming' | 'outgoing';
 
 

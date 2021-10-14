@@ -56,6 +56,7 @@ class TasksSpec {
     const tasks = RegistryFactory.get(C_TASKS) as Tasks;
     Injector.set(Tasks.NAME, tasks);
 
+
     const registry = new TaskRunnerRegistry();
     Injector.set(TaskRunnerRegistry.NAME, registry);
   }
@@ -611,7 +612,7 @@ class TasksSpec {
     const data = await runner.run();
     expect(data.results).to.have.length(1);
     expect(registry.getRunners()).to.have.length(0);
-    expect(await registry.hasRunningTasks('simple_task')).to.be.false;
+    expect(registry.hasRunningTasks('simple_task')).to.be.false;
   }
 
 
@@ -656,9 +657,9 @@ class TasksSpec {
     }) as any;
 
     const results = await Promise.all([promise1, promise2]);
+    await taskRunnerRegistry.onShutdown();
     expect(results.shift()).not.to.be.null;
     expect(results.shift()).to.be.null;
-    await taskRunnerRegistry.onStartup();
     Injector.remove(Tasks.NAME);
     Injector.remove(TaskRunnerRegistry.NAME);
   }

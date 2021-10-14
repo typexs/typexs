@@ -553,7 +553,6 @@ export class TaskRunner extends EventEmitter {
     return this.$tasks.map(t => t.taskRef().name);
   }
 
-
   update(taskName: string) {
     this.emit(TASKRUN_STATE_UPDATE, taskName, this.collectStats());
   }

@@ -18,6 +18,7 @@ import { CacheArray } from '../queue/CacheArray';
 import { DefaultArray } from '../queue/DefaultArray';
 import { Cache } from '../cache/Cache';
 import { IQueueArray } from '../queue/IQueueArray';
+import { Injector } from '../di/Injector';
 
 /**
  * Node specific registry for TaskRunner which is initalized as singleton in Activator.
@@ -26,7 +27,6 @@ export class TaskRunnerRegistry {
 
   public static NAME = CL_TASK_RUNNER_REGISTRY;
 
-  @Inject(Cache.NAME)
   cache: Cache;
 
   @Inject(Tasks.NAME)
@@ -41,6 +41,11 @@ export class TaskRunnerRegistry {
   private taskNames: { [id: string]: { taskNames: string[]; ts: number } } = {};
 
   async onStartup() {
+    try {
+      this.cache = Injector.get(Cache.NAME) as Cache;
+    } catch (e) {
+
+    }
     if (this.cache) {
       // this.worker = new CacheArray(this.options.cache, QueueJob);
       this.systemwideTaskStatus = new CacheArray(this.cache, TaskRunnerEvent);
@@ -106,6 +111,7 @@ export class TaskRunnerRegistry {
   addLocalRunner(runner: TaskRunner) {
     const runnerId = runner.id;
     if (!this.localTaskRunner.find(x => x.id === runnerId)) {
+      this.taskNames[runner.id] = { taskNames: runner.getTaskNames(), ts: (Date.now()) };
       this.localTaskRunner.push(runner);
       runner.once(TASKRUN_STATE_FINISH_PROMISE, () => {
         this.removeLocalRunner(runnerId);
@@ -158,7 +164,7 @@ export class TaskRunnerRegistry {
   /**
    * Check if tasks with name or names are running
    */
-  async hasRunningTasks(taskNames: string | string[]): Promise<boolean> {
+  hasRunningTasks(taskNames: string | string[]) {
     if (_.isString(taskNames)) {
       taskNames = [taskNames];
     }
