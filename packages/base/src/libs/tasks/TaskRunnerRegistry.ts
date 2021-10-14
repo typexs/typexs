@@ -13,7 +13,6 @@ import { Tasks } from './Tasks';
 import { TaskRunnerEvent } from './TaskRunnerEvent';
 import { ITaskRunnerStatus } from './ITaskRunnerStatus';
 import { SystemNodeInfo } from '../../entities/SystemNodeInfo';
-import { Log } from '../../libs/logging/Log';
 import { CacheArray } from '../queue/CacheArray';
 import { DefaultArray } from '../queue/DefaultArray';
 import { Cache } from '../cache/Cache';
@@ -65,7 +64,7 @@ export class TaskRunnerRegistry {
 
   @subscribe(TaskRunnerEvent)
   async onTaskRunnerEvent(event: TaskRunnerEvent) {
-    Log.debug('task runner event: ' + event.state + ' ' + event.id + ' ' + event.nodeId);
+    // Log.debug('task runner event: ' + event.state + ' ' + event.id + ' ' + event.nodeId);
     if (['stopped', 'errored', 'request_error'].includes(event.state)) {
       await this.removeTaskStatus(event.id);
     } else {
