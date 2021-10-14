@@ -135,6 +135,7 @@ export class Injector {
       // need to be injected, and user can use provided container to get instances he needs
       params.push(this);
 
+      // eslint-disable-next-line prefer-spread
       value = new (type.bind.apply(type, params))();
     }
 
