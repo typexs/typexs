@@ -2,10 +2,11 @@
  * Registers all running tasks in the local node
  */
 import * as _ from 'lodash';
+import { isEmpty, keys, remove, values } from 'lodash';
 import { Inject } from 'typedi';
 import { EventBus, subscribe } from 'commons-eventbus';
 import { TaskRunner } from './TaskRunner';
-import { CL_TASK_RUNNER_REGISTRY, TASK_RUNNER_SPEC, TASKRUN_STATE_FINISHED } from './Constants';
+import { CL_TASK_RUNNER_REGISTRY, TASK_RUNNER_SPEC, TASKRUN_STATE_FINISH_PROMISE } from './Constants';
 import { Counters } from '../helper/Counters';
 import { ITaskRunnerOptions } from './ITaskRunnerOptions';
 import { Tasks } from './Tasks';
@@ -13,6 +14,10 @@ import { TaskRunnerEvent } from './TaskRunnerEvent';
 import { ITaskRunnerStatus } from './ITaskRunnerStatus';
 import { SystemNodeInfo } from '../../entities/SystemNodeInfo';
 import { Log } from '../../libs/logging/Log';
+import { CacheArray } from '../queue/CacheArray';
+import { DefaultArray } from '../queue/DefaultArray';
+import { Cache } from '../cache/Cache';
+import { IQueueArray } from '../queue/IQueueArray';
 
 /**
  * Node specific registry for TaskRunner which is initalized as singleton in Activator.
@@ -21,34 +26,62 @@ export class TaskRunnerRegistry {
 
   public static NAME = CL_TASK_RUNNER_REGISTRY;
 
+  @Inject(Cache.NAME)
+  cache: Cache;
+
   @Inject(Tasks.NAME)
   tasks: Tasks;
 
+  private intervalId: any;
+
   private localTaskRunner: TaskRunner[] = [];
 
-  private globalTaskRunner: ITaskRunnerStatus[] = [];
+  private systemwideTaskStatus: IQueueArray<TaskRunnerEvent>;
 
+  private taskNames: { [id: string]: { taskNames: string[]; ts: number } } = {};
 
   async onStartup() {
+    if (this.cache) {
+      // this.worker = new CacheArray(this.options.cache, QueueJob);
+      this.systemwideTaskStatus = new CacheArray(this.cache, TaskRunnerEvent);
+    } else {
+      // this.worker = new DefaultArray<QueueJob<T>>();
+      this.systemwideTaskStatus = new DefaultArray<TaskRunnerEvent>();
+    }
+
+    this.intervalId = setInterval(this.cleanup.bind(this), 30 * 60 * 1000);
     await EventBus.register(this);
   }
 
   async onShutdown() {
+    clearInterval(this.intervalId);
     await EventBus.unregister(this);
   }
 
   @subscribe(TaskRunnerEvent)
-  onTaskRunnerEvent(event: TaskRunnerEvent) {
+  async onTaskRunnerEvent(event: TaskRunnerEvent) {
     Log.debug('task runner event: ' + event.state + ' ' + event.id + ' ' + event.nodeId);
     if (['stopped', 'errored', 'request_error'].includes(event.state)) {
-      _.remove(this.globalTaskRunner, x => x.id === event.id);
+      await this.removeTaskStatus(event.id);
     } else {
-      const found = this.globalTaskRunner.find(x => x.id === event.id);
-      if (found) {
-        _.assign(found, event);
-      } else {
-        this.globalTaskRunner.push(event);
-      }
+      await this.addTaskStatus(event);
+    }
+  }
+
+  /**
+   * Cleanup registry for old values
+   */
+  async cleanup() {
+    let remove = await this.systemwideTaskStatus.filter(
+      (x: TaskRunnerEvent) => ['stopped', 'errored', 'request_error'].includes(x.state));
+    if (!isEmpty(remove)) {
+      await Promise.all(remove.map((x: TaskRunnerEvent) => this.removeTaskStatus(x.id)));
+    }
+    // 4 hours
+    const longestTask = 4 * 60 * 60 * 1000;
+    remove = keys(this.taskNames).filter(k => longestTask < Date.now() - this.taskNames[k].ts);
+    if (!isEmpty(remove)) {
+      await Promise.all(remove.map((x: string) => this.removeTaskStatus(x)));
     }
   }
 
@@ -57,9 +90,12 @@ export class TaskRunnerRegistry {
    *
    * @param nodeInfo
    */
-  onNodeUpdate(nodeInfo: SystemNodeInfo) {
+  async onNodeUpdate(nodeInfo: SystemNodeInfo) {
     if (nodeInfo.state === 'register' || nodeInfo.state === 'unregister') {
-      _.remove(this.globalTaskRunner, x => x.nodeId === nodeInfo.nodeId);
+      const toremove = (await this.systemwideTaskStatus.filter(x => x.nodeId === nodeInfo.nodeId));
+      if (toremove.length > 0) {
+        await Promise.all(toremove.map(x => this.removeTaskStatus(x.id)));
+      }
     }
   }
 
@@ -67,14 +103,30 @@ export class TaskRunnerRegistry {
   /**
    * Add a runner mostly on startup
    */
-  addRunner(runner: TaskRunner) {
-    const runnerNr = runner.nr;
-    if (!this.localTaskRunner.find(x => x.nr === runnerNr)) {
+  addLocalRunner(runner: TaskRunner) {
+    const runnerId = runner.id;
+    if (!this.localTaskRunner.find(x => x.id === runnerId)) {
       this.localTaskRunner.push(runner);
-      runner.once(TASKRUN_STATE_FINISHED, () => {
-        _.remove(this.localTaskRunner, x => x.nr === runnerNr);
+      runner.once(TASKRUN_STATE_FINISH_PROMISE, () => {
+        this.removeLocalRunner(runnerId);
       });
     }
+  }
+
+
+  removeLocalRunner(runnerId: string) {
+    delete this.taskNames[runnerId];
+    remove(this.localTaskRunner, x => x.id === runnerId);
+  }
+
+  addTaskStatus(r: TaskRunnerEvent) {
+    this.taskNames[r.id] = { taskNames: r.taskNames, ts: (Date.now()) };
+    return this.systemwideTaskStatus.set(r);
+  }
+
+  removeTaskStatus(runnerId: string) {
+    this.systemwideTaskStatus.remove(runnerId);
+    delete this.taskNames[runnerId];
   }
 
   /**
@@ -86,7 +138,7 @@ export class TaskRunnerRegistry {
   createNewRunner(names: TASK_RUNNER_SPEC[], options: ITaskRunnerOptions = null) {
     options.skipRegistryAddition = true;
     const runner = new TaskRunner(this.tasks, names, options);
-    this.addRunner(runner);
+    this.addLocalRunner(runner);
     return runner;
   }
 
@@ -106,11 +158,11 @@ export class TaskRunnerRegistry {
   /**
    * Check if tasks with name or names are running
    */
-  hasRunningTasks(taskNames: string | string[]) {
+  async hasRunningTasks(taskNames: string | string[]): Promise<boolean> {
     if (_.isString(taskNames)) {
       taskNames = [taskNames];
     }
-    const intersect = _.intersection(taskNames, _.concat([], ...this.getRunningTasks().map(x => x.taskNames)));
+    const intersect = _.intersection(taskNames, _.concat([], ...(values(this.taskNames)).map(x => x.taskNames)));
     return intersect.length === taskNames.length;
   }
 
@@ -118,8 +170,9 @@ export class TaskRunnerRegistry {
   /**
    * Returns the currently running runnerIds with the taskNames
    */
-  getRunningTasks(): ITaskRunnerStatus[] {
-    return _.cloneDeep(this.globalTaskRunner);
+  async getRunningTasks(): Promise<ITaskRunnerStatus[]> {
+    const copy = await this.systemwideTaskStatus.map(x => x);
+    return copy;
   }
 
   /**
@@ -148,8 +201,8 @@ export class TaskRunnerRegistry {
       taskNames = [taskNames];
     }
     const counters = new Counters();
-    this.globalTaskRunner.forEach(x => {
-      x.taskNames.filter(y => taskNames.includes(y)).forEach(y => counters.get(y).inc());
+    values(this.taskNames).map(x => {
+      x.taskNames.filter((y: string) => taskNames.includes(y)).forEach((y: string) => counters.get(y).inc());
     });
     return counters.asObject();
   }

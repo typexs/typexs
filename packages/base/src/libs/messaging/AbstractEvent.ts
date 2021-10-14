@@ -1,7 +1,8 @@
-import {CryptUtils} from '@allgemein/base';
+import { CryptUtils } from '@allgemein/base';
+import { IdObject } from '../queue/IdObject';
 
 
-export abstract class AbstractEvent {
+export abstract class AbstractEvent implements IdObject {
 
 
   static inc = 0;
@@ -53,7 +54,7 @@ export abstract class AbstractEvent {
   /**
    * Error
    */
-  error: Error | { message: string, name: string };
+  error: Error | { message: string; name: string };
 
   /**
    * response exists but shouldn't be ad to results
@@ -65,7 +66,7 @@ export abstract class AbstractEvent {
     this.id = CryptUtils.shorthash('event-' + (new Date()).getTime() + '' + (AbstractEvent.inc++));
   }
 
-  of(system: { nodeId: string, instNr: number }) {
+  of(system: { nodeId: string; instNr: number }) {
     this.nodeId = system.nodeId;
     this.instNr = system.instNr;
   }

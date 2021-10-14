@@ -34,6 +34,12 @@ export class TaskRunnerEvent extends AbstractEvent implements ITaskRunnerStatus 
    */
   started: Date;
 
+
+  /**
+   * updated
+   */
+  updated: Date;
+
   /**
    * stopped
    */

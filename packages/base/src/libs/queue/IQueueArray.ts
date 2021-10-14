@@ -15,4 +15,6 @@ export interface IQueueArray<T> {
   push(x: T): void;
 
   map(fn: (x: any) => any): any[] | Promise<any[]>;
+
+  filter(fn: (x: any) => any): any[] | Promise<any[]>;
 }

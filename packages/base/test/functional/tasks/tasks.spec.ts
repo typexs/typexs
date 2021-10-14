@@ -611,7 +611,7 @@ class TasksSpec {
     const data = await runner.run();
     expect(data.results).to.have.length(1);
     expect(registry.getRunners()).to.have.length(0);
-    expect(registry.hasRunningTasks('simple_task')).to.be.false;
+    expect(await registry.hasRunningTasks('simple_task')).to.be.false;
   }
 
 

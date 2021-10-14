@@ -46,6 +46,9 @@ export class TaskRunner extends EventEmitter {
 
   nr: number = TaskRunner.taskRunnerId++;
 
+  /**
+   * Unique Task Id
+   */
   id: string;
 
   event: TaskRunnerEvent;
@@ -150,7 +153,7 @@ export class TaskRunner extends EventEmitter {
     if (!this.$options.skipRegistryAddition) {
       try {
         const registry: TaskRunnerRegistry = Injector.get(TaskRunnerRegistry.NAME);
-        registry.addRunner(this);
+        registry.addLocalRunner(this);
       } catch (e) {
         this.getLogger().debug(`couldn't locally register task nr=${this.nr} id=${this.id}`);
       }

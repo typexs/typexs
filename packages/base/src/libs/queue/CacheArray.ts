@@ -76,6 +76,19 @@ export class CacheArray<T extends IdObject> implements IQueueArray<T> {
     return res;
   }
 
+
+  async filter(fn: Function): Promise<any[]> {
+    const res = [];
+    for (const id of this.ids) {
+      const entry = await this.get(id.id);
+      if (fn(entry)) {
+        res.push(entry);
+      }
+    }
+    return res;
+  }
+
+
   async remove(id: string) {
     const idx = this.ids.findIndex(y => y.id === id);
     this.ids.splice(idx, 1);

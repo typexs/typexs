@@ -478,7 +478,7 @@ class TasksSpec {
         })
       .run();
 
-    await TestHelper.wait(500);
+    await TestHelper.wait(100);
 
     const running2 = executor2
       .create(

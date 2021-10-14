@@ -182,7 +182,7 @@ export class TasksExchange extends AbstractExchange<TasksRequest, TasksResponse>
           break;
 
         case 'running_tasks':
-          response.runningStatuses = this.runnerRegistry.getRunningTasks();
+          response.runningStatuses = await this.runnerRegistry.getRunningTasks();
           break;
 
         case 'start':

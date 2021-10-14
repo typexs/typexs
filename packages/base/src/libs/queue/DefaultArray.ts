@@ -33,6 +33,18 @@ export class DefaultArray<T extends IdObject> implements IQueueArray<T> {
     return res;
   }
 
+
+  filter(fn: (x: any) => any): any[] | Promise<any[]> {
+    const res = [];
+    for (const entry of this.entries) {
+      if (fn(entry)) {
+        res.push(fn(entry));
+      }
+    }
+    return res;
+  }
+
+
   pop(): Promise<T> | T {
     return this.entries.pop();
   }
