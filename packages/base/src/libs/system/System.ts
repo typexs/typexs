@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { EventBus, subscribe } from 'commons-eventbus';
+import { EventBus, subscribe } from '@allgemein/eventbus';
 import { Log } from '../logging/Log';
 import { APP_SYSTEM_DISTRIBUTED, APP_SYSTEM_UPDATE_INTERVAL, C_KEY_SEPARATOR, C_STORAGE_DEFAULT, TYPEXS_NAME } from '../Constants';
 import { StorageRef } from '../storage/StorageRef';

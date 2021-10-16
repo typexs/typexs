@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {EventBus, subscribe} from 'commons-eventbus';
+import {EventBus, subscribe} from '@allgemein/eventbus';
 import {__CLASS__, __NODE_ID__, __REGISTRY__, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET} from '../libs/Constants';
 import {Bootstrap} from './../Bootstrap';
 import {Inject} from 'typedi';

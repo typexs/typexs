@@ -1,6 +1,6 @@
-import { assign, cloneDeep, defaults, has, isArray, isEmpty, isString } from 'lodash';
+import { assign, cloneDeep, defaults, has, isArray, isEmpty, isNumber, isString } from 'lodash';
 import { Inject } from 'typedi';
-import { EventBus, subscribe } from 'commons-eventbus';
+import { EventBus, subscribe } from '@allgemein/eventbus';
 import { ClassUtils } from '@allgemein/base';
 import { freemem, totalmem } from 'os';
 import { Bootstrap } from '../Bootstrap';
@@ -37,6 +37,8 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
 
   options: ITaskQueueWorkerOptions;
 
+  intervalId: any;
+
   @Inject(Cache.NAME)
   cache: Cache;
 
@@ -67,10 +69,16 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
     });
     await EventBus.register(this);
     this.logger.debug('Task worker: waiting for tasks ...');
+
+    if (this.options.loadAverageInterval && isNumber(this.options.loadAverageInterval)) {
+      this.intervalId = setInterval(this.loadAverage.bind(this), this.options.loadAverageInterval);
+    }
+
+
   }
 
 
-  onNext() {
+  loadAverage() {
     // const usedMem = os.
     const mem = process.memoryUsage();
 
@@ -86,7 +94,11 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
       `| free = ${this.memStr(freemem())} | total = ${this.memStr(totalmem())} | rss = ${this.memStr(mem.rss)} ` +
       `| external = ${this.memStr(mem.external)} | ${this.queue.getConcurrent()}`
     );
+
   }
+  //
+  // onNext() {
+  // }
 
   memStr(mem: number) {
     return (Math.round(mem / 1024 / 1024 * 100) / 100) + ' MB';
@@ -258,6 +270,7 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
 
   async finish() {
     await EventBus.unregister(this);
+    clearInterval(this.intervalId);
     this.logger.remove();
     this.queue.removeAllListeners();
   }

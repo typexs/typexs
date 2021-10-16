@@ -10,7 +10,7 @@ import { TaskRequestFactory } from './worker/TaskRequestFactory';
 import { TasksHelper } from './TasksHelper';
 import { EventEmitter } from 'events';
 import { ITaskRunnerOptions } from './ITaskRunnerOptions';
-import { EventBus, subscribe, unsubscribe } from 'commons-eventbus';
+import { EventBus, subscribe, unsubscribe } from '@allgemein/eventbus';
 import { TaskFuture } from './worker/execute/TaskFuture';
 import { ITaskRunnerResult } from './ITaskRunnerResult';
 import { IError } from '../exceptions/IError';

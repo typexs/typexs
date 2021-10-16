@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
-import {EventBus, IEventDef} from 'commons-eventbus';
-import EventBusMeta from 'commons-eventbus/bus/EventBusMeta';
+import {EventBus, IEventDef} from '@allgemein/eventbus';
+import EventBusMeta from '@allgemein/eventbus/bus/EventBusMeta';
 import {FSWatcher} from 'fs';
 import {TasksHelper} from '../tasks/TasksHelper';
 import {AbstractWatcherConfig} from './AbstractWatcherConfig';

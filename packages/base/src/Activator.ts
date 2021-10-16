@@ -71,6 +71,8 @@ export class Activator implements IActivator {
     }
     Injector.set(ExchangeMessageRegistry.NAME, exchange);
 
+
+    // TODO only fix watcher defined
     /**
      * Initialize watcher registry
      */

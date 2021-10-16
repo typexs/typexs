@@ -1,4 +1,4 @@
-import {EventBus} from 'commons-eventbus';
+import {EventBus} from '@allgemein/eventbus';
 
 
 export class EventBusFormat {

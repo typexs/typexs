@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import {EventEmitter} from 'events';
 import {System} from '../../libs/system/System';
 import {ILoggerApi} from '../../libs/logging/ILoggerApi';
-import {EventBus, subscribe, unsubscribe} from 'commons-eventbus';
+import {EventBus, subscribe, unsubscribe} from '@allgemein/eventbus';
 import {ClassType} from '@allgemein/schema-api';
 import {IMessageOptions} from './IMessageOptions';
 import {AbstractEvent} from './AbstractEvent';

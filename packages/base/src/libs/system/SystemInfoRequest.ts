@@ -4,7 +4,7 @@ import {EventEmitter} from 'events';
 
 import * as _ from 'lodash';
 
-import {EventBus, subscribe} from 'commons-eventbus';
+import {EventBus, subscribe} from '@allgemein/eventbus';
 import {NodeRuntimeInfo} from './NodeRuntimeInfo';
 import {SystemInfoResponse} from './SystemInfoResponse';
 import {K_NODE_ID} from '../messaging/Constants';

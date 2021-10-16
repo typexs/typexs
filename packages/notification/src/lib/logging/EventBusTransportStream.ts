@@ -1,8 +1,8 @@
 import {assign, get, has, isNull, isString} from 'lodash';
 import TransportStream from 'winston-transport';
 import {LogEvent} from '@typexs/base';
-import EventBusMeta from 'commons-eventbus/bus/EventBusMeta';
-import {EventBus} from 'commons-eventbus';
+import EventBusMeta from '@allgemein/eventbus/bus/EventBusMeta';
+import {EventBus} from '@allgemein/eventbus';
 import {IEventBusTransportStreamOptions} from './IEventBusTransportStreamOptions';
 import {LOG_LEVELS} from './Constants';
 

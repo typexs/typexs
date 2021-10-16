@@ -1,5 +1,5 @@
 import {Inject} from 'typedi';
-import {EventBus, subscribe} from 'commons-eventbus';
+import {EventBus, subscribe} from '@allgemein/eventbus';
 import {Config} from '@allgemein/config';
 import * as fs from 'fs';
 import {PlatformUtils} from '@allgemein/base';

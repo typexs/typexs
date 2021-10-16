@@ -5,7 +5,7 @@ import {AbstractEvent} from './../libs/messaging/AbstractEvent';
 import {Inject} from 'typedi';
 import {AbstractExchange} from './../libs/messaging/AbstractExchange';
 import * as _ from 'lodash';
-import {EventBus, subscribe, unsubscribe} from 'commons-eventbus';
+import {EventBus, subscribe, unsubscribe} from '@allgemein/eventbus';
 import {IWorkerStatisitic} from './../libs/worker/IWorkerStatisitic';
 
 import {IWorker} from './../libs/worker/IWorker';

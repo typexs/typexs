@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
-import {EventBus} from 'commons-eventbus';
+import {EventBus} from '@allgemein/eventbus';
 import {Schedule} from '../../libs/schedule/Schedule';
-import EventBusMeta from 'commons-eventbus/bus/EventBusMeta';
+import EventBusMeta from '@allgemein/eventbus/bus/EventBusMeta';
 import {IScheduleFactory} from '../../libs/schedule/IScheduleFactory';
 import {IScheduleDef} from '../../libs/schedule/IScheduleDef';
 

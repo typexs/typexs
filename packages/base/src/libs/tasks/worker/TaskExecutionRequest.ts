@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import {System} from '../../system/System';
 import {EventEmitter} from 'events';
-import {EventBus, subscribe} from 'commons-eventbus';
+import {EventBus, subscribe} from '@allgemein/eventbus';
 import {TaskQueueWorker} from '../../../workers/TaskQueueWorker';
 import {IWorkerInfo} from '../../worker/IWorkerInfo';
 import {ITaskExecutionRequestOptions} from './ITaskExecutionRequestOptions';

@@ -1,4 +1,4 @@
-import {Event} from 'commons-eventbus';
+import {Event} from '@allgemein/eventbus';
 import {PathLike} from 'fs';
 
 /**

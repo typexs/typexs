@@ -1,35 +1,15 @@
-import {
-  cloneDeep,
-  defaults,
-  find,
-  get,
-  has,
-  intersection,
-  isBoolean,
-  isUndefined,
-  remove,
-  set,
-  sortBy,
-  uniq
-} from 'lodash';
-import {
-  ICache,
-  IClassesLoader,
-  IModuleRegistry,
-  IModuleRegistryOptions,
-  ModuleDescriptor,
-  ModuleRegistry
-} from '@allgemein/moduls';
-import {IRuntimeLoaderOptions} from './IRuntimeLoaderOptions';
-import {TYPEXS_NAME} from '../libs/Constants';
-import {CryptUtils, PlatformUtils} from '@allgemein/base';
-import {Log} from './../libs/logging/Log';
-import {MatchUtils} from '../libs/utils/MatchUtils';
-import {ModulRegistryCache} from '../libs/cache/ModulRegistryCache';
-import {IRuntimeLoader} from '../libs/core/IRuntimeLoader';
-import {DEFAULT_RUNTIME_OPTIONS} from '../libs/config/Constants';
-import {IClassesLib} from '@allgemein/moduls/loader/classes/IClassesOptions';
-import {BaseUtils} from '../libs/utils/BaseUtils';
+import { cloneDeep, defaults, find, get, has, intersection, isBoolean, isUndefined, remove, set, sortBy, uniq } from 'lodash';
+import { ICache, IClassesLoader, IModuleRegistry, IModuleRegistryOptions, ModuleDescriptor, ModuleRegistry } from '@allgemein/moduls';
+import { IRuntimeLoaderOptions } from './IRuntimeLoaderOptions';
+import { TYPEXS_NAME } from '../libs/Constants';
+import { CryptUtils, PlatformUtils } from '@allgemein/base';
+import { Log } from './../libs/logging/Log';
+import { MatchUtils } from '../libs/utils/MatchUtils';
+import { ModulRegistryCache } from '../libs/cache/ModulRegistryCache';
+import { IRuntimeLoader } from '../libs/core/IRuntimeLoader';
+import { DEFAULT_RUNTIME_OPTIONS } from '../libs/config/Constants';
+import { IClassesLib } from '@allgemein/moduls/loader/classes/IClassesOptions';
+import { BaseUtils } from '../libs/utils/BaseUtils';
 
 
 export class RuntimeLoader implements IRuntimeLoader {
@@ -126,8 +106,14 @@ export class RuntimeLoader implements IRuntimeLoader {
       }
     }
 
+    const useNoTypexsModules = ['@allgemein/eventbus'];
+
     const moduleRegistryOptions: IModuleRegistryOptions = {
-      packageFilter: (json: any) => intersection(Object.keys(json), modulePackageJsonKeys).length > 0 && this.isEnabled(json.name),
+      packageFilter: (json: any) =>
+        (
+          intersection(Object.keys(json), modulePackageJsonKeys).length > 0 && this.isEnabled(json.name)
+        ) ||
+        useNoTypexsModules.includes(json.name),
       module: module,
       paths: modulPaths,
       pattern: this.options.subModulPattern ? this.options.subModulPattern : [],
@@ -180,7 +166,7 @@ export class RuntimeLoader implements IRuntimeLoader {
     }
 
     this.options.libs = sortBy(this.options.libs, ['topic']);
-    this.classesLoader = await this.registry.createClassesLoader({libs: this.options.libs});
+    this.classesLoader = await this.registry.createClassesLoader({ libs: this.options.libs });
   }
 
   isIncluded(modulName: string) {
@@ -188,7 +174,7 @@ export class RuntimeLoader implements IRuntimeLoader {
   }
 
   includeModule(modulName: string) {
-    return set(this.options.included, modulName, {enabled: true});
+    return set(this.options.included, modulName, { enabled: true });
   }
 
 

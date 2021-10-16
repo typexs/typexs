@@ -24,7 +24,7 @@ import { CryptUtils } from '@allgemein/base';
 import { TasksApi } from '../../api/Tasks.api';
 import { TaskRunnerRegistry } from './TaskRunnerRegistry';
 import { TaskRunnerEvent } from './TaskRunnerEvent';
-import { EventBus } from 'commons-eventbus';
+import { EventBus } from '@allgemein/eventbus';
 import { Injector } from '../di/Injector';
 import { StreamLogger } from '../logging/StreamLogger';
 import { DateUtils } from '../utils/DateUtils';

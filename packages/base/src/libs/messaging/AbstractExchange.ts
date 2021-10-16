@@ -4,7 +4,7 @@ import {AbstractEvent} from './AbstractEvent';
 import {System} from '../../libs/system/System';
 import {Inject} from 'typedi';
 import {Message} from './Message';
-import {EventBus, subscribe} from 'commons-eventbus';
+import {EventBus, subscribe} from '@allgemein/eventbus';
 import {ILoggerApi} from '../../libs/logging/ILoggerApi';
 import {Log} from '../../libs/logging/Log';
 import {IMessageOptions} from './IMessageOptions';

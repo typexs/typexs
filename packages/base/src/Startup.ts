@@ -1,6 +1,6 @@
 import { isArray, keys } from 'lodash';
 import { Config } from '@allgemein/config';
-import { EventBus, IEventBusConfiguration } from 'commons-eventbus';
+import { EventBus, IEventBusConfiguration } from '@allgemein/eventbus';
 import { Inject } from 'typedi';
 import { IBootstrap } from './api/IBootstrap';
 import { IShutdown } from './api/IShutdown';
@@ -12,6 +12,7 @@ import {
   C_EVENTBUS,
   C_KEY_SEPARATOR,
   K_CLS_CACHE_ADAPTER,
+  K_CLS_EVENTBUS_ADAPTER,
   K_CLS_EXCHANGE_MESSAGE,
   K_CLS_SCHEDULE_ADAPTER_FACTORIES
 } from './libs/Constants';
@@ -71,6 +72,8 @@ export class Startup implements IBootstrap, IShutdown {
   private eventbus() {
     const bus: { [name: string]: IEventBusConfiguration } = Config.get(C_EVENTBUS, false);
     if (bus) {
+      const classes = this.loader.getClasses(K_CLS_EVENTBUS_ADAPTER);
+      classes.map(x => EventBus.registerAdapter(x));
       for (const name of keys(bus)) {
         const busCfg: IEventBusConfiguration = bus[name];
         busCfg.name = name;

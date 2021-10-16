@@ -5,7 +5,7 @@ import {
   K_CLS_BOOTSTRAP,
   K_CLS_CACHE_ADAPTER,
   K_CLS_COMMANDS,
-  K_CLS_ENTITIES_DEFAULT,
+  K_CLS_ENTITIES_DEFAULT, K_CLS_EVENTBUS_ADAPTER,
   K_CLS_EXCHANGE_MESSAGE,
   K_CLS_GENERATORS,
   K_CLS_SCHEDULE_ADAPTER_FACTORIES,
@@ -118,7 +118,8 @@ export const DEFAULT_RUNTIME_OPTIONS: IRuntimeLoaderOptions = {
   ],
 
   include: [
-    '**/@typexs{,**/}*'
+    '**/@typexs{,**/}*',
+    '**/@allgemein{,**/}*'
   ],
 
   exclude: [
@@ -179,6 +180,14 @@ export const DEFAULT_RUNTIME_OPTIONS: IRuntimeLoaderOptions = {
       refs: [
         'adapters/cache/*CacheAdapter.*',
         'src/adapters/cache/*CacheAdapter.*'
+      ]
+    },
+    {
+      topic: K_CLS_EVENTBUS_ADAPTER,
+      refs: [
+        'adapter/*/*EventBusAdapter.*',
+        'adapters/eventbus/*/*EventBusAdapter.*',
+        'src/adapters/eventbus/*/*EventBusAdapter.*',
       ]
     },
     {

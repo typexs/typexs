@@ -74,7 +74,7 @@ export async function cli(): Promise<Bootstrap> {
       command: command.command,
       aliases: command.aliases,
       describe: command.describe,
-      handler: () => selectedCommand = command
+      handler: () => selectedCommand = command as any
     };
 
     if (command.builder) {

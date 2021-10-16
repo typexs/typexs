@@ -4,7 +4,7 @@
 import * as _ from 'lodash';
 import { isEmpty, keys, remove, values } from 'lodash';
 import { Inject } from 'typedi';
-import { EventBus, subscribe } from 'commons-eventbus';
+import { EventBus, subscribe } from '@allgemein/eventbus';
 import { TaskRunner } from './TaskRunner';
 import { CL_TASK_RUNNER_REGISTRY, TASK_RUNNER_SPEC, TASKRUN_STATE_FINISH_PROMISE } from './Constants';
 import { Counters } from '../helper/Counters';
