@@ -8,6 +8,7 @@ import {Config} from '@allgemein/config';
 import {TEST_STORAGE_OPTIONS} from '../../config';
 import {TypeOrmStorageRef} from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
 import {BaseConnectionOptions} from 'typeorm/connection/BaseConnectionOptions';
+import { TestHelper } from '../../TestHelper';
 
 
 let bootstrap: Bootstrap;
@@ -39,7 +40,7 @@ class StorageGeneralSpec {
         path: appdir
       },
       modules: {
-        paths: [path.join(__dirname, '..', '..', '..', '..')],
+        paths: TestHelper.includePaths(),
         include: [],
         libs: [{
           topic: 'entity.fake',

@@ -62,13 +62,8 @@ class MessagingSpec {
           loggers: [<any>{name: '*', level: 'debug'}]
         },
         modules: <any>{
-          paths: [
-            __dirname + '/../../../../..'
-          ],
-          disableCache: true,
-          include: [
-            '**/packages/base**'
-          ]
+          paths: TestHelper.includePaths(),
+          disableCache: true
         },
         tasks: {
           logdir: LOCAL_LOG_DIR + '/logs'

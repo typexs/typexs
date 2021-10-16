@@ -33,7 +33,9 @@ class CacheRedisSpec {
       .setConfigSources([{ type: 'system' }])
       .configure({
         app: { name: 'test' },
-        modules: { paths: [__dirname + '/../../..'] },
+        modules: {
+          paths: TestHelper.includePaths()
+        },
         storage: { default: TEST_STORAGE_OPTIONS },
         cache: { bins: { default: 'redis1' }, adapter: { redis1: { type: 'redis', host: '127.0.0.1', port: 6379 } } }
       });

@@ -12,6 +12,7 @@ import {C_STORAGE_DEFAULT} from '../../../src/libs/Constants';
 import {TaskLog} from '../../../src/entities/TaskLog';
 import {StorageRef} from '../../../src/libs/storage/StorageRef';
 import { LockFactory } from '@allgemein/base';
+import { TestHelper } from '../TestHelper';
 
 
 const stdMocks = require('std-mocks');
@@ -36,7 +37,7 @@ class TasksSpec {
       // },
       app: {path: appdir},
       storage: {default: TEST_STORAGE_OPTIONS},
-      modules: {paths: [__dirname + '/../../..'], disableCache: true},
+      modules: {paths: TestHelper.includePaths(), disableCache: true},
       // workers: {access: [{name: 'TaskMonitorWorker', access: 'allow'}]}
     });
     bootstrap.activateLogger();

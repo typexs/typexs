@@ -5,7 +5,7 @@ import { SimpleTaskPromise } from './tasks/SimpleTaskPromise';
 import { TestHelper } from '../TestHelper';
 import { TaskExecutor } from '../../../src/libs/tasks/TaskExecutor';
 import { TEST_STORAGE_OPTIONS } from '../config';
-import { IEventBusConfiguration } from 'commons-eventbus';
+import { EventBus, IEventBusConfiguration, RedisEventBusAdapter } from '@allgemein/eventbus';
 import { SpawnHandle } from '../SpawnHandle';
 import { TaskRequestFactory } from '../../../src/libs/tasks/worker/TaskRequestFactory';
 import { ITaskRunnerResult } from '../../../src/libs/tasks/ITaskRunnerResult';
@@ -28,6 +28,7 @@ const p: SpawnHandle[] = [];
 class TasksSpec {
 
   static async before() {
+    EventBus.registerAdapter(RedisEventBusAdapter);
     Bootstrap.reset();
     await TestHelper.clearCache();
 
@@ -41,11 +42,17 @@ class TasksSpec {
           path: __dirname + '/fake_app_task_exec'
         },
         logging: { enable: LOG_EVENT, level: 'debug', loggers: [{ name: '*', level: 'debug' }] },
-        modules: { paths: [__dirname + '/../../..'] },
+        modules: {
+          disableCache: true,
+          paths: TestHelper.includePaths()
+        },
         storage: { default: TEST_STORAGE_OPTIONS },
         eventbus: {
           default: <IEventBusConfiguration>{
-            adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 }
+            adapter: 'redis', extra: {
+              host: '127.0.0.1', port: 6379,
+              unref: true
+            }
           }
         },
         workers: {

@@ -6,10 +6,11 @@ import {TEST_STORAGE_OPTIONS} from './config';
 import {Access} from '../../src/libs/Access';
 import {PermissionsRegistry} from '../../src';
 import {BasicPermission, IPermissions, IRole, IRolesHolder} from '@typexs/roles-api';
+import { TestHelper } from './TestHelper';
 
 let bootstrap: Bootstrap;
 let inc = 0;
-
+const LOG_EVENT = TestHelper.logEnable(false);
 @suite('functional/access')
 class AccessSpec {
 
@@ -19,7 +20,7 @@ class AccessSpec {
       .setConfigSources([{type: 'system'}])
       .configure(<ITypexsOptions & any>{
         // app: {name: 'test', nodeId: 'worker'},
-        logging: {enable: true, level: 'debug'},
+        logging: {enable: LOG_EVENT, level: 'debug'},
         modules: {
           paths: [
             __dirname + '/../../..'

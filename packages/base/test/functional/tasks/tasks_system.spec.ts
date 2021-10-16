@@ -1,16 +1,16 @@
 import * as _ from 'lodash';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {Bootstrap} from '../../../src/Bootstrap';
-import {TEST_STORAGE_OPTIONS} from '../config';
-import {IEventBusConfiguration} from 'commons-eventbus';
-import {System} from '../../../src/libs/system/System';
-import {C_TASKS} from '../../../src/libs/tasks/Constants';
-import {TestHelper} from '../TestHelper';
-import {SpawnHandle} from '../SpawnHandle';
-import {ITypexsOptions} from '../../../src/libs/ITypexsOptions';
-import {Tasks} from '../../../src/libs/tasks/Tasks';
-import {Injector} from '../../../src/libs/di/Injector';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { Bootstrap } from '../../../src/Bootstrap';
+import { TEST_STORAGE_OPTIONS } from '../config';
+import { EventBus, IEventBusConfiguration, RedisEventBusAdapter } from '@allgemein/eventbus';
+import { System } from '../../../src/libs/system/System';
+import { C_TASKS } from '../../../src/libs/tasks/Constants';
+import { TestHelper } from '../TestHelper';
+import { SpawnHandle } from '../SpawnHandle';
+import { ITypexsOptions } from '../../../src/libs/ITypexsOptions';
+import { Tasks } from '../../../src/libs/tasks/Tasks';
+import { Injector } from '../../../src/libs/di/Injector';
 
 const LOG_EVENT = TestHelper.logEnable(false);
 
@@ -20,6 +20,7 @@ class TasksSystemSpec {
 
 
   async before() {
+    EventBus.registerAdapter(RedisEventBusAdapter);
     await TestHelper.clearCache();
     Bootstrap.reset();
   }
@@ -40,14 +41,14 @@ class TasksSystemSpec {
           enable: LOG_EVENT, level: 'debug'
         },
         modules: {
-          paths: [__dirname + '/../../..'], disableCache: true
+          paths: TestHelper.includePaths(), disableCache: true
         },
         storage: {
           default: TEST_STORAGE_OPTIONS
         },
         eventbus: {
           default: <IEventBusConfiguration>{
-            adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}
+            adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}
           }
         }
       });
@@ -89,9 +90,9 @@ class TasksSystemSpec {
       .configure(<ITypexsOptions & any>{
         app: {name: 'test', nodeId: nodeId, path: __dirname + '/fake_app'},
         logging: {enable: LOG_EVENT, level: 'debug'},
-        modules: {paths: [__dirname + '/../../..'], disableCache: true},
+        modules: {paths: TestHelper.includePaths(), disableCache: true},
         storage: {default: TEST_STORAGE_OPTIONS},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}}
+        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}}
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -183,7 +184,7 @@ class TasksSystemSpec {
           enable: LOG_EVENT, level: 'debug'
         },
         modules: {
-          paths: [__dirname + '/../../..'],
+          paths: TestHelper.includePaths(),
           disableCache: true
         },
         storage: {
@@ -191,7 +192,7 @@ class TasksSystemSpec {
         },
         eventbus: {
           default: <IEventBusConfiguration>{
-            adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}
+            adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}
           }
         }
       });

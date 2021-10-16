@@ -36,12 +36,7 @@ class MessagingSpec {
         },
 
         modules: <any>{
-          paths: [
-            __dirname + '/../../../../..'
-          ],
-          include: [
-            '**/packages/base**'
-          ],
+          paths:  TestHelper.includePaths(),
           disableCache: true
         }
       }
@@ -217,9 +212,7 @@ class MessagingSpec {
     const data = results[0] as any[];
 
     // const fileContent = await FileUtils.readFile(filePath);
-    expect(data.map(x => {
-      return {path: x.path, size: x.stats.size, isFile: x.stats.isFile};
-    })).to.be.deep.eq([
+    expect(data.map(x => ({path: x.path, size: x.stats.size, isFile: x.stats.isFile}))).to.be.deep.eq([
       {
         'isFile': false,
         'path': 'config',
@@ -228,7 +221,7 @@ class MessagingSpec {
       {
         'isFile': true,
         'path': 'node_01.ts',
-        'size': 2156
+        'size': 2134
       },
       {
         'isFile': true,

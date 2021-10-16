@@ -34,13 +34,8 @@ class MessagingSpec {
       },
 
       modules: <any>{
-        paths: [
-          __dirname + '/../../../../..'
-        ],
-        disableCache: true,
-        include: [
-          '**/packages/base**'
-        ]
+        paths: TestHelper.includePaths(),
+        disableCache: true
       }
     });
     await bootstrap.activateLogger();

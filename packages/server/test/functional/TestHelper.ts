@@ -1,8 +1,20 @@
 import * as _ from 'lodash';
 import {getMetadataArgsStorage} from 'typeorm';
+import { join, resolve } from 'path';
 
 export class TestHelper {
 
+  static root(){
+    return resolve(__dirname + '/../../../..');
+  }
+
+  static includePaths(module = 'server') {
+    const root = this.root();
+    return [
+      join(root, 'packages', module),
+      join(root, 'node_modules', '@allgemein')
+    ];
+  }
   static suiteName(filename: string) {
     return filename.split('/test/').pop();
   }

@@ -1,15 +1,15 @@
 import * as _ from 'lodash';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
 
-import {Bootstrap} from '../../../src/Bootstrap';
-import {Config} from '@allgemein/config';
-import {TEST_STORAGE_OPTIONS} from '../config';
-import {Container} from 'typedi';
-import {Cache} from '../../../src/libs/cache/Cache';
-import {MemoryCacheAdapter} from '../../../src/adapters/cache/MemoryCacheAdapter';
-import {TestHelper} from '../TestHelper';
-import {C_DEFAULT} from '@allgemein/base';
+import { Bootstrap } from '../../../src/Bootstrap';
+import { Config } from '@allgemein/config';
+import { TEST_STORAGE_OPTIONS } from '../config';
+import { Container } from 'typedi';
+import { Cache } from '../../../src/libs/cache/Cache';
+import { MemoryCacheAdapter } from '../../../src/adapters/cache/MemoryCacheAdapter';
+import { TestHelper } from '../TestHelper';
+import { C_DEFAULT } from '@allgemein/base';
 
 let bootstrap: Bootstrap = null;
 
@@ -31,11 +31,13 @@ class CacheMemorySpec {
   @test
   async 'use default runtime memory cache with default options'() {
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure({
-        app: {name: 'test'},
-        modules: {paths: [__dirname + '/../../..'], disableCache: true},
-        storage: {default: TEST_STORAGE_OPTIONS},
+        app: { name: 'test' },
+        modules: {
+          paths: TestHelper.includePaths(), disableCache: true
+        },
+        storage: { default: TEST_STORAGE_OPTIONS }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -47,7 +49,7 @@ class CacheMemorySpec {
 
     const options = cache.getOptions();
     expect(options).to.deep.eq({
-      bins: {default: 'default'}
+      bins: { default: 'default' }
     });
 
     const adapterClasses = cache.getAdapterClasses();
@@ -67,19 +69,19 @@ class CacheMemorySpec {
     let noValue = await cache.get('test');
     expect(noValue).to.be.eq(null);
 
-    await cache.set('test', {k: 'asd'});
+    await cache.set('test', { k: 'asd' });
 
     let testValue = await cache.get('test');
-    expect(testValue).to.be.deep.eq({k: 'asd'});
+    expect(testValue).to.be.deep.eq({ k: 'asd' });
 
     const testBin = 'test';
     noValue = await cache.get('test', testBin);
     expect(noValue).to.be.eq(null);
 
-    await cache.set('test', {k: 'asd'}, testBin);
+    await cache.set('test', { k: 'asd' }, testBin);
 
     testValue = await cache.get('test', testBin);
-    expect(testValue).to.be.deep.eq({k: 'asd'});
+    expect(testValue).to.be.deep.eq({ k: 'asd' });
 
     await bootstrap.shutdown();
   }
@@ -88,12 +90,14 @@ class CacheMemorySpec {
   @test
   async 'use runtime memory cache with options'() {
     let bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure({
-        app: {name: 'test'},
-        modules: {paths: [__dirname + '/../../..']},
-        storage: {default: TEST_STORAGE_OPTIONS},
-        cache: {bins: {default: 'mem1', test: 'mem2'}, adapter: {mem1: {type: 'memory'}, mem2: {type: 'memory'}}}
+        app: { name: 'test' },
+        modules: {
+          paths: TestHelper.includePaths()
+        },
+        storage: { default: TEST_STORAGE_OPTIONS },
+        cache: { bins: { default: 'mem1', test: 'mem2' }, adapter: { mem1: { type: 'memory' }, mem2: { type: 'memory' } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -106,11 +110,11 @@ class CacheMemorySpec {
     const options = cache.getOptions();
 
     expect(options).to.deep.eq({
-        bins: {default: 'mem1', test: 'mem2'},
+        bins: { default: 'mem1', test: 'mem2' },
         adapter:
           {
-            mem1: {type: 'memory'},
-            mem2: {type: 'memory'}
+            mem1: { type: 'memory' },
+            mem2: { type: 'memory' }
           }
       }
     );
@@ -137,19 +141,19 @@ class CacheMemorySpec {
     let noValue = await cache.get('test');
     expect(noValue).to.be.eq(null);
 
-    await cache.set('test', {k: 'asd'});
+    await cache.set('test', { k: 'asd' });
 
     let testValue = await cache.get('test');
-    expect(testValue).to.be.deep.eq({k: 'asd'});
+    expect(testValue).to.be.deep.eq({ k: 'asd' });
 
     const testBin = 'test';
     noValue = await cache.get('test', testBin);
     expect(noValue).to.be.eq(null);
 
-    await cache.set('test', {k: 'asd'}, testBin);
+    await cache.set('test', { k: 'asd' }, testBin);
 
     testValue = await cache.get('test', testBin);
-    expect(testValue).to.be.deep.eq({k: 'asd'});
+    expect(testValue).to.be.deep.eq({ k: 'asd' });
 
     await cache.set('test2', 'asdasdasd', testBin);
 

@@ -1,14 +1,23 @@
 import * as _ from 'lodash';
-import {getMetadataArgsStorage} from 'typeorm';
-import {SystemNodeInfo} from '../../src/entities/SystemNodeInfo';
-import {TaskLog} from '../../src/entities/TaskLog';
-import {PlatformUtils} from '@allgemein/base';
+import { getMetadataArgsStorage } from 'typeorm';
+import { SystemNodeInfo } from '../../src/entities/SystemNodeInfo';
+import { TaskLog } from '../../src/entities/TaskLog';
+import { PlatformUtils } from '@allgemein/base';
+import { join, resolve } from 'path';
 
 export class TestHelper {
 
   // static suiteName(filename: string) {
   //   return filename.split('/test/').pop();
   // }
+
+  static includePaths(module = 'base') {
+    const root = resolve(__dirname + '/../../../..');
+    return [
+      join(root, 'packages', module),
+      join(root, 'node_modules', '@allgemein')
+    ];
+  }
 
   static async clearCache() {
     if (PlatformUtils.fileExist('/tmp/.txs/cache')) {

@@ -19,6 +19,7 @@ import {IRole, IRolesHolder} from '@typexs/roles-api/index';
 import {BasicPermission} from '@typexs/roles-api';
 import {join} from 'path';
 import {CONFIG_SCHEMA} from '../../../src/config.schema';
+import { TestHelper } from '../TestHelper';
 
 
 let permissionsCheck = false;
@@ -36,12 +37,13 @@ const settingsTemplate: ITypexsOptions & any = {
 
   modules: {
     paths: [
-      __dirname + '/../../../..'
+      TestHelper.root()
     ],
     disableCache: true,
     include: [
-      '**/packages/base**',
-      '**/packages/server**'
+      '**/@allgemein{,/eventbus}*',
+      '**/@typexs{,/base}*',
+      '**/@typexs{,/server}*'
     ],
 
   },

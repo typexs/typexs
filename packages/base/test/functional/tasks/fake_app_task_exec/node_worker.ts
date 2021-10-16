@@ -1,10 +1,11 @@
 import {TEST_STORAGE_OPTIONS} from '../../config';
-import {IEventBusConfiguration} from 'commons-eventbus';
 import {Config} from '@allgemein/config';
 import {ITypexsOptions} from '../../../../src/libs/ITypexsOptions';
 import {Bootstrap} from '../../../../src/Bootstrap';
-
+import { EventBus, IEventBusConfiguration, RedisEventBusAdapter } from '@allgemein/eventbus';
+import { TestHelper } from '../../TestHelper';
 (async function () {
+  EventBus.registerAdapter(RedisEventBusAdapter);
   const LOG_EVENT = !!process.argv.find(x => x === '--enable_log');
   let NODEID = process.argv.find(x => x.startsWith('--nodeId='));
   if (NODEID) {
@@ -27,11 +28,13 @@ import {Bootstrap} from '../../../../src/Bootstrap';
           name: '*', level: 'debug', transports: [{console: {}}]
         }]
       },
-      modules: {paths: [__dirname + '/../../../..'], disableCache: true},
+      modules: {
+        paths: TestHelper.includePaths(),
+        disableCache: true},
       storage: {default: TEST_STORAGE_OPTIONS},
       eventbus: {
         default: <IEventBusConfiguration>{
-          adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}
+          adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}
         }
       },
       workers: {
@@ -50,7 +53,7 @@ import {Bootstrap} from '../../../../src/Bootstrap';
 
   process.send('startup');
 
-  const timeout = parseInt(Config.get('argv.timeout', 240000), 0);
+  const timeout = parseInt(Config.get('argv.timeout', 240000), 10);
   const t = setTimeout(async () => {
     await bootstrap.shutdown();
   }, timeout);

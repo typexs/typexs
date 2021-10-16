@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import {SpawnHandle} from '../SpawnHandle';
 import {TestHelper} from '../TestHelper';
 import {TEST_STORAGE_OPTIONS} from '../config';
-import {IEventBusConfiguration} from 'commons-eventbus';
+import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {HttpFactory, IHttp} from '@allgemein/http';
 import {WebServer} from '../../../src/libs/web/WebServer';
 
@@ -17,16 +17,18 @@ const settingsTemplate: any = {
     default: TEST_STORAGE_OPTIONS
   },
 
-  app: {name: 'demo', path: __dirname + '/../../../../..', nodeId: 'server'},
+  app: {name: 'demo', path: TestHelper.root(), nodeId: 'server'},
 
   modules: {
     paths: [
-      __dirname + '/../../../..'
+      TestHelper.root()
     ],
     disableCache: true,
     include: [
-      '**/packages/base**',
-      '**/packages/server**'
+      '**/@allgemein{,/eventbus}*',
+      '**/@typexs{,/base}*',
+      '**/@typexs{,/server}*',
+      '**/fake_app_node*'
     ],
 
   },
@@ -51,7 +53,7 @@ const settingsTemplate: any = {
       }]
     }
   },
-  eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
+  eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}},
 
 };
 

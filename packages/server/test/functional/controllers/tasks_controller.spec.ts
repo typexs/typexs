@@ -9,7 +9,7 @@ import {expect} from 'chai';
 import * as _ from 'lodash';
 import {TestHelper} from '../TestHelper';
 import {TEST_STORAGE_OPTIONS} from '../config';
-import {IEventBusConfiguration} from 'commons-eventbus';
+import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {HttpFactory, IHttp} from '@allgemein/http';
 import {WebServer} from '../../../src/libs/web/WebServer';
 import {Helper} from '../../../src/libs/Helper';
@@ -25,12 +25,13 @@ const settingsTemplate: any = {
 
   modules: {
     paths: [
-      __dirname + '/../../../..'
+      TestHelper.root()
     ],
     disableCache: true,
     include: [
-      '**/packages/base**',
-      '**/packages/server**'
+      '**/@allgemein{,/eventbus}*',
+      '**/@typexs{,/base}*',
+      '**/@typexs{,/server}*'
     ],
 
   },
@@ -56,7 +57,7 @@ const settingsTemplate: any = {
     }
   },
   workers: {access: [{name: 'TaskMonitorWorker', access: 'allow'}]},
-  eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
+  eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}},
 
 };
 

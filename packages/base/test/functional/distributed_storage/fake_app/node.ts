@@ -1,5 +1,5 @@
 import {SPAWN_TIMEOUT, TEST_STORAGE_OPTIONS} from '../../config';
-import {IEventBusConfiguration} from 'commons-eventbus';
+import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {Config} from '@allgemein/config';
 import {ITypexsOptions} from '../../../../src/libs/ITypexsOptions';
 import {Bootstrap} from '../../../../src/Bootstrap';
@@ -7,6 +7,7 @@ import {generateSqlDataRows} from '../helper';
 import {Injector} from '../../../../src/libs/di/Injector';
 import {C_STORAGE_DEFAULT} from '../../../../src/libs/Constants';
 import {StorageRef} from '../../../../src/libs/storage/StorageRef';
+import { TestHelper } from '../../TestHelper';
 
 (async function () {
   const LOG_EVENT = !!process.argv.find(x => x === '--enable_log');
@@ -22,9 +23,9 @@ import {StorageRef} from '../../../../src/libs/storage/StorageRef';
     .configure(<ITypexsOptions & any>{
       app: {name: NODEID, nodeId: NODEID, path: __dirname},
       logging: {enable: LOG_EVENT, level: 'debug'},
-      modules: {paths: [__dirname + '/../../../..']},
+      modules: {paths: TestHelper.includePaths()},
       storage: {default: TEST_STORAGE_OPTIONS},
-      eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
+      eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}},
       workers: {access: [{name: 'DistributedQueryWorker', access: 'allow'}]}
     });
   bootstrap.activateLogger();

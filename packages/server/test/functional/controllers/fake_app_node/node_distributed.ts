@@ -1,10 +1,11 @@
-import {IEventBusConfiguration} from 'commons-eventbus';
-import {Bootstrap, C_STORAGE_DEFAULT, Config, Injector, StorageRef} from '@typexs/base';
+import { IEventBusConfiguration } from '@allgemein/eventbus';
+import { Bootstrap, C_STORAGE_DEFAULT, Config, Injector, StorageRef } from '@typexs/base';
 
-import {DistributedRandomData} from './entities/DistributedRandomData';
-import {getBootstrapForSpawn} from '../spawn';
+import { DistributedRandomData } from './entities/DistributedRandomData';
+import { getBootstrapForSpawn } from '../spawn';
+import { TestHelper } from '../../TestHelper';
 
-(async function () {
+(async function() {
 
   let bootstrap: Bootstrap = getBootstrapForSpawn('fake_app_node', {
     app: {
@@ -12,14 +13,18 @@ import {getBootstrapForSpawn} from '../spawn';
     },
     modules: {
       disableCache: true,
-      include: [
-        '**/packages/base**',
-        '**/packages/server**',
-        '**/fake_app_node**'
+      paths: [
+        TestHelper.root()
       ],
+      include: [
+        '**/@allgemein{,/eventbus}*',
+        '**/@typexs{,/base}*',
+        '**/@typexs{,/server}*',
+        '**/fake_app_node**'
+      ]
     },
-    eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
-    workers: {access: [{name: 'DistributedQueryWorker', access: 'allow'}]}
+    eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
+    workers: { access: [{ name: 'DistributedQueryWorker', access: 'allow' }] }
   });
   // const LOG_EVENT = !!process.argv.find(x => x === '--enable_log');
   // let NODEID = process.argv.find(x => x.startsWith('--nodeId='));

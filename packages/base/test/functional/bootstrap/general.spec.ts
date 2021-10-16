@@ -98,7 +98,8 @@ class BootstrapGeneralSpec {
     const appdir = path.join(__dirname, 'fake_app');
 
     let bootstrap = Bootstrap.configure({
-      app: { name: 'test', path: appdir }, modules: { include: [] }
+      app: { name: 'test', path: appdir },
+      modules: { include: [] }
     });
     bootstrap = await bootstrap.prepareRuntime();
 
@@ -154,6 +155,14 @@ class BootstrapGeneralSpec {
                 'shared/entities', 'src/shared/entities',
                 'src/entitytest'
               ]
+            },
+            {
+              'refs': [
+                'adapter/*/*EventBusAdapter.*',
+                'adapters/eventbus/*/*EventBusAdapter.*',
+                'src/adapters/eventbus/*/*EventBusAdapter.*'
+              ],
+              'topic': 'eventbus.adapters'
             },
             {
               topic: 'exchange.messages',
@@ -233,7 +242,9 @@ class BootstrapGeneralSpec {
     let bootstrap = Bootstrap.configure({
       app: { name: 'test', path: appdir },
       logging: { enable: false, level: 'debug' },
-      modules: { paths: [__dirname + '/../../..'] }
+      modules: {
+        paths: TestHelper.includePaths()
+      }
     });
 
     await bootstrap.activateLogger();

@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import {Bootstrap} from '../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
 import {TEST_STORAGE_OPTIONS} from '../config';
-import {EventBus, IEventBusConfiguration} from 'commons-eventbus';
+import {EventBus, IEventBusConfiguration} from '@allgemein/eventbus';
 import {Container} from 'typedi';
 import {TestHelper} from '../TestHelper';
 import {SpawnHandle} from '../SpawnHandle';
@@ -14,7 +14,7 @@ import {DistributedStorageEntityController} from '../../../src/libs/distributed_
 import {DistributedQueryWorker} from '../../../src/workers/DistributedQueryWorker';
 import {Workers} from '../../../src/libs/worker/Workers';
 import {C_DEFAULT} from '@allgemein/base';
-import {subscribe} from 'commons-eventbus';
+import {subscribe} from '@allgemein/eventbus';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);

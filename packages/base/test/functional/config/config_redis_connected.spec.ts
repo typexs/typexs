@@ -1,18 +1,18 @@
 // process.env.SQL_LOG = '1';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {Bootstrap} from '../../../src/Bootstrap';
-import {Config} from '@allgemein/config';
-import {TEST_STORAGE_OPTIONS} from '../config';
-import {IEventBusConfiguration} from 'commons-eventbus';
-import {TestHelper} from '../TestHelper';
-import {ITypexsOptions} from '../../../src/libs/ITypexsOptions';
-import {SpawnHandle} from '../SpawnHandle';
-import {System} from '../../../src/libs/system/System';
-import {Injector} from '../../../src/libs/di/Injector';
-import {ConfigUtils} from '../../../src/libs/utils/ConfigUtils';
-import {C_CONFIG, C_KEY_SEPARATOR} from '../../../src/libs/Constants';
-import {Cache} from '../../../src/libs/cache/Cache';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { Bootstrap } from '../../../src/Bootstrap';
+import { Config } from '@allgemein/config';
+import { TEST_STORAGE_OPTIONS } from '../config';
+import { IEventBusConfiguration } from '@allgemein/eventbus';
+import { TestHelper } from '../TestHelper';
+import { ITypexsOptions } from '../../../src/libs/ITypexsOptions';
+import { SpawnHandle } from '../SpawnHandle';
+import { System } from '../../../src/libs/system/System';
+import { Injector } from '../../../src/libs/di/Injector';
+import { ConfigUtils } from '../../../src/libs/utils/ConfigUtils';
+import { C_CONFIG, C_KEY_SEPARATOR } from '../../../src/libs/Constants';
+import { Cache } from '../../../src/libs/cache/Cache';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -43,14 +43,17 @@ class ConfigRedisSpec {
     const p = SpawnHandle.do(__dirname + '/fake_app/node.ts').start(LOG_EVENT);
 
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
-        app: {name: 'test', nodeId: 'system', path: __dirname + '/fake_app'},
-        logging: {enable: LOG_EVENT, level: 'debug', loggers: [{name: '*', level: 'debug', enable: true}]},
-        modules: {paths: [__dirname + '/../../..'], disableCache: true},
-        storage: {default: TEST_STORAGE_OPTIONS},
-        cache: {bins: {default: 'redis1'}, adapter: {redis1: {type: 'redis', host: '127.0.0.1', port: 6380}}},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}}
+        app: { name: 'test', nodeId: 'system', path: __dirname + '/fake_app' },
+        logging: { enable: LOG_EVENT, level: 'debug', loggers: [{ name: '*', level: 'debug', enable: true }] },
+        modules: {
+          paths: TestHelper.includePaths()
+          , disableCache: true
+        },
+        storage: { default: TEST_STORAGE_OPTIONS },
+        cache: { bins: { default: 'redis1' }, adapter: { redis1: { type: 'redis', host: '127.0.0.1', port: 6380, unref: true } } },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true} } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -108,7 +111,6 @@ class ConfigRedisSpec {
       }
     ]);
   }
-
 
 
   // @test

@@ -3,7 +3,7 @@ import {suite, test} from '@testdeck/mocha';
 import {expect} from 'chai';
 import {Bootstrap} from '../../../src/Bootstrap';
 import {TEST_STORAGE_OPTIONS} from '../config';
-import {IEventBusConfiguration} from 'commons-eventbus/browser';
+import {IEventBusConfiguration} from '@allgemein/eventbus/browser';
 import {System} from '../../../src/libs/system/System';
 import {SystemApi} from '../../../src/api/System.api';
 import {ISystemApi} from '../../../src/api/ISystemApi';
@@ -32,9 +32,9 @@ class SystemRedisConnectedSpec {
       .configure(<ITypexsOptions & any>{
         app: {name: 'test', nodeId: 'system', path: __dirname + '/fake_app'},
         logging: {enable: LOG_EVENT, level: 'debug', loggers: [{name: '*', level: 'debug'}]},
-        modules: {paths: [__dirname + '/../../..']},
+        modules: {paths:TestHelper.includePaths()},
         storage: {default: TEST_STORAGE_OPTIONS},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}}
+        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}}
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();

@@ -1,8 +1,9 @@
-import {IEventBusConfiguration} from 'commons-eventbus';
-import {Bootstrap, Config} from '@typexs/base';
-import {getBootstrapForSpawn} from '../spawn';
+import { IEventBusConfiguration } from '@allgemein/eventbus';
+import { Bootstrap, Config } from '@typexs/base';
+import { getBootstrapForSpawn } from '../spawn';
+import { TestHelper } from '../../TestHelper';
 
-(async function () {
+(async function() {
   let bootstrap: Bootstrap = getBootstrapForSpawn('fake_app_node', {
     app: {
       path: __dirname
@@ -12,14 +13,16 @@ import {getBootstrapForSpawn} from '../spawn';
     },
     modules: {
       disableCache: true,
+      paths: [TestHelper.root()],
       include: [
-        '**/packages/base**',
-        '**/packages/server**',
+        '**/@allgemein{,/eventbus}*',
+        '**/@typexs{,/base}*',
+        '**/@typexs{,/server}*',
         '**/fake_app_node**'
-      ],
+      ]
     },
-    eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
-    workers: {access: [{name: 'DistributedQueryWorker', access: 'allow'}]}
+    eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
+    workers: { access: [{ name: 'DistributedQueryWorker', access: 'allow' }] }
   });
 
   bootstrap.activateLogger();

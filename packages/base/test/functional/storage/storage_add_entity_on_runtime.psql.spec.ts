@@ -32,7 +32,7 @@ class StorageAddEntityOnRuntimeSpec {
           path: appdir
         },
         modules: {
-          paths: [__dirname + '/../../..'],
+          paths: TestHelper.includePaths(),
           include: []
         },
         storage: {

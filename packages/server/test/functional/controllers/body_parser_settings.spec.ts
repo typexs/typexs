@@ -5,7 +5,7 @@ import {C_DEFAULT, K_ROUTE_CONTROLLER} from '../../../src/libs/Constants';
 import  request from 'supertest';
 import {expect} from 'chai';
 import * as _ from 'lodash';
-import {CryptUtils} from 'commons-base';
+import {CryptUtils} from '@allgemein/base';
 import {IWebServerInstanceOptions} from '../../../src/libs/web/IWebServerInstanceOptions';
 
 process.setMaxListeners(1000);

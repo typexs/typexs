@@ -7,6 +7,7 @@ import { Bootstrap, StorageRef } from '../../../../src';
 import { WithNumbers } from './scenarios/app_types/entities/WithNumbers';
 import { WithJson } from './scenarios/app_types/entities/WithJson';
 import { WithDate } from './scenarios/app_types/entities/WithDate';
+import { TestHelper } from '../../TestHelper';
 
 
 let bootstrap: Bootstrap = null;
@@ -25,7 +26,7 @@ class StorageRefDataTypesPsqlSpec {
       app: { path: appdir },
       modules: {
         disableCache: true,
-        paths: [__dirname + '/../../../..'],
+        paths: TestHelper.includePaths(),
         include: []
       },
       logging: {

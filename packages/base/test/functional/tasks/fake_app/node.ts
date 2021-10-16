@@ -1,8 +1,9 @@
 import {SPAWN_TIMEOUT, TEST_STORAGE_OPTIONS} from '../../config';
-import {IEventBusConfiguration} from 'commons-eventbus';
+import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {Config} from '@allgemein/config';
 import {ITypexsOptions} from '../../../../src/libs/ITypexsOptions';
 import {Bootstrap} from '../../../../src/Bootstrap';
+import { TestHelper } from '../../TestHelper';
 
 (async function () {
   const LOG_EVENT = !!process.argv.find(x => x === '--enable_log');
@@ -17,10 +18,10 @@ import {Bootstrap} from '../../../../src/Bootstrap';
     .configure(<ITypexsOptions & any>{
       app: {name: NODEID, nodeId: NODEID, path: __dirname},
       logging: {enable: LOG_EVENT, level: 'debug', loggers: [{name: '*', level: 'debug'}]},
-      modules: {paths: [__dirname + '/../../../..'], disableCache: true},
+      modules: {paths: TestHelper.includePaths(), disableCache: true},
       storage: {default: TEST_STORAGE_OPTIONS},
       // cache: {bins: {default: 'redis1'}, adapter: {redis1: {type: 'redis', host: '127.0.0.1', port: 6379}}},
-      eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}}
+      eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}}
     });
   bootstrap.activateLogger();
   bootstrap.activateErrorHandling();
@@ -28,7 +29,7 @@ import {Bootstrap} from '../../../../src/Bootstrap';
   bootstrap = await bootstrap.activateStorage();
   bootstrap = await bootstrap.startup();
   process.send('startup');
-  const timeout = parseInt(Config.get('argv.timeout', SPAWN_TIMEOUT), 0);
+  const timeout = parseInt(Config.get('argv.timeout', SPAWN_TIMEOUT), 10);
   /*
   let commands = bootstrap.getCommands();
   expect(commands.length).to.be.gt(0);

@@ -16,6 +16,7 @@ import {
   USED_SOURCES_ONLY,
   VALIDATE_ONLY
 } from '../../../src/libs/config/Constants';
+import { TestHelper } from '../TestHelper';
 
 let bootstrap: Bootstrap;
 let commands: ICommand[] = [];
@@ -33,7 +34,7 @@ class ConfigOutputCommandSpec {
       app: { path: appdir },
       modules: <any>{
         disableCache: true,
-        paths: [__dirname + '/../../..']
+        paths: TestHelper.includePaths()
       }
     });
     await bootstrap.prepareRuntime();

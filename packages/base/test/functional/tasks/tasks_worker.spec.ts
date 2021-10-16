@@ -6,7 +6,7 @@ import { Bootstrap } from '../../../src/Bootstrap';
 import { Container } from 'typedi';
 import { Config } from '@allgemein/config';
 import { TEST_STORAGE_OPTIONS } from '../config';
-import { EventBus, IEventBusConfiguration, subscribe } from 'commons-eventbus';
+import { EventBus, IEventBusConfiguration, RedisEventBusAdapter, subscribe } from '@allgemein/eventbus';
 import { TaskQueueWorker } from '../../../src/workers/TaskQueueWorker';
 import { SimpleWorkerTask } from './tasks/SimpleWorkerTask';
 import { TaskEvent } from '../../../src/libs/tasks/event/TaskEvent';
@@ -25,7 +25,6 @@ import { StorageRef } from '../../../src/libs/storage/StorageRef';
 import { Injector } from '../../../src/libs/di/Injector';
 import { TaskProposeEvent } from '../../../src/libs/tasks/event/TaskProposeEvent';
 
-
 const LOG_EVENT = TestHelper.logEnable(false);
 let bootstrap: Bootstrap = null;
 
@@ -34,6 +33,7 @@ class TasksWorkerSpec {
 
 
   async before() {
+    EventBus.registerAdapter(RedisEventBusAdapter);
     await TestHelper.clearCache();
     Bootstrap.reset();
     Config.clear();
@@ -55,9 +55,9 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: NODEID },
         logging: { enable: LOG_EVENT, level: 'debug' },
-        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } }
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
         // workers: {access: [{name: 'TaskMonitorWorker', access: 'allow'}]}
       });
     bootstrap.activateLogger();
@@ -155,9 +155,9 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: 'worker' },
         logging: { enable: LOG_EVENT, level: 'debug' },
-        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
         workers: { access: [{ name: 'TaskQueueWorker', access: 'allow' }] }
       });
     bootstrap.activateLogger();
@@ -237,9 +237,9 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: 'system', path: __dirname + '/fake_app' },
         logging: { enable: LOG_EVENT, level: 'debug' },
-        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } }
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -314,9 +314,9 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: 'system', path: __dirname + '/fake_app' },
         logging: { enable: LOG_EVENT, level: 'debug' },
-        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } }
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -384,9 +384,9 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: 'system', path: __dirname + '/fake_app' },
         logging: { enable: LOG_EVENT, level: 'debug' },
-        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } }
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -491,10 +491,10 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: 'event', path: __dirname + '/fake_app' },
         logging: { enable: LOG_EVENT, level: 'debug', loggers: [{ name: '*', level: 'debug' }] },
-        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
         // cache: {bins: {default: 'redis1'}, adapter: {redis1: {type: 'redis', host: '127.0.0.1', port: 6379}}},
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } }
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -548,9 +548,9 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: 'worker' },
         logging: { enable: LOG_EVENT, level: 'debug' },
-        modules: { paths: [__dirname + '/../../..'], disableCache: true },
+        modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379 } } },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
         workers: { access: [{ name: 'Task*Worker', access: 'allow' }] }
       });
     bootstrap.activateLogger();

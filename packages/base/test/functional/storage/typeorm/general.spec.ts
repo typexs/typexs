@@ -16,6 +16,7 @@ import {TypeOrmStorageRef} from '../../../../src/libs/storage/framework/typeorm/
 import {BaseConnectionOptions} from 'typeorm/connection/BaseConnectionOptions';
 import {C_DEFAULT} from '@allgemein/base';
 import {Injector} from '../../../../src/libs/di/Injector';
+import { TestHelper } from '../../TestHelper';
 
 
 let bootstrap: Bootstrap;
@@ -66,7 +67,7 @@ class StorageGeneralSpec {
         path: appdir
       },
       modules: {
-        paths: [__dirname + '/../../../..'],
+        paths: TestHelper.includePaths(),
         include: []
       }
     }).prepareRuntime();

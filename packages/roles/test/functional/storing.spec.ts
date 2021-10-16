@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import {expect} from 'chai';
-import {Bootstrap, C_STORAGE_DEFAULT, Config, Injector, ITypexsOptions, StorageRef} from '@typexs/base';
+import { Bootstrap, C_STORAGE_DEFAULT, Config, Injector, ITypexsOptions, LogEvent, StorageRef } from '@typexs/base';
 import {suite, test} from '@testdeck/mocha';
 import {TEST_STORAGE_OPTIONS} from './config';
 import {Permission, RBelongsTo} from '../../src';
@@ -8,7 +8,9 @@ import {Role} from '../../src/entities/Role';
 import {EntityController} from '@typexs/schema';
 import {PermissionsRegistryLoader} from '../../src/libs/PermissionsRegistryLoader';
 import {RolesHelper} from '../../src/libs/RolesHelper';
+import { TestHelper } from './TestHelper';
 
+const LOG_EVENT = TestHelper.logEnable(false);
 let bootstrap: Bootstrap;
 
 @suite('functional/storing')
@@ -80,7 +82,7 @@ class StoringSpec {
       .setConfigSources([{type: 'system'}])
       .configure(<ITypexsOptions & any>{
         app: {path: __dirname + '/demo_storing/startup'},
-        logging: {enable: true, level: 'debug'},
+        logging: {enable: LOG_EVENT, level: 'debug'},
         modules: {
           paths: [
             __dirname + '/../../..'
@@ -126,7 +128,7 @@ class StoringSpec {
       // .setConfigSources()
       .configure(<ITypexsOptions & any>{
         app: {path: __dirname + '/demo_storing/init_roles'},
-        logging: {enable: true, level: 'debug'},
+        logging: {enable: LOG_EVENT, level: 'debug'},
         modules: {
           paths: [
             __dirname + '/../../..'
@@ -181,7 +183,7 @@ class StoringSpec {
       // .setConfigSources()
       .configure(<ITypexsOptions & any>{
         app: {path: __dirname + '/demo_storing/init_roles'},
-        logging: {enable: true, level: 'debug'},
+        logging: {enable: LOG_EVENT, level: 'debug'},
         storage: {default: TEST_STORAGE_OPTIONS},
         modules: {
           paths: [
@@ -210,13 +212,10 @@ class StoringSpec {
     let permissions = await storageRef.getController().find(Permission, null, {limit: 0}) as Permission[];
     let rbelongs = await storageRef.getController().find(RBelongsTo, null, {limit: 0}) as RBelongsTo[];
     expect(rbelongs).to.have.length(5);
-    console.log(rbelongs);
     const cfgRoles = Config.get('initialise.roles', []);
-    console.log(cfgRoles);
     await RolesHelper.initRoles(permissionsLoader, cfgRoles);
     permissions = await storageRef.getController().find(Permission, null, {limit: 0}) as Permission[];
     rbelongs = await storageRef.getController().find(RBelongsTo, null, {limit: 0}) as RBelongsTo[];
-    console.log(rbelongs);
     expect(rbelongs).to.have.length(5);
   }
 
@@ -227,7 +226,7 @@ class StoringSpec {
       // .setConfigSources()
       .configure(<ITypexsOptions & any>{
         app: {path: __dirname + '/demo_storing/init_roles'},
-        logging: {enable: true, level: 'debug'},
+        logging: {enable: LOG_EVENT, level: 'debug'},
         modules: {
           paths: [
             __dirname + '/../../..'

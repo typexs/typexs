@@ -9,6 +9,7 @@ import {TypeOrmEntityController} from '../../../src/libs/storage/framework/typeo
 import {TypeOrmStorageRef} from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
 import {getMetadataArgsStorage} from 'typeorm';
 import {TypeOrmEntityRegistry} from '../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
+import { TestHelper } from '../TestHelper';
 
 
 let bootstrap: Bootstrap;
@@ -44,7 +45,7 @@ class StorageControllerMongoSpec {
           path: appdir
         },
         modules: {
-          paths: [__dirname + '/../../..']
+          paths: TestHelper.includePaths()
         }
       })
       .prepareRuntime();

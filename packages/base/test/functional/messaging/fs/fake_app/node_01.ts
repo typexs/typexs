@@ -1,8 +1,9 @@
-import {IEventBusConfiguration} from 'commons-eventbus';
+import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {Config} from '@allgemein/config';
 import {ITypexsOptions} from '../../../../../src/libs/ITypexsOptions';
 import {SPAWN_TIMEOUT, TEST_STORAGE_OPTIONS} from '../../../config';
 import {Bootstrap} from '../../../../../src/Bootstrap';
+import { TestHelper } from '../../../TestHelper';
 
 (async function () {
   const LOG_EVENT = !!process.argv.find(x => x === '--enable_log');
@@ -18,16 +19,11 @@ import {Bootstrap} from '../../../../../src/Bootstrap';
       },
 
       modules: {
-        paths: [
-          __dirname + '/../../../../../..'
-        ],
-        disableCache: true,
-        include: [
-          '**/packages/base**'
-        ]
+        paths:  TestHelper.includePaths(),
+        disableCache: true
       },
       storage: {default: TEST_STORAGE_OPTIONS},
-      eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
+      eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}},
       workers: {access: [{name: 'ExchangeMessageWorker', access: 'allow'}]},
       filesystem: {paths: ['.']}
     });
@@ -40,7 +36,7 @@ import {Bootstrap} from '../../../../../src/Bootstrap';
   process.send('startup');
 
 
-  const timeout = parseInt(Config.get('argv.timeout', SPAWN_TIMEOUT), 0);
+  const timeout = parseInt(Config.get('argv.timeout', SPAWN_TIMEOUT), 10);
   /*
   let commands = bootstrap.getCommands();
   expect(commands.length).to.be.gt(0);

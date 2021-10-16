@@ -4,7 +4,7 @@ import {API_CTRL_FILESYSTEM_READ, K_ROUTE_CONTROLLER} from '../../../src/libs/Co
 import * as _ from 'lodash';
 import {TestHelper} from '../TestHelper';
 import {TEST_STORAGE_OPTIONS} from '../config';
-import {IEventBusConfiguration} from 'commons-eventbus';
+import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {HttpFactory, IHttp} from '@allgemein/http';
 import {expect} from 'chai';
 import {WebServer} from '../../../src/libs/web/WebServer';
@@ -23,12 +23,13 @@ const settingsTemplate: any = {
 
   modules: {
     paths: [
-      __dirname + '/../../../..'
+      TestHelper.root()
     ],
     disableCache: true,
     include: [
-      '**/packages/base**',
-      '**/packages/server**',
+      '**/@allgemein{,/eventbus}*',
+      '**/@typexs{,/base}*',
+      '**/@typexs{,/server}*',
       '**/fake_app_node**'
     ],
 
@@ -56,7 +57,7 @@ const settingsTemplate: any = {
   },
   eventbus: {
     default: <IEventBusConfiguration>{
-      adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}
+      adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}
     }
   },
   workers: {
@@ -116,7 +117,7 @@ class FileSystemApiControllerSpec {
     const url = server.url();
     let res: any = await http.get(url + '/api' +
       API_CTRL_FILESYSTEM_READ + '?path=myfiles',
-      {responseType: 'json'});
+    {responseType: 'json'});
     res = res.body;
     expect(res).to.not.be.null;
     expect(res).to.have.length(1);
@@ -130,7 +131,7 @@ class FileSystemApiControllerSpec {
     const url = server.url();
     let res: any = await http.get(url + '/api' +
       API_CTRL_FILESYSTEM_READ + '?path=myfiles/file03_with_content.txt',
-      {responseType: 'json'});
+    {responseType: 'json'});
     res = res.body;
     expect(res).to.not.be.null;
     expect(res).to.have.length(1);

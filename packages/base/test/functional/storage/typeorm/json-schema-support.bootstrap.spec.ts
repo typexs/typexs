@@ -6,6 +6,7 @@ import {Config} from '@allgemein/config';
 import {PlatformUtils} from '@allgemein/base';
 import {REGISTRY_TYPEORM, TypeOrmConnectionWrapper} from '../../../../src';
 import {RegistryFactory} from '@allgemein/schema-api';
+import { TestHelper } from '../../TestHelper';
 
 
 let bootstrap: Bootstrap = null;
@@ -42,7 +43,7 @@ class JsonSchemaSupportSpec {
           path: appdir
         },
         modules: {
-          paths: [__dirname + '/../../../..'],
+          paths: TestHelper.includePaths(),
           include: [
             '**/@typexs{,**/}*',
             '**/apps/json-schema/**'

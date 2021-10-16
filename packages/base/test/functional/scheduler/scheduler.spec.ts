@@ -3,7 +3,7 @@ import {expect} from 'chai';
 import {Bootstrap} from '../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
 import {Scheduler} from '../../../src/libs/schedule/Scheduler';
-import {EventBus, subscribe} from 'commons-eventbus';
+import {EventBus, subscribe} from '@allgemein/eventbus';
 import {TestHelper} from '../TestHelper';
 import {IScheduleFactory} from '../../../src/libs/schedule/IScheduleFactory';
 import {SimpleTask} from '../tasks/tasks/SimpleTask';

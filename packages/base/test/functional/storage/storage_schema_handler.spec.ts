@@ -6,6 +6,7 @@ import {expect} from 'chai';
 import {Bootstrap} from '../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
 import {TypeOrmStorageRef} from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
+import { TestHelper } from '../TestHelper';
 
 
 @suite('functional/storage/schema_handler')
@@ -31,7 +32,7 @@ class GeneralSpec {
           path: appdir
         },
         modules: {
-          paths: [__dirname + '/../../..']
+          paths: TestHelper.includePaths()
         }
       })
       .prepareRuntime();

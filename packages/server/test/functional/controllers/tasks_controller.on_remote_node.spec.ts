@@ -1,6 +1,6 @@
 // process.env.SQL_LOG = '1';
 import {suite, test, timeout} from '@testdeck/mocha';
-import {EventBus, IEventBusConfiguration, subscribe} from 'commons-eventbus';
+import {EventBus, IEventBusConfiguration, subscribe} from '@allgemein/eventbus';
 import {HttpFactory, IHttp} from '@allgemein/http';
 import {
   Bootstrap,
@@ -44,12 +44,14 @@ const settingsTemplate: any = {
 
   modules: {
     paths: [
-      __dirname + '/../../../..'
+      TestHelper.root()
     ],
     disableCache: true,
     include: [
-      '**/packages/base**',
-      '**/packages/server**'
+      '**/@allgemein{,/eventbus}*',
+      '**/@typexs{,/base}*',
+      '**/@typexs{,/server}*',
+      '**/fake_app_tasks*'
     ],
 
   },
@@ -76,7 +78,7 @@ const settingsTemplate: any = {
     }
   },
   // workers: {access: [{name: 'TaskMonitorWorker', access: 'allow'}]},
-  eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
+  eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}},
 
 };
 

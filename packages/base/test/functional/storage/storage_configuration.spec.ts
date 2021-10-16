@@ -4,6 +4,7 @@ import {expect} from 'chai';
 import {Bootstrap} from '../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
 import {TestEntity} from './fake_app/entities/TestEntity';
+import { TestHelper } from '../TestHelper';
 
 
 let bootstrap: Bootstrap = null;
@@ -24,7 +25,7 @@ class StorageConfigurationSpec {
     bootstrap = await Bootstrap.configure({
       app: {path: appdir},
       modules: {
-        paths: [__dirname + '/../../..'],
+        paths: TestHelper.includePaths(),
         include: []
       },
       logging: {

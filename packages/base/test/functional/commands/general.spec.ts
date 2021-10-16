@@ -4,6 +4,7 @@ import * as path from 'path';
 import {Bootstrap} from '../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
 import * as _ from 'lodash';
+import { TestHelper } from '../TestHelper';
 
 @suite('functional/commands/general')
 class GeneralSpec {
@@ -22,7 +23,7 @@ class GeneralSpec {
       app: {path: appdir},
       modules: <any>{
         disableCache: true,
-        paths: [__dirname + '/../../..']
+        paths: TestHelper.includePaths()
       }
     });
     await bootstrap.prepareRuntime();

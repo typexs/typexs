@@ -1,4 +1,4 @@
-import {IEventBusConfiguration} from 'commons-eventbus';
+import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {Bootstrap, Config} from '@typexs/base';
 import {getBootstrapForSpawn} from '../spawn';
 
@@ -6,7 +6,7 @@ import {getBootstrapForSpawn} from '../spawn';
 
   let bootstrap: Bootstrap = getBootstrapForSpawn('fake_app_node_tasks', {
     app: {path: __dirname},
-    eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
+    eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}},
     workers: {
       access: [
         {name: 'TaskQueueWorker', access: 'allow'},
@@ -30,7 +30,7 @@ import {getBootstrapForSpawn} from '../spawn';
 
   process.send('startup');
 
-  const timeout = parseInt(Config.get('argv.timeout', 240000), 0);
+  const timeout = parseInt(Config.get('argv.timeout', 240000), 10);
   const t = setTimeout(async () => {
     await bootstrap.shutdown();
   }, timeout);

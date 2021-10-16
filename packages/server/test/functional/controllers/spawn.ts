@@ -1,6 +1,7 @@
-import {defaultsDeep} from 'lodash';
-import {Bootstrap, ITypexsOptions} from '@typexs/base';
-import {TEST_STORAGE_OPTIONS} from '../config';
+import { defaultsDeep } from 'lodash';
+import { Bootstrap, ITypexsOptions } from '@typexs/base';
+import { TEST_STORAGE_OPTIONS } from '../config';
+import { TestHelper } from '../TestHelper';
 
 
 export function getBootstrapForSpawn(nodeName: string, opts: any = {}) {
@@ -13,21 +14,23 @@ export function getBootstrapForSpawn(nodeName: string, opts: any = {}) {
   }
 
   return Bootstrap
-    .setConfigSources([{type: 'system'}])
+    .setConfigSources([{ type: 'system' }])
     .configure(defaultsDeep(opts, <ITypexsOptions & any>{
-      app: {name: NODEID, nodeId: NODEID, path: __dirname},
-      logging: {enable: LOG_EVENT, level: 'debug'},
+      app: { name: NODEID, nodeId: NODEID, path: __dirname },
+      logging: { enable: LOG_EVENT, level: 'debug' },
       modules: {
         paths: [
-          __dirname + '/../../../..'
+          TestHelper.root()
         ],
         disableCache: true,
         include: [
-          '**/packages/base**',
-          '**/packages/server**'
-        ],
+          '**/@allgemein{,/eventbus}*',
+          '**/@typexs{,/base}*',
+          '**/@typexs{,/server}*',
+          '**/' + nodeName + '*'
+        ]
       },
-      storage: {default: TEST_STORAGE_OPTIONS}
+      storage: { default: TEST_STORAGE_OPTIONS }
     }));
 
 }

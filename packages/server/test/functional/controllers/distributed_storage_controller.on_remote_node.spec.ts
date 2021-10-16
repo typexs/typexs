@@ -25,7 +25,7 @@ import * as _ from 'lodash';
 import {SpawnHandle} from '../SpawnHandle';
 import {TestHelper} from '../TestHelper';
 import {TEST_STORAGE_OPTIONS} from '../config';
-import {IEventBusConfiguration} from 'commons-eventbus';
+import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {HttpFactory, IHttp} from '@allgemein/http';
 import {DistributedRandomData} from './fake_app_node/entities/DistributedRandomData';
 import {RandomData} from './fake_app_storage/entities/RandomData';
@@ -45,13 +45,14 @@ const settingsTemplate: any = {
 
   modules: {
     paths: [
-      __dirname + '/../../../..',
+      TestHelper.root(),
       __dirname + '/fake_app_node'
     ],
     disableCache: true,
     include: [
-      '**/packages/base**',
-      '**/packages/server**',
+      '**/@allgemein{,/eventbus}*',
+      '**/@typexs{,/base}*',
+      '**/@typexs{,/server}*',
       '**/fake_app_node**'
     ],
 
@@ -77,7 +78,7 @@ const settingsTemplate: any = {
     }
   },
   workers: {access: [{name: 'DistributedQueryWorker', access: 'allow'}]},
-  eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
+  eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}},
 
 };
 
@@ -319,7 +320,8 @@ class DistributedStorageControllerSpec {
       'date': '2020-02-01T23:00:00.000Z',
       'floatValue': 0.893,
       'id': 1,
-      'long': 'long long long very long long long long very long long long long very long long long long very long long long long very long ',
+      'long': 'long long long very long long long long very long long ' +
+        'long long very long long long long very long long long long very long ',
       'numValue': 100,
       'short': 'short name 1'
     });
@@ -334,7 +336,9 @@ class DistributedStorageControllerSpec {
       'date': '2020-03-03T23:00:00.000Z',
       'floatValue': 1.786,
       'id': 2,
-      'long': 'long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long ',
+      'long': 'long long long very long long long long very long long long long very long long long long very long ' +
+        'long long long very long long long long very long long long long very long long long long very ' +
+        'long long long long very long long long long very long ',
       'numValue': 200,
       'short': 'short name 2'
     });
