@@ -118,7 +118,6 @@
     "class-validator": "0.12.2",
     "codecov": "^3.8.2",
     "codelyzer": "^6.0.2",
-    "commons-eventbus": "^0.12.2",
     "core-js": "^3.13.1",
     "cron-parser": "^3.5.0",
     "d3": "^6.7.0",
