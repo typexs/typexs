@@ -27,7 +27,7 @@ services:
       - txs_base_net
 
   typexs_base_test_psql:
-    image: postgres:11
+    image: postgres:14
     ports:
       - 127.0.0.1:5436:5432
     environment:
