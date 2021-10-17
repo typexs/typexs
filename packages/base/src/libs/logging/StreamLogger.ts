@@ -30,6 +30,7 @@ export class StreamLogger implements ILoggerApi {
   }
 
   close(): void {
+    this.writeStream = null;
   }
 
 

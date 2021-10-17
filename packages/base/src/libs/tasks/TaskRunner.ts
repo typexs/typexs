@@ -2,7 +2,6 @@ import { clone, defaults, get, isError, isString, isUndefined, keys, orderBy, se
 import { EventEmitter } from 'events';
 import { Tasks } from './Tasks';
 import { TaskRun } from './TaskRun';
-import { Log } from '../logging/Log';
 import {
   TASK_RUNNER_SPEC,
   TASK_STATES,
@@ -226,13 +225,14 @@ export class TaskRunner extends EventEmitter {
     this.event.finished = this.$tasks.filter(x => this.doneNrs.includes(x.nr)).map(x => x.getTaskName());
 
     const event = clone(this.event);
-    setTimeout(() => {
-      try {
-        EventBus.postAndForget(event);
-      } catch (e) {
-        Log.error(e);
-      }
-    }, 0);
+    EventBus.postAndForget(event).catch(e => this.taskLogger.error(e));
+    // setTimeout(() => {
+    //   try {
+    //     EventBus.postAndForget(event);
+    //   } catch (e) {
+    //     Log.error(e);
+    //   }
+    // }, 0);
   }
 
 
@@ -566,11 +566,11 @@ export class TaskRunner extends EventEmitter {
 
     if (this.$finish) {
       this.$finish(status);
+      this.$finish = null;
     }
     this.getLogger().close();
 
     this.writeStream.end();
-
     if (this.writeStream) {
       this.writeStream.destroy();
     }
@@ -607,22 +607,26 @@ export class TaskRunner extends EventEmitter {
 
   async finalize() {
     // TODO ...
-
-    if (this.readStream) {
-      this.readStream.removeAllListeners();
+    if (this.taskLogger) {
+      // this.taskLogger.close();
+      this.taskLogger = null;
     }
+
     if (this.writeStream) {
       this.writeStream.removeAllListeners();
-    }
-
-    if (this.writeStream) {
-      this.writeStream.destroy();
+      // this.writeStream.destroy();
+      this.writeStream = null;
     }
     if (this.readStream) {
-      this.readStream.destroy();
+      this.readStream.removeAllListeners();
+      // this.readStream.destroy();
+      this.readStream = null;
     }
 
     this.removeAllListeners();
+    this.event = null;
+    this.$registry = null;
+    this.$tasks = null;
   }
 
 }

@@ -55,11 +55,11 @@ export class TasksStorageHelper {
     if (this.timeouts[result.id]) {
       this.clearTimeout(result.id);
     }
-    this.timeouts[result.id] = setTimeout(async () => {
-      try {
-        await this.save(result, storageRef);
-      } catch (e) {
-      }
+    this.timeouts[result.id] = setTimeout(() => {
+      this.save(result, storageRef)
+        .catch(() => {
+        })
+        .finally(() => this.clearTimeout(result.id));
     }, 50);
   }
 

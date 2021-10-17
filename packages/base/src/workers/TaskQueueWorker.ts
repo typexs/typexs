@@ -96,6 +96,7 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
     );
 
   }
+
   //
   // onNext() {
   // }
@@ -178,12 +179,13 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
     }
 
     if (event.state === 'enqueue') {
-      setTimeout(() =>
-        this.queue.push({
-          names: taskNames,
-          parameters: parameters,
-          event: event
-        }), 10);
+      // setTimeout(() =>
+      this.queue.push({
+        names: taskNames,
+        parameters: parameters,
+        event: event
+      });
+      // , 10);
     }
 
     this.logger.debug('enqueue task event: ' + event.nodeId + '=>' + event.id);
