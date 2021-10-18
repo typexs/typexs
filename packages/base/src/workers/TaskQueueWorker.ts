@@ -178,18 +178,18 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
       });
     }
 
+    this.logger.debug('enqueue task event: ' + event.nodeId + '=>' + event.id);
+    const firedEvent = this.fireState(event);
     if (event.state === 'enqueue') {
       // setTimeout(() =>
-      this.queue.push({
+        this.queue.push({
         names: taskNames,
         parameters: parameters,
         event: event
-      });
+        });
       // , 10);
     }
-
-    this.logger.debug('enqueue task event: ' + event.nodeId + '=>' + event.id);
-    return this.fireState(event);
+    return firedEvent;
   }
 
 
