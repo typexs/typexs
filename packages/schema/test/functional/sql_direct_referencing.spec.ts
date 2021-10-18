@@ -362,13 +362,11 @@ class SqlDirectReferencingSpec {
     expect(car_save_1).to.deep.eq(car_find_1);
 
     await c.close();
-
-
   }
+
 
   @test
   async 'referencing property E-P-SP[]-E'() {
-
     const options = _.clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'direct_property';
 
@@ -376,6 +374,7 @@ class SqlDirectReferencingSpec {
     const Skil = require('./schemas/direct_property/Skil').Skil;
     const Driver = require('./schemas/direct_property/Driver').Driver;
 
+    await registry.ready();
 
     const connect = await this.connect(options);
     const xsem = connect.controller;
@@ -408,17 +407,13 @@ class SqlDirectReferencingSpec {
 
     const cars_found = await xsem.find(Car, { id: 1 }, FINDOPT);
     const car_find_1 = cars_found.shift();
-    console.log(inspect(car_find_1, false, 10));
     expect(car_save_1).to.deep.eq(car_find_1);
-
     await c.close();
-
   }
 
 
   @test
   async 'saving multiple entities with and without refrences'() {
-
     const options = _.clone(TEST_STORAGE_OPTIONS);
 
     const Author = require('./schemas/default/Author').Author;

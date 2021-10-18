@@ -53,6 +53,7 @@ class SqlE_PoIndirectReferencingSpec {
     registry.getEntityRefFor(EntityWithIntegrated);
     registry.getEntityRefFor(EntityWithIntegratedArray);
 
+
     const options = clone(TEST_STORAGE_OPTIONS);
     set(options, 'name', 'e-po-dynamic');
     // set(options, 'logger', 'simple-console');
@@ -212,8 +213,45 @@ class SqlE_PoIndirectReferencingSpec {
 
   }
 
-  @test.skip
-  async 'save entity with object'() {
+  @test
+  async 'save entity with object (one-to-one)'() {
+    const clazz = registry.getEntityRefFor('EntityWithIntegrated');
+    const entity = clazz.getClassRef().build({
+      nr: 5,
+      object: { value: 'save-test-1' }
+    }, { skipClassNamespaceInfo: true });
+
+    const entry = await entityController.save(entity);
+
+    const entityObject = (await connection.manager.query(
+      'select * from entity_with_integrated where id = (select max(id) as maxId from entity_with_integrated);')).shift();
+    const object = (await connection.manager.query(
+      'select * from p_entity_with_integrated_object where id >= (select max(id) as maxId from p_entity_with_integrated_object) - 1;'));
+
+    expect(entityObject).to.be.deep.eq({
+      id: entityObject.id,
+      nr: 5
+    });
+    const foundRel = object.filter((x: any) => x.source_id === entityObject.id);
+    expect(foundRel).to.be.deep.eq([{
+      'id': foundRel[0].id,
+      'source_type': 'entity_with_integrated',
+      'source_id': entityObject.id,
+      'source_seq_nr': 0,
+      'value': 'save-test-1'
+    }]);
+
+    /**
+     * Check if resave makes problems
+     */
+    const found = await entityController.findOne(clazz.getClass(), { id: entityObject.id });
+    delete entry['$state'];
+    expect(found).to.deep.eq(entry);
+
+    const resave = await entityController.save(found);
+    console.log(inspect(resave, false, 10));
+    delete resave['$state'];
+    expect(found).to.deep.eq(resave);
 
   }
 

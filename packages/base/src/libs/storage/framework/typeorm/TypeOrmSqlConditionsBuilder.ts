@@ -1,24 +1,14 @@
 import * as _ from 'lodash';
-import {NotYetImplementedError} from '@allgemein/base';
-import {RelationMetadataArgs} from 'typeorm/metadata-args/RelationMetadataArgs';
-import {IConditionJoin} from '../IConditionJoin';
-import {TypeOrmPropertyRef} from './schema/TypeOrmPropertyRef';
-import {IClassRef, IEntityRef} from '@allgemein/schema-api';
-import {EntityManager, QueryBuilder, SelectQueryBuilder} from 'typeorm';
-import {DateUtils} from 'typeorm/util/DateUtils';
-import {AbstractSchemaHandler} from '../../AbstractSchemaHandler';
-import {
-  AbstractCompare,
-  And,
-  IMangoWalker,
-  MangoExpression,
-  MultiArgs,
-  Not,
-  Or,
-  PAst,
-  PValue
-} from '@allgemein/mango-expressions';
-import {TypeOrmStorageRef} from './TypeOrmStorageRef';
+import { NotYetImplementedError } from '@allgemein/base';
+import { RelationMetadataArgs } from 'typeorm/metadata-args/RelationMetadataArgs';
+import { IConditionJoin } from '../IConditionJoin';
+import { TypeOrmPropertyRef } from './schema/TypeOrmPropertyRef';
+import { IClassRef, IEntityRef } from '@allgemein/schema-api';
+import { EntityManager, QueryBuilder, SelectQueryBuilder } from 'typeorm';
+import { DateUtils } from 'typeorm/util/DateUtils';
+import { AbstractSchemaHandler } from '../../AbstractSchemaHandler';
+import { AbstractCompare, And, IMangoWalker, MangoExpression, MultiArgs, Not, Or, PAst, PValue } from '@allgemein/mango-expressions';
+import { TypeOrmStorageRef } from './TypeOrmStorageRef';
 
 
 export interface ISqlParam {
@@ -61,11 +51,12 @@ export class TypeOrmSqlConditionsBuilder<T> implements IMangoWalker {
   protected joins: IConditionJoin[] = [];
 
 
-  constructor(manager: EntityManager | QueryBuilder<any>,
-              entityRef: IEntityRef,
-              storageRef: TypeOrmStorageRef,
-              type: 'update' | 'select' | 'delete',
-              alias: string = null) {
+  constructor(
+    manager: EntityManager | QueryBuilder<any>,
+    entityRef: IEntityRef,
+    storageRef: TypeOrmStorageRef,
+    type: 'update' | 'select' | 'delete',
+    alias: string = null) {
     // super(entityRef, alias);
     this.entityRef = entityRef;
     this.alias = alias;

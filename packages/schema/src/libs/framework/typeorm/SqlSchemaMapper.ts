@@ -309,6 +309,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
         this.attachTargetKeys(propertyDef, classRef, storeClass);
         return { next: this.handleCreateObjectClass(classRef) };
       } else {
+        // no target identifier present, mark class as dynamic property
         propertyDef.getJoinRef().setOption(C_CLASS_WRAPPED, true);
         return { next: storeClass };
       }

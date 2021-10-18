@@ -347,22 +347,22 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
   }
 
 
-  async fetchPreviousEntities(
+  fetchPreviousEntities(
     clazz: Function,
-    lookupConditions: any[], mode: 'select' | 'delete' = 'select') {
+    lookupConditions: any[], mode: 'select' | 'delete' = 'select'): Promise<any[]> {
     if (!_.isEmpty(lookupConditions)) {
       const removeEntityRef = this.c.getStorageRef().getEntityRef(clazz);
       const opts: any = {}; // _.clone(this.options);
       opts.orSupport = _.isArray(lookupConditions);
       opts.mode = mode;
-      return await SqlHelper.execQuery(
+      return SqlHelper.execQuery(
         this.c,
         removeEntityRef as EntityRef,
         null,
         lookupConditions,
         opts);
     }
-    return [];
+    return Promise.resolve([]);
   }
 
 
@@ -534,6 +534,9 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
         abort: targetObjects.length === 0
       };
     } else if (propertyDef.hasJoinRef()) {
+      //
+      // Dynamically create reference
+      //
       // joinObjs = this.handleJoinRefVisit(sourceDef, propertyDef, classRef, sources);
       // return {
       //   next: targetObjects,
@@ -767,9 +770,14 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
 
       let previousRelations = [];
       const lookupConditions = collectLookupConditions(propertyDef, sources.target);
-      if (!wrapped) {
+      // if (!wrapped) {
+      try {
         previousRelations = await this.fetchPreviousEntities(joinClass, lookupConditions);
+      } catch (e) {
+
       }
+
+      // }
 
       // identify removed relations
       if (!isEmpty(sources.join) && !isEmpty(previousRelations)) {

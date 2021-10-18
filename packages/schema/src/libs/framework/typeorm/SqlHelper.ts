@@ -70,7 +70,7 @@ export class SqlHelper {
         builder.build(opts.orSupport && _.isArray(cond) ? { $or: cond } : cond);
         qb = builder.getQueryBuilder() as any;
       } else {
-        qb = connection.manager.getRepository(entityRef.object.getClass()).createQueryBuilder();
+        qb = connection.manager.getRepository(entityRef.getClass()).createQueryBuilder();
       }
 
       if (mode !== 'delete') {
