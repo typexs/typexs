@@ -182,11 +182,11 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
     const firedEvent = this.fireState(event);
     if (event.state === 'enqueue') {
       // setTimeout(() =>
-        this.queue.push({
+      this.queue.push({
         names: taskNames,
         parameters: parameters,
         event: event
-        });
+      });
       // , 10);
     }
     return firedEvent;
