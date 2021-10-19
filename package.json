@@ -45,10 +45,13 @@
     "@typexs/ng-router-menu": "file:./packages/ng-router-menu/src",
     "@typexs/ng-theme-base": "file:./packages/ng-theme-base/src",
     "@typexs/notification": "file:./packages/notification/src",
+    "@typexs/pipelines": "file:./packages/pipelines/src",
     "@typexs/roles": "file:./packages/roles/src",
     "@typexs/roles-api": "file:./packages/roles-api/src",
     "@typexs/schema": "file:./packages/schema/src",
     "@typexs/server": "file:./packages/server/src",
+    "@typexs/search": "file:./packages/search/src",
+    "@typexs/search-ng": "file:./packages/search-ng/src",
     "@typexs/storage-ng": "file:./packages/storage-ng/src",
     "@typexs/tasks-ng": "file:./packages/tasks-ng/src"
   },
