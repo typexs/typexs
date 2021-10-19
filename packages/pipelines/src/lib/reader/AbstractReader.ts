@@ -1,0 +1,176 @@
+import {IReader} from './IReader';
+import {IReaderOptions} from './IReaderOptions';
+import {Pipeline} from '../Pipeline';
+import {ILoggerApi, Log} from '@typexs/base';
+import * as _ from 'lodash';
+import {createEmbeddedPromise, PIPE_HANDLER} from './Constants';
+import {Processor} from '../Processor';
+
+export abstract class AbstractReader implements IReader {
+
+  readonly $readerType: string;
+
+  $options: IReaderOptions;
+
+  $pipe: Pipeline;
+
+  $timestamp: any;
+
+  $stats: any;
+
+  logger: ILoggerApi;
+
+
+  constructor(type: string, options: IReaderOptions) {
+    this.$readerType = type;
+    this.$options = _.defaults(options || {}, {size: 100});
+    this.logger = _.get(options, 'logger', Log.getLogger());
+    this.$timestamp = new Date();
+    if (options[PIPE_HANDLER]) {
+      if (options[PIPE_HANDLER] instanceof Pipeline) {
+        this.$pipe = <any>options[PIPE_HANDLER];
+      } else {
+        this.$pipe = Reflect.construct(options[PIPE_HANDLER], [options]);
+      }
+    } else {
+      this.$pipe = new Pipeline(options);
+    }
+    this.$pipe.$src = this;
+
+    this.$stats = {
+      began: this.$timestamp,
+      finished: this.$timestamp,
+      enqueued: 0
+    };
+  }
+
+  getOptions(): IReaderOptions {
+    return this.$options;
+  }
+
+  /**
+   * Collect output data
+   */
+  async collect() {
+    return {stats: this.$stats, pipes: await this.$pipe.collect()};
+  }
+
+
+  /**
+   * @deprecated
+   *
+   * @param pipeline
+   * @returns {Reader}
+   */
+  pipeline(pipeline: any) {
+    if (pipeline instanceof Pipeline) {
+      this.$pipe = pipeline;
+      pipeline.$src = this;
+    } else {
+      throw new Error('no new pipeline object!');
+    }
+    return this;
+  }
+
+
+  pipe(pipe: any): IReader {
+    if (_.isFunction(pipe)) {
+      this.$pipe.use(pipe);
+    } else if (pipe instanceof Processor) {
+      this.$pipe.use(pipe);
+    } else {
+      throw new Error('no pipe compatible object');
+    }
+    return this as any as IReader;
+  }
+
+
+  onFinish(): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+      this.getOptions().finishCallback = resolve;
+    });
+  }
+
+  onCatch(pipe: Function): IReader {
+    // throw new Error('Method not implemented.');
+    // this.$pipe.
+    this.$pipe.setErrorCallback(pipe);
+    return this;
+  }
+
+  doRun() {
+  }
+
+
+  init() {
+    return createEmbeddedPromise(this, 'doInit');
+  }
+
+  fetch() {
+    return createEmbeddedPromise(this, 'doFetch');
+  }
+
+
+  doInit(cb: any) {
+    cb(null, null);
+  }
+
+  doProcess(data: any) {
+    if (this.$pipe) {
+      return this.$pipe.execute(data);
+    } else {
+      throw new Error('no pipe or pipeline defined to push data [1]');
+    }
+  }
+
+  finalize() {
+    if (this.getOptions().finishCallback) {
+      this.getOptions().finishCallback();
+    }
+  }
+
+
+  run(data?: any, finish?: (err: Error, data: any) => void) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const self = this;
+    return this.init()
+      .then(function (res) {
+        if (self.$pipe) {
+          return self.$pipe.prepare();
+        } else {
+          throw new Error('no pipe or pipeline defined to push data [3]');
+        }
+      })
+      .then(function () {
+        const $p = (<Promise<any>>self.onFinish())
+          .then(function (res) {
+            if (self.$pipe) {
+              return self.$pipe.close();
+            } else {
+              throw new Error('no pipe or pipeline defined to push data [2]');
+            }
+          })
+          .then(function (res) {
+            if (finish) {
+              finish(null, {pipes: res, stats: self.$stats});
+              return {};
+            } else {
+              return {pipes: res, stats: self.$stats};
+            }
+          })
+          .catch(function (err) {
+            Log.error(err);
+            if (finish) {
+              finish(err, {pipes: [], stats: self.$stats});
+            } else {
+              throw err;
+            }
+          });
+        // self.$queue.run();
+        self.doRun();
+        return $p;
+      });
+  }
+
+
+}

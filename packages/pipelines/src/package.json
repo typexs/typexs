@@ -1,0 +1,32 @@
+{
+  "name": "@typexs/pipelines",
+  "version": "0.0.0-PLACEHOLDER",
+  "main": "index.js",
+  "browser": "browser.js",
+  "dependencies": {
+  },
+  "private": true,
+  "peerDependencies": {
+    "@typexs/base": "*"
+  },
+  "typexs": {
+    "name": "pipelines",
+    "declareLibs": [
+      {
+        "topic": "adapters_pipeline_processors",
+        "refs": [
+          "src/adapters/pipeline/processors",
+          "adapters/pipeline/processors"
+        ]
+      },
+      {
+        "topic": "adapters_pipeline_readers",
+        "refs": [
+          "src/adapters/pipeline/readers",
+          "adapters/pipeline/readers"
+        ]
+      }
+    ]
+  }
+
+}
