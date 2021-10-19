@@ -1,16 +1,16 @@
 import * as _ from 'lodash';
-import {suite, test, timeout} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {Bootstrap, Injector, Storage} from '@typexs/base';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { Bootstrap, Injector, Storage } from '@typexs/base';
 import * as path from 'path';
-import {IElasticStorageRefOptions} from '../../src/lib/elastic/IElasticStorageRefOptions';
-import {ElasticStorageRef} from '../../src/lib/elastic/ElasticStorageRef';
-import {TestHelper} from '../../../../../test/helper/TestHelper';
+import { IElasticStorageRefOptions } from '../../src/lib/elastic/IElasticStorageRefOptions';
+import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
 
-import {Client} from '@elastic/elasticsearch';
-import {ES_host, ES_port} from './config';
-import {IndexProcessingWorker} from '../../src/workers/IndexProcessingWorker';
-import {IndexRuntimeStatus} from '../../src/lib/IndexRuntimeStatus';
+import { Client } from '@elastic/elasticsearch';
+import { ES_host, ES_port } from './config';
+import { IndexProcessingWorker } from '../../src/workers/IndexProcessingWorker';
+import { IndexRuntimeStatus } from '../../src/lib/IndexRuntimeStatus';
+import { TestHelper } from './TestHelper';
 
 
 let bootstrap: Bootstrap = null;
@@ -18,8 +18,8 @@ const appdir = path.join(__dirname, 'fake_app');
 const resolve = __dirname + '/../../../../..';
 const testConfig = [
   {
-    app: {path: appdir},
-    modules: {paths: [resolve], disableCache: true},
+    app: { path: appdir },
+    modules: { paths: [resolve], disableCache: true },
     logging: {
       enable: true
     },
@@ -28,14 +28,14 @@ const testConfig = [
         framework: 'index',
         type: 'elastic',
         host: ES_host,
-        port: ES_port,
+        port: ES_port
 
       }
     }
   },
   {
-    app: {path: appdir},
-    modules: {paths: [resolve], disableCache: true},
+    app: { path: appdir },
+    modules: { paths: [resolve], disableCache: true },
     logging: {
       enable: false,
       level: 'debug'
@@ -51,14 +51,14 @@ const testConfig = [
         host: ES_host,
         port: ES_port,
         indexTypes: [
-          {index: 'core', entities: ['TestEntity']}
+          { index: 'core', entities: ['TestEntity'] }
         ]
       }
     }
   },
   {
-    app: {path: appdir},
-    modules: {paths: [resolve], disableCache: true},
+    app: { path: appdir },
+    modules: { paths: [resolve], disableCache: true },
     logging: {
       enable: false,
       level: 'debug'
@@ -74,14 +74,14 @@ const testConfig = [
         host: ES_host,
         port: ES_port,
         indexTypes: [
-          {entities: ['TestEntity']}
+          { entities: ['TestEntity'] }
         ]
       }
     }
   },
   {
-    app: {path: appdir},
-    modules: {paths: [resolve], disableCache: true},
+    app: { path: appdir },
+    modules: { paths: [resolve], disableCache: true },
     logging: {
       enable: false,
       level: 'debug'
@@ -97,14 +97,14 @@ const testConfig = [
         host: ES_host,
         port: ES_port,
         indexTypes: [
-          {entities: ['TestEntity', 'RegistryEntity']}
+          { entities: ['TestEntity', 'RegistryEntity'] }
         ]
       }
     }
   },
   {
-    app: {path: appdir},
-    modules: {paths: [resolve], disableCache: true},
+    app: { path: appdir },
+    modules: { paths: [resolve], disableCache: true },
     logging: {
       enable: false,
       level: 'debug'
@@ -120,7 +120,7 @@ const testConfig = [
         host: ES_host,
         port: ES_port,
         indexTypes: [
-          {entities: ['TestEntity', 'RegistryEntity']}
+          { entities: ['TestEntity', 'RegistryEntity'] }
         ]
       }
     },
@@ -137,16 +137,16 @@ const testConfig = [
 
 ];
 
-const beforeCall = async function (cfg: any) {
-  const client = new Client({node: 'http://' + ES_host + ':' + ES_port});
-  if ((await client.indices.exists({index: 'core'})).body) {
-    await client.indices.delete({index: 'core', ignore_unavailable: true});
+const beforeCall = async function(cfg: any) {
+  const client = new Client({ node: 'http://' + ES_host + ':' + ES_port });
+  if ((await client.indices.exists({ index: 'core' })).body) {
+    await client.indices.delete({ index: 'core', ignore_unavailable: true });
   }
   await client.close();
 
   // Bootstrap.reset();
   bootstrap = Bootstrap
-    .setConfigSources([{type: 'system'}])
+    .setConfigSources([{ type: 'system' }])
     .configure(cfg);
 
   bootstrap.activateErrorHandling();
@@ -210,33 +210,34 @@ class TypexsSearchConfiguration {
     const indicies = storageRef.getIndiciesNames();
     expect(indicies).to.be.deep.eq(['core']);
     const indexTypes = storageRef.getIndexTypes();
-    expect(indexTypes.map(t => {
-      return {indexName: t.indexName, typeName: t.typeName};
-    })).to.be.deep.eq([{indexName: 'core', typeName: 'test_entity'}]);
+    expect(indexTypes.map(t => ({ indexName: t.indexName, typeName: t.typeName }))).to.be.deep.eq([{
+      indexName: 'core',
+      typeName: 'test_entity'
+    }]);
 
     // create new index
     const checkIndex = await storageRef.checkIndices();
-    expect(checkIndex).to.be.deep.eq({core: true});
+    expect(checkIndex).to.be.deep.eq({ core: true });
     expect(storageRef.isChecked()).to.be.true;
     storageRef.resetCheck();
 
     // no change index
     const checkIndex2 = await storageRef.checkIndices();
-    expect(checkIndex2).to.be.deep.eq({core: true});
+    expect(checkIndex2).to.be.deep.eq({ core: true });
     expect(storageRef.isChecked()).to.be.true;
     storageRef.resetCheck();
 
     // extend index
     process.env.ES_EXT_NEW = '1';
     const checkIndexAdd = await storageRef.checkIndices();
-    expect(checkIndexAdd).to.be.deep.eq({core: true});
+    expect(checkIndexAdd).to.be.deep.eq({ core: true });
     delete process.env.ES_EXT_NEW;
     expect(storageRef.isChecked()).to.be.true;
     storageRef.resetCheck();
 
     process.env.ES_EXT_UPDATE = '1';
     const checkIndexUpdate = await storageRef.checkIndices();
-    expect(checkIndexUpdate).to.be.deep.eq({core: true});
+    expect(checkIndexUpdate).to.be.deep.eq({ core: true });
     delete process.env.ES_EXT_UPDATE;
     expect(storageRef.isChecked()).to.be.true;
     storageRef.resetCheck();
@@ -259,7 +260,7 @@ class TypexsSearchConfiguration {
     const indicies = storageRef.getIndiciesNames();
     expect(indicies).to.be.deep.eq(['typeorm_default_test_entity']);
     const checkIndex2 = await storageRef.checkIndices();
-    expect(checkIndex2).to.be.deep.eq({typeorm_default_test_entity: true});
+    expect(checkIndex2).to.be.deep.eq({ typeorm_default_test_entity: true });
     expect(storageRef.isChecked()).to.be.true;
     storageRef.resetCheck();
 
@@ -286,15 +287,15 @@ class TypexsSearchConfiguration {
     expect(storageRef.hasEntityClass('TestT*Idx,RegistryP*Idx')).to.be.false;
     expect(storageRef.hasEntityClass('Test*Idx,RegistryP*Idx')).to.be.true;
 
-    expect(storageRef.getEntityRef('*').map(x => x.name)).to.be.deep.eq([
+    expect(storageRef.getEntityRef('*').map((x: any) => x.name)).to.be.deep.eq([
       'TestEntityIdx',
       'RegistryEntityIdx'
     ]);
-    expect(storageRef.getEntityRef('*Idx').map(x => x.name)).to.be.deep.eq([
+    expect(storageRef.getEntityRef('*Idx').map((x: any) => x.name)).to.be.deep.eq([
       'TestEntityIdx',
       'RegistryEntityIdx'
     ]);
-    expect(storageRef.getEntityRef('*_idx').map(x => x.name)).to.be.deep.eq([
+    expect(storageRef.getEntityRef('*_idx').map((x: any) => x.name)).to.be.deep.eq([
       'TestEntityIdx',
       'RegistryEntityIdx'
     ]);
@@ -304,11 +305,11 @@ class TypexsSearchConfiguration {
     expect(storageRef.getEntityRef('TesterEntity')).to.be.null;
     expect(storageRef.getEntityRef('TesterEntityIdx')).to.be.null;
     expect(storageRef.getEntityRef('*Entity')).to.be.null;
-    expect(storageRef.getEntityRef('TestEntityIdx,RegistryEntityIdx').map(x => x.name)).to.be.deep.eq([
+    expect(storageRef.getEntityRef('TestEntityIdx,RegistryEntityIdx').map((x: any) => x.name)).to.be.deep.eq([
       'TestEntityIdx',
       'RegistryEntityIdx'
     ]);
-    expect(storageRef.getEntityRef('Test*Idx,Registry*Idx').map(x => x.name)).to.be.deep.eq([
+    expect(storageRef.getEntityRef('Test*Idx,Registry*Idx').map((x: any) => x.name)).to.be.deep.eq([
       'TestEntityIdx',
       'RegistryEntityIdx'
     ]);

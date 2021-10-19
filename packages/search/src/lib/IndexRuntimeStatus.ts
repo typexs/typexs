@@ -15,7 +15,7 @@ export class IndexRuntimeStatus {
 
   private workerActive: boolean = false;
 
-  private types: { [className: string]: { ref: string, registry: string } } = {};
+  private types: { [className: string]: { ref: string; registry: string } } = {};
 
   private storageRefs: { [ref: string]: IStorageRef } = {};
 
@@ -53,7 +53,7 @@ export class IndexRuntimeStatus {
           storageRef.getEntityRefs().forEach((entityRef: IndexEntityRef) => {
             this.types[entityRef.getEntityRef().name] = {
               ref: ref,
-              registry: entityRef.getEntityRef().getLookupRegistry().getName()
+              registry: entityRef.getEntityRef().getRegistry().getLookupRegistry().getNamespace()
             };
             if (!this.storageRefs[ref]) {
               this.storageRefs[ref] = storageRef;

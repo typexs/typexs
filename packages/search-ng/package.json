@@ -1,0 +1,33 @@
+{
+  "$schema": "../../node_modules/ng-packagr/package.schema.json",
+  "name": "@typexs/search-ng",
+  "version": "0.0.0-PLACEHOLDER",
+  "description": "Angular for typexs",
+  "main": "./public_api.ts",
+  "directories": {
+    "doc": "docs/de"
+  },
+  "author": "Robert Kania",
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "framework",
+    "commons",
+    "typescript",
+    "typexs"
+  ],
+  "peerDependencies": {
+    "@typexs/search": "0.0.0-PLACEHOLDER",
+    "@typexs/base-ng": "0.0.0-PLACEHOLDER",
+    "@typexs/storage-ng": "0.0.0-PLACEHOLDER",
+    "@typexs/ng-forms": "0.0.0-PLACEHOLDER"
+  },
+  "devDependencies": {
+    "@angular/common": "12.0.3",
+    "@angular/router": "12.0.3",
+    "@angular/core": "12.0.3",
+    "@angular/forms": "12.0.3",
+    "lodash": "4.17.21",
+    "rxjs": "6.6.7"
+  }
+}

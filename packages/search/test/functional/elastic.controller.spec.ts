@@ -1,18 +1,19 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Injector, XS_P_$COUNT, XS_P_$LIMIT} from '@typexs/base';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { Bootstrap, Injector, XS_P_$COUNT, XS_P_$LIMIT } from '@typexs/base';
 import * as path from 'path';
 import * as _ from 'lodash';
-import {ElasticStorageRef} from '../../src/lib/elastic/ElasticStorageRef';
-import {GreatEntity} from './fake_app_controller/entities/GreatEntity';
-import {IndexEntityRef} from '../../src/lib/registry/IndexEntityRef';
-import {expect} from 'chai';
-import {ElasticEntityController} from '../../src/lib/elastic/ElasticEntityController';
-import {Client} from '@elastic/elasticsearch';
-import {DataEntity} from './fake_app_controller/entities/DataEntity';
-import {SearchEntity} from './fake_app_controller/entities/SearchEntity';
-import {XS_P_$AGGREGATION, XS_P_$FACETS, XS_P_$INDEX, XS_P_$MAX_SCORE} from '../../src/lib/Constants';
-import {ClassUtils} from '@allgemein/base';
-import {ES_host, ES_port} from './config';
+import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
+import { GreatEntity } from './fake_app_controller/entities/GreatEntity';
+import { IndexEntityRef } from '../../src/lib/registry/IndexEntityRef';
+import { expect } from 'chai';
+import { ElasticEntityController } from '../../src/lib/elastic/ElasticEntityController';
+import { Client } from '@elastic/elasticsearch';
+import { DataEntity } from './fake_app_controller/entities/DataEntity';
+import { SearchEntity } from './fake_app_controller/entities/SearchEntity';
+import { XS_P_$AGGREGATION, XS_P_$FACETS, XS_P_$INDEX, XS_P_$MAX_SCORE } from '../../src/lib/Constants';
+import { ClassUtils } from '@allgemein/base';
+import { ES_host, ES_port } from './config';
+import { TestHelper } from './TestHelper';
 
 const lorem = 'lorem ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod ' +
   'tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero ' +
@@ -32,11 +33,11 @@ const lorem2 = 'lorem ipsum dolor varius harsut sit amet, consetetur sadipscing 
 
 let bootstrap: Bootstrap = null;
 const appdir = path.join(__dirname, 'fake_app_controller');
-const resolve = __dirname + '/../../../../..';
+const resolve = TestHelper.root();
 const testConfig = [
   {
-    app: {path: appdir},
-    modules: {paths: [resolve]},
+    app: { path: appdir },
+    modules: { paths: [resolve] },
     logging: {
       enable: false,
       level: 'debug'
@@ -53,13 +54,13 @@ const testConfig = [
         host: ES_host,
         port: ES_port,
         indexTypes: [
-          {index: 'core', entities: ['GreatEntity']},
-          {index: 'data_index', entities: ['DataEntity']},
-          {index: 'search_index', entities: ['SearchEntity']}
+          { index: 'core', entities: ['GreatEntity'] },
+          { index: 'data_index', entities: ['DataEntity'] },
+          { index: 'search_index', entities: ['SearchEntity'] }
         ]
       }
-    },
-  },
+    }
+  }
 ];
 
 
@@ -72,28 +73,28 @@ class TypexsSearchEntityController {
 
 
   static async before() {
-    client = new Client({node: 'http://' + ES_host + ':' + ES_port});
+    client = new Client({ node: 'http://' + ES_host + ':' + ES_port });
     await client.ping();
 
     const words = lorem.split(' ');
     const words2 = lorem2.split(' ');
-    const existsData = await client.indices.exists({index: 'data_index'});
-    const existsSearch = await client.indices.exists({index: 'search_index'});
+    const existsData = await client.indices.exists({ index: 'data_index' });
+    const existsSearch = await client.indices.exists({ index: 'search_index' });
     if (existsData.body) {
-      await client.indices.delete({index: 'data_index'});
+      await client.indices.delete({ index: 'data_index' });
     }
     if (existsSearch.body) {
-      await client.indices.delete({index: 'search_index'});
+      await client.indices.delete({ index: 'search_index' });
     }
     // delete index
-    const {body} = await client.indices.exists({index: 'core'});
+    const { body } = await client.indices.exists({ index: 'core' });
     if (body) {
-      await client.indices.delete({index: 'core'});
+      await client.indices.delete({ index: 'core' });
     }
 
 
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(testConfig.shift());
 
     bootstrap.activateErrorHandling();
@@ -148,7 +149,7 @@ class TypexsSearchEntityController {
 
     }
     await Promise.all(promises);
-    await client.indices.refresh({index: ['data_index', 'search_index']});
+    await client.indices.refresh({ index: ['data_index', 'search_index'] });
 
   }
 
@@ -162,10 +163,10 @@ class TypexsSearchEntityController {
 
 
   async before() {
-    const {body} = await client.indices.exists({index: 'core'});
+    const { body } = await client.indices.exists({ index: 'core' });
     if (body) {
-      await client.deleteByQuery({index: 'core', body: {query: {match_all: {}}}});
-      await client.indices.refresh({index: 'core'});
+      await client.deleteByQuery({ index: 'core', body: { query: { match_all: {} } } });
+      await client.indices.refresh({ index: 'core' });
     }
 
   }
@@ -185,9 +186,9 @@ class TypexsSearchEntityController {
     ge01.name = 'great entity 1';
 
     const genId = entityRef.getTypeName() + '--' + ge01.id;
-    let saved = await controller.save(ge01, {passResults: true});
+    let saved = await controller.save(ge01, { passResults: true });
 
-    let {body} = (await client.get({
+    let { body } = (await client.get({
       index: entityRef.getIndexName(),
       id: genId
     })) as any;
@@ -197,10 +198,10 @@ class TypexsSearchEntityController {
 
     expect(body._id).to.be.eq(genId);
     expect(body._source).to.be.deep.include(saved);
-    expect(index).to.be.deep.include({_id: genId, _index: 'core', result: 'created'});
+    expect(index).to.be.deep.include({ _id: genId, _index: 'core', result: 'created' });
 
     // Update data
-    saved = await controller.save(ge01 as any, {passResults: true, refresh: true});
+    saved = await controller.save(ge01 as any, { passResults: true, refresh: true });
     expect(saved[XS_P_$INDEX]._version).to.be.eq(2);
 
     const resp = (await client.get({
@@ -214,7 +215,7 @@ class TypexsSearchEntityController {
     delete ge01['$index'];
     expect(body._id).to.be.eq(genId);
     expect(body._source).to.be.deep.include(saved);
-    expect(index).to.be.deep.include({_id: genId, _index: 'core', result: 'updated'});
+    expect(index).to.be.deep.include({ _id: genId, _index: 'core', result: 'updated' });
   }
 
   @test
@@ -231,7 +232,7 @@ class TypexsSearchEntityController {
     ge02.name = 'great entity it was now';
     let g = [ge02, ge01];
 
-    const saved = await controller.save(g, {passResults: true, refresh: true});
+    const saved = await controller.save(g, { passResults: true, refresh: true });
     const indexData = saved.map(x => {
       const a = x['$index'];
       delete x['$index'];
@@ -252,7 +253,7 @@ class TypexsSearchEntityController {
 
     expect(results.body.hits.total.value).to.be.eq(2);
     expect(results.body.hits.hits).to.have.length(2);
-    let sources = results.body.hits.hits.map(hit => entityRef.build(hit._source));
+    let sources = results.body.hits.hits.map((hit: any) => entityRef.build(hit._source));
     sources = _.orderBy(sources, x => JSON.stringify(x));
     g = _.orderBy(g, x => JSON.stringify(x));
     expect(sources).to.be.deep.eq(g);
@@ -266,7 +267,7 @@ class TypexsSearchEntityController {
 
   @test
   async 'query/search for selected entity type (limited 10)'() {
-    const queryResults = await controller.find('DataEntityIdx', null, {limit: 10, sort: {id: 'asc'}});
+    const queryResults = await controller.find('DataEntityIdx', null, { limit: 10, sort: { id: 'asc' } });
     expect(queryResults).to.have.length(10);
     // $max_score
     expect(queryResults[XS_P_$MAX_SCORE]).to.be.eq(null);
@@ -276,7 +277,7 @@ class TypexsSearchEntityController {
 
   @test
   async 'query/search for selected entity type with suffix (limited 10)'() {
-    const queryResults = await controller.find('DataEntityIdx', null, {limit: 10, sort: {id: 'asc'}});
+    const queryResults = await controller.find('DataEntityIdx', null, { limit: 10, sort: { id: 'asc' } });
     expect(queryResults).to.have.length(10);
     // $max_score
     expect(queryResults[XS_P_$MAX_SCORE]).to.be.eq(null);
@@ -286,7 +287,7 @@ class TypexsSearchEntityController {
 
   @test
   async 'query/search for all entries (limited 10)'() {
-    const queryResults = await controller.find('*', null, {limit: 10, sort: {id: 'asc'}});
+    const queryResults = await controller.find('*', null, { limit: 10, sort: { id: 'asc' } });
     expect(queryResults).to.have.length(10);
     // $max_score
     expect(queryResults[XS_P_$MAX_SCORE]).to.be.eq(null);
@@ -299,7 +300,7 @@ class TypexsSearchEntityController {
 
   @test
   async 'query/search for match entries (limited 10)'() {
-    const queryResults = await controller.find('*', {_all: {$like: 'varius'}}, {limit: 10, sort: {id: 'asc'}});
+    const queryResults = await controller.find('*', { _all: { $like: 'varius' } }, { limit: 10, sort: { id: 'asc' } });
     expect(queryResults).to.have.length(7);
     // $max_score
     expect(queryResults[XS_P_$MAX_SCORE]).to.be.eq(null);
@@ -313,7 +314,7 @@ class TypexsSearchEntityController {
 
   @test
   async 'fail query/search for match entries'() {
-    const queryResults = await controller.find('*', {_all: {$eq: 'lorum'}}, {limit: 10, sort: {id: 'asc'}});
+    const queryResults = await controller.find('*', { _all: { $eq: 'lorum' } }, { limit: 10, sort: { id: 'asc' } });
     expect(queryResults).to.have.length(0);
     // $max_score
     expect(queryResults[XS_P_$MAX_SCORE]).to.be.eq(null);
@@ -328,10 +329,10 @@ class TypexsSearchEntityController {
   @test
   async 'query with highlight in object'() {
     const queryResults = await controller.find('*',
-      {_all: {$like: 'takimata'}},
+      { _all: { $like: 'takimata' } },
       {
         limit: 10,
-        sort: {id: 'asc'},
+        sort: { id: 'asc' },
         highlight: {}
       }
     );
@@ -348,15 +349,15 @@ class TypexsSearchEntityController {
   @test
   async 'query with value facets'() {
     const queryResults = await controller.find('*',
-      {_all: {$like: 'takimata'}},
+      { _all: { $like: 'takimata' } },
       {
         limit: 10,
-        sort: {id: 'asc'},
+        sort: { id: 'asc' },
         facets: {
           enabled: [
-            {type: 'value', name: 'enabled-entries'}
+            { type: 'value', name: 'enabled-entries' }
           ]
-        },
+        }
       }
     );
     expect(queryResults).to.have.length(10);
@@ -386,15 +387,15 @@ class TypexsSearchEntityController {
   @test
   async 'filter query with value facets'() {
     const queryResults = await controller.find('*',
-      {$and: [{_all: {$like: 'takimata'}}, {enabled: 'false'}]},
+      { $and: [{ _all: { $like: 'takimata' } }, { enabled: 'false' }] },
       {
         limit: 10,
-        sort: {id: 'asc'},
+        sort: { id: 'asc' },
         facets: {
           enabled: [
-            {type: 'value', name: 'enabled-entries'}
+            { type: 'value', name: 'enabled-entries' }
           ]
-        },
+        }
       }
     );
     expect(queryResults).to.have.length(10);
@@ -416,14 +417,14 @@ class TypexsSearchEntityController {
   @test
   async 'query with passed aggs'() {
     const queryResults = await controller.find('*',
-      {$and: [{_all: {$like: 'takimata'}}]},
+      { $and: [{ _all: { $like: 'takimata' } }] },
       {
         limit: 10,
-        sort: {id: 'asc'},
+        sort: { id: 'asc' },
         aggs: {
-          'enabled-entries': {terms: {field: 'enabled'}}
+          'enabled-entries': { terms: { field: 'enabled' } }
 
-        },
+        }
       }
     );
     expect(queryResults).to.have.length(10);
@@ -459,7 +460,7 @@ class TypexsSearchEntityController {
     const queryResults = await controller.find('*', null,
       {
         limit: 10,
-        sort: {id: 'asc'},
+        sort: { id: 'asc' },
         aggs: {
           'enabled-entries':
             {
@@ -511,10 +512,10 @@ class TypexsSearchEntityController {
   @test
   async 'delete existing entry'() {
     const queryResults = await controller.find('*',
-      {_all: {$like: 'carusus'}},
+      { _all: { $like: 'carusus' } },
       {
         limit: 10,
-        sort: {id: 'asc'}
+        sort: { id: 'asc' }
       }
     );
 
@@ -524,10 +525,10 @@ class TypexsSearchEntityController {
     expect(deleted).to.eq(2);
 
     const checkQueryResults = await controller.find('*',
-      {_all: {$like: 'carusus'}},
+      { _all: { $like: 'carusus' } },
       {
         limit: 10,
-        sort: {id: 'asc'}
+        sort: { id: 'asc' }
       }
     );
 
@@ -539,22 +540,22 @@ class TypexsSearchEntityController {
   @test
   async 'delete entries by condition'() {
     const queryResults = await controller.find(DataEntity,
-      {_all: {$like: 'harsut'}},
+      { _all: { $like: 'harsut' } },
       {
-        limit: 10,
+        limit: 10
       }
     );
 
     expect(queryResults).to.have.length(3);
 
-    const deleted = await controller.remove(DataEntity, {_all: {$like: 'harsut'}}, {refresh: true});
+    const deleted = await controller.remove(DataEntity, { _all: { $like: 'harsut' } }, { refresh: true });
     expect(deleted).to.eq(3);
 
     const checkQueryResults = await controller.find(DataEntity,
-      {_all: {$like: 'harsut'}},
+      { _all: { $like: 'harsut' } },
       {
         limit: 10,
-        sort: {id: 'asc'}
+        sort: { id: 'asc' }
       }
     );
 

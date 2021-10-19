@@ -5,7 +5,7 @@ import {ISaveOp} from '@typexs/base/libs/storage/framework/ISaveOp';
 import {IDeleteOp} from '@typexs/base/libs/storage/framework/IDeleteOp';
 import {Inject, Invoker, Log} from '@typexs/base';
 import {ClassUtils} from '@allgemein/base';
-import {EventBus} from 'commons-eventbus';
+import {EventBus} from '@allgemein/eventbus';
 import {IndexRuntimeStatus} from '../lib/IndexRuntimeStatus';
 import {IndexEvent} from '../lib/events/IndexEvent';
 import {ClassType} from '@allgemein/schema-api';
@@ -22,7 +22,7 @@ export class ExtendStorageApi extends StorageApi {
   invoker: Invoker;
 
   filterIndexableObject<T>(object: T[]) {
-    const indexable: { ref: string, class: string, registry: string, obj: T }[] = [];
+    const indexable: { ref: string; class: string; registry: string; obj: T }[] = [];
     for (const obj of object) {
       const name = ClassUtils.getClassName(obj as any);
       if (_.has(this.status.getTypes(), name)) {
@@ -44,7 +44,7 @@ export class ExtendStorageApi extends StorageApi {
   }
 
   filterIndexableTypes<T>(types: ClassType<T>[]) {
-    const indexable: { ref: string, class: string, registry: string }[] = [];
+    const indexable: { ref: string; class: string; registry: string }[] = [];
     for (const obj of types) {
       const name = ClassUtils.getClassName(obj as any);
       if (indexable.find(x => x.class === name)) {

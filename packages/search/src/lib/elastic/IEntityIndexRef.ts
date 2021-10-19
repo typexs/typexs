@@ -1,4 +1,4 @@
-import {IEntityRef} from 'commons-schema-api/browser';
+import {IEntityRef} from '@allgemein/schema-api';
 import {IIndexRef} from './IIndexRef';
 
 export interface IEntityIndexRef extends IIndexRef {

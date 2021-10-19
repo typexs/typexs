@@ -1,7 +1,7 @@
 import {Routes} from '@angular/router';
-import {AuthGuardService} from '@typexs/ng-base';
+import {AuthGuardService} from '@typexs/base-ng';
 import {SearchPageComponent} from './components/page/page.component';
-import {PERMISSION_ACCESS_SEARCH_VIEW} from '../../lib/Constants';
+import {PERMISSION_ACCESS_SEARCH_VIEW} from '@typexs/search';
 
 export const SEARCH_ROUTES: Routes = [
   {

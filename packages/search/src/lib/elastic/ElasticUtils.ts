@@ -3,13 +3,15 @@ import {IndexEntityRef} from '../registry/IndexEntityRef';
 import {ClassRef, IClassRef, IEntityRef} from '@allgemein/schema-api';
 import {IElasticFieldDef} from './IElasticFieldDef';
 import {ClassUtils} from '@allgemein/base';
+import { isString } from 'lodash';
 
 export class ElasticUtils {
 
 
-  static flattenProperties(sourceRef: IEntityRef | IClassRef,
-                           prefix: string = '',
-                           done: any[] = []): IElasticFieldDef[] {
+  static flattenProperties(
+    sourceRef: IEntityRef | IClassRef,
+    prefix: string = '',
+    done: any[] = []): IElasticFieldDef[] {
     const fields = [];
     for (const prop of sourceRef.getPropertyRefs()) {
       const _prefix = [prefix, prop.name].filter(x => !!x).join('.');
@@ -25,7 +27,7 @@ export class ElasticUtils {
       } else {
         let type = prop.getType();
         if (type) {
-          type = type.toLowerCase();
+          type = isString(type) ? type.toLowerCase() : type.name.toLowerCase();
           fields.push({type: type, name: _prefix, className: sourceRef.name});
         }
       }

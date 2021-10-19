@@ -1,9 +1,9 @@
-import {IStorage} from '@typexs/base/libs/storage/IStorage';
-import {IStorageRef, RuntimeLoader} from '@typexs/base';
-import {K_CLS_STORAGE_INDEX_TYPES} from '../../../lib/Constants';
-import {IIndexStorageRefOptions} from '../../../lib/IIndexStorageRefOptions';
-import {IIndexType} from '../../../lib/IIndexType';
-import {IndexEntityRegistry} from '../../../lib/registry/IndexEntityRegistry';
+import { IStorage } from '@typexs/base/libs/storage/IStorage';
+import { IStorageRef, RuntimeLoader } from '@typexs/base';
+import { K_CLS_STORAGE_INDEX_TYPES } from '../../../lib/Constants';
+import { IIndexStorageRefOptions } from '../../../lib/IIndexStorageRefOptions';
+import { IIndexType } from '../../../lib/IIndexType';
+import { IndexEntityRegistry } from '../../../lib/registry/IndexEntityRegistry';
 
 
 export class IndexStorage implements IStorage {

@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
-import {Incoming, Inject, Injector, ITask, ITaskRuntimeContainer, TaskRuntime} from '@typexs/base';
-import {IndexRuntimeStatus} from '../lib/IndexRuntimeStatus';
-import {IndexProcessingQueue} from '../lib/events/IndexProcessingQueue';
-import {StorageControllerReader} from '../../../../adapters/pipeline/readers/StorageControllerReader';
-import {IIndexStorageRef} from '../lib/IIndexStorageRef';
-import {TN_INDEX} from '../lib/Constants';
+import { Incoming, Inject, Injector, ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/base';
+import { IndexRuntimeStatus } from '../lib/IndexRuntimeStatus';
+import { IndexProcessingQueue } from '../lib/events/IndexProcessingQueue';
+import { IIndexStorageRef } from '../lib/IIndexStorageRef';
+import { TN_INDEX } from '../lib/Constants';
+import { StorageControllerReader } from '@typexs/pipelines/adapters/pipeline/readers/StorageControllerReader';
 
 
 export class IndexTask implements ITask {
@@ -13,7 +13,7 @@ export class IndexTask implements ITask {
 
   @Incoming({
     optional: true, handle: x =>
-      x.split(',').map(x => x.trim()).filter(x => !_.isEmpty(x))
+      x.split(',').map((x: any) => x.trim()).filter((x: any) => !_.isEmpty(x))
   })
   entityNames: string[];
 
@@ -49,13 +49,14 @@ export class IndexTask implements ITask {
       const entityRef = indexRef.getEntityRef(x, true);
       const clazzIdx = entityRef.getClass();
       const clazz = entityRef.getEntityRef().getClassRef().getClass();
-      const registry = entityRef.getEntityRef().getLookupRegistry().getName();
+      const registry = entityRef.getEntityRef().getNamespace();
       const sourceRef = this.status.getStorage().forClass(clazz);
 
       const raw = sourceRef.getType() === 'mongodb';
 
       const deleted = await indexRef.getController().remove(clazzIdx, {});
       this.runtime.counter('deleted.' + clazz.name).value = deleted;
+
       const doit = new StorageControllerReader({
         entityType: clazz as any,
         storageName: sourceRef.getName(),
@@ -63,7 +64,7 @@ export class IndexTask implements ITask {
         raw: raw
       });
 
-      doit.pipe(x => {
+      doit.pipe((x: any) => {
         if (raw) {
           const r = Reflect.construct(clazz, []);
           _.assign(r, x);
@@ -71,7 +72,7 @@ export class IndexTask implements ITask {
         }
         this.runtime.counter('index').inc();
         this.runtime.counter('class.' + clazz.name).inc();
-        dispatcher.queue.push({action: 'save', ref: type.ref, obj: x, class: clazz.name, registry: registry});
+        dispatcher.queue.push({ action: 'save', ref: type.ref, obj: x, class: clazz.name, registry: registry });
       });
 
       reader.push(doit);

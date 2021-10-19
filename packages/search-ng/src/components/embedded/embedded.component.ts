@@ -1,10 +1,11 @@
-import {Component, Input} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import * as _ from 'lodash';
-import {AbstractQueryEmbeddedComponent, IGridApi, ListViewComponent, StorageService} from '@typexs/ng-base';
-import {ISearchFacet} from '../../../../lib/search/ISearchFacet';
-import {IElasticFindOptions} from '../../../../lib/elastic/ops/IElasticFindOptions';
-import {And, ExprDesc, Expressions, In, Key, Like, Value} from 'commons-expressions/browser';
-import {QueryAction} from '../query-form/QueryAction';
+import { AbstractQueryEmbeddedComponent, IGridApi, ListViewComponent } from '@typexs/base-ng';
+import { IElasticFindOptions, ISearchFacet } from '@typexs/search';
+import { And, ExprDesc, Expressions, In, Key, Like, Value } from '@allgemein/expressions';
+import { QueryAction } from '../query-form/QueryAction';
+import { StorageService } from '@typexs/storage-ng';
+
 
 /**
  * Component that contains a search input and a list of search results
@@ -24,8 +25,8 @@ export class SearchEmbeddedComponent extends AbstractQueryEmbeddedComponent {
 
   @Input()
   facets: ISearchFacet[] = [
-    {name: 'type', type: 'value', field: '__type.keyword'},
-    {name: 'sap_client', type: 'value', field: '_clientId.keyword'}
+    { name: 'type', type: 'value', field: '__type.keyword' },
+    { name: 'sap_client', type: 'value', field: '_clientId.keyword' }
   ];
 
   showFilter: boolean = true;
@@ -122,21 +123,21 @@ export class SearchEmbeddedComponent extends AbstractQueryEmbeddedComponent {
       });
     }
 
-    const selectedFacets = [];
+    const selectedFacets: any[] = [];
 
     if (!_.isEmpty(this.facets)) {
       queryOptions.facets = {};
       for (const f of this.facets) {
         queryOptions.facets[f.field] = [
-          <any>{name: f.name, type: f.type}
+          <any>{ name: f.name, type: f.type }
         ];
 
         if (f.results) {
-          const selectedResults = f.results.filter(x => x.selected);
+          const selectedResults = f.results.filter((x: any) => x.selected);
           if (!_.isEmpty(selectedResults)) {
-            filterQuery.push(In(f.field, selectedResults.map(x => x.key)));
-            selectedResults.forEach(x => {
-              selectedFacets.push({name: f.name, key: x.key});
+            filterQuery.push(In(f.field, selectedResults.map((x: any) => x.key)));
+            selectedResults.forEach((x: any) => {
+              selectedFacets.push({ name: f.name, key: x.key });
             });
           }
         }
@@ -181,8 +182,8 @@ export class SearchEmbeddedComponent extends AbstractQueryEmbeddedComponent {
                   const entry = this.facets.find(x => x.name === f.name);
                   entry.results = f.values ? f.values : [];
 
-                  selectedFacets.filter(x => x.name === f.name).forEach(x => {
-                    const resultedEntry = entry.results.find(y => y.key === x.key);
+                  selectedFacets.filter((x: any) => x.name === f.name).forEach(x => {
+                    const resultedEntry = entry.results.find((y: any) => y.key === x.key);
                     if (resultedEntry) {
                       resultedEntry.selected = true;
                     }

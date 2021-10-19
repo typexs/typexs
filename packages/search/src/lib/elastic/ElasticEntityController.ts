@@ -1,16 +1,16 @@
 import * as _ from 'lodash';
-import {CLS_DEF, IEntityController, NotYetImplementedError} from '@typexs/base';
-import {ElasticStorageRef} from './ElasticStorageRef';
-import {IClassRef} from '@allgemein/schema-api';
-import {ElasticConnection} from './ElasticConnection';
-import {SaveOp} from './ops/SaveOp';
-import {FindOp} from './ops/FindOp';
-import {IElasticAggregateOptions} from './ops/IElasticAggregateOptions';
-import {IElasticFindOptions} from './ops/IElasticFindOptions';
-import {IElasticDeleteOptions} from './ops/IElasticDeleteOptions';
-import {IElasticSaveOptions} from './ops/IElasticSaveOptions';
-import {IElasticUpdateOptions} from './ops/IElasticUpdateOptions';
-import {DeleteOp} from './ops/DeleteOp';
+import { CLS_DEF, IEntityController, NotYetImplementedError } from '@typexs/base';
+import { ElasticStorageRef } from './ElasticStorageRef';
+import { IClassRef } from '@allgemein/schema-api';
+import { ElasticConnection } from './ElasticConnection';
+import { SaveOp } from './ops/SaveOp';
+import { FindOp } from './ops/FindOp';
+import { IElasticAggregateOptions } from './ops/IElasticAggregateOptions';
+import { IElasticFindOptions } from './ops/IElasticFindOptions';
+import { IElasticDeleteOptions } from './ops/IElasticDeleteOptions';
+import { IElasticSaveOptions } from './ops/IElasticSaveOptions';
+import { IElasticUpdateOptions } from './ops/IElasticUpdateOptions';
+import { DeleteOp } from './ops/DeleteOp';
 
 export class ElasticEntityController implements IEntityController {
 
@@ -72,14 +72,14 @@ export class ElasticEntityController implements IEntityController {
 
   remove<T>(object: T[] | T, options?: IElasticDeleteOptions): Promise<number>;
   remove<T>(cls: CLS_DEF<T>, condition?: any, options?: IElasticDeleteOptions): Promise<number>;
-  remove<T>(object, condition?: any, options?: IElasticDeleteOptions): Promise<number> {
+  remove<T>(object: any, condition?: any, options?: IElasticDeleteOptions): Promise<number> {
     return new DeleteOp<T>(this).run(object, condition, options);
     // return null;
   }
 
   save<T>(object: T, options?: IElasticSaveOptions): Promise<T>;
   save<T>(object: T[], options?: IElasticSaveOptions): Promise<T[]>;
-  save<T>(object, options?: IElasticSaveOptions): Promise<T | T[]> {
+  save<T>(object: any, options?: IElasticSaveOptions): Promise<T | T[]> {
     return new SaveOp<T>(this).run(object, options);
   }
 

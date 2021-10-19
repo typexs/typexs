@@ -8,9 +8,13 @@
   },
   "author": "",
   "license": "ISC",
-  "peerDependencies": {
+  "dependencies": {
     "@typexs/base": "0.0.0-PLACEHOLDER",
-    "@typexs/schema": "0.0.0-PLACEHOLDER"
+    "@typexs/schema": "0.0.0-PLACEHOLDER",
+    "@typexs/pipelines": "0.0.0-PLACEHOLDER"
+  },
+  "peerDependencies": {
+    "@elastic/elasticsearch": "^7.15.0"
   },
   "typexs": {
     "name": "search",

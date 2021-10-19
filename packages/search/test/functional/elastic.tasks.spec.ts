@@ -15,12 +15,12 @@ import {SearchDataEntity} from './fake_app_tasks/entities/SearchDataEntity';
 import {IndexProcessingQueue} from '../../src/lib/events/IndexProcessingQueue';
 import {expect} from 'chai';
 import {IndexProcessingWorker} from '../../src/workers/IndexProcessingWorker';
-import {TestHelper} from '../../../../../test/helper/TestHelper';
+import { TestHelper } from './TestHelper';
 
 
 let bootstrap: Bootstrap = null;
 const appdir = path.join(__dirname, 'fake_app_tasks');
-const resolve = __dirname + '/../../../../..';
+const resolve = TestHelper.root();
 const testConfig = [
   {
     app: {path: appdir},
@@ -154,7 +154,7 @@ class TypexsSearchEntityController {
 
     }
     const worker = await Injector.get<IndexProcessingWorker>(IndexProcessingWorker);
-    const inc = worker.queue.queue._inc;
+    const inc = worker.queue.queue.getInc();
     // await Promise.all(promises);
     // await client.indices.refresh({index: ['data_index', 'search_index']});
     await dbController.save(entities, <any>{refresh: true});
@@ -162,7 +162,7 @@ class TypexsSearchEntityController {
 
       await worker.queue.await();
       await TestHelper.waitFor(() =>
-        worker.queue.queue._inc >= inc + 60
+        worker.queue.queue.getInc() >= inc + 60
       );
       await TestHelper.wait(1000);
     } catch (e) {
@@ -188,7 +188,7 @@ class TypexsSearchEntityController {
   @test
   async 'reindex all entities'() {
     // const indexProcessingWorker =  Injector.get(indexProcessingWorker);
-    // const inc = indexProcessingWorker.queue.queue._inc;
+    // const inc = indexProcessingWorker.queue.queue.getInc();
     const executor = Injector.create(TaskExecutor);
     const data = await executor.create(
       [TN_INDEX],

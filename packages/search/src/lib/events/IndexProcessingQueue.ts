@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
-import {AsyncWorkerQueue, ILoggerApi, Inject, IQueueProcessor, Log, Semaphore, Storage} from '@typexs/base';
-import {IndexRuntimeStatus} from '../IndexRuntimeStatus';
-import {IIndexData} from './IIndexData';
-import {IIndexStorageRef} from '../IIndexStorageRef';
-import {LockFactory} from '@typexs/base/libs/LockFactory';
+import { LockFactory, Semaphore } from '@allgemein/base';
+import { AsyncWorkerQueue, ILoggerApi, Inject, IQueueProcessor, Log, Storage } from '@typexs/base';
+import { IndexRuntimeStatus } from '../IndexRuntimeStatus';
+import { IIndexData } from './IIndexData';
+import { IIndexStorageRef } from '../IIndexStorageRef';
 
 
 export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
@@ -18,7 +18,7 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
 
   LOCK: Semaphore;
 
-  refreshIndexRef: { class: string, registry: string, ref: string }[] = [];
+  refreshIndexRef: { class: string; registry: string; ref: string }[] = [];
 
   queue: AsyncWorkerQueue<IIndexData>;
 
@@ -34,10 +34,11 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
     const status = await this.status.checkIfActive();
     if (status) {
       this.LOCK = LockFactory.$().semaphore(1);
-      this.queue = new AsyncWorkerQueue<IIndexData>(this, {name: 'index_event_dispatcher', logger: this.logger, concurrent: 50});
+      this.queue = new AsyncWorkerQueue<IIndexData>(this, { name: 'index_event_dispatcher', logger: this.logger, concurrent: 50 });
     }
     return status;
   }
+
 
   push(data: IIndexData) {
     return this.queue.push(data);
@@ -48,7 +49,7 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
     try {
       if (event.ref && event.registry && event.class) {
         // clearTimeout(this.timeout);
-        this.refreshIndexRef.push({ref: event.ref, class: event.class, registry: event.registry});
+        this.refreshIndexRef.push({ ref: event.ref, class: event.class, registry: event.registry });
       }
 
       if (event.action === 'save') {
@@ -66,7 +67,7 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
   }
 
 
-  async await() {
+  async await(): Promise<null> {
     if (this.queue) {
       await this.queue.await();
       await this.LOCK.await(5000);
@@ -94,11 +95,11 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
 
       for (const refKey of _.keys(indexNames)) {
         const indicies = _.uniq(indexNames[refKey]);
-        this.queue.logger.debug('refresh indicies of storage ref ' + refKey + ' ' + JSON.stringify(indicies));
+        this.queue.getLogger().debug('refresh indicies of storage ref ' + refKey + ' ' + JSON.stringify(indicies));
         await (this.storage.get(refKey) as IIndexStorageRef).refresh(indicies);
       }
     } catch (e) {
-      this.queue.logger.error(e);
+      this.queue.getLogger().error(e);
     }
   }
 
@@ -107,14 +108,14 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
     if (this.refreshIndexRef.length === 0) {
       return;
     }
-    const inc = this.queue._inc;
+    const inc = this.queue.getInc();
     await this.LOCK.acquire();
     await new Promise(resolve => {
       setTimeout(() => {
         resolve(true);
       }, 500);
     });
-    if (this.queue._inc === inc) {
+    if (this.queue.getInc() === inc) {
       await this.refresh();
     }
     this.LOCK.release();

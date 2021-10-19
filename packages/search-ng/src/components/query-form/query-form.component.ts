@@ -3,9 +3,9 @@ import {distinctUntilChanged, debounceTime} from 'rxjs/operators';
 import * as _ from 'lodash';
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 
-import {ExprDesc, Expressions} from 'commons-expressions/browser';
+import {ExprDesc, Expressions} from '@allgemein/expressions';
 import {QueryAction} from './QueryAction';
-import {Log} from '@typexs/ng-base';
+import {Log} from '@typexs/base-ng';
 import {Subject, Subscription} from 'rxjs';
 
 
@@ -36,7 +36,7 @@ export class SearchQueryFormComponent implements OnInit, OnDestroy {
   queryChanged: Subject<string> = new Subject<string>();
 
 
-  history: { mode: 'aggregate' | 'query', text: string, query: any }[] = [];
+  history: { mode: 'aggregate' | 'query'; text: string; query: any }[] = [];
 
   historyToggle: boolean = false;
 
@@ -122,7 +122,7 @@ export class SearchQueryFormComponent implements OnInit, OnDestroy {
     $event.stopPropagation();
   }
 
-  selectEntry(entry: { mode: 'aggregate' | 'query', text: string, query: any }) {
+  selectEntry(entry: { mode: 'aggregate' | 'query'; text: string; query: any }) {
     this.mode = entry.mode;
     this.query = entry.text;
     this.build();

@@ -1,11 +1,21 @@
 import * as _ from 'lodash';
-import {AbstractRef, ClassRef, IBuildOptions, IEntityRef} from '@allgemein/schema-api';
-import {C_INDEX} from '../Constants';
-import {IIndexEntityRefOptions} from '../IIndexEntityRefOptions';
-import {ClassUtils} from '@allgemein/base';
-import {__CLASS__} from '@typexs/base';
+import {
+  AbstractRef,
+  ClassRef,
+  IBuildOptions,
+  IClassRef,
+  IEntityRef,
+  ILookupRegistry,
+  ISchemaRef,
+  METADATA_TYPE
+} from '@allgemein/schema-api';
+import { C_INDEX } from '../Constants';
+import { IIndexEntityRefOptions } from '../IIndexEntityRefOptions';
+import { ClassUtils } from '@allgemein/base';
+import { __CLASS__ } from '@typexs/base';
 
 export class IndexEntityRef extends AbstractRef implements IEntityRef {
+
 
   indexName: string;
 
@@ -27,14 +37,27 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
     if (indexName) {
       this.indexName = _.snakeCase(indexName);
     } else {
-      let schema = (<ClassRef>entityRef.getClassRef()).getSchema();
+      let schema = (<ClassRef>entityRef.getClassRef()).getOptions('schema', false);
       if (!schema) {
         schema = 'default';
       }
-      const registry = entityRef.getLookupRegistry().getName();
+      const registry = entityRef.getRegistry().getLookupRegistry().getNamespace();
       this.indexName = _.snakeCase([registry, schema, this.typeName].filter(x => !!x).join('__'));
     }
     this.entityRef = entityRef;
+  }
+
+
+  getSchemaRefs(): ISchemaRef | ISchemaRef[] {
+    throw new Error('Method not implemented.');
+  }
+
+  getClassRefFor(object: string | Function | IClassRef, type: METADATA_TYPE): IClassRef {
+    throw new Error('Method not implemented.');
+  }
+
+  getRegistry(): ILookupRegistry {
+    throw new Error('Method not implemented.');
   }
 
   getTypeName() {
@@ -57,7 +80,7 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
     return this.entityRef.getPropertyRefs();
   }
 
-  getPropertyRef(name) {
+  getPropertyRef(name: string) {
     return this.getPropertyRefs().find(p => p.name === name);
   }
 
@@ -81,15 +104,16 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
     return this.entityRef.create();
   }
 
-  toJson(follow?: boolean): any {
-    const json = super.toJson();
-    const ref = this.entityRef.toJson(follow);
-    json.properties = ref.properties;
-    delete ref.properties;
-    json.indexName = this.indexName;
-    json.typeName = this.typeName;
-    json.entityRef = ref;
-    return json;
-  }
+
+  // toJson(follow?: boolean): any {
+  //   const json = super.toJson();
+  //   const ref = this.entityRef.toJson(follow);
+  //   json.properties = ref.properties;
+  //   delete ref.properties;
+  //   json.indexName = this.indexName;
+  //   json.typeName = this.typeName;
+  //   json.entityRef = ref;
+  //   return json;
+  // }
 
 }

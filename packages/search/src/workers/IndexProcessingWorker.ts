@@ -1,5 +1,5 @@
 import {Inject, Injector, IWorker} from '@typexs/base';
-import {EventBus, subscribe} from 'commons-eventbus';
+import {EventBus, subscribe} from '@allgemein/eventbus';
 import {IndexEvent} from '../lib/events/IndexEvent';
 import {ClassRef} from '@allgemein/schema-api';
 import {IIndexData} from '../lib/events/IIndexData';

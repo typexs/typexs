@@ -1,16 +1,16 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 import * as _ from 'lodash';
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Injector} from '@typexs/base';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { Bootstrap, Injector } from '@typexs/base';
 import * as path from 'path';
-import {ElasticStorageRef} from '../../src/lib/elastic/ElasticStorageRef';
-import {ElasticEntityController} from '../../src/lib/elastic/ElasticEntityController';
-import {Client} from '@elastic/elasticsearch';
-import {DataEntity} from './fake_app_controller/entities/DataEntity';
-import {SearchEntity} from './fake_app_controller/entities/SearchEntity';
-import {ES_host, ES_port} from './config';
-import {IndexProcessingWorker} from '../../src/workers/IndexProcessingWorker';
-import {TestHelper} from '../../../../../test/helper/TestHelper';
+import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
+import { ElasticEntityController } from '../../src/lib/elastic/ElasticEntityController';
+import { Client } from '@elastic/elasticsearch';
+import { DataEntity } from './fake_app_controller/entities/DataEntity';
+import { SearchEntity } from './fake_app_controller/entities/SearchEntity';
+import { ES_host, ES_port } from './config';
+import { IndexProcessingWorker } from '../../src/workers/IndexProcessingWorker';
+import { TestHelper } from './TestHelper';
 
 const lorem = 'lorem ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod ' +
   'tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero ' +
@@ -30,11 +30,11 @@ const lorem2 = 'lorem ipsum dolor varius harsut sit amet, consetetur sadipscing 
 
 let bootstrap: Bootstrap = null;
 const appdir = path.join(__dirname, 'fake_app_controller');
-const resolve = __dirname + '/../../../../..';
+const resolve = TestHelper.root();
 const testConfig = [
   {
-    app: {path: appdir},
-    modules: {paths: [resolve]},
+    app: { path: appdir },
+    modules: { paths: [resolve] },
     logging: {
       enable: false,
       level: 'debug'
@@ -51,17 +51,17 @@ const testConfig = [
         host: ES_host,
         port: ES_port,
         indexTypes: [
-          {index: 'data_index', entities: ['DataEntity']},
-          {index: 'search_index', entities: ['SearchEntity']}
+          { index: 'data_index', entities: ['DataEntity'] },
+          { index: 'search_index', entities: ['SearchEntity'] }
         ]
       }
     },
     workers: {
       access: [
-        {name: IndexProcessingWorker.name, access: 'allow'}
+        { name: IndexProcessingWorker.name, access: 'allow' }
       ]
     }
-  },
+  }
 ];
 
 
@@ -74,27 +74,27 @@ class TypexsSearchEntityController {
 
 
   static async before() {
-    client = new Client({node: 'http://' + ES_host + ':' + ES_port});
+    client = new Client({ node: 'http://' + ES_host + ':' + ES_port });
     await client.ping();
 
 
-    const existsData = await client.indices.exists({index: 'data_index'});
-    const existsSearch = await client.indices.exists({index: 'search_index'});
+    const existsData = await client.indices.exists({ index: 'data_index' });
+    const existsSearch = await client.indices.exists({ index: 'search_index' });
     if (existsData.body) {
-      await client.indices.delete({index: 'data_index'});
+      await client.indices.delete({ index: 'data_index' });
     }
     if (existsSearch.body) {
-      await client.indices.delete({index: 'search_index'});
+      await client.indices.delete({ index: 'search_index' });
     }
     // delete index
-    const {body} = await client.indices.exists({index: 'core'});
+    const { body } = await client.indices.exists({ index: 'core' });
     if (body) {
-      await client.indices.delete({index: 'core'});
+      await client.indices.delete({ index: 'core' });
     }
 
 
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(testConfig.shift());
 
     bootstrap.activateErrorHandling();
@@ -131,7 +131,7 @@ class TypexsSearchEntityController {
     const indexProcessingWorker = Injector.get<IndexProcessingWorker>(IndexProcessingWorker);
     const dbStorageRef = Injector.get<ElasticStorageRef>('storage.default');
     const dbController = dbStorageRef.getController();
-    const inc = indexProcessingWorker.queue.queue._inc;
+    const inc = indexProcessingWorker.queue.queue.getInc();
     const i = 1;
     const entity = new DataEntity();
     entity.id = i;
@@ -144,11 +144,11 @@ class TypexsSearchEntityController {
     expect(savedEntity['$state']).to.not.be.null;
     delete entity['$state'];
 
-    await TestHelper.waitFor(() => indexProcessingWorker.queue.queue._inc > inc);
+    await TestHelper.waitFor(() => indexProcessingWorker.queue.queue.getInc() > inc);
     await indexProcessingWorker.queue.await();
     await indexProcessingWorker.queue.refresh();
 
-    const indexedSavedEntity = await storageRef.getController().find('DataEntityIdx', {id: {$eq: 1}});
+    const indexedSavedEntity = await storageRef.getController().find('DataEntityIdx', { id: { $eq: 1 } });
     expect(indexedSavedEntity).to.have.length(1);
     expect(indexedSavedEntity[0]).to.be.deep.include(entity);
   }
@@ -161,7 +161,7 @@ class TypexsSearchEntityController {
     const dbStorageRef = Injector.get<ElasticStorageRef>('storage.default');
     const dbController = dbStorageRef.getController();
 
-    const inc = indexProcessingWorker.queue.queue._inc;
+    const inc = indexProcessingWorker.queue.queue.getInc();
     const entities = [];
     for (const i of _.range(5, 15)) {
       const d = new DataEntity();
@@ -177,13 +177,14 @@ class TypexsSearchEntityController {
     const savedEntities = await dbController.save(entities);
     expect(savedEntities).to.have.length(10);
     await TestHelper.waitFor(() =>
-      indexProcessingWorker.queue.queue._inc >= inc + 10
+      indexProcessingWorker.queue.queue.getInc() >= inc + 10
     );
     await indexProcessingWorker.queue.await();
     // await TestHelper.wait(10000);
     // await indexDispatcher.LOCK.await();
 
-    const indexedSavedEntity = await storageRef.getController().find('DataEntityIdx', {$and: [{id: {$ge: 5}}, {id: {$le: 15}}]}, {sort: {id: 'asc'}});
+    const indexedSavedEntity = await storageRef.getController()
+      .find('DataEntityIdx', { $and: [{ id: { $ge: 5 } }, { id: { $le: 15 } }] }, { sort: { id: 'asc' } });
     expect(indexedSavedEntity).to.have.length(10);
     for (let i = 0; i < entities.length; i++) {
       const e = entities[i];
@@ -201,7 +202,7 @@ class TypexsSearchEntityController {
     const indexProcessingWorker = Injector.get<IndexProcessingWorker>(IndexProcessingWorker);
     const dbStorageRef = Injector.get<ElasticStorageRef>('storage.default');
     const dbController = dbStorageRef.getController();
-    const inc = indexProcessingWorker.queue.queue._inc;
+    const inc = indexProcessingWorker.queue.queue.getInc();
     const i = 100;
     const entity = new DataEntity();
     entity.id = i;
@@ -214,12 +215,12 @@ class TypexsSearchEntityController {
     expect(savedEntity['$state']).to.not.be.null;
     delete entity['$state'];
     await TestHelper.waitFor(() =>
-      indexProcessingWorker.queue.queue._inc >= inc + 1
+      indexProcessingWorker.queue.queue.getInc() >= inc + 1
     );
 
     await indexProcessingWorker.queue.await();
 
-    let indexedSavedEntity = await storageRef.getController().find('DataEntityIdx', {id: {$eq: 100}});
+    let indexedSavedEntity = await storageRef.getController().find('DataEntityIdx', { id: { $eq: 100 } });
     expect(indexedSavedEntity).to.have.length(1);
     expect(indexedSavedEntity[0]).to.be.deep.include(entity);
 
@@ -227,7 +228,7 @@ class TypexsSearchEntityController {
     expect(removeCount).to.be.eq(1);
     await indexProcessingWorker.queue.await();
 
-    indexedSavedEntity = await storageRef.getController().find('DataEntityIdx', {id: {$eq: 100}});
+    indexedSavedEntity = await storageRef.getController().find('DataEntityIdx', { id: { $eq: 100 } });
     expect(indexedSavedEntity).to.have.length(0);
   }
 
@@ -239,7 +240,7 @@ class TypexsSearchEntityController {
     const indexProcessingWorker = Injector.get<IndexProcessingWorker>(IndexProcessingWorker);
     const dbStorageRef = Injector.get<ElasticStorageRef>('storage.default');
     const dbController = dbStorageRef.getController();
-    const inc = indexProcessingWorker.queue.queue._inc;
+    const inc = indexProcessingWorker.queue.queue.getInc();
     const entities = [];
     for (const i of _.range(50, 65)) {
       const d = new DataEntity();
@@ -255,21 +256,21 @@ class TypexsSearchEntityController {
     const savedEntities = await dbController.save(entities);
     expect(savedEntities).to.have.length(15);
     await TestHelper.waitFor(() =>
-      indexProcessingWorker.queue.queue._inc >= inc + 15
+      indexProcessingWorker.queue.queue.getInc() >= inc + 15
     );
     await indexProcessingWorker.queue.await();
 
     let indexedSavedEntities = await storageRef.getController()
-      .find('DataEntityIdx', {$and: [{id: {$ge: 50}}, {id: {$le: 65}}]}, {sort: {id: 'asc'}});
+      .find('DataEntityIdx', { $and: [{ id: { $ge: 50 } }, { id: { $le: 65 } }] }, { sort: { id: 'asc' } });
     expect(indexedSavedEntities).to.have.length(15);
 
 
-    const removeCount = await dbController.remove(DataEntity, {$and: [{id: {$ge: 50}}, {id: {$le: 65}}]});
+    const removeCount = await dbController.remove(DataEntity, { $and: [{ id: { $ge: 50 } }, { id: { $le: 65 } }] });
     expect(removeCount).to.be.eq(-2);
     await indexProcessingWorker.queue.await();
 
     indexedSavedEntities = await storageRef.getController()
-      .find('DataEntityIdx', {$and: [{id: {$ge: 50}}, {id: {$le: 65}}]});
+      .find('DataEntityIdx', { $and: [{ id: { $ge: 50 } }, { id: { $le: 65 } }] });
     expect(indexedSavedEntities).to.have.length(0);
   }
 
