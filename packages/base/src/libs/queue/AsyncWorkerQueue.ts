@@ -77,6 +77,14 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
   }
 
 
+  getInc() {
+    return this._inc;
+  }
+
+  getLogger(){
+    return this.logger;
+  }
+
   private cleanup() {
     const end = (new Date().getTime()) - this.options.cleanupTimeout;
     const removed = remove(this.done, x => x.ts <= end);

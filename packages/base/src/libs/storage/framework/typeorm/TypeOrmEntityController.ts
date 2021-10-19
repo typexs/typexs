@@ -3,22 +3,22 @@
  *
  * TODO also an interface for EntityManager should be implemented
  */
-import {IEntityController} from '../../IEntityController';
-import {TypeOrmStorageRef} from './TypeOrmStorageRef';
-import {Invoker} from '../../../../base/Invoker';
-import {TypeOrmConnectionWrapper} from './TypeOrmConnectionWrapper';
-import {Injector} from '../../../di/Injector';
-import {ClassType, IClassRef, IEntityRef} from '@allgemein/schema-api';
-import {IFindOptions} from '../IFindOptions';
-import {FindOp} from './FindOp';
-import {ISaveOptions} from '../ISaveOptions';
-import {SaveOp} from './SaveOp';
-import {DeleteOp} from './DeleteOp';
-import {UpdateOp} from './UpdateOp';
-import {IUpdateOptions} from '../IUpdateOptions';
-import {IDeleteOptions} from '../IDeleteOptions';
-import {IAggregateOptions} from '../IAggregateOptions';
-import {AggregateOp} from './AggregateOp';
+import { IEntityController } from '../../IEntityController';
+import { TypeOrmStorageRef } from './TypeOrmStorageRef';
+import { Invoker } from '../../../../base/Invoker';
+import { TypeOrmConnectionWrapper } from './TypeOrmConnectionWrapper';
+import { Injector } from '../../../di/Injector';
+import { ClassType, IClassRef, IEntityRef } from '@allgemein/schema-api';
+import { IFindOptions } from '../IFindOptions';
+import { FindOp } from './FindOp';
+import { ISaveOptions } from '../ISaveOptions';
+import { SaveOp } from './SaveOp';
+import { DeleteOp } from './DeleteOp';
+import { UpdateOp } from './UpdateOp';
+import { IUpdateOptions } from '../IUpdateOptions';
+import { IDeleteOptions } from '../IDeleteOptions';
+import { IAggregateOptions } from '../IAggregateOptions';
+import { AggregateOp } from './AggregateOp';
 
 export class TypeOrmEntityController implements IEntityController {
 
@@ -76,18 +76,18 @@ export class TypeOrmEntityController implements IEntityController {
     return null;
   }
 
-  async findOne<T>(fn: Function | string | ClassType<T>, conditions: any = null, options: IFindOptions = {limit: 1}): Promise<T> {
+  async findOne<T>(fn: Function | string | ClassType<T>, conditions: any = null, options: IFindOptions = { limit: 1 }): Promise<T> {
     return this.find<T>(fn, conditions, options).then(r => r.length > 0 ? r.shift() : null);
   }
 
-  async find<T>(fn: Function | string | ClassType<T>, conditions: any = null, options: IFindOptions = {limit: 100}): Promise<T[]> {
+  async find<T>(fn: Function | string | ClassType<T>, conditions: any = null, options: IFindOptions = { limit: 100 }): Promise<T[]> {
     return new FindOp<T>(this).run(fn, conditions, options);
 
   }
 
   async save<T>(object: T, options?: ISaveOptions): Promise<T>;
   async save<T>(object: T[], options?: ISaveOptions): Promise<T[]>;
-  async save<T>(object: T | T[], options: ISaveOptions = {validate: true}): Promise<T | T[]> {
+  async save<T>(object: T | T[], options: ISaveOptions = { validate: true }): Promise<T | T[]> {
     return new SaveOp<T>(this).run(object, options);
   }
 
@@ -105,6 +105,25 @@ export class TypeOrmEntityController implements IEntityController {
 
   aggregate<T>(cls: ClassType<T>, pipeline: any[], options: IAggregateOptions = {}): Promise<any[]> {
     return new AggregateOp<T>(this).run(cls, pipeline, options);
+  }
+
+  async rawQuery(query: any, options?: any): Promise<any> {
+    const connection = await this.connect();
+    let res = null;
+    let error = null;
+    try {
+      res = await connection.manager.query(query, options);
+    } catch (e) {
+      error = e;
+    } finally {
+      await connection.close();
+    }
+
+    if (error) {
+      throw error;
+    }
+
+    return res;
   }
 
 }

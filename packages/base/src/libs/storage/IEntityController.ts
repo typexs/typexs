@@ -1,12 +1,15 @@
-import {ISaveOptions} from './framework/ISaveOptions';
-import {IFindOptions} from './framework/IFindOptions';
-import {IEntityRef} from '@allgemein/schema-api';
-import {IUpdateOptions} from './framework/IUpdateOptions';
-import {IAggregateOptions} from './framework/IAggregateOptions';
-import {IDeleteOptions} from './framework/IDeleteOptions';
-import {CLS_DEF} from '../Constants';
+import { ISaveOptions } from './framework/ISaveOptions';
+import { IFindOptions } from './framework/IFindOptions';
+import { IEntityRef } from '@allgemein/schema-api';
+import { IUpdateOptions } from './framework/IUpdateOptions';
+import { IAggregateOptions } from './framework/IAggregateOptions';
+import { IDeleteOptions } from './framework/IDeleteOptions';
+import { CLS_DEF } from '../Constants';
+import { IStorageRef } from './IStorageRef';
 
-
+/**
+ * Abstraction for an backend entity managing and querying interface. Condition should be passed in mango schema.
+ */
 export interface IEntityController {
 
   name(): string;
@@ -29,4 +32,16 @@ export interface IEntityController {
 
   aggregate<T>(baseClass: CLS_DEF<T>, pipeline: any[], options?: IAggregateOptions): Promise<any[]>;
 
+  /**
+   * Return the storage reference of this controller
+   */
+  getStorageRef?(): IStorageRef;
+
+  /**
+   * Pass a raw query without any abstraction directly to the backend system
+   *
+   * @param query
+   * @param options
+   */
+  rawQuery?(query: any, options?: any): any;
 }
