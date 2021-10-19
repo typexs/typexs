@@ -1,32 +1,45 @@
 version: '3'
 
 networks:
-  txs_base_net: {}
+  txs_base_net: { }
 
 services:
 
-  typexs_base_test_mongo:
-    image: mongo:4
-    ports:
-      - 127.0.0.1:27017:27017
-    networks:
-      - txs_base_net
-
-  typexs_base_test_redis:
+  redis:
     image: redis:5
     ports:
       - 127.0.0.1:6379:6379
     networks:
       - txs_base_net
 
-  typexs_base_test_redis2:
+  redis2:
     image: redis:5
     ports:
       - 127.0.0.1:6380:6379
     networks:
       - txs_base_net
 
-  typexs_base_test_psql:
+  mongo:
+    image: mongo:4
+    ports:
+      - 127.0.0.1:27017:27017
+    networks:
+      - txs_base_net
+
+  elastic:
+    image: elasticsearch:7.14.2
+    environment:
+      - TAKE_FILE_OWNERSHIP=true
+      - discovery.type=single-node
+      - node.name=es01
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ports:
+      - 127.0.0.1:9200:9200
+      - 127.0.0.1:9300:9300
+    networks:
+      - txs_base_net
+
+  psql:
     image: postgres:14
     ports:
       - 127.0.0.1:5436:5432
@@ -38,7 +51,7 @@ services:
     networks:
       - txs_base_net
 
-  typexs_base_test_mysql:
+  mysql:
     image: mysql:5
     ports:
       - 127.0.0.1:3306:3306
