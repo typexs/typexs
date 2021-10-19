@@ -1,8 +1,7 @@
-import * as _ from 'lodash';
-import {SchemaRef} from './registry/SchemaRef';
-import {ISchemaMapper} from './framework/ISchemaMapper';
-import {INameResolver} from './framework/INameResolver';
-import {IFramework} from './framework/IFramework';
+import { SchemaRef } from './registry/SchemaRef';
+import { ISchemaMapper } from './framework/ISchemaMapper';
+import { INameResolver } from './framework/INameResolver';
+import { IFramework } from './framework/IFramework';
 import {
   IAggregateOptions,
   IEntityController,
@@ -12,8 +11,9 @@ import {
   NotSupportedError,
   NotYetImplementedError
 } from '@typexs/base';
-import {IFindOptions} from './framework/IFindOptions';
-import {ClassRef, ClassType, IClassRef, IEntityRef, ISchemaRef, METATYPE_CLASS_REF} from '@allgemein/schema-api';
+import { IFindOptions } from './framework/IFindOptions';
+import { ClassRef, ClassType, IClassRef, IEntityRef, ISchemaRef, METATYPE_CLASS_REF } from '@allgemein/schema-api';
+import { assign } from 'lodash';
 
 export type CLS_DEF<T> = ClassType<T> | Function | string;
 
@@ -90,7 +90,7 @@ export class EntityController implements IEntityController {
 
   async save<T>(object: T, options?: ISaveOptions): Promise<T>;
   async save<T>(object: T[], options?: ISaveOptions): Promise<T[]>;
-  async save<T>(object: T | T[], options: ISaveOptions = {validate: true}): Promise<T | T[]> {
+  async save<T>(object: T | T[], options: ISaveOptions = { validate: true }): Promise<T | T[]> {
     if (!this.framework) {
       throw new NotSupportedError('no framework support');
     }
@@ -98,8 +98,8 @@ export class EntityController implements IEntityController {
   }
 
 
-  async findOne<T>(fn: Function | string | ClassType<T>, conditions: any = null, options: IFindOptions = {limit: 1}): Promise<T> {
-    return this.find<T>(fn, conditions, _.assign(options, {limit: 1})).then(r => r.shift());
+  async findOne<T>(fn: Function | string | ClassType<T>, conditions: any = null, options: IFindOptions = { limit: 1 }): Promise<T> {
+    return this.find<T>(fn, conditions, assign(options, { limit: 1 })).then(r => r.shift());
   }
 
 
@@ -132,6 +132,22 @@ export class EntityController implements IEntityController {
     throw new NotYetImplementedError();
   }
 
+  /**
+   * Returns the storage reference
+   */
+  getStorageRef(): IStorageRef {
+    return this.storageRef;
+  }
+
+  /**
+   * By pass the storage controller of underlaying storage reference
+   *
+   * @param query
+   * @param options
+   */
+  rawQuery(query: any, options?: any): any {
+    return this.getStorageRef().getController().rawQuery(query, options);
+  }
 }
 
 
