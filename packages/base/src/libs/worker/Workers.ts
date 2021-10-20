@@ -10,7 +10,7 @@ import {MatchUtils} from '../utils/MatchUtils';
 import {RuntimeLoader} from '../../base/RuntimeLoader';
 import {Injector} from '../di/Injector';
 import {Log} from '../logging/Log';
-import {AbstractRegistry} from '@allgemein/schema-api/lib/registry/AbstractRegistry';
+import {AbstractRegistry} from '@allgemein/schema-api';
 
 
 const DEFAULT_OPTIONS: IWorkerConfig = {access: [{access: 'deny', name: '*'}]};

@@ -454,7 +454,7 @@ export class TaskRunner extends EventEmitter {
 
     const doneCallback = function(err: Error, res: any) {
       if (err) {
-        self.taskLogger.error(err);
+        self.taskLogger.error(err.stack);
       }
       taskRun.error(err);
       taskRun.result(res);

@@ -42,6 +42,12 @@ const settingsTemplate: any = {
     transports: [{console: {}}],
   },
 
+  tasks:{
+    logger: 'winston',
+    logging: 'file'
+  },
+
+
   server: {
     default: {
       type: 'web',

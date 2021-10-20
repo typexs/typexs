@@ -180,7 +180,7 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
         error = e;
         worker.setError(e);
         this._error++;
-        this.logger.error(e);
+        this.logger.error(e.stack);
       } finally {
         remove(this.active, x => x.id === worker.id);
         await worker.doStop(this, error);
@@ -209,7 +209,7 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
       try {
         await this.all.push(job);
       } catch (e) {
-        this.logger.error(e);
+        this.logger.error(e.stack);
         error = e;
       }
     }

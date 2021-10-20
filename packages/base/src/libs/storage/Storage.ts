@@ -120,6 +120,7 @@ export class Storage {
             }
           } else {
             const type = StringUtils.checkIfPathLocation(entry);
+            let path;
             switch (type) {
               case 'url':
               case 'unknown':
@@ -147,7 +148,7 @@ export class Storage {
                 break;
               case 'relative':
               case 'absolute':
-                const path = type === 'relative' ? PlatformUtils.pathResolveAndNormalize(entry) : entry;
+                path = type === 'relative' ? PlatformUtils.pathResolveAndNormalize(entry) : entry;
                 object = await this.fromPath(path);
                 break;
             }

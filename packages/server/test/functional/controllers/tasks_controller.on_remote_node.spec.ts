@@ -63,6 +63,11 @@ const settingsTemplate: any = {
     loggers: [{name: '*', level: 'debug'}]
   },
 
+  tasks:{
+    logger: 'winston',
+    logging: 'file'
+  },
+
   server: {
     default: {
       type: 'web',
@@ -353,7 +358,7 @@ class TasksControllerSpec {
     await EventBus.register(z);
 
     const _url = URL + '/api' + API_CTRL_TASK_EXEC
-        .replace(':taskName', 'simple_task_with_params') + '?params=' +
+      .replace(':taskName', 'simple_task_with_params') + '?params=' +
       JSON.stringify({need_this: {really: {important: 'data'}}}) + '&targetIds=' +
       JSON.stringify(['fake_app_node_tasks']);
     const taskEvents: TaskEvent[] = await request.get(_url, {passBody: true, responseType: 'json'}) as any;
@@ -413,7 +418,7 @@ class TasksControllerSpec {
   @test
   async 'execute remote task without necessary parameters'() {
     const _url = URL + '/api' + API_CTRL_TASK_EXEC
-        .replace(':taskName', 'simple_task_with_params') + '?targetIds=' +
+      .replace(':taskName', 'simple_task_with_params') + '?targetIds=' +
       JSON.stringify(['fake_app_node_tasks']);
     try {
       const taskEvents: TaskEvent[] = await request.get(_url, {passBody: true, responseType: 'json'}) as any;
@@ -428,7 +433,7 @@ class TasksControllerSpec {
   @test
   async 'execute remote task without necessary parameters (skip throwing)'() {
     const _url = URL + '/api' + API_CTRL_TASK_EXEC
-        .replace(':taskName', 'simple_task_with_params') + '?targetIds=' +
+      .replace(':taskName', 'simple_task_with_params') + '?targetIds=' +
       JSON.stringify(['fake_app_node_tasks']) +
       '&options=' + JSON.stringify(<ITaskExectorOptions>{skipThrow: true});
     const taskEvents: TaskEvent[] = await request.get(_url, {passBody: true, responseType: 'json'}) as any;
@@ -446,7 +451,7 @@ class TasksControllerSpec {
   @test
   async 'execute remote task and wait for results (task error)'() {
     const _url = URL + '/api' + API_CTRL_TASK_EXEC
-        .replace(':taskName', 'simple_task_with_error')
+      .replace(':taskName', 'simple_task_with_error')
       + '?options=' + JSON.stringify(<ITaskExectorOptions>{waitForRemoteResults: true});
 
     try {
@@ -463,7 +468,7 @@ class TasksControllerSpec {
   @test
   async 'execute remote task and wait for results (task error, skip throw)'() {
     const _url = URL + '/api' + API_CTRL_TASK_EXEC
-        .replace(':taskName', 'simple_task_with_error')
+      .replace(':taskName', 'simple_task_with_error')
       + '?options=' + JSON.stringify(<ITaskExectorOptions>{skipThrow: true, waitForRemoteResults: true});
 
     const runnerResults: ITaskRunnerResult[] = await request.get(_url, {passBody: true, responseType: 'json'}) as any;
@@ -495,8 +500,8 @@ class TasksControllerSpec {
     // console.log(inspect(event, null, 10));
 
     const _urlLog = URL + '/api' + API_CTRL_TASK_LOG
-        .replace(':nodeId', event.nodeId)
-        .replace(':runnerId', event.id) +
+      .replace(':nodeId', event.nodeId)
+      .replace(':runnerId', event.id) +
       '?options=' + JSON.stringify(<IMessageOptions>{filterErrors: true});
 
     const taskEvent = (await request.get(_urlLog, {responseType: 'json', passBody: true})) as unknown as any[];

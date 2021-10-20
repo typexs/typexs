@@ -122,20 +122,20 @@ export class DistributedStorageAPIController {
     if (!_.isEmpty(opts)) {
       const checked = {};
       _.keys(opts).filter(k => [
-          'raw',
-          'timeout',
-          'validate',
-          'noTransaction',
-          'skipBuild',
-          'hint',
-          'contollerHint',
-          'timeout',
-          'cache',
-          'skipLocal',
-          'outputMode',
-          'targetIds',
-          'filterErrors'
-        ].indexOf(k) > -1 &&
+        'raw',
+        'timeout',
+        'validate',
+        'noTransaction',
+        'skipBuild',
+        'hint',
+        'contollerHint',
+        'timeout',
+        'cache',
+        'skipLocal',
+        'outputMode',
+        'targetIds',
+        'filterErrors'
+      ].indexOf(k) > -1 &&
         (_.isString(opts[k]) ||
           _.isNumber(opts[k]) ||
           _.isPlainObject(opts[k]) ||
@@ -161,7 +161,7 @@ export class DistributedStorageAPIController {
   ])
   @Get(_API_CTRL_DISTRIBUTED_STORAGE_FIND_ENTITY)
   async query(
-    @Param('name') name: string,
+  @Param('name') name: string,
     @QueryParam('query') query: string,
     @QueryParam('aggr') aggr: string,
     @QueryParam('sort') sort: string = null,
@@ -256,10 +256,10 @@ export class DistributedStorageAPIController {
     PERMISSION_ALLOW_DISTRIBUTED_STORAGE_ACCESS_ENTITY_PATTERN])
   @Get(_API_CTRL_DISTRIBUTED_STORAGE_GET_ENTITY)
   async get(@Param('name') name: string,
-            @Param('nodeId') targetId: string,
-            @Param('id') id: string,
-            @QueryParam('opts') opts: IDistributedFindOptions = {},
-            @CurrentUser() user: any) {
+    @Param('nodeId') targetId: string,
+    @Param('id') id: string,
+    @QueryParam('opts') opts: IDistributedFindOptions = {},
+    @CurrentUser() user: any) {
     if (_.isEmpty(name) || _.isEmpty(id)) {
       throw new HttpResponseError(['distributed_storage', 'find'], 'Entity name or id not set');
     }
@@ -313,10 +313,10 @@ export class DistributedStorageAPIController {
   ])
   @Post(_API_CTRL_DISTRIBUTED_STORAGE_SAVE_ENTITY)
   async save(@Param('name') name: string,
-             @Param('nodeId') targetId: string,
-             @Body() data: any,
-             @QueryParam('opts') opts: ISaveOptions | IUpdateOptions = {},
-             @CurrentUser() user: any): Promise<any> {
+    @Param('nodeId') targetId: string,
+    @Body() data: any,
+    @QueryParam('opts') opts: ISaveOptions | IUpdateOptions = {},
+    @CurrentUser() user: any): Promise<any> {
     const {ref, controller} = this.getControllerForEntityName(name);
     if (_.isArray(ref)) {
       throw new Error('multiple entity ref are not supported for "save"');
@@ -346,11 +346,11 @@ export class DistributedStorageAPIController {
   ])
   @Post(_API_CTRL_DISTRIBUTED_STORAGE_UPDATE_ENTITY)
   async updateById(@Param('name') name: string,
-                   @Param('nodeId') targetId: string,
-                   @Param('id') id: string,
-                   @QueryParam('opts') opts: IDistributedUpdateOptions = {},
-                   @Body() data: any,
-                   @CurrentUser() user: any) {
+    @Param('nodeId') targetId: string,
+    @Param('id') id: string,
+    @QueryParam('opts') opts: IDistributedUpdateOptions = {},
+    @Body() data: any,
+    @CurrentUser() user: any) {
 
     const {ref, controller} = this.getControllerForEntityName(name);
     if (_.isArray(ref)) {
@@ -386,11 +386,11 @@ export class DistributedStorageAPIController {
   ])
   @Put(_API_CTRL_DISTRIBUTED_STORAGE_UPDATE_ENTITIES_BY_CONDITION)
   async updateByCondition(@Param('name') name: string,
-                          @Param('nodeId') targetId: string,
-                          @QueryParam('query') query: any = null,
-                          @QueryParam('opts') opts: IUpdateOptions = {},
-                          @Body() data: any,
-                          @CurrentUser() user: any) {
+    @Param('nodeId') targetId: string,
+    @QueryParam('query') query: any = null,
+    @QueryParam('opts') opts: IUpdateOptions = {},
+    @Body() data: any,
+    @CurrentUser() user: any) {
     if (!data) {
       throw new HttpResponseError(['distributed_storage', 'update'], 'No update data given');
     }
@@ -436,11 +436,11 @@ export class DistributedStorageAPIController {
   ])
   @Delete(_API_CTRL_DISTRIBUTED_STORAGE_DELETE_ENTITY)
   async deleteById(@Param('name') name: string,
-                   @Param('nodeId') targetId: string,
-                   @Param('id') id: string,
-                   @QueryParam('opts') opts: IDistributedRemoveOptions = {},
-                   @Body() data: any,
-                   @CurrentUser() user: any) {
+    @Param('nodeId') targetId: string,
+    @Param('id') id: string,
+    @QueryParam('opts') opts: IDistributedRemoveOptions = {},
+    @Body() data: any,
+    @CurrentUser() user: any) {
     const {ref, controller} = this.getControllerForEntityName(name);
     if (_.isArray(ref)) {
       throw new Error('multiple entity ref are not supported for "delete"');
@@ -483,10 +483,10 @@ export class DistributedStorageAPIController {
   ])
   @Delete(_API_CTRL_DISTRIBUTED_STORAGE_DELETE_ENTITIES_BY_CONDITION)
   async deleteByQuery(@Param('name') name: string,
-                      @Param('nodeId') targetId: string,
-                      @QueryParam('query') query: any = {},
-                      @QueryParam('opts') opts: IDistributedRemoveOptions = {},
-                      @CurrentUser() user: any) {
+    @Param('nodeId') targetId: string,
+    @QueryParam('query') query: any = {},
+    @QueryParam('opts') opts: IDistributedRemoveOptions = {},
+    @CurrentUser() user: any) {
 
     if (!query || _.isEmpty(query)) {
       // multiple ids should be bound by 'or', else it would be 'and'
@@ -509,7 +509,7 @@ export class DistributedStorageAPIController {
   }
 
 
-  private getControllerForEntityName(name: string): { ref: IEntityRef | IEntityRef[], controller: DistributedStorageEntityController } {
+  private getControllerForEntityName(name: string): { ref: IEntityRef | IEntityRef[]; controller: DistributedStorageEntityController } {
     const storageRef = this.getStorageRef(name);
     const entityRef = this.getEntityRef(storageRef, name);
     return {ref: entityRef, controller: this.controller};

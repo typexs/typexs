@@ -29,6 +29,12 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
 
   name = 'task_queue_worker';
 
+  @Inject(Cache.NAME)
+  cache: Cache;
+
+  @Inject(TaskRunnerRegistry.NAME)
+  taskRunnerRegistry: TaskRunnerRegistry;
+
   inc = 0;
 
   nodeId: string;
@@ -38,12 +44,6 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
   options: ITaskQueueWorkerOptions;
 
   intervalId: any;
-
-  @Inject(Cache.NAME)
-  cache: Cache;
-
-  @Inject(TaskRunnerRegistry.NAME)
-  taskRunnerRegistry: TaskRunnerRegistry;
 
   logger: ILoggerApi = Log.getLoggerFor(TaskQueueWorker);
 
@@ -187,7 +187,7 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
           parameters: parameters,
           event: event
         })
-      , 10);
+      , 50);
     }
     this.logger.debug('enqueue task event: ' + event.nodeId + '=>' + event.id);
     return firedEvent;

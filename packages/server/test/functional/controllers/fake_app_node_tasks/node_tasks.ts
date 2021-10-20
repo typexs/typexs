@@ -1,20 +1,23 @@
-import {IEventBusConfiguration} from '@allgemein/eventbus';
-import {Bootstrap, Config} from '@typexs/base';
-import {getBootstrapForSpawn} from '../spawn';
+import { IEventBusConfiguration } from '@allgemein/eventbus';
+import { Bootstrap, Config } from '@typexs/base';
+import { getBootstrapForSpawn } from '../spawn';
 
-(async function () {
+(async function() {
 
   let bootstrap: Bootstrap = getBootstrapForSpawn('fake_app_node_tasks', {
-    app: {path: __dirname},
-    eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}},
+    app: { path: __dirname },
+    eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
     workers: {
       access: [
-        {name: 'TaskQueueWorker', access: 'allow'},
-        {name: 'ExchangeMessageWorker', access: 'allow'}
+        { name: 'TaskQueueWorker', access: 'allow' },
+        { name: 'ExchangeMessageWorker', access: 'allow' }
       ]
     },
-    tasks: {logdir: '/tmp/taskmonitor/fake_app_node_tasks'},
-    filesystem: {paths: ['/tmp/taskmonitor']}
+    tasks: {
+      logdir: '/tmp/taskmonitor/fake_app_node_tasks', logger: 'winston',
+      logging: 'file'
+    },
+    filesystem: { paths: ['/tmp/taskmonitor'] }
   });
 
 

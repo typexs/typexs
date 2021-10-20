@@ -137,9 +137,7 @@ export class StorageAPIController {
   @Get(_API_CTRL_STORAGE_METADATA_ALL_STORES)
   async getMetadatas(@CurrentUser() user: any): Promise<any> {
     const storageNames = this.storage.getNames();
-    const data = await Promise.all(_.map(storageNames, storageName => {
-      return this.getStorageSchema(storageName);
-    }));
+    const data = await Promise.all(_.map(storageNames, storageName => this.getStorageSchema(storageName)));
     return data;
   }
 
@@ -150,9 +148,9 @@ export class StorageAPIController {
   @Access(PERMISSION_ALLOW_ACCESS_STORAGE_METADATA)
   @Get(_API_CTRL_STORAGE_METADATA_GET_STORE)
   async getMetadata(@Param('name') storageName: string,
-                    @QueryParam('withCollections') withCollections: boolean,
-                    @QueryParam('refresh') refresh: boolean,
-                    @CurrentUser() user: any) {
+    @QueryParam('withCollections') withCollections: boolean,
+    @QueryParam('refresh') refresh: boolean,
+    @CurrentUser() user: any) {
     return this.getStorageSchema(storageName, withCollections, refresh);
   }
 
@@ -165,9 +163,7 @@ export class StorageAPIController {
   async getMetadataEntities(@CurrentUser() user: any) {
     const storageNames = this.storage.getNames();
     let data: IJsonSchema7[] = [];
-    const arrs = await Promise.all(_.map(storageNames, storageName => {
-      return this.getStorageSchema(storageName).then(e => e.schema);
-    }));
+    const arrs = await Promise.all(_.map(storageNames, storageName => this.getStorageSchema(storageName).then(e => e.schema)));
     data = _.concat([], ...arrs);
     return data;
   }
@@ -218,12 +214,12 @@ export class StorageAPIController {
     PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY_PATTERN])
   @Get(_API_CTRL_STORAGE_FIND_ENTITY)
   query(@Param('name') name: string,
-        @QueryParam('query') query: string,
-        @QueryParam('sort') sort: string = null,
-        @QueryParam('limit') limit: number = 50,
-        @QueryParam('offset') offset: number = 0,
-        @QueryParam('opts') opts: IFindOptions = {},
-        @CurrentUser() user: any) {
+    @QueryParam('query') query: string,
+    @QueryParam('sort') sort: string = null,
+    @QueryParam('limit') limit: number = 50,
+    @QueryParam('offset') offset: number = 0,
+    @QueryParam('opts') opts: IFindOptions = {},
+    @CurrentUser() user: any) {
     return this._query(name, query, null, sort, limit, offset, opts, user);
   }
 
@@ -235,12 +231,12 @@ export class StorageAPIController {
     PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY_PATTERN])
   @Get(_API_CTRL_STORAGE_AGGREGATE_ENTITY)
   aggregate(@Param('name') name: string,
-            @QueryParam('aggr') aggr: string,
-            @QueryParam('sort') sort: string = null,
-            @QueryParam('limit') limit: number = 50,
-            @QueryParam('offset') offset: number = 0,
-            @QueryParam('opts') opts: IFindOptions = {},
-            @CurrentUser() user: any) {
+    @QueryParam('aggr') aggr: string,
+    @QueryParam('sort') sort: string = null,
+    @QueryParam('limit') limit: number = 50,
+    @QueryParam('offset') offset: number = 0,
+    @QueryParam('opts') opts: IFindOptions = {},
+    @CurrentUser() user: any) {
     return this._query(name, null, aggr, sort, limit, offset, opts, user);
   }
 
@@ -361,9 +357,9 @@ export class StorageAPIController {
     PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY_PATTERN])
   @Get(_API_CTRL_STORAGE_GET_ENTITY)
   async get(@Param('name') name: string,
-            @Param('id') id: string,
-            @QueryParam('opts') opts: IFindOptions = {},
-            @CurrentUser() user: any) {
+    @Param('id') id: string,
+    @QueryParam('opts') opts: IFindOptions = {},
+    @CurrentUser() user: any) {
     if (_.isEmpty(name) || _.isEmpty(id)) {
       throw new HttpError(400, 'entity name or id not set');
     }
@@ -426,9 +422,9 @@ export class StorageAPIController {
   @Access([PERMISSION_ALLOW_SAVE_STORAGE_ENTITY, PERMISSION_ALLOW_SAVE_STORAGE_ENTITY_PATTERN])
   @Post(_API_CTRL_STORAGE_SAVE_ENTITY)
   async save(@Param('name') name: string,
-             @Body() data: any,
-             @QueryParam('opts') opts: ISaveOptions | IUpdateOptions = {},
-             @CurrentUser() user: any): Promise<any> {
+    @Body() data: any,
+    @QueryParam('opts') opts: ISaveOptions | IUpdateOptions = {},
+    @CurrentUser() user: any): Promise<any> {
     const {ref, controller} = this.getControllerForEntityName(name);
     if (_.isArray(ref)) {
       throw new Error('multiple entity ref are not supported for "save"');
@@ -457,10 +453,10 @@ export class StorageAPIController {
   @Access([PERMISSION_ALLOW_UPDATE_STORAGE_ENTITY, PERMISSION_ALLOW_UPDATE_STORAGE_ENTITY_PATTERN])
   @Post(_API_CTRL_STORAGE_UPDATE_ENTITY)
   async updateById(@Param('name') name: string,
-                   @Param('id') id: string,
-                   @QueryParam('opts') opts: IUpdateOptions = {},
-                   @Body() data: any,
-                   @CurrentUser() user: any) {
+    @Param('id') id: string,
+    @QueryParam('opts') opts: IUpdateOptions = {},
+    @Body() data: any,
+    @CurrentUser() user: any) {
 
     const {ref, controller} = this.getControllerForEntityName(name);
     if (_.isArray(ref)) {
@@ -494,10 +490,10 @@ export class StorageAPIController {
     PERMISSION_ALLOW_UPDATE_STORAGE_ENTITY_PATTERN])
   @Put(_API_CTRL_STORAGE_UPDATE_ENTITIES_BY_CONDITION)
   async updateByCondition(@Param('name') name: string,
-                          @QueryParam('query') query: any = null,
-                          @QueryParam('opts') opts: IUpdateOptions = {},
-                          @Body() data: any,
-                          @CurrentUser() user: any) {
+    @QueryParam('query') query: any = null,
+    @QueryParam('opts') opts: IUpdateOptions = {},
+    @Body() data: any,
+    @CurrentUser() user: any) {
     if (!data) {
       throw new HttpResponseError(['storage', 'update'], 'No update data given');
     }
@@ -544,10 +540,11 @@ export class StorageAPIController {
    */
   @Access([PERMISSION_ALLOW_DELETE_STORAGE_ENTITY, PERMISSION_ALLOW_DELETE_STORAGE_ENTITY_PATTERN])
   @Delete(_API_CTRL_STORAGE_DELETE_ENTITY)
-  async deleteById(@Param('name') name: string,
-                   @Param('id') id: string,
-                   @QueryParam('opts') opts: IDeleteOptions = {},
-                   @CurrentUser() user: any) {
+  async deleteById(
+  @Param('name') name: string,
+    @Param('id') id: string,
+    @QueryParam('opts') opts: IDeleteOptions = {},
+    @CurrentUser() user: any) {
     const {ref, controller} = this.getControllerForEntityName(name);
     if (_.isArray(ref)) {
       throw new Error('multiple entity ref are not supported for "delete"');
@@ -580,8 +577,6 @@ export class StorageAPIController {
     } catch (e) {
       throw new HttpResponseError(['storage', 'delete'], e.message);
     }
-
-    return 0;
   }
 
 
@@ -599,9 +594,9 @@ export class StorageAPIController {
     PERMISSION_ALLOW_DELETE_STORAGE_ENTITY_PATTERN])
   @Delete(_API_CTRL_STORAGE_DELETE_ENTITIES_BY_CONDITION)
   async deleteByQuery(@Param('name') name: string,
-                      @QueryParam('query') query: any = {},
-                      @QueryParam('opts') opts: IDeleteOptions = {},
-                      @CurrentUser() user: any) {
+    @QueryParam('query') query: any = {},
+    @QueryParam('opts') opts: IDeleteOptions = {},
+    @CurrentUser() user: any) {
 
     if (!query || _.isEmpty(query)) {
       // multiple ids should be bound by 'or', else it would be 'and'
@@ -634,7 +629,7 @@ export class StorageAPIController {
   }
 
 
-  private getControllerForEntityName(name: string, user?: IRolesHolder): { ref: IEntityRef | IEntityRef[], controller: IEntityController } {
+  private getControllerForEntityName(name: string, user?: IRolesHolder): { ref: IEntityRef | IEntityRef[]; controller: IEntityController } {
     const storageRef = this.getStorageRef(name);
     const controller = storageRef.getController();
     const entityRef = this.getEntityRef(storageRef, name, user);
@@ -670,6 +665,7 @@ export class StorageAPIController {
           return allowedEntities.shift();
         }
       } else {
+        // eslint-disable-next-line max-len
         throw new HttpResponseError(['storage', 'entity_ref_not_found'], 'Entity reference not found for ' + name + ' or permissions are not given.');
       }
 

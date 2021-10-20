@@ -34,13 +34,6 @@ import { getJsObjectType } from './Helper';
 export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistry*/ implements IJsonSchema {
 
 
-  constructor(namespace: string) {
-    super(namespace);
-    // this = LookupRegistry.$(NAMESPACE_BUILT_ENTITY);
-    // const defaultSchema = new SchemaRef({name: 'default'});
-    // this.add(METATYPE_SCHEMA, defaultSchema);
-  }
-
   static NAME = 'EntityRegistry';
 
   private static _self: EntityRegistry; // = new Registry();
