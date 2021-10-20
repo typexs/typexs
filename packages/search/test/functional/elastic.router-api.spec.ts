@@ -1,16 +1,20 @@
-import {expect} from 'chai';
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Injector, XS_P_$COUNT} from '@typexs/base';
+import { expect } from 'chai';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { __CLASS__, Bootstrap, Injector, XS_P_$COUNT } from '@typexs/base';
 import * as path from 'path';
-import {ElasticStorageRef} from '../../src/lib/elastic/ElasticStorageRef';
-import {ES_host, ES_port} from './config';
-import {Client} from '@elastic/elasticsearch';
+import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
+import { ES_host, ES_port } from './config';
+import { Client } from '@elastic/elasticsearch';
 import * as _ from 'lodash';
-import {DataEntity} from './fake_app_controller/entities/DataEntity';
-import {SearchEntity} from './fake_app_controller/entities/SearchEntity';
-import {ElasticEntityController} from '../../src/lib/elastic/ElasticEntityController';
-import {HttpFactory, IHttp} from '@allgemein/http';
-import {API_CTRL_STORAGE_FIND_ENTITY, WebServer} from '@typexs/server';
+import { DataEntity } from './fake_app_controller/entities/DataEntity';
+import { SearchEntity } from './fake_app_controller/entities/SearchEntity';
+import { ElasticEntityController } from '../../src/lib/elastic/ElasticEntityController';
+import { HttpFactory, IHttp } from '@allgemein/http';
+import { API_CTRL_STORAGE_FIND_ENTITY, WebServer } from '@typexs/server';
+import { TestHelper } from './TestHelper';
+import { __ID__, __TYPE__, C_ELASTIC_SEARCH, C_SEARCH_INDEX, ES_IDFIELD } from '../../src/lib/Constants';
+import { IElasticStorageRefOptions } from '../../src';
+import { __NS__ } from '@allgemein/schema-api';
 
 const lorem = 'lorem ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod ' +
   'tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero ' +
@@ -30,11 +34,11 @@ const lorem2 = 'lorem ipsum dolor varius harsut sit amet, consetetur sadipscing 
 
 let bootstrap: Bootstrap = null;
 const appdir = path.join(__dirname, 'fake_app_controller');
-const resolve = __dirname + '/../../../../..';
+const resolve = TestHelper.root();
 const testConfig = [
   {
-    app: {path: appdir},
-    modules: {paths: [resolve]},
+    app: { path: appdir },
+    modules: { paths: [resolve] },
     logging: {
       enable: false,
       level: 'debug'
@@ -70,20 +74,20 @@ const testConfig = [
         type: 'sqlite',
         database: ':memory:'
       },
-      elastic: <any>{
-        framework: 'index',
-        type: 'elastic',
+      elastic: <IElasticStorageRefOptions>{
+        framework: C_SEARCH_INDEX,
+        type: C_ELASTIC_SEARCH,
         connectOnStartup: true,
         host: ES_host,
         port: ES_port,
         indexTypes: [
-          {index: 'core', entities: ['GreatEntity']},
-          {index: 'data_index', entities: ['DataEntity']},
-          {index: 'search_index', entities: ['SearchEntity']}
+          { index: 'core', entities: ['GreatEntity'] },
+          { index: 'data_index', entities: ['DataEntity'] },
+          { index: 'search_index', entities: ['SearchEntity'] }
         ]
       }
     }
-  },
+  }
 ];
 
 
@@ -100,28 +104,28 @@ class TypexsSearchRouterApi {
   static async before() {
     Bootstrap.reset();
 
-    client = new Client({node: 'http://' + ES_host + ':' + ES_port});
+    client = new Client({ node: 'http://' + ES_host + ':' + ES_port });
     await client.ping();
 
     const words = lorem.split(' ');
     const words2 = lorem2.split(' ');
-    const existsData = await client.indices.exists({index: 'data_index'});
-    const existsSearch = await client.indices.exists({index: 'search_index'});
+    const existsData = await client.indices.exists({ index: 'data_index' });
+    const existsSearch = await client.indices.exists({ index: 'search_index' });
     if (existsData.body) {
-      await client.indices.delete({index: 'data_index'});
+      await client.indices.delete({ index: 'data_index' });
     }
     if (existsSearch.body) {
-      await client.indices.delete({index: 'search_index'});
+      await client.indices.delete({ index: 'search_index' });
     }
     // delete index
-    const {body} = await client.indices.exists({index: 'core'});
+    const { body } = await client.indices.exists({ index: 'core' });
     if (body) {
-      await client.indices.delete({index: 'core'});
+      await client.indices.delete({ index: 'core' });
     }
 
 
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(testConfig.shift());
 
     bootstrap.activateErrorHandling();
@@ -136,8 +140,8 @@ class TypexsSearchRouterApi {
     const promises = [];
     for (const i of _.range(0, 40)) {
       const d = new DataEntity();
-      d['__id'] = i + '';
-      d['__type'] = 'data_entity';
+      d[__ID__] = i + '';
+      d[__TYPE__] = 'data_entity';
       d.id = i;
       d.date = new Date(2020, i % 12, i % 30);
       d.name = words[i];
@@ -155,8 +159,8 @@ class TypexsSearchRouterApi {
       }));
 
       const s = new SearchEntity();
-      s['__id'] = i + '';
-      s['__type'] = 'search_entity';
+      s[__ID__] = i + '';
+      s[__TYPE__] = 'search_entity';
       s.id = i;
       s.datus = new Date(2020, i % 12, i % 30);
       s.search = words[i + 1];
@@ -173,7 +177,7 @@ class TypexsSearchRouterApi {
         body: s
       }));
       await Promise.all(promises);
-      await client.indices.refresh({index: ['data_index', 'search_index']});
+      await client.indices.refresh({ index: ['data_index', 'search_index'] });
 
 
     }
@@ -199,13 +203,14 @@ class TypexsSearchRouterApi {
   @test
   async 'find entities by given type'() {
     const url = 'http://localhost:4500/api' + API_CTRL_STORAGE_FIND_ENTITY.replace(':name', 'SearchEntityIdx');
-    const response = await http.get(url, {responseType: 'json', passBody: true});
+    const response = await http.get(url, { responseType: 'json', passBody: true });
     expect(response[XS_P_$COUNT]).to.be.eq(40);
     expect(response['entities']).to.have.length(40);
     expect(response['entities'][0]).to.be.deep.eq(
       {
         'id': 0,
         'search': 'ipsum',
+        // eslint-disable-next-line max-len
         'textus': 'ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
         'numerus': 0,
         'datus': '2019-12-30T23:00:00.000Z',
@@ -213,11 +218,11 @@ class TypexsSearchRouterApi {
         '$score': 1,
         '$label': '0',
         '$url': '/storage/entity/search_entity_idx/0',
-        '__class__': 'SearchEntityIdx',
-        '__registry__': 'index',
-        '_id': 'search_entity--0',
-        '__id': '0',
-        '__type': 'search_entity'
+        [__CLASS__]: 'SearchEntityIdx',
+        [__NS__]: C_SEARCH_INDEX,
+        [ES_IDFIELD]: 'search_entity--0',
+        [__ID__]: '0',
+        [__TYPE__]: 'search_entity'
       }
     );
   }
@@ -225,7 +230,7 @@ class TypexsSearchRouterApi {
   @test
   async 'find entities over all'() {
     const url = 'http://localhost:4500/api' + API_CTRL_STORAGE_FIND_ENTITY.replace(':name', '*');
-    const response = await http.get(url, {responseType: 'json', passBody: true});
+    const response = await http.get(url, { responseType: 'json', passBody: true });
     expect(response[XS_P_$COUNT]).to.be.eq(80);
     expect(response['entities']).to.have.length(50);
   }

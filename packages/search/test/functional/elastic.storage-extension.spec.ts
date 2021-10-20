@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import * as _ from 'lodash';
 import { suite, test, timeout } from '@testdeck/mocha';
-import { Bootstrap, Injector } from '@typexs/base';
+import { Bootstrap, C_STORAGE_DEFAULT, Injector } from '@typexs/base';
 import * as path from 'path';
 import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
 import { ElasticEntityController } from '../../src/lib/elastic/ElasticEntityController';
@@ -11,6 +11,8 @@ import { SearchEntity } from './fake_app_controller/entities/SearchEntity';
 import { ES_host, ES_port } from './config';
 import { IndexProcessingWorker } from '../../src/workers/IndexProcessingWorker';
 import { TestHelper } from './TestHelper';
+import { C_ELASTIC_SEARCH, C_SEARCH_INDEX } from '../../src/lib/Constants';
+import { IElasticStorageRefOptions } from '../../src';
 
 const lorem = 'lorem ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod ' +
   'tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero ' +
@@ -34,7 +36,7 @@ const resolve = TestHelper.root();
 const testConfig = [
   {
     app: { path: appdir },
-    modules: { paths: [resolve] },
+    modules: { paths: [resolve], disableCache: true },
     logging: {
       enable: false,
       level: 'debug'
@@ -44,9 +46,9 @@ const testConfig = [
         type: 'sqlite',
         database: ':memory:'
       },
-      elastic: <any>{
-        framework: 'index',
-        type: 'elastic',
+      elastic: <IElasticStorageRefOptions>{
+        framework: C_SEARCH_INDEX,
+        type: C_ELASTIC_SEARCH,
         connectOnStartup: true,
         host: ES_host,
         port: ES_port,
@@ -69,8 +71,8 @@ let storageRef: ElasticStorageRef;
 let controller: ElasticEntityController;
 let client: Client;
 
-@suite('functional/typexs-search/elastic/storage-extension') @timeout(300000)
-class TypexsSearchEntityController {
+@suite('functional/elastic/storage-extension') @timeout(300000)
+class ElasticStorageExtensionSpec {
 
 
   static async before() {
@@ -129,7 +131,7 @@ class TypexsSearchEntityController {
     const words2 = lorem2.split(' ');
 
     const indexProcessingWorker = Injector.get<IndexProcessingWorker>(IndexProcessingWorker);
-    const dbStorageRef = Injector.get<ElasticStorageRef>('storage.default');
+    const dbStorageRef = Injector.get<ElasticStorageRef>(C_STORAGE_DEFAULT);
     const dbController = dbStorageRef.getController();
     const inc = indexProcessingWorker.queue.queue.getInc();
     const i = 1;
@@ -158,7 +160,7 @@ class TypexsSearchEntityController {
     const words = lorem.split(' ');
     const words2 = lorem2.split(' ');
     const indexProcessingWorker = Injector.get<IndexProcessingWorker>(IndexProcessingWorker);
-    const dbStorageRef = Injector.get<ElasticStorageRef>('storage.default');
+    const dbStorageRef = Injector.get<ElasticStorageRef>(C_STORAGE_DEFAULT);
     const dbController = dbStorageRef.getController();
 
     const inc = indexProcessingWorker.queue.queue.getInc();
@@ -238,7 +240,7 @@ class TypexsSearchEntityController {
     const words = lorem.split(' ');
     const words2 = lorem2.split(' ');
     const indexProcessingWorker = Injector.get<IndexProcessingWorker>(IndexProcessingWorker);
-    const dbStorageRef = Injector.get<ElasticStorageRef>('storage.default');
+    const dbStorageRef = Injector.get<ElasticStorageRef>(C_STORAGE_DEFAULT);
     const dbController = dbStorageRef.getController();
     const inc = indexProcessingWorker.queue.queue.getInc();
     const entities = [];

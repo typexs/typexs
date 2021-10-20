@@ -13,7 +13,7 @@ import { Client, ClientOptions } from '@elastic/elasticsearch';
 import { IElasticFieldDef } from './IElasticFieldDef';
 import { OpsHelper } from './ops/OpsHelper';
 import { IIndexStorageRef } from '../IIndexStorageRef';
-import { ES_ALLFIELD } from '../Constants';
+import { __ID__, __TYPE__, C_ELASTIC_SEARCH, C_SEARCH_INDEX, ES_ALLFIELD, ES_IDFIELD, ES_LABELFIELD } from '../Constants';
 
 
 export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
@@ -39,8 +39,8 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
 
   constructor(options: IElasticStorageRefOptions) {
     super(_.defaults(options, <IElasticStorageRefOptions>{
-      framework: 'index',
-      type: 'elastic',
+      framework: C_SEARCH_INDEX,
+      type: C_ELASTIC_SEARCH,
       host: '127.0.0.1',
       port: 9200
     }));
@@ -57,7 +57,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
    * Name of framework used
    */
   getFramework(): string {
-    return 'index';
+    return C_SEARCH_INDEX;
   }
 
 
@@ -65,7 +65,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
    * Name of subtype in framework
    */
   getType(): string {
-    return 'elastic';
+    return C_ELASTIC_SEARCH;
   }
 
   getInvoker() {
@@ -135,7 +135,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
         for (const field of fields) {
           field.indexName = type.getIndexName();
           field.typeName = type.getTypeName();
-          if (['_id'].includes(field.name)) {
+          if ([ES_IDFIELD].includes(field.name)) {
             continue;
           }
           this.fields.push(field);
@@ -256,7 +256,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
             }
           ],
           properties: {
-            __id: {
+            [__ID__]: {
               type: 'text',
               fields: {
                 keyword: {
@@ -266,7 +266,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
               },
               copy_to: [ES_ALLFIELD]
             },
-            __type: {
+            [__TYPE__]: {
               type: 'text',
               fields: {
                 keyword: {
@@ -276,7 +276,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
               },
               copy_to: [ES_ALLFIELD]
             },
-            _label: {
+            [ES_LABELFIELD]: {
               type: 'text',
               fields: {
                 keyword: {
@@ -286,7 +286,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
               },
               copy_to: [ES_ALLFIELD]
             },
-            _all: {
+            [ES_ALLFIELD]: {
               type: 'text',
               fields: {
                 keyword: {
@@ -373,7 +373,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
    * Return names of indices
    */
   getIndiciesNames() {
-    return _.uniq(_.orderBy(this.types.map(x => x.indexName)));
+    return _.uniq(_.orderBy(this.types.map(x => x.getIndexName())));
   }
 
   /**
@@ -485,7 +485,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
   }
 
   getRawCollectionNames(): string[] | Promise<string[]> {
-    return this.types.map(x => x.indexName + '.' + x.typeName);
+    return this.types.map(x => x.getIndexName() + '.' + x.getTypeName());
   }
 
   getRawCollections(collectionNames: string[]): ICollection[] | Promise<ICollection[]> {

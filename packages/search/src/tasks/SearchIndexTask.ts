@@ -7,7 +7,7 @@ import { TN_INDEX } from '../lib/Constants';
 import { StorageControllerReader } from '@typexs/pipelines/adapters/pipeline/readers/StorageControllerReader';
 
 
-export class IndexTask implements ITask {
+export class SearchIndexTask implements ITask {
 
   name = TN_INDEX;
 
@@ -75,6 +75,9 @@ export class IndexTask implements ITask {
         dispatcher.queue.push({ action: 'save', ref: type.ref, obj: x, class: clazz.name, registry: registry });
       });
 
+      doit.onCatch(
+        (err: Error) => logger.error(err.stack)
+      );
       reader.push(doit);
     }
 
@@ -83,7 +86,7 @@ export class IndexTask implements ITask {
       try {
         results = await Promise.all(reader.map(r => r.run()));
       } catch (e) {
-        logger.error(e);
+        logger.error(e.stack);
       }
     }
 

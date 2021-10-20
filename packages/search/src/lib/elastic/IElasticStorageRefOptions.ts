@@ -5,7 +5,7 @@ import {IEntityRef} from '@allgemein/schema-api';
 export interface IElasticIndexOptions {
   index?: string;
   autoAppendAllField?: boolean;
-  entities: (string | IEntityRef | { entityName: string, registry: string })[];
+  entities: (string | IEntityRef | { entityName: string; registry: string })[];
 }
 
 

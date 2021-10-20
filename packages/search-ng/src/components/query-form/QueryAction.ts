@@ -1,4 +1,4 @@
-import {ExprDesc} from 'commons-expressions/browser';
+import { ExprDesc } from '@allgemein/expressions';
 
 export type QUERY_MODE = 'query' | 'aggregate';
 

@@ -71,14 +71,18 @@ export class ElasticEntityController implements IEntityController {
   }
 
   remove<T>(object: T[] | T, options?: IElasticDeleteOptions): Promise<number>;
+  // eslint-disable-next-line no-dupe-class-members
   remove<T>(cls: CLS_DEF<T>, condition?: any, options?: IElasticDeleteOptions): Promise<number>;
+  // eslint-disable-next-line no-dupe-class-members
   remove<T>(object: any, condition?: any, options?: IElasticDeleteOptions): Promise<number> {
     return new DeleteOp<T>(this).run(object, condition, options);
     // return null;
   }
 
   save<T>(object: T, options?: IElasticSaveOptions): Promise<T>;
+  // eslint-disable-next-line no-dupe-class-members
   save<T>(object: T[], options?: IElasticSaveOptions): Promise<T[]>;
+  // eslint-disable-next-line no-dupe-class-members
   save<T>(object: any, options?: IElasticSaveOptions): Promise<T | T[]> {
     return new SaveOp<T>(this).run(object, options);
   }

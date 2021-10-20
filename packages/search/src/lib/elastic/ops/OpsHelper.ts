@@ -3,15 +3,16 @@ import {ElasticEntityController} from '../ElasticEntityController';
 import {ClassType} from '@allgemein/schema-api';
 import {IndexEntityRef} from '../../registry/IndexEntityRef';
 import {MatchUtils} from '@typexs/base/libs/utils/MatchUtils';
+import { __ID__, ES_IDFIELD } from '../../Constants';
 
 export class OpsHelper {
 
   static getId(entityRef: IndexEntityRef, entity: any, typed: boolean = true) {
     let id = null;
-    if (_.has(entity, '_id')) {
-      id = entity['_id'];
-    } else if (_.has(entity, '__id')) {
-      id = entity['__id'];
+    if (_.has(entity, ES_IDFIELD)) {
+      id = entity[ES_IDFIELD];
+    } else if (_.has(entity, __ID__)) {
+      id = entity[__ID__];
     } else {
       const idPropertyRefs = entityRef.getPropertyRefs().filter(p => p.isIdentifier());
       if (idPropertyRefs.length === 0) {

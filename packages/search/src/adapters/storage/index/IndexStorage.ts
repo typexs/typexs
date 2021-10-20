@@ -1,9 +1,10 @@
 import { IStorage } from '@typexs/base/libs/storage/IStorage';
 import { IStorageRef, RuntimeLoader } from '@typexs/base';
-import { K_CLS_STORAGE_INDEX_TYPES } from '../../../lib/Constants';
+import { C_SEARCH_INDEX, K_CLS_STORAGE_INDEX_TYPES } from '../../../lib/Constants';
 import { IIndexStorageRefOptions } from '../../../lib/IIndexStorageRefOptions';
 import { IIndexType } from '../../../lib/IIndexType';
 import { IndexEntityRegistry } from '../../../lib/registry/IndexEntityRegistry';
+import { RegistryFactory } from '@allgemein/schema-api';
 
 
 export class IndexStorage implements IStorage {
@@ -30,10 +31,12 @@ export class IndexStorage implements IStorage {
    * Name of this framework type
    */
   getType(): string {
-    return 'index';
+    return C_SEARCH_INDEX;
   }
 
   async prepare(loader: RuntimeLoader) {
+    RegistryFactory.register(C_SEARCH_INDEX, IndexEntityRegistry);
+    RegistryFactory.register(/^search-index\..*/, IndexEntityRegistry);
     const classes = await loader.getClasses(K_CLS_STORAGE_INDEX_TYPES);
     for (const cls of classes) {
       const idxType = Reflect.construct(cls, []);
@@ -43,7 +46,7 @@ export class IndexStorage implements IStorage {
   }
 
   shutdown() {
-    IndexEntityRegistry.reset();
+    RegistryFactory.get(C_SEARCH_INDEX).reset();
   }
 
 }

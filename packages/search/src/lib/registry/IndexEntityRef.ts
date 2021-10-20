@@ -1,7 +1,8 @@
 import * as _ from 'lodash';
+import { assign } from 'lodash';
 import {
+  __NS__,
   AbstractRef,
-  ClassRef,
   IBuildOptions,
   IClassRef,
   IEntityRef,
@@ -9,19 +10,19 @@ import {
   ISchemaRef,
   METADATA_TYPE
 } from '@allgemein/schema-api';
-import { C_INDEX } from '../Constants';
 import { IIndexEntityRefOptions } from '../IIndexEntityRefOptions';
 import { ClassUtils } from '@allgemein/base';
 import { __CLASS__ } from '@typexs/base';
+import { __ID__, __TYPE__, C_SEARCH_INDEX } from '../Constants';
 
 export class IndexEntityRef extends AbstractRef implements IEntityRef {
 
 
-  indexName: string;
+  private indexName: string;
 
-  typeName: string;
+  private typeName: string;
 
-  entityRef: IEntityRef;
+  private entityRef: IEntityRef;
 
 
   /**
@@ -31,17 +32,17 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
    * @param indexName
    */
   constructor(entityRef: IEntityRef, indexName?: string, options?: IIndexEntityRefOptions) {
-    super('entity', entityRef.name + 'Idx', <any>entityRef.getClassRef(), C_INDEX);
+    super('entity', entityRef.name + 'Idx', <any>entityRef.getClassRef(), C_SEARCH_INDEX);
     this.setOptions(options || {});
     this.typeName = _.snakeCase(entityRef.name);
     if (indexName) {
       this.indexName = _.snakeCase(indexName);
     } else {
-      let schema = (<ClassRef>entityRef.getClassRef()).getOptions('schema', false);
+      let schema = entityRef.getClassRef().getOptions('schema', false);
       if (!schema) {
         schema = 'default';
       }
-      const registry = entityRef.getRegistry().getLookupRegistry().getNamespace();
+      const registry = entityRef.getNamespace();
       this.indexName = _.snakeCase([registry, schema, this.typeName].filter(x => !!x).join('__'));
     }
     this.entityRef = entityRef;
@@ -90,14 +91,20 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
       return true;
     } else if (instance[__CLASS__] && (instance[__CLASS__] === this.name || this.getEntityRef().name === instance[__CLASS__])) {
       return true;
-    } else if (!_.isEmpty(instance['__id']) && instance['__type'] === this.getTypeName()) {
+    } else if (!_.isEmpty(instance[__ID__]) && instance[__TYPE__] === this.getTypeName()) {
       return true;
     }
     return false;
   }
 
   build<T>(instance: any, options?: IBuildOptions): T {
-    return this.entityRef.build(instance, options);
+    const opts = assign(options || {}, { skipClassNamespaceInfo: true });
+    const built = this.entityRef.build(instance, opts);
+    if (!options || !options.skipClassNamespaceInfo) {
+      built[__CLASS__] = this.name;
+      built[__NS__] = this.getNamespace();
+    }
+    return built as T;
   }
 
   create<T>(): T {

@@ -2,8 +2,8 @@ import {suite, test, timeout} from '@testdeck/mocha';
 import {ElasticMangoWalker} from '../../src/lib/elastic/ElasticMangoWalker';
 import {expect} from 'chai';
 
-@suite('functional/typexs-search/elastic/mango') @timeout(300000)
-class TypexsSearchConfiguration {
+@suite('functional/elastic/mango')
+class ElasticMangoSpec {
 
 
   @test

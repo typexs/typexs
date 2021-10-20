@@ -1,23 +1,29 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {TypeOrmEntityRegistry} from '@typexs/base';
-import {RegistryEntity} from './fake_app/entities/RegistryEntity';
-import {getMetadataArgsStorage} from 'typeorm';
-import {IndexEntityRef} from '../../src/lib/registry/IndexEntityRef';
-import {expect} from 'chai';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { REGISTRY_TYPEORM, TypeOrmEntityRegistry } from '@typexs/base';
+import { RegistryEntity } from './fake_app/entities/RegistryEntity';
+import { getMetadataArgsStorage } from 'typeorm';
+import { IndexEntityRef } from '../../src/lib/registry/IndexEntityRef';
+import { expect } from 'chai';
+import { RegistryFactory } from '@allgemein/schema-api';
+
+let registry: any;
+
+@suite('functional/index-registry') @timeout(300000)
+class IndexRegistrySpec {
 
 
-@suite('functional/typexs-search/registry') @timeout(300000)
-class TypexsSearchIndexRegistry {
-
-
-  static async before() {
+  static before() {
+    RegistryFactory.remove(REGISTRY_TYPEORM);
+    RegistryFactory.register(REGISTRY_TYPEORM, TypeOrmEntityRegistry);
+    RegistryFactory.register(/^typeorm\..*/, TypeOrmEntityRegistry);
+    registry = RegistryFactory.get(REGISTRY_TYPEORM);
 
   }
 
   @test
   async 'create ref for existing object to index'() {
     const tableDef = getMetadataArgsStorage().tables.find(x => x.target === RegistryEntity);
-    const r = TypeOrmEntityRegistry.$().createEntity(<any>tableDef);
+    const r = registry.createEntity(tableDef);
     const indexRef = new IndexEntityRef(r);
 
     expect(indexRef.getIndexName()).to.be.eq('typeorm_default_registry_entity');
@@ -31,5 +37,12 @@ class TypexsSearchIndexRegistry {
     // console.log(json);
   }
 
+  @test.pending
+  async 'TODO register of @typexs/schema stuff'() {
+  }
+
+  @test.pending
+  async 'TODO register of stuff from other registries'() {
+  }
 
 }

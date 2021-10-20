@@ -61,7 +61,7 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
         res = this.storage.get(event.ref).getController().remove(event.obj, event.condition, event.options);
       }
     } catch (e) {
-      this.logger.error(e);
+      this.logger.error(e.stack);
     }
     return res;
   }
@@ -99,7 +99,7 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
         await (this.storage.get(refKey) as IIndexStorageRef).refresh(indicies);
       }
     } catch (e) {
-      this.queue.getLogger().error(e);
+      this.queue.getLogger().error(e.stack);
     }
   }
 

@@ -10,7 +10,16 @@ import { ElasticEntityController } from '../../src/lib/elastic/ElasticEntityCont
 import { Client } from '@elastic/elasticsearch';
 import { DataEntity } from './fake_app_controller/entities/DataEntity';
 import { SearchEntity } from './fake_app_controller/entities/SearchEntity';
-import { XS_P_$AGGREGATION, XS_P_$FACETS, XS_P_$INDEX, XS_P_$MAX_SCORE } from '../../src/lib/Constants';
+import {
+  __ID__,
+  __TYPE__,
+  C_ELASTIC_SEARCH,
+  C_SEARCH_INDEX,
+  XS_P_$AGGREGATION,
+  XS_P_$FACETS,
+  XS_P_$INDEX,
+  XS_P_$MAX_SCORE
+} from '../../src/lib/Constants';
 import { ClassUtils } from '@allgemein/base';
 import { ES_host, ES_port } from './config';
 import { TestHelper } from './TestHelper';
@@ -37,7 +46,10 @@ const resolve = TestHelper.root();
 const testConfig = [
   {
     app: { path: appdir },
-    modules: { paths: [resolve] },
+    modules: {
+      paths: [resolve],
+      disableCache: true
+    },
     logging: {
       enable: false,
       level: 'debug'
@@ -48,8 +60,8 @@ const testConfig = [
         database: ':memory:'
       },
       elastic: <any>{
-        framework: 'index',
-        type: 'elastic',
+        framework: C_SEARCH_INDEX,
+        type: C_ELASTIC_SEARCH,
         connectOnStartup: true,
         host: ES_host,
         port: ES_port,
@@ -68,8 +80,8 @@ let storageRef: ElasticStorageRef;
 let controller: ElasticEntityController;
 let client: Client;
 
-@suite('functional/typexs-search/elastic/entity-controller') @timeout(300000)
-class TypexsSearchEntityController {
+@suite('functional/elastic/entity-controller')
+class ElasticControllerSpec {
 
 
   static async before() {
@@ -109,8 +121,8 @@ class TypexsSearchEntityController {
     const promises = [];
     for (const i of _.range(0, 40)) {
       const d = new DataEntity();
-      d['__id'] = i + '';
-      d['__type'] = 'data_entity';
+      d[__ID__] = i + '';
+      d[__TYPE__] = 'data_entity';
       d.id = i;
       d.date = new Date(2020, i % 12, i % 30);
       d.name = words[i];
@@ -128,8 +140,8 @@ class TypexsSearchEntityController {
       }));
 
       const s = new SearchEntity();
-      s['__id'] = i + '';
-      s['__type'] = 'search_entity';
+      s[__ID__] = i + '';
+      s[__TYPE__] = 'search_entity';
       s.id = i;
       s.datus = new Date(2020, i % 12, i % 30);
       s.search = words[i + 1];
@@ -253,7 +265,7 @@ class TypexsSearchEntityController {
 
     expect(results.body.hits.total.value).to.be.eq(2);
     expect(results.body.hits.hits).to.have.length(2);
-    let sources = results.body.hits.hits.map((hit: any) => entityRef.build(hit._source));
+    let sources = results.body.hits.hits.map((hit: any) => entityRef.build(hit._source, {skipClassNamespaceInfo: true}));
     sources = _.orderBy(sources, x => JSON.stringify(x));
     g = _.orderBy(g, x => JSON.stringify(x));
     expect(sources).to.be.deep.eq(g);

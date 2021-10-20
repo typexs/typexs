@@ -4,14 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
+    "posttest": "nyc report --reporter=json"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@typexs/base": "0.0.0-PLACEHOLDER",
     "@typexs/schema": "0.0.0-PLACEHOLDER",
-    "@typexs/pipelines": "0.0.0-PLACEHOLDER"
+    "@typexs/pipelines": "0.0.0-PLACEHOLDER",
+    "@typexs/roles-api": "0.0.0-PLACEHOLDER"
   },
   "peerDependencies": {
     "@elastic/elasticsearch": "^7.15.0"

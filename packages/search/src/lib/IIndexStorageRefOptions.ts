@@ -5,7 +5,7 @@ export interface IIndexStorageRefOptions extends IStorageOptions {
   /**
    * The framework will be Elastic
    */
-  framework: 'index';
+  framework: 'search-index';
 
 
   /**

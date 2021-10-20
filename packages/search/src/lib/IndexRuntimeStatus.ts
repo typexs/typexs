@@ -1,8 +1,8 @@
-import {Inject, IStorageRef, Storage} from '@typexs/base';
-import {C_INDEX} from './Constants';
-import {IndexEntityRef} from './registry/IndexEntityRef';
+import { Inject, IStorageRef, Storage } from '@typexs/base';
+import { C_SEARCH_INDEX } from './Constants';
+import { IndexEntityRef } from './registry/IndexEntityRef';
 import * as _ from 'lodash';
-import {ClassUtils} from '@allgemein/base';
+import { ClassUtils } from '@allgemein/base';
 
 export class IndexRuntimeStatus {
 
@@ -49,7 +49,7 @@ export class IndexRuntimeStatus {
       this._checked = true;
       this.storage.getNames().forEach(ref => {
         const storageRef = this.storage.get(ref);
-        if (storageRef.getFramework() === C_INDEX) {
+        if (storageRef.getFramework() === C_SEARCH_INDEX) {
           storageRef.getEntityRefs().forEach((entityRef: IndexEntityRef) => {
             this.types[entityRef.getEntityRef().name] = {
               ref: ref,

@@ -7,6 +7,7 @@ import {DataContainer, Log} from '@typexs/base';
 import {Index} from '@elastic/elasticsearch/api/requestParams';
 import {IElasticSaveOptions} from './IElasticSaveOptions';
 import {OpsHelper} from './OpsHelper';
+import { __ID__, __TYPE__, ES_IDFIELD, ES_TYPEFIELD } from '../../Constants';
 
 export class SaveOp<T> implements ISaveOp<T> {
 
@@ -61,8 +62,8 @@ export class SaveOp<T> implements ISaveOp<T> {
         // const entityName = entityRef.name;
         const id = OpsHelper.getId(entityRef, entity);
 
-        delete entity['_id'];
-        delete entity['_type'];
+        delete entity[ES_IDFIELD];
+        delete entity[ES_TYPEFIELD];
 
         // const idPropertyRefs = entityRef.getPropertyRefs().filter(p => p.isIdentifier());
         // if (idPropertyRefs.length === 0) {
@@ -71,10 +72,10 @@ export class SaveOp<T> implements ISaveOp<T> {
 
         const jsonEntity = _.cloneDeep(entity);
 
-        if (!_.has(entity, '__type')) {
-          jsonEntity.__type = entityRef.getTypeName();
+        if (!_.has(entity, __TYPE__)) {
+          jsonEntity[__TYPE__] = entityRef.getTypeName();
         }
-        jsonEntity.__id = id;
+        jsonEntity[__ID__] = id;
         // jsonEntity.__id = jsonEntity._id + '';
         //
         // if (_.has(jsonEntity, '_id')) {

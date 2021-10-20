@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { suite, test, timeout } from '@testdeck/mocha';
+import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Bootstrap, Injector, Storage } from '@typexs/base';
 import * as path from 'path';
@@ -11,22 +11,27 @@ import { ES_host, ES_port } from './config';
 import { IndexProcessingWorker } from '../../src/workers/IndexProcessingWorker';
 import { IndexRuntimeStatus } from '../../src/lib/IndexRuntimeStatus';
 import { TestHelper } from './TestHelper';
+import { C_ELASTIC_SEARCH, C_SEARCH_INDEX } from '../../src/lib/Constants';
 
 
 let bootstrap: Bootstrap = null;
 const appdir = path.join(__dirname, 'fake_app');
-const resolve = __dirname + '/../../../../..';
+const resolve = TestHelper.root();
 const testConfig = [
   {
     app: { path: appdir },
-    modules: { paths: [resolve], disableCache: true },
+    modules: {
+      paths: [resolve],
+      disableCache: true
+
+    },
     logging: {
-      enable: true
+      enable: false
     },
     storage: {
       elastic: <IElasticStorageRefOptions>{
-        framework: 'index',
-        type: 'elastic',
+        framework: C_SEARCH_INDEX,
+        type: C_ELASTIC_SEARCH,
         host: ES_host,
         port: ES_port
 
@@ -46,8 +51,8 @@ const testConfig = [
         database: ':memory:'
       },
       elastic: <any>{
-        framework: 'index',
-        type: 'elastic',
+        framework: C_SEARCH_INDEX,
+        type: C_ELASTIC_SEARCH,
         host: ES_host,
         port: ES_port,
         indexTypes: [
@@ -69,8 +74,8 @@ const testConfig = [
         database: ':memory:'
       },
       elastic: <any>{
-        framework: 'index',
-        type: 'elastic',
+        framework: C_SEARCH_INDEX,
+        type: C_ELASTIC_SEARCH,
         host: ES_host,
         port: ES_port,
         indexTypes: [
@@ -92,8 +97,8 @@ const testConfig = [
         database: ':memory:'
       },
       elastic: <any>{
-        framework: 'index',
-        type: 'elastic',
+        framework: C_SEARCH_INDEX,
+        type: C_ELASTIC_SEARCH,
         host: ES_host,
         port: ES_port,
         indexTypes: [
@@ -115,8 +120,8 @@ const testConfig = [
         database: ':memory:'
       },
       elastic: <any>{
-        framework: 'index',
-        type: 'elastic',
+        framework: C_SEARCH_INDEX,
+        type: C_ELASTIC_SEARCH,
         host: ES_host,
         port: ES_port,
         indexTypes: [
@@ -157,7 +162,7 @@ const beforeCall = async function(cfg: any) {
 
 };
 
-@suite('functional/typexs-search/elastic/configuration') @timeout(300000)
+@suite('functional/elastic/configuration')
 class TypexsSearchConfiguration {
 
 
@@ -179,9 +184,9 @@ class TypexsSearchConfiguration {
     await beforeCall(testConfig[0]);
     const storage = Injector.get<Storage>(Storage.NAME);
     const storageFrameworks = _.keys(storage.storageFramework);
-    expect(storageFrameworks).to.include('index');
+    expect(storageFrameworks).to.include(C_SEARCH_INDEX);
 
-    const elasticRef = storage.get('elastic');
+    const elasticRef = storage.get(C_ELASTIC_SEARCH);
     expect(elasticRef).to.be.instanceOf(ElasticStorageRef);
 
     const storageRef = Injector.get<ElasticStorageRef>('storage.elastic');
@@ -191,11 +196,11 @@ class TypexsSearchConfiguration {
     const opts = storageRef.getOptions();
     expect(opts).to.deep.eq({
       'entities': [],
-      'framework': 'index',
+      'framework': C_SEARCH_INDEX,
       'host': ES_host,
-      'name': 'elastic',
+      'name': C_ELASTIC_SEARCH,
       'port': ES_port,
-      'type': 'elastic'
+      'type': C_ELASTIC_SEARCH
     });
   }
 
@@ -210,7 +215,7 @@ class TypexsSearchConfiguration {
     const indicies = storageRef.getIndiciesNames();
     expect(indicies).to.be.deep.eq(['core']);
     const indexTypes = storageRef.getIndexTypes();
-    expect(indexTypes.map(t => ({ indexName: t.indexName, typeName: t.typeName }))).to.be.deep.eq([{
+    expect(indexTypes.map(t => ({ indexName: t.getIndexName(), typeName: t.getTypeName() }))).to.be.deep.eq([{
       indexName: 'core',
       typeName: 'test_entity'
     }]);
@@ -249,9 +254,9 @@ class TypexsSearchConfiguration {
     await beforeCall(testConfig[2]);
     const storage = Injector.get<Storage>(Storage.NAME);
     const storageFrameworks = _.keys(storage.storageFramework);
-    expect(storageFrameworks).to.include('index');
+    expect(storageFrameworks).to.include(C_SEARCH_INDEX);
 
-    const elasticRef = storage.get('elastic');
+    const elasticRef = storage.get(C_ELASTIC_SEARCH);
     expect(elasticRef).to.be.instanceOf(ElasticStorageRef);
 
     const storageRef = Injector.get<ElasticStorageRef>('storage.elastic');

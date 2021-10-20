@@ -1,9 +1,6 @@
-import {Component} from '@angular/core';
-
-
-import {AppService, C_DEFAULT, IDTGridOptions, ListViewComponent} from '@typexs/ng-base';
-import {ISearchFacet} from '../../../../lib/search/ISearchFacet';
-import {DEFAULT_FACET, SEARCH_PAGE, TXS_SEARCH} from '../../../../lib/Constants';
+import { Component } from '@angular/core';
+import { AppService, C_DEFAULT, IDTGridOptions, ListViewComponent } from '@typexs/base-ng';
+import { DEFAULT_FACET, ISearchFacet, SEARCH_PAGE, TXS_SEARCH } from '@typexs/search';
 
 /**
  * Component that contains a search input and a list of search results
@@ -25,10 +22,10 @@ export class SearchPageComponent {
 
   constructor(private appService: AppService) {
     this.facets = appService.getSettings([
-        TXS_SEARCH, SEARCH_PAGE, C_DEFAULT, DEFAULT_FACET].join('.'),
-      [
-        {name: 'type', type: 'value', field: '__type.keyword'}
-      ]
+      TXS_SEARCH, SEARCH_PAGE, C_DEFAULT, DEFAULT_FACET].join('.'),
+    [
+      { name: 'type', type: 'value', field: '__type.keyword' }
+    ]
     );
   }
 

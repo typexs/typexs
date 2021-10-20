@@ -7,7 +7,7 @@ import { NotYetImplementedError, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '
 import { IndexElasticApi } from '../../../api/IndexElastic.api';
 import { ElasticMangoWalker } from '../ElasticMangoWalker';
 import { IndexEntityRef } from '../../registry/IndexEntityRef';
-import { ES_IDFIELD, XS_P_$AGGREGATION, XS_P_$FACETS, XS_P_$INDEX, XS_P_$MAX_SCORE, XS_P_$SCORE } from '../../Constants';
+import { __TYPE__, ES_IDFIELD, XS_P_$AGGREGATION, XS_P_$FACETS, XS_P_$INDEX, XS_P_$MAX_SCORE, XS_P_$SCORE } from '../../Constants';
 import { IElasticFieldDef } from '../IElasticFieldDef';
 import { IElasticFindOptions } from './IElasticFindOptions';
 import { OpsHelper } from './OpsHelper';
@@ -214,7 +214,7 @@ export class FindOp<T> implements IFindOp<T> {
         if (_.has(hits, 'hits')) {
           for (const hit of hits.hits) {
             const _source = hit._source;
-            const _type = _source.__type;
+            const _type = _source[__TYPE__];
             const _index = hit._index;
             let object = null;
             if (!this.options.raw && _type && _index) {

@@ -8,7 +8,7 @@ import {Client} from '@elastic/elasticsearch';
 import {ES_host, ES_port} from './config';
 import {lorem, lorem2} from './testdata';
 import {TaskExecutor} from '@typexs/base/libs/tasks/TaskExecutor';
-import {TN_INDEX} from '../../src/lib/Constants';
+import { __ID__, __TYPE__, C_ELASTIC_SEARCH, C_SEARCH_INDEX, TN_INDEX } from '../../src/lib/Constants';
 import {ITaskRunnerResult} from '@typexs/base/libs/tasks/ITaskRunnerResult';
 import {SomeSearchEntity} from './fake_app_tasks/entities/SomeSearchEntity';
 import {SearchDataEntity} from './fake_app_tasks/entities/SearchDataEntity';
@@ -16,6 +16,7 @@ import {IndexProcessingQueue} from '../../src/lib/events/IndexProcessingQueue';
 import {expect} from 'chai';
 import {IndexProcessingWorker} from '../../src/workers/IndexProcessingWorker';
 import { TestHelper } from './TestHelper';
+import { IElasticStorageRefOptions } from '../../src';
 
 
 let bootstrap: Bootstrap = null;
@@ -24,7 +25,7 @@ const resolve = TestHelper.root();
 const testConfig = [
   {
     app: {path: appdir},
-    modules: {paths: [resolve]},
+    modules: {paths: [resolve], disableCache: true},
     logging: {
       enable: false,
       level: 'debug',
@@ -39,9 +40,9 @@ const testConfig = [
         type: 'sqlite',
         database: ':memory:'
       },
-      elastic: <any>{
-        framework: 'index',
-        type: 'elastic',
+      elastic: <IElasticStorageRefOptions>{
+        framework: C_SEARCH_INDEX,
+        type: C_ELASTIC_SEARCH,
         connectOnStartup: true,
         host: ES_host,
         port: ES_port,
@@ -111,8 +112,8 @@ class TypexsSearchEntityController {
     for (const i of _.range(60, 90)) {
       const idxReset = i - 60;
       const d = new SearchDataEntity();
-      d['__id'] = i + '';
-      d['__type'] = 'search_data_entity';
+      d[__ID__] = i + '';
+      d[__TYPE__] = 'search_data_entity';
       d.id = i;
       d.date = new Date(2020, i % 12, i % 30);
       d.name = words[idxReset];
@@ -132,8 +133,8 @@ class TypexsSearchEntityController {
 
 
       const s = new SomeSearchEntity();
-      s['__id'] = i + '';
-      s['__type'] = 'some_search_entity';
+      s[__ID__] = i + '';
+      s[__TYPE__] = 'some_search_entity';
       s.id = i;
       s.datus = new Date(2020, i % 12, i % 30);
       s.search = words[idxReset + 1];
@@ -195,7 +196,7 @@ class TypexsSearchEntityController {
       {},
       {
         isLocal: true,
-        skipTargetCheck: true,
+        skipTargetCheck: true
       })
       .run() as ITaskRunnerResult;
     // console.log(inspect(data, false, 10));

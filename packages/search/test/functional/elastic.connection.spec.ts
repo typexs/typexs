@@ -6,10 +6,12 @@ import {ElasticStorageRef} from '../../src/lib/elastic/ElasticStorageRef';
 import {ElasticConnection} from '../../src/lib/elastic/ElasticConnection';
 import {IElasticStorageRefOptions} from '../../src/lib/elastic/IElasticStorageRefOptions';
 import {ES_host, ES_port} from './config';
+import { TestHelper } from './TestHelper';
+import { C_ELASTIC_SEARCH, C_SEARCH_INDEX } from '../../src/lib/Constants';
 
 let bootstrap: Bootstrap = null;
 const appdir = path.join(__dirname, 'fake_app');
-const resolve = __dirname + '/../../../../..';
+const resolve = TestHelper.root();
 const testConfig = [
   {
     app: {path: appdir},
@@ -19,8 +21,8 @@ const testConfig = [
     },
     storage: {
       elastic: <IElasticStorageRefOptions>{
-        framework: 'index',
-        type: 'elastic',
+        framework: C_SEARCH_INDEX,
+        type: C_ELASTIC_SEARCH,
         host: ES_host,
         port: ES_port,
 
@@ -30,7 +32,7 @@ const testConfig = [
 ];
 
 
-@suite('functional/typexs-search/elastic/connection') @timeout(300000)
+@suite('functional/elastic/connection')
 class TypexsSearchConnection {
 
 
