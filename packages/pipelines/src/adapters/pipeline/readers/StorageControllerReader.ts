@@ -3,14 +3,15 @@ import {
   IEntityController,
   IFindOptions,
   Injector,
+  Storage,
   StorageRef,
   TypeOrmEntityRegistry,
   XS_P_$COUNT,
   XS_P_$OFFSET
 } from '@typexs/base';
-import {ClassType, IEntityRef} from '@allgemein/schema-api';
-import {Reader} from '../../../lib/reader/Reader';
-import {IStorageControllerReaderOptions} from '../../../lib/reader/IStorageControllerReaderOptions';
+import { ClassType, IEntityRef } from '@allgemein/schema-api';
+import { Reader } from '../../../lib/reader/Reader';
+import { IStorageControllerReaderOptions } from '../../../lib/reader/IStorageControllerReaderOptions';
 
 
 export class StorageControllerReader<T> extends Reader {
@@ -47,7 +48,7 @@ export class StorageControllerReader<T> extends Reader {
     this.entityRef = TypeOrmEntityRegistry.$().getEntityRefFor(this.entityType);
     // this.schemaName = (<ClassRef>this.entityRef.getClassRef()).getSchema();
     this.storageName = options.storageName;
-    const storage = (<Storage>Injector.get(Storage.name));
+    const storage = (<Storage>Injector.get(Storage.NAME));
     let ref: StorageRef = null;
     if (this.storageName) {
       ref = storage.get(this.storageName);
@@ -114,7 +115,7 @@ export class StorageControllerReader<T> extends Reader {
       const findOptions: IFindOptions = {
         offset: this.offset,
         limit: limit,
-        raw: this.getRaw(),
+        raw: this.getRaw()
       };
 
       if (this.getOptions().sort) {
