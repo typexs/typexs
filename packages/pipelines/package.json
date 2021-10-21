@@ -4,6 +4,7 @@
   "main": "index.js",
   "browser": "browser.js",
   "dependencies": {
+    "sha1": "^1.1.1"
   },
   "private": true,
   "peerDependencies": {
@@ -28,5 +29,4 @@
       }
     ]
   }
-
 }

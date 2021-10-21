@@ -11,23 +11,9 @@ import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import { isClassRef } from '@allgemein/schema-api/api/IClassRef';
 
 
-export class PropertyRef extends DefaultPropertyRef/* AbstractRef implements IPropertyRef*/ {
-
-  // readonly cardinality: number = 1;
-
-  // readonly dataType: string;
-
-  // readonly targetRef: IClassRef = null;
-
-  // readonly propertyRef: IClassRef = null;
+export class PropertyRef extends DefaultPropertyRef {
 
   joinRef: IClassRef = null;
-
-  // readonly identifier: boolean;
-
-  // readonly generated: boolean;
-
-  // readonly embed: boolean;
 
 
   get entityName() {
@@ -43,6 +29,10 @@ export class PropertyRef extends DefaultPropertyRef/* AbstractRef implements IPr
       const found_primative = find(JS_PRIMATIVE_TYPES, t => (new RegExp('^' + t + ':?')).test((<string>options.type).toLowerCase()));
       if (found_primative || options.type.toLowerCase() === options.type) {
         // this.dataType = options.type;
+      } else if (options.type === 'array') {
+        // if array make an object
+        options.cardinality = 0;
+        this.setOption('type', 'object');
       } else {
         targetRef = this.getTargetRef();
         // this.targetRef = this.getClassRefFor(options.type);
@@ -54,11 +44,7 @@ export class PropertyRef extends DefaultPropertyRef/* AbstractRef implements IPr
     }
 
     if (isFunction(options.type) || isEntityRef(options.type) || isClassRef(options.type)) {
-      // const targetClass = options.type || options.targetClass;
-      // this.targetRef = this.getClassRefFor(targetClass);
       targetRef = this.getTargetRef();
-      // } else if (isFunction(options.propertyClass)) {
-      //   this.propertyRef = this.getClassRefFor(options.propertyClass, METATYPE_CLASS_REF);
     }
 
     if (!targetRef && !this.dataType /* && !this.propertyRef*/) {
@@ -217,7 +203,6 @@ export class PropertyRef extends DefaultPropertyRef/* AbstractRef implements IPr
         } else {
           return null;
         }
-        break;
       case 'boolean':
         if (isBoolean(data)) {
           return data;
@@ -236,7 +221,7 @@ export class PropertyRef extends DefaultPropertyRef/* AbstractRef implements IPr
           if (/^\d+\.|\,\d+$/.test(data)) {
             return parseFloat(data.replace(',', '.'));
           } else if (/^\d+$/.test(data)) {
-            return parseInt(data, 0);
+            return parseInt(data, 10);
           } else {
             throw new NotYetImplementedError('value ' + data);
           }
@@ -247,7 +232,6 @@ export class PropertyRef extends DefaultPropertyRef/* AbstractRef implements IPr
         } else {
           return null;
         }
-        break;
       case 'date':
       case 'datetime':
       case 'timestamp':
@@ -256,7 +240,6 @@ export class PropertyRef extends DefaultPropertyRef/* AbstractRef implements IPr
         } else {
           return DateUtils.fromISO(data);
         }
-        break;
       default:
         throw new NotYetImplementedError('value ' + data);
     }

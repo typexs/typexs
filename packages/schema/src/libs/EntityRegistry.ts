@@ -46,6 +46,9 @@ export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistr
     return this._self;
   }
 
+  constructor(namespace: string) {
+    super(namespace, { detectUnannotatedProperties: false });
+  }
 
   prepare() {
     const schema = this.find(METATYPE_SCHEMA, (x: ISchemaRef) => x.name === XS_DEFAULT_SCHEMA);

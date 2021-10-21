@@ -9,6 +9,6 @@ export * from './grid/grid.component';
 export * from './grid/grid-row.component';
 export * from './grid/grid-cell.component';
 export * from './form.service';
-export {ISelectOptionsService} from './libs/ISelectOptionsService';
+export { ISelectOptionsService, ISelectOption } from './libs/ISelectOptionsService';
 export * from './forms.elements';
 

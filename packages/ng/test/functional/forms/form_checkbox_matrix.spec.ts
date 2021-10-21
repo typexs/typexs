@@ -4,9 +4,9 @@ import { expect } from 'chai';
 import { FORM_ELEMENTS } from '../../../src/lib/forms/elements';
 import { FormBuilder } from '../../../src/lib/forms/FormBuilder';
 import { ComponentRegistry } from '../../../src';
-import { CheckboxMatrix } from '../../../../../src/modules/app/entities/CheckboxMatrix';
-import { CheckboxMatrixRow } from '../../../../../src/modules/app/entities/CheckboxMatrixRow';
 import { RegistryFactory } from '@allgemein/schema-api';
+import { CheckboxMatrixRow } from '../../../../app/src/app/entities/CheckboxMatrixRow';
+import { CheckboxMatrix } from '../../../../app/src/app/entities/CheckboxMatrix';
 
 FORM_ELEMENTS;
 

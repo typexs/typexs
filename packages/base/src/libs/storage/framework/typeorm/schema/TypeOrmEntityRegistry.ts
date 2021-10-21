@@ -129,7 +129,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
 
   constructor(namespace: string = REGISTRY_TYPEORM) {
-    super(namespace);
+    super(namespace, { detectUnannotatedProperties: false });
     this.setMaxListeners(1000);
 
     try {
