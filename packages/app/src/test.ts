@@ -22,7 +22,7 @@ getTestBed().initTestEnvironment(
 );
 
 // Then we find all the tests.
-const context = require.context('./../modules/', true, /\.spec\.ts$/);
+const context = require.context('./app', true, /\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
 // This file is required by karma.conf.js and loads recursively all the .spec and framework files

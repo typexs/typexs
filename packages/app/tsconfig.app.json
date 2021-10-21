@@ -1,0 +1,125 @@
+{
+  "extends": "./../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "build/app",
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "react-native-sqlite-storage": [
+        "./src/dummy.ts"
+      ],
+      "@typexs/base": [
+        "./packages/base/src/browser"
+      ],
+      "@typexs/base/*": [
+        "./packages/base/src/*"
+      ],
+      "@typexs/server": [
+        "./packages/server/src/browser"
+      ],
+      "@typexs/server/*": [
+        "./packages/server/src/*"
+      ],
+      "@typexs/schema": [
+        "./packages/schema/src/browser"
+      ],
+      "@typexs/schema/*": [
+        "./packages/schema/src/*"
+      ],
+      "@typexs/ng": [
+        "./packages/ng/src/browser"
+      ],
+      "@typexs/ng/*": [
+        "./packages/ng/src/*"
+      ],
+      "@typexs/roles": [
+        "./packages/roles/src/browser"
+      ],
+      "@typexs/roles/*": [
+        "./packages/roles/src/*"
+      ],
+      "@typexs/base-ng/*": [
+        "./packages/base-ng/src/*"
+      ],
+      "@typexs/base-ng": [
+        "./packages/base-ng/src/public_api"
+      ],
+      "@typexs/storage-ng/*": [
+        "./packages/storage-ng/src/"
+      ],
+      "@typexs/storage-ng": [
+        "./packages/storage-ng/src/public_api"
+      ],
+      "@typexs/search/*": [
+        "./packages/search/src/"
+      ],
+      "@typexs/search": [
+        "./packages/search/src/browser"
+      ],
+      "@typexs/search-ng/*": [
+        "./packages/search-ng/src/"
+      ],
+      "@typexs/search-ng": [
+        "./packages/search-ng/src/public_api"
+      ],
+      "@typexs/entity-ng/*": [
+        "./packages/entity-ng/src/*"
+      ],
+      "@typexs/entity-ng": [
+        "./packages/entity-ng/src/public_api"
+      ],
+      "@typexs/ng-router-menu/*": [
+        "./packages/ng-router-menu/src/*"
+      ],
+      "@typexs/ng-router-menu": [
+        "./packages/ng-router-menu/src/public_api"
+      ],
+      "@typexs/ng-admin-ui/*": [
+        "./packages/ng-admin-ui/src/*"
+      ],
+      "@typexs/ng-admin-ui": [
+        "./packages/ng-admin-ui/src/public_api"
+      ],
+      "@typexs/ng-theme-base/*": [
+        "./packages/ng-theme-base/src/*"
+      ],
+      "@typexs/ng-theme-base": [
+        "./packages/ng-theme-base/src/public_api"
+      ],
+      "@typexs/ng-forms/*": [
+        "./packages/ng-forms/src/*"
+      ],
+      "@typexs/ng-forms": [
+        "./packages/ng-forms/src/public_api"
+      ],
+      "@typexs/tasks-ng/*": [
+        "./packages/tasks-ng/src/*"
+      ],
+      "@typexs/tasks-ng": [
+        "./packages/tasks-ng/src/public_api"
+      ],
+      "@typexs/distributed-storage-ng/*": [
+        "./packages/distributed-storage-ng/src/*"
+      ],
+      "@typexs/distributed-storage-ng": [
+        "./packages/distributed-storage-ng/src/public_api"
+      ]
+    }
+  },
+  "include": [
+    "src/polyfills.ts",
+    "src/main.ts",
+    "src/dummy.ts"
+  ],
+  "angularCompilerOptions": {
+    "genDir": "build/app-aot",
+    "skipMetadataEmit": false,
+    "skipTemplateCodegen": false,
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true,
+    "strictInputTypes": false
+  }
+}

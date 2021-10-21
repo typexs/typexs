@@ -1,0 +1,90 @@
+      "@typexs/base": [
+        "./../base/src/browser"
+      ],
+      "@typexs/base/*": [
+        "./../base/src/*"
+      ],
+      "@typexs/server": [
+        "./../server/src/browser"
+      ],
+      "@typexs/server/*": [
+        "./../server/src/*"
+      ],
+      "@typexs/schema": [
+        "./../schema/src/browser"
+      ],
+      "@typexs/schema/*": [
+        "./../schema/src/*"
+      ],
+      "@typexs/ng": [
+        "./../ng/src/browser"
+      ],
+      "@typexs/ng/*": [
+        "./../ng/src/*"
+      ],
+      "@typexs/roles": [
+        "./../roles/src/browser"
+      ],
+      "@typexs/roles/*": [
+        "./../roles/src/*"
+      ],
+      "@typexs/base-ng/*": [
+        "./../base-ng/src/*"
+      ],
+      "@typexs/base-ng": [
+        "./../base-ng/src/public_api"
+      ],
+      "@typexs/storage-ng/*": [
+        "./../storage-ng/src/"
+      ],
+      "@typexs/storage-ng": [
+        "./../storage-ng/src/public_api"
+      ],
+      "@typexs/search-ng/*": [
+        "./../search-ng/src/"
+      ],
+      "@typexs/search-ng": [
+        "./../search-ng/src/public_api"
+      ],
+      "@typexs/entity-ng/*": [
+        "./../entity-ng/src/*"
+      ],
+      "@typexs/entity-ng": [
+        "./../entity-ng/src/public_api"
+      ],
+      "@typexs/ng-router-menu/*": [
+        "./../ng-router-menu/src/*"
+      ],
+      "@typexs/ng-router-menu": [
+        "./../ng-router-menu/src/public_api"
+      ],
+      "@typexs/ng-admin-ui/*": [
+        "./../ng-admin-ui/src/*"
+      ],
+      "@typexs/ng-admin-ui": [
+        "./../ng-admin-ui/src/public_api"
+      ],
+      "@typexs/ng-theme-base/*": [
+        "./../ng-theme-base/src/*"
+      ],
+      "@typexs/ng-theme-base": [
+        "./../ng-theme-base/src/public_api"
+      ],
+      "@typexs/ng-forms/*": [
+        "./../ng-forms/src/*"
+      ],
+      "@typexs/ng-forms": [
+        "./../ng-forms/src/public_api"
+      ],
+      "@typexs/tasks-ng/*": [
+        "./../tasks-ng/src/*"
+      ],
+      "@typexs/tasks-ng": [
+        "./../tasks-ng/src/public_api"
+      ],
+      "@typexs/distributed-storage-ng/*": [
+        "./../distributed-storage-ng/src/*"
+      ],
+      "@typexs/distributed-storage-ng": [
+        "./../distributed-storage-ng/src/public_api"
+      ]
