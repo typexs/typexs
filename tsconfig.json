@@ -28,17 +28,14 @@
     "typeRoots": [
       "./node_modules/@types"
     ],
-    "baseUrl": "./",
-    "paths": {
-      
-    }
+    "baseUrl": "./"
   },
   "exclude": [
     "archive",
     "build",
     "dist",
     "tmp",
-    "src/**/files",
+    "files",
     "node_modules"
   ],
   "compileOnSave": true
