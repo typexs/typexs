@@ -1,4 +1,6 @@
 
+export const C_ID = 'ID';
+
 export const C_DEFAULT = 'default';
 export const C_PROPERTY = 'property';
 export const C_ENTITY_REF = 'entityRef';

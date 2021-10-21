@@ -1,32 +1,35 @@
 app:
   name: typexs-ng
 
-
 storage:
   default:
     synchronize: true
     type: sqlite
     # database: ':memory:'
     database: 'tmp/db_${app.name}_server.db'
-#    logger: simple-console
-#    logging: all
+    # logger: simple-console
+    # logging: all
     connectOnStartup: true
 
 modules:
   paths:
     - ./demo/
+  include:
+    - '**/@allgemein{,**/*}'
+    - '**/@typexs{,**/*}'
+    - '**/demo{,**/*}'
 
 logging:
   enable: true
   level: debug
   transports:
-    - console: {}
+    - console: { }
   loggers:
     - name: '*'
       enable: true
       level: debug
       transports:
-        - console: {}
+        - console: { }
 
 filesystem:
   paths:
@@ -37,4 +40,4 @@ filesystem:
 config:
   anonymous:
     allow: true
-  permissions: []
+  permissions: [ ]

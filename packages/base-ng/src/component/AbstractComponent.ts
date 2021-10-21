@@ -5,7 +5,7 @@ import { Log } from '../lib/log/Log';
 import { NotYetImplementedError } from '@allgemein/base';
 import { ClassType } from '@allgemein/schema-api';
 import { IInstanceableComponent } from './IInstanceableComponent';
-import { C_DEFAULT, M_getViewContext, M_setViewContext, PROP_METADATA } from '../constants';
+import { C_DEFAULT, C_ID, M_getViewContext, M_setViewContext, PROP_METADATA } from '../constants';
 import { Context, isTreeObject, TreeObject } from '@typexs/ng';
 
 
@@ -91,11 +91,9 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
     const factory = this.r.resolveComponentFactory(cmptType);
     const ref = this.getViewContainerRef().createComponent(factory);
     const ID = INC++;
-    Object.defineProperty(ref, 'ID', { value: ID, enumerable: true });
+    Object.defineProperty(ref, C_ID, { value: ID, enumerable: true });
     this._components.push(ref);
-    ref.onDestroy((function(ID: number) {
-      return () => remove(this._components, r => r['ID'] === ID);
-    })(ID));
+    ref.onDestroy(() => remove(this._components, r => r[C_ID] === ID));
     return ref;
   }
 
