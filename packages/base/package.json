@@ -39,7 +39,7 @@
     "typedi": "0.8.0"
   },
   "peerDependencies": {
-    "typeorm": "0.2.38",
+    "typeorm": "0.2.34",
     "winston": "~3.3.3",
     "yargonaut": "~1.1.4",
     "yargs": "~17.2.1"
