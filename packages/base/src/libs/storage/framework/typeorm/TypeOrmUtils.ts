@@ -93,7 +93,7 @@ export class TypeOrmUtils {
       case 'datetime':
       case 'datetime2':
       case 'datetimeoffset':
-        return 'datetime';
+        return 'date';
 
       case 'date':
         return 'date';
@@ -103,7 +103,7 @@ export class TypeOrmUtils {
       case 'timestamp without time zone':
       case 'timestamp with time zone':
       case 'timestamp with local time zone':
-        return 'timestamp';
+        return 'number';
 
 
       case 'character varying':
@@ -192,7 +192,7 @@ export class TypeOrmUtils {
       case 'simple-json':
       case 'json':
       case 'jsonb':
-        return 'json';
+        return 'object';
 
       case 'float':
       case 'double':
@@ -209,7 +209,7 @@ export class TypeOrmUtils {
       case 'numeric':
       case 'number':
       case 'fixed':
-        return 'double';
+        return 'number';
 
       case 'year':
       case 'point':

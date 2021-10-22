@@ -1,9 +1,10 @@
-import {isEmpty, isFunction, snakeCase, values} from 'lodash';
-import {Injectable} from '@angular/core';
-import {IEntityRef, LookupRegistry, METATYPE_ENTITY} from '@allgemein/schema-api';
-import {IQueringService} from './../api/querying/IQueringService';
-import {forkJoin} from 'rxjs';
-import {ComponentRegistry} from '@typexs/ng';
+import { isEmpty, isFunction, snakeCase, values } from 'lodash';
+import { Injectable } from '@angular/core';
+import { IEntityRef, LookupRegistry, METATYPE_ENTITY } from '@allgemein/schema-api';
+import { IQueringService } from './../api/querying/IQueringService';
+import { forkJoin } from 'rxjs';
+import { ComponentRegistry } from '@typexs/ng';
+import { LabelHelper } from '../../../base/src';
 
 
 @Injectable()
@@ -86,27 +87,18 @@ export class EntityResolverService {
   }
 
 
-  getLabelKeysFor(obj: any) {
-    const entityRef = this.getEntityRef(obj);
-    if (!entityRef) {
-      return null;
-    }
-    const key = 'label.' + snakeCase(entityRef.name);
-    if (this.cache[key]) {
-      return this.cache[key](obj);
-    }
-    const labelProps = entityRef.getPropertyRefs().filter(x => x.getOptions('form') === 'label');
-
-
-    this.cache[key] = (obj: any) => {
-      const ret = {};
-      labelProps.forEach(x => {
-        ret[x.name] = x.get(obj);
-      });
-      return ret;
-    };
-    return this.cache[key](obj);
-  }
+  // getLabelKeysFor(obj: any) {
+  //   const entityRef = this.getEntityRef(obj);
+  //   if (!entityRef) {
+  //     return null;
+  //   }
+  //   const key = 'label.' + snakeCase(entityRef.name);
+  //
+  //   const label = LabelHelper.labelForEntity(obj, entityRef);
+  //
+  //
+  //   return label;
+  // }
 
 
   getRouteFor(obj: any) {
@@ -126,17 +118,9 @@ export class EntityResolverService {
     if (obj['ngLabel'] && isFunction(obj['ngLabel'])) {
       return obj['ngLabel']();
     }
-
-    const keys = this.getLabelKeysFor(obj);
-    if (keys === null) {
-      return 'Unknown';
-    }
-    const _values = values(keys);
-    if (_values.length === 0) {
-      return 'Unknown';
-    }
-    const label = _values.join(' - ').trim();
-    return isEmpty(label) ? 'Unknown' : label;
+    const entityRef = this.getEntityRef(obj);
+    const label = LabelHelper.labelForEntity(obj, entityRef);
+    return isEmpty(label) ? 'No label found' : label;
   }
 
 }

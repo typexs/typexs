@@ -6,6 +6,13 @@ export const TYPEXS_NAME = 'typexs';
 export const CONFIG_NAMESPACE = 'typexs';
 export const K_WORKDIR = 'workdir';
 
+export const C_SKIP_BUILDS = 'skipBuilds';
+export const C_RAW = 'raw';
+export const C_LABEL = 'label';
+export const C_ENTITY_LABEL = 'entity_label';
+export const C_$LABEL = '$label';
+
+
 export const __DEFAULT__ = '__default__';
 
 export const K_CLS_ACTIVATOR = 'activator.js';

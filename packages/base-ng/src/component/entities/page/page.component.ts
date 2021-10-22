@@ -3,7 +3,9 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {IEntityRef} from '@allgemein/schema-api';
 import {EntityResolverService} from '../../../services/entity-resolver.service';
-import {C_$LABEL, C_LABEL} from '../../../api/querying/Constants';
+import {C_$LABEL, C_LABEL} from '@typexs/ng';
+import { Helper } from '../../../api/querying/Helper';
+import { LabelHelper } from '../../../../../base/src';
 
 
 @Component({
@@ -31,11 +33,7 @@ export class EntityViewPageComponent implements OnInit {
 
   label(): string {
     if (this.instance) {
-      if (isFunction(this.instance[C_LABEL])) {
-        return this.instance[C_LABEL];
-      } else if (this.instance[C_$LABEL]) {
-        return this.instance[C_$LABEL];
-      }
+      return LabelHelper.labelForEntity(this.instance, this.entityRef);
     }
     return undefined;
   }

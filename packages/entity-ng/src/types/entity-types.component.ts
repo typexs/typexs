@@ -1,6 +1,7 @@
-import {Component} from '@angular/core';
-import {EntityService} from './../entity.service';
-import {EntityRef} from '@typexs/schema';
+import { Component } from '@angular/core';
+import { EntityService } from './../entity.service';
+import { EntityRef } from '@typexs/schema';
+import { IEntityRef } from '@allgemein/schema-api';
 
 
 @Component({
@@ -12,7 +13,7 @@ export class EntityTypesComponent {
   constructor(public entityService: EntityService) {
   }
 
-  getEntityRefs() {
+  getEntityRefs(): IEntityRef[] {
     return this.entityService.getEntityRefs().filter(e => (e as EntityRef).isStorable());
   }
 }

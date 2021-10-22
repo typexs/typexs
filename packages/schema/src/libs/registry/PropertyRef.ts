@@ -2,7 +2,14 @@ import { IProperty } from './IProperty';
 import { assign, capitalize, find, isArray, isBoolean, isFunction, isNull, isNumber, isString, isUndefined, snakeCase } from 'lodash';
 import { EntityRef } from './EntityRef';
 
-import { DefaultPropertyRef, IBuildOptions, IClassRef, JS_PRIMATIVE_TYPES, METATYPE_PROPERTY } from '@allgemein/schema-api';
+import {
+  DefaultPropertyRef,
+  IBuildOptions,
+  IClassRef,
+  JS_PRIMATIVE_TYPES,
+  METATYPE_PROPERTY,
+  XS_ID_SEPARATOR
+} from '@allgemein/schema-api';
 import { DateUtils, NotSupportedError, NotYetImplementedError } from '@typexs/base';
 import { ExprDesc } from '@allgemein/expressions';
 import { OrderDesc } from '../../libs/descriptors/OrderDesc';
@@ -69,7 +76,7 @@ export class PropertyRef extends DefaultPropertyRef {
   }
 
   id() {
-    return [this.getClassRef().id(), this.name].join('--').toLowerCase();
+    return [this.getClassRef().id(), this.name].join(XS_ID_SEPARATOR).toLowerCase();
   }
 
   isSequence(): boolean {

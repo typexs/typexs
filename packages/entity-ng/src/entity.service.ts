@@ -1,11 +1,9 @@
-import {assign, defaults, get, isArray, keys, set} from 'lodash';
-import {Injectable} from '@angular/core';
+import { assign, defaults, get, isArray, keys, set } from 'lodash';
+import { Injectable } from '@angular/core';
 import {
   AbstractQueryService,
   AuthService,
   BackendService,
-  C_RAW,
-  C_SKIP_BUILDS,
   EntityResolverService,
   IQueringService,
   STORAGE_REQUEST_MODE
@@ -20,16 +18,18 @@ import {
   API_ENTITY_PREFIX,
   NAMESPACE_BUILT_ENTITY
 } from '@typexs/schema';
-import {__CLASS__, __NS__, IBuildOptions, IEntityRef, RegistryFactory} from '@allgemein/schema-api';
+import { __CLASS__, __NS__, IBuildOptions, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
+import { C_SKIP_BUILDS, C_RAW } from '@typexs/ng';
 
 
 @Injectable()
 export class EntityService extends AbstractQueryService implements IQueringService {
 
 
-  constructor(private backend: BackendService,
-              private authService: AuthService,
-              private resolverService: EntityResolverService) {
+  constructor(
+    private backend: BackendService,
+    private authService: AuthService,
+    private resolverService: EntityResolverService) {
     super(backend, authService, resolverService, {
       ngRoutePrefix: API_ENTITY_PREFIX,
       routes: {
@@ -38,15 +38,15 @@ export class EntityService extends AbstractQueryService implements IQueringServi
         // eslint-disable-next-line @typescript-eslint/naming-convention
         update_by_condition: null,
         save: API_CTRL_ENTITY_SAVE_ENTITY,
-        delete: {route: API_CTRL_ENTITY_DELETE_ENTITY, method: 'delete'},
+        delete: { route: API_CTRL_ENTITY_DELETE_ENTITY, method: 'delete' },
         // eslint-disable-next-line @typescript-eslint/naming-convention
         delete_by_condition: null,
         query: API_CTRL_ENTITY_FIND_ENTITY,
         get: API_CTRL_ENTITY_GET_ENTITY,
-        aggregate: null,
+        aggregate: null
       },
       // namespace: NAMESPACE_BUILT_ENTITY
-      registry: RegistryFactory.get(NAMESPACE_BUILT_ENTITY),
+      registry: RegistryFactory.get(NAMESPACE_BUILT_ENTITY)
       // registryName: REGISTRY_TXS_SCHEMA
     });
   }

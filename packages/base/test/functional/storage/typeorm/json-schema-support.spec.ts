@@ -64,6 +64,7 @@ class JsonSchemaSupportSpec {
           properties: {
             id: {
               type: 'number',
+              'identifier': true,
               metadata: {
                 propertyName: 'id',
                 mode: 'regular',
@@ -100,6 +101,7 @@ class JsonSchemaSupportSpec {
           properties: {
             id: {
               type: 'number',
+              'identifier': true,
               metadata: {
                 propertyName: 'id',
                 mode: 'regular',

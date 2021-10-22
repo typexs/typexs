@@ -112,7 +112,7 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements O
           value = parseFloat(this.filterValue);
           break;
         case 'number':
-          value = parseInt(this.filterValue, 0);
+          value = parseInt(this.filterValue, 10);
           break;
         default:
           value = this.filterValue;

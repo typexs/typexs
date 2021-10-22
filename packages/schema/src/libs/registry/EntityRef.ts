@@ -1,7 +1,6 @@
-import {PropertyRef} from './PropertyRef';
-import {IEntity} from './IEntity';
-import * as _ from 'lodash';
-import {assign, defaults} from 'lodash';
+import { PropertyRef } from './PropertyRef';
+import { IEntity } from './IEntity';
+import { assign, defaults, isArray } from 'lodash';
 
 
 import {
@@ -16,10 +15,10 @@ import {
   METATYPE_PROPERTY,
   RegistryFactory
 } from '@allgemein/schema-api';
-import {ClassUtils} from '@allgemein/base';
-import {K_STORABLE, NAMESPACE_BUILT_ENTITY, XS_P_$LABEL} from '../Constants';
-import {Expressions} from '@allgemein/expressions';
-import {__CLASS__} from '@typexs/base';
+import { ClassUtils } from '@allgemein/base';
+import { K_STORABLE, NAMESPACE_BUILT_ENTITY } from '../Constants';
+import { Expressions } from '@allgemein/expressions';
+import { __CLASS__, LabelHelper } from '@typexs/base';
 
 const DEFAULT_OPTIONS: IEntity = {
   storable: true
@@ -35,7 +34,7 @@ export class EntityRef extends DefaultEntityRef {
 
 
   constructor(options: IEntity = {}) {
-    super(defaults(assign(options, {metaType: METATYPE_ENTITY}), DEFAULT_OPTIONS));
+    super(defaults(assign(options, { metaType: METATYPE_ENTITY }), DEFAULT_OPTIONS));
     // super(METATYPE_ENTITY, fn instanceof ClassRef ? fn.className : fn.name, fn, NAMESPACE_BUILT_ENTITY);
     // OptionsHelper.merge(this.object, options);
 
@@ -102,31 +101,11 @@ export class EntityRef extends DefaultEntityRef {
   }
 
   resolveIds(instance: any | any[]) {
-    if (_.isArray(instance)) {
+    if (isArray(instance)) {
       return instance.map(i => this.resolveId(i));
     }
     return this.resolveId(instance);
   }
-
-  // create<T>(): T {
-  //   return this.new();
-  // }
-  //
-  // new<T>(addinfo: boolean = true): T {
-  //   const instance = <T>this.object.create(addinfo);
-  //   // const id = this.id();
-  //   // // TODO make constant of xs:entity_id
-  //   // if (addinfo) {
-  //   //   Reflect.defineProperty(<any>instance, __ID__, {
-  //   //     value: id,
-  //   //     writable: false,
-  //   //     enumerable: true,
-  //   //     configurable: false
-  //   //   });
-  //   // }
-  //   return instance;
-  //
-  // }
 
   buildLookupConditions(data: any | any[]) {
     return Expressions.buildLookupConditions(this, data);
@@ -137,43 +116,9 @@ export class EntityRef extends DefaultEntityRef {
     return Expressions.parseLookupConditions(this, id);
   }
 
-  // getClass() {
-  //   return this.getClassRef().getClass();
-  // }
-  //
-  // getClassRef() {
-  //   return this.object;
-  // }
-
-  // build<T>(data: any, options: IBuildOptions = {}): T {
-  //   return <T>SchemaUtils.transform(this, data, options);
-  // }
-
 
   label(entity: any, sep: string = ' ', max: number = 1024): string {
-    if (Reflect.has(entity, 'label')) {
-      if (_.isFunction(entity['label'])) {
-        return entity.label();
-      } else {
-        return entity.label;
-      }
-    } else if (Reflect.has(entity, XS_P_$LABEL)) {
-      return entity[XS_P_$LABEL];
-    } else {
-      // create label from data
-      const label: string[] = [];
-      this.getPropertyRefs().forEach(p => {
-        if (!p.isReference()) {
-          label.push(p.get(entity));
-        }
-      });
-
-      const str = label.join(sep);
-      if (str.length > max) {
-        return str.substring(0, max);
-      }
-      return str;
-    }
+    return LabelHelper.labelForEntity(entity, this, sep, max);
   }
 
 

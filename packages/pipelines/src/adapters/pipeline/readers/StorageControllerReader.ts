@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import {
+  C_RAW,
   IEntityController,
   IFindOptions,
   Injector,
@@ -89,7 +90,7 @@ export class StorageControllerReader<T> extends Reader {
   }
 
   getRaw() {
-    return _.get(this.getOptions(), 'raw', false);
+    return _.get(this.getOptions(), C_RAW, false);
   }
 
   async find() {

@@ -113,3 +113,4 @@ export { IWorkerConfig } from './libs/worker/IWorkerConfig';
 export { IWorkerStatisitic } from './libs/worker/IWorkerStatisitic';
 
 export { DateUtils } from './libs/utils/DateUtils';
+export { LabelHelper } from './libs/utils/LabelHelper';

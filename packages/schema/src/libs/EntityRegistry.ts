@@ -31,7 +31,7 @@ import { IObject } from './registry/IObject';
 import { getJsObjectType } from './Helper';
 
 
-export class EntityRegistry extends DefaultNamespacedRegistry /* AbstractRegistry*/ implements IJsonSchema {
+export class EntityRegistry extends DefaultNamespacedRegistry implements IJsonSchema {
 
 
   static NAME = 'EntityRegistry';

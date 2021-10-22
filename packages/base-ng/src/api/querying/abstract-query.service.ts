@@ -157,6 +157,9 @@ export abstract class AbstractQueryService implements IQueringService {
   }
 
 
+  /**
+   * Metadata are passed as json schema description. Here the data are interpreted back to ILookupRegistry object.
+   */
   loadEntityMetadata() {
     if (!this.isSupported('metadata')) {
       Log.warn('loading metadata for ' + this.options.ngRoutePrefix + ' is not supported');
@@ -169,7 +172,7 @@ export abstract class AbstractQueryService implements IQueringService {
       observable.subscribe(
         async value => {
           if (isArray(value)) {
-            // this.entityRefs = [];
+            // if multiple json schemas are
             for (const entityDefJson of value) {
               if (supportsJsonSchemaImport(reg)) {
                 await reg.fromJsonSchema(entityDefJson);

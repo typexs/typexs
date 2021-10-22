@@ -1,6 +1,6 @@
-import {assign, defaults, get, isArray, keys, set} from 'lodash';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import { assign, defaults, get, isArray, keys, set } from 'lodash';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import {
   API_CTRL_STORAGE_AGGREGATE_ENTITY,
   API_CTRL_STORAGE_DELETE_ENTITIES_BY_CONDITION,
@@ -14,26 +14,25 @@ import {
   API_CTRL_STORAGE_UPDATE_ENTITY,
   IStorageRefMetadata
 } from '@typexs/server';
-import {__CLASS__, __REGISTRY__, REGISTRY_TYPEORM} from '@typexs/base';
-import {IBuildOptions, IEntityRef, RegistryFactory} from '@allgemein/schema-api';
+import { __CLASS__, __REGISTRY__, REGISTRY_TYPEORM } from '@typexs/base';
+import { IBuildOptions, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
 import {
   AbstractQueryService,
   AuthService,
   BackendService,
-  C_RAW,
-  C_SKIP_BUILDS,
   EntityResolverService,
   IQueringService,
   STORAGE_REQUEST_MODE
 } from '@typexs/base-ng';
-
+import { C_SKIP_BUILDS, C_RAW } from '@typexs/ng';
 
 @Injectable()
 export class StorageService extends AbstractQueryService implements IQueringService {
 
-  constructor(private backend: BackendService,
-              private authService: AuthService,
-              private resolverService: EntityResolverService) {
+  constructor(
+    private backend: BackendService,
+    private authService: AuthService,
+    private resolverService: EntityResolverService) {
     super(
       backend,
       authService,
@@ -43,13 +42,13 @@ export class StorageService extends AbstractQueryService implements IQueringServ
           get: API_CTRL_STORAGE_GET_ENTITY,
           query: API_CTRL_STORAGE_FIND_ENTITY,
           aggregate: API_CTRL_STORAGE_AGGREGATE_ENTITY,
-          delete: {route: API_CTRL_STORAGE_DELETE_ENTITY, method: 'delete'},
+          delete: { route: API_CTRL_STORAGE_DELETE_ENTITY, method: 'delete' },
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          delete_by_condition: {route: API_CTRL_STORAGE_DELETE_ENTITIES_BY_CONDITION, method: 'delete'},
+          delete_by_condition: { route: API_CTRL_STORAGE_DELETE_ENTITIES_BY_CONDITION, method: 'delete' },
           save: API_CTRL_STORAGE_SAVE_ENTITY,
           update: API_CTRL_STORAGE_UPDATE_ENTITY,
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          update_by_condition: API_CTRL_STORAGE_UPDATE_ENTITIES_BY_CONDITION,
+          update_by_condition: API_CTRL_STORAGE_UPDATE_ENTITIES_BY_CONDITION
         },
         registry: RegistryFactory.get(REGISTRY_TYPEORM),
         ngRoutePrefix: '/storage',

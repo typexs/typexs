@@ -1,4 +1,4 @@
-import {get, keys} from 'lodash';
+import { get, keys } from 'lodash';
 import {
   Component,
   ComponentFactoryResolver,
@@ -14,10 +14,10 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import {AbstractGridComponent} from './abstract-grid.component';
-import {ComponentRegistryService} from '../component/component-registry.service';
-import {Log} from '../lib/log/Log';
-import {IDTGridOptions} from './IDTGridOptions';
+import { AbstractGridComponent } from './abstract-grid.component';
+import { ComponentRegistryService } from '../component/component-registry.service';
+import { Log } from '../lib/log/Log';
+import { IDTGridOptions } from './IDTGridOptions';
 
 
 const inputKeys = ['columns', 'rows', 'maxRows', 'options', 'params'];
@@ -42,15 +42,16 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
   options: IDTGridOptions;
 
 
-  @ViewChild('content', {read: ViewContainerRef, static: true})
+  @ViewChild('content', { read: ViewContainerRef, static: true })
   vc: ViewContainerRef;
 
   componentRef: ComponentRef<any>;
 
 
-  constructor(@Inject(Injector) public injector: Injector,
-              @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver,
-              @Inject(ComponentRegistryService) public componentRegistryService: ComponentRegistryService) {
+  constructor(
+    @Inject(Injector) public injector: Injector,
+    @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver,
+    @Inject(ComponentRegistryService) public componentRegistryService: ComponentRegistryService) {
     super();
   }
 
@@ -124,7 +125,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
       (<EventEmitter<any>>this.api()[prop]).subscribe(
         (v: any) => (<EventEmitter<any>>this[prop]).emit(v),
         (error: any) => (<EventEmitter<any>>this[prop]).error(error),
-        () => (<EventEmitter<any>>this[prop]).complete(),
+        () => (<EventEmitter<any>>this[prop]).complete()
       );
     }
 

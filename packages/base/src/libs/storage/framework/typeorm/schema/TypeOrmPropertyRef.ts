@@ -1,13 +1,14 @@
-import {capitalize, defaults, get, has, isArray, isBoolean, isEmpty, isFunction, isNumber, isString} from 'lodash';
+import { capitalize, defaults, get, has, isArray, isBoolean, isEmpty, isFunction, isNumber, isString } from 'lodash';
 
-import {ColumnMetadataArgs} from 'typeorm/metadata-args/ColumnMetadataArgs';
-import {RelationMetadataArgs} from 'typeorm/metadata-args/RelationMetadataArgs';
-import {EmbeddedMetadataArgs} from 'typeorm/metadata-args/EmbeddedMetadataArgs';
-import {ClassUtils, NotSupportedError, NotYetImplementedError} from '@allgemein/base';
-import {DefaultPropertyRef, IBuildOptions, IClassRef, IPropertyOptions, METATYPE_PROPERTY} from '@allgemein/schema-api';
-import {TypeOrmEntityRef} from './TypeOrmEntityRef';
-import {TypeOrmUtils} from '../TypeOrmUtils';
-import {REGISTRY_TYPEORM} from '../Constants';
+import { ColumnMetadataArgs } from 'typeorm/metadata-args/ColumnMetadataArgs';
+import { RelationMetadataArgs } from 'typeorm/metadata-args/RelationMetadataArgs';
+import { EmbeddedMetadataArgs } from 'typeorm/metadata-args/EmbeddedMetadataArgs';
+import { ClassUtils, NotSupportedError, NotYetImplementedError } from '@allgemein/base';
+import { DefaultPropertyRef, IBuildOptions, IClassRef, IPropertyOptions, METATYPE_PROPERTY } from '@allgemein/schema-api';
+import { TypeOrmEntityRef } from './TypeOrmEntityRef';
+import { TypeOrmUtils } from '../TypeOrmUtils';
+import { REGISTRY_TYPEORM } from '../Constants';
+import { C_CARDINALITY, C_IDENTIFIER } from '@allgemein/schema-api/lib/Constants';
 
 export interface ITypeOrmPropertyOptions extends IPropertyOptions {
   metadata: ColumnMetadataArgs | RelationMetadataArgs | EmbeddedMetadataArgs;
@@ -15,7 +16,7 @@ export interface ITypeOrmPropertyOptions extends IPropertyOptions {
 }
 
 
-export class TypeOrmPropertyRef extends DefaultPropertyRef /*AbstractRef implements IPropertyRef*/ {
+export class TypeOrmPropertyRef extends DefaultPropertyRef {
 
   column: ColumnMetadataArgs = null;
 
@@ -69,6 +70,24 @@ export class TypeOrmPropertyRef extends DefaultPropertyRef /*AbstractRef impleme
       }
       // this.targetRef.isEntity = true;
     }
+
+    this.updateOptionsForSerialization();
+
+  }
+
+  /**
+   * Keep consistency when json schema of this registry is interpreted by other registry types (backend -> browser).
+   *
+   * TypeormEntityRegistry => DefaultNamedRegistry
+   * @private
+   */
+  private updateOptionsForSerialization() {
+    if (this.isIdentifier()) {
+      this.setOption(C_IDENTIFIER, true);
+    }
+    if (this.cardinality !== 1) {
+      this.setOption(C_CARDINALITY, this.cardinality);
+    }
   }
 
 
@@ -90,9 +109,10 @@ export class TypeOrmPropertyRef extends DefaultPropertyRef /*AbstractRef impleme
   }
 
   isCollection(): boolean {
-    return (this.relation ?
-      this.relation.relationType === 'one-to-many' ||
-      this.relation.relationType === 'many-to-many' : false) ||
+    return (
+        this.relation ?
+          this.relation.relationType === 'one-to-many' ||
+          this.relation.relationType === 'many-to-many' : false) ||
       (this.embedded ? this.embedded.isArray : false);
   }
 
@@ -127,7 +147,6 @@ export class TypeOrmPropertyRef extends DefaultPropertyRef /*AbstractRef impleme
         } else {
           return null;
         }
-        break;
 
       case 'boolean':
 
@@ -149,7 +168,7 @@ export class TypeOrmPropertyRef extends DefaultPropertyRef /*AbstractRef impleme
           if (/^\d+\.|\,\d+$/.test(data)) {
             return parseFloat(data.replace(',', '.'));
           } else if (/^\d+$/.test(data)) {
-            return parseInt(data, 0);
+            return parseInt(data, 10);
           } else {
           }
         } else if (isNumber(data)) {
@@ -215,14 +234,29 @@ export class TypeOrmPropertyRef extends DefaultPropertyRef /*AbstractRef impleme
   getType() {
     if (!this.isReference()) {
       const type = this.column.options.type;
-      if (isFunction(type)) {
-        const name = ClassUtils.getClassName(type);
-        if (['string', 'number', 'boolean', 'date', 'float', 'array', 'object'].includes(name.toLowerCase())) {
-          return name.toLowerCase();
+      if (type) {
+        if (isFunction(type)) {
+          const name = ClassUtils.getClassName(type);
+          if (['string', 'number', 'boolean', 'date', 'float', 'array', 'object'].includes(name.toLowerCase())) {
+            return name.toLowerCase();
+          }
+          return name;
+        } else {
+          return TypeOrmUtils.toJsonType(type) as any;
         }
-        return name;
-      } else {
-        return TypeOrmUtils.toJsonType(type) as any;
+      } else if (this.column.mode) {
+        switch (this.column.mode) {
+          case 'createDate':
+          case 'updateDate':
+          case 'deleteDate':
+            return 'date';
+          case 'objectId':
+            return 'string';
+          case 'array':
+            return 'array';
+          default:
+            throw new NotYetImplementedError('not all column modes are handled');
+        }
       }
     }
     return this.getTargetRef().getClass();
