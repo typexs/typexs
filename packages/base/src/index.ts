@@ -79,14 +79,6 @@ export {Storage} from './libs/storage/Storage';
 export {StorageRef} from './libs/storage/StorageRef';
 export {AbstractSchemaHandler} from './libs/storage/AbstractSchemaHandler';
 
-export {IUpdateOp} from './libs/storage/framework/IUpdateOp';
-export {IUpdateOptions} from './libs/storage/framework/IUpdateOptions';
-export {IDeleteOp} from './libs/storage/framework/IDeleteOp';
-export {IDeleteOptions} from './libs/storage/framework/IDeleteOptions';
-export {ISaveOp} from './libs/storage/framework/ISaveOp';
-export {ISaveOptions} from './libs/storage/framework/ISaveOptions';
-export {IFindOp} from './libs/storage/framework/IFindOp';
-export {IFindOptions} from './libs/storage/framework/IFindOptions';
 
 export {IDistributedQueryWorkerOptions} from './libs/distributed_storage/IDistributedQueryWorkerOptions';
 export {DistributedStorageEntityController} from './libs/distributed_storage/DistributedStorageEntityController';
@@ -150,3 +142,7 @@ export {MatchUtils} from './libs/utils/MatchUtils';
 export {DateUtils} from './libs/utils/DateUtils';
 
 export {Bootstrap} from './Bootstrap';
+
+export { TypeOrmEntityRef } from './libs/storage/framework/typeorm/schema/TypeOrmEntityRef';
+export { TypeOrmPropertyRef } from './libs/storage/framework/typeorm/schema/TypeOrmPropertyRef';
+export { TypeOrmEntityRegistry } from './libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';

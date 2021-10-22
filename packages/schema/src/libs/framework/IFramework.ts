@@ -1,7 +1,7 @@
-import {ISchemaMapper} from './ISchemaMapper';
-import {EntityController} from '../EntityController';
-import {IDeleteOp, IFindOp, ISaveOp, IStorageRef} from '@typexs/base';
-import {ISchemaRef} from '@allgemein/schema-api';
+import { ISchemaMapper } from './ISchemaMapper';
+import { EntityController } from '../EntityController';
+import { IDeleteOp, IFindOp, ISaveOp, IStorageRef } from '@typexs/base';
+import { ISchemaRef } from '@allgemein/schema-api';
 
 export interface IFramework {
 

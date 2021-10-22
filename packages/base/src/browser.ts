@@ -46,6 +46,7 @@ export { ICacheOptions } from './libs/cache/ICacheOptions';
 export { ICommand } from './libs/commands/ICommand';
 
 export { IStorageRef } from './libs/storage/IStorageRef';
+
 export { IEntityController } from './libs/storage/IEntityController';
 export { IConnection } from './libs/storage/IConnection';
 export { DataContainer } from '@allgemein/schema-api';
@@ -58,6 +59,12 @@ export { IValidationMessage } from './libs/storage/IValidationMessage';
 export { IValidationResult } from './libs/storage/IValidationResult';
 // export { Storage } from './libs/storage/Storage';
 // export { StorageRef } from './libs/storage/StorageRef';
+
+export {IUpdateOp} from './libs/storage/framework/IUpdateOp';
+export {IDeleteOp} from './libs/storage/framework/IDeleteOp';
+export {ISaveOp} from './libs/storage/framework/ISaveOp';
+export {IFindOp} from './libs/storage/framework/IFindOp';
+
 
 export { IFindOptions } from './libs/storage/framework/IFindOptions';
 export { IUpdateOptions } from './libs/storage/framework/IUpdateOptions';
@@ -81,9 +88,6 @@ export {
   EVENT_STORAGE_REF_SHUTDOWN,
   K_STRINGIFY_OPTION
 } from './libs/storage/framework/typeorm/Constants';
-// export { TypeOrmEntityRef } from './libs/storage/framework/typeorm/schema/TypeOrmEntityRef';
-// export { TypeOrmPropertyRef } from './libs/storage/framework/typeorm/schema/TypeOrmPropertyRef';
-// export { TypeOrmEntityRegistry } from './libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
 export { INodeInfo } from './libs/system/INodeInfo';
 export { Tasks } from './libs/tasks/Tasks';
 export { TaskExchangeRef } from './libs/tasks/TaskExchangeRef';

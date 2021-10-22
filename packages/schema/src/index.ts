@@ -16,13 +16,12 @@ export {ConditionValidationError} from './libs/exceptions/ConditionValidationErr
 
 export {EntityController} from './libs/EntityController';
 export {EntityControllerFactory} from './libs/EntityControllerFactory';
-export {EntityRegistry} from './libs/EntityRegistry';
 
 
 export {EntityDefTreeWorker} from './libs/framework/EntityDefTreeWorker';
 export {FrameworkFactory} from './libs/framework/FrameworkFactory';
-export {IDataExchange} from './libs/framework/IDataExchange';
-export {IFindOptions} from './libs/framework/IFindOptions';
-export {IFramework} from './libs/framework/IFramework';
-export {INameResolver} from './libs/framework/INameResolver';
-export {ISchemaMapper} from './libs/framework/ISchemaMapper';
+
+export {EntityRef} from './libs/registry/EntityRef';
+export {PropertyRef} from './libs/registry/PropertyRef';
+export {SchemaRef} from './libs/registry/SchemaRef';
+export {EntityRegistry} from './libs/EntityRegistry';

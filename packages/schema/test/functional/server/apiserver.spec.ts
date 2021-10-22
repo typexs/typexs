@@ -1,17 +1,13 @@
 // process.env.SQL_LOG='1';
-import {suite, test, timeout} from '@testdeck/mocha';
-import { Bootstrap, Injector, REGISTRY_TYPEORM, TypeOrmEntityRegistry, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
-import {K_ROUTE_CONTROLLER, Server, XS_P_$URL} from '@typexs/server';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { Bootstrap, Injector, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
+import { K_ROUTE_CONTROLLER, Server, XS_P_$URL } from '@typexs/server';
 import * as _ from 'lodash';
-import {expect} from 'chai';
-import {TestHelper} from '../TestHelper';
-import {TEST_STORAGE_OPTIONS} from '../config';
-import {HttpFactory, IHttp} from '@allgemein/http';
-import {
-  API_CTRL_ENTITY_FIND_ENTITY,
-  API_CTRL_ENTITY_GET_ENTITY,
-  API_CTRL_ENTITY_SAVE_ENTITY, NAMESPACE_BUILT_ENTITY
-} from '../../../src/libs/Constants';
+import { expect } from 'chai';
+import { TestHelper } from '../TestHelper';
+import { TEST_STORAGE_OPTIONS } from '../config';
+import { HttpFactory, IHttp } from '@allgemein/http';
+import { API_CTRL_ENTITY_FIND_ENTITY, API_CTRL_ENTITY_GET_ENTITY, API_CTRL_ENTITY_SAVE_ENTITY } from '../../../src/libs/Constants';
 import { RegistryFactory } from '@allgemein/schema-api';
 
 const settingsTemplate: any = {
@@ -20,7 +16,7 @@ const settingsTemplate: any = {
     literature: {
       synchronize: true,
       type: 'sqlite',
-      database: ':memory:',
+      database: ':memory:'
       // logging: 'all',
       // logger: 'simple-console'
     }
@@ -49,7 +45,7 @@ const settingsTemplate: any = {
   logging: {
     enable: false,
     level: 'debug',
-    transports: [{console: {}}],
+    transports: [{ console: {} }]
   },
 
 
@@ -88,7 +84,7 @@ class ApiserverSpec {
     const settings = _.clone(settingsTemplate);
     http = await HttpFactory.create();
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(settings)
       .activateErrorHandling()
       .activateLogger();
@@ -130,11 +126,11 @@ class ApiserverSpec {
       responseType: 'json',
       passBody: true
     });
-    expect(res).to.deep.include({id: 1});
+    expect(res).to.deep.include({ id: 1 });
 
     const getUrl = url + '/api' + API_CTRL_ENTITY_GET_ENTITY.replace(':name', 'book3').replace(':id', '1');
-    res = await http.get(getUrl, {responseType: 'json', passBody: true});
-    expect(res).to.deep.include({id: 1});
+    res = await http.get(getUrl, { responseType: 'json', passBody: true });
+    expect(res).to.deep.include({ id: 1 });
     const x = {};
     x[XS_P_$URL] = '/entity/book_3/1';
 
@@ -152,7 +148,7 @@ class ApiserverSpec {
       }
     ];
 
-    res = await http.post(saveUrl, {json: arrData, responseType: 'json', passBody: true});
+    res = await http.post(saveUrl, { json: arrData, responseType: 'json', passBody: true });
     expect(_.map(res, r => r.id)).to.deep.eq([2, 3]);
 
     res = await http.get(url + '/api' + API_CTRL_ENTITY_GET_ENTITY.replace(':name', 'book3').replace(':id', '1,2,3'), {
@@ -163,12 +159,12 @@ class ApiserverSpec {
     expect(_.map(res.entities, r => r.id)).to.deep.eq([1, 2, 3]);
 
     res = await http.get(url + '/api' + API_CTRL_ENTITY_FIND_ENTITY.replace(':name', 'book3')
-      + `?query=${JSON.stringify({id: 1})}`, {responseType: 'json', passBody: true});
+      + `?query=${JSON.stringify({ id: 1 })}`, { responseType: 'json', passBody: true });
     expect(res[XS_P_$COUNT]).to.eq(1);
     expect(_.map(res.entities, r => r.id)).to.deep.eq([1]);
 
     res = await http.get(url + '/api' + API_CTRL_ENTITY_FIND_ENTITY.replace(':name', 'book3') +
-      `?query=${JSON.stringify({label: {$like: 'Odyssee'}})}`, {
+      `?query=${JSON.stringify({ label: { $like: 'Odyssee' } })}`, {
       responseType: 'json',
       passBody: true
     });
@@ -176,7 +172,7 @@ class ApiserverSpec {
     expect(_.map(res.entities, r => r.id)).to.deep.eq([3]);
 
     res = await http.get(url + '/api' + API_CTRL_ENTITY_FIND_ENTITY.replace(':name', 'book3') +
-      `?sort=${JSON.stringify({id: 'desc'})}&limit=2`, {
+      `?sort=${JSON.stringify({ id: 'desc' })}&limit=2`, {
       responseType: 'json',
       passBody: true
     });
@@ -185,7 +181,7 @@ class ApiserverSpec {
     expect(_.map(res.entities, r => r.id)).to.deep.eq([3, 2]);
 
     res = await http.get(url + '/api' + API_CTRL_ENTITY_FIND_ENTITY.replace(':name', 'book3') +
-      `?sort=${JSON.stringify({id: 'desc'})}&limit=2&offset=1`, {
+      `?sort=${JSON.stringify({ id: 'desc' })}&limit=2&offset=1`, {
       responseType: 'json',
       passBody: true
     });
@@ -210,18 +206,18 @@ class ApiserverSpec {
       responseType: 'json',
       passBody: true
     });
-    expect(res).to.deep.include({id: 1});
+    expect(res).to.deep.include({ id: 1 });
 
 
     const data = {
       title: 'Prinz',
-      author: {id: 1}
+      author: { id: 1 }
     };
 
     // tslint:disable-next-line:max-line-length
     res = await http.post(url + '/api' + API_CTRL_ENTITY_SAVE_ENTITY.replace(':name', 'bookkk'),
-      {json: data, responseType: 'json', passBody: true});
-    expect(res).to.deep.include({id: 1});
+      { json: data, responseType: 'json', passBody: true });
+    expect(res).to.deep.include({ id: 1 });
   }
 }
 
