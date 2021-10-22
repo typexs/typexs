@@ -44,7 +44,6 @@ export { ICacheConfig } from './libs/cache/ICacheConfig';
 export { ICacheOptions } from './libs/cache/ICacheOptions';
 
 export { ICommand } from './libs/commands/ICommand';
-
 export { IStorageRef } from './libs/storage/IStorageRef';
 
 export { IEntityController } from './libs/storage/IEntityController';
