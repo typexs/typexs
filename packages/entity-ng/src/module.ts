@@ -72,11 +72,6 @@ export class EntityModule {
 
 
   constructor(private appService: AppService) {
-
-    // RegistryFactory.register(NAMESPACE_BUILT_ENTITY, EntityRegistry);
-    // RegistryFactory.register(new RegExp('^' + NAMESPACE_BUILT_ENTITY + '\.'), EntityRegistry);
-
-    // this.appService.registerService('EntityService', EntityService);
   }
 
 }

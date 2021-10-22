@@ -16,7 +16,7 @@ import {Helper} from './Helper';
 import {IQueryComponentApi} from './IQueryComponentApi';
 import {first} from 'rxjs/operators';
 import {IFindOptions} from './IFindOptions';
-import { LabelHelper } from '../../../../base/src';
+import { LabelHelper } from '@typexs/base';
 
 
 /**

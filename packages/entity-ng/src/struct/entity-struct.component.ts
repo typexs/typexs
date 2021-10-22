@@ -22,7 +22,7 @@ export class EntityStructComponent implements OnInit {
 
   referrerProps: IPropertyRef[] = [];
 
-  propertyDefs: { property: IPropertyRef, level: number }[] = [];
+  propertyDefs: { property: IPropertyRef; level: number }[] = [];
 
   validationEntries: IValidatorEntry[] = [];
 

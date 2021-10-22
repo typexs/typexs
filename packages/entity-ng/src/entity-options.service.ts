@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { EntityService } from './entity.service';
-import { EntityRef, K_STORABLE, PropertyRef } from '@typexs/schema';
+// import { EntityRef, K_STORABLE, PropertyRef } from '@typexs/schema';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ISelectOptionsService } from '@typexs/ng-forms';
 import { ISelectOption } from '@typexs/ng/lib/forms/elements/ISelectOption';
-import { IClassRef, IEntityRef } from '@allgemein/schema-api';
+import { IClassRef, IEntityRef, IPropertyRef } from '@allgemein/schema-api';
 import { Log } from '@typexs/base-ng';
+import { K_STORABLE } from '@typexs/schema';
+import { Expressions } from '@allgemein/expressions';
+import { LabelHelper } from '../../base/src';
 
 @Injectable()
 export class EntityOptionsService implements ISelectOptionsService {
@@ -15,11 +18,11 @@ export class EntityOptionsService implements ISelectOptionsService {
   }
 
 
-  options(propertyDef: PropertyRef, limit: number = 25, page: number = 0): Observable<ISelectOption[]> {
+  options(propertyDef: IPropertyRef, limit: number = 25, page: number = 0): Observable<ISelectOption[]> {
     const bs = new BehaviorSubject<ISelectOption[]>(null);
 
     let storeable = true;
-    let sourceRef: IClassRef | IEntityRef = propertyDef.getSourceRef();
+    let sourceRef: IClassRef | IEntityRef = propertyDef.getClassRef();
     if (sourceRef.hasEntityRef()) {
       sourceRef = sourceRef.getEntityRef();
       storeable = sourceRef.getOptions(K_STORABLE);
@@ -29,7 +32,7 @@ export class EntityOptionsService implements ISelectOptionsService {
     }
 
     if (storeable && propertyDef.getTargetRef().hasEntityRef()) {
-      const entityDef = <EntityRef>propertyDef.getTargetRef().getEntityRef();
+      const entityDef = <IEntityRef>propertyDef.getTargetRef().getEntityRef();
       this.entityService.query(entityDef.name, null, { limit: limit }).subscribe(
         result => {
           if (result) {
@@ -38,8 +41,8 @@ export class EntityOptionsService implements ISelectOptionsService {
             if (result.entities) {
               result.entities.forEach((e: any) => {
                 const option: ISelectOption = {};
-                option.value = entityDef.buildLookupConditions(e);
-                option.label = entityDef.label(e);
+                option.value = Expressions.buildLookupConditions(entityDef, e);
+                option.label = LabelHelper.labelForEntity(e, entityDef);
                 _entities.push(option);
               });
             }

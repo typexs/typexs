@@ -1,14 +1,8 @@
-import {
-  defaults, find, isArray, isEmpty, isFunction, isNumber, intersection,
-  get, clone, upperFirst, isNull, keys, values, isString, filter, merge, isPlainObject,
-  concat, kebabCase, has, snakeCase, isRegExp, orderBy, remove, first, set, assign,
-  capitalize, isUndefined, isDate
-} from 'lodash';
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {StorageService} from '../storage.service';
-import {IEntityRef, LookupRegistry, METATYPE_ENTITY} from '@allgemein/schema-api';
-import {REGISTRY_TYPEORM} from '@typexs/base';
+import { snakeCase } from 'lodash';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { StorageService } from '../storage.service';
+import { IEntityRef, METATYPE_ENTITY } from '@allgemein/schema-api';
 
 
 @Component({
@@ -32,8 +26,8 @@ export class StorageDeleteComponent implements OnInit {
   deleted: boolean = false;
 
   constructor(public entityService: StorageService,
-              private route: ActivatedRoute,
-              private router: Router) {
+    private route: ActivatedRoute,
+    private router: Router) {
   }
 
 
@@ -47,9 +41,7 @@ export class StorageDeleteComponent implements OnInit {
   load() {
     this.name = this.route.snapshot.paramMap.get('name');
     this.id = this.route.snapshot.paramMap.get('id');
-    this.entityDef = LookupRegistry.$(REGISTRY_TYPEORM).find(METATYPE_ENTITY, (e: IEntityRef) => {
-      return e.machineName === snakeCase(this.name);
-    });
+    this.entityDef = this.entityService.getRegistry().find(METATYPE_ENTITY, (e: IEntityRef) => e.machineName === snakeCase(this.name));
     if (this.entityDef) {
       this.entityService.get(this.name, this.id).subscribe((entity) => {
         this.instance = entity;

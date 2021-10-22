@@ -56,8 +56,8 @@ export { IDBType } from './libs/storage/IDBType';
 export { IValidationError } from './libs/storage/IValidationError';
 export { IValidationMessage } from './libs/storage/IValidationMessage';
 export { IValidationResult } from './libs/storage/IValidationResult';
-export { Storage } from './libs/storage/Storage';
-export { StorageRef } from './libs/storage/StorageRef';
+// export { Storage } from './libs/storage/Storage';
+// export { StorageRef } from './libs/storage/StorageRef';
 
 export { IFindOptions } from './libs/storage/framework/IFindOptions';
 export { IUpdateOptions } from './libs/storage/framework/IUpdateOptions';
@@ -81,9 +81,9 @@ export {
   EVENT_STORAGE_REF_SHUTDOWN,
   K_STRINGIFY_OPTION
 } from './libs/storage/framework/typeorm/Constants';
-export { TypeOrmEntityRef } from './libs/storage/framework/typeorm/schema/TypeOrmEntityRef';
-export { TypeOrmPropertyRef } from './libs/storage/framework/typeorm/schema/TypeOrmPropertyRef';
-export { TypeOrmEntityRegistry } from './libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
+// export { TypeOrmEntityRef } from './libs/storage/framework/typeorm/schema/TypeOrmEntityRef';
+// export { TypeOrmPropertyRef } from './libs/storage/framework/typeorm/schema/TypeOrmPropertyRef';
+// export { TypeOrmEntityRegistry } from './libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
 export { INodeInfo } from './libs/system/INodeInfo';
 export { Tasks } from './libs/tasks/Tasks';
 export { TaskExchangeRef } from './libs/tasks/TaskExchangeRef';

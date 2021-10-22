@@ -1,22 +1,22 @@
-import {defaults, get, has, isArrayLike, isBoolean, isEmpty, isNumber, isObjectLike, isString, isUndefined, keys} from 'lodash';
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject, Observable, of, Subject} from 'rxjs';
-import {API_CTRL_SERVER_PING, API_CTRL_SERVER_ROUTES} from '@typexs/server';
-import {catchError, filter, first, mergeMap, tap} from 'rxjs/operators';
-import {IBackendClientService} from '../api/backend/IBackendClientService';
-import {MessageService} from '../messages/message.service';
-import {BACKEND_CLIENT_STATE} from '../api/backend/Constants';
-import {IRoutePointer} from '../api/backend/IRoutePointer';
-import {IApiCallOptions} from '../lib/http/IApiCallOptions';
-import {IHttpRequestOptions} from '../lib/http/IHttpRequestOptions';
-import {UrlHelper} from '../lib/UrlHelper';
-import {Log} from '../lib/log/Log';
-import {LogMessage} from '../messages/types/LogMessage';
-import {ErrorHelper} from '../lib/ErrorHelper';
-import {MessageChannel} from '../messages/MessageChannel';
-import {CryptUtils} from '@allgemein/base';
-import {IRoute} from '../api/backend/IRoute';
+import { defaults, get, has, isArrayLike, isBoolean, isEmpty, isNumber, isObjectLike, isString, isUndefined, keys } from 'lodash';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { API_CTRL_SERVER_PING, API_CTRL_SERVER_ROUTES } from '@typexs/server';
+import { catchError, filter, first, mergeMap, tap } from 'rxjs/operators';
+import { IBackendClientService } from '../api/backend/IBackendClientService';
+import { MessageService } from '../messages/message.service';
+import { BACKEND_CLIENT_STATE } from '../api/backend/Constants';
+import { IRoutePointer } from '../api/backend/IRoutePointer';
+import { IApiCallOptions } from '../lib/http/IApiCallOptions';
+import { IHttpRequestOptions } from '../lib/http/IHttpRequestOptions';
+import { UrlHelper } from '../lib/UrlHelper';
+import { Log } from '../lib/log/Log';
+import { LogMessage } from '../messages/types/LogMessage';
+import { ErrorHelper } from '../lib/ErrorHelper';
+import { MessageChannel } from '../messages/MessageChannel';
+import { CryptUtils } from '@allgemein/base';
+import { IRoute } from '../api/backend/IRoute';
 
 /**
  * The primary communication handle to the backend
@@ -190,7 +190,6 @@ export class HttpBackendService implements IBackendClientService {
 
 
   apiUrl(context: string | IRoutePointer): string {
-    console.log(context);
     return this.api + (isString(context) ? context : (<IRoutePointer>context).route);
   }
 
@@ -247,7 +246,7 @@ export class HttpBackendService implements IBackendClientService {
     const doCaching = _method === 'get';
 
     if (doCaching) {
-      cacheKey = CryptUtils.shorthash(JSON.stringify({c: context, o: options}));
+      cacheKey = CryptUtils.shorthash(JSON.stringify({ c: context, o: options }));
       if (this.requestCache[cacheKey]) {
         return this.requestCache[cacheKey].asObservable();
       }
@@ -348,8 +347,9 @@ export class HttpBackendService implements IBackendClientService {
    * @param url
    */
   get<T>(url: string | IHttpRequestOptions): Observable<T>;
+  // eslint-disable-next-line no-dupe-class-members
   get<T>(url: string | IHttpRequestOptions, response?: (err: Error, data: T) => void): Observable<T> {
-    const options: IHttpRequestOptions = isString(url) ? {url: url, logging: true} : url;
+    const options: IHttpRequestOptions = isString(url) ? { url: url, logging: true } : url;
     if (response) {
       options.callback = response;
     }
@@ -358,8 +358,9 @@ export class HttpBackendService implements IBackendClientService {
 
 
   post<T>(url: string | IHttpRequestOptions, body: any | null): Observable<T>;
+  // eslint-disable-next-line no-dupe-class-members
   post<T>(url: string | IHttpRequestOptions, body: any | null, response?: (err: Error, data: T) => void): Observable<T> {
-    const options: IHttpRequestOptions = isString(url) ? {url: url, logging: true, body: body} : url;
+    const options: IHttpRequestOptions = isString(url) ? { url: url, logging: true, body: body } : url;
     if (body) {
       options.body = body;
     }
@@ -371,8 +372,9 @@ export class HttpBackendService implements IBackendClientService {
 
 
   delete<T>(url: string | IHttpRequestOptions): Observable<T>;
+  // eslint-disable-next-line no-dupe-class-members
   delete<T>(url: string | IHttpRequestOptions, response?: (err: Error, data: T) => void): Observable<T> {
-    const options: IHttpRequestOptions = isString(url) ? {url: url, logging: true} : url;
+    const options: IHttpRequestOptions = isString(url) ? { url: url, logging: true } : url;
     if (response) {
       options.callback = response;
     }
@@ -381,8 +383,9 @@ export class HttpBackendService implements IBackendClientService {
 
 
   put<T>(url: string | IHttpRequestOptions): Observable<T>;
+  // eslint-disable-next-line no-dupe-class-members
   put<T>(url: string | IHttpRequestOptions, response?: (err: Error, data: T) => void): Observable<T> {
-    const options: IHttpRequestOptions = isString(url) ? {url: url, logging: true} : url;
+    const options: IHttpRequestOptions = isString(url) ? { url: url, logging: true } : url;
     if (response) {
       options.callback = response;
     }

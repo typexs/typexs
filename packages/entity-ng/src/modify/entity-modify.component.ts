@@ -1,8 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {EntityService} from './../entity.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {EntityRegistry} from '@typexs/schema/libs/EntityRegistry';
-import {EntityRef} from '@typexs/schema/libs/registry/EntityRef';
+import { Component, OnInit } from '@angular/core';
+import { EntityService } from './../entity.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IEntityRef } from '@allgemein/schema-api';
+import { Expressions } from '@allgemein/expressions';
+import { LabelHelper } from '@typexs/base';
+// import {EntityRegistry} from '@typexs/schema/libs/EntityRegistry';
+// import {EntityRef} from '@typexs/schema/libs/registry/EntityRef';
 
 @Component({
   selector: 'entity-modify',
@@ -18,15 +21,16 @@ export class EntityModifyComponent implements OnInit {
 
   name: string;
 
-  entityDef: EntityRef;
+  entityDef: IEntityRef;
 
   instance: any;
 
   error: any = null;
 
-  constructor(private entityService: EntityService,
-              private route: ActivatedRoute,
-              private router: Router) {
+  constructor(
+    private entityService: EntityService,
+    private route: ActivatedRoute,
+    private router: Router) {
   }
 
 
@@ -48,7 +52,7 @@ export class EntityModifyComponent implements OnInit {
   load() {
     this.name = this.route.snapshot.paramMap.get('name');
     this.id = this.route.snapshot.paramMap.get('id');
-    this.entityDef = EntityRegistry.$().getEntityRefByName(this.name);
+    this.entityDef = this.getRegistry().getEntityRefFor(this.name);
     if (this.entityDef) {
       if (this.id) {
         this.new = false;
@@ -70,13 +74,28 @@ export class EntityModifyComponent implements OnInit {
   }
 
 
+  buildLookupConditions(data: any | any[]) {
+    return Expressions.buildLookupConditions(this.entityDef, data);
+  }
+
+
+  createLookupConditions(id: string): any | any[] {
+    return Expressions.parseLookupConditions(this.entityDef, id);
+  }
+
+
+  label(entity: any, sep: string = ' ', max: number = 1024): string {
+    return LabelHelper.labelForEntity(entity, this.entityDef, sep, max);
+  }
+
+
   onSubmit($event: any) {
     if ($event.data.isValidated && $event.data.isSuccessValidated) {
       const instance = $event.data.instance;
       if (this.new) {
         this.entityService.save(this.name, instance).subscribe(async (res: any) => {
           if (res) {
-            const idStr = this.entityDef.buildLookupConditions(res);
+            const idStr = this.buildLookupConditions(res);
             // TODO flash message
             await this.router.navigate([this.entityService.getNgUrlPrefix(), this.name, 'view', idStr]);
           } else {
@@ -86,7 +105,7 @@ export class EntityModifyComponent implements OnInit {
       } else {
         this.entityService.update(this.name, this.id, instance).subscribe(async (res: any) => {
           if (res) {
-            const idStr = this.entityDef.buildLookupConditions(res);
+            const idStr = this.buildLookupConditions(res);
             // TODO flash message
             await this.router.navigate([this.entityService.getNgUrlPrefix(), this.name, 'view', idStr]);
           } else {

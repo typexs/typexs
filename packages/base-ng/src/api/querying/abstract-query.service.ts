@@ -114,7 +114,7 @@ export abstract class AbstractQueryService implements IQueringService {
    * @param name
    */
   getEntityRefForName(name: string): IEntityRef {
-    if (!this.options.registryName) {
+    if (!this.options.registry) {
       return null;
     }
     return this.getRegistry().getEntityRefFor(name);
@@ -129,7 +129,9 @@ export abstract class AbstractQueryService implements IQueringService {
    * checks if metadata model is ready to be used
    */
   isReady(): Observable<boolean> ;
+  // eslint-disable-next-line no-dupe-class-members
   isReady(callback: Function): void ;
+  // eslint-disable-next-line no-dupe-class-members
   isReady(callback?: Function): Observable<boolean> | void {
     if (!callback) {
       return this.$isReady.asObservable();

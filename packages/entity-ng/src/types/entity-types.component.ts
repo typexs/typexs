@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { EntityService } from './../entity.service';
-import { EntityRef } from '@typexs/schema';
 import { IEntityRef } from '@allgemein/schema-api';
+import { K_STORABLE } from '@typexs/schema';
 
 
 @Component({
@@ -14,6 +14,6 @@ export class EntityTypesComponent {
   }
 
   getEntityRefs(): IEntityRef[] {
-    return this.entityService.getEntityRefs().filter(e => (e as EntityRef).isStorable());
+    return this.entityService.getEntityRefs().filter(e => (e as IEntityRef).getOptions(K_STORABLE, true));
   }
 }

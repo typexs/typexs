@@ -1,4 +1,3 @@
-import './register';
 import {IEntity} from '../registry/IEntity';
 import {Entity as _Entity} from '@allgemein/schema-api';
 import {defaults} from 'lodash';

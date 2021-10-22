@@ -18,8 +18,7 @@ import {ClassType} from '@allgemein/schema-api';
   templateUrl: './entity-query.component.html',
   styleUrls: ['./entity-query.component.scss']
 })
-export class EntityQueryComponent
-  implements OnInit {
+export class EntityQueryComponent implements OnInit {
 
   options: IDTGridOptions = {};
 

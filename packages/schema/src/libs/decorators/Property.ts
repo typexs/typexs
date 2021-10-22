@@ -1,4 +1,3 @@
-import './register';
 import {IProperty} from '../registry/IProperty';
 import {Property as _Property} from '@allgemein/schema-api';
 import {defaults, isFunction, isString} from 'lodash';

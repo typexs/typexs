@@ -110,8 +110,8 @@ export class TypeOrmPropertyRef extends DefaultPropertyRef {
 
   isCollection(): boolean {
     return (
-        this.relation ?
-          this.relation.relationType === 'one-to-many' ||
+      this.relation ?
+        this.relation.relationType === 'one-to-many' ||
           this.relation.relationType === 'many-to-many' : false) ||
       (this.embedded ? this.embedded.isArray : false);
   }

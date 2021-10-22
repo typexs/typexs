@@ -1,8 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {EntityService} from './../entity.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {EntityRegistry} from '@typexs/schema/libs/EntityRegistry';
-import {EntityRef} from '@typexs/schema/libs/registry/EntityRef';
+import { Component, OnInit } from '@angular/core';
+import { EntityService } from './../entity.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IEntityRef } from '@allgemein/schema-api';
 
 @Component({
   selector: 'entity-delete',
@@ -16,7 +15,7 @@ export class EntityDeleteComponent implements OnInit {
 
   id: string;
 
-  entityDef: EntityRef;
+  entityDef: IEntityRef;
 
   instance: any;
 
@@ -24,9 +23,10 @@ export class EntityDeleteComponent implements OnInit {
 
   deleted = false;
 
-  constructor(public entityService: EntityService,
-              private route: ActivatedRoute,
-              private router: Router) {
+  constructor(
+    public entityService: EntityService,
+    private route: ActivatedRoute,
+    private router: Router) {
   }
 
 
@@ -40,7 +40,7 @@ export class EntityDeleteComponent implements OnInit {
   load() {
     this.name = this.route.snapshot.paramMap.get('name');
     this.id = this.route.snapshot.paramMap.get('id');
-    this.entityDef = EntityRegistry.$().getEntityRefByName(this.name);
+    this.entityDef = this.entityService.getRegistry().getEntityRefFor(this.name);
     if (this.entityDef) {
       this.entityService.get(this.name, this.id).subscribe((entity) => {
         this.instance = entity;
@@ -59,7 +59,7 @@ export class EntityDeleteComponent implements OnInit {
           // TODO maybe wait
           this.instance = entity;
           this.deleted = true;
-//          await this.router.navigate([storageService.getNgUrlPrefix(), this.name, 'query']);
+          //  await this.router.navigate([storageService.getNgUrlPrefix(), this.name, 'query']);
         });
       }
     }

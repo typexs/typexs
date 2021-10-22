@@ -1,5 +1,3 @@
-// import {EntityRegistry} from '../EntityRegistry';
-import './register';
 import {ISchema} from '../registry/ISchema';
 import {Schema as _Schema} from '@allgemein/schema-api';
 import {defaults, isString} from 'lodash';

@@ -1,4 +1,3 @@
-import './register';
 import {IProperty} from '../registry/IProperty';
 import {PropertyOf as _PropertyOf} from '@allgemein/schema-api';
 
