@@ -1,23 +1,48 @@
 version: '3'
 networks:
-  typexs_base_dev: {}
+  dev: {}
 services:
 
 
-  typexs_base_dev_mongo:
+  mongo:
     image: mongo:4
     ports:
       - 127.0.0.1:27017:27017
     volumes:
       - ./local/mongodb:/data/db
     networks:
-      - typexs_base_dev
+      - dev
 
-  typexs_base_dev_redis:
+  redis:
     image: redis:5
     ports:
       - 127.0.0.1:6379:6379
     volumes:
       - ./local/redis/db:/data
     networks:
-      - typexs_base_dev
+      - dev
+
+  elastic:
+    image: elasticsearch:7.14.2
+    environment:
+      - TAKE_FILE_OWNERSHIP=true
+      - discovery.type=single-node
+      - node.name=es01
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ports:
+      - 127.0.0.1:9200:9200
+      - 127.0.0.1:9300:9300
+    networks:
+      - dev
+
+  psql:
+    image: postgres:14
+    ports:
+      - 127.0.0.1:5436:5432
+    environment:
+      POSTGRES_DATABASES: txsbase
+      POSTGRES_USER: txsbase
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_PASSWORD:
+    networks:
+      - dev
