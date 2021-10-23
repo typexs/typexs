@@ -162,7 +162,7 @@ export class AbstractQueryEmbeddedComponent implements OnInit, OnChanges, IQuery
       this.entityRef.getPropertyRefs().forEach(x => {
 
         const column: IGridColumn = {
-          label: LabelHelper.labelForProperty(x, this.entityRef.getClassRef()),
+          label: LabelHelper.labelForProperty(x),
           field: x.name,
         };
 

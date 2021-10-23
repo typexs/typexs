@@ -6,7 +6,13 @@ import {
   C_SKIP_BUILDS as C_SKIP_BUILDS_BASE
 } from '@typexs/base/libs/Constants';
 
-
+export const K_FORM = 'form';
+export const K_READONLY = 'readonly';
+export const K_SELECT = 'select';
+export const K_TEXT = 'text';
+export const K_NAME = 'name';
+export const K_LABEL = 'label';
+export const K_VALUE = 'value';
 export const C_NG = 'ng';
 export const C_NG_MODUL = 'ng.module';
 export const C_DEFAULT = 'default';

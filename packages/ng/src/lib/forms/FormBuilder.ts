@@ -1,13 +1,13 @@
-import {capitalize, isArray, isString, keys, remove} from 'lodash';
-import {NotYetImplementedError} from '@allgemein/base';
-import {AbstractRef, ClassRef, IEntityRef, IPropertyRef, METATYPE_ENTITY, METATYPE_PROPERTY} from '@allgemein/schema-api';
-import {FormObject} from './FormObject';
-import {Form} from './elements';
-import {ResolveDataValue} from './ResolveDataValue';
-import {ComponentRegistry} from '../views/ComponentRegistry';
-import {NoFormTypeDefinedError} from '../exceptions/NoFormTypeDefinedError';
-import { K_VIRTUAL } from '../Constants';
-import { K_FORM, K_NAME, K_READONLY, K_SELECT, K_TEXT } from '../../../../ng-forms/src/constants';
+import { capitalize, isArray, isString, keys, remove } from 'lodash';
+import { NotYetImplementedError } from '@allgemein/base';
+import { AbstractRef, ClassRef, IEntityRef, IPropertyRef, METATYPE_ENTITY, METATYPE_PROPERTY } from '@allgemein/schema-api';
+import { FormObject } from './FormObject';
+import { Form } from './elements';
+import { ResolveDataValue } from './ResolveDataValue';
+import { ComponentRegistry } from '../views/ComponentRegistry';
+import { NoFormTypeDefinedError } from '../exceptions/NoFormTypeDefinedError';
+import { K_FORM, K_NAME, K_READONLY, K_SELECT, K_TEXT, K_VIRTUAL } from '../Constants';
+import { LabelHelper } from '@typexs/base';
 
 export class FormBuilder {
 
@@ -33,7 +33,7 @@ export class FormBuilder {
   }
 
 
-  private _buildFormObject(entity: IEntityRef | IPropertyRef, parent: FormObject = null, options: { level: number } = {level: 0}) {
+  private _buildFormObject(entity: IEntityRef | IPropertyRef, parent: FormObject = null, options: { level: number } = { level: 0 }) {
     let formObject: FormObject = null;
 
     if (!this.form) {
@@ -88,7 +88,7 @@ export class FormBuilder {
       if (options.level === 0 || formObject.isStruct()) {
         const properties = (<IEntityRef>entity).getPropertyRefs().filter(x => !x.getOptions(K_VIRTUAL, false));
         for (const property of properties) {
-          const childObject = this._buildFormObject(property, formObject, {level: nextLevel});
+          const childObject = this._buildFormObject(property, formObject, { level: nextLevel });
           formObject.insert(childObject);
         }
       }
@@ -101,12 +101,12 @@ export class FormBuilder {
         if (property.getTargetRef().hasEntityRef()) {
           // build for new entity
           const entity = (<ClassRef>property.getTargetRef()).getEntityRef();
-          this._buildFormObject(entity, formObject, {level: nextLevel});
+          this._buildFormObject(entity, formObject, { level: nextLevel });
         } else {
           // insert property form elements
           const properties = property.getTargetRef().getPropertyRefs().filter(x => !x.getOptions(K_VIRTUAL, false));
           for (const property of properties) {
-            const childObject = this._buildFormObject(property, formObject, {level: nextLevel});
+            const childObject = this._buildFormObject(property, formObject, { level: nextLevel });
             formObject.insert(childObject);
           }
         }
@@ -165,7 +165,7 @@ export class FormBuilder {
   private _applyValues(formObject: FormObject, property: IPropertyRef) {
     formObject.handle(K_NAME, property.name);
     formObject.handle('id', property.id());
-    formObject.handle('label', /*property.label() ? property.label() :*/ capitalize(property.name));
+    formObject.handle('label', LabelHelper.labelForProperty(property));
     formObject.handle('binding', property);
 
     const options = property.getOptions();

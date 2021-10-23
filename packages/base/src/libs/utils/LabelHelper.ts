@@ -46,7 +46,7 @@ export class LabelHelper {
   }
 
 
-  static labelForProperty(property: IPropertyRef, ref: IClassRef, sep: string = ' ', max: number = 1024): string {
+  static labelForProperty(property: IPropertyRef): string {
     if (Reflect.has(property, C_LABEL)) {
       if (isFunction(property[C_LABEL])) {
         return property[C_LABEL]();

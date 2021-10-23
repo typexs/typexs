@@ -4,7 +4,7 @@ import { IEntityRef, LookupRegistry, METATYPE_ENTITY } from '@allgemein/schema-a
 import { IQueringService } from './../api/querying/IQueringService';
 import { forkJoin } from 'rxjs';
 import { ComponentRegistry } from '@typexs/ng';
-import { LabelHelper } from '../../../base/src';
+import { LabelHelper } from '@typexs/base';
 
 
 @Injectable()

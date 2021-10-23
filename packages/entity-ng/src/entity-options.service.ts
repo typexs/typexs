@@ -8,7 +8,7 @@ import { IClassRef, IEntityRef, IPropertyRef } from '@allgemein/schema-api';
 import { Log } from '@typexs/base-ng';
 import { K_STORABLE } from '@typexs/schema';
 import { Expressions } from '@allgemein/expressions';
-import { LabelHelper } from '../../base/src';
+import { LabelHelper } from '@typexs/base';
 
 @Injectable()
 export class EntityOptionsService implements ISelectOptionsService {

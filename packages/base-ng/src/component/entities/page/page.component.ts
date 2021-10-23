@@ -1,11 +1,9 @@
-import {assign, isArray, isFunction, uniq} from 'lodash';
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {IEntityRef} from '@allgemein/schema-api';
-import {EntityResolverService} from '../../../services/entity-resolver.service';
-import {C_$LABEL, C_LABEL} from '@typexs/ng';
-import { Helper } from '../../../api/querying/Helper';
-import { LabelHelper } from '../../../../../base/src';
+import { assign, isArray, uniq } from 'lodash';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { IEntityRef } from '@allgemein/schema-api';
+import { EntityResolverService } from '../../../services/entity-resolver.service';
+import { LabelHelper } from '@typexs/base';
 
 
 @Component({

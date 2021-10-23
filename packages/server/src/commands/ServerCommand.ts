@@ -19,6 +19,7 @@ export class ServerCommand {
     return yargs;
   }
 
+  // TODO start also multiple server at once
   async start(name: string) {
     const service = this.registry.get(name);
     const status = await service.start();
@@ -30,7 +31,6 @@ export class ServerCommand {
     } else {
       Log.error('Failed to start server ' + name + '.');
     }
-
   }
 
   async handler(argv: any) {
