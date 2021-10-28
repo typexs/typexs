@@ -7,7 +7,7 @@ export class FrameworkFactory {
 
   private static $self: FrameworkFactory;
 
-  frameworks: IFramework[] = [new SqlFramework()];
+  frameworks: IFramework[] = [];
 
   private constructor() {
     this.frameworks.push(new SqlFramework());

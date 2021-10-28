@@ -12,6 +12,7 @@ import { IndexProcessingWorker } from '../../src/workers/IndexProcessingWorker';
 import { IndexRuntimeStatus } from '../../src/lib/IndexRuntimeStatus';
 import { TestHelper } from './TestHelper';
 import { C_ELASTIC_SEARCH, C_SEARCH_INDEX } from '../../src/lib/Constants';
+import { join } from 'path';
 
 
 let bootstrap: Bootstrap = null;
@@ -137,7 +138,39 @@ const testConfig = [
         }
       ]
     }
+  },
+  {
+    app: { path: join(__dirname, 'scenarios', 'app_with_entities') },
+    modules: { paths: [resolve], disableCache: true },
+    logging: {
+      enable: false,
+      level: 'debug'
+    },
+    storage: {
+      default: {
+        type: 'sqlite',
+        database: ':memory:'
+      },
+      elastic: <any>{
+        framework: C_SEARCH_INDEX,
+        type: C_ELASTIC_SEARCH,
+        host: ES_host,
+        port: ES_port,
+        indexTypes: [
+          { entities: ['EntityBySchemaApi'] }
+        ]
+      }
+    },
+    workers: {
+      access: [
+        {
+          name: IndexProcessingWorker.name,
+          access: 'allow'
+        }
+      ]
+    }
   }
+
 
 
 ];

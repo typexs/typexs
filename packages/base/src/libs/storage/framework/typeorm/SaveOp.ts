@@ -1,13 +1,13 @@
-import {defaults, get, has, isArray, isEmpty, keys, map, remove} from 'lodash';
-import {ISaveOp} from '../ISaveOp';
-import {ISaveOptions} from '../ISaveOptions';
-import {TypeOrmUtils} from './TypeOrmUtils';
-import {ObjectsNotValidError} from '../../../exceptions/ObjectsNotValidError';
-import {TypeOrmEntityRegistry} from './schema/TypeOrmEntityRegistry';
-import {StorageApi} from '../../../../api/Storage.api';
-import {TypeOrmEntityController} from './TypeOrmEntityController';
-import {DataContainer, IEntityRef} from '@allgemein/schema-api';
-import {convertPropertyValueJsonToString, convertPropertyValueStringToJson} from './Helper';
+import { defaults, get, has, isArray, isEmpty, keys, map, remove } from 'lodash';
+import { ISaveOp } from '../ISaveOp';
+import { ISaveOptions } from '../ISaveOptions';
+import { TypeOrmUtils } from './TypeOrmUtils';
+import { ObjectsNotValidError } from '../../../exceptions/ObjectsNotValidError';
+import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
+import { EntityControllerApi } from '../../../../api/EntityControllerApi';
+import { TypeOrmEntityController } from './TypeOrmEntityController';
+import { DataContainer, IEntityRef } from '@allgemein/schema-api';
+import { convertPropertyValueJsonToString, convertPropertyValueStringToJson } from './Helper';
 
 
 const saveOptionsKeys = ['data', 'listeners', 'transaction', 'chunk', 'reload'];
@@ -46,14 +46,14 @@ export class SaveOp<T> implements ISaveOp<T> {
   }
 
   async run(object: T[] | T, options?: ISaveOptions): Promise<T[] | T> {
-    defaults(options, {validate: false, raw: false});
+    defaults(options, { validate: false, raw: false });
     this.options = options;
     this.isArray = isArray(object);
     this.objects = this.prepare(object);
 
     const jsonPropertySupport = this.controller.storageRef.getSchemaHandler().supportsJson();
 
-    await this.controller.invoker.use(StorageApi).doBeforeSave(this.objects, this);
+    await this.controller.invoker.use(EntityControllerApi).doBeforeSave(this.objects, this);
 
     let objectsValid = true;
     if (get(options, 'validate', false)) {
@@ -74,7 +74,7 @@ export class SaveOp<T> implements ISaveOp<T> {
       const refs: { [k: string]: IEntityRef } = {};
       for (const entityName of entityNames) {
         refs[entityName] = this.controller.getStorageRef().getRegistry().getEntityRefFor(entityName);
-        // await this.controller.invoker.use(StorageApi).prepareEntities(this.objects, this);
+        // await this.controller.invoker.use(EntityControllerApi).prepareEntities(this.objects, this);
         if (!jsonPropertySupport) {
           convertPropertyValueJsonToString(refs[entityName], resolveByEntityRef[entityName]);
         }
@@ -98,7 +98,9 @@ export class SaveOp<T> implements ISaveOp<T> {
               if (!entity._id) {
                 entity._id = idPropertyRefs.map(x => get(entity, x.name)).join('--');
                 if (isEmpty(entity._id)) {
-                  throw new Error('no id could be generate for ' + entityName + ' with properties ' + idPropertyRefs.map(x => x.name).join(', '));
+                  throw new Error(
+                    'no id could be generate for ' + entityName +
+                    ' with properties ' + idPropertyRefs.map(x => x.name).join(', '));
                 }
               }
               keys(entity).filter(x => /^$/.test(x)).map(x => delete entity[x]);
@@ -108,7 +110,7 @@ export class SaveOp<T> implements ISaveOp<T> {
               const bulk = repo.initializeOrderedBulkOp();
               resolveByEntityRef[entityName].forEach((entity: any) => {
                 // filter command values
-                bulk.find({_id: entity._id}).upsert().replaceOne(entity);
+                bulk.find({ _id: entity._id }).upsert().replaceOne(entity);
               });
               promises.push(bulk.execute());
             } else {
@@ -176,7 +178,7 @@ export class SaveOp<T> implements ISaveOp<T> {
 
 
     const result = this.isArray ? this.objects : this.objects.shift();
-    await this.controller.invoker.use(StorageApi).doAfterSave(result, this.error, this);
+    await this.controller.invoker.use(EntityControllerApi).doAfterSave(result, this.error, this);
 
     if (this.error) {
       throw this.error;

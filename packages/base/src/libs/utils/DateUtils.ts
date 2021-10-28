@@ -32,4 +32,8 @@ export class DateUtils {
     return DateTime.fromJSDate(date).plus(add).toJSDate();
   }
 
+  static sub(add: DurationInput, date: Date = new Date()) {
+    return DateTime.fromJSDate(date).minus(add).toJSDate();
+  }
+
 }

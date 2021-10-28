@@ -6,7 +6,7 @@ import {Invoker} from '../../../src/base/Invoker';
 import {Injector} from '../../../src/libs/di/Injector';
 import {TypeOrmStorage} from '../../../src/adapters/storage/typeorm/TypeOrmStorage';
 import {SqliteSchemaHandler} from '../../../src/adapters/storage/typeorm/SqliteSchemaHandler';
-import {StorageApi} from '../../../src/api/Storage.api';
+import {EntityControllerApi} from '../../../src/api/EntityControllerApi';
 
 @suite('functional/storage/standalone/configuration')
 class StorageStandaloneConfigurationSpec {
@@ -20,12 +20,12 @@ class StorageStandaloneConfigurationSpec {
     Injector.set(Invoker.NAME, invoker);
 
     // const apis = MetaArgs.key(K_CLS_USE_API);
-    // [StorageApi].forEach(api => {
+    // [EntityControllerApi].forEach(api => {
     //   invoker.register(api, apis.filter(x => x.api === api).map(x => x.target));
     // });
 
     // const apis = MetaArgs.key(K_CLS_USE_API);
-    [StorageApi].forEach(api => {
+    [EntityControllerApi].forEach(api => {
       invoker.register(api, []);
     });
 

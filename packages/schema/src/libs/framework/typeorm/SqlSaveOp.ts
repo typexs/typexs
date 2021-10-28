@@ -15,6 +15,7 @@ import { SchemaUtils } from '../../SchemaUtils';
 import { ISaveData } from './ISaveData';
 import { collectLookupConditions, lookupKey, setTargetInitialForProperty } from './Helper';
 import { C_CLASS_WRAPPED, PROP_KEY_TARGET } from './Constants';
+import { EntityControllerApi } from '../../../../../base/src/api/EntityControllerApi';
 
 
 export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
@@ -884,14 +885,16 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
 
 
     if (objectsValid) {
+      await this.entityController.invoker.use(EntityControllerApi).doBeforeSave(this.objects, this);
+
       const resolveByEntityDef = this.entityController.resolveByEntityDef(this.objects);
       const entityNames = Object.keys(resolveByEntityDef);
       this.c = await this.entityController.storageRef.connect() as TypeOrmConnectionWrapper;
 
       // start transaction, got to leafs and save
-      let error = null;
+      let error, results: any[] = null;
       try {
-        const results = await this.c.manager.transaction(async em => {
+        results = await this.c.manager.transaction(async em => {
           const promises = [];
           for (const entityName of entityNames) {
             const p = this.saveByEntityDef(entityName, resolveByEntityDef[entityName]);
@@ -904,6 +907,8 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
       } finally {
         await this.c.close();
       }
+      await this.entityController.invoker.use(EntityControllerApi).doAfterSave(results, error, this);
+
       if (error) {
         throw error;
       }

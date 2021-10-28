@@ -4,7 +4,7 @@
 // import * as _ from 'lodash';
 // import {IAggregateOp} from '../IAggregateOp';
 // import {IAggregateOptions} from '../IAggregateOptions';
-// import {StorageApi} from '../../../../api/Storage.api';
+// import {EntityControllerApi} from '../../../../api/Storage.api';
 // import {SelectQueryBuilder} from 'typeorm';
 // import {XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET} from '../../../Constants';
 // import {ISqlParam, TypeOrmSqlConditionsBuilder} from './TypeOrmSqlConditionsBuilder';
@@ -115,7 +115,7 @@
 //     }
 //
 //
-//     await this.controller.invoker.use(StorageApi).doBeforeAggregate(this);
+//     await this.controller.invoker.use(EntityControllerApi).doBeforeAggregate(this);
 //
 //     if (this.controller.storageRef.dbType === 'mongodb') {
 //       results = await this.aggregateMongo(this.entityRef, pipeline, options);
@@ -123,7 +123,7 @@
 //       results = await this.aggregateSql(this.entityRef, pipeline, options);
 //     }
 //
-//     await this.controller.invoker.use(StorageApi).doAfterAggregate(results, this.error, this);
+//     await this.controller.invoker.use(EntityControllerApi).doAfterAggregate(results, this.error, this);
 //
 //     if (this.error) {
 //       throw this.error;

@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import {UseAPI} from '@typexs/base/decorators/UseAPI';
-import {StorageApi} from '@typexs/base/api/Storage.api';
+import {EntityControllerApi} from 'packages/base/src/api/EntityControllerApi';
 import {ISaveOp} from '@typexs/base/libs/storage/framework/ISaveOp';
 import {IDeleteOp} from '@typexs/base/libs/storage/framework/IDeleteOp';
 import {Inject, Invoker, Log} from '@typexs/base';
@@ -11,8 +11,8 @@ import {IndexEvent} from '../lib/events/IndexEvent';
 import {ClassType} from '@allgemein/schema-api';
 import {IndexElasticApi} from '../api/IndexElastic.api';
 
-@UseAPI(StorageApi)
-export class ExtendStorageApi extends StorageApi {
+@UseAPI(EntityControllerApi)
+export class ExtendEntityControllerApi extends EntityControllerApi {
   // check if worker is online, pass objects
 
   @Inject(() => IndexRuntimeStatus)

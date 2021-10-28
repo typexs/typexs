@@ -20,7 +20,7 @@ const stdMocks = require('std-mocks');
 let bootstrap: Bootstrap;
 
 @suite('functional/commands/tasks')
-class TasksSpec {
+class Task_commandSpec {
 
 
   static async before() {
@@ -72,7 +72,7 @@ class TasksSpec {
     stdMocks.restore();
     const results = stdMocks.flush();
     expect(results.stdout).to.have.length(2);
-    expect(results.stdout[1]).to.contain('- test\n');
+    expect(results.stdout[1]).to.contain('test\n');
   }
 
 

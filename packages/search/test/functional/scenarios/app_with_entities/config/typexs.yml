@@ -1,0 +1,9 @@
+app:
+  name: app_with_entities
+
+
+storage:
+  default:
+    synchronize: true
+    type: sqlite
+    database: ':memory:'

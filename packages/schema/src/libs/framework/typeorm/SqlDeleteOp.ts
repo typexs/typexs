@@ -1,14 +1,13 @@
-import {isArray, isString} from 'lodash';
-import {EntityDefTreeWorker} from '../EntityDefTreeWorker';
-import {EntityRef} from '../../registry/EntityRef';
-import {PropertyRef} from '../../registry/PropertyRef';
-import {IDataExchange} from '../IDataExchange';
-import {EntityController} from '../../EntityController';
-import {XS_P_PREV_ID} from '../../Constants';
-import {ClassRef} from '@allgemein/schema-api';
-import {NotSupportedError, TypeOrmConnectionWrapper} from '@typexs/base';
-import {IDeleteOp} from '@typexs/base';
-import {IDeleteOptions} from '@typexs/base';
+import { isArray, isString } from 'lodash';
+import { EntityDefTreeWorker } from '../EntityDefTreeWorker';
+import { EntityRef } from '../../registry/EntityRef';
+import { PropertyRef } from '../../registry/PropertyRef';
+import { IDataExchange } from '../IDataExchange';
+import { EntityController } from '../../EntityController';
+import { XS_P_PREV_ID } from '../../Constants';
+import { ClassRef } from '@allgemein/schema-api';
+import { IDeleteOp, IDeleteOptions, NotSupportedError, TypeOrmConnectionWrapper } from '@typexs/base';
+import { EntityControllerApi } from '../../../../../base/src/api/EntityControllerApi';
 
 
 export type IDeleteData = IDataExchange<any[]>;
@@ -115,6 +114,9 @@ export class SqlDeleteOp<T> extends EntityDefTreeWorker implements IDeleteOp<T> 
     const resolveByEntityDef = this.em.resolveByEntityDef(this.objects);
     const entityNames = Object.keys(resolveByEntityDef);
     this.c = (await this.em.storageRef.connect() as TypeOrmConnectionWrapper);
+
+    await this.em.invoker.use(EntityControllerApi).doBeforeRemove(this);
+    let error;
     try {
 
       // start transaction, got to leafs and save
@@ -127,12 +129,19 @@ export class SqlDeleteOp<T> extends EntityDefTreeWorker implements IDeleteOp<T> 
         return Promise.all(promises);
       });
 
+      // eslint-disable-next-line no-useless-catch
     } catch (e) {
-      throw e;
+      error = e;
     } finally {
       await this.c.close();
     }
 
+    await this.em.invoker.use(EntityControllerApi).doAfterRemove(this.objects, error, this);
+
+
+    if (error) {
+      throw error;
+    }
     if (!_isArray) {
       return this.objects.shift();
     }

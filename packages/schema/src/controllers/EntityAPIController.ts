@@ -14,10 +14,19 @@ import {
   XS_P_$LABEL,
   XS_P_$URL
 } from '@typexs/server';
-import {__CLASS__, __REGISTRY__, Inject, Invoker, NotYetImplementedError, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET} from '@typexs/base';
-import {EntityRef} from '../libs/registry/EntityRef';
-import {EntityControllerFactory} from '../libs/EntityControllerFactory';
-import {EntityController} from '../libs/EntityController';
+import {
+  __CLASS__,
+  __REGISTRY__,
+  EntityControllerRegistry,
+  Inject,
+  Invoker,
+  NotYetImplementedError,
+  XS_P_$COUNT,
+  XS_P_$LIMIT,
+  XS_P_$OFFSET
+} from '@typexs/base';
+import { EntityRef } from '../libs/registry/EntityRef';
+import { EntityController } from '../libs/EntityController';
 import * as _ from 'lodash';
 import {
   _API_CTRL_ENTITY_DELETE_ENTITY,
@@ -31,6 +40,7 @@ import {
   _API_CTRL_ENTITY_SAVE_ENTITY,
   _API_CTRL_ENTITY_UPDATE_ENTITY,
   API_ENTITY_PREFIX,
+  NAMESPACE_BUILT_ENTITY,
   PERMISSION_ALLOW_ACCESS_ENTITY,
   PERMISSION_ALLOW_ACCESS_ENTITY_METADATA,
   PERMISSION_ALLOW_ACCESS_ENTITY_PATTERN,
@@ -39,20 +49,21 @@ import {
   PERMISSION_ALLOW_DELETE_ENTITY,
   PERMISSION_ALLOW_DELETE_ENTITY_PATTERN,
   PERMISSION_ALLOW_UPDATE_ENTITY,
-  PERMISSION_ALLOW_UPDATE_ENTITY_PATTERN,
+  PERMISSION_ALLOW_UPDATE_ENTITY_PATTERN
 } from '../libs/Constants';
-import {ObjectsNotValidError} from './../libs/exceptions/ObjectsNotValidError';
-import {EntityControllerApi} from '../api/entity.controller.api';
-import {IJsonSchemaUnserializeOptions, JsonSchema} from '@allgemein/schema-api';
-import {isEntityRef} from '@allgemein/schema-api/api/IEntityRef';
+import { ObjectsNotValidError } from './../libs/exceptions/ObjectsNotValidError';
+import { EntityControllerApi } from '../api/entity.controller.api';
+import { IEntityRef, IJsonSchemaUnserializeOptions, JsonSchema, RegistryFactory } from '@allgemein/schema-api';
+import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
+import { EntityRegistry } from '../libs/EntityRegistry';
 
 
 @ContextGroup(C_API)
 @JsonController(API_ENTITY_PREFIX)
 export class EntityAPIController {
 
-  @Inject('EntityControllerFactory')
-  factory: EntityControllerFactory;
+  @Inject(EntityControllerRegistry.NAME)
+  controllerRegistry: EntityControllerRegistry;
 
   @Inject(Invoker.NAME)
   invoker: Invoker;
@@ -104,9 +115,10 @@ export class EntityAPIController {
   @Access(PERMISSION_ALLOW_ACCESS_ENTITY_METADATA)
   @Get(_API_CTRL_ENTITY_METADATA_GET_STORE)
   @ContentType('application/json')
-  async schema(@Param('name') schemaName: string,
-               @CurrentUser() user: any,
-               @QueryParam('opts') options?: IJsonSchemaUnserializeOptions) {
+  async schema(
+  @Param('name') schemaName: string,
+    @CurrentUser() user: any,
+    @QueryParam('opts') options?: IJsonSchemaUnserializeOptions) {
     const schemaRef = this.getRegistry().getSchemaRefByName(schemaName);
     if (schemaRef) {
       const serializer = JsonSchema.getSerializer({
@@ -234,7 +246,7 @@ export class EntityAPIController {
     const conditions = entityDef.createLookupConditions(id);
     let result = null;
     if (_.isArray(conditions)) {
-      result = await controller.find(entityDef.getClass(), {$or: conditions}, {
+      result = await controller.find(entityDef.getClass(), { $or: conditions }, {
         hooks: {
           afterEntity: EntityAPIController._afterEntity
         }
@@ -248,7 +260,7 @@ export class EntityAPIController {
       result = results;
     } else {
       result = await controller.find(entityDef.getClass(), conditions, {
-        hooks: {afterEntity: EntityAPIController._afterEntity},
+        hooks: { afterEntity: EntityAPIController._afterEntity },
         limit: 1
       }).then(x => x.shift());
     }
@@ -267,9 +279,9 @@ export class EntityAPIController {
     await this.invoker.use(EntityControllerApi).beforeEntityBuild(entityDef, data, user, controller);
     let entities;
     if (_.isArray(data)) {
-      entities = _.map(data, d => entityDef.build(d, {beforeBuild: EntityAPIController._beforeBuild}));
+      entities = _.map(data, d => entityDef.build(d, { beforeBuild: EntityAPIController._beforeBuild }));
     } else {
-      entities = entityDef.build(data, {beforeBuild: EntityAPIController._beforeBuild});
+      entities = entityDef.build(data, { beforeBuild: EntityAPIController._beforeBuild });
     }
     await this.invoker.use(EntityControllerApi).afterEntityBuild(entityDef, entities, user, controller);
     return controller.save(entities).catch(e => {
@@ -290,12 +302,12 @@ export class EntityAPIController {
   async update(@Param('name') name: string, @Param('id') id: string, @Body() data: any, @CurrentUser() user: any) {
     const [entityDef, controller] = this.getControllerForEntityName(name);
     await this.invoker.use(EntityControllerApi).beforeEntityBuild(entityDef, data, user, controller);
-//    const conditions = entityDef.createLookupConditions(id);
+    // const conditions = entityDef.createLookupConditions(id);
     let entities;
     if (_.isArray(data)) {
-      entities = _.map(data, d => entityDef.build(d, {beforeBuild: EntityAPIController._beforeBuild}));
+      entities = _.map(data, d => entityDef.build(d, { beforeBuild: EntityAPIController._beforeBuild }));
     } else {
-      entities = entityDef.build(data, {beforeBuild: EntityAPIController._beforeBuild});
+      entities = entityDef.build(data, { beforeBuild: EntityAPIController._beforeBuild });
     }
     await this.invoker.use(EntityControllerApi).afterEntityBuild(entityDef, entities, user, controller);
     return controller.save(entities).catch(e => {
@@ -325,7 +337,7 @@ export class EntityAPIController {
 
 
   private getControllerForEntityName(name: string): [EntityRef, EntityController] {
-    const entityDef = this.getEntityDef(name);
+    const entityDef = this.getEntityDef(name) as EntityRef;
     const schema = entityDef.getSchemaRefs();
     if (!_.isArray(schema)) {
       return [entityDef, this.getController(schema.name)];
@@ -340,15 +352,16 @@ export class EntityAPIController {
 
 
   private getController(schemaName: string): EntityController {
-    const controller = this.factory.get(schemaName);
+    const controller = this.controllerRegistry.getControllers()
+      .find(x => x instanceof EntityController && x.getSchemaRef().name === schemaName) as EntityController;
     if (controller) {
       return controller;
     }
-    throw new Error('no controller defined for ' + name);
+    throw new Error('no controller defined for ' + schemaName);
   }
 
 
-  private getEntityDef(entityName: string): EntityRef {
+  private getEntityDef(entityName: string): IEntityRef {
     const entityDef = this.getRegistry().getEntityRefByName(entityName);
     if (entityDef) {
       return entityDef;
@@ -357,7 +370,7 @@ export class EntityAPIController {
   }
 
   private getRegistry() {
-    return this.factory.getRegistry();
+    return RegistryFactory.get(NAMESPACE_BUILT_ENTITY) as EntityRegistry;
   }
 }
 

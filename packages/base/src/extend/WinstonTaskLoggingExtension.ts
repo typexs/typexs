@@ -12,6 +12,9 @@ import { WinstonLoggerJar } from '../libs/logging/WinstonLoggerJar';
 import { ILogEntry } from '../libs/logging/ILogEntry';
 import { Config } from '@allgemein/config';
 import { isUndefined } from 'lodash';
+import { TaskLog } from '../entities/TaskLog';
+import { PlatformUtils } from '@allgemein/base';
+import { unlink } from 'fs/promises';
 
 
 @UseAPI(TasksApi)
@@ -41,6 +44,25 @@ export class WinstonTaskLoggingExtension implements ITasksApi {
     }
     return WinstonTaskLoggingExtension.fileLogEnabled;
 
+  }
+
+  /**
+   * Remove log file if exists
+   * @param entry
+   * @param offset
+   */
+  async onCleanup(entry: TaskLog, offset: number) {
+    if (this.isFileLoggingEnabled()) {
+      const filename = TasksHelper.getTaskLogFile(entry.tasksId, entry.nodeId);
+      if (PlatformUtils.fileExist(filename)) {
+        try {
+          await unlink(filename);
+        } catch (e) {
+          Log.error('can\'t unlink file ' + filename, e);
+        }
+
+      }
+    }
   }
 
   onInit(runner: TaskRunner | TaskRun) {

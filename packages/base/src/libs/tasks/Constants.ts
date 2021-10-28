@@ -3,6 +3,8 @@ export const XS_TYPE_BINDING_SUBELEM = 'entity_ref_has_subelement';
 export const XS_TYPE_BINDING_TASK_GROUP = 'task_group_binding';
 export const XS_TYPE_BINDING_TASK_DEPENDS_ON = 'task_dependency_binding';
 
+export const TN_TASKS_CLEANUP = 'tasks_cleanup';
+
 /**
  * Classname of TaskQueueWorker
  */

@@ -1,8 +1,15 @@
-import {TaskRunner} from '../libs/tasks/TaskRunner';
-import {TaskRun} from '../libs/tasks/TaskRun';
+import { TaskRunner } from '../libs/tasks/TaskRunner';
+import { TaskRun } from '../libs/tasks/TaskRun';
+import { TaskLog } from '../entities/TaskLog';
 
 
 export interface ITasksApi {
+
+  beforeCleanup?(offset: number): void;
+
+  onCleanup?(entry: TaskLog, offset: number): void;
+
+  afterCleanup?(offset: number): void;
 
   /**
    * on task command startup

@@ -4,7 +4,7 @@ import {NotSupportedError, TreeUtils} from '@allgemein/base';
 import * as _ from 'lodash';
 import {IAggregateOp} from '../IAggregateOp';
 import {IAggregateOptions} from '../IAggregateOptions';
-import {StorageApi} from '../../../../api/Storage.api';
+import {EntityControllerApi} from '../../../../api/EntityControllerApi';
 import {SelectQueryBuilder} from 'typeorm';
 import {XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET} from '../../../Constants';
 import {ISqlParam, TypeOrmSqlConditionsBuilder} from './TypeOrmSqlConditionsBuilder';
@@ -51,7 +51,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
 
   error: Error = null;
 
-  private cacheFields: { name: string, alias: string, type: 'select' | 'group' }[];
+  private cacheFields: { name: string; alias: string; type: 'select' | 'group' }[];
 
   private firstSelect: boolean;
 
@@ -112,7 +112,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
     }
 
 
-    await this.controller.invoker.use(StorageApi).doBeforeAggregate(this);
+    await this.controller.invoker.use(EntityControllerApi).doBeforeAggregate(this);
 
     if (this.controller.storageRef.dbType === 'mongodb') {
       results = await this.aggregateMongo(this.entityRef, pipeline, options);
@@ -120,7 +120,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
       results = await this.aggregateSql(this.entityRef, pipeline, options);
     }
 
-    await this.controller.invoker.use(StorageApi).doAfterAggregate(results, this.error, this);
+    await this.controller.invoker.use(EntityControllerApi).doAfterAggregate(results, this.error, this);
 
     if (this.error) {
       throw this.error;
@@ -170,7 +170,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
           if (countQb.length === 1) {
             const cntValue = countQb.shift()['cnt'];
             if (/\d+/.test(cntValue)) {
-              count = parseInt(cntValue, 0);
+              count = parseInt(cntValue, 10);
             } else {
               count = -2;
             }
@@ -221,7 +221,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
             if (autoParseNumbers) {
               if (_.isString(v)) {
                 if (/^\d+$/.test(v)) {
-                  v = parseInt(v, 0);
+                  v = parseInt(v, 10);
                 } else if (/^\d+\.\d+$/.test(v)) {
                   v = parseFloat(v);
                 }

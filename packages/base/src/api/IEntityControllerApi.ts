@@ -5,7 +5,7 @@ import {IDeleteOp} from '../libs/storage/framework/IDeleteOp';
 import {IAggregateOp} from '../libs/storage/framework/IAggregateOp';
 
 
-export interface IStorageApi {
+export interface IEntityControllerApi {
 
   doBeforeFind<T>(op: IFindOp<T>): void;
 

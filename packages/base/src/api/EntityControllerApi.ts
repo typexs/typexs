@@ -1,4 +1,4 @@
-import { IStorageApi } from './IStorageApi';
+import { IEntityControllerApi } from './IEntityControllerApi';
 import { IFindOp } from '../libs/storage/framework/IFindOp';
 import { IUpdateOp } from '../libs/storage/framework/IUpdateOp';
 import { IDeleteOp } from '../libs/storage/framework/IDeleteOp';
@@ -6,7 +6,7 @@ import { IAggregateOp } from '../libs/storage/framework/IAggregateOp';
 import { ISaveOp } from '../libs/storage/framework/ISaveOp';
 
 
-export class StorageApi implements IStorageApi {
+export class EntityControllerApi implements IEntityControllerApi {
 
   doBeforeFind<T>(op: IFindOp<T>) {
   }

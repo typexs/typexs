@@ -16,20 +16,16 @@ import { IFindData } from './IFindData';
 import { IBinding } from './IBinding';
 import { setTargetInitialForProperty, setTargetValueForProperty } from './Helper';
 import { C_CLASS_WRAPPED } from './Constants';
+import { EntityControllerApi } from '../../../../../base/src/api/EntityControllerApi';
 
 
 export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
-
-  constructor(em: EntityController) {
-    super();
-    this.em = em;
-  }
 
   objectDepth: number = 0;
 
   entityDepth: number = 0;
 
-  readonly em: EntityController;
+  readonly controller: EntityController;
 
   private connection: TypeOrmConnectionWrapper;
 
@@ -38,6 +34,12 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
   findConditions: any;
 
   entityType: any;
+
+
+  constructor(controller: EntityController) {
+    super();
+    this.controller = controller;
+  }
 
 
   private hookAbortCondition: (
@@ -228,8 +230,8 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
       // fetch table data and extract target references
       const sourcePropsIds = this.getIdentifierPropertiesFor(sourceRef);
 
-      const [sourceTypeId, sourceTypeName] = this.em.nameResolver().forSource(XS_P_TYPE);
-      const [sourceSeqNrId, sourceSeqNrName] = this.em.nameResolver().forSource(XS_P_SEQ_NR);
+      const [sourceTypeId, sourceTypeName] = this.controller.nameResolver().forSource(XS_P_TYPE);
+      const [sourceSeqNrId, sourceSeqNrName] = this.controller.nameResolver().forSource(XS_P_SEQ_NR);
 
       const qb = this.connection.manager.getRepository(propertyRef.joinRef.getClass()).createQueryBuilder();
 
@@ -237,7 +239,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         const condition: any = {};
         condition[sourceTypeName] = sourceRef.machineName;
         sourcePropsIds.forEach(prop => {
-          const [sourceId, sourceName] = this.em.nameResolver().forSource(prop);
+          const [sourceId, sourceName] = this.controller.nameResolver().forSource(prop);
           condition[sourceName] = prop.get(source);
         });
 
@@ -281,7 +283,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
             const name = refProps[idx++];
 
             [targetId, targetName] = SqlHelper.resolveNameForEmbeddedIds(
-              this.em.nameResolver(), name, propertyRef, prop);
+              this.controller.nameResolver(), name, propertyRef, prop);
 
             condition[prop.storingName] = extJoinObj[targetId];
             lookup[prop.name] = extJoinObj[targetId];
@@ -297,7 +299,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
           const lookup = {};
 
           targetIdProps.forEach(prop => {
-            const [targetId, _dummy] = this.em.nameResolver().for(propertyRef.machineName, prop);
+            const [targetId, _dummy] = this.controller.nameResolver().for(propertyRef.machineName, prop);
             condition[prop.storingName] = extJoinObj[targetId];
             lookup[prop.name] = extJoinObj[targetId];
           });
@@ -377,7 +379,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
       });
 
       targetIdProps.forEach(prop => {
-        const [targetId, dummy] = this.em.nameResolver().forTarget(prop);
+        const [targetId, dummy] = this.controller.nameResolver().forTarget(prop);
         condition[prop.storingName] = result[targetId];
         lookup.target[prop.name] = prop.get(result);
       });
@@ -395,7 +397,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
   ): [IBinding<any, any>[], any[]] {
     const sourcePropsIds = this.getIdentifierPropertiesFor(sourceRef);
     const targetIdProps = this.getIdentifierPropertiesFor(targetRef);
-    const [sourceSeqNrId, dummy] = this.em.nameResolver().forSource(XS_P_SEQ_NR);
+    const [sourceSeqNrId, dummy] = this.controller.nameResolver().forSource(XS_P_SEQ_NR);
     const lookups: IBinding<any, any>[] = [];
     const conditions = [];
     for (const result of results) {
@@ -410,12 +412,12 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
       }
 
       sourcePropsIds.forEach(prop => {
-        const [sourceId] = this.em.nameResolver().forSource(prop);
+        const [sourceId] = this.controller.nameResolver().forSource(prop);
         lookup.source[prop.name] = result[sourceId];
       });
 
       targetIdProps.forEach(prop => {
-        const [targetId] = this.em.nameResolver().forTarget(prop);
+        const [targetId] = this.controller.nameResolver().forTarget(prop);
         condition[prop.storingName] = result[targetId];
         lookup.target[prop.name] = result[targetId];
       });
@@ -432,7 +434,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
     if (sourceRef instanceof EntityRef) {
       propertyRefs = sourceRef.getPropertyRefIdentifier();
     } else if (sourceRef instanceof ClassRef) {
-      propertyRefs = this.em.schema().getPropertiesFor(sourceRef.getClass()).filter(p => p.isIdentifier());
+      propertyRefs = this.controller.schema().getPropertiesFor(sourceRef.getClass()).filter(p => p.isIdentifier());
     } else {
       throw new NotYetImplementedError();
     }
@@ -468,13 +470,13 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
       // my data so handle it
       const sourcePropsIds = this.getIdentifierPropertiesFor(sourceRef);
       const targetIdProps = entityRef.getPropertyRefIdentifier();
-      const [sourceTypeId, sourceTypeName] = this.em.nameResolver().forSource(XS_P_TYPE);
+      const [sourceTypeId, sourceTypeName] = this.controller.nameResolver().forSource(XS_P_TYPE);
 
       for (const target of visitResult.next) {
         let lookup: any = {};
         lookup[sourceTypeId] = sourceRef.machineName;
         sourcePropsIds.forEach(prop => {
-          const [sourceId, _dummy] = this.em.nameResolver().forSource(prop);
+          const [sourceId, _dummy] = this.controller.nameResolver().forSource(prop);
           lookup[sourceId] = prop.get(target);
         });
 
@@ -485,7 +487,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         for (const joinObj of joinObjs) {
           lookup = {};
           targetIdProps.forEach(prop => {
-            const [targetId, _dummy] = this.em.nameResolver().forTarget(prop);
+            const [targetId, _dummy] = this.controller.nameResolver().forTarget(prop);
             lookup[prop.name] = joinObj[targetId];
           });
           const res = _.find(sources.next, lookup);
@@ -511,7 +513,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         targetIdProps.forEach(prop => {
           const name = refProps[idx++];
           [targetId, targetName] = SqlHelper.resolveNameForEmbeddedIds(
-            this.em.nameResolver(), name, propertyRef, prop);
+            this.controller.nameResolver(), name, propertyRef, prop);
           delete joinObj[targetId];
         });
         joinObj[propertyRef.name] = attachObj;
@@ -520,7 +522,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
     } else {
       // not my table
       // add object to join object
-      const [sourceSeqNrId, sourceSeqNrName] = this.em.nameResolver().forSource(XS_P_SEQ_NR);
+      const [sourceSeqNrId, sourceSeqNrName] = this.controller.nameResolver().forSource(XS_P_SEQ_NR);
       for (let x = 0; x < visitResult.lookup.length; x++) {
 
         const lookup = visitResult.lookup[x];
@@ -572,10 +574,10 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
     const wrapped = joinRef.getOptions(C_CLASS_WRAPPED, false);
     const joinClass = joinRef.getClass();
 
-    const [sourceSeqNrId, sourceSeqNrName] = this.em.nameResolver().forSource(XS_P_SEQ_NR);
+    const [sourceSeqNrId, sourceSeqNrName] = this.controller.nameResolver().forSource(XS_P_SEQ_NR);
 
     if (sourceRef instanceof EntityRef) {
-      const [sourceTypeId, sourceTypeName] = this.em.nameResolver().forSource(XS_P_TYPE);
+      const [sourceTypeId, sourceTypeName] = this.controller.nameResolver().forSource(XS_P_TYPE);
 
       // collect pk from source objects
       const idProperties = sourceRef.getPropertyRefIdentifier();
@@ -585,7 +587,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         lookup[sourceTypeId] = sourceRef.machineName;
         condition[sourceTypeName] = sourceRef.machineName;
         idProperties.forEach(x => {
-          const [sourceId, sourceName] = this.em.nameResolver().forSource(x);
+          const [sourceId, sourceName] = this.controller.nameResolver().forSource(x);
           condition[sourceName] = x.get(object);
           lookup[sourceId] = x.get(object);
         });
@@ -596,16 +598,16 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
       sort = { [sourceSeqNrName]: 'ASC' };
     } else if (sourceRef instanceof ClassRef) {
       // for default join variant
-      const [sourcePropertyId, sourcePropertyName] = this.em.nameResolver().forSource(XS_P_PROPERTY_ID);
+      const [sourcePropertyId, sourcePropertyName] = this.controller.nameResolver().forSource(XS_P_PROPERTY_ID);
 
       for (const object of sources.next) {
         const condition: any = {}, lookup: any = {};
 
-        let [id, name] = this.em.nameResolver().forSource(XS_P_TYPE);
+        let [id, name] = this.controller.nameResolver().forSource(XS_P_TYPE);
         lookup[id] = sourceRef.machineName;
         condition[name] = sourceRef.machineName;
 
-        [id, name] = this.em.nameResolver().forSource(XS_P_PROPERTY);
+        [id, name] = this.controller.nameResolver().forSource(XS_P_PROPERTY);
         lookup[id] = propertyRef.machineName;
         condition[name] = propertyRef.machineName;
 
@@ -648,8 +650,8 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
     if (_.isEmpty(sources.target)) {
       return;
     }
-    const classProp = this.em.schema().getPropertiesFor(classRef.getClass());
-    const [sourceSeqNrId, sourceSeqNrName] = this.em.nameResolver().forSource(XS_P_SEQ_NR);
+    const classProp = this.controller.schema().getPropertiesFor(classRef.getClass());
+    const [sourceSeqNrId, sourceSeqNrName] = this.controller.nameResolver().forSource(XS_P_SEQ_NR);
 
     for (let x = 0; x < sources.lookup.length; x++) {
       const lookup = sources.lookup[x];
@@ -742,7 +744,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         abort: results.length === 0
       };
     } else if (propertyRef.isEmbedded()) {
-      const targetIdProps = this.em.schema()
+      const targetIdProps = this.controller.schema()
         .getPropertiesFor(
           propertyRef.getTargetClass()
         ).filter(p => p.isIdentifier());
@@ -758,7 +760,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         targetIdProps.forEach(prop => {
           const name = refProps[idx++];
 
-          [targetId, targetName] = SqlHelper.resolveNameForEmbeddedIds(this.em.nameResolver(), name, propertyRef, prop);
+          [targetId, targetName] = SqlHelper.resolveNameForEmbeddedIds(this.controller.nameResolver(), name, propertyRef, prop);
           condition[prop.storingName] = extJoinObj[targetId];
           lookup[prop.name] = extJoinObj[targetId];
         });
@@ -837,7 +839,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
 
 
     } else if (propertyRef.isEmbedded()) {
-      const targetIdProps = this.em.schema()
+      const targetIdProps = this.controller.schema()
         .getPropertiesFor(propertyRef.getTargetClass())
         .filter(p => p.isIdentifier());
 
@@ -853,7 +855,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         targetIdProps.forEach(prop => {
           const name = refProps[idx++];
           [targetId, targetName] = SqlHelper.resolveNameForEmbeddedIds(
-            this.em.nameResolver(), name, propertyRef, prop);
+            this.controller.nameResolver(), name, propertyRef, prop);
           delete joinObj[targetId];
         });
         joinObj[propertyRef.name] = attachObj;
@@ -884,7 +886,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
    *
    */
   private handleInlinePropertyPrefixObject(sources: IFindData, propertyRef: PropertyRef, classRef: ClassRef) {
-    const targetProps = this.em.schema().getPropertiesFor(classRef.getClass());
+    const targetProps = this.controller.schema().getPropertiesFor(classRef.getClass());
     const hasId = targetProps.filter(p => p.isIdentifier()).length > 0;
 
     if (!hasId) {
@@ -895,7 +897,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         } else {
           const target = classRef.create(false);
           targetProps.forEach(prop => {
-            const [id, name] = this.em.nameResolver().for(propertyRef.machineName, prop);
+            const [id, name] = this.controller.nameResolver().for(propertyRef.machineName, prop);
             target[prop.name] = join[id];
             delete join[id];
           });
@@ -916,18 +918,32 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
   ): Promise<T[]> {
     this.entityType = entityType;
     this.findConditions = findConditions;
-    this.connection = (await this.em.storageRef.connect() as TypeOrmConnectionWrapper);
+    this.connection = (await this.controller.storageRef.connect() as TypeOrmConnectionWrapper);
     const opts = _.clone(options) || {};
     this.options = _.defaults(opts, { limit: 100, subLimit: 100, maxConditionSplitingLimit: 100 });
     this.hookAbortCondition = _.get(options, 'hooks.abortCondition', this.hookAbortCondition);
     this.hookAfterEntity = _.get(options, 'hooks.afterEntity', this.hookAfterEntity);
     const entityRef = EntityRegistry.$().getClassRefFor(entityType, METATYPE_ENTITY).getEntityRef() as EntityRef;
-    const result = await this.onEntity(entityRef, null, <IFindData>{
-      next: null,
-      condition: findConditions,
-      options: options
-    });
+    await this.controller.invoker.use(EntityControllerApi).doBeforeFind(this);
+
+    let result, error;
+    try {
+      result = await this.onEntity(entityRef, null, <IFindData>{
+        next: null,
+        condition: findConditions,
+        options: options
+      });
+
+    } catch (e) {
+      error = e;
+    }
     await this.connection.close();
+
+    await this.controller.invoker.use(EntityControllerApi).doAfterFind(result.next, error, this);
+
+    if (error) {
+      throw error;
+    }
     return result.next;
   }
 

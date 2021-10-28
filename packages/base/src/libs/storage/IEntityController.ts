@@ -1,6 +1,6 @@
 import { ISaveOptions } from './framework/ISaveOptions';
 import { IFindOptions } from './framework/IFindOptions';
-import { IEntityRef } from '@allgemein/schema-api';
+import { IEntityRef, ISchemaRef } from '@allgemein/schema-api';
 import { IUpdateOptions } from './framework/IUpdateOptions';
 import { IAggregateOptions } from './framework/IAggregateOptions';
 import { IDeleteOptions } from './framework/IDeleteOptions';
@@ -31,6 +31,11 @@ export interface IEntityController {
   update<T>(cls: CLS_DEF<T>, condition: any, update: any, options?: IUpdateOptions): Promise<number>;
 
   aggregate<T>(baseClass: CLS_DEF<T>, pipeline: any[], options?: IAggregateOptions): Promise<any[]>;
+
+  /**
+   * Return schema reference of this controller if one exists
+   */
+  getSchemaRef?(): ISchemaRef;
 
   /**
    * Return the storage reference of this controller

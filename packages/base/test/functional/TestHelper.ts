@@ -11,8 +11,13 @@ export class TestHelper {
   //   return filename.split('/test/').pop();
   // }
 
+  static root() {
+    return resolve(__dirname + '/../../../..');
+
+  }
+
   static includePaths(module = 'base') {
-    const root = resolve(__dirname + '/../../../..');
+    const root = this.root();
     return [
       join(root, 'packages', module),
       join(root, 'node_modules', '@allgemein')

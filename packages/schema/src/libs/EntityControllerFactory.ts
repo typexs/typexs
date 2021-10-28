@@ -1,11 +1,11 @@
-import {Inject, Injector, Log, Storage} from '@typexs/base';
+import { EntityControllerRegistry, Inject, Injector, Log, Storage } from '@typexs/base';
 
-import {EntityController} from './EntityController';
-import {IFramework} from './framework/IFramework';
-import {FrameworkFactory} from './framework/FrameworkFactory';
-import {RegistryFactory} from '@allgemein/schema-api';
-import {NAMESPACE_BUILT_ENTITY} from './Constants';
-import {EntityRegistry} from './EntityRegistry';
+import { EntityController } from './EntityController';
+import { IFramework } from './framework/IFramework';
+import { FrameworkFactory } from './framework/FrameworkFactory';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { NAMESPACE_BUILT_ENTITY } from './Constants';
+import { EntityRegistry } from './EntityRegistry';
 
 export class EntityControllerFactory {
 
@@ -14,7 +14,8 @@ export class EntityControllerFactory {
   @Inject(Storage.NAME)
   storage: Storage;
 
-  controller: EntityController[] = [];
+  @Inject(EntityControllerRegistry.NAME)
+  controllerRegistry: EntityControllerRegistry;
 
   getRegistry() {
     return RegistryFactory.get(NAMESPACE_BUILT_ENTITY) as EntityRegistry;
@@ -38,13 +39,13 @@ export class EntityControllerFactory {
         const entityController = new EntityController(storageName, schemaDef, storageRef, framework);
         await entityController.initialize();
         Injector.set('EntityController.' + storageName, entityController);
-        this.controller.push(entityController);
+        this.controllerRegistry.add(entityController);
       }
     }
   }
 
   get(name: string) {
-    return this.controller.find(x => x.name().toLowerCase() === name.toLowerCase());
+    return this.controllerRegistry.getControllers().find(x => x.name().toLowerCase() === name.toLowerCase());
   }
 
 

@@ -7,7 +7,7 @@ import {TypeOrmEntityRegistry} from './schema/TypeOrmEntityRegistry';
 import {ClassUtils, TreeUtils} from '@allgemein/base';
 import {getMetadataArgsStorage, SelectQueryBuilder} from 'typeorm';
 import {ClassType} from '@allgemein/schema-api';
-import {StorageApi} from '../../../../api/Storage.api';
+import {EntityControllerApi} from '../../../../api/EntityControllerApi';
 import {TypeOrmEntityController} from './TypeOrmEntityController';
 import {Injector} from '../../../di/Injector';
 import {Cache} from '../../../cache/Cache';
@@ -61,7 +61,7 @@ export class FindOp<T> implements IFindOp<T> {
     this.options = options;
 
     const jsonPropertySupport = this.controller.storageRef.getSchemaHandler().supportsJson();
-    await this.controller.invoker.use(StorageApi).doBeforeFind(this);
+    await this.controller.invoker.use(EntityControllerApi).doBeforeFind(this);
 
     if (options.cache) {
       cache = (Injector.get(Cache.NAME) as Cache);
@@ -87,7 +87,7 @@ export class FindOp<T> implements IFindOp<T> {
       const entityRef = TypeOrmEntityRegistry.$().getEntityRefFor(entityType);
       convertPropertyValueStringToJson(entityRef, results);
     }
-    await this.controller.invoker.use(StorageApi).doAfterFind(results, this.error, this);
+    await this.controller.invoker.use(EntityControllerApi).doAfterFind(results, this.error, this);
 
     if (this.error) {
       throw this.error;

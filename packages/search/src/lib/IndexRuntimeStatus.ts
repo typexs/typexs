@@ -1,8 +1,9 @@
-import { Inject, IStorageRef, Storage } from '@typexs/base';
+import { Inject, Injector, Storage } from '@typexs/base';
 import { C_SEARCH_INDEX } from './Constants';
 import { IndexEntityRef } from './registry/IndexEntityRef';
 import * as _ from 'lodash';
 import { ClassUtils } from '@allgemein/base';
+import { IIndexStorageRef } from './IIndexStorageRef';
 
 export class IndexRuntimeStatus {
 
@@ -17,7 +18,7 @@ export class IndexRuntimeStatus {
 
   private types: { [className: string]: { ref: string; registry: string } } = {};
 
-  private storageRefs: { [ref: string]: IStorageRef } = {};
+  // private storageRefs: { [ref: string]: IStorageRef } = {};
 
   activateWorker() {
     this.workerActive = true;
@@ -36,8 +37,8 @@ export class IndexRuntimeStatus {
     return this.types[className];
   }
 
-  getStorageRef(name: string) {
-    return this.storageRefs[name];
+  getStorageRef(name: string): IIndexStorageRef {
+    return Injector.get('storage.' + name);
   }
 
   getStorage() {
@@ -53,11 +54,11 @@ export class IndexRuntimeStatus {
           storageRef.getEntityRefs().forEach((entityRef: IndexEntityRef) => {
             this.types[entityRef.getEntityRef().name] = {
               ref: ref,
-              registry: entityRef.getEntityRef().getRegistry().getLookupRegistry().getNamespace()
+              registry: entityRef.getEntityRef().getNamespace()
             };
-            if (!this.storageRefs[ref]) {
-              this.storageRefs[ref] = storageRef;
-            }
+            // if (!this.storageRefs[ref]) {
+            //   this.storageRefs[ref] = storageRef;
+            // }
 
           });
         }

@@ -544,7 +544,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
     this.createColumnIfNotExists('primary-generated', refTargetClass, 'id', { name: 'id', type: 'int' });
 
     // TODO maybe put property to
-    // this.schemaDef.getRegistry().create(METATYPE_PROPERTY, <IPropertyOptions>{
+    // this.schemaRef.getRegistry().create(METATYPE_PROPERTY, <IPropertyOptions>{
     //   target: refTargetClass,
     //   identifier: true,
     //   propertyName: 'id',

@@ -7,7 +7,7 @@ import {TypeOrmSqlConditionsBuilder} from './TypeOrmSqlConditionsBuilder';
 import {TypeOrmEntityRegistry} from './schema/TypeOrmEntityRegistry';
 import {IDeleteOptions} from '../IDeleteOptions';
 import {DeleteQueryBuilder} from 'typeorm';
-import {StorageApi} from '../../../../api/Storage.api';
+import {EntityControllerApi} from '../../../../api/EntityControllerApi';
 import {TypeOrmEntityController} from './TypeOrmEntityController';
 import {TypeOrmConnectionWrapper} from './TypeOrmConnectionWrapper';
 
@@ -53,7 +53,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
     this.conditions = conditions;
     this.options = options;
 
-    await this.controller.invoker.use(StorageApi).doBeforeRemove(this);
+    await this.controller.invoker.use(EntityControllerApi).doBeforeRemove(this);
 
     let results: number | T[];
     if (_.isFunction(object)) {
@@ -62,7 +62,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
       results = await this.remove(<T | T[]>object, options);
     }
 
-    await this.controller.invoker.use(StorageApi).doAfterRemove(results, this.error, this);
+    await this.controller.invoker.use(EntityControllerApi).doAfterRemove(results, this.error, this);
 
     if (this.error) {
       throw this.error;
@@ -91,7 +91,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
           const x = new TypeOrmSqlConditionsBuilder(connection.manager, entityRef, this.controller.getStorageRef(), 'delete');
           const qb = x.getQueryBuilder() as DeleteQueryBuilder<any>;
           x.build(condition);
-          const result = await qb/*.where(x.build(condition))*/.execute();
+          const result = await qb/* .where(x.build(condition)) */.execute();
           count = result.affected ? result.affected : -2;
         } else {
           await connection.manager.transaction(async em => {

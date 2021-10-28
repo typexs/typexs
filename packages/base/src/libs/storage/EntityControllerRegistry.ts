@@ -1,9 +1,9 @@
-import * as _ from 'lodash';
-import {IEntityController} from './IEntityController';
-import {ClassUtils} from '@allgemein/base';
-import {ClassType, IClassRef} from '@allgemein/schema-api';
+import { IEntityController } from './IEntityController';
+import { ClassUtils } from '@allgemein/base';
+import { ClassType, IClassRef } from '@allgemein/schema-api';
+import { first, isEmpty } from 'lodash';
 
-const CONTROLLER_REGISTRY = 'entity_controller_registry';
+// const CONTROLLER_REGISTRY = 'entity_controller_registry';
 
 export class EntityControllerRegistry {
 
@@ -15,10 +15,10 @@ export class EntityControllerRegistry {
     this.entityControllers.push(e);
   }
 
-  getControllerForClass(cls: string | ClassType<any> | Function | IClassRef, hint?: { className?: string, name?: string }) {
+  getControllerForClass(cls: string | ClassType<any> | Function | IClassRef, hint?: { className?: string; name?: string }) {
     const controllers = this.entityControllers.filter(x => !!x.forClass(cls));
     let found = null;
-    if (controllers.length > 1 && !_.isEmpty(hint)) {
+    if (controllers.length > 1 && !isEmpty(hint)) {
 
       if (hint.className) {
         found = controllers.find(x => ClassUtils.getClassName(x as any) === hint.className);
@@ -29,14 +29,17 @@ export class EntityControllerRegistry {
       }
 
       if (!found) {
-        found = _.first(controllers);
+        found = first(controllers);
       }
     } else if (controllers.length === 1) {
-      found = _.first(controllers);
+      found = first(controllers);
     }
     return found;
   }
 
+  get(name: string) {
+    return this.getControllers().find(x => x.name() === name);
+  }
 
   getControllers() {
     return this.entityControllers;

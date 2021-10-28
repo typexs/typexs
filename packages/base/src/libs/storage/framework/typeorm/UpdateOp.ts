@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import {IUpdateOptions} from '../IUpdateOptions';
 import {TypeOrmSqlConditionsBuilder} from './TypeOrmSqlConditionsBuilder';
 import {UpdateQueryBuilder} from 'typeorm';
-import {StorageApi} from '../../../../api/Storage.api';
+import {EntityControllerApi} from '../../../../api/EntityControllerApi';
 import {TypeOrmEntityController} from './TypeOrmEntityController';
 import {convertPropertyValueJsonToString} from './Helper';
 
@@ -56,7 +56,7 @@ export class UpdateOp<T> implements IUpdateOp<T> {
     this.entityRef = TypeOrmEntityRegistry.$().getEntityRefFor(this.entityType);
     let results: number = -1;
 
-    await this.controller.invoker.use(StorageApi).doBeforeUpdate(this);
+    await this.controller.invoker.use(EntityControllerApi).doBeforeUpdate(this);
 
     if (this.controller.storageRef.dbType === 'mongodb') {
       results = await this.updateMongo();
@@ -64,7 +64,7 @@ export class UpdateOp<T> implements IUpdateOp<T> {
       results = await this.updateSql();
     }
 
-    await this.controller.invoker.use(StorageApi).doAfterUpdate(results, this.error, this);
+    await this.controller.invoker.use(EntityControllerApi).doAfterUpdate(results, this.error, this);
     if (this.error) {
       throw this.error;
     }

@@ -168,7 +168,7 @@ class TasksControllerSpec {
     rTaskRemote = rTaskRemote.body;
 
     const rTasksNames = _.keys(rTasks.definitions);
-    expect(rTasksNames).to.have.length(6);
+    expect(rTasksNames).to.have.length(7);
     expect(rTaskLocal).to.deep.include(
       {
         '$schema': 'http://json-schema.org/draft-07/schema#',
@@ -230,7 +230,7 @@ class TasksControllerSpec {
 
 
     // expect(rBefore).to.have.length(2);
-    expect(rAfter).to.have.length(6);
+    expect(rAfter).to.have.length(7);
     expect(rAfter.find((x: any) => x.name === 'local_simple_task')).to.deep.include({
       name: 'local_simple_task',
       nodeInfos: [

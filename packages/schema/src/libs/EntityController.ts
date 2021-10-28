@@ -5,6 +5,8 @@ import { IFramework } from './framework/IFramework';
 import {
   IAggregateOptions,
   IEntityController,
+  Injector,
+  Invoker,
   ISaveOptions,
   IStorageRef,
   IUpdateOptions,
@@ -12,27 +14,32 @@ import {
   NotYetImplementedError
 } from '@typexs/base';
 import { IFindOptions } from './framework/IFindOptions';
-import { ClassRef, ClassType, IClassRef, IEntityRef, ISchemaRef, METATYPE_CLASS_REF } from '@allgemein/schema-api';
+import { ClassRef, ClassType, IClassRef, IEntityRef, ISchemaRef, METATYPE_CLASS_REF, METATYPE_ENTITY } from '@allgemein/schema-api';
 import { assign } from 'lodash';
+import { isClassRef } from '@allgemein/schema-api/api/IClassRef';
+import { ClassUtils } from '@allgemein/base';
 
 export type CLS_DEF<T> = ClassType<T> | Function | string;
 
 export class EntityController implements IEntityController {
 
+  invoker: Invoker;
+
   constructor(name: string, schema: ISchemaRef = null, storageRef: IStorageRef = null, framework: IFramework = null) {
     this._name = name;
     this.storageRef = storageRef;
-    this.schemaDef = schema;
+    this.schemaRef = schema;
     if (framework) {
       this.framework = framework;
-      this.mapper = framework.getSchemaMapper(this.storageRef, this.schemaDef);
+      this.mapper = framework.getSchemaMapper(this.storageRef, this.schemaRef);
+      this.invoker = Injector.get(Invoker.NAME);
     }
   }
 
   // revision support
   readonly storageRef: IStorageRef;
 
-  readonly schemaDef: ISchemaRef;
+  readonly schemaRef: ISchemaRef;
 
   readonly mapper: ISchemaMapper;
 
@@ -61,7 +68,7 @@ export class EntityController implements IEntityController {
   }
 
   getRegistry() {
-    return this.schemaDef.getRegistry();
+    return this.schemaRef.getRegistry();
   }
 
 
@@ -77,7 +84,11 @@ export class EntityController implements IEntityController {
   }
 
   schema(): SchemaRef {
-    return this.schemaDef as SchemaRef;
+    return this.schemaRef as SchemaRef;
+  }
+
+  getSchemaRef(): ISchemaRef {
+    return this.schemaRef;
   }
 
   async initialize() {
@@ -125,7 +136,10 @@ export class EntityController implements IEntityController {
   }
 
   forClass<T>(cls: CLS_DEF<T> | IClassRef): IEntityRef {
-    throw new NotYetImplementedError();
+    if (isClassRef(cls)) {
+      return this.getRegistry().find(METATYPE_ENTITY, (x: IEntityRef) => x.getClassRef().name === cls.name);
+    }
+    return this.getRegistry().find(METATYPE_ENTITY, (x: IEntityRef) => x.getClassRef().name === ClassUtils.getClassName(cls));
   }
 
   update<T>(cls: CLS_DEF<T>, condition: any, update: any, options?: IUpdateOptions): Promise<number> {

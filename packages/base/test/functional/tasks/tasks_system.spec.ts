@@ -106,7 +106,7 @@ class TasksSystemSpec {
     let taskInfos = tasks.infos(true);
 
     expect(system.nodes).to.have.length(0);
-    expect(taskInfos).to.have.length(1);
+    expect(taskInfos).to.have.length.gte(1);
     expect(taskInfos[0]).to.deep.eq({
       name: 'test',
       description: 'Hallo welt',
@@ -127,7 +127,7 @@ class TasksSystemSpec {
 
     taskInfos = tasks.infos(true);
     expect(system.nodes).to.have.length(1);
-    expect(taskInfos).to.have.length(1);
+    expect(taskInfos).to.have.length.gte(1);
     expect(taskInfos[0]).to.deep.eq({
       name: 'test',
       description: 'Hallo welt',
@@ -153,7 +153,7 @@ class TasksSystemSpec {
     await bootstrap.shutdown();
 
     expect(system.nodes).to.have.length(0);
-    expect(taskInfos).to.have.length(1);
+    expect(taskInfos).to.have.length.gte(1);
     expect(taskInfos[0]).to.deep.eq({
       name: 'test',
       description: 'Hallo welt',
@@ -206,8 +206,8 @@ class TasksSystemSpec {
     const tasks: Tasks = Injector.get(Tasks.NAME);
     let taskInfos = tasks.infos(true);
 
-    expect(system.nodes).to.have.length(0);
-    expect(taskInfos).to.have.length(0);
+    expect(system.nodes).to.have.length.gte(0);
+    expect(taskInfos).to.have.length.gte(0);
 
 
     const p = SpawnHandle.do(__dirname + '/fake_app/node.ts').start(LOG_EVENT);
@@ -217,8 +217,8 @@ class TasksSystemSpec {
 
     taskInfos = tasks.infos(true);
     expect(system.nodes).to.have.length(1);
-    expect(taskInfos).to.have.length(1);
-    expect(taskInfos[0]).to.deep.eq({
+    expect(taskInfos).to.have.length.gte(1);
+    expect(taskInfos[1]).to.deep.eq({
       name: 'test',
       description: 'Hallo welt',
       permissions: null,

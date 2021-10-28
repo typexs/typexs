@@ -19,7 +19,9 @@ export class Invoker {
       const obj = {};
       const proto = Object.getOwnPropertyNames(api.prototype);
       proto.forEach(p => {
-        if (p === 'constructor') { return; }
+        if (p === 'constructor') {
+          return;
+        }
         const desc = Object.getOwnPropertyDescriptor(api.prototype, p);
         if (isFunction(desc.value)) {
           obj[p] = function (...args: any[]) {

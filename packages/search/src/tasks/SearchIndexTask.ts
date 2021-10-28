@@ -1,10 +1,10 @@
-import * as _ from 'lodash';
-import { Incoming, Inject, Injector, ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/base';
+import { EntityControllerRegistry, Incoming, Inject, Injector, ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/base';
 import { IndexRuntimeStatus } from '../lib/IndexRuntimeStatus';
 import { IndexProcessingQueue } from '../lib/events/IndexProcessingQueue';
-import { IIndexStorageRef } from '../lib/IIndexStorageRef';
 import { TN_INDEX } from '../lib/Constants';
-import { StorageControllerReader } from '@typexs/pipelines/adapters/pipeline/readers/StorageControllerReader';
+import { IReader } from '@typexs/pipelines/lib/reader/IReader';
+import { assign, isEmpty, keys } from 'lodash';
+import { ControllerReader } from '@typexs/pipelines/adapters/pipeline/readers/ControllerReader';
 
 
 export class SearchIndexTask implements ITask {
@@ -13,12 +13,15 @@ export class SearchIndexTask implements ITask {
 
   @Incoming({
     optional: true, handle: x =>
-      x.split(',').map((x: any) => x.trim()).filter((x: any) => !_.isEmpty(x))
+      x.split(',').map((x: any) => x.trim()).filter((x: any) => !isEmpty(x))
   })
   entityNames: string[];
 
   @Inject(() => IndexRuntimeStatus)
   status: IndexRuntimeStatus;
+
+  @Inject(EntityControllerRegistry.NAME)
+  controllerRegistry: EntityControllerRegistry;
 
   @TaskRuntime()
   runtime: ITaskRuntimeContainer;
@@ -36,30 +39,31 @@ export class SearchIndexTask implements ITask {
     await dispatcher.prepare();
 
     if (!this.entityNames) {
-      this.entityNames = _.keys(this.status.getTypes());
+      this.entityNames = keys(this.status.getTypes());
     }
 
-    const reader: StorageControllerReader<any>[] = [];
+    const reader: IReader[] = [];
     for (const x of this.entityNames) {
       const type = this.status.getTypeForObject(x);
       if (!type) {
         continue;
       }
-      const indexRef = this.status.getStorageRef(type.ref) as IIndexStorageRef;
-      const entityRef = indexRef.getEntityRef(x, true);
+      const indexStorageRef = this.status.getStorageRef(type.ref);
+      const entityRef = indexStorageRef.getEntityRef(x, true);
       const clazzIdx = entityRef.getClass();
-      const clazz = entityRef.getEntityRef().getClassRef().getClass();
+      const clazzRef = entityRef.getEntityRef().getClassRef();
+      const clazz = clazzRef.getClass();
+
       const registry = entityRef.getEntityRef().getNamespace();
       const sourceRef = this.status.getStorage().forClass(clazz);
 
       const raw = sourceRef.getType() === 'mongodb';
 
-      const deleted = await indexRef.getController().remove(clazzIdx, {});
+      const deleted = await indexStorageRef.getController().remove(clazzIdx, {});
       this.runtime.counter('deleted.' + clazz.name).value = deleted;
 
-      const doit = new StorageControllerReader({
+      const doit = new ControllerReader({
         entityType: clazz as any,
-        storageName: sourceRef.getName(),
         size: 50,
         raw: raw
       });
@@ -67,7 +71,7 @@ export class SearchIndexTask implements ITask {
       doit.pipe((x: any) => {
         if (raw) {
           const r = Reflect.construct(clazz, []);
-          _.assign(r, x);
+          assign(r, x);
           x = r;
         }
         this.runtime.counter('index').inc();
