@@ -1,5 +1,8 @@
-import { Entity, Property } from '@allgemein/schema-api';
+import { Entity, Namespace, Property, Schema } from '@allgemein/schema-api';
+import { NAMESPACE_BUILT_ENTITY } from '@typexs/schema';
 
+@Namespace(NAMESPACE_BUILT_ENTITY)
+@Schema({ name: 'default' })
 @Entity()
 export class EntityBySchemaApi {
 

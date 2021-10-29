@@ -4,7 +4,7 @@ import { ISaveOptions } from '../ISaveOptions';
 import { TypeOrmUtils } from './TypeOrmUtils';
 import { ObjectsNotValidError } from '../../../exceptions/ObjectsNotValidError';
 import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
-import { EntityControllerApi } from '../../../../api/EntityControllerApi';
+import { EntityControllerApi } from '../../../../api/EntityController.api';
 import { TypeOrmEntityController } from './TypeOrmEntityController';
 import { DataContainer, IEntityRef } from '@allgemein/schema-api';
 import { convertPropertyValueJsonToString, convertPropertyValueStringToJson } from './Helper';

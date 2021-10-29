@@ -3,6 +3,7 @@ import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Bootstrap, Injector, Storage } from '@typexs/base';
 import * as path from 'path';
+import { join } from 'path';
 import { IElasticStorageRefOptions } from '../../src/lib/elastic/IElasticStorageRefOptions';
 import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
 
@@ -12,7 +13,6 @@ import { IndexProcessingWorker } from '../../src/workers/IndexProcessingWorker';
 import { IndexRuntimeStatus } from '../../src/lib/IndexRuntimeStatus';
 import { TestHelper } from './TestHelper';
 import { C_ELASTIC_SEARCH, C_SEARCH_INDEX } from '../../src/lib/Constants';
-import { join } from 'path';
 
 
 let bootstrap: Bootstrap = null;
@@ -139,11 +139,12 @@ const testConfig = [
       ]
     }
   },
+  // Nr. 5: use @typexs/schema for entity management
   {
     app: { path: join(__dirname, 'scenarios', 'app_with_entities') },
     modules: { paths: [resolve], disableCache: true },
     logging: {
-      enable: false,
+      enable: true,
       level: 'debug'
     },
     storage: {
@@ -170,7 +171,6 @@ const testConfig = [
       ]
     }
   }
-
 
 
 ];
@@ -299,6 +299,29 @@ class TypexsSearchConfiguration {
     expect(indicies).to.be.deep.eq(['typeorm_default_test_entity']);
     const checkIndex2 = await storageRef.checkIndices();
     expect(checkIndex2).to.be.deep.eq({ typeorm_default_test_entity: true });
+    expect(storageRef.isChecked()).to.be.true;
+    storageRef.resetCheck();
+
+  }
+
+
+  @test
+  async 'check if dynamic index name creation works - for schema entities'() {
+    await beforeCall(testConfig[5]);
+    const storage = Injector.get<Storage>(Storage.NAME);
+    const storageFrameworks = _.keys(storage.storageFramework);
+    expect(storageFrameworks).to.include(C_SEARCH_INDEX);
+
+    const elasticRef = storage.get(C_ELASTIC_SEARCH);
+    expect(elasticRef).to.be.instanceOf(ElasticStorageRef);
+
+    const storageRef = Injector.get<ElasticStorageRef>('storage.elastic');
+    expect(storageRef).to.be.instanceOf(ElasticStorageRef);
+    expect(storageRef).to.eq(elasticRef);
+    const indicies = storageRef.getIndiciesNames();
+    expect(indicies).to.be.deep.eq(['built_entity_default_entity_by_schema_api']);
+    const checkIndex2 = await storageRef.checkIndices();
+    expect(checkIndex2).to.be.deep.eq({ built_entity_default_entity_by_schema_api: true });
     expect(storageRef.isChecked()).to.be.true;
     storageRef.resetCheck();
 

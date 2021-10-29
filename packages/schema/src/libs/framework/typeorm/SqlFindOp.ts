@@ -16,7 +16,7 @@ import { IFindData } from './IFindData';
 import { IBinding } from './IBinding';
 import { setTargetInitialForProperty, setTargetValueForProperty } from './Helper';
 import { C_CLASS_WRAPPED } from './Constants';
-import { EntityControllerApi } from '../../../../../base/src/api/EntityControllerApi';
+import { EntityControllerApi } from '@typexs/base';
 
 
 export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {

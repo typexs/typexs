@@ -6,7 +6,7 @@ import {Invoker} from '../../../src/base/Invoker';
 import {Injector} from '../../../src/libs/di/Injector';
 import {TypeOrmStorage} from '../../../src/adapters/storage/typeorm/TypeOrmStorage';
 import {SqliteSchemaHandler} from '../../../src/adapters/storage/typeorm/SqliteSchemaHandler';
-import {EntityControllerApi} from '../../../src/api/EntityControllerApi';
+import {EntityControllerApi} from '../../../src/api/EntityController.api';
 
 @suite('functional/storage/standalone/configuration')
 class StorageStandaloneConfigurationSpec {

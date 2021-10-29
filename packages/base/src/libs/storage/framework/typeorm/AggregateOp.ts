@@ -4,7 +4,6 @@ import {NotSupportedError, TreeUtils} from '@allgemein/base';
 import * as _ from 'lodash';
 import {IAggregateOp} from '../IAggregateOp';
 import {IAggregateOptions} from '../IAggregateOptions';
-import {EntityControllerApi} from '../../../../api/EntityControllerApi';
 import {SelectQueryBuilder} from 'typeorm';
 import {XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET} from '../../../Constants';
 import {ISqlParam, TypeOrmSqlConditionsBuilder} from './TypeOrmSqlConditionsBuilder';
@@ -30,6 +29,7 @@ import {convertPropertyValueJsonToString} from './Helper';
 import {TypeOrmUtils} from './TypeOrmUtils';
 import {IMangoWalkerControl} from '@allgemein/mango-expressions/IMangoWalker';
 import {GROUP_ID} from '@allgemein/mango-expressions/operators/stage/Group';
+import { EntityControllerApi } from '../../../../api/EntityController.api';
 
 
 export interface ISqlAggregateParam {

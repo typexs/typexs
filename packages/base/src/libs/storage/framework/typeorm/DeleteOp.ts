@@ -7,7 +7,7 @@ import {TypeOrmSqlConditionsBuilder} from './TypeOrmSqlConditionsBuilder';
 import {TypeOrmEntityRegistry} from './schema/TypeOrmEntityRegistry';
 import {IDeleteOptions} from '../IDeleteOptions';
 import {DeleteQueryBuilder} from 'typeorm';
-import {EntityControllerApi} from '../../../../api/EntityControllerApi';
+import {EntityControllerApi} from '../../../../api/EntityController.api';
 import {TypeOrmEntityController} from './TypeOrmEntityController';
 import {TypeOrmConnectionWrapper} from './TypeOrmConnectionWrapper';
 

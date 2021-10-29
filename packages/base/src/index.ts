@@ -13,6 +13,8 @@ export { ITasksApi } from './api/ITasksApi';
 export { SystemApi } from './api/System.api';
 export { ISystemApi } from './api/ISystemApi';
 
+export { EntityControllerApi } from './api/EntityController.api';
+export { IEntityControllerApi } from './api/IEntityControllerApi';
 
 export { ConfigExchange } from './adapters/exchange/config/ConfigExchange';
 export { TasksExchange } from './adapters/exchange/tasks/TasksExchange';

@@ -1,4 +1,4 @@
-import { DataContainer, ISaveOp, ISaveOptions, NotYetImplementedError, TypeOrmConnectionWrapper } from '@typexs/base';
+import { DataContainer, EntityControllerApi, ISaveOp, ISaveOptions, NotYetImplementedError, TypeOrmConnectionWrapper } from '@typexs/base';
 import { EntityDefTreeWorker } from '../EntityDefTreeWorker';
 import { EntityController } from '../../EntityController';
 import { PropertyRef } from '../../registry/PropertyRef';
@@ -15,7 +15,6 @@ import { SchemaUtils } from '../../SchemaUtils';
 import { ISaveData } from './ISaveData';
 import { collectLookupConditions, lookupKey, setTargetInitialForProperty } from './Helper';
 import { C_CLASS_WRAPPED, PROP_KEY_TARGET } from './Constants';
-import { EntityControllerApi } from '../../../../../base/src/api/EntityControllerApi';
 
 
 export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {

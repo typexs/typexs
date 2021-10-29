@@ -7,7 +7,7 @@ import {TypeOrmEntityRegistry} from './schema/TypeOrmEntityRegistry';
 import {ClassUtils, TreeUtils} from '@allgemein/base';
 import {getMetadataArgsStorage, SelectQueryBuilder} from 'typeorm';
 import {ClassType} from '@allgemein/schema-api';
-import {EntityControllerApi} from '../../../../api/EntityControllerApi';
+import {EntityControllerApi} from '../../../../api/EntityController.api';
 import {TypeOrmEntityController} from './TypeOrmEntityController';
 import {Injector} from '../../../di/Injector';
 import {Cache} from '../../../cache/Cache';

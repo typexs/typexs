@@ -1,6 +1,14 @@
 import * as _ from 'lodash';
 import {getMetadataArgsStorage} from 'typeorm';
-import {Injector, Invoker, REGISTRY_TYPEORM, SqliteSchemaHandler, TypeOrmEntityRegistry, TypeOrmStorageRef} from '@typexs/base';
+import {
+  EntityControllerApi,
+  Injector,
+  Invoker,
+  REGISTRY_TYPEORM,
+  SqliteSchemaHandler,
+  TypeOrmEntityRegistry,
+  TypeOrmStorageRef
+} from '@typexs/base';
 import {EntityController} from '../../src/libs/EntityController';
 import {EntityRegistry} from '../../src/libs/EntityRegistry';
 import {FrameworkFactory} from '../../src/libs/framework/FrameworkFactory';
@@ -12,7 +20,7 @@ export class TestHelper {
     return filename.split('/test/').pop();
   }
 
-  static async connect(options: any): Promise<{ ref: TypeOrmStorageRef, controller: EntityController }> {
+  static async connect(options: any): Promise<{ ref: TypeOrmStorageRef; controller: EntityController }> {
 
     RegistryFactory.register(REGISTRY_TYPEORM, TypeOrmEntityRegistry);
     RegistryFactory.register(/^typeorm\..*/, TypeOrmEntityRegistry);
@@ -20,6 +28,9 @@ export class TestHelper {
 
 
     const invoker = new Invoker();
+    [EntityControllerApi].forEach(api => {
+      invoker.register(api, []);
+    });
     Injector.set(Invoker.NAME, invoker);
     const ref = new TypeOrmStorageRef(options);
     const schemaHandler = Reflect.construct(SqliteSchemaHandler, [ref]) as SqliteSchemaHandler;

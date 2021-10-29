@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import {UseAPI} from '@typexs/base/decorators/UseAPI';
-import {EntityControllerApi} from 'packages/base/src/api/EntityControllerApi';
+import {EntityControllerApi} from '@typexs/base';
 import {ISaveOp} from '@typexs/base/libs/storage/framework/ISaveOp';
 import {IDeleteOp} from '@typexs/base/libs/storage/framework/IDeleteOp';
 import {Inject, Invoker, Log} from '@typexs/base';

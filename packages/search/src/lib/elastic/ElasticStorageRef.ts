@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { ClassRef, ClassType, IClassRef, IEntityRef, ILookupRegistry, LookupRegistry, METATYPE_ENTITY } from '@allgemein/schema-api';
+import { ClassRef, ClassType, IClassRef, IEntityRef, LookupRegistry, METATYPE_ENTITY, RegistryFactory } from '@allgemein/schema-api';
 import { ICollection, Injector, Invoker, Log, NotYetImplementedError, StorageRef } from '@typexs/base';
 import { ElasticConnection } from './ElasticConnection';
 import { ElasticEntityController } from './ElasticEntityController';
@@ -79,8 +79,8 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     return _.get(this.getOptions(), 'readonly', false);
   }
 
-  getRegistry(): ILookupRegistry {
-    throw new Error('Method not implemented.');
+  getRegistry(): IndexEntityRegistry {
+    return RegistryFactory.get(C_SEARCH_INDEX) as IndexEntityRegistry;
   }
 
   /**

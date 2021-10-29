@@ -7,7 +7,7 @@ import { EntityController } from '../../EntityController';
 import { XS_P_PREV_ID } from '../../Constants';
 import { ClassRef } from '@allgemein/schema-api';
 import { IDeleteOp, IDeleteOptions, NotSupportedError, TypeOrmConnectionWrapper } from '@typexs/base';
-import { EntityControllerApi } from '../../../../../base/src/api/EntityControllerApi';
+import { EntityControllerApi } from '@typexs/base';
 
 
 export type IDeleteData = IDataExchange<any[]>;

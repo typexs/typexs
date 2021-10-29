@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import {IUpdateOptions} from '../IUpdateOptions';
 import {TypeOrmSqlConditionsBuilder} from './TypeOrmSqlConditionsBuilder';
 import {UpdateQueryBuilder} from 'typeorm';
-import {EntityControllerApi} from '../../../../api/EntityControllerApi';
+import {EntityControllerApi} from '../../../../api/EntityController.api';
 import {TypeOrmEntityController} from './TypeOrmEntityController';
 import {convertPropertyValueJsonToString} from './Helper';
 
