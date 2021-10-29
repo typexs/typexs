@@ -1,15 +1,15 @@
-import * as _ from 'lodash';
-import {UseAPI} from '@typexs/base/decorators/UseAPI';
-import {EntityControllerApi} from '@typexs/base';
-import {ISaveOp} from '@typexs/base/libs/storage/framework/ISaveOp';
-import {IDeleteOp} from '@typexs/base/libs/storage/framework/IDeleteOp';
-import {Inject, Invoker, Log} from '@typexs/base';
-import {ClassUtils} from '@allgemein/base';
-import {EventBus} from '@allgemein/eventbus';
-import {IndexRuntimeStatus} from '../lib/IndexRuntimeStatus';
-import {IndexEvent} from '../lib/events/IndexEvent';
-import {ClassType} from '@allgemein/schema-api';
-import {IndexElasticApi} from '../api/IndexElastic.api';
+import { UseAPI } from '@typexs/base/decorators/UseAPI';
+import { EntityControllerApi, Inject, Injector, Invoker, Log } from '@typexs/base';
+import { ISaveOp } from '@typexs/base/libs/storage/framework/ISaveOp';
+import { IDeleteOp } from '@typexs/base/libs/storage/framework/IDeleteOp';
+import { ClassUtils } from '@allgemein/base';
+import { EventBus } from '@allgemein/eventbus';
+import { IndexRuntimeStatus } from '../lib/IndexRuntimeStatus';
+import { IndexEvent } from '../lib/events/IndexEvent';
+import { ClassType } from '@allgemein/schema-api';
+import { IndexElasticApi } from '../api/IndexElastic.api';
+import { IndexProcessingQueue } from '../lib/events/IndexProcessingQueue';
+import { assign, cloneDeep, has, isArray } from 'lodash';
 
 @UseAPI(EntityControllerApi)
 export class ExtendEntityControllerApi extends EntityControllerApi {
@@ -25,10 +25,10 @@ export class ExtendEntityControllerApi extends EntityControllerApi {
     const indexable: { ref: string; class: string; registry: string; obj: T }[] = [];
     for (const obj of object) {
       const name = ClassUtils.getClassName(obj as any);
-      if (_.has(this.status.getTypes(), name)) {
+      if (has(this.status.getTypes(), name)) {
         const results = this.invoker.use(IndexElasticApi).isIndexable(name, obj);
         let pass = true;
-        if (results && _.isArray(results) && results.length > 0) {
+        if (results && isArray(results) && results.length > 0) {
           pass = results.reduce((previousValue, currentValue) => previousValue && currentValue, pass);
         }
         if (pass) {
@@ -50,7 +50,7 @@ export class ExtendEntityControllerApi extends EntityControllerApi {
       if (indexable.find(x => x.class === name)) {
         continue;
       }
-      if (_.has(this.status.getTypes(), name)) {
+      if (has(this.status.getTypes(), name)) {
         indexable.push({
           ...this.status.getTypes()[name],
           class: name
@@ -61,31 +61,31 @@ export class ExtendEntityControllerApi extends EntityControllerApi {
   }
 
   isActive() {
-    return this.status.checkIfActive() && this.status.isWorkerActive();
+    return this.status.checkIfActive();
   }
+
+  isWorkerActive() {
+    return this.status.isWorkerActive();
+  }
+
 
   doAfterSave<T>(object: T[] | T, error: Error, op: ISaveOp<T>) {
     if (!this.isActive()) {
       return;
     }
-    // we don't need to wait, use setTimeout
-    const filterIndexable = this.filterIndexableObject(_.isArray(object) ? object : [object]);
-    if (filterIndexable.length > 0) {
-      setTimeout(() => {
-        const prepared = filterIndexable
-          .map(x => {
-            const o = _.cloneDeep(x.obj);
-            this.invoker.use(IndexElasticApi).prepareBeforeSave(x.class, o);
-            const r = _.assign(x, <any>{action: 'save', obj: o});
-            return r;
-          });
 
-        EventBus.post(
-          new IndexEvent(prepared)
-        ).catch(err => {
-          Log.error(err);
+    // we don't need to wait, use setTimeout
+    const filterIndexable = this.filterIndexableObject(isArray(object) ? object : [object]);
+    if (filterIndexable.length > 0) {
+      const prepared = filterIndexable
+        .map(x => {
+          const o = cloneDeep(x.obj);
+          this.invoker.use(IndexElasticApi).prepareBeforeSave(x.class, o);
+          const r = assign(x, <any>{ action: 'save', obj: o });
+          return r;
         });
-      });
+      const event = new IndexEvent(prepared);
+      this.processEvent(event);
     }
   }
 
@@ -94,47 +94,54 @@ export class ExtendEntityControllerApi extends EntityControllerApi {
       return;
     }
 
+    if (this.isWorkerActive()) {
+      if (op.getConditions() !== null) {
+        const filterTypes = this.filterIndexableTypes(<any>(
+          isArray(op.getRemovable()) ? op.getRemovable() : [op.getRemovable()]
+        ));
 
-    if (op.getConditions() !== null) {
-      const filterTypes = this.filterIndexableTypes(<any>(
-        _.isArray(op.getRemovable()) ? op.getRemovable() : [op.getRemovable()]
-      ));
-
-      if (filterTypes.length > 0) {
-        EventBus.post(
-          new IndexEvent(filterTypes
+        if (filterTypes.length > 0) {
+          const event = new IndexEvent(filterTypes
             .map(x =>
-              _.assign(x, <any>{
+              assign(x, <any>{
                 action: 'delete_by_condition',
                 condition: op.getConditions()
               })
             )
-          )
-        )
-          .catch(err => {
-            Log.error(err);
-          });
-      }
+          );
 
-    } else {
-      const filterIndexable = this.filterIndexableObject(<any>(
-        _.isArray(op.getRemovable()) ? op.getRemovable() : [op.getRemovable()]
-      ));
-      if (filterIndexable.length > 0) {
-        // TODO create timeout post
-        setTimeout(() => {
-          EventBus.post(
-            new IndexEvent(filterIndexable.map(x => _.assign(x, <any>{
-              action: 'delete',
-              options: op.getOptions()
-            })))
-          )
-            .catch(err => {
-              Log.error(err);
-            });
-        });
-      }
+          this.processEvent(event);
 
+        }
+
+      } else {
+        const filterIndexable = this.filterIndexableObject(<any>(
+          isArray(op.getRemovable()) ? op.getRemovable() : [op.getRemovable()]
+        ));
+        if (filterIndexable.length > 0) {
+          const event = new IndexEvent(filterIndexable.map(x => assign(x, <any>{
+            action: 'delete',
+            options: op.getOptions()
+          })));
+          this.processEvent(event);
+
+        }
+      }
     }
+  }
+
+  processEvent(event: IndexEvent) {
+    if (this.isWorkerActive()) {
+      EventBus.post(event).catch(err => {
+        Log.error(err);
+      });
+    } else {
+      try {
+        Injector.get(IndexProcessingQueue).add(event);
+      } catch (e) {
+        Log.error(e);
+      }
+    }
+
   }
 }

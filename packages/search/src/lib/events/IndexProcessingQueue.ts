@@ -4,11 +4,11 @@ import { AsyncWorkerQueue, ILoggerApi, Inject, IQueueProcessor, Log, Storage } f
 import { IndexRuntimeStatus } from '../IndexRuntimeStatus';
 import { IIndexData } from './IIndexData';
 import { IIndexStorageRef } from '../IIndexStorageRef';
+import { IndexEvent } from './IndexEvent';
+import { ClassRef } from '@allgemein/schema-api';
 
 
 export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
-
-  // name: IndexProcessingWorker
 
   @Inject(() => IndexRuntimeStatus)
   status: IndexRuntimeStatus;
@@ -24,14 +24,12 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
 
   logger: ILoggerApi;
 
-  // timeout: NodeJS.Timeout;
-
   constructor() {
     this.logger = Log.getLoggerFor(IndexProcessingQueue);
   }
 
   async prepare() {
-    const status = await this.status.checkIfActive();
+    const status = this.status.checkIfActive();
     if (status) {
       this.LOCK = LockFactory.$().semaphore(1);
       this.queue = new AsyncWorkerQueue<IIndexData>(this, { name: 'index_event_dispatcher', logger: this.logger, concurrent: 50 });
@@ -43,6 +41,36 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
   push(data: IIndexData) {
     return this.queue.push(data);
   }
+
+  add(event: IndexEvent) {
+    for (const entry of event.data) {
+      if (entry.action === 'save' || entry.action === 'delete') {
+        const classRef = ClassRef.get(entry.class, entry.registry);
+        const obj = classRef.build(entry.obj, {createAndCopy: true});
+        this.push(<IIndexData>{
+          ref: entry.ref,
+          action: entry.action,
+          obj: obj,
+          options: entry.options,
+          class: entry.class,
+          registry: entry.registry
+        });
+      } else if (entry.action === 'delete_by_condition') {
+        const classRef = ClassRef.get(entry.class, entry.registry);
+        this.push(<IIndexData>{
+          ref: entry.ref,
+          action: entry.action,
+          obj: classRef.getClass(),
+          condition: entry.condition,
+          options: entry.options,
+          class: entry.class,
+          registry: entry.registry
+        });
+
+      }
+    }
+  }
+
 
   do(event: IIndexData) {
     let res = null;

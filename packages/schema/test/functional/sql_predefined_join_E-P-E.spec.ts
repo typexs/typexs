@@ -1,14 +1,14 @@
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
 import * as _ from 'lodash';
-import {TestHelper} from './TestHelper';
-import {TEST_STORAGE_OPTIONS} from './config';
-import {EntityController} from '../../src/libs/EntityController';
-import {TypeOrmConnectionWrapper} from '@typexs/base';
-import {ILookupRegistry, RegistryFactory} from '@allgemein/schema-api';
-import {NAMESPACE_BUILT_ENTITY} from '../../src/libs/Constants';
-import {EntityRegistry} from '../../src/libs/EntityRegistry';
+import { TestHelper } from './TestHelper';
+import { TEST_STORAGE_OPTIONS } from './config';
+import { EntityController } from '../../src/libs/EntityController';
+import { TypeOrmConnectionWrapper } from '@typexs/base';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
+import { EntityRegistry } from '../../src/libs/EntityRegistry';
 
 let c: TypeOrmConnectionWrapper;
 let entityController: EntityController;
@@ -169,7 +169,7 @@ class SqlPredefinedJoinEPESpec {
     const values: any[] = await c.connection.query('SELECT * FROM r_belongsto;');
     expect(values).to.have.length(1);
     expect(values[0]).to.deep.include({
-      'beltoid' : 1,
+      'beltoid': 1,
       'ownerid': 1,
       'ownertab': 'personal',
       'sortierung': 0,
@@ -207,12 +207,12 @@ class SqlPredefinedJoinEPESpec {
     });
 
     // save again
-    await entityController.save(lectures[0], <any>{relationUpdateMode: 'recreate'});
+    await entityController.save(lectures[0], <any>{ relationUpdateMode: 'recreate' });
 
     const values: any[] = await c.connection.query('SELECT * FROM r_belongsto;');
     expect(values).to.have.length(1);
     expect(values[0]).to.deep.include({
-      'beltoid' : 2,
+      'beltoid': 2,
       'ownerid': 1,
       'ownertab': 'personal',
       'sortierung': 0,
@@ -220,8 +220,6 @@ class SqlPredefinedJoinEPESpec {
       'tabpk': 1
     });
   }
-
-
 
 
   /**
@@ -271,7 +269,8 @@ class SqlPredefinedJoinEPESpec {
       'tabelle': 'veranstaltung',
       'tabpk': 2
     });
-    expect(values[3]).to.deep.include({
+    expect(values[3]).to.deep.include(
+      {
         'beltoid': 4,
         'ownerid': 3,
         'ownertab': 'personal',

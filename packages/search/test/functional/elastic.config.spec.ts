@@ -144,7 +144,7 @@ const testConfig = [
     app: { path: join(__dirname, 'scenarios', 'app_with_entities') },
     modules: { paths: [resolve], disableCache: true },
     logging: {
-      enable: true,
+      enable: false,
       level: 'debug'
     },
     storage: {

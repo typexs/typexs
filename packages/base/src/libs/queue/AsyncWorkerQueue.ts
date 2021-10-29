@@ -81,7 +81,7 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
     return this._inc;
   }
 
-  getLogger(){
+  getLogger() {
     return this.logger;
   }
 
@@ -280,7 +280,10 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
   }
 
   enqueued() {
-    return this.worker.length;
+    if (this.worker) {
+      return this.worker.length;
+    }
+    return 0;
   }
 
   amount() {
@@ -337,8 +340,12 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
       (await this.get(k)).finalize(this);
     }));
 
-    this.active.map(jobs => jobs.finalize(this));
-    this.worker = null;
+    if (this.active) {
+      this.active.map(jobs => jobs.finalize(this));
+    }
+
+    this.all = null;
+    this.worker = [];
     this.active = null;
     this.removeAllListeners();
   }

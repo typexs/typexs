@@ -48,7 +48,7 @@ const settingsTemplate: any = {
 
 
   logging: {
-    enable: true,
+    enable: false,
     level: 'debug',
     transports: [{console: {name: 'sql_schema_predefined_join_bidirect_over_api'}}],
   },
