@@ -1,13 +1,12 @@
-import {IFindOptions} from './IFindOptions';
-import {ClassType} from '@allgemein/schema-api';
+import { IFindOptions } from './IFindOptions';
+import { ClassType } from '@allgemein/schema-api';
+import { IOp } from './IOp';
 
-export interface IFindOp<T> {
+export interface IFindOp<T> extends IOp<IFindOptions> {
 
   getFindConditions(): any;
 
   getEntityType(): Function | string | ClassType<T>;
-
-  getOptions(): IFindOptions;
 
   run(entityType: Function | string, findConditions: any, options?: IFindOptions): Promise<T[]>;
 

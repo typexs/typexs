@@ -6,8 +6,9 @@ import { ObjectsNotValidError } from '../../../exceptions/ObjectsNotValidError';
 import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
 import { EntityControllerApi } from '../../../../api/EntityController.api';
 import { TypeOrmEntityController } from './TypeOrmEntityController';
-import { DataContainer, IEntityRef } from '@allgemein/schema-api';
+import { DataContainer, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
 import { convertPropertyValueJsonToString, convertPropertyValueStringToJson } from './Helper';
+import { REGISTRY_TYPEORM } from './Constants';
 
 
 const saveOptionsKeys = ['data', 'listeners', 'transaction', 'chunk', 'reload'];
@@ -44,6 +45,16 @@ export class SaveOp<T> implements ISaveOp<T> {
   private isMongoDB() {
     return this.controller.storageRef.dbType === 'mongodb';
   }
+
+
+  getNamespace(): string {
+    return REGISTRY_TYPEORM;
+  }
+
+  getRegistry() {
+    return RegistryFactory.get(this.getNamespace());
+  }
+
 
   async run(object: T[] | T, options?: ISaveOptions): Promise<T[] | T> {
     defaults(options, { validate: false, raw: false });

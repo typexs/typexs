@@ -9,7 +9,7 @@ export interface IIndexElasticApi {
 
   onOptions?(stage: 'find' | 'update' | 'aggregate' | 'remove' | 'save', options: any): void;
 
-  isIndexable?(className: string, obj: any): boolean;
+  isIndexable?(className: string, obj: any, registry: string): boolean;
 
   doBeforeIndexRepositoryCreate?(indexData: any, types: IndexEntityRef[]): void;
 

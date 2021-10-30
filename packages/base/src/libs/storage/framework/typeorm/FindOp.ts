@@ -6,7 +6,7 @@ import {TypeOrmSqlConditionsBuilder} from './TypeOrmSqlConditionsBuilder';
 import {TypeOrmEntityRegistry} from './schema/TypeOrmEntityRegistry';
 import {ClassUtils, TreeUtils} from '@allgemein/base';
 import {getMetadataArgsStorage, SelectQueryBuilder} from 'typeorm';
-import {ClassType} from '@allgemein/schema-api';
+import { ClassType, RegistryFactory } from '@allgemein/schema-api';
 import {EntityControllerApi} from '../../../../api/EntityController.api';
 import {TypeOrmEntityController} from './TypeOrmEntityController';
 import {Injector} from '../../../di/Injector';
@@ -44,6 +44,16 @@ export class FindOp<T> implements IFindOp<T> {
   getOptions() {
     return this.options;
   }
+
+
+  getNamespace(): string {
+    return REGISTRY_TYPEORM;
+  }
+
+  getRegistry() {
+    return RegistryFactory.get(this.getNamespace());
+  }
+
 
   async run(entityType: Function | string | ClassType<T>, findConditions?: any, options?: IFindOptions): Promise<T[]> {
     this.entityType = entityType;

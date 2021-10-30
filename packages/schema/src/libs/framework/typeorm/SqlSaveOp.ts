@@ -3,7 +3,7 @@ import { EntityDefTreeWorker } from '../EntityDefTreeWorker';
 import { EntityController } from '../../EntityController';
 import { PropertyRef } from '../../registry/PropertyRef';
 import { EntityRef } from '../../registry/EntityRef';
-import { __PROPERTY__, XS_P_PROPERTY, XS_P_PROPERTY_ID, XS_P_SEQ_NR, XS_P_TYPE } from '../../Constants';
+import { __PROPERTY__, NAMESPACE_BUILT_ENTITY, XS_P_PROPERTY, XS_P_PROPERTY_ID, XS_P_SEQ_NR, XS_P_TYPE } from '../../Constants';
 import * as _ from 'lodash';
 import { assign, cloneDeep, find, get, has, isArray, isEmpty, remove } from 'lodash';
 import { SqlHelper } from './SqlHelper';
@@ -34,6 +34,10 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
   private isArray: boolean;
 
   private options: ISaveOptions;
+
+  getNamespace(): string {
+    return NAMESPACE_BUILT_ENTITY;
+  }
 
 
   visitDataProperty(propertyDef: PropertyRef,
@@ -883,6 +887,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
     }
 
 
+    let error, results: any[] = null;
     if (objectsValid) {
       await this.entityController.invoker.use(EntityControllerApi).doBeforeSave(this.objects, this);
 
@@ -891,7 +896,6 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
       this.c = await this.entityController.storageRef.connect() as TypeOrmConnectionWrapper;
 
       // start transaction, got to leafs and save
-      let error, results: any[] = null;
       try {
         results = await this.c.manager.transaction(async em => {
           const promises = [];
@@ -901,24 +905,26 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
           }
           return Promise.all(promises);
         });
+        results = [].concat(...results);
       } catch (e) {
         error = e;
       } finally {
         await this.c.close();
       }
-      await this.entityController.invoker.use(EntityControllerApi).doAfterSave(results, error, this);
 
-      if (error) {
-        throw error;
-      }
     } else {
-      throw new ObjectsNotValidError(this.objects, this.isArray);
+      error = new ObjectsNotValidError(this.objects, this.isArray);
     }
 
-    if (!this.isArray) {
-      return this.objects.shift();
+    const result = this.isArray ? this.objects : this.objects.shift();
+    await this.entityController.invoker.use(EntityControllerApi).doAfterSave(result, error, this);
+
+    if (error) {
+      throw error;
     }
-    return this.objects;
+
+
+    return result;
   }
 
 

@@ -9,7 +9,7 @@ import {IAggregateOp} from '@typexs/base/libs/storage/framework/IAggregateOp';
 
 export class IndexElasticApi implements IIndexElasticApi {
 
-  isIndexable(className: string, obj: any): boolean {
+  isIndexable(className: string, obj: any, registry: string): boolean {
     return true;
   }
 

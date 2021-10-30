@@ -1,18 +1,18 @@
-import {DistributedStorageEntityController} from './../DistributedStorageEntityController';
-import {System} from '../../system/System';
-import {ClassType} from '@allgemein/schema-api';
-import {AbstractMessage} from '../../messaging/AbstractMessage';
-import {EntityControllerRegistry} from '../../storage/EntityControllerRegistry';
-import {DistributedAggregateRequest} from './DistributedAggregateRequest';
-import {DistributedAggregateResponse} from './DistributedAggregateResponse';
-import {IDistributedAggregateOptions} from './IDistributedAggregateOptions';
-import {IAggregateOp} from '../../storage/framework/IAggregateOp';
+import { DistributedStorageEntityController } from './../DistributedStorageEntityController';
+import { System } from '../../system/System';
+import { ClassType } from '@allgemein/schema-api';
+import { AbstractMessage } from '../../messaging/AbstractMessage';
+import { EntityControllerRegistry } from '../../storage/EntityControllerRegistry';
+import { DistributedAggregateRequest } from './DistributedAggregateRequest';
+import { DistributedAggregateResponse } from './DistributedAggregateResponse';
+import { IDistributedAggregateOptions } from './IDistributedAggregateOptions';
+import { IAggregateOp } from '../../storage/framework/IAggregateOp';
 import * as _ from 'lodash';
-import {IWorkerInfo} from '../../worker/IWorkerInfo';
-import {DistributedQueryWorker} from '../../../workers/DistributedQueryWorker';
-import {ClassUtils} from '@allgemein/base';
-import {C_WORKERS} from '../../worker/Constants';
-import {__NODE_ID__, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET} from '../../Constants';
+import { IWorkerInfo } from '../../worker/IWorkerInfo';
+import { DistributedQueryWorker } from '../../../workers/DistributedQueryWorker';
+import { ClassUtils } from '@allgemein/base';
+import { C_WORKERS } from '../../worker/Constants';
+import { __NODE_ID__, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '../../Constants';
 
 
 export class DistributedAggregateOp

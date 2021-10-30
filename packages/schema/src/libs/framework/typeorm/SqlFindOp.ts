@@ -2,10 +2,10 @@ import * as _ from 'lodash';
 import { assign, isArray, isNull, isNumber, isUndefined, keys, remove } from 'lodash';
 import { EntityDefTreeWorker } from '../EntityDefTreeWorker';
 import { EntityController } from '../../EntityController';
-import { IFindOp, NotYetImplementedError, TypeOrmConnectionWrapper } from '@typexs/base';
+import { EntityControllerApi, IFindOp, NotYetImplementedError, TypeOrmConnectionWrapper } from '@typexs/base';
 import { PropertyRef } from '../../registry/PropertyRef';
 import { EntityRef } from '../../registry/EntityRef';
-import { XS_P_ABORTED, XS_P_PROPERTY, XS_P_PROPERTY_ID, XS_P_SEQ_NR, XS_P_TYPE } from '../../Constants';
+import { NAMESPACE_BUILT_ENTITY, XS_P_ABORTED, XS_P_PROPERTY, XS_P_PROPERTY_ID, XS_P_SEQ_NR, XS_P_TYPE } from '../../Constants';
 import { SqlHelper } from './SqlHelper';
 import { JoinDesc } from '../../descriptors/JoinDesc';
 import { IFindOptions } from '../IFindOptions';
@@ -16,7 +16,6 @@ import { IFindData } from './IFindData';
 import { IBinding } from './IBinding';
 import { setTargetInitialForProperty, setTargetValueForProperty } from './Helper';
 import { C_CLASS_WRAPPED } from './Constants';
-import { EntityControllerApi } from '@typexs/base';
 
 
 export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
@@ -51,6 +50,11 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
 
   private hookAfterEntity: (entityRef: EntityRef, entities: any[]) => void = () => {
   };
+
+
+  getNamespace(): string {
+    return NAMESPACE_BUILT_ENTITY;
+  }
 
 
   visitDataProperty(propertyRef: PropertyRef,

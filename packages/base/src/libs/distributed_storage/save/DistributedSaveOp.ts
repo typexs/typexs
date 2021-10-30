@@ -1,25 +1,25 @@
 import * as _ from 'lodash';
-import {DistributedStorageEntityController} from './../DistributedStorageEntityController';
-import {System} from '../../system/System';
-import {ClassRef} from '@allgemein/schema-api';
-import {ISaveOp} from '../../storage/framework/ISaveOp';
-import {DistributedSaveRequest} from './DistributedSaveRequest';
-import {DistributedSaveResponse} from './DistributedSaveResponse';
-import { __DISTRIBUTED_ID__,  __REMOTE_IDS__, XS_P_$ERRORED, XS_P_$SAVED} from './../Constants';
-import {IDistributedSaveOptions} from './IDistributedSaveOptions';
-import {AbstractMessage} from '../../messaging/AbstractMessage';
-import {IMessageOptions} from '../../messaging/IMessageOptions';
-import {C_WORKERS} from '../../worker/Constants';
-import {DistributedQueryWorker} from '../../../workers/DistributedQueryWorker';
-import {IWorkerInfo} from '../../worker/IWorkerInfo';
-import {EntityControllerRegistry} from '../../storage/EntityControllerRegistry';
-import {BaseUtils} from '../../utils/BaseUtils';
-import {__CLASS__, __REGISTRY__} from '../../Constants';
+import { DistributedStorageEntityController } from './../DistributedStorageEntityController';
+import { System } from '../../system/System';
+import { ClassRef } from '@allgemein/schema-api';
+import { ISaveOp } from '../../storage/framework/ISaveOp';
+import { DistributedSaveRequest } from './DistributedSaveRequest';
+import { DistributedSaveResponse } from './DistributedSaveResponse';
+import { __DISTRIBUTED_ID__, __REMOTE_IDS__, XS_P_$ERRORED, XS_P_$SAVED } from './../Constants';
+import { IDistributedSaveOptions } from './IDistributedSaveOptions';
+import { AbstractMessage } from '../../messaging/AbstractMessage';
+import { IMessageOptions } from '../../messaging/IMessageOptions';
+import { C_WORKERS } from '../../worker/Constants';
+import { DistributedQueryWorker } from '../../../workers/DistributedQueryWorker';
+import { IWorkerInfo } from '../../worker/IWorkerInfo';
+import { EntityControllerRegistry } from '../../storage/EntityControllerRegistry';
+import { BaseUtils } from '../../utils/BaseUtils';
+import { __CLASS__, __REGISTRY__ } from '../../Constants';
 
 
 export class DistributedSaveOp<T>
   extends AbstractMessage<DistributedSaveRequest,
-    DistributedSaveResponse> implements ISaveOp<T> {
+  DistributedSaveResponse> implements ISaveOp<T> {
 
   constructor(system: System, entityControllerRegistry: EntityControllerRegistry) {
     super(system, DistributedSaveRequest, DistributedSaveResponse);
@@ -54,7 +54,7 @@ export class DistributedSaveOp<T>
   }
 
   async run(objects: T | T[], options?: IDistributedSaveOptions): Promise<T[]> {
-    this.options = _.defaults(options, {timeout: 10000});
+    this.options = _.defaults(options, { timeout: 10000 });
     this.timeout = this.options.timeout;
 
     let inc = 0;

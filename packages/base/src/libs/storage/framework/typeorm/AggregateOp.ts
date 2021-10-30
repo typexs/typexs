@@ -1,12 +1,11 @@
-import {ClassType, IEntityRef} from '@allgemein/schema-api';
-import {TypeOrmEntityRegistry} from './schema/TypeOrmEntityRegistry';
-import {NotSupportedError, TreeUtils} from '@allgemein/base';
+import { ClassType, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
+import { NotSupportedError, TreeUtils } from '@allgemein/base';
 import * as _ from 'lodash';
-import {IAggregateOp} from '../IAggregateOp';
-import {IAggregateOptions} from '../IAggregateOptions';
-import {SelectQueryBuilder} from 'typeorm';
-import {XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET} from '../../../Constants';
-import {ISqlParam, TypeOrmSqlConditionsBuilder} from './TypeOrmSqlConditionsBuilder';
+import { IAggregateOp } from '../IAggregateOp';
+import { IAggregateOptions } from '../IAggregateOptions';
+import { SelectQueryBuilder } from 'typeorm';
+import { XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '../../../Constants';
+import { ISqlParam, TypeOrmSqlConditionsBuilder } from './TypeOrmSqlConditionsBuilder';
 import {
   AbstractOperator,
   Count,
@@ -24,12 +23,13 @@ import {
   Value,
   ValueRef
 } from '@allgemein/mango-expressions';
-import {TypeOrmEntityController} from './TypeOrmEntityController';
-import {convertPropertyValueJsonToString} from './Helper';
-import {TypeOrmUtils} from './TypeOrmUtils';
-import {IMangoWalkerControl} from '@allgemein/mango-expressions/IMangoWalker';
-import {GROUP_ID} from '@allgemein/mango-expressions/operators/stage/Group';
+import { TypeOrmEntityController } from './TypeOrmEntityController';
+import { convertPropertyValueJsonToString } from './Helper';
+import { TypeOrmUtils } from './TypeOrmUtils';
+import { IMangoWalkerControl } from '@allgemein/mango-expressions/IMangoWalker';
+import { GROUP_ID } from '@allgemein/mango-expressions/operators/stage/Group';
 import { EntityControllerApi } from '../../../../api/EntityController.api';
+import { REGISTRY_TYPEORM } from './Constants';
 
 
 export interface ISqlAggregateParam {
@@ -85,6 +85,14 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
     return this.options;
   }
 
+  getNamespace(): string {
+    return REGISTRY_TYPEORM;
+  }
+
+  getRegistry() {
+    return RegistryFactory.get(this.getNamespace());
+  }
+
 
   async run(cls: Function | string | ClassType<any>, pipeline: any[], options: IAggregateOptions = {}): Promise<any[]> {
     if (_.isEmpty(pipeline) || !_.isArray(pipeline)) {
@@ -99,7 +107,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
     this.entityType = cls;
     this.pipeline = pipeline;
     this.options = options;
-    this.entityRef = TypeOrmEntityRegistry.$().getEntityRefFor(cls);
+    this.entityRef = this.getRegistry().getEntityRefFor(cls);
     let results: any[] = [];
 
 
@@ -272,11 +280,11 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
         _.keys(this.sort).forEach(x => {
           sort[x] = this.sort[x] === 'asc' ? 1 : -1;
         });
-        pipeline.push({$sort: sort});
+        pipeline.push({ $sort: sort });
       }
 
       const countPipeline = _.clone(pipeline);
-      countPipeline.push({$count: 'count'});
+      countPipeline.push({ $count: 'count' });
       let count = -1;
       try {
         const countAll = await repo.aggregate(countPipeline).next();
@@ -295,10 +303,10 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
         r.limit(this.limit);
       }
       let n: any = null;
+      // eslint-disable-next-line no-cond-assign
       while (n = await r.next()) {
         results.push(n);
       }
-
 
       results[XS_P_$LIMIT] = this.limit;
       results[XS_P_$OFFSET] = this.offset;
@@ -419,9 +427,9 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
         // inside an operator return
         const fn = handler.getOperationHandle(ast.name);
         if (_.has(valueRes, 'q')) {
-          return {q: fn(valueRes.q)};
+          return { q: fn(valueRes.q) };
         } else {
-          return {q: fn(valueRes)};
+          return { q: fn(valueRes) };
         }
       }
     } else if (this.stage === 'group' && ast instanceof AbstractOperator) {
@@ -454,7 +462,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
         }
 
         if (insideOperator) {
-          return <ISqlParam>{q: syntax};
+          return <ISqlParam>{ q: syntax };
         } else {
           const op = this.addSelectField(syntax, _.isString(ast.key) ? ast.key : null, 'operation');
           this.queryBuilder.addGroupBy(syntax);
@@ -557,11 +565,11 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
     if (_.isArray(value)) {
       op = [];
       value.forEach(x => {
-        const _op: any = {name: x, alias: null, type: mode};
+        const _op: any = { name: x, alias: null, type: mode };
         this.cacheFields.push(_op);
       });
     } else {
-      op = {name: value, alias: alias, type: mode};
+      op = { name: value, alias: alias, type: mode };
       this.cacheFields.push(op);
     }
 

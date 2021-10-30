@@ -59,11 +59,12 @@ export { IValidationResult } from './libs/storage/IValidationResult';
 // export { Storage } from './libs/storage/Storage';
 // export { StorageRef } from './libs/storage/StorageRef';
 
-export {IUpdateOp} from './libs/storage/framework/IUpdateOp';
-export {IDeleteOp} from './libs/storage/framework/IDeleteOp';
-export {ISaveOp} from './libs/storage/framework/ISaveOp';
-export {IFindOp} from './libs/storage/framework/IFindOp';
-
+export { IOp } from './libs/storage/framework/IOp';
+export { IUpdateOp } from './libs/storage/framework/IUpdateOp';
+export { IDeleteOp } from './libs/storage/framework/IDeleteOp';
+export { ISaveOp } from './libs/storage/framework/ISaveOp';
+export { IFindOp } from './libs/storage/framework/IFindOp';
+export { IAggregateOp } from './libs/storage/framework/IAggregateOp';
 
 export { IFindOptions } from './libs/storage/framework/IFindOptions';
 export { IUpdateOptions } from './libs/storage/framework/IUpdateOptions';

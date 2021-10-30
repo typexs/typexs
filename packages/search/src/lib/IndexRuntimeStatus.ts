@@ -2,8 +2,9 @@ import { Inject, Injector, Storage } from '@typexs/base';
 import { C_SEARCH_INDEX } from './Constants';
 import { IndexEntityRef } from './registry/IndexEntityRef';
 import * as _ from 'lodash';
-import { ClassUtils } from '@allgemein/base';
+import { isString } from 'lodash';
 import { IIndexStorageRef } from './IIndexStorageRef';
+import { ClassRef, ClassType } from '@allgemein/schema-api';
 
 export class IndexRuntimeStatus {
 
@@ -16,7 +17,7 @@ export class IndexRuntimeStatus {
 
   private workerActive: boolean = false;
 
-  private types: { [className: string]: { ref: string; registry: string } } = {};
+  private types: { ref: string; registry: string; className: string }[] = [];
 
   // private storageRefs: { [ref: string]: IStorageRef } = {};
 
@@ -32,18 +33,37 @@ export class IndexRuntimeStatus {
     return this.types;
   }
 
-  getTypeForObject(obj: any) {
-    const className = ClassUtils.getClassName(obj);
-    return this.types[className];
+  getTypeForObject(obj: any, registry: string) {
+    const className = ClassRef.getClassName(obj);
+    return this.types.find(x => x.className === className && x.registry === registry);
   }
 
   getStorageRef(name: string): IIndexStorageRef {
     return Injector.get('storage.' + name);
   }
 
+
   getStorage() {
     return this.storage;
   }
+
+
+  getType(cls: string | ClassType<any>, registry: string) {
+    let res: string = null;
+    if (!isString(cls)) {
+      res = ClassRef.getClassName(cls);
+    } else {
+      res = cls;
+    }
+    return this.types.find(x => x.className === res && x.registry === registry);
+  }
+
+
+  hasType(cls: string | ClassType<any>, registry: string) {
+    const x = this.getType(cls, registry);
+    return !!x;
+  }
+
 
   checkIfActive() {
     if (!this._checked) {
@@ -52,18 +72,15 @@ export class IndexRuntimeStatus {
         const storageRef = this.storage.get(ref);
         if (storageRef.getFramework() === C_SEARCH_INDEX) {
           storageRef.getEntityRefs().forEach((entityRef: IndexEntityRef) => {
-            this.types[entityRef.getEntityRef().name] = {
+            this.types.push({
+              className: entityRef.getEntityRef().getClassRef().name,
               ref: ref,
               registry: entityRef.getEntityRef().getNamespace()
-            };
-            // if (!this.storageRefs[ref]) {
-            //   this.storageRefs[ref] = storageRef;
-            // }
-
+            });
           });
         }
       });
-      this.enabled = _.keys(this.types).length > 0;
+      this.enabled = this.types.length > 0;
     }
     return this.enabled;
   }

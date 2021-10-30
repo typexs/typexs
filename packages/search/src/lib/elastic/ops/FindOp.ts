@@ -7,7 +7,16 @@ import { NotYetImplementedError, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '
 import { IndexElasticApi } from '../../../api/IndexElastic.api';
 import { ElasticMangoWalker } from '../ElasticMangoWalker';
 import { IndexEntityRef } from '../../registry/IndexEntityRef';
-import { __TYPE__, ES_IDFIELD, XS_P_$AGGREGATION, XS_P_$FACETS, XS_P_$INDEX, XS_P_$MAX_SCORE, XS_P_$SCORE } from '../../Constants';
+import {
+  __TYPE__,
+  C_SEARCH_INDEX,
+  ES_IDFIELD,
+  XS_P_$AGGREGATION,
+  XS_P_$FACETS,
+  XS_P_$INDEX,
+  XS_P_$MAX_SCORE,
+  XS_P_$SCORE
+} from '../../Constants';
 import { IElasticFieldDef } from '../IElasticFieldDef';
 import { IElasticFindOptions } from './IElasticFindOptions';
 import { OpsHelper } from './OpsHelper';
@@ -27,6 +36,10 @@ export class FindOp<T> implements IFindOp<T> {
 
   constructor(controller: ElasticEntityController) {
     this.controller = controller;
+  }
+
+  getNamespace(): string {
+    return C_SEARCH_INDEX;
   }
 
   getFindConditions() {
@@ -125,12 +138,12 @@ export class FindOp<T> implements IFindOp<T> {
       } else {
         if (this.options.onEmptyConditions) {
           switch (this.options.onEmptyConditions) {
-          case 'match_all':
-            opts.body.query = { match_all: {} };
-            break;
-          case 'match_none':
-            opts.body.query = { match_none: {} };
-            break;
+            case 'match_all':
+              opts.body.query = { match_all: {} };
+              break;
+            case 'match_none':
+              opts.body.query = { match_none: {} };
+              break;
           }
         }
       }

@@ -3,7 +3,7 @@ import { IndexRuntimeStatus } from '../lib/IndexRuntimeStatus';
 import { IndexProcessingQueue } from '../lib/events/IndexProcessingQueue';
 import { TN_INDEX } from '../lib/Constants';
 import { IReader } from '@typexs/pipelines/lib/reader/IReader';
-import { assign, isEmpty, keys } from 'lodash';
+import { assign, isEmpty } from 'lodash';
 import { ControllerReader } from '@typexs/pipelines/adapters/pipeline/readers/ControllerReader';
 
 
@@ -38,18 +38,21 @@ export class SearchIndexTask implements ITask {
     const dispatcher = Injector.create(IndexProcessingQueue);
     await dispatcher.prepare();
 
+    let defs = [];
     if (!this.entityNames) {
-      this.entityNames = keys(this.status.getTypes());
+      defs = this.status.getTypes();
+    } else {
+      defs = this.status.getTypes().filter(x => this.entityNames.includes(x.className));
     }
 
     const reader: IReader[] = [];
-    for (const x of this.entityNames) {
-      const type = this.status.getTypeForObject(x);
+    for (const x of defs) {
+      const type = this.status.getTypeForObject(x.className, x.registry);
       if (!type) {
         continue;
       }
       const indexStorageRef = this.status.getStorageRef(type.ref);
-      const entityRef = indexStorageRef.getEntityRef(x, true);
+      const entityRef = indexStorageRef.getEntityRef(x.className, true);
       const clazzIdx = entityRef.getClass();
       const clazzRef = entityRef.getEntityRef().getClassRef();
       const clazz = clazzRef.getClass();

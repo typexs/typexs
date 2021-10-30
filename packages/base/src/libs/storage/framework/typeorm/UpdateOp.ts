@@ -1,14 +1,15 @@
-import {ClassType, IEntityRef} from '@allgemein/schema-api';
-import {IUpdateOp} from '../IUpdateOp';
-import {TypeOrmEntityRegistry} from './schema/TypeOrmEntityRegistry';
-import {TreeUtils} from '@allgemein/base';
+import { ClassType, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
+import { IUpdateOp } from '../IUpdateOp';
+import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
+import { TreeUtils } from '@allgemein/base';
 import * as _ from 'lodash';
-import {IUpdateOptions} from '../IUpdateOptions';
-import {TypeOrmSqlConditionsBuilder} from './TypeOrmSqlConditionsBuilder';
-import {UpdateQueryBuilder} from 'typeorm';
-import {EntityControllerApi} from '../../../../api/EntityController.api';
-import {TypeOrmEntityController} from './TypeOrmEntityController';
-import {convertPropertyValueJsonToString} from './Helper';
+import { IUpdateOptions } from '../IUpdateOptions';
+import { TypeOrmSqlConditionsBuilder } from './TypeOrmSqlConditionsBuilder';
+import { UpdateQueryBuilder } from 'typeorm';
+import { EntityControllerApi } from '../../../../api/EntityController.api';
+import { TypeOrmEntityController } from './TypeOrmEntityController';
+import { convertPropertyValueJsonToString } from './Helper';
+import { REGISTRY_TYPEORM } from './Constants';
 
 
 export class UpdateOp<T> implements IUpdateOp<T> {
@@ -46,6 +47,16 @@ export class UpdateOp<T> implements IUpdateOp<T> {
   getOptions() {
     return this.options;
   }
+
+
+  getNamespace(): string {
+    return REGISTRY_TYPEORM;
+  }
+
+  getRegistry() {
+    return RegistryFactory.get(this.getNamespace());
+  }
+
 
   async run(cls: ClassType<T>, condition: any, update: any, options?: IUpdateOptions): Promise<number> {
     this.entityType = cls;

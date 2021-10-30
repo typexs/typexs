@@ -1,13 +1,13 @@
 import * as _ from 'lodash';
-import {ISaveOp} from '@typexs/base/libs/storage/framework/ISaveOp';
-import {ElasticEntityController} from '../ElasticEntityController';
-import {IndexElasticApi} from '../../../api/IndexElastic.api';
-import {IndexEntityRegistry} from '../../registry/IndexEntityRegistry';
-import {DataContainer, Log} from '@typexs/base';
-import {Index} from '@elastic/elasticsearch/api/requestParams';
-import {IElasticSaveOptions} from './IElasticSaveOptions';
-import {OpsHelper} from './OpsHelper';
-import { __ID__, __TYPE__, ES_IDFIELD, ES_TYPEFIELD } from '../../Constants';
+import { ISaveOp } from '@typexs/base/libs/storage/framework/ISaveOp';
+import { ElasticEntityController } from '../ElasticEntityController';
+import { IndexElasticApi } from '../../../api/IndexElastic.api';
+import { IndexEntityRegistry } from '../../registry/IndexEntityRegistry';
+import { DataContainer, Log } from '@typexs/base';
+import { Index } from '@elastic/elasticsearch/api/requestParams';
+import { IElasticSaveOptions } from './IElasticSaveOptions';
+import { OpsHelper } from './OpsHelper';
+import { __ID__, __TYPE__, C_SEARCH_INDEX, ES_IDFIELD, ES_TYPEFIELD } from '../../Constants';
 
 export class SaveOp<T> implements ISaveOp<T> {
 
@@ -27,6 +27,10 @@ export class SaveOp<T> implements ISaveOp<T> {
     this.controller = controller;
   }
 
+  getNamespace(): string {
+    return C_SEARCH_INDEX;
+  }
+
   getOptions() {
     return this.options;
   }
@@ -41,7 +45,7 @@ export class SaveOp<T> implements ISaveOp<T> {
 
   async run(object: T[] | T, options?: IElasticSaveOptions): Promise<T | T[]> {
     options = options || {};
-    _.defaults(options, {validate: false, raw: false, passResults: false});
+    _.defaults(options, { validate: false, raw: false, passResults: false });
     await this.controller.getInvoker().use(IndexElasticApi).onOptions('save', options);
     this.options = options;
     this.isArray = _.isArray(object);
@@ -117,7 +121,7 @@ export class SaveOp<T> implements ISaveOp<T> {
             }
           }
           if (options.refresh && results.length > 0) {
-            await client.indices.refresh({index: _.uniq(indices)});
+            await client.indices.refresh({ index: _.uniq(indices) });
           }
         }
       }

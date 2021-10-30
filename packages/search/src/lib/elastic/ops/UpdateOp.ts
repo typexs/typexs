@@ -8,6 +8,7 @@ import { OpsHelper } from './OpsHelper';
 import { IndexEntityRef } from '../../registry/IndexEntityRef';
 import { IElasticFieldDef } from '../IElasticFieldDef';
 import { ElasticMangoWalker } from '../ElasticMangoWalker';
+import { C_SEARCH_INDEX } from '../../Constants';
 
 
 export class UpdateOp<T> implements IUpdateOp<T> {
@@ -26,6 +27,10 @@ export class UpdateOp<T> implements IUpdateOp<T> {
 
   constructor(controller: ElasticEntityController) {
     this.controller = controller;
+  }
+
+  getNamespace(): string {
+    return C_SEARCH_INDEX;
   }
 
   getConditions() {

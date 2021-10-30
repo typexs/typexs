@@ -9,6 +9,7 @@ import { ElasticUtils } from '../ElasticUtils';
 import { ClassUtils } from '@allgemein/base';
 import { ElasticMangoWalker } from '../ElasticMangoWalker';
 import { IElasticFieldDef } from '../IElasticFieldDef';
+import { C_SEARCH_INDEX } from '../../Constants';
 
 
 export class DeleteOp<T> implements IDeleteOp<T> {
@@ -28,6 +29,10 @@ export class DeleteOp<T> implements IDeleteOp<T> {
 
   constructor(controller: ElasticEntityController) {
     this.controller = controller;
+  }
+
+  getNamespace(): string {
+    return C_SEARCH_INDEX;
   }
 
 
