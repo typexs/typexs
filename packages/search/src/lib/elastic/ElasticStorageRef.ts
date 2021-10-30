@@ -247,9 +247,18 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
             },
             {
               'integers': {
+                'match_mapping_type': 'integer',
+                'mapping': {
+                  'type': 'long',
+                  copy_to: [ES_ALLFIELD]
+                }
+              }
+            },
+            {
+              'longs': {
                 'match_mapping_type': 'long',
                 'mapping': {
-                  'type': 'integer',
+                  'type': 'long',
                   copy_to: [ES_ALLFIELD]
                 }
               }
