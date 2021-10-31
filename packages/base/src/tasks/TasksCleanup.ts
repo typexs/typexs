@@ -32,6 +32,13 @@ export class TasksCleanup implements ITask {
   @Incoming({ optional: true })
   offset: number = 7 * 24 * 60 * 60;
 
+  /**
+   *
+   */
+  @Incoming({ optional: true })
+  size: number = 100;
+
+
   async exec() {
     const logger = this.runtime.logger();
 
@@ -40,14 +47,14 @@ export class TasksCleanup implements ITask {
     const controller = this.storageRef.getController();
     let running = true;
     while (running) {
-      const entries = await controller.find(TaskLog, { stopped: { $le: date } }, { limit: 30 });
+      const entries = await controller.find(TaskLog, { stopped: { $le: date } }, { limit: this.size });
       if (entries.length === 0) {
         running = false;
         break;
       }
       logger.debug('remove task log entries ' + entries.length + ' of ' + entries[XS_P_$COUNT]);
 
-      await controller.remove(entries);
+      await controller.remove(TaskLog, { tasksId: { $in: entries.map(x => x.tasksId) } });
       await this.invoker.use(TasksApi).onCleanup(entries, this.offset);
       entries.map(x => {
         this.runtime.counter('remove').inc();
@@ -56,4 +63,5 @@ export class TasksCleanup implements ITask {
 
     await this.invoker.use(TasksApi).afterCleanup(this.offset);
   }
+
 }

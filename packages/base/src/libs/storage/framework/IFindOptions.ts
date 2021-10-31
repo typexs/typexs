@@ -14,4 +14,9 @@ export interface IFindOptions {
 
   sort?: { [key: string]: 'asc' | 'desc' };
 
+  /**
+   * TODO select fields
+   */
+  select?: string[];
+
 }
