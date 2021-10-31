@@ -1,5 +1,5 @@
 import { UseAPI } from '@typexs/base/decorators/UseAPI';
-import { EntityControllerApi, Inject, Injector, Invoker, Log } from '@typexs/base';
+import { EntityControllerApi, IEntityControllerApi, Inject, Injector, Invoker, Log } from '@typexs/base';
 import { ISaveOp } from '@typexs/base/libs/storage/framework/ISaveOp';
 import { IDeleteOp } from '@typexs/base/libs/storage/framework/IDeleteOp';
 import { EventBus } from '@allgemein/eventbus';
@@ -11,7 +11,7 @@ import { IndexProcessingQueue } from '../lib/events/IndexProcessingQueue';
 import { assign, cloneDeep, isArray, isFunction } from 'lodash';
 
 @UseAPI(EntityControllerApi)
-export class ExtendEntityControllerApi extends EntityControllerApi {
+export class ExtendEntityControllerApi implements IEntityControllerApi {
   // check if worker is online, pass objects
 
   @Inject(() => IndexRuntimeStatus)
@@ -19,6 +19,8 @@ export class ExtendEntityControllerApi extends EntityControllerApi {
 
   @Inject(Invoker.NAME)
   invoker: Invoker;
+
+
 
 
   filterIndexableObject<T>(object: T[], registry: string) {

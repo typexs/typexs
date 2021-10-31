@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { assign, isArray, isNull, isNumber, isUndefined, keys, remove } from 'lodash';
+import { assign, get, isArray, isNull, isNumber, isUndefined, keys, remove } from 'lodash';
 import { EntityDefTreeWorker } from '../EntityDefTreeWorker';
 import { EntityController } from '../../EntityController';
 import { EntityControllerApi, IFindOp, NotYetImplementedError, TypeOrmConnectionWrapper } from '@typexs/base';
@@ -943,12 +943,12 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
     }
     await this.connection.close();
 
-    await this.controller.invoker.use(EntityControllerApi).doAfterFind(result.next, error, this);
-
+    const ret = get(result, 'next', []);
+    await this.controller.invoker.use(EntityControllerApi).doAfterFind(ret, error, this);
     if (error) {
       throw error;
     }
-    return result.next;
+    return ret;
   }
 
   getEntityType() {
