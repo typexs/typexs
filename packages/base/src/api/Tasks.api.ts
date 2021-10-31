@@ -9,7 +9,7 @@ export class TasksApi implements ITasksApi {
   beforeCleanup(offset: number) {
   }
 
-  onCleanup?(entry: TaskLog, offset: number) {
+  onCleanup?(entry: TaskLog | TaskLog[], offset: number) {
 
   }
 

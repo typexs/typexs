@@ -7,7 +7,7 @@ export interface ITasksApi {
 
   beforeCleanup?(offset: number): void;
 
-  onCleanup?(entry: TaskLog, offset: number): void;
+  onCleanup?(entry: TaskLog | TaskLog[], offset: number): void;
 
   afterCleanup?(offset: number): void;
 
