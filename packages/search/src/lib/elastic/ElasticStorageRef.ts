@@ -231,7 +231,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
         mappings: {
           dynamic_templates: [
             {
-              'strings': {
+              strings: {
                 'match_mapping_type': 'string',
                 'mapping': {
                   'type': 'text',
@@ -246,16 +246,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
               }
             },
             {
-              'integers': {
-                'match_mapping_type': 'integer',
-                'mapping': {
-                  'type': 'long',
-                  copy_to: [ES_ALLFIELD]
-                }
-              }
-            },
-            {
-              'longs': {
+              longs: {
                 'match_mapping_type': 'long',
                 'mapping': {
                   'type': 'long',

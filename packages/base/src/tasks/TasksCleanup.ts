@@ -48,10 +48,10 @@ export class TasksCleanup implements ITask {
       logger.debug('remove task log entries ' + entries.length + ' of ' + entries[XS_P_$COUNT]);
 
       await controller.remove(entries);
-      await Promise.all(entries.map(x => {
+      await this.invoker.use(TasksApi).onCleanup(entries, this.offset);
+      entries.map(x => {
         this.runtime.counter('remove').inc();
-        return this.invoker.use(TasksApi).onCleanup(x, this.offset);
-      }));
+      });
     }
 
     await this.invoker.use(TasksApi).afterCleanup(this.offset);
