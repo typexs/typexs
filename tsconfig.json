@@ -25,7 +25,7 @@
     "noImplicitAny": true,
     "skipLibCheck": true,
     "suppressImplicitAnyIndexErrors": true,
-    "resolveJsonModule": false,
+    "resolveJsonModule": true,
     "typeRoots": [
       "./node_modules/@types"
     ],

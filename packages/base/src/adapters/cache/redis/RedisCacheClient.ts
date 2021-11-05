@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import { isNull, isUndefined } from 'lodash';
 import { ClientOpts, createClient, RedisClient } from 'redis';
 import { IRedisCacheClient } from './IRedisCacheClient';
 import { ICacheGetOptions, ICacheSetOptions } from '../../../libs/cache/ICacheOptions';
@@ -86,25 +87,37 @@ export class RedisCacheClient implements IRedisCacheClient {
         reject(new Error('no connection'));
       }
 
-      const _value = this.serialize(value);
-      const args: any[] = [key, _value];
-      if (options && options.ttl) {
-        if (options.ttl % 1000 === 0) {
-          args.push('EX', Math.round(options.ttl / 1000));
-        } else {
-          args.push('PX', options.ttl);
+      if (isNull(value) || isUndefined(value)) {
+        const args: any[] = [key];
+        args.push((err: Error, reply: any) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(reply);
+          }
+        });
+        // eslint-disable-next-line prefer-spread
+        this.client.del.apply(this.client, args);
+      } else {
+        const _value = this.serialize(value);
+        const args: any[] = [key, _value];
+        if (options && options.ttl) {
+          if (options.ttl % 1000 === 0) {
+            args.push('EX', Math.round(options.ttl / 1000));
+          } else {
+            args.push('PX', options.ttl);
+          }
         }
-
+        args.push((err: Error, reply: any) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(reply);
+          }
+        });
+        // eslint-disable-next-line prefer-spread
+        this.client.set.apply(this.client, args);
       }
-      args.push((err: Error, reply: any) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(reply);
-        }
-      });
-      // eslint-disable-next-line prefer-spread
-      this.client.set.apply(this.client, args);
     });
   }
 
