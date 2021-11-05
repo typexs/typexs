@@ -380,6 +380,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         // coming from unserialization
         typeOrmOptions = this._findTableMetadataArgs(options.target);
         if (!typeOrmOptions) {
+          // create an default entry
           typeOrmOptions = <TableMetadataArgs & { new: boolean }>{
             new: true,
             target: options.target,

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AbstractQueryEmbeddedComponent} from '@typexs/base-ng';
+import {AbstractQueryComponent} from '@typexs/base-ng';
 import {EntityService} from '../../entity.service';
 
 
@@ -16,7 +16,7 @@ import {EntityService} from '../../entity.service';
   templateUrl: './entity-query-embedded.component.html',
   styleUrls: ['./entity-query-embedded.component.scss']
 })
-export class EntityQueryEmbeddedComponent extends AbstractQueryEmbeddedComponent {
+export class EntityQueryEmbeddedComponent extends AbstractQueryComponent {
 
   constructor(private entityService: EntityService) {
     super();

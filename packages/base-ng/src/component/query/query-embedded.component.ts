@@ -1,6 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {IQueringService} from '../../api/querying/IQueringService';
-import {AbstractQueryEmbeddedComponent} from '../../api/querying/abstract-query-embedded.component';
+import {AbstractQueryComponent} from '../../api/querying/abstract-query.component';
 
 
 /**
@@ -16,7 +16,7 @@ import {AbstractQueryEmbeddedComponent} from '../../api/querying/abstract-query-
   templateUrl: './query-embedded.component.html',
   styleUrls: ['./query-embedded.component.scss']
 })
-export class QueryEmbeddedComponent extends AbstractQueryEmbeddedComponent {
+export class QueryEmbeddedComponent extends AbstractQueryComponent {
 
 
   @Input()

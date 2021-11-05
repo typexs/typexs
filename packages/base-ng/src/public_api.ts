@@ -92,13 +92,12 @@ export * from './datatable/simple-html-table/simple-html-cell-entity-reference-r
 export * from './datatable/simple-html-table/simple-html-cell-router-link-renderer.component';
 export * from './datatable/list-view/list-view.component';
 
-export * from './api/querying/abstract-query.service';
-export * from './api/querying/abstract-query-embedded.component';
-export * from './api/querying/abstract-aggregate-embedded.component';
-export * from './api/querying/IQueringService';
-export * from './api/querying/IQueryComponentApi';
-export * from './api/querying/QueryAction';
+export {AbstractQueryService} from './api/querying/abstract-query.service';
+export {AbstractQueryComponent} from './api/querying/abstract-query.component';
+export {AbstractAggregateEmbeddedComponent} from './api/querying/abstract-aggregate-embedded.component';
+export {IQueringService} from './api/querying/IQueringService';
+export {IQueryComponentApi} from './api/querying/IQueryComponentApi';
+export {QueryAction} from './api/querying/QueryAction';
 export { STORAGE_REQUEST_MODE, DEFAULT_DT_GRID_OPTIONS, QUERY_MODE } from './api/querying/Constants';
-export * from './api/querying/free-query/free-query-input.component';
-
-export * from './component/query/query-embedded.component';
+export {FreeQueryInputComponent} from './api/querying/free-query/free-query-input.component';
+export {QueryEmbeddedComponent} from './component/query/query-embedded.component';

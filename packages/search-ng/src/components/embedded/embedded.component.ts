@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import * as _ from 'lodash';
-import { AbstractQueryEmbeddedComponent, IGridApi, ListViewComponent } from '@typexs/base-ng';
+import { AbstractQueryComponent, IGridApi, ListViewComponent } from '@typexs/base-ng';
 import { IElasticFindOptions, ISearchFacet } from '@typexs/search';
 import { And, ExprDesc, Expressions, In, Key, Like, Value } from '@allgemein/expressions';
 import { QueryAction } from '../query-form/QueryAction';
@@ -15,7 +15,7 @@ import { StorageService } from '@typexs/storage-ng';
   templateUrl: './embedded.component.html',
   styleUrls: ['./embedded.component.scss']
 })
-export class SearchEmbeddedComponent extends AbstractQueryEmbeddedComponent {
+export class SearchEmbeddedComponent extends AbstractQueryComponent {
 
   /**
    * Name the searchable entities, if empty search all with '*'
@@ -26,7 +26,7 @@ export class SearchEmbeddedComponent extends AbstractQueryEmbeddedComponent {
   @Input()
   facets: ISearchFacet[] = [
     { name: 'type', type: 'value', field: '__type.keyword' },
-    { name: 'sap_client', type: 'value', field: '_clientId.keyword' }
+    // { name: 'sap_client', type: 'value', field: '_clientId.keyword' }
   ];
 
   showFilter: boolean = true;
@@ -48,6 +48,10 @@ export class SearchEmbeddedComponent extends AbstractQueryEmbeddedComponent {
 
 
   ngOnInit() {
+   super.ngOnInit();
+  }
+
+  doInit(){
     if (!this.params) {
       this.params = {};
     }

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AbstractQueryEmbeddedComponent} from '@typexs/base-ng';
+import {AbstractQueryComponent} from '@typexs/base-ng';
 import {StorageService} from '../../storage.service';
 
 
@@ -16,7 +16,7 @@ import {StorageService} from '../../storage.service';
   templateUrl: './storage-query-embedded.component.html',
   styleUrls: ['./storage-query-embedded.component.scss']
 })
-export class StorageQueryEmbeddedComponent extends AbstractQueryEmbeddedComponent {
+export class StorageQueryEmbeddedComponent extends AbstractQueryComponent {
 
 
   constructor(private storageService: StorageService) {

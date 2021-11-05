@@ -42,8 +42,9 @@ export class EmbeddedDistributedStorageComponent implements OnInit, OnChanges, A
 
   _columns: any[] = [];
 
-  constructor(private service: DistributedStorageService,
-              private changeDetector: ChangeDetectorRef) {
+  constructor(
+    private service: DistributedStorageService,
+    private changeDetector: ChangeDetectorRef) {
 
   }
 

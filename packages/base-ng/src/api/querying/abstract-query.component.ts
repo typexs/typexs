@@ -16,7 +16,7 @@ import {Helper} from './Helper';
 import {IQueryComponentApi} from './IQueryComponentApi';
 import {first} from 'rxjs/operators';
 import {IFindOptions} from './IFindOptions';
-import { LabelHelper } from '@typexs/base';
+import { LabelHelper, XS_P_$COUNT } from '@typexs/base';
 
 
 /**
@@ -30,7 +30,7 @@ import { LabelHelper } from '@typexs/base';
 @Component({
   template: ''
 })
-export class AbstractQueryEmbeddedComponent implements OnInit, OnChanges, IQueryComponentApi {
+export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponentApi {
 
   @Input()
   get params() {
@@ -70,16 +70,16 @@ export class AbstractQueryEmbeddedComponent implements OnInit, OnChanges, IQuery
   @Input()
   componentClass: ClassType<AbstractGridComponent>;
 
+  @ViewChild('datatable', {static: true})
+  datatable: DatatableComponent;
+
   entityRef: IEntityRef;
 
   error: any = null;
 
   _isLoaded: boolean = false;
 
-  @ViewChild('datatable', {static: true})
-  datatable: DatatableComponent;
-
-  private queringService: IQueringService;
+  queringService: IQueringService;
 
 
   setQueryService(storageService: IQueringService) {
@@ -109,6 +109,10 @@ export class AbstractQueryEmbeddedComponent implements OnInit, OnChanges, IQuery
 
 
   ngOnInit() {
+    this.doInit();
+  }
+
+  doInit(){
     if (!this.params) {
       this.params = {};
     }
@@ -128,6 +132,11 @@ export class AbstractQueryEmbeddedComponent implements OnInit, OnChanges, IQuery
     });
   }
 
+  /**
+   * Listen on value changes
+   *
+   * @param changes
+   */
   ngOnChanges(changes: SimpleChanges) {
     if (this._isLoaded) {
       if (changes['componentClass']) {
@@ -136,6 +145,9 @@ export class AbstractQueryEmbeddedComponent implements OnInit, OnChanges, IQuery
         });
       } else if (changes['options']) {
         this.requery();
+      } else if (changes['name']) {
+        this.reset();
+        this.doInit();
       }
     }
   }
@@ -353,7 +365,7 @@ export class AbstractQueryEmbeddedComponent implements OnInit, OnChanges, IQuery
         .subscribe(
           (results: any) => {
             if (results) {
-              if (results.entities && has(results, '$count') && isNumber(results.$count)) {
+              if (results.entities && has(results, XS_P_$COUNT) && isNumber(results.$count)) {
                 this.rebuildColumns(results.entities, api);
                 api.setRows(results.entities);
                 api.setMaxRows(results.$count);
@@ -377,8 +389,15 @@ export class AbstractQueryEmbeddedComponent implements OnInit, OnChanges, IQuery
   }
 
 
-  reset() {
-    this.params.offset = 0;
-  }
 
+  /**
+   * Reset the component values
+   */
+  reset(){
+    this.params.offset = 0;
+    this.datatable.reset();
+    this._isLoaded = false;
+    this.entityRef = undefined;
+    this.error = undefined;
+  }
 }

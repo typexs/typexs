@@ -1,7 +1,7 @@
 import {Component, Input} from '@angular/core';
 import {DistributedStorageService} from '../../../services/distributed_storage.service';
 import {DEFAULT_DS_OPTIONS, IDSOptions} from '../../../lib/IDSOptions';
-import {AbstractQueryEmbeddedComponent} from '@typexs/base-ng';
+import {AbstractQueryComponent} from '@typexs/base-ng';
 
 
 /**
@@ -18,7 +18,7 @@ import {AbstractQueryEmbeddedComponent} from '@typexs/base-ng';
   styleUrls: ['./query-embedded.component.scss']
 })
 export class DistributedStorageQueryEmbeddedComponent
-  extends AbstractQueryEmbeddedComponent {
+  extends AbstractQueryComponent {
 
   @Input()
   iEntityName: string;
@@ -34,6 +34,10 @@ export class DistributedStorageQueryEmbeddedComponent
 
   // reset loading entity
   ngOnInit(): void {
+    this.doInit();
+  }
+
+  doInit(){
     // pass entity name to name
     if (this.iEntityName && !this.name) {
       this.name = this.iEntityName;
