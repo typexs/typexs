@@ -14,10 +14,9 @@ import {
   NotYetImplementedError
 } from '@typexs/base';
 import { IFindOptions } from './framework/IFindOptions';
-import { ClassRef, ClassType, IClassRef, IEntityRef, ISchemaRef, METATYPE_CLASS_REF, METATYPE_ENTITY } from '@allgemein/schema-api';
+import { ClassRef, ClassType, IClassRef, IEntityRef, ISchemaRef, METATYPE_CLASS_REF } from '@allgemein/schema-api';
 import { assign } from 'lodash';
 import { isClassRef } from '@allgemein/schema-api/api/IClassRef';
-import { ClassUtils } from '@allgemein/base';
 
 export type CLS_DEF<T> = ClassType<T> | Function | string;
 
@@ -100,7 +99,9 @@ export class EntityController implements IEntityController {
 
 
   async save<T>(object: T, options?: ISaveOptions): Promise<T>;
+  // eslint-disable-next-line no-dupe-class-members
   async save<T>(object: T[], options?: ISaveOptions): Promise<T[]>;
+  // eslint-disable-next-line no-dupe-class-members
   async save<T>(object: T | T[], options: ISaveOptions = { validate: true }): Promise<T | T[]> {
     if (!this.framework) {
       throw new NotSupportedError('no framework support');
@@ -123,7 +124,9 @@ export class EntityController implements IEntityController {
 
 
   async remove<T>(object: T): Promise<T>;
+  // eslint-disable-next-line no-dupe-class-members
   async remove<T>(object: T[]): Promise<T[]>;
+  // eslint-disable-next-line no-dupe-class-members
   async remove<T>(object: T | T[]): Promise<T[] | number | T> {
     if (!this.framework) {
       throw new NotSupportedError('no framework support');
@@ -137,9 +140,10 @@ export class EntityController implements IEntityController {
 
   forClass<T>(cls: CLS_DEF<T> | IClassRef): IEntityRef {
     if (isClassRef(cls)) {
-      return this.getRegistry().find(METATYPE_ENTITY, (x: IEntityRef) => x.getClassRef().name === cls.name);
+      return this.getSchemaRef().getEntityRefs().find((x: IEntityRef) => x.getClassRef().name === cls.name);
     }
-    return this.getRegistry().find(METATYPE_ENTITY, (x: IEntityRef) => x.getClassRef().name === ClassUtils.getClassName(cls));
+    const clsName = ClassRef.getClassName(cls);
+    return this.getSchemaRef().getEntityRefs().find((x: IEntityRef) => x.getClassRef().name === clsName);
   }
 
   update<T>(cls: CLS_DEF<T>, condition: any, update: any, options?: IUpdateOptions): Promise<number> {

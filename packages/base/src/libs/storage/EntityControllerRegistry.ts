@@ -1,9 +1,6 @@
 import { IEntityController } from './IEntityController';
-import { ClassUtils } from '@allgemein/base';
-import { ClassType, IClassRef } from '@allgemein/schema-api';
+import { ClassRef, ClassType, IClassRef } from '@allgemein/schema-api';
 import { first, isEmpty } from 'lodash';
-
-// const CONTROLLER_REGISTRY = 'entity_controller_registry';
 
 export class EntityControllerRegistry {
 
@@ -12,20 +9,22 @@ export class EntityControllerRegistry {
   private entityControllers: IEntityController[] = [];
 
   add(e: IEntityController) {
-    this.entityControllers.push(e);
+    this.entityControllers.unshift(e);
   }
 
   getControllerForClass(cls: string | ClassType<any> | Function | IClassRef, hint?: { className?: string; name?: string }) {
     const controllers = this.entityControllers.filter(x => !!x.forClass(cls));
     let found = null;
-    if (controllers.length > 1 && !isEmpty(hint)) {
+    if (controllers.length > 1) {
 
-      if (hint.className) {
-        found = controllers.find(x => ClassUtils.getClassName(x as any) === hint.className);
-      }
+      if (!isEmpty(hint)) {
+        if (hint.className) {
+          found = controllers.find(x => ClassRef.getClassName(x as any) === hint.className);
+        }
 
-      if (!found && hint.name) {
-        found = controllers.find(x => x.name() === hint.name);
+        if (!found && hint.name) {
+          found = controllers.find(x => x.name() === hint.name);
+        }
       }
 
       if (!found) {
