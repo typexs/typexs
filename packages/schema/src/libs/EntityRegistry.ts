@@ -189,7 +189,7 @@ export class EntityRegistry extends DefaultNamespacedRegistry implements IJsonSc
           .getByContextAndTarget(METATYPE_SCHEMA, entityRef.getClass()) as ISchema[];
         if (metaSchemaOptionsForEntity.length > 0) {
           for (const schemaOptions of metaSchemaOptionsForEntity) {
-            this.addSchemaToEntityRef(schemaOptions.name, entityRef as IEntityRef, { override: true, onlyDefault: true });
+            this.addSchemaToEntityRef(schemaOptions.name, entityRef as IEntityRef, { override: true, onlyDefault: false });
           }
         } else {
           // no schema options add to 'default'

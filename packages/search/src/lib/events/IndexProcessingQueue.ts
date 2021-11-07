@@ -10,7 +10,9 @@ import { ClassRef } from '@allgemein/schema-api';
 
 export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
 
-  @Inject(() => IndexRuntimeStatus)
+  static NAME = IndexProcessingQueue.name;
+
+  @Inject(IndexRuntimeStatus.NAME)
   status: IndexRuntimeStatus;
 
   @Inject(Storage.NAME)

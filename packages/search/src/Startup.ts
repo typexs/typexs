@@ -1,4 +1,4 @@
-import { IBootstrap, Injector, IShutdown } from '@typexs/base';
+import { IBootstrap, IShutdown, Inject } from '@typexs/base';
 import { IndexProcessingQueue } from './lib/events/IndexProcessingQueue';
 
 /**
@@ -6,15 +6,16 @@ import { IndexProcessingQueue } from './lib/events/IndexProcessingQueue';
  */
 export class Startup implements IBootstrap, IShutdown {
 
+  @Inject(IndexProcessingQueue.NAME)
+  eventDispatcher: IndexProcessingQueue;
 
   async bootstrap() {
     // if not disable User Local handle
-    const eventDispatcher = Injector.get(IndexProcessingQueue);
-    await eventDispatcher.prepare();
+    console.log('');
+    await this.eventDispatcher.prepare();
   }
 
   async shutdown() {
-    const eventDispatcher = Injector.get(IndexProcessingQueue);
-    await eventDispatcher.shutdown();
+    await this.eventDispatcher.shutdown();
   }
 }

@@ -17,7 +17,7 @@ export class SearchIndexTask implements ITask {
   })
   entityNames: string[];
 
-  @Inject(() => IndexRuntimeStatus)
+  @Inject(IndexRuntimeStatus.NAME)
   status: IndexRuntimeStatus;
 
   @Inject(EntityControllerRegistry.NAME)

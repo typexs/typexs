@@ -8,6 +8,8 @@ import { ClassRef, ClassType } from '@allgemein/schema-api';
 
 export class IndexRuntimeStatus {
 
+  static NAME = IndexRuntimeStatus.name;
+
   @Inject(Storage.NAME)
   private storage: Storage;
 

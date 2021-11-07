@@ -1,5 +1,5 @@
 import { UseAPI } from '@typexs/base/decorators/UseAPI';
-import { EntityControllerApi, IEntityControllerApi, Inject, Injector, Invoker, Log } from '@typexs/base';
+import { EntityControllerApi, IEntityControllerApi, Injector, Invoker, Log } from '@typexs/base';
 import { ISaveOp } from '@typexs/base/libs/storage/framework/ISaveOp';
 import { IDeleteOp } from '@typexs/base/libs/storage/framework/IDeleteOp';
 import { EventBus } from '@allgemein/eventbus';
@@ -14,28 +14,39 @@ import { assign, cloneDeep, isArray, isFunction } from 'lodash';
 export class ExtendEntityControllerApi implements IEntityControllerApi {
   // check if worker is online, pass objects
 
-  @Inject(() => IndexRuntimeStatus)
-  status: IndexRuntimeStatus;
-
-  @Inject(Invoker.NAME)
   invoker: Invoker;
 
+  status: IndexRuntimeStatus;
 
+  getStatus() {
+    if (!this.status) {
+      this.status = Injector.get(IndexRuntimeStatus.NAME);
+    }
+    return this.status;
+  }
+
+
+  getInvoker() {
+    if (!this.invoker) {
+      this.invoker = Injector.get(Invoker.NAME);
+    }
+    return this.invoker;
+  }
 
 
   filterIndexableObject<T>(object: T[], registry: string) {
     const indexable: { ref: string; class: string; registry: string; obj: T }[] = [];
     for (const obj of object) {
       const name = ClassRef.getClassName(obj as any);
-      if (this.status.hasType(name, registry)) {
-        const results = this.invoker.use(IndexElasticApi).isIndexable(name, obj, registry);
+      if (this.getStatus().hasType(name, registry)) {
+        const results = this.getInvoker().use(IndexElasticApi).isIndexable(name, obj, registry);
         let pass = true;
         if (results && isArray(results) && results.length > 0) {
           pass = results.reduce((previousValue, currentValue) => previousValue && currentValue, pass);
         }
         if (pass) {
           indexable.push({
-            ...this.status.getType(name, registry),
+            ...this.getStatus().getType(name, registry),
             class: name,
             obj: obj
           });
@@ -53,9 +64,9 @@ export class ExtendEntityControllerApi implements IEntityControllerApi {
       if (indexable.find(x => x.class === name)) {
         continue;
       }
-      if (this.status.hasType(name, registry)) {
+      if (this.getStatus().hasType(name, registry)) {
         indexable.push({
-          ...this.status.getType(name, registry),
+          ...this.getStatus().getType(name, registry),
           class: name
         });
       }
@@ -65,12 +76,12 @@ export class ExtendEntityControllerApi implements IEntityControllerApi {
 
 
   isActive() {
-    return this.status.checkIfActive();
+    return this.getStatus().checkIfActive();
   }
 
 
   isWorkerActive() {
-    return this.status.isWorkerActive();
+    return this.getStatus().isWorkerActive();
   }
 
 
@@ -85,7 +96,7 @@ export class ExtendEntityControllerApi implements IEntityControllerApi {
       const prepared = filterIndexable
         .map(x => {
           const o = cloneDeep(x.obj);
-          this.invoker.use(IndexElasticApi).prepareBeforeSave(x.class, o);
+          this.getInvoker().use(IndexElasticApi).prepareBeforeSave(x.class, o);
           const r = assign(x, <any>{ action: 'save', obj: o });
           return r;
         });
@@ -137,7 +148,7 @@ export class ExtendEntityControllerApi implements IEntityControllerApi {
 
   processEvent(event: IndexEvent) {
     if (this.isWorkerActive()) {
-      EventBus.post(event).catch(err => {
+      EventBus.postAndForget(event).catch(err => {
         Log.error(err);
       });
     } else {

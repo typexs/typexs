@@ -1,4 +1,12 @@
-import { IDBType, IStorageOptions, NotSupportedError, NotYetImplementedError, REGISTRY_TYPEORM, TypeOrmStorageRef } from '@typexs/base';
+import {
+  IDBType,
+  IStorageOptions,
+  Log,
+  NotSupportedError,
+  NotYetImplementedError,
+  REGISTRY_TYPEORM,
+  TypeOrmStorageRef
+} from '@typexs/base';
 import {
   Column,
   CreateDateColumn,
@@ -81,6 +89,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
   async initialize() {
     const entities = this.schemaDef.getStorableEntities();
     for (const entity of entities) {
+      Log.debug('-> adding ' + entity.name + ' to entity registry');
       const entityClass = await this.walk(entity, null);
       this.addType(entityClass);
     }
