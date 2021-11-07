@@ -37,7 +37,7 @@ export class TypeOrmConnectionWrapper implements IConnection {
 
 
   initialize() {
-    this._fn = function() {
+    this._fn = () => {
       this.reload();
     };
     this.storageRef.on(EVENT_STORAGE_REF_PREPARED, this._fn);

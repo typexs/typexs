@@ -56,9 +56,6 @@ export class TypeOrmStorageRef extends StorageRef {
     super(defaults(options, { entities: [] }));
 
     // Apply some unchangeable and fixed options
-    // options = Utils.merge(options, FIX_STORAGE_OPTIONS);
-    // super();
-    // this.on('close', this.onCloseConnection.bind(this));
     if (options.type === 'sqlite') {
       const opts = <SqliteConnectionOptions & IStorageOptions>options;
 
@@ -108,14 +105,6 @@ export class TypeOrmStorageRef extends StorageRef {
     }
     Log.debug(`storage: use ${this.getOptions().type} for storage with options:\n${out} `);
     this.controller = new TypeOrmEntityController(this);
-
-
-    // this.on(EVENT_STORAGE_ENTITY_ADDED, () => {
-    //   clearTimeout(this.reloadTimout);
-    //   this.reloadTimout = setTimeout(async () => {
-    //     await this.reload();
-    //   }, 0);
-    // });
   }
 
 
@@ -174,7 +163,6 @@ export class TypeOrmStorageRef extends StorageRef {
           if (entryExists) {
             this.registerEntityRef(type);
           }
-
         }
       }
     }
