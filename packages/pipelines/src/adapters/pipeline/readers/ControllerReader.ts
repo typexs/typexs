@@ -31,6 +31,7 @@ export class ControllerReader<T> extends Reader {
     this.controller = registry.getControllerForClass(options.entityType);
     this.entityType = options.entityType;
 
+
   }
 
   doFetch() {

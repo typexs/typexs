@@ -434,7 +434,21 @@ export class TypeOrmStorageRef extends StorageRef {
   async reset(full: boolean = true): Promise<any> {
     this._prepared = false;
     if (getConnectionManager().has(this.name)) {
-      await this.shutdown(full);
+      if (!this.isOnlyMemory() || full) {
+        await this.closeConnections();
+      }
+      // try {
+      //   await this.closeConnection();
+      // } catch (e) {
+      // }
+
+      if (full) {
+        this.removeFromConnectionManager();
+        this.emit(EVENT_STORAGE_REF_SHUTDOWN);
+        this.removeAllListeners();
+      }
+      //
+      // await this.shutdown(full);
     }
   }
 
@@ -552,6 +566,7 @@ export class TypeOrmStorageRef extends StorageRef {
     const name = this.name;
     remove(getConnectionManager()['connections'], (connection) => connection.name === name);
   }
+
 
 
   async shutdown(full: boolean = true): Promise<void> {
