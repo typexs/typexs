@@ -74,11 +74,12 @@ export class IndexRuntimeStatus {
         if (storageRef.getFramework() === C_SEARCH_INDEX) {
           Log.debug('found search-index storage type for ' + storageRef.getName());
           storageRef.getEntityRefs().forEach((entityRef: IndexEntityRef) => {
-            Log.debug('--> marking type ' + entityRef.getEntityRef().getClassRef().name + ' for indexing in ' + ref);
+            const entity = entityRef.getEntityRef();
+            Log.debug('--> marking type ' + entity.getClassRef().name + ' (ns: ' + entity.getNamespace() + ') for indexing in ' + ref);
             this.types.push({
-              className: entityRef.getEntityRef().getClassRef().name,
+              className: entity.getClassRef().name,
               ref: ref,
-              registry: entityRef.getEntityRef().getNamespace()
+              registry: entity.getNamespace()
             });
           });
         }

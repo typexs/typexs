@@ -1,9 +1,9 @@
 import {get, has, isArray, isFunction, isRegExp, isString, merge, orderBy, remove, snakeCase} from 'lodash';
 import {IBindingInfo, IComponentBinding} from './IComponentBinding';
 import {ClassUtils} from '@allgemein/base';
-import {__CLASS__} from '@allgemein/schema-api';
+import { __CLASS__, ClassRef } from '@allgemein/schema-api';
 import {NoFormHandlerDefinedForTypeError} from '../exceptions/NoFormHandlerDefinedForTypeError';
-import {C_DEFAULT} from '../Constants';
+import { __REGISTRY__, C_DEFAULT } from '../Constants';
 
 export class ComponentRegistry {
 
@@ -45,7 +45,14 @@ export class ComponentRegistry {
     if (has(obj, __CLASS__)) {
       return obj[__CLASS__];
     }
-    return ClassUtils.getClassName(obj);
+    return ClassRef.getClassName(obj);
+  }
+
+  static getRegistryName(obj: any) {
+    if (has(obj, __REGISTRY__)) {
+      return obj[__REGISTRY__];
+    }
+    return null;
   }
 
   addHandle(typeName: string | string[], handle: Function): IComponentBinding {

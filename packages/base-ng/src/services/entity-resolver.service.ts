@@ -1,9 +1,8 @@
-import { isEmpty, isFunction, snakeCase, values } from 'lodash';
+import { first, isEmpty, isFunction, last, snakeCase, values } from 'lodash';
 import { Injectable } from '@angular/core';
-import { IEntityRef, LookupRegistry, METATYPE_ENTITY } from '@allgemein/schema-api';
+import { ClassRef, IEntityRef, LookupRegistry, METATYPE_ENTITY } from '@allgemein/schema-api';
 import { IQueringService } from './../api/querying/IQueringService';
 import { forkJoin } from 'rxjs';
-import { ComponentRegistry } from '@typexs/ng';
 import { LabelHelper } from '@typexs/base';
 
 
@@ -31,25 +30,36 @@ export class EntityResolverService {
     return ['', this.ngEntityPrefix, snakeCase(entityRef.name), encodeURIComponent(values(idKeys).join('--'))].join('/');
   }
 
-  getEntityRef(obj: any): IEntityRef {
-    const className = ComponentRegistry.getClassName(obj);
+  getEntityRef(obj: any, namespace?: string): IEntityRef {
+    let returnRef = null;
+    const className = ClassRef.getClassName(obj);
     if (['Object', 'Array'].includes(className)) {
-      return null;
+      return returnRef;
     }
     const key = 'class.' + snakeCase(className);
-    if (this.cache[key]) {
-      return this.cache[key];
+    // if (this.cache[key]) {
+    //   return this.cache[key];
+    // }
+    // const lookupNames = LookupRegistry.getRegistryNamespaces();
+
+    const refs = LookupRegistry.filter(METATYPE_ENTITY,
+      (x: IEntityRef) => snakeCase(x.getClassRef().name) === snakeCase(className)) as IEntityRef[];
+
+    if (refs.length === 1) {
+      returnRef = first(refs);
+    } else if (refs.length > 1) {
+      if (namespace) {
+        returnRef = refs.find(x => x.getNamespace() === namespace);
+      }
+      if (!returnRef) {
+        returnRef = last(refs);
+      }
     }
-    const returnRef = LookupRegistry.find(METATYPE_ENTITY,
-      (x: IEntityRef) => snakeCase(x.getClassRef().name) === snakeCase(className)) as IEntityRef;
-    if (!returnRef) {
-      return null;
-    }
-    this.cache[key] = returnRef;
+    // this.cache[key]< = returnRef;
     return returnRef;
   }
 
-  getServiceForEntity(entityRef: any) {
+  getServiceForEntity(entityRef: IEntityRef) {
     if (!entityRef) {
       return null;
     }

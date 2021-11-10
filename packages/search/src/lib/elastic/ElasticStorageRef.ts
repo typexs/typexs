@@ -109,7 +109,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
               .map(r =>
                 r.filter<IEntityRef>(METATYPE_ENTITY,
                   (x: IEntityRef) =>
-                    _.snakeCase(x.name) === machineName || x.storingName === machineName
+                    _.snakeCase(x.getClassRef().name) === machineName || x.storingName === machineName
                 )
               )
             );

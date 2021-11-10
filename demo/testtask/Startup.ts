@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import { C_STORAGE_DEFAULT, IBootstrap, IEntityController, Inject, StorageRef, XS_P_$COUNT } from '@typexs/base';
 import { TypeOrmSimpleItem } from './entities/TypeOrmSimpleItem';
 import { BuildSimpleItem } from './entities/BuildSimpleItem';
+import { InnerValue } from './entities/InnerValue';
 
 export class Startup implements IBootstrap {
 
@@ -41,6 +42,9 @@ export class Startup implements IBootstrap {
         si.stop = r * 10 + 6;
         si.text = 'Text ' + r;
         si.name = 'Name ' + r;
+        si.inner = new InnerValue();
+        si.inner.name = 'inner-' + r;
+        si.inner.text = 'testinner-' + r;
         add.push(si);
 
       }
