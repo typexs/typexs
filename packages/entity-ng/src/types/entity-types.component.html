@@ -16,7 +16,7 @@
 
       <tbody>
       <tr *ngFor="let entityDef of getEntityRefs()">
-        <td>{{entityDef.getOptions('schema')}}</td>
+        <td>{{entityDef.getOptions('schema', []).join(', ')}}</td>
         <td>{{entityDef.name}}</td>
         <td>{{entityDef.name}}</td>
         <td>

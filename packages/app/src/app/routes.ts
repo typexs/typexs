@@ -27,9 +27,18 @@ import {TreeContentDynamicChangeComponent} from './components/content-view/tree-
 import {TreeContentComponent} from './components/content-view/tree-content.component';
 import {SimpleViewVariantsComponent} from './components/content-view/simple-view-variants.component';
 import {CTXT_ROUTE_USER_LOGOUT, CTXT_ROUTE_USER_PROFILE, EntityViewPageComponent} from '@typexs/base-ng';
+import { SearchModule, SearchPageComponent } from '@typexs/search-ng';
+import { PERMISSION_ACCESS_SEARCH_VIEW } from '@typexs/search';
 
 
 export const APP_ROUTES: Routes = [
+  // ...SearchModule.getRoutes(),
+  {
+    path: 'search',
+    component: SearchPageComponent,
+    // canActivate: [AuthGuardService],
+    data: {label: 'Suche', group: 'demo'}
+  },
   {
     path: 'demo',
     component: DemosComponent,
@@ -146,6 +155,7 @@ export const APP_ROUTES: Routes = [
   //   path: 'admin',
   //   loadChildren: () => import('../admin/module').then(x => x.AdminModule)
   // },
+
   ...AdminModule.getRoutes(),
   {
     path: 'admin',

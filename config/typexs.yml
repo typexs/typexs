@@ -6,18 +6,27 @@ storage:
     synchronize: true
     type: sqlite
     # database: ':memory:'
-    database: 'tmp/db_${app.name}_server.db'
+    database: '/tmp/db_${app.name}_server.db'
     # logger: simple-console
     # logging: all
     connectOnStartup: true
+  elastic:
+    framework: search-index
+    type: elastic
+    host: localhost
+    port: 9200
+    indexTypes:
+      - entities:
+          - TypeOrmSimpleItem
+          - BuildSimpleItem
+
 
 modules:
-  paths:
-    - ./demo/
   include:
     - '**/@allgemein{,**/*}'
     - '**/@typexs{,**/*}'
     - '**/demo{,**/*}'
+    - '**/testtask{,**/*}'
 
 logging:
   enable: true

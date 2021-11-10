@@ -1,21 +1,21 @@
-import {clone, isArray, isBoolean, isEmpty, isNumber, isObjectLike, isPlainObject, isString, values} from 'lodash';
-import {IQueringService} from './IQueringService';
-import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
-import {IBuildOptions, IEntityRef, IJsonSchema, JsonSchema, supportsJsonSchemaImport} from '@allgemein/schema-api';
-import {IApiCallOptions} from '../../lib/http/IApiCallOptions';
-import {STORAGE_REQUEST_MODE} from './Constants';
-import {Log} from '../../lib/log/Log';
-import {UrlHelper} from '../../lib/UrlHelper';
-import {filter, first} from 'rxjs/operators';
-import {EntityResolverService} from '../../services/entity-resolver.service';
-import {IRoutePointer} from '../backend/IRoutePointer';
-import {IQueryServiceOptions} from './IQueryServiceOptions';
-import {IAggregateOptions} from './IAggregateOptions';
-import {IFindOptions} from './IFindOptions';
-import {ISaveOptions} from './ISaveOptions';
-import {IUpdateOptions} from './IUpdateOptions';
-import {IBackendClientService} from '../backend/IBackendClientService';
-import {IAuthServiceProvider} from '../auth/IAuthServiceProvider';
+import { clone, isArray, isBoolean, isEmpty, isNumber, isObjectLike, isPlainObject, isString, snakeCase, values } from 'lodash';
+import { IQueringService } from './IQueringService';
+import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { IBuildOptions, IEntityRef, IJsonSchema, JsonSchema, METATYPE_ENTITY, supportsJsonSchemaImport } from '@allgemein/schema-api';
+import { IApiCallOptions } from '../../lib/http/IApiCallOptions';
+import { STORAGE_REQUEST_MODE } from './Constants';
+import { Log } from '../../lib/log/Log';
+import { UrlHelper } from '../../lib/UrlHelper';
+import { filter, first } from 'rxjs/operators';
+import { EntityResolverService } from '../../services/entity-resolver.service';
+import { IRoutePointer } from '../backend/IRoutePointer';
+import { IQueryServiceOptions } from './IQueryServiceOptions';
+import { IAggregateOptions } from './IAggregateOptions';
+import { IFindOptions } from './IFindOptions';
+import { ISaveOptions } from './ISaveOptions';
+import { IUpdateOptions } from './IUpdateOptions';
+import { IBackendClientService } from '../backend/IBackendClientService';
+import { IAuthServiceProvider } from '../auth/IAuthServiceProvider';
 
 
 export abstract class AbstractQueryService implements IQueringService {
@@ -117,11 +117,13 @@ export abstract class AbstractQueryService implements IQueringService {
     if (!this.options.registry) {
       return null;
     }
-    return this.getRegistry().getEntityRefFor(name);
-    // LookupRegistry.$(this.options.registryName)
-    //   .find(XS_TYPE_ENTITY, (e: IEntityRef) => {
-    //     return e.machineName === snakeCase(name);
-    //   });
+    const snakeCaseName = snakeCase(name);
+    return this.getRegistry().find(METATYPE_ENTITY, (x: IEntityRef) =>
+      x.name === name ||
+      x.getClassRef().name === name ||
+      snakeCase(x.name) === snakeCaseName ||
+      snakeCase(x.getClassRef().name) === snakeCaseName
+    );
   }
 
 
@@ -179,14 +181,14 @@ export abstract class AbstractQueryService implements IQueringService {
               if (supportsJsonSchemaImport(reg)) {
                 await reg.fromJsonSchema(entityDefJson);
               } else {
-                await JsonSchema.unserialize(entityDefJson, {namespace: reg.getLookupRegistry().getNamespace()});
+                await JsonSchema.unserialize(entityDefJson, { namespace: reg.getLookupRegistry().getNamespace() });
               }
             }
           } else if (isObjectLike(value) && value['$schema']) {
             if (supportsJsonSchemaImport(reg)) {
               await reg.fromJsonSchema(value);
             } else {
-              await JsonSchema.unserialize(value, {namespace: reg.getLookupRegistry().getNamespace()});
+              await JsonSchema.unserialize(value, { namespace: reg.getLookupRegistry().getNamespace() });
             }
           }
           this.$isReady.next(true);
@@ -247,7 +249,7 @@ export abstract class AbstractQueryService implements IQueringService {
     if (!buildEntityId) {
       throw new Error('id for entity name is wrong ' + entityName + ' = ' + JSON.stringify(entityId));
     }
-    const apiParams = {name: entityName, id: buildEntityId};
+    const apiParams = { name: entityName, id: buildEntityId };
     const additinalQuery: any = {};
     // let apiUrl = this.apiUrl(this.options.urlGetEntity, );
     if (!isEmpty(options)) {
@@ -304,7 +306,7 @@ export abstract class AbstractQueryService implements IQueringService {
   private _query(entityName: string, query: any = null, aggr: any = null, options: IFindOptions = {}) {
     const _opts = clone(options);
     const entityDef = this.getEntityRefForName(entityName);
-    const apiParams = {name: entityName};
+    const apiParams = { name: entityName };
     const additinalQuery: any = {};
     let aggrMode = false;
     if (isPlainObject(query)) {
@@ -314,7 +316,7 @@ export abstract class AbstractQueryService implements IQueringService {
       aggrMode = true;
     } else {
       if (aggr) {
-        return of({entities: [], $count: 0, $limit: 0, $offset: 0});
+        return of({ entities: [], $count: 0, $limit: 0, $offset: 0 });
       }
     }
     if (isNumber(_opts.limit)) {
@@ -335,7 +337,7 @@ export abstract class AbstractQueryService implements IQueringService {
     const mode = aggrMode ? 'aggregate' : 'query';
     const buildOptions: IBuildOptions = {};
     this.buildOptions(mode, options, buildOptions);
-    const apiOptions = {params: apiParams, query: additinalQuery};
+    const apiOptions = { params: apiParams, query: additinalQuery };
     return this.callApi(this.getRoute(aggrMode ? 'aggregate' : 'query'), apiOptions, x => {
       x.entities = this.buildEntity(mode, entityDef, x.entities, buildOptions);
       return x;
@@ -347,7 +349,7 @@ export abstract class AbstractQueryService implements IQueringService {
       throw new Error('Url for saving entities is missing.');
     }
     const entityDef = this.getEntityRefForName(entityName);
-    const apiParams = {name: entityName};
+    const apiParams = { name: entityName };
     const additinalQuery: any = {};
     if (!isEmpty(options)) {
       additinalQuery.opts = options;
@@ -383,7 +385,7 @@ export abstract class AbstractQueryService implements IQueringService {
       throw new Error('something is wrong');
     }
 
-    const apiParams = {name: entityName, id: entityId};
+    const apiParams = { name: entityName, id: entityId };
     const additinalQuery: any = {};
     if (!isEmpty(options)) {
       additinalQuery.opts = options;
@@ -422,7 +424,7 @@ export abstract class AbstractQueryService implements IQueringService {
       throw new Error('Something is wrong.');
     }
 
-    const apiParams = {name: entityName};
+    const apiParams = { name: entityName };
     const additinalQuery: any = {
       query: condition
     };
@@ -451,7 +453,7 @@ export abstract class AbstractQueryService implements IQueringService {
       throw new Error('Url for delete entities is missing.');
     }
     const entityDef = this.getEntityRefForName(entityName);
-    const apiParams = {name: entityName, id: entityId};
+    const apiParams = { name: entityName, id: entityId };
     const additinalQuery: any = {};
     if (!isEmpty(options)) {
       additinalQuery.opts = options;
@@ -483,7 +485,7 @@ export abstract class AbstractQueryService implements IQueringService {
 
 
     const entityDef = this.getEntityRefForName(entityName);
-    const apiParams = {name: entityName};
+    const apiParams = { name: entityName };
     const additinalQuery: any = {
       query: condition
     };

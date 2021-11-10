@@ -1,5 +1,5 @@
 import {BasicPermission, IPermissionDef, IPermissions} from '@typexs/roles-api';
-import {IActivator, Injector} from '@typexs/base';
+import { IActivator, Injector, Log } from '@typexs/base';
 import {EntityRegistry} from './libs/EntityRegistry';
 import {EntityControllerFactory} from './libs/EntityControllerFactory';
 import {
@@ -25,8 +25,8 @@ export class Activator implements IActivator, IPermissions {
     const factory = Injector.get(EntityControllerFactory);
     Injector.set(EntityControllerFactory.NAME, factory);
     //
-    // Log.info('booting schema ...');
-    // await factory.initialize();
+    Log.info('booting schema ...');
+    await factory.initialize();
   }
 
 

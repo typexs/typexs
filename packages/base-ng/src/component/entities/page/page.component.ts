@@ -75,17 +75,6 @@ export class EntityViewPageComponent implements OnInit {
       this.error = `Can't find entity type for ${this.name}.`;
     });
 
-
-    // this.entityDef = this.entityService.getRegistry().getEntityRefFor(this.name);
-    // if (this.entityDef) {
-    //   this.entityService.get(this.name, this.id).subscribe((entity: any) => {
-    //     this.instance = entity;
-    //     this.ready = true;
-    //   });
-    // } else {
-    //   this.error = `Can't find entity type for ${this.name}.`;
-    // }
-
   }
 
 

@@ -1,7 +1,6 @@
-import { Inject, Injector, Storage } from '@typexs/base';
+import { Inject, Injector, Log, Storage } from '@typexs/base';
 import { C_SEARCH_INDEX } from './Constants';
 import { IndexEntityRef } from './registry/IndexEntityRef';
-import * as _ from 'lodash';
 import { isString } from 'lodash';
 import { IIndexStorageRef } from './IIndexStorageRef';
 import { ClassRef, ClassType } from '@allgemein/schema-api';
@@ -73,7 +72,9 @@ export class IndexRuntimeStatus {
       this.storage.getNames().forEach(ref => {
         const storageRef = this.storage.get(ref);
         if (storageRef.getFramework() === C_SEARCH_INDEX) {
+          Log.debug('found search-index storage type for ' + storageRef.getName());
           storageRef.getEntityRefs().forEach((entityRef: IndexEntityRef) => {
+            Log.debug('--> marking type ' + entityRef.getEntityRef().getClassRef().name + ' for indexing in ' + ref);
             this.types.push({
               className: entityRef.getEntityRef().getClassRef().name,
               ref: ref,

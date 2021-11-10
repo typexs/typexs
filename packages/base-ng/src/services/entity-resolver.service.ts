@@ -40,7 +40,8 @@ export class EntityResolverService {
     if (this.cache[key]) {
       return this.cache[key];
     }
-    const returnRef = LookupRegistry.find(METATYPE_ENTITY, (x: IEntityRef) => snakeCase(x.name) === snakeCase(className)) as IEntityRef;
+    const returnRef = LookupRegistry.find(METATYPE_ENTITY,
+      (x: IEntityRef) => snakeCase(x.getClassRef().name) === snakeCase(className)) as IEntityRef;
     if (!returnRef) {
       return null;
     }

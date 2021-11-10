@@ -15,6 +15,7 @@ import {BaseAdminThemeModule} from '@typexs/ng-theme-base';
 import {StorageModule} from '@typexs/storage-ng';
 import {EntityModule} from '@typexs/entity-ng';
 import {DistributedStorageModule} from '@typexs/distributed-storage-ng';
+import { SearchModule } from '@typexs/search-ng';
 
 
 export const APP_MODULES: Array<Type<any> | ModuleWithProviders<any> | any[]> = [
@@ -30,5 +31,6 @@ export const APP_MODULES: Array<Type<any> | ModuleWithProviders<any> | any[]> = 
   RouterModule.forRoot(APP_ROUTES),
   StorageModule,
   EntityModule,
-  DistributedStorageModule
+  DistributedStorageModule,
+  SearchModule
 ];

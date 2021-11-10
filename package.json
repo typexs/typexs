@@ -35,6 +35,7 @@
   },
   "homepage": "https://github.com/typexs/typexs#readme",
   "dependencies": {
+    "testtask": "file:./demo/testtask",
     "@typexs/base": "file:./packages/base/src",
     "@typexs/base-ng": "file:./packages/base-ng/src",
     "@typexs/distributed-storage-ng": "file:./packages/distributed-storage-ng/src",

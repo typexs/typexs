@@ -41,6 +41,8 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
       let schema = entityRef.getClassRef().getOptions('schema', false);
       if (!schema) {
         schema = 'default';
+      } else {
+        schema = schema.join('--');
       }
       const registry = entityRef.getNamespace();
       this.indexName = _.snakeCase([registry, schema, this.typeName].filter(x => !!x).join('__'));

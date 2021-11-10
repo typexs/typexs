@@ -3,7 +3,7 @@ import {Label} from '@typexs/ng';
 
 
 @Entity()
-export class SimpleItem {
+export class TypeOrmSimpleItem {
 
   @PrimaryGeneratedColumn()
   id: number;

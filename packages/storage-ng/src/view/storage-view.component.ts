@@ -22,12 +22,12 @@ export class StorageViewComponent implements OnInit {
 
   error: any = null;
 
-  constructor(public entityService: StorageService, private route: ActivatedRoute) {
+  constructor(public service: StorageService, private route: ActivatedRoute) {
   }
 
 
   ngOnInit() {
-    this.entityService.isLoaded().subscribe(x => {
+    this.service.isLoaded().subscribe(x => {
       this.load();
     });
   }
@@ -36,16 +36,15 @@ export class StorageViewComponent implements OnInit {
   load() {
     this.name = this.route.snapshot.paramMap.get('name');
     this.id = this.route.snapshot.paramMap.get('id');
-    this.entityDef = this.entityService.getRegistry().getEntityRefFor(this.name);
+    this.entityDef = this.service.getRegistry().getEntityRefFor(this.name);
     if (this.entityDef) {
-      this.entityService.get(this.name, this.id).subscribe((entity: any) => {
+      this.service.get(this.name, this.id).subscribe((entity: any) => {
         this.instance = entity;
         this.ready = true;
       });
     } else {
       this.error = `Can't find entity type for ${this.name}.`;
     }
-
   }
 
 

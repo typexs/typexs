@@ -1,6 +1,6 @@
 storage:
   default:
-    database: 'tmp/db_${app.name}_worker.db'
+    database: '/tmp/db_${app.name}_server.db'
 
 tasks:
   logdir: ./tmp/tasklog

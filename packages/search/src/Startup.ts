@@ -11,7 +11,6 @@ export class Startup implements IBootstrap, IShutdown {
 
   async bootstrap() {
     // if not disable User Local handle
-    console.log('');
     await this.eventDispatcher.prepare();
   }
 

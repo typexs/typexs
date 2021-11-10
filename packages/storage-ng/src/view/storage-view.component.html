@@ -17,9 +17,9 @@
     </div>
 
     <div>
-      <a class="btn btn-primary" [routerLink]="[entityService.getNgUrlPrefix(),name,'query' ]">Query</a>
-      <a class="btn btn-warning" [routerLink]="[entityService.getNgUrlPrefix(),name,'edit', id ]">Edit</a>
-      <a class="btn btn-danger" [routerLink]="[entityService.getNgUrlPrefix(),name,'delete', id ]">Delete</a>
+      <a class="btn btn-primary" [routerLink]="[service.getNgUrlPrefix(),name,'query' ]">Query</a>
+      <a class="btn btn-warning" [routerLink]="[service.getNgUrlPrefix(),name,'edit', id ]">Edit</a>
+      <a class="btn btn-danger" [routerLink]="[service.getNgUrlPrefix(),name,'delete', id ]">Delete</a>
     </div>
   </div>
 </div>
