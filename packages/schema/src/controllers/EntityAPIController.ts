@@ -53,7 +53,7 @@ import {
 } from '../libs/Constants';
 import { ObjectsNotValidError } from './../libs/exceptions/ObjectsNotValidError';
 import { EntityControllerApi } from '../api/entity.controller.api';
-import { IEntityRef, IJsonSchemaUnserializeOptions, JsonSchema, RegistryFactory } from '@allgemein/schema-api';
+import { IEntityRef, IJsonSchemaUnserializeOptions, JsonSchema, METATYPE_PROPERTY, RegistryFactory, T_STRING } from '@allgemein/schema-api';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import { EntityRegistry } from '../libs/EntityRegistry';
 
@@ -130,6 +130,12 @@ export class EntityAPIController {
         postProcess: (src, dst) => {
           if (isEntityRef(src)) {
             dst.schemaName = schemaName;
+          } else if (src.metaType === METATYPE_PROPERTY) {
+            const type = src.getType();
+            if (type === 'datetime') {
+              dst.type = T_STRING;
+              dst.format = 'date-time';
+            }
           }
         }
       });
