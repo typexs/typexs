@@ -62,7 +62,7 @@ import { Access } from '../decorators/Access';
 import { IRolesHolder, PermissionHelper } from '@typexs/roles-api';
 import { WalkValues } from '../libs/Helper';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
-import { assign, cloneDeep, concat, isArray, isEmpty, isFunction, isNumber, isPlainObject, isString, keys, uniq } from 'lodash';
+import { assign, cloneDeep, concat, get, isArray, isEmpty, isFunction, isNumber, isPlainObject, isString, keys, uniq } from 'lodash';
 
 @ContextGroup(C_API)
 @JsonController(API_CTRL_STORAGE_PREFIX)
@@ -783,11 +783,13 @@ export class StorageAPIController {
           dst.namespace = src.getNamespace();
         } else if (src.metaType === METATYPE_PROPERTY) {
           const type = src.getType();
-          if (type === 'datetime') {
+          const opts = src.getOptions();
+          if (type === 'datetime' || get(opts, 'metadata.options.sourceType') === 'datetime') {
             dst.type = T_STRING;
             dst.format = 'date-time';
           }
         }
+        this.invoker.use(StorageAPIControllerApi).serializationPostProcess(src, dst, serializer);
       }
     });
     for (const ref of storageRef.getEntityRefs()) {

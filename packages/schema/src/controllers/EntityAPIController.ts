@@ -11,6 +11,7 @@ import {
   Param,
   Post,
   QueryParam,
+  StorageAPIControllerApi,
   XS_P_$LABEL,
   XS_P_$URL
 } from '@typexs/server';
@@ -27,7 +28,6 @@ import {
 } from '@typexs/base';
 import { EntityRef } from '../libs/registry/EntityRef';
 import { EntityController } from '../libs/EntityController';
-import * as _ from 'lodash';
 import {
   _API_CTRL_ENTITY_DELETE_ENTITY,
   _API_CTRL_ENTITY_FIND_ENTITY,
@@ -56,6 +56,7 @@ import { EntityControllerApi } from '../api/entity.controller.api';
 import { IEntityRef, IJsonSchemaUnserializeOptions, JsonSchema, METATYPE_PROPERTY, RegistryFactory, T_STRING } from '@allgemein/schema-api';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import { EntityRegistry } from '../libs/EntityRegistry';
+import { first, get, isArray, isNumber, isPlainObject, keys } from 'lodash';
 
 
 @ContextGroup(C_API)
@@ -91,7 +92,7 @@ export class EntityAPIController {
 
 
   static _beforeBuild(entityDef: EntityRef, from: any, to: any) {
-    _.keys(from).filter(k => k.startsWith('$')).map(k => {
+    keys(from).filter(k => k.startsWith('$')).map(k => {
       to[k] = from[k];
     });
   }
@@ -116,7 +117,7 @@ export class EntityAPIController {
   @Get(_API_CTRL_ENTITY_METADATA_GET_STORE)
   @ContentType('application/json')
   async schema(
-  @Param('name') schemaName: string,
+    @Param('name') schemaName: string,
     @CurrentUser() user: any,
     @QueryParam('opts') options?: IJsonSchemaUnserializeOptions) {
     const schemaRef = this.getRegistry().getSchemaRefByName(schemaName);
@@ -127,16 +128,19 @@ export class EntityAPIController {
          * @param src
          * @param dst
          */
-        postProcess: (src, dst) => {
+        postProcess: (src, dst, serializer) => {
           if (isEntityRef(src)) {
             dst.schemaName = schemaName;
           } else if (src.metaType === METATYPE_PROPERTY) {
             const type = src.getType();
-            if (type === 'datetime') {
+            const opts = src.getOptions();
+            if (type === 'datetime' || get(opts, 'metadata.options.sourceType') === 'datetime') {
               dst.type = T_STRING;
               dst.format = 'date-time';
             }
           }
+
+          this.invoker.use(StorageAPIControllerApi).serializationPostProcess(src, dst, serializer);
         }
       });
       for (const ref of schemaRef.getEntityRefs()) {
@@ -203,23 +207,23 @@ export class EntityAPIController {
     let conditions = null;
     if (query) {
       conditions = JSON.parse(query);
-      if (!_.isPlainObject(conditions)) {
+      if (!isPlainObject(conditions)) {
         throw new Error('conditions are wrong ' + query);
       }
     }
     let sortBy = null;
     if (sort) {
       sortBy = JSON.parse(sort);
-      if (!_.isPlainObject(sortBy)) {
+      if (!isPlainObject(sortBy)) {
         throw new Error('sort by is wrong ' + sort);
       }
     }
 
-    if (!_.isNumber(limit)) {
+    if (!isNumber(limit)) {
       limit = 50;
     }
 
-    if (!_.isNumber(offset)) {
+    if (!isNumber(offset)) {
       offset = 0;
     }
 
@@ -251,7 +255,7 @@ export class EntityAPIController {
     const [entityDef, controller] = this.getControllerForEntityName(name);
     const conditions = entityDef.createLookupConditions(id);
     let result = null;
-    if (_.isArray(conditions)) {
+    if (isArray(conditions)) {
       result = await controller.find(entityDef.getClass(), { $or: conditions }, {
         hooks: {
           afterEntity: EntityAPIController._afterEntity
@@ -284,8 +288,8 @@ export class EntityAPIController {
     const [entityDef, controller] = this.getControllerForEntityName(name);
     await this.invoker.use(EntityControllerApi).beforeEntityBuild(entityDef, data, user, controller);
     let entities;
-    if (_.isArray(data)) {
-      entities = _.map(data, d => entityDef.build(d, { beforeBuild: EntityAPIController._beforeBuild }));
+    if (isArray(data)) {
+      entities = data.map(d => entityDef.build(d, { beforeBuild: EntityAPIController._beforeBuild }));
     } else {
       entities = entityDef.build(data, { beforeBuild: EntityAPIController._beforeBuild });
     }
@@ -310,8 +314,8 @@ export class EntityAPIController {
     await this.invoker.use(EntityControllerApi).beforeEntityBuild(entityDef, data, user, controller);
     // const conditions = entityDef.createLookupConditions(id);
     let entities;
-    if (_.isArray(data)) {
-      entities = _.map(data, d => entityDef.build(d, { beforeBuild: EntityAPIController._beforeBuild }));
+    if (isArray(data)) {
+      entities = data.map(d => entityDef.build(d, { beforeBuild: EntityAPIController._beforeBuild }));
     } else {
       entities = entityDef.build(data, { beforeBuild: EntityAPIController._beforeBuild });
     }
@@ -345,11 +349,11 @@ export class EntityAPIController {
   private getControllerForEntityName(name: string): [EntityRef, EntityController] {
     const entityDef = this.getEntityDef(name) as EntityRef;
     const schema = entityDef.getSchemaRefs();
-    if (!_.isArray(schema)) {
+    if (!isArray(schema)) {
       return [entityDef, this.getController(schema.name)];
     } else {
       if (schema.length === 1) {
-        return [entityDef, this.getController(_.first(schema).name)];
+        return [entityDef, this.getController(first(schema).name)];
       } else {
         throw new Error('multiple schemas for this entity, select one');
       }

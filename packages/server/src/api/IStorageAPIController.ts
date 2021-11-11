@@ -1,4 +1,5 @@
-import {IEntityRef} from '@allgemein/schema-api';
+import { IEntityRef } from '@allgemein/schema-api';
+import { IJsonSchemaSerializer } from '@allgemein/schema-api/lib/json-schema/IJsonSchemaSerializer';
 
 export type STORAGE_API_CONTROLLER_STATE = 'get' | 'query' | 'save' | 'update' | 'delete';
 
@@ -24,10 +25,17 @@ export interface IStorageAPIController {
    * @param results - can be array or single entity
    * @param callOptions - is a map with => paramName to value
    */
-  postProcessResults?(state: STORAGE_API_CONTROLLER_STATE,
-                      entityRef: IEntityRef | IEntityRef[],
-                      results: any | any[],
-                      callOptions?: any): void;
+  postProcessResults?(
+    state: STORAGE_API_CONTROLLER_STATE,
+    entityRef: IEntityRef | IEntityRef[],
+    results: any | any[],
+    callOptions?: any): void;
+
+
+  serializationPostProcess(
+    src: any,
+    dst: any,
+    serializer?: IJsonSchemaSerializer): void;
 
 
 }
