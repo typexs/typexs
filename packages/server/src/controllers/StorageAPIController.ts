@@ -51,7 +51,7 @@ import {
   XS_P_$URL
 } from '../libs/Constants';
 import { HttpResponseError } from '../libs/exceptions/HttpResponseError';
-import { IBuildOptions, IEntityRef, IJsonSchema7, IPropertyRef, JsonSchema } from '@allgemein/schema-api';
+import { IBuildOptions, IEntityRef, IJsonSchema7, IPropertyRef, JsonSchema, METATYPE_PROPERTY, T_STRING } from '@allgemein/schema-api';
 import { Expressions } from '@allgemein/expressions';
 import { IStorageRefMetadata } from '../libs/storage_api/IStorageRefMetadata';
 import { SystemNodeInfoApi } from '../api/SystemNodeInfo.api';
@@ -781,6 +781,12 @@ export class StorageAPIController {
         if (isEntityRef(src)) {
           dst.storage = storageName;
           dst.namespace = src.getNamespace();
+        } else if (src.metaType === METATYPE_PROPERTY) {
+          const type = src.getType();
+          if (type === 'datetime') {
+            dst.type = T_STRING;
+            dst.format = 'date-time';
+          }
         }
       }
     });
