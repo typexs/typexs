@@ -9,7 +9,9 @@ export class EntityControllerRegistry {
   private entityControllers: IEntityController[] = [];
 
   add(e: IEntityController) {
-    this.entityControllers.unshift(e);
+    if (!this.entityControllers.includes(e)) {
+      this.entityControllers.unshift(e);
+    }
   }
 
   getControllerForClass(cls: string | ClassType<any> | Function | IClassRef, hint?: { className?: string; name?: string }) {

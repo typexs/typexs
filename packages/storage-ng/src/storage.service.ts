@@ -86,7 +86,7 @@ export class StorageService extends AbstractQueryService implements IQueringServ
     let def = entityDef;
     if (!entityDef) {
       if (entity[__CLASS__] && entity[__REGISTRY__]) {
-        def = this.getRegistry().getEntityRefFor(entity[__CLASS__]);
+        def = RegistryFactory.get(entity[__REGISTRY__]).getEntityRefFor(entity[__CLASS__]);
       }
     }
 

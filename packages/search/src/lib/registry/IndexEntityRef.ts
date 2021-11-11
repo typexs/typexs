@@ -1,5 +1,4 @@
-import * as _ from 'lodash';
-import { assign } from 'lodash';
+import { assign, isEmpty, snakeCase } from 'lodash';
 import {
   __NS__,
   AbstractRef,
@@ -32,11 +31,12 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
    * @param indexName
    */
   constructor(entityRef: IEntityRef, indexName?: string, options?: IIndexEntityRefOptions) {
-    super('entity', entityRef.name + 'Idx', <any>entityRef.getClassRef(), C_SEARCH_INDEX);
+    super('entity', entityRef.getClassRef().name + 'Idx', <any>entityRef.getClassRef(), C_SEARCH_INDEX);
+    const classRef = entityRef.getClassRef();
     this.setOptions(options || {});
-    this.typeName = _.snakeCase(entityRef.name);
+    this.typeName = snakeCase(classRef.name);
     if (indexName) {
-      this.indexName = _.snakeCase(indexName);
+      this.indexName = snakeCase(indexName);
     } else {
       let schema = entityRef.getClassRef().getOptions('schema', false);
       if (!schema) {
@@ -45,7 +45,7 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
         schema = schema.join('--');
       }
       const registry = entityRef.getNamespace();
-      this.indexName = _.snakeCase([registry, schema, this.typeName].filter(x => !!x).join('__'));
+      this.indexName = snakeCase([registry, schema, this.typeName].filter(x => !!x).join('__'));
     }
     this.entityRef = entityRef;
   }
@@ -76,7 +76,7 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
   }
 
   id(): string {
-    return _.snakeCase([this.getIndexName(), this.getTypeName()].join('--'));
+    return snakeCase([this.getIndexName(), this.getTypeName()].join('--'));
   }
 
   getPropertyRefs() {
@@ -93,7 +93,7 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
       return true;
     } else if (instance[__CLASS__] && (instance[__CLASS__] === this.name || this.getEntityRef().name === instance[__CLASS__])) {
       return true;
-    } else if (!_.isEmpty(instance[__ID__]) && instance[__TYPE__] === this.getTypeName()) {
+    } else if (!isEmpty(instance[__ID__]) && instance[__TYPE__] === this.getTypeName()) {
       return true;
     }
     return false;

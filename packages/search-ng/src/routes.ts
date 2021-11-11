@@ -8,6 +8,6 @@ export const SEARCH_ROUTES: Routes = [
     path: 'search',
     component: SearchPageComponent,
     canActivate: [AuthGuardService],
-    data: {label: 'Suche', isAuthenticated: true, permissions: [PERMISSION_ACCESS_SEARCH_VIEW]}
+    data: {label: 'Search', isAuthenticated: true, permissions: [PERMISSION_ACCESS_SEARCH_VIEW]}
   }
 ];

@@ -5,6 +5,7 @@ import { IElasticFindOptions, ISearchFacet } from '@typexs/search';
 import { And, ExprDesc, Expressions, In, Key, Like, Value } from '@allgemein/expressions';
 import { QueryAction } from '../query-form/QueryAction';
 import { StorageService } from '@typexs/storage-ng';
+import { __CLASS__, __NS__ } from '@allgemein/schema-api';
 
 
 /**
@@ -25,7 +26,8 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
 
   @Input()
   facets: ISearchFacet[] = [
-    { name: 'type', type: 'value', field: '__type.keyword' },
+    { name: 'Type', type: 'value', field: __CLASS__ + '.keyword' },
+    { name: 'Namespace', type: 'value', field: __NS__ + '.keyword' },
     // { name: 'sap_client', type: 'value', field: '_clientId.keyword' }
   ];
 
@@ -48,7 +50,7 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
 
 
   ngOnInit() {
-   super.ngOnInit();
+    super.ngOnInit();
   }
 
   doInit(){
