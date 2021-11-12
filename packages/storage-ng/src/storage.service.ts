@@ -24,7 +24,7 @@ import {
   IQueringService,
   STORAGE_REQUEST_MODE
 } from '@typexs/base-ng';
-import { C_SKIP_BUILDS, C_RAW } from '@typexs/ng';
+import { C_RAW, C_SKIP_BUILDS } from '@typexs/ng';
 
 @Injectable()
 export class StorageService extends AbstractQueryService implements IQueringService {
@@ -93,7 +93,7 @@ export class StorageService extends AbstractQueryService implements IQueringServ
     if (def) {
       const dynamic = def.getOptions(C_FLEXIBLE);
       if (get(options, C_SKIP_BUILDS, false) || dynamic === true) {
-        const x = def.create();
+        const x = def.create(false);
         assign(x, entity);
         return x;
       }

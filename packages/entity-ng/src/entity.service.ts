@@ -90,7 +90,7 @@ export class EntityService extends AbstractQueryService implements IQueringServi
     if (def) {
       const dynamic = def.getOptions(C_FLEXIBLE);
       if (get(options, C_SKIP_BUILDS, false) || dynamic === true) {
-        const x = def.create();
+        const x = def.create(false);
         assign(x, entity);
         return x;
       }
