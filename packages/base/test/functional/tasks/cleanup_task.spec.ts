@@ -2,7 +2,7 @@ import { TaskState } from '../../../src';
 import * as _ from 'lodash';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-import { TestHelper } from '../TestHelper';
+import { TestHelper } from '@typexs/testing';
 import { TaskExecutor } from '../../../src/libs/tasks/TaskExecutor';
 import { TEST_STORAGE_OPTIONS } from '../config';
 import { ITaskRunnerResult } from '../../../src/libs/tasks/ITaskRunnerResult';

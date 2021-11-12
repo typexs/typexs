@@ -1,7 +1,7 @@
 import {suite, test} from '@testdeck/mocha';
 import {expect} from 'chai';
 
-import {TestHelper} from '../TestHelper';
+import {TestHelper} from '@typexs/testing';
 import {Log} from '../../../src/libs/logging/Log';
 import {Injector} from '../../../src/libs/di/Injector';
 import {RegistryFactory} from '@allgemein/schema-api';

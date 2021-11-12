@@ -1,6 +1,5 @@
 import {expect} from 'chai';
 import {suite, test} from '@testdeck/mocha';
-import {TestHelper} from '../TestHelper';
 import {Counters} from '../../../src/libs/helper/Counters';
 
 @suite('functional/helper/counters')

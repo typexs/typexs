@@ -4,8 +4,8 @@ import * as path from 'path';
 import {expect} from 'chai';
 import {Bootstrap} from '../../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
-import {TestHelper} from '../../TestHelper';
-import {SpawnHandle} from '../../SpawnHandle';
+import {TestHelper} from '@typexs/testing';
+import {SpawnHandle} from '@typexs/testing';
 import {Injector} from '../../../../src/libs/di/Injector';
 import {ConfigExchange} from '../../../../src/adapters/exchange/config/ConfigExchange';
 

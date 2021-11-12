@@ -16,7 +16,7 @@ import {
   USED_SOURCES_ONLY,
   VALIDATE_ONLY
 } from '../../../src/libs/config/Constants';
-import { TestHelper } from '../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 let bootstrap: Bootstrap;
 let commands: ICommand[] = [];

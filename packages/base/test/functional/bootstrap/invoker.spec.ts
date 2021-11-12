@@ -9,7 +9,7 @@ import {Container} from 'typedi';
 import {Invoker} from '../../../src/base/Invoker';
 import {K_CLS_API, K_CLS_USE_API} from '../../../src/libs/Constants';
 import {AwesomeApi} from './fake_app/src/api/Awesome.api';
-import {TestHelper} from '../TestHelper';
+import {TestHelper} from '@typexs/testing';
 
 
 @suite('functional/bootstrap/invoker')

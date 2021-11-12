@@ -5,7 +5,7 @@ import { IQueueProcessor } from '../../../src/libs/queue/IQueueProcessor';
 import { AsyncWorkerQueue } from '../../../src/libs/queue/AsyncWorkerQueue';
 import { Cache } from '../../../src/libs/cache/Cache';
 import { RedisCacheAdapter } from '../../../src';
-import { TestHelper } from '../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 class Workload implements IQueueWorkload {
 

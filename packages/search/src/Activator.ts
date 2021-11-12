@@ -8,12 +8,10 @@ export class Activator implements IActivator, IPermissions {
 
   startup() {
 
-    const status = Injector.create(IndexRuntimeStatus);
+    const status = Injector.get(IndexRuntimeStatus);
     Injector.set(IndexRuntimeStatus.NAME, status);
-    Injector.set(IndexRuntimeStatus, status);
-    const queue = Injector.create(IndexProcessingQueue);
+    const queue = Injector.get(IndexProcessingQueue);
     Injector.set(IndexProcessingQueue.NAME, queue);
-    Injector.set(IndexProcessingQueue, queue);
   }
 
 

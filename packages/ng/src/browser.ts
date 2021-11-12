@@ -14,7 +14,6 @@ export { NoFormTypeDefinedError } from './lib/exceptions/NoFormTypeDefinedError'
 
 
 export { Checkbox } from './lib/forms/decorators/Checkbox';
-export { DynamicProperties } from './lib/forms/decorators/DynamicProperties';
 export { Grid } from './lib/forms/decorators/Grid';
 export { Hidden } from './lib/forms/decorators/Hidden';
 export { Label } from './lib/forms/decorators/Label';

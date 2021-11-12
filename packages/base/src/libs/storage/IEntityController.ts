@@ -16,6 +16,14 @@ export interface IEntityController {
 
   forClass(cls: CLS_DEF<any>): IEntityRef;
 
+  /**
+   * Return query for id search
+   *
+   * @param cls
+   * @param entity
+   */
+  entityIdQuery?(cls: IEntityRef, entity: any): any;
+
   findOne<T>(fn: CLS_DEF<T>, conditions?: any, options?: IFindOptions): Promise<T>;
 
   find<T>(fn: CLS_DEF<T>, conditions?: any, options?: IFindOptions): Promise<T[]>;

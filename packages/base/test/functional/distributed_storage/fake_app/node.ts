@@ -7,7 +7,7 @@ import {generateSqlDataRows} from '../helper';
 import {Injector} from '../../../../src/libs/di/Injector';
 import {C_STORAGE_DEFAULT} from '../../../../src/libs/Constants';
 import {StorageRef} from '../../../../src/libs/storage/StorageRef';
-import { TestHelper } from '../../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 (async function () {
   const LOG_EVENT = !!process.argv.find(x => x === '--enable_log');

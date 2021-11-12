@@ -10,8 +10,8 @@ import { EventBus, IEventBusConfiguration, RedisEventBusAdapter, subscribe } fro
 import { TaskQueueWorker } from '../../../src/workers/TaskQueueWorker';
 import { SimpleWorkerTask } from './tasks/SimpleWorkerTask';
 import { TaskEvent } from '../../../src/libs/tasks/event/TaskEvent';
-import { TestHelper } from '../TestHelper';
-import { SpawnHandle } from '../SpawnHandle';
+import { TestHelper } from '@typexs/testing';
+import { SpawnHandle } from '@typexs/testing';
 import { TaskCommand } from '../../../src/commands/TaskCommand';
 import { SimpleTaskWithLog } from './tasks/SimpleTaskWithLog';
 import { TaskRequestFactory } from '../../../src/libs/tasks/worker/TaskRequestFactory';

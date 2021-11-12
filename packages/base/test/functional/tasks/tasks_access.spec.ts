@@ -2,7 +2,7 @@ import {suite, test} from '@testdeck/mocha';
 import {expect} from 'chai';
 import {Log} from '../../../src/libs/logging/Log';
 
-import {TestHelper} from '../TestHelper';
+import {TestHelper} from '@typexs/testing';
 import {Tasks} from '../../../src/libs/tasks/Tasks';
 import {RegistryFactory} from '@allgemein/schema-api';
 import {C_TASKS} from '../../../src/libs/tasks/Constants';

@@ -6,7 +6,7 @@ import {expect} from 'chai';
 import {Bootstrap} from '../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
 import {TypeOrmStorageRef} from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
-import { TestHelper } from '../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 
 @suite('functional/storage/schema_handler')

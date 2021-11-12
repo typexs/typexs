@@ -7,7 +7,7 @@ import { Bootstrap, StorageRef } from '../../../../src';
 import { WithNumbers } from './scenarios/app_types/entities/WithNumbers';
 import { WithJson } from './scenarios/app_types/entities/WithJson';
 import { WithDate } from './scenarios/app_types/entities/WithDate';
-import { TestHelper } from '../../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 
 let bootstrap: Bootstrap = null;

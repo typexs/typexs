@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IEntityRef } from '@allgemein/schema-api';
 import { EntityResolverService } from '../../../services/entity-resolver.service';
-import { LabelHelper } from '@typexs/base';
+import { C_FLEXIBLE, LabelHelper } from '@typexs/base';
 
 
 @Component({
@@ -56,7 +56,7 @@ export class EntityViewPageComponent implements OnInit {
 
     const opts = {};
     this.entityRef = this.resolver.getEntityRef(this.name);
-    const dynamic = this.entityRef.getOptions('dynamic');
+    const dynamic = this.entityRef.getOptions(C_FLEXIBLE);
     if (dynamic === true) {
       opts['raw'] = true;
     }

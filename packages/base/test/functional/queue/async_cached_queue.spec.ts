@@ -6,7 +6,7 @@ import { AsyncWorkerQueue } from '../../../src/libs/queue/AsyncWorkerQueue';
 import { QueueJob } from '../../../src/libs/queue/QueueJob';
 import { Cache } from '../../../src/libs/cache/Cache';
 import { MemoryCacheAdapter } from '../../../src';
-import { TestHelper } from '../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 class Workload implements IQueueWorkload {
 

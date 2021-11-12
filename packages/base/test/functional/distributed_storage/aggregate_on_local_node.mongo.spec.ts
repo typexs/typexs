@@ -5,7 +5,7 @@ import {Config} from '@allgemein/config';
 import {TEST_MONGO_STORAGE_OPTIONS} from '../config';
 import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {Container} from 'typedi';
-import {TestHelper} from '../TestHelper';
+import {TestHelper} from '@typexs/testing';
 
 import {DistributedStorageEntityController} from '../../../src/libs/distributed_storage/DistributedStorageEntityController';
 import {ITypexsOptions} from '../../../src/libs/ITypexsOptions';

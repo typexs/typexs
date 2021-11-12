@@ -20,6 +20,7 @@ import {
 } from '@typexs/schema';
 import { __CLASS__, __NS__, IBuildOptions, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
 import { C_SKIP_BUILDS, C_RAW } from '@typexs/ng';
+import { C_FLEXIBLE } from '@typexs/base';
 
 
 @Injectable()
@@ -87,7 +88,7 @@ export class EntityService extends AbstractQueryService implements IQueringServi
     }
 
     if (def) {
-      const dynamic = def.getOptions('dynamic');
+      const dynamic = def.getOptions(C_FLEXIBLE);
       if (get(options, C_SKIP_BUILDS, false) || dynamic === true) {
         const x = def.create();
         assign(x, entity);

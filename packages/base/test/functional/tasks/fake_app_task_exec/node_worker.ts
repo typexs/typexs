@@ -3,7 +3,7 @@ import {Config} from '@allgemein/config';
 import {ITypexsOptions} from '../../../../src/libs/ITypexsOptions';
 import {Bootstrap} from '../../../../src/Bootstrap';
 import { EventBus, IEventBusConfiguration, RedisEventBusAdapter } from '@allgemein/eventbus';
-import { TestHelper } from '../../TestHelper';
+import { TestHelper } from '@typexs/testing';
 (async function () {
   EventBus.registerAdapter(RedisEventBusAdapter);
   const LOG_EVENT = !!process.argv.find(x => x === '--enable_log');

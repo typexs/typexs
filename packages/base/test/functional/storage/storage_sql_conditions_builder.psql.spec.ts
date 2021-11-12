@@ -8,7 +8,7 @@ import {TypeOrmEntityRegistry} from '../../../src/libs/storage/framework/typeorm
 import {SelectQueryBuilder} from 'typeorm';
 import {Config} from '@allgemein/config';
 import {TypeOrmStorageRef} from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
-import { TestHelper } from '../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 let bootstrap: Bootstrap;
 let CarCond: any = null;

@@ -4,7 +4,7 @@ import {expect} from 'chai';
 import {Bootstrap} from '../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
 import {TestEntity} from './fake_app/entities/TestEntity';
-import { TestHelper } from '../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 
 let bootstrap: Bootstrap = null;

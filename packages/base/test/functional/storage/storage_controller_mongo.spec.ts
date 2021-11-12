@@ -9,7 +9,7 @@ import {TypeOrmEntityController} from '../../../src/libs/storage/framework/typeo
 import {TypeOrmStorageRef} from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
 import {getMetadataArgsStorage} from 'typeorm';
 import {TypeOrmEntityRegistry} from '../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
-import { TestHelper } from '../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 
 let bootstrap: Bootstrap;

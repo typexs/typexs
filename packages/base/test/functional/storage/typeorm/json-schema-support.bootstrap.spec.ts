@@ -6,7 +6,7 @@ import {Config} from '@allgemein/config';
 import {PlatformUtils} from '@allgemein/base';
 import {REGISTRY_TYPEORM, TypeOrmConnectionWrapper} from '../../../../src';
 import {RegistryFactory} from '@allgemein/schema-api';
-import { TestHelper } from '../../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 
 let bootstrap: Bootstrap = null;

@@ -7,13 +7,13 @@ import {Config} from '@allgemein/config';
 import {TEST_STORAGE_OPTIONS} from '../config';
 import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {Container} from 'typedi';
-import {TestHelper} from '../TestHelper';
+import {TestHelper} from '@typexs/testing';
 
 import {DistributedStorageEntityController} from '../../../src/libs/distributed_storage/DistributedStorageEntityController';
 import {ITypexsOptions} from '../../../src/libs/ITypexsOptions';
 import {DataRow} from './fake_app/entities/DataRow';
 import {IEntityController} from '../../../src/libs/storage/IEntityController';
-import {SpawnHandle} from '../SpawnHandle';
+import {SpawnHandle} from '@typexs/testing';
 import {generateSqlDataRows} from './helper';
 import {Injector} from '../../../src/libs/di/Injector';
 import {__NODE_ID__, __REGISTRY__, C_STORAGE_DEFAULT, XS_P_$COUNT} from '../../../src/libs/Constants';

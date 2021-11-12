@@ -10,7 +10,7 @@ import {Column, Entity, getMetadataArgsStorage, PrimaryGeneratedColumn} from 'ty
 import {TypeOrmConnectionWrapper} from '../../../src/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
 import {EVENT_STORAGE_REF_PREPARED} from '../../../src/libs/storage/framework/typeorm/Constants';
 import {TypeOrmStorageRef} from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
-import { TestHelper } from '../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 let bootstrap: Bootstrap;
 

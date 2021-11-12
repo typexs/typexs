@@ -3,7 +3,7 @@ import {Config} from '@allgemein/config';
 import {ITypexsOptions} from '../../../../../src/libs/ITypexsOptions';
 import {SPAWN_TIMEOUT, TEST_STORAGE_OPTIONS} from '../../../config';
 import {Bootstrap} from '../../../../../src/Bootstrap';
-import { TestHelper } from '../../../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 (async function () {
   const LOG_EVENT = !!process.argv.find(x => x === '--enable_log');

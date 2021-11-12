@@ -19,6 +19,7 @@ export { IModule } from './api/IModule';
 export { IShutdown } from './api/IShutdown';
 
 export { UseAPI } from './decorators/UseAPI';
+export { FlexibleProperties } from './decorators/FlexibleProperties';
 
 export { IHttpHeaders } from './libs/IHttpHeaders';
 export { IKeyValuePair } from './libs/IKeyValuePair';
@@ -56,8 +57,7 @@ export { IDBType } from './libs/storage/IDBType';
 export { IValidationError } from './libs/storage/IValidationError';
 export { IValidationMessage } from './libs/storage/IValidationMessage';
 export { IValidationResult } from './libs/storage/IValidationResult';
-// export { Storage } from './libs/storage/Storage';
-// export { StorageRef } from './libs/storage/StorageRef';
+export { STATE_KEY, C_FLEXIBLE, DEFAULT_STORAGEREF_OPTIONS, K_GENERATED, K_IDENTIFIER, K_NULLABLE } from './libs/storage/Constants';
 
 export { IOp } from './libs/storage/framework/IOp';
 export { IUpdateOp } from './libs/storage/framework/IUpdateOp';

@@ -10,7 +10,7 @@ import { DataEntity } from './fake_app_controller/entities/DataEntity';
 import { SearchEntity } from './fake_app_controller/entities/SearchEntity';
 import { ElasticEntityController } from '../../src/lib/elastic/ElasticEntityController';
 import { HttpFactory, IHttp } from '@allgemein/http';
-import { API_CTRL_STORAGE_FIND_ENTITY, WebServer } from '@typexs/server';
+import { API_CTRL_STORAGE_FIND_ENTITY, API_CTRL_STORAGE_GET_ENTITY, API_CTRL_STORAGE_METADATA_GET_STORE, WebServer } from '@typexs/server';
 import { TestHelper } from './TestHelper';
 import { __ID__, __TYPE__, C_ELASTIC_SEARCH, C_SEARCH_INDEX, ES_IDFIELD } from '../../src/lib/Constants';
 import { IElasticStorageRefOptions } from '../../src';
@@ -201,6 +201,258 @@ class TypexsSearchRouterApi {
 
 
   @test
+  async 'get metadata'() {
+    const url = 'http://localhost:4500/api' + API_CTRL_STORAGE_METADATA_GET_STORE.replace(':name', 'elastic');
+    const response = await http.get(url, { responseType: 'json', passBody: true });
+    expect(response).to.be.deep.eq({
+      'name': 'elastic',
+      'type': 'elastic',
+      'framework': 'search-index',
+      'options': {
+        'framework': 'search-index',
+        'type': 'elastic',
+        'connectOnStartup': true,
+        'host': 'localhost',
+        'port': 9200,
+        'indexTypes': [
+          {
+            'index': 'core',
+            'entities': [
+              'GreatEntity'
+            ]
+          },
+          {
+            'index': 'data_index',
+            'entities': [
+              'DataEntity'
+            ]
+          },
+          {
+            'index': 'search_index',
+            'entities': [
+              'SearchEntity'
+            ]
+          }
+        ],
+        'entities': [],
+        'name': 'elastic'
+      },
+      'schema': {
+        '$schema': 'http://json-schema.org/draft-07/schema#',
+        'definitions': {
+          'GreatEntityIdx': {
+            'title': 'GreatEntityIdx',
+            'type': 'object',
+            '$id': '#GreatEntityIdx',
+            'allowAutoAppendAllField': false,
+            'flexible': true,
+            'storage': 'elastic',
+            'namespace': 'search-index',
+            'properties': {
+              'id': {
+                'type': 'number',
+                'metadata': {
+                  'propertyName': 'id',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'int',
+                    'primary': true
+                  }
+                },
+                'tableType': 'column',
+                'identifier': true
+              },
+              'name': {
+                'type': 'string',
+                'metadata': {
+                  'propertyName': 'name',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'varchar'
+                  }
+                },
+                'tableType': 'column'
+              }
+            }
+          },
+          'DataEntityIdx': {
+            'title': 'DataEntityIdx',
+            'type': 'object',
+            '$id': '#DataEntityIdx',
+            'allowAutoAppendAllField': false,
+            'flexible': true,
+            'storage': 'elastic',
+            'namespace': 'search-index',
+            'properties': {
+              'id': {
+                'type': 'number',
+                'metadata': {
+                  'propertyName': 'id',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'int',
+                    'primary': true
+                  }
+                },
+                'tableType': 'column',
+                'identifier': true
+              },
+              'name': {
+                'type': 'string',
+                'metadata': {
+                  'propertyName': 'name',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'varchar'
+                  }
+                },
+                'tableType': 'column'
+              },
+              'text': {
+                'type': 'string',
+                'metadata': {
+                  'propertyName': 'text',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'varchar'
+                  }
+                },
+                'tableType': 'column'
+              },
+              'someNumber': {
+                'type': 'number',
+                'metadata': {
+                  'propertyName': 'someNumber',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'int'
+                  }
+                },
+                'tableType': 'column'
+              },
+              'date': {
+                'type': 'string',
+                'format': 'date-time',
+                'metadata': {
+                  'propertyName': 'date',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'datetime'
+                  }
+                },
+                'tableType': 'column'
+              },
+              'enabled': {
+                'type': 'boolean',
+                'metadata': {
+                  'propertyName': 'enabled',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'boolean'
+                  }
+                },
+                'tableType': 'column'
+              }
+            }
+          },
+          'SearchEntityIdx': {
+            'title': 'SearchEntityIdx',
+            'type': 'object',
+            '$id': '#SearchEntityIdx',
+            'allowAutoAppendAllField': false,
+            'flexible': true,
+            'storage': 'elastic',
+            'namespace': 'search-index',
+            'properties': {
+              'id': {
+                'type': 'number',
+                'metadata': {
+                  'propertyName': 'id',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'int',
+                    'primary': true
+                  }
+                },
+                'tableType': 'column',
+                'identifier': true
+              },
+              'search': {
+                'type': 'string',
+                'metadata': {
+                  'propertyName': 'search',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'varchar'
+                  }
+                },
+                'tableType': 'column'
+              },
+              'textus': {
+                'type': 'string',
+                'metadata': {
+                  'propertyName': 'textus',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'varchar'
+                  }
+                },
+                'tableType': 'column'
+              },
+              'numerus': {
+                'type': 'number',
+                'metadata': {
+                  'propertyName': 'numerus',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'int'
+                  }
+                },
+                'tableType': 'column'
+              },
+              'datus': {
+                'type': 'string',
+                'format': 'date-time',
+                'metadata': {
+                  'propertyName': 'datus',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'datetime'
+                  }
+                },
+                'tableType': 'column'
+              },
+              'enabled': {
+                'type': 'boolean',
+                'metadata': {
+                  'propertyName': 'enabled',
+                  'mode': 'regular',
+                  'options': {
+                    'type': 'boolean'
+                  }
+                },
+                'tableType': 'column'
+              }
+            }
+          }
+        },
+        'anyOf': [
+          {
+            '$ref': '#/definitions/GreatEntityIdx'
+          },
+          {
+            '$ref': '#/definitions/DataEntityIdx'
+          },
+          {
+            '$ref': '#/definitions/SearchEntityIdx'
+          }
+        ]
+      }
+    });
+  }
+
+
+  @test
   async 'find entities by given type'() {
     const url = 'http://localhost:4500/api' + API_CTRL_STORAGE_FIND_ENTITY.replace(':name', 'SearchEntityIdx');
     const response = await http.get(url, { responseType: 'json', passBody: true });
@@ -235,10 +487,38 @@ class TypexsSearchRouterApi {
     expect(response['entities']).to.have.length(50);
   }
 
-  @test.skip()
-  async 'get entity'() {
 
+  @test
+  async 'get entity'() {
+    const url = 'http://localhost:4500/api' + API_CTRL_STORAGE_GET_ENTITY
+      .replace(':name', 'SearchEntityIdx')
+      .replace(':id', '0');
+
+    const response = await http.get(url, { responseType: 'json', passBody: true });
+    expect(response).to.be.deep.eq({
+      '__ID__': '0',
+      '__TYPE__': 'search_entity',
+      'id': 0,
+      'datus': '2019-12-30T23:00:00.000Z',
+      'search': 'ipsum',
+      'textus': 'ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod ' +
+        'tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam ' +
+        'et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor ' +
+        'sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut ' +
+        'labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. ' +
+        'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+      'numerus': 0,
+      'enabled': false,
+      '_id': 'search_entity--0',
+      '$score': 1,
+      '$url': '/storage/entity/search_entity_idx/0',
+      '$label': '0',
+      '__CLASS__': 'SearchEntityIdx',
+      '__NS__': 'search-index'
+
+    });
   }
+
 
   @test.skip()
   async 'save entity'() {

@@ -12,7 +12,7 @@ import {C_STORAGE_DEFAULT} from '../../../src/libs/Constants';
 import {TaskLog} from '../../../src/entities/TaskLog';
 import {StorageRef} from '../../../src/libs/storage/StorageRef';
 import { LockFactory } from '@allgemein/base';
-import { TestHelper } from '../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 
 const stdMocks = require('std-mocks');

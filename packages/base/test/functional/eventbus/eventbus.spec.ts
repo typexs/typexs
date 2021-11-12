@@ -6,8 +6,8 @@ import {Config} from '@allgemein/config';
 import {TEST_STORAGE_OPTIONS} from '../config';
 import {EventBus, IEventBusConfiguration} from '@allgemein/eventbus';
 import {Container} from 'typedi';
-import {TestHelper} from '../TestHelper';
-import {SpawnHandle} from '../SpawnHandle';
+import {TestHelper} from '@typexs/testing';
+import {SpawnHandle} from '@typexs/testing';
 import {SystemNodeInfo} from '../../../src/entities/SystemNodeInfo';
 
 import {DistributedStorageEntityController} from '../../../src/libs/distributed_storage/DistributedStorageEntityController';

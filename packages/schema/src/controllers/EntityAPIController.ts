@@ -134,7 +134,9 @@ export class EntityAPIController {
           } else if (src.metaType === METATYPE_PROPERTY) {
             const type = src.getType();
             const opts = src.getOptions();
-            if (type === 'datetime' || get(opts, 'metadata.options.sourceType') === 'datetime') {
+            if (type === 'datetime' ||
+              get(opts, 'metadata.options.sourceType') === 'datetime' ||
+              get(opts, 'metadata.options.sourceType') === 'date') {
               dst.type = T_STRING;
               dst.format = 'date-time';
             }

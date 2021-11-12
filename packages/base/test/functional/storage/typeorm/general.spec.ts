@@ -16,7 +16,7 @@ import {TypeOrmStorageRef} from '../../../../src/libs/storage/framework/typeorm/
 import {BaseConnectionOptions} from 'typeorm/connection/BaseConnectionOptions';
 import {C_DEFAULT} from '@allgemein/base';
 import {Injector} from '../../../../src/libs/di/Injector';
-import { TestHelper } from '../../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 
 let bootstrap: Bootstrap;

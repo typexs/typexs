@@ -74,4 +74,9 @@ export class ElasticUtils {
     }
     return resolved;
   }
+
+
+  static buildIdQuery(entityRef: IndexEntityRef, id: any) {
+    return [entityRef.getTypeName(), id].join('--');
+  }
 }

@@ -5,7 +5,7 @@ import {Config} from '@allgemein/config';
 import {TEST_STORAGE_OPTIONS} from '../config';
 import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {Container} from 'typedi';
-import {TestHelper} from '../TestHelper';
+import {TestHelper} from '@typexs/testing';
 
 import {DistributedStorageEntityController} from '../../../src/libs/distributed_storage/DistributedStorageEntityController';
 import {ITypexsOptions} from '../../../src/libs/ITypexsOptions';
@@ -14,7 +14,7 @@ import * as _ from 'lodash';
 import {Injector} from '../../../src/libs/di/Injector';
 import {__NODE_ID__, __REGISTRY__, C_STORAGE_DEFAULT} from '../../../src/libs/Constants';
 import {StorageRef} from '../../../src/libs/storage/StorageRef';
-import {SpawnHandle} from '../SpawnHandle';
+import {SpawnHandle} from '@typexs/testing';
 import {generateSqlDataRows} from './helper';
 import {__CLASS__} from '@allgemein/schema-api';
 

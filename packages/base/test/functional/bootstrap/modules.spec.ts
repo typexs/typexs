@@ -6,7 +6,7 @@ import {expect} from 'chai';
 import {Bootstrap} from '../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
 import {RuntimeLoader} from '../../../src/base/RuntimeLoader';
-import {TestHelper} from '../TestHelper';
+import {TestHelper} from '@typexs/testing';
 
 
 @suite('functional/bootstrap/modules')

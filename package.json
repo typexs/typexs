@@ -54,9 +54,11 @@
     "@typexs/search-ng": "file:./packages/search-ng/src",
     "@typexs/server": "file:./packages/server/src",
     "@typexs/storage-ng": "file:./packages/storage-ng/src",
-    "@typexs/tasks-ng": "file:./packages/tasks-ng/src"
+    "@typexs/tasks-ng": "file:./packages/tasks-ng/src",
+    "@typexs/testing": "file:./packages/testing/src"
   },
   "devDependencies": {
+    "ajv": "^8.2.0",
     "@allgemein/http": "^1.2.0",
     "@allgemein/packaging": "^1.2.14",
     "@allgemein/schema-api": "^1.5.2",

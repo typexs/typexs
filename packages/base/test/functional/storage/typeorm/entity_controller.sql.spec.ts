@@ -7,7 +7,7 @@ import {ClassType} from '@allgemein/schema-api';
 import {XS_P_$COUNT} from '../../../../src/libs/Constants';
 import {TypeOrmStorageRef} from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
 import {IEntityController} from '../../../../src/libs/storage/IEntityController';
-import { TestHelper } from '../../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 let bootstrap: Bootstrap;
 let storageRef: TypeOrmStorageRef;

@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import {suite, test} from '@testdeck/mocha';
 import {expect} from 'chai';
-import {TestHelper} from '../TestHelper';
+import {TestHelper} from '@typexs/testing';
 import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';

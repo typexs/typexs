@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { CLS_DEF, IEntityController, NotYetImplementedError } from '@typexs/base';
 import { ElasticStorageRef } from './ElasticStorageRef';
-import { IClassRef } from '@allgemein/schema-api';
+import { IClassRef, IEntityRef } from '@allgemein/schema-api';
 import { ElasticConnection } from './ElasticConnection';
 import { SaveOp } from './ops/SaveOp';
 import { FindOp } from './ops/FindOp';
@@ -11,6 +11,9 @@ import { IElasticDeleteOptions } from './ops/IElasticDeleteOptions';
 import { IElasticSaveOptions } from './ops/IElasticSaveOptions';
 import { IElasticUpdateOptions } from './ops/IElasticUpdateOptions';
 import { DeleteOp } from './ops/DeleteOp';
+import { OpsHelper } from './ops/OpsHelper';
+import { IndexEntityRef } from '../registry/IndexEntityRef';
+import { ElasticUtils } from './ElasticUtils';
 
 export class ElasticEntityController implements IEntityController {
 
@@ -61,6 +64,12 @@ export class ElasticEntityController implements IEntityController {
 
   name(): string {
     return this.storageRef.name;
+  }
+
+  entityIdQuery(entityRef: IndexEntityRef, value: any): any {
+    return {
+      _id: ElasticUtils.buildIdQuery(entityRef, value)
+    };
   }
 
   /**

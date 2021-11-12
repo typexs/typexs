@@ -20,7 +20,11 @@ export class ExtendEntityControllerApi implements IEntityControllerApi {
 
   getStatus() {
     if (!this.status) {
-      this.status = Injector.get(IndexRuntimeStatus.NAME);
+      try{
+        this.status = Injector.get(IndexRuntimeStatus.NAME);
+      }catch (e) {
+
+      }
     }
     return this.status;
   }
@@ -76,12 +80,14 @@ export class ExtendEntityControllerApi implements IEntityControllerApi {
 
 
   isActive() {
-    return this.getStatus().checkIfActive();
+    const status = this.getStatus();
+    return status && status.checkIfActive();
   }
 
 
   isWorkerActive() {
-    return this.getStatus().isWorkerActive();
+    const status = this.getStatus();
+    return status && status.isWorkerActive();
   }
 
 

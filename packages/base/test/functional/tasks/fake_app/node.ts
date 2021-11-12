@@ -3,7 +3,7 @@ import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {Config} from '@allgemein/config';
 import {ITypexsOptions} from '../../../../src/libs/ITypexsOptions';
 import {Bootstrap} from '../../../../src/Bootstrap';
-import { TestHelper } from '../../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 (async function () {
   const LOG_EVENT = !!process.argv.find(x => x === '--enable_log');

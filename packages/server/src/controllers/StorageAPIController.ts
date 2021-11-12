@@ -184,18 +184,20 @@ export class StorageAPIController {
       throw new Error('multiple entity refs found');
     }
 
-    const entry = JsonSchema.serialize(entityRef, {
-      /**
-       * Append storageName to entity object
-       * @param src
-       * @param dst
-       */
-      postProcess: (src, dst) => {
-        if (isEntityRef(src)) {
-          dst.storage = ref.getName();
-        }
-      }
-    });
+    const entry = this.getSerializer({ storage: ref.getName() }).serialize(entityRef);
+    //
+    // const entry = JsonSchema.serialize(entityRef, {
+    //   /**
+    //    * Append storageName to entity object
+    //    * @param src
+    //    * @param dst
+    //    */
+    //   postProcess: (src, dst) => {
+    //     if (isEntityRef(src)) {
+    //       dst.storage = ref.getName();
+    //     }
+    //   }
+    // });
     return entry;
   }
 
@@ -379,7 +381,8 @@ export class StorageAPIController {
 
     StorageAPIController.checkOptions(opts, options);
 
-    let conditions = Expressions.parseLookupConditions(ref, id);
+
+    let conditions = controller.entityIdQuery ? controller.entityIdQuery(ref, id) : Expressions.parseLookupConditions(ref, id);
 
     let result = null;
     if (isArray(conditions)) {
@@ -552,7 +555,7 @@ export class StorageAPIController {
     if (isArray(ref)) {
       throw new Error('multiple entity ref are not supported for "delete"');
     }
-    let conditions = Expressions.parseLookupConditions(ref, id);
+    let conditions = controller.entityIdQuery ? controller.entityIdQuery(ref, id) : Expressions.parseLookupConditions(ref, id);
     if (conditions.length > 1) {
       // multiple ids should be bound by 'or', else it would be 'and'
       conditions = { $or: conditions };
@@ -771,27 +774,9 @@ export class StorageAPIController {
       options: options,
       schema: null
     };
-    const serializer = JsonSchema.getSerializer({
-      /**
-       * Append storageName to entity object
-       * @param src
-       * @param dst
-       */
-      postProcess: (src, dst) => {
-        if (isEntityRef(src)) {
-          dst.storage = storageName;
-          dst.namespace = src.getNamespace();
-        } else if (src.metaType === METATYPE_PROPERTY) {
-          const type = src.getType();
-          const opts = src.getOptions();
-          if (type === 'datetime' || get(opts, 'metadata.options.sourceType') === 'datetime') {
-            dst.type = T_STRING;
-            dst.format = 'date-time';
-          }
-        }
-        this.invoker.use(StorageAPIControllerApi).serializationPostProcess(src, dst, serializer);
-      }
-    });
+
+    const serializer = this.getSerializer({ storage: storageName });
+
     for (const ref of storageRef.getEntityRefs()) {
       if (ref && isEntityRef(ref)) {
         serializer.serialize(ref);
@@ -805,6 +790,33 @@ export class StorageAPIController {
 
     await this.cache.set(cacheKey, entry, cacheBin, { ttl: 24 * 60 * 60 * 1000 });
     return entry;
+  }
+
+  private getSerializer(add: any = {}) {
+    return JsonSchema.getSerializer({
+      /**
+       * Append storageName to entity object
+       * @param src
+       * @param dst
+       */
+      postProcess: (src, dst, serializer) => {
+        if (isEntityRef(src)) {
+          assign(dst, add);
+          // dst.storage = storageName;
+          dst.namespace = src.getNamespace();
+        } else if (src.metaType === METATYPE_PROPERTY) {
+          const type = src.getType();
+          const opts = src.getOptions();
+          if (type === 'datetime' ||
+            get(opts, 'metadata.options.sourceType') === 'datetime' ||
+            get(opts, 'metadata.options.sourceType') === 'date') {
+            dst.type = T_STRING;
+            dst.format = 'date-time';
+          }
+        }
+        this.invoker.use(StorageAPIControllerApi).serializationPostProcess(src, dst, serializer);
+      }
+    });
   }
 
 

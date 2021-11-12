@@ -14,7 +14,7 @@ import {
   API_CTRL_STORAGE_UPDATE_ENTITY,
   IStorageRefMetadata
 } from '@typexs/server';
-import { __CLASS__, __REGISTRY__, REGISTRY_TYPEORM } from '@typexs/base';
+import { __CLASS__, __REGISTRY__, C_FLEXIBLE, REGISTRY_TYPEORM } from '@typexs/base';
 import { IBuildOptions, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
 import {
   AbstractQueryService,
@@ -91,7 +91,7 @@ export class StorageService extends AbstractQueryService implements IQueringServ
     }
 
     if (def) {
-      const dynamic = def.getOptions('dynamic');
+      const dynamic = def.getOptions(C_FLEXIBLE);
       if (get(options, C_SKIP_BUILDS, false) || dynamic === true) {
         const x = def.create();
         assign(x, entity);

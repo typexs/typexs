@@ -8,7 +8,7 @@ import {Config} from '@allgemein/config';
 import {TEST_STORAGE_OPTIONS} from '../../config';
 import {TypeOrmStorageRef} from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
 import {BaseConnectionOptions} from 'typeorm/connection/BaseConnectionOptions';
-import { TestHelper } from '../../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 
 let bootstrap: Bootstrap;

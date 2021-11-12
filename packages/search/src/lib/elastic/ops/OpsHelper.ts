@@ -1,9 +1,10 @@
 import * as _ from 'lodash';
-import {ElasticEntityController} from '../ElasticEntityController';
-import {ClassType} from '@allgemein/schema-api';
-import {IndexEntityRef} from '../../registry/IndexEntityRef';
-import {MatchUtils} from '@typexs/base/libs/utils/MatchUtils';
+import { ElasticEntityController } from '../ElasticEntityController';
+import { ClassType } from '@allgemein/schema-api';
+import { IndexEntityRef } from '../../registry/IndexEntityRef';
+import { MatchUtils } from '@typexs/base/libs/utils/MatchUtils';
 import { __ID__, ES_IDFIELD } from '../../Constants';
+import { ElasticUtils } from '../ElasticUtils';
 
 export class OpsHelper {
 
@@ -30,12 +31,12 @@ export class OpsHelper {
       if (id.startsWith(entityRef.getTypeName() + '-')) {
         return id;
       }
-      return [entityRef.getTypeName(), id].join('--');
+      return ElasticUtils.buildIdQuery(entityRef, id);
     }
     return id;
 
-
   }
+
 
   static getIndexTypes(controller: ElasticEntityController, entityTypes: (Function | string | ClassType<any>)[]): IndexEntityRef[] {
     const indexEntityRefs = [];

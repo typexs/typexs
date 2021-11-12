@@ -19,7 +19,7 @@ import {SimpleTaskUngrouped01} from './tasks/SimpleTaskUngrouped01';
 import {SimpleTaskUngrouped02} from './tasks/SimpleTaskUngrouped02';
 import {SimpleTaskError} from './tasks/SimpleTaskError';
 import {SimpleTaskWithRuntimeLog} from './tasks/SimpleTaskWithRuntimeLog';
-import {TestHelper} from '../TestHelper';
+import {TestHelper} from '@typexs/testing';
 import {SimpleTaskWithDefaultArgs} from './tasks/SimpleTaskWithDefaultArgs';
 import {SimpleOtherTask, SimpleTaskStartingOtherTask} from './tasks/SimpleTaskStartingOtherTask';
 import {Log} from '../../../src/libs/logging/Log';

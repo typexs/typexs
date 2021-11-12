@@ -6,7 +6,7 @@ import {IQueueWorkload} from '../../../src/libs/queue/IQueueWorkload';
 import {IQueueProcessor} from '../../../src/libs/queue/IQueueProcessor';
 import {AsyncWorkerQueue} from '../../../src/libs/queue/AsyncWorkerQueue';
 import {QueueJob} from '../../../src/libs/queue/QueueJob';
-import { TestHelper } from '../TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 // describe('',() => {})
 

@@ -2,16 +2,17 @@ import { assign, isEmpty, snakeCase } from 'lodash';
 import {
   __NS__,
   AbstractRef,
+  ClassRef,
   IBuildOptions,
   IClassRef,
   IEntityRef,
   ILookupRegistry,
   ISchemaRef,
-  METADATA_TYPE
+  METADATA_TYPE,
+  RegistryFactory
 } from '@allgemein/schema-api';
 import { IIndexEntityRefOptions } from '../IIndexEntityRefOptions';
-import { ClassUtils } from '@allgemein/base';
-import { __CLASS__ } from '@typexs/base';
+import { __CLASS__, C_FLEXIBLE } from '@typexs/base';
 import { __ID__, __TYPE__, C_SEARCH_INDEX } from '../Constants';
 
 export class IndexEntityRef extends AbstractRef implements IEntityRef {
@@ -33,6 +34,7 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
   constructor(entityRef: IEntityRef, indexName?: string, options?: IIndexEntityRefOptions) {
     super('entity', entityRef.getClassRef().name + 'Idx', <any>entityRef.getClassRef(), C_SEARCH_INDEX);
     const classRef = entityRef.getClassRef();
+    options = assign(options || {}, { [C_FLEXIBLE]: true });
     this.setOptions(options || {});
     this.typeName = snakeCase(classRef.name);
     if (indexName) {
@@ -60,7 +62,7 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
   }
 
   getRegistry(): ILookupRegistry {
-    throw new Error('Method not implemented.');
+    return RegistryFactory.get(C_SEARCH_INDEX);
   }
 
   getTypeName() {
@@ -88,7 +90,7 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
   }
 
   isOf(instance: any): boolean {
-    const name = ClassUtils.getClassName(instance);
+    const name = ClassRef.getClassName(instance);
     if (name && (name === this.name || this.getEntityRef().name === name)) {
       return true;
     } else if (instance[__CLASS__] && (instance[__CLASS__] === this.name || this.getEntityRef().name === instance[__CLASS__])) {

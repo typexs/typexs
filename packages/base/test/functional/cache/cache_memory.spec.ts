@@ -8,7 +8,7 @@ import { TEST_STORAGE_OPTIONS } from '../config';
 import { Container } from 'typedi';
 import { Cache } from '../../../src/libs/cache/Cache';
 import { MemoryCacheAdapter } from '../../../src/adapters/cache/MemoryCacheAdapter';
-import { TestHelper } from '../TestHelper';
+import { TestHelper } from '@typexs/testing';
 import { C_DEFAULT } from '@allgemein/base';
 
 let bootstrap: Bootstrap = null;
