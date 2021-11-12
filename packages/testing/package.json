@@ -1,0 +1,32 @@
+{
+  "name": "@typexs/testing",
+  "version": "0.0.0-PLACEHOLDER",
+  "description": "Testing for typexs",
+  "main": "./index.ts",
+  "browser": "./browser.ts",
+  "directories": {
+    "doc": "docs/de"
+  },
+  "scripts": {
+    "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
+    "posttest": "nyc report --reporter=json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/typexs/typexs.git"
+  },
+  "author": "Robert Kania",
+  "license": "MIT",
+  "keywords": [
+    "commons",
+    "typescript",
+    "typexs",
+    "server",
+    "controllers"
+  ],
+  "bugs": {
+    "url": "https://gitlab.com/typexs/typexs/-/issues"
+  },
+  "homepage": "https://gitlab.com/typexs/typexs#readme",
+  "private": true
+ }
