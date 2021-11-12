@@ -1,4 +1,4 @@
-import { assign, defaults, get, isArray, keys, set } from 'lodash';
+import { get, isArray, set } from 'lodash';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
@@ -14,7 +14,7 @@ import {
   API_CTRL_STORAGE_UPDATE_ENTITY,
   IStorageRefMetadata
 } from '@typexs/server';
-import { __CLASS__, __REGISTRY__, C_FLEXIBLE, REGISTRY_TYPEORM } from '@typexs/base';
+import { REGISTRY_TYPEORM } from '@typexs/base';
 import { IBuildOptions, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
 import {
   AbstractQueryService,
@@ -22,9 +22,10 @@ import {
   BackendService,
   EntityResolverService,
   IQueringService,
-  STORAGE_REQUEST_MODE
+  STORAGE_REQUEST_MODE,
+  EntityHelper
 } from '@typexs/base-ng';
-import { C_RAW, C_SKIP_BUILDS } from '@typexs/ng';
+import { C_RAW } from '@typexs/ng';
 
 @Injectable()
 export class StorageService extends AbstractQueryService implements IQueringService {
@@ -57,59 +58,6 @@ export class StorageService extends AbstractQueryService implements IQueringServ
   }
 
 
-  private static _beforeBuild(entityDef: IEntityRef, from: any, to: any) {
-    keys(from).filter(k => k.startsWith('$')).forEach(k => {
-      to[k] = from[k];
-    });
-  }
-
-  private static _beforeBuildRaw(entityDef: IEntityRef, from: any, to: any) {
-    keys(from).filter(k => !k.startsWith('$')).forEach(k => {
-      to[k] = from[k];
-    });
-  }
-
-  /**
-   * Postprocess retrieved entity by declared build options. By default the build copy "$"
-   * starting members and pass only members by entity schema definition.
-   *
-   * - supports "raw" find option to by pass schema filter
-   * - with "skipBuilds" the build process can be overruled
-   *
-   *
-   * @param entityDef
-   * @param entity
-   * @param options
-   * @private
-   */
-  private _buildEntitySingle(entityDef: IEntityRef, entity: any, options?: IBuildOptions) {
-    let def = entityDef;
-    if (!entityDef) {
-      if (entity[__CLASS__] && entity[__REGISTRY__]) {
-        def = RegistryFactory.get(entity[__REGISTRY__]).getEntityRefFor(entity[__CLASS__]);
-      }
-    }
-
-    if (def) {
-      const dynamic = def.getOptions(C_FLEXIBLE);
-      if (get(options, C_SKIP_BUILDS, false) || dynamic === true) {
-        const x = def.create(false);
-        assign(x, entity);
-        return x;
-      }
-      const opts = defaults(options, {
-        beforeBuild: StorageService._beforeBuild
-      });
-      if (get(options, C_RAW, false)) {
-        opts.beforeBuild = StorageService._beforeBuildRaw;
-      }
-      return def.build(entity, opts);
-    } else {
-      return entity;
-    }
-  }
-
-
   buildEntity(method: STORAGE_REQUEST_MODE, entityDef: IEntityRef, rawEntities: any | any[], options?: IBuildOptions) {
     if (method === 'aggregate') {
       return rawEntities;
@@ -117,9 +65,9 @@ export class StorageService extends AbstractQueryService implements IQueringServ
 
     let result = null;
     if (isArray(rawEntities)) {
-      result = rawEntities.map(r => this._buildEntitySingle(entityDef, r, options));
+      result = rawEntities.map(r => EntityHelper.buildEntitySingle(entityDef, r, options));
     } else {
-      result = this._buildEntitySingle(entityDef, rawEntities, options);
+      result = EntityHelper.buildEntitySingle(entityDef, rawEntities, options);
     }
     return result;
 

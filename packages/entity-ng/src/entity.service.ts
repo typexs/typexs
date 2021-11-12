@@ -1,4 +1,4 @@
-import { assign, defaults, get, isArray, keys, set } from 'lodash';
+import { get, isArray, set } from 'lodash';
 import { Injectable } from '@angular/core';
 import {
   AbstractQueryService,
@@ -6,7 +6,8 @@ import {
   BackendService,
   EntityResolverService,
   IQueringService,
-  STORAGE_REQUEST_MODE
+  STORAGE_REQUEST_MODE,
+  EntityHelper
 } from '@typexs/base-ng';
 import {
   API_CTRL_ENTITY_DELETE_ENTITY,
@@ -18,9 +19,8 @@ import {
   API_ENTITY_PREFIX,
   NAMESPACE_BUILT_ENTITY
 } from '@typexs/schema';
-import { __CLASS__, __NS__, IBuildOptions, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
-import { C_SKIP_BUILDS, C_RAW } from '@typexs/ng';
-import { C_FLEXIBLE } from '@typexs/base';
+import { IBuildOptions, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
+import { C_RAW } from '@typexs/ng';
 
 
 @Injectable()
@@ -53,60 +53,6 @@ export class EntityService extends AbstractQueryService implements IQueringServi
   }
 
 
-  private static _beforeBuild(entityDef: IEntityRef, from: any, to: any) {
-    keys(from).filter(k => k.startsWith('$')).forEach(k => {
-      to[k] = from[k];
-    });
-  }
-
-  private static _beforeBuildRaw(entityDef: IEntityRef, from: any, to: any) {
-    keys(from).filter(k => !k.startsWith('$')).forEach(k => {
-      to[k] = from[k];
-    });
-  }
-
-
-  /**
-   * Postprocess retrieved entity by declared build options. By default the build copy "$"
-   * starting members and pass only members by entity schema definition.
-   *
-   * - supports "raw" find option to by pass schema filter
-   * - with "skipBuilds" the build process can be overruled
-   *
-   *
-   * @param entityDef
-   * @param entity
-   * @param options
-   * @private
-   */
-  private _buildEntitySingle(entityDef: IEntityRef, entity: any, options?: IBuildOptions) {
-    let def = entityDef;
-    if (!entityDef) {
-      if (entity[__CLASS__] && entity[__NS__]) {
-        def = this.getRegistry().getEntityRefFor(entity[__CLASS__]);
-      }
-    }
-
-    if (def) {
-      const dynamic = def.getOptions(C_FLEXIBLE);
-      if (get(options, C_SKIP_BUILDS, false) || dynamic === true) {
-        const x = def.create(false);
-        assign(x, entity);
-        return x;
-      }
-      const opts = defaults(options, {
-        beforeBuild: EntityService._beforeBuild
-      });
-      if (get(options, C_RAW, false)) {
-        opts.beforeBuild = EntityService._beforeBuildRaw;
-      }
-      return def.build(entity, opts);
-    } else {
-      return entity;
-    }
-  }
-
-
   buildEntity?(method: STORAGE_REQUEST_MODE, entityRef: IEntityRef, rawEntities: any | any[], buildOptions: IBuildOptions = {}) {
     if (method === 'aggregate') {
       return rawEntities;
@@ -114,9 +60,9 @@ export class EntityService extends AbstractQueryService implements IQueringServi
 
     let result = null;
     if (isArray(rawEntities)) {
-      result = rawEntities.map(r => this._buildEntitySingle(entityRef, r, buildOptions));
+      result = rawEntities.map(r => EntityHelper.buildEntitySingle(entityRef, r, buildOptions));
     } else {
-      result = this._buildEntitySingle(entityRef, rawEntities, buildOptions);
+      result = EntityHelper.buildEntitySingle(entityRef, rawEntities, buildOptions);
     }
     return result;
   }
