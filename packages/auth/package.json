@@ -1,0 +1,82 @@
+{
+  "name": "@typexs/auth",
+  "version": "0.0.0-PLACEHOLDER",
+  "description": "Auth module for typexs",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs/de"
+  },
+  "scripts": {
+    "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
+    "posttest": "nyc report --reporter=json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/typexs/typexs.git"
+  },
+  "author": "Robert Kania",
+  "license": "MIT",
+  "keywords": [
+    "commons",
+    "typescript",
+    "auth"
+  ],
+  "bugs": {
+    "url": "https://github.com/typexs/typexs/issues"
+  },
+  "homepage": "https://github.com/typexs/typexs#readme",
+  "dependencies": {
+    "@typexs/roles-api": "0.0.0-PLACEHOLDER",
+    "bcrypt": "^5.0.0",
+    "jsonwebtoken": "^8.5.1"
+  },
+  "peerDependencies": {
+    "@typexs/base": "0.0.0-PLACEHOLDER",
+    "@typexs/schema": "0.0.0-PLACEHOLDER",
+    "@typexs/server": "0.0.0-PLACEHOLDER",
+    "@typexs/roles": "0.0.0-PLACEHOLDER"
+  },
+  "private": true,
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts",
+      "tmp/",
+      "build/"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "html",
+      "json",
+      "lcovonly"
+    ],
+    "sourceMap": true,
+    "instrument": true,
+    "cache": false,
+    "report-dir": "./coverage/backend"
+  },
+  "typexs": {
+    "name": "typexs-auth",
+    "declareLibs": [
+      {
+        "topic": "auth.adapters",
+        "refs": [
+          "adapters/auth/*/*Adapter.*",
+          "src/adapters/auth/*/*Adapter.*"
+        ]
+      },
+      {
+        "topic": "auth.configurations",
+        "refs": [
+          "adapters/auth/*/*Configuration.*",
+          "src/adapters/auth/*/*Configuration.*"
+        ]
+      }
+    ]
+  }
+}

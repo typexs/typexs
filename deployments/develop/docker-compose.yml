@@ -48,3 +48,16 @@ services:
       POSTGRES_PASSWORD:
     networks:
       - dev
+
+  ldap:
+    image: osixia/openldap:1.2.2
+    ports:
+      - 389:389
+      - 689:689
+    environment:
+      LDAP_NOFILE: 10000
+    volumes:
+      - ./ldap/ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom
+    command: --copy-service --loglevel debug
+    networks:
+      - dev

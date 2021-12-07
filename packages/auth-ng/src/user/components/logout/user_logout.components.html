@@ -1,0 +1,8 @@
+<div class="user-logout-wrapper">
+  <div *ngIf="(isAuthenticated() | async)">
+    Log out failed.
+  </div>
+  <div *ngIf="!(isAuthenticated() | async)">
+    User logged out.
+  </div>
+</div>

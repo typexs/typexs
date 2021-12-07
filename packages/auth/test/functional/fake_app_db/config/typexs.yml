@@ -1,0 +1,29 @@
+app:
+  name: fake_app
+
+
+storage:
+  default:
+    synchronize: true
+    type: sqlite
+    database: ':memory:'
+
+
+logging:
+  enable: false
+  level: debug
+  transports:
+  - console: {}
+
+
+server:
+  default:
+    type: web
+    framework: express
+    host: localhost
+    port: 4500
+
+    routes:
+    - type: routing_controller
+      context: api
+      routePrefix: api

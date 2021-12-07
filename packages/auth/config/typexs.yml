@@ -1,0 +1,36 @@
+
+app:
+  name: typexs-auth
+
+logging:
+  enable: true
+  level: debug
+  transports:
+  - console: {}
+
+
+server:
+  default:
+    type: web
+    framework: express
+    host: localhost
+    port: 4500
+
+    routes:
+    - type: routing_controller
+      context: api
+      routePrefix: api
+
+
+storage:
+  default:
+    type: postgres
+    database: auth
+    username: auth
+    port: 5234
+    synchronize: true
+    # database: ':memory:'
+    # database: 'tmp/db_${app.name}.db'
+    # logger: simple-console
+    # logging: all
+
