@@ -1,32 +1,32 @@
 import * as _ from 'lodash';
 import * as bcrypt from 'bcrypt';
-import {Inject, Invoker, Log} from '@typexs/base';
-import {IApplication, IMiddleware, IRoutingController, K_ROUTE_CONTROLLER, RoutePermissionsHelper} from '@typexs/server';
-import {Action, InternalServerError} from 'routing-controllers';
-import {AuthLifeCycle} from '../libs/Constants';
-import {AuthSession} from '../entities/AuthSession';
-import {AuthMethod} from '../entities/AuthMethod';
-import {EmptyHttpRequestError} from '../libs/exceptions/EmptyHttpRequestError';
-import {IAuthConfig} from '../libs/auth/IAuthConfig';
-import {IAuthAdapter} from '../libs/adapter/IAuthAdapter';
-import {IAuthOptions} from '../libs/auth/IAuthOptions';
-import {AbstractUserSignup} from '../libs/models/AbstractUserSignup';
-import {AbstractUserLogin} from '../libs/models/AbstractUserLogin';
-import {IAuthMethodInfo} from '../libs/auth/IAuthMethodInfo';
-import {User} from '../entities/User';
-import {EntityController} from '@typexs/schema';
-import {AbstractUserLogout} from '../libs/models/AbstractUserLogout';
-import {AuthDataContainer} from '../libs/auth/AuthDataContainer';
-import {AuthHelper} from '../libs/auth/AuthHelper';
-import {AuthManager} from '../libs/auth/AuthManager';
-import {UserAuthApi} from '../api/UserAuth.api';
-import {UserNotApprovedError} from '../libs/exceptions/UserNotApprovedError';
-import {UserDisabledError} from '../libs/exceptions/UserDisabledError';
-import {UserNotFoundError} from '../libs/exceptions/UserNotFoundError';
-import {RestrictedAccessError} from '../libs/exceptions/RestrictedAccessError';
-import {IEntityRef, IPropertyRef} from 'commons-schema-api';
-import {Access} from '@typexs/roles/libs/Access';
-import {Injector, IStorageRef} from '@typexs/base/browser';
+import { Inject, Invoker, Log } from '@typexs/base';
+import { IApplication, IMiddleware, IRoutingController, K_ROUTE_CONTROLLER, RoutePermissionsHelper } from '@typexs/server';
+import { Action, InternalServerError } from 'routing-controllers';
+import { AuthLifeCycle } from '../libs/Constants';
+import { AuthSession } from '../entities/AuthSession';
+import { AuthMethod } from '../entities/AuthMethod';
+import { EmptyHttpRequestError } from '../libs/exceptions/EmptyHttpRequestError';
+import { IAuthConfig } from '../libs/auth/IAuthConfig';
+import { IAuthAdapter } from '../libs/adapter/IAuthAdapter';
+import { IAuthOptions } from '../libs/auth/IAuthOptions';
+import { AbstractUserSignup } from '../libs/models/AbstractUserSignup';
+import { AbstractUserLogin } from '../libs/models/AbstractUserLogin';
+import { IAuthMethodInfo } from '../libs/auth/IAuthMethodInfo';
+import { User } from '../entities/User';
+import { EntityController } from '@typexs/entity';
+import { AbstractUserLogout } from '../libs/models/AbstractUserLogout';
+import { AuthDataContainer } from '../libs/auth/AuthDataContainer';
+import { AuthHelper } from '../libs/auth/AuthHelper';
+import { AuthManager } from '../libs/auth/AuthManager';
+import { UserAuthApi } from '../api/UserAuth.api';
+import { UserNotApprovedError } from '../libs/exceptions/UserNotApprovedError';
+import { UserDisabledError } from '../libs/exceptions/UserDisabledError';
+import { UserNotFoundError } from '../libs/exceptions/UserNotFoundError';
+import { RestrictedAccessError } from '../libs/exceptions/RestrictedAccessError';
+import { IEntityRef, IPropertyRef } from '@allgemein/schema-api';
+import { Access } from '@typexs/roles/libs/Access';
+import { Injector, IStorageRef } from '@typexs/base/browser';
 
 export class Auth implements IMiddleware {
 
@@ -350,9 +350,10 @@ export class Auth implements IMiddleware {
   }
 
 
-  async doAuthenticatedLogin(dataContainer: AuthDataContainer<AbstractUserLogin>,
-                             req: any,
-                             res: any): Promise<AuthDataContainer<AbstractUserLogin>> {
+  async doAuthenticatedLogin(
+    dataContainer: AuthDataContainer<AbstractUserLogin>,
+    req: any,
+    res: any): Promise<AuthDataContainer<AbstractUserLogin>> {
     const loginInstance = dataContainer.instance;
     const adapter = this.getAdapterByIdentifier(loginInstance.authId);
 
@@ -463,7 +464,7 @@ export class Auth implements IMiddleware {
             },
             {
               userId: user.id,
-              updated_at: {$le: current}
+              updated_at: { $le: current }
             }
           ]
         });
@@ -619,12 +620,12 @@ export class Auth implements IMiddleware {
           return false;
         }
 
-        const user = await this.getEntityController().findOne(User, {id: session.userId}, {
+        const user = await this.getEntityController().findOne(User, { id: session.userId }, {
           limit: 1,
           hooks: {
-            abortCondition: (entityRef: IEntityRef, propertyDef: IPropertyRef, results: any, op: any) => {
-              return op.entityDepth > 1; // get permissions!
-            }
+            abortCondition: (entityRef: IEntityRef, propertyDef: IPropertyRef, results: any, op: any) =>
+              op.entityDepth > 1 // get permissions!
+
           }
         });
         if (user) {
@@ -670,18 +671,16 @@ export class Auth implements IMiddleware {
     }
 
     if (mail) {
-      cond = {$or: [cond, {mail: mail.trim()}]};
+      cond = { $or: [cond, { mail: mail.trim() }] };
     }
 
     return this.getEntityController().findOne<User>(User, cond, {
       // limit: 1,
       hooks: {
         abortCondition: (entityRef: IEntityRef,
-                         propertyDef: IPropertyRef,
-                         results: any,
-                         op: any) => {
-          return op.entityDepth > 1;
-        }
+          propertyDef: IPropertyRef,
+          results: any,
+          op: any) => op.entityDepth > 1
       }
     });
   }
@@ -703,7 +702,7 @@ export class Auth implements IMiddleware {
 
 
   getSessionByToken(token: string) {
-    return this.getEntityController().findOne(AuthSession, {token: token});
+    return this.getEntityController().findOne(AuthSession, { token: token });
   }
 
 

@@ -1,15 +1,16 @@
-import * as _ from 'lodash';
-import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {DefaultUserLogin} from '../../../../libs/models/DefaultUserLogin';
-import {Router} from '@angular/router';
-import {UserAuthService} from './../../user-auth.service';
-import {AuthService, IMessage, LogMessage, MessageChannel, MessageService, MessageType, NavigatorService} from '@typexs/ng-base';
-import {mergeMap} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { DefaultUserLogin } from '@typexs/auth/libs/models/DefaultUserLogin';
+import { NavigatorService } from '@typexs/ng-router-menu';
+import { Router } from '@angular/router';
+import { UserAuthService } from './../../user-auth.service';
+import { AuthService, IMessage, LogMessage, MessageChannel, MessageService, MessageType } from '@typexs/base-ng';
+import { mergeMap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { isArray, isString, keys } from 'lodash';
 
 @Component({
   selector: 'txs-user-login',
-  templateUrl: './user_login.component.html',
+  templateUrl: './user_login.component.html'
 })
 export class UserLoginComponent implements OnInit, OnDestroy {
 
@@ -27,9 +28,9 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   authenticated: boolean;
 
   constructor(private authService: AuthService,
-              private router: Router,
-              private navigatorService: NavigatorService,
-              private messageService: MessageService
+    private router: Router,
+    private navigatorService: NavigatorService,
+    private messageService: MessageService
   ) {
 
   }
@@ -69,14 +70,14 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   }
 
   redirectOnSuccess() {
-    if (_.isString(this.successUrl)) {
+    if (isString(this.successUrl)) {
       const nav = this.navigatorService.entries.find(e => e.path && e.path.includes(<string>this.successUrl));
       if (nav) {
         return this.router.navigate([nav.getFullPath()]);
       } else {
         return this.router.navigate([this.successUrl]);
       }
-    } else if (_.isArray(this.successUrl)) {
+    } else if (isArray(this.successUrl)) {
       return this.router.navigate(this.successUrl);
     }
     return null;
@@ -94,7 +95,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
               this.redirectOnSuccess();
             } else {
               for (const error of state.errors) {
-                _.keys(error.constraints).forEach(k => {
+                keys(error.constraints).forEach(k => {
                   this.formMessage.publish({
                     type: <any>MessageType[error.type.toUpperCase()],
                     content: error.constraints[k],

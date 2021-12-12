@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
-import {DataContainer} from '@typexs/base/browser';
-import {EntityRegistry} from '@typexs/schema';
+import {DataContainer} from '@typexs/base';
+import {EntityRegistry} from '@typexs/entity';
 export const STATE_KEY = '$state';
 export class AuthDataContainer<T> extends DataContainer<T> {
 

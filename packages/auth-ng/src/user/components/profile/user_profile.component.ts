@@ -1,17 +1,17 @@
-import * as _ from 'lodash';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {User} from '../../../../entities/User';
-import {UserAuthService} from './../../user-auth.service';
-import {AuthService} from '@typexs/ng-base';
-import {mergeMap} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
-import {of} from 'rxjs/internal/observable/of';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { User } from '@typexs/auth/entities/User';
+import { UserAuthService } from './../../user-auth.service';
+import { AuthService } from '@typexs/base-ng';
+import { mergeMap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { of } from 'rxjs/internal/observable/of';
+import { isNull } from 'lodash';
 
 
 @Component({
   selector: 'txs-user-profile',
-  templateUrl: './user_profile.components.html',
+  templateUrl: './user_profile.components.html'
 })
 export class UserProfileComponent implements OnInit, OnDestroy {
 
@@ -33,7 +33,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       .pipe(mergeMap(x => x ? this.getUserAuthService().getUser() : of(null)))
       .subscribe(x => {
         this.user = x;
-        if (_.isNull(x)) {
+        if (isNull(x)) {
           this.router.navigateByUrl('/');
         }
       });

@@ -24,7 +24,7 @@ const settingsTemplate = {
       type: 'postgres',
       database: 'auth',
       username: 'auth',
-      port: 5234,
+      port: 5437,
       // logger: 'simple-console',
       // logging: 'all',
 
@@ -35,11 +35,16 @@ const settingsTemplate = {
       default: LDAP_CONFIG
     }
   },
-  logging: LOGGING
+  logging: LOGGING,
+  modules: {
+    paths: [
+      TestHelper.root()
+    ]
+  }
 };
 let bootstrap: Bootstrap = null;
 
-@suite('functional/auth_ldap_stresstest') @timeout(60000)
+@suite('functional/auth_ldap_stresstest')
 class AuthLdapLifecycleSpec {
 
   static async before() {

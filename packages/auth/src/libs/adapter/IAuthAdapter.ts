@@ -1,9 +1,11 @@
-import {IAuthOptions} from '../auth/IAuthOptions';
-import {AuthLifeCycle} from '../Constants';
-import {AbstractUserSignup} from '../models/AbstractUserSignup';
-import {AbstractUserLogin} from '../models/AbstractUserLogin';
-import {IApplication, IRequest, IResponse} from '@typexs/server';
-import {AuthDataContainer} from '../auth/AuthDataContainer';
+import { IAuthOptions } from '../auth/IAuthOptions';
+import { AuthLifeCycle } from '../Constants';
+import { AbstractUserSignup } from '../models/AbstractUserSignup';
+import { AbstractUserLogin } from '../models/AbstractUserLogin';
+import { IApplication } from '@typexs/server/libs/server/IApplication';
+import { IRequest } from '@typexs/server/libs/server/IRequest';
+import { IResponse } from '@typexs/server/libs/server/IResponse';
+import { AuthDataContainer } from '../auth/AuthDataContainer';
 
 
 export type T_AUTH_ADAPTER_STAGE = 'before' | 'after';
@@ -50,7 +52,5 @@ export interface IAuthAdapter {
    */
   updateOptions?(options: IAuthOptions): void;
 
-
-//  extend(obj: User | AuthMethod, data: any): void;
 
 }

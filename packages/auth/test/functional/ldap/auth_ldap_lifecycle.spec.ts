@@ -24,6 +24,11 @@ const settingsTemplate = {
     methods: {
       default: LDAP_CONFIG
     }
+  },
+  modules: {
+    paths: [
+      TestHelper.root()
+    ]
   }
 };
 

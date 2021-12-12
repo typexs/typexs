@@ -1,22 +1,22 @@
-process.env.LOG = '1';
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Injector, StorageRef} from '@typexs/base';
+// process.env.LOG = '1';
+import { suite, test } from '@testdeck/mocha';
+import { Bootstrap, Injector, StorageRef } from '@typexs/base';
 import * as _ from 'lodash';
-import {Auth} from '../../../src/middleware/Auth';
-import {DefaultUserSignup} from '../../../src/libs/models/DefaultUserSignup';
-import {AuthMethod} from '../../../src/entities/AuthMethod';
-import {expect} from 'chai';
-import {DefaultUserLogin} from '../../../src/libs/models/DefaultUserLogin';
-import {MockResponse} from '../../helper/MockResponse';
-import {MockRequest} from '../../helper/MockRequest';
-import {AuthSession} from '../../../src/entities/AuthSession';
-import {Action} from 'routing-controllers';
-import {ITypexsOptions} from '@typexs/base/libs/ITypexsOptions';
-import {User} from '../../../src/entities/User';
-import {TESTDB_SETTING, TestHelper} from '../TestHelper';
-import {AuthDataContainer} from '../../../src/libs/auth/AuthDataContainer';
-import {LOGGING} from '../config';
-import {TypeOrmConnectionWrapper} from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { Auth } from '../../../src/middleware/Auth';
+import { DefaultUserSignup } from '../../../src/libs/models/DefaultUserSignup';
+import { AuthMethod } from '../../../src/entities/AuthMethod';
+import { expect } from 'chai';
+import { DefaultUserLogin } from '../../../src/libs/models/DefaultUserLogin';
+import { MockResponse } from '../../helper/MockResponse';
+import { MockRequest } from '../../helper/MockRequest';
+import { AuthSession } from '../../../src/entities/AuthSession';
+import { Action } from 'routing-controllers';
+import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
+import { User } from '../../../src/entities/User';
+import { TESTDB_SETTING, TestHelper } from '../TestHelper';
+import { AuthDataContainer } from '../../../src/libs/auth/AuthDataContainer';
+import { LOGGING } from '../config';
+import { TypeOrmConnectionWrapper } from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
 
 let bootstrap: Bootstrap = null;
 let auth: Auth = null;
@@ -34,11 +34,16 @@ const OPTIONS = <ITypexsOptions>{
       }
     }
   },
-  logging: LOGGING
+  logging: LOGGING,
+  modules: {
+    paths: [
+      TestHelper.root()
+    ]
+  }
 };
 
 
-@suite('functional/database/auth_database_lifecycle_default') @timeout(20000)
+@suite('functional/database/auth_database_lifecycle_default')
 class AuthDatabaseLifecycleDefaultSpec {
 
   _beforeLoginDone: boolean = false;
@@ -77,8 +82,26 @@ class AuthDatabaseLifecycleDefaultSpec {
 
     expect(doingSignup.success).to.be.false;
     expect(doingSignup.errors).to.have.length(2);
-    expect(_.get(doingSignup.errors, '0.constraints.minLength')).to.exist;
-    expect(_.get(doingSignup.errors, '1.constraints.equalWith')).to.exist;
+    expect(doingSignup.errors).to.deep.eq(
+      [
+        {
+          'property': 'username',
+          'value': 'superma',
+          'constraints': {
+            'minLength': 'username is too short'
+          },
+          'type': 'validate'
+        },
+        {
+          'property': 'passwordConfirm',
+          'constraints': {
+            'equal-with': 'Value of property "passwordConfirm" must be equal with value of referred properties.'
+          },
+          'type': 'validate',
+          'value': undefined
+        }
+      ]
+    );
 
     // too long username
     signUp = auth.getInstanceForSignup('default');
@@ -88,8 +111,24 @@ class AuthDatabaseLifecycleDefaultSpec {
     doingSignup = await auth.doSignup(signUp, req, res);
     expect(doingSignup.success).to.be.false;
     expect(doingSignup.errors).to.have.length(2);
-    expect(_.get(doingSignup.errors, '0.constraints.maxLength')).to.exist;
-    expect(_.get(doingSignup.errors, '1.constraints.equalWith')).to.exist;
+    expect(doingSignup.errors).to.deep.eq([
+      {
+        'property': 'username',
+        'value': 's123456789123456789123456789123456789123456789123456789123456789',
+        'constraints': {
+          'maxLength': 'username is too long'
+        },
+        'type': 'validate'
+      },
+      {
+        'property': 'passwordConfirm',
+        'constraints': {
+          'equal-with': 'Value of property "passwordConfirm" must be equal with value of referred properties.'
+        },
+        'type': 'validate',
+        'value': undefined
+      }
+    ]);
 
     // wrong chars in username and password
     signUp = auth.getInstanceForSignup('default');
@@ -99,8 +138,18 @@ class AuthDatabaseLifecycleDefaultSpec {
     doingSignup = await auth.doSignup(signUp, req, res);
     expect(doingSignup.success).to.be.false;
     expect(doingSignup.errors).to.have.length(1);
+    expect(doingSignup.errors).to.deep.eq([
+      {
+        'property': 'passwordConfirm',
+        'constraints': {
+          'equal-with': 'Value of property "passwordConfirm" must be equal with value of referred properties.'
+        },
+        'type': 'validate',
+        'value': undefined
+      }
+    ]);
     // expect(_.get(doingSignup.errors, '0.constraints.allowedString')).to.exist;
-    expect(_.get(doingSignup.errors, '0.constraints.equalWith')).to.exist;
+    // expect(_.get(doingSignup.errors, '0.constraints.equalWith')).to.exist;
 
     // signup per db
     signUp = auth.getInstanceForSignup('default');
@@ -201,7 +250,16 @@ class AuthDatabaseLifecycleDefaultSpec {
     expect(doingLogin.success).to.be.false;
     expect(doingLogin.isAuthenticated).to.be.false;
     expect(doingLogin.errors).to.have.length(1);
-    expect(_.get(doingLogin.errors, '0.constraints.allowedString')).to.exist;
+    expect(doingLogin.errors).to.deep.eq([
+      {
+        'property': 'username',
+        'value': 'super$ man',
+        'constraints': {
+          'regex': 'username contains wrong character'
+        },
+        'type': 'validate'
+      }
+    ]);
     // expect(_.get(doingLogin.errors, '1.constraints.allowedString')).to.exist;
 
   }
@@ -250,10 +308,10 @@ class AuthDatabaseLifecycleDefaultSpec {
 
     const c = await storageRef.connect() as TypeOrmConnectionWrapper;
     const _session = await c.manager.getRepository(AuthSession)
-      .findOne({where: {token: doingLogin.token}});
+      .findOne({ where: { token: doingLogin.token } });
 
 
-    const session = await storageRef.getController().findOne(AuthSession, {token: {$eq: doingLogin.token}}, {
+    const session = await storageRef.getController().findOne(AuthSession, { token: { $eq: doingLogin.token } }, {
       sort: {},
       limit: 1
     }) as AuthSession;

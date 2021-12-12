@@ -18,7 +18,7 @@ const DEFAULTS: ILdapAuthOptions = {
   url: 'ldap://localhost:389',
 
 
-//  uidAttr: 'uid',
+  //  uidAttr: 'uid',
 
   mailAttr: 'mail',
 
@@ -46,11 +46,11 @@ const DEFAULTS: ILdapAuthOptions = {
   allowSignup: false,
 
 
-  //reconnect: false,
+  // reconnect: false,
 
-//  timeout: 1000,
+  //  timeout: 1000,
 
-//  idleTimeout: 100
+  //  idleTimeout: 100
   // connectTimeout: 5000,
 
 
@@ -65,11 +65,11 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
 
   options: ILdapAuthOptions;
 
-  //ldap: any;
+  // ldap: any;
 
   idle: number = 2000;
 
-  timer: NodeJS.Timer;
+  timer: any;
 
   queue: AsyncWorkerQueue<AuthDataContainer<DefaultUserLogin>>;
 
@@ -94,9 +94,10 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
 
 
   async authenticate(container: AuthDataContainer<DefaultUserLogin>): Promise<boolean> {
-    let queueJob = this.queue.push(container);
+    const queueJobRef = this.queue.push(container);
+    const queueJob = await queueJobRef.get();
     try {
-      await queueJob.done();
+      await queueJob.done(this.queue);
     } catch (e) {
       // retry 3
       let r = _.get(container, 'retry', 3);
@@ -110,7 +111,7 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
 
 
   createOnLogin(login: AuthDataContainer<DefaultUserLogin>): boolean {
-    let ldapData = login.data;
+    const ldapData = login.data;
     let mail = null;
     if (_.has(ldapData, this.options.mailAttr)) {
       // set mail field @see Auth.ts:createUser
@@ -132,18 +133,18 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
 
 
   async do(container: AuthDataContainer<DefaultUserLogin>, queue?: AsyncWorkerQueue<any>): Promise<boolean> {
-    //clearTimeout(this.timer);
+    // clearTimeout(this.timer);
 
-    //if (!this.ldap) {
-    let ldap = Reflect.construct(LdapAdapter.clazz, [this.options]);
+    // if (!this.ldap) {
+    const ldap = Reflect.construct(LdapAdapter.clazz, [this.options]);
 
 
     container.isAuthenticated = false;
     container.success = container.isAuthenticated;
 
     try {
-      let login = container.instance;
-      let user = await ldap.authenticate(login.getIdentifier(), login.getSecret());
+      const login = container.instance;
+      const user = await ldap.authenticate(login.getIdentifier(), login.getSecret());
       if (user) {
         container.data = user;
         container.isAuthenticated = true;
@@ -181,7 +182,7 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
 
 
     } finally {
-      //await ldap.close();
+      // await ldap.close();
       // if(!_.get(this.options,'reconnect',false)){
       //   await this.ldap;
       // }

@@ -1,12 +1,13 @@
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
 
-import {C_DEFAULT, K_ROUTE_CONTROLLER, WebServer} from '@typexs/server';
-import {Bootstrap, Injector, PlatformUtils} from '@typexs/base';
-import {AuthManager} from '../../src/libs/auth/AuthManager';
-import {TestHelper} from './TestHelper';
+import { C_DEFAULT, K_ROUTE_CONTROLLER, WebServer } from '@typexs/server';
+import { Bootstrap, Injector, PlatformUtils } from '@typexs/base';
+import { AuthManager } from '../../src/libs/auth/AuthManager';
+import { TestHelper } from './TestHelper';
 
 let bootstrap: Bootstrap;
+const logValue = TestHelper.logEnable(false);
 
 @suite('functional/middleware')
 class MiddlewareSpec {
@@ -24,11 +25,12 @@ class MiddlewareSpec {
     bootstrap = await TestHelper.bootstrap_basic({
       modules: {
         appdir: PlatformUtils.pathResolve('.'),
+        paths: [TestHelper.root()],
         libs: [
           {
             'topic': 'server.middleware',
             'refs': [
-              'src/middleware',
+              'src/middleware'
             ]
           }]
       }

@@ -1,22 +1,23 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import * as request from 'supertest';
+import { suite, test } from '@testdeck/mocha';
+import request from 'supertest';
 
-import {K_ROUTE_CONTROLLER, WebServer} from '@typexs/server';
-import {Bootstrap, Config, Injector} from '@typexs/base';
+import { K_ROUTE_CONTROLLER, WebServer } from '@typexs/server';
+import { Bootstrap, Injector } from '@typexs/base';
 
-import {Auth} from '../../../src/middleware/Auth';
-import {DefaultUserSignup} from '../../../src/libs/models/DefaultUserSignup';
-import {ITypexsOptions} from '@typexs/base/libs/ITypexsOptions';
-import {TESTDB_SETTING, TestHelper} from '../TestHelper';
-import {IDatabaseAuthOptions} from '../../../src/adapters/auth/db/IDatabaseAuthOptions';
-import {IAuthConfig} from '../../../src/libs/auth/IAuthConfig';
-import {expect} from 'chai';
-import {DefaultUserLogin} from '../../../src/libs/models/DefaultUserLogin';
-import {User} from '../../../src';
-import {Role} from '@typexs/roles/entities/Role';
-import {RBelongsTo} from '@typexs/roles';
-import {EntityController} from '@typexs/schema';
-import {TypeOrmConnectionWrapper} from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { Auth } from '../../../src/middleware/Auth';
+import { DefaultUserSignup } from '../../../src/libs/models/DefaultUserSignup';
+import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
+import { TESTDB_SETTING, TestHelper } from '../TestHelper';
+import { IDatabaseAuthOptions } from '../../../src/adapters/auth/db/IDatabaseAuthOptions';
+import { IAuthConfig } from '../../../src/libs/auth/IAuthConfig';
+import { expect } from 'chai';
+import { DefaultUserLogin } from '../../../src/libs/models/DefaultUserLogin';
+import { User } from '../../../src';
+import { Role } from '@typexs/roles/entities/Role';
+import { RBelongsTo } from '@typexs/roles';
+import { EntityController } from '@typexs/entity';
+import { TypeOrmConnectionWrapper } from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { RegistryFactory } from '@allgemein/schema-api';
 
 let web: WebServer = null;
 
@@ -28,7 +29,7 @@ const OPTIONS = <ITypexsOptions>{
 
   modules: {
     paths: [
-      __dirname + '/../../..'
+      TestHelper.root()
     ]
 
   },
@@ -52,7 +53,7 @@ const OPTIONS = <ITypexsOptions>{
         password: 'password',
         roles: ['testrole']
       }
-    ],
+    ]
   },
   auth: <IAuthConfig>{
     methods: {
@@ -67,7 +68,7 @@ const OPTIONS = <ITypexsOptions>{
   logging: {
     enable: true,
     level: 'debug',
-    transports: [{console: {}}]
+    transports: [{ console: {} }]
   },
   server: {
     default: {
@@ -85,16 +86,17 @@ const OPTIONS = <ITypexsOptions>{
 
 let bootstrap: Bootstrap = null;
 
-@suite('functional/database/auth_database_permissions') @timeout(20000)
+@suite('functional/database/auth_database_permissions')
 class AuthDatabasePermissionsSpec {
 
   static async before() {
-    Config.clear();
-    Injector.reset();
+    Bootstrap.reset();
+    RegistryFactory.reset();
+    // Injector.reset();
 
     bootstrap = await TestHelper.bootstrap_basic(
       OPTIONS,
-      [{type: 'system'}]
+      [{ type: 'system' }]
     );
 
     web = Injector.get('server.default');
@@ -133,7 +135,7 @@ class AuthDatabasePermissionsSpec {
     expect(roles).to.have.length(1);
     const users = await entityController.find(User) as User[];
     expect(users).to.have.length(1);
-    expect(users[0].roles).to.have.length(1);
+    expect(users[0].getRoles()).to.have.length(1);
 
     const auth = <Auth>Injector.get('Auth');
 
@@ -179,7 +181,7 @@ class AuthDatabasePermissionsSpec {
     expect(user.username).to.be.eq(logIn.username);
 
 
-// user is not authorized because of permissions
+    // user is not authorized because of permissions
     res = await request(web.getUri())
       .get('/api/permissionsTest')
       .set(auth.getHttpAuthKey(), token)
@@ -214,7 +216,7 @@ class AuthDatabasePermissionsSpec {
       .set(auth.getHttpAuthKey(), token)
       .expect(200);
     message = res.body;
-    expect(message).to.deep.eq({test: 'welt'});
+    expect(message).to.deep.eq({ test: 'welt' });
 
 
   }

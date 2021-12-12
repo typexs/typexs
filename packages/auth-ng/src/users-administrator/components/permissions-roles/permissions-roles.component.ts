@@ -1,35 +1,34 @@
 import * as _ from 'lodash';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Entity} from '@typexs/schema/libs/decorators/Entity';
-import {Property} from '@typexs/schema/libs/decorators/Property';
-import {ISelectOption} from '@typexs/ng-base/modules/forms/libs/ISelectOption';
-import {AuthService, EntityService, IMessage, MessageChannel, MessageService, MessageType} from '@typexs/ng-base';
-import {Label} from '@typexs/ng/libs/forms/decorators/Label';
-import {Checkbox} from '@typexs/ng/libs/forms/decorators/Checkbox';
-import {Grid} from '@typexs/ng/libs/forms/decorators/Grid';
-import {Role} from '@typexs/roles/entities/Role';
-import {Permission} from '@typexs/roles/entities/Permission';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AuthService, IMessage, MessageChannel, MessageService, MessageType } from '@typexs/base-ng';
+import { Role } from '@typexs/roles/entities/Role';
+import { Permission } from '@typexs/roles/entities/Permission';
+import { Entity, Property } from '@allgemein/schema-api';
+import { ISelectOption } from '@typexs/ng/lib/forms/elements';
+import { Checkbox, Grid, Label } from '@typexs/ng';
+import { EntityService } from '@typexs/entity-ng';
+import { K_STORABLE } from '@typexs/entity/libs/Constants';
 
 
-@Entity({storeable: false})
+@Entity({ [K_STORABLE]: false })
 export class PermissionData {
 
   @Label()
-  @Property({type: 'string'})
+  @Property({ type: 'string' })
   permission: string;
 
-  @Checkbox({enum: 'roleNames'})
-  @Property({type: 'string', enum: 'roleNames', cardinality: 0})
+  @Checkbox({ enum: 'roleNames' })
+  @Property({ type: 'string', enum: 'roleNames', cardinality: 0 })
   roles: string[];
 
   roleNames: ISelectOption[] = [];
 }
 
-@Entity({storeable: false})
+@Entity({ [K_STORABLE]: false })
 export class PermissionMatrix {
 
-  @Grid({fixed: true, nr: false})
-  @Property({type: PermissionData, cardinality: 0})
+  @Grid({ fixed: true, nr: false })
+  @Property({ type: PermissionData, cardinality: 0 })
   permissions: PermissionData[] = [];
 
 }
@@ -37,7 +36,7 @@ export class PermissionMatrix {
 
 @Component({
   selector: 'permissions-rights-overview',
-  templateUrl: './permissions-roles.component.html',
+  templateUrl: './permissions-roles.component.html'
 })
 export class PermissionsRolesComponent implements OnInit, OnDestroy {
 
@@ -53,19 +52,20 @@ export class PermissionsRolesComponent implements OnInit, OnDestroy {
 
   result: any;
 
-  constructor(private authService: AuthService,
-              private entityService: EntityService,
-              private messageService: MessageService) {
+  constructor(
+    private authService: AuthService,
+    private entityService: EntityService,
+    private messageService: MessageService) {
   }
 
   isReady() {
     const permissionsMatrix = new PermissionMatrix();
 
-    this.entityService.query(Permission.name, null, {limit: 0}).subscribe((permissions) => {
+    this.entityService.query(Permission.name, null, { limit: 0 }).subscribe((permissions) => {
       if (permissions) {
         this.permissions = permissions.entities;
 
-        this.entityService.query(Role.name, null, {limit: 0}).subscribe((roles) => {
+        this.entityService.query(Role.name, null, { limit: 0 }).subscribe((roles) => {
           if (roles) {
             this.roles = roles.entities;
 
@@ -152,7 +152,7 @@ export class PermissionsRolesComponent implements OnInit, OnDestroy {
           });
         }
       }, (error: Error) => {
-        console.error(error);
+        // console.error(error);
         this.channel.publish({
           type: MessageType.SUCCESS,
           content: error.message

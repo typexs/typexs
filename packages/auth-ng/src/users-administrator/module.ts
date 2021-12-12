@@ -1,18 +1,13 @@
-import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
-import {USER_ADMIN_ROUTES} from './routes';
-import {
-  AdminModule,
-  BaseAdminThemeModule,
-  EntityModule,
-  FormsModule,
-  NavigatorModule,
-  NavigatorService,
-  BaseModule
-} from '@typexs/ng-base';
-import {PermissionsRolesComponent} from './components/permissions-roles/permissions-roles.component';
-import {BrowserModule} from '@angular/platform-browser';
-import {UserModule} from '../user/module';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { USER_ADMIN_ROUTES } from './routes';
+import { BaseModule } from '@typexs/base-ng';
+import { PermissionsRolesComponent } from './components/permissions-roles/permissions-roles.component';
+import { UserModule } from '../user/module';
+import { NavigatorService, RouterMenuModule } from '@typexs/ng-router-menu';
+import { EntityModule } from '@typexs/entity-ng';
+import { CommonModule } from '@angular/common';
+import { BaseAdminThemeModule } from '@typexs/ng-theme-base';
 
 export const PROVIDERS: any[] = [];
 
@@ -22,13 +17,11 @@ export const PROVIDERS: any[] = [];
   ],
   imports: [
     RouterModule.forChild(USER_ADMIN_ROUTES),
-    EntityModule,
-    BrowserModule,
-    FormsModule,
+    CommonModule,
     BaseModule,
-    AdminModule,
-    NavigatorModule,
     UserModule,
+    RouterMenuModule,
+    EntityModule,
     BaseAdminThemeModule
   ],
   exports: [
@@ -46,7 +39,7 @@ export class UserAdminModule {
   }
 
   constructor(private navigator: NavigatorService) {
-    this.navigator.addGroupEntry('admin/users/.*', {label: 'Users', group: 'admin'});
+    this.navigator.addGroupEntry('admin/users/.*', { label: 'Users', group: 'admin' });
   }
 
 }

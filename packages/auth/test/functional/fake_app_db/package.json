@@ -7,7 +7,7 @@
   "dependencies": {
     "@typexs/base": "latest",
     "@typexs/ng": "latest",
-    "@typexs/schema": "latest",
+    "@typexs/entity": "latest",
     "@typexs/server": "latest"
   }
 }

@@ -77,7 +77,7 @@ export class OAuthAdapter extends AbstractAuthAdapter {
   */
 
   use(app: IApplication, stage: T_AUTH_ADAPTER_STAGE) {
-    if (stage == 'after') {
+    if (stage === 'after') {
 
     }
   }

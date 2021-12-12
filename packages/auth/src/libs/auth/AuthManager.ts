@@ -100,6 +100,7 @@ export class AuthManager {
 
         if (!_.isEmpty(this.authConfig) && !_.isEmpty(this.authConfig.methods)) {
           for (const authId in this.authConfig.methods) {
+            // eslint-disable-next-line no-prototype-builtins
             if (this.authConfig.methods.hasOwnProperty(authId)) {
               const methodOptions = this.authConfig.methods[authId];
               methodOptions.authId = authId;

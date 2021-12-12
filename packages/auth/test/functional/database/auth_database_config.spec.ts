@@ -1,10 +1,10 @@
-import {suite, test} from '@testdeck/mocha';
-import {Bootstrap, Log} from '@typexs/base';
-import {expect} from 'chai';
-import {ITypexsOptions} from '@typexs/base/libs/ITypexsOptions';
-import {TESTDB_SETTING, TestHelper} from '../TestHelper';
-import {IAuthConfig} from '../../../src/libs/auth/IAuthConfig';
-import _ = require('lodash');
+import { suite, test } from '@testdeck/mocha';
+import { Bootstrap, Log } from '@typexs/base';
+import { expect } from 'chai';
+import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
+import { TESTDB_SETTING, TestHelper } from '../TestHelper';
+import { IAuthConfig } from '../../../src/libs/auth/IAuthConfig';
+import { clone } from 'lodash';
 
 
 const OPTIONS: ITypexsOptions = <ITypexsOptions>{
@@ -15,14 +15,14 @@ const OPTIONS: ITypexsOptions = <ITypexsOptions>{
     // allowSignup: true,
     methods: {
       default: {
-        type: 'database',
+        type: 'database'
 
       }
     }
   },
   modules: {
     paths: [
-      __dirname + '/../../..'
+      TestHelper.root()
     ]
   }
 };
@@ -42,6 +42,7 @@ class AuthConfigSpec {
     Log.enable = true;
   }
 
+
   async after() {
 
     if (bootstrap) {
@@ -53,10 +54,10 @@ class AuthConfigSpec {
 
   @test
   async 'global signup forbidden'() {
-    const opts = _.clone(OPTIONS);
+    const opts = clone(OPTIONS);
     opts.storage = {};
     (<IAuthConfig>(<any>opts).auth).allowSignup = false;
-    const ref = await TestHelper.bootstrap_auth('default', opts, [{type: 'system'}], {startup: true});
+    const ref = await TestHelper.bootstrap_auth('default', opts, [{ type: 'system' }], { startup: true });
     bootstrap = ref.bootstrap;
     const auth = ref.auth;
 
@@ -71,10 +72,10 @@ class AuthConfigSpec {
 
   @test
   async 'adapter signup forbidden'() {
-    const opts = _.clone(OPTIONS);
+    const opts = clone(OPTIONS);
     opts.storage = {};
     (<IAuthConfig>(<any>opts).auth).methods.default.allowSignup = false;
-    const ref = await TestHelper.bootstrap_auth('default', opts, [{type: 'system'}], {startup: true});
+    const ref = await TestHelper.bootstrap_auth('default', opts, [{ type: 'system' }], { startup: true });
     bootstrap = ref.bootstrap;
     const auth = ref.auth;
 
@@ -84,11 +85,11 @@ class AuthConfigSpec {
 
   @test
   async 'global signup allowed, but not from adapter'() {
-    const opts = _.clone(OPTIONS);
+    const opts = clone(OPTIONS);
     opts.storage = {};
     (<IAuthConfig>(<any>opts).auth).allowSignup = true;
     // (<IAuthConfig>(<any>opts).auth).methods.default.allowSignup = false;
-    const ref = await TestHelper.bootstrap_auth('default', opts, [{type: 'system'}], {startup: true});
+    const ref = await TestHelper.bootstrap_auth('default', opts, [{ type: 'system' }], { startup: true });
     bootstrap = ref.bootstrap;
     const auth = ref.auth;
 
@@ -108,11 +109,11 @@ class AuthConfigSpec {
 
   @test
   async 'global and adapter signup allowed '() {
-    const opts = _.clone(OPTIONS);
+    const opts = clone(OPTIONS);
     opts.storage = {};
     (<IAuthConfig>(<any>opts).auth).allowSignup = true;
     (<IAuthConfig>(<any>opts).auth).methods.default.allowSignup = true;
-    const ref = await TestHelper.bootstrap_auth('default', opts, [{type: 'system'}], {startup: true});
+    const ref = await TestHelper.bootstrap_auth('default', opts, [{ type: 'system' }], { startup: true });
     const auth = ref.auth;
     bootstrap = ref.bootstrap;
 

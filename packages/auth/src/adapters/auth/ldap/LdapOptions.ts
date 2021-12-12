@@ -12,7 +12,29 @@ export interface GroupSearchFilterFunction {
    *
    * @param user The user retrieved and authenticated from LDAP
    */
-  (user: any): string;
+  user: any;
+}
+
+
+export interface ClientOptions {
+  url: string;
+  tlsOptions?: Object;
+  socketPath?: string;
+  log?: any;
+  timeout?: number;
+  connectTimeout?: number;
+  idleTimeout?: number;
+  reconnect?: boolean | {
+    initialDelay?: number;
+    maxDelay?: number;
+    failAfter?: number;
+  };
+  strictDN?: boolean;
+  queueSize?: number;
+  queueTimeout?: number;
+  queueDisable?: boolean;
+  bindDN?: string;
+  bindCredentials?: string;
 }
 
 
@@ -94,26 +116,4 @@ export interface Options extends ClientOptions {
    * 5 minutes.
    */
   cache?: boolean;
-}
-
-
-export interface ClientOptions {
-  url: string;
-  tlsOptions?: Object;
-  socketPath?: string;
-  log?: any;
-  timeout?: number;
-  connectTimeout?: number;
-  idleTimeout?: number;
-  reconnect?: boolean | {
-    initialDelay?: number,
-    maxDelay?: number,
-    failAfter?: number
-  };
-  strictDN?: boolean;
-  queueSize?: number;
-  queueTimeout?: number;
-  queueDisable?: boolean;
-  bindDN?: string;
-  bindCredentials?: string;
 }

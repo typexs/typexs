@@ -1,54 +1,61 @@
 import * as _ from 'lodash';
 
-import {Asc, Entity, From, Join, Property, To} from '@typexs/schema/browser';
-import {And, Eq, Key, Value} from 'commons-expressions/browser';
-import {RBelongsTo} from '@typexs/roles/entities/RBelongsTo';
-import {Readonly} from '@typexs/ng/libs/forms/decorators/Readonly';
-import {IAuthUser} from '../libs/models/IAuthUser';
-import {Role} from '@typexs/roles/entities/Role';
-import {IRolesHolder} from '@typexs/roles-api';
+import { NAMESPACE_BUILT_ENTITY } from '@typexs/entity/libs/Constants';
+import { And, Eq, Key, Value } from '@allgemein/expressions';
+import { RBelongsTo } from '@typexs/roles/entities/RBelongsTo';
+import { Readonly } from '@typexs/ng/lib/forms/decorators/Readonly';
+import { IAuthUser } from '../libs/models/IAuthUser';
+import { Role } from '@typexs/roles/entities/Role';
+import { IRolesHolder } from '@typexs/roles-api';
+import { Entity, Namespace, Property, Schema } from '@allgemein/schema-api';
+import { From, Join, To } from '@typexs/entity/libs/descriptors/JoinDesc';
+import { Asc } from '@typexs/entity/libs/descriptors/OrderDesc';
 
-
+@Namespace(NAMESPACE_BUILT_ENTITY)
+@Schema({ name: 'default' })
 @Entity()
 export class User implements IAuthUser, IRolesHolder {
 
-  @Property({type: 'number', auto: true})
+  @Property({ type: 'number', auto: true })
   id: number;
 
-  @Property({type: 'string', typeorm: {unique: true}})
+  @Property({ type: 'string', typeorm: { unique: true } })
   username: string;
 
-  @Property({type: 'string', typeorm: {unique: true}})
+  @Property({ type: 'string', typeorm: { unique: true } })
   mail: string;
 
-  @Property({type: 'string', nullable: true})
+  @Property({ type: 'string', nullable: true })
   displayName: string;
 
-  @Property({type: 'boolean'})
+  @Property({ type: 'boolean' })
   disabled: boolean = false;
 
-  @Property({type: 'boolean'})
+  @Property({ type: 'boolean' })
   approved: boolean = false;
 
   @Property({
-    type: 'Role', cardinality: 0,
-    join: Join(RBelongsTo, [
-        From(Eq('ownerid', Key('id'))),
-        To(Eq('id', Key('refid')))
-      ],
-      And(
-        Eq('ownertab', Value('user')),
-        Eq('reftab', Value('role'))),
-      [Asc(Key('sort')), Asc(Key('id'))])
+    type: 'Role',
+    cardinality: 0,
+    join:
+      Join(RBelongsTo,
+        [
+          From(Eq('ownerid', Key('id'))),
+          To(Eq('id', Key('refid')))
+        ],
+        And(
+          Eq('ownertab', Value('user')),
+          Eq('reftab', Value('role'))),
+        [Asc(Key('sort')), Asc(Key('id'))])
   })
   roles: Role[];
 
   @Readonly()
-  @Property({type: 'date:created'})
+  @Property({ type: 'date:created' })
   created_at: Date;
 
   @Readonly()
-  @Property({type: 'date:updated'})
+  @Property({ type: 'date:updated' })
   updated_at: Date;
 
   isApproved(): boolean {

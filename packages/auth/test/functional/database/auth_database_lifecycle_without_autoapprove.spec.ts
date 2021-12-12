@@ -37,7 +37,13 @@ const OPTIONS = <ITypexsOptions>{
     enable: false,
     level: 'debug',
     transports: [{console: {name: 'without_autoappr'}}]
+  },
+  modules: {
+    paths: [
+      TestHelper.root()
+    ]
   }
+
 };
 
 @suite('functional/database/auth_database_lifecycle_without_autoapproval') @timeout(20000)

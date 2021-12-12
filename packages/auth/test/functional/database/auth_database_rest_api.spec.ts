@@ -1,6 +1,6 @@
 import {suite, test, timeout} from '@testdeck/mocha';
 import {expect} from 'chai';
-import * as request from 'supertest';
+import request from 'supertest';
 import {K_ROUTE_CONTROLLER, WebServer} from '@typexs/server';
 import {Bootstrap, Config, Injector} from '@typexs/base';
 import {Auth} from '../../../src/middleware/Auth';
@@ -31,11 +31,16 @@ const OPTIONS = <ITypexsOptions>{
     enable: false,
     level: 'debug',
     transports: [{console: {}}]
+  },
+  modules: {
+    paths: [
+      TestHelper.root()
+    ]
   }
 };
 
 
-@suite('functional/database/auth_database_rest_api') @timeout(20000)
+@suite('functional/database/auth_database_rest_api')
 class AuthConfigSpec {
 
   static async before() {

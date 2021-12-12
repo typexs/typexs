@@ -21,12 +21,17 @@ const settingsTemplate = {
         type: 'ldap',
       }
     }
+  },
+  modules: {
+    paths: [
+      TestHelper.root()
+    ]
   }
 };
 
 
 let bootstrap: Bootstrap = null;
-@suite('functional/ldap/auth_ldap_adapter') @timeout(20000)
+@suite('functional/ldap/auth_ldap_adapter')
 class AuthLdapAdapterSpec {
 
   static async before() {

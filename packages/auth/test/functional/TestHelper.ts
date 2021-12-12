@@ -6,13 +6,13 @@ import {
   Invoker,
   IStorageOptions,
   SqliteSchemaHandler,
-  Storage,
-  StorageRef
+  Storage
 } from '@typexs/base';
-import {EntityController, EntityRegistry, FrameworkFactory} from '@typexs/schema';
-import {AuthManager} from '../../src/libs/auth/AuthManager';
-import {Auth} from '../../src/middleware/Auth';
-import _ = require('lodash');
+import { EntityController, EntityRegistry, FrameworkFactory } from '@typexs/entity';
+import { AuthManager } from '../../src/libs/auth/AuthManager';
+import { Auth } from '../../src/middleware/Auth';
+import { TestHelper as TestHelperBase } from '@typexs/testing/lib/TestHelper';
+import { clone } from 'lodash';
 
 
 export const TESTDB_SETTING: IStorageOptions & any =
@@ -31,7 +31,7 @@ export const TESTDB_SETTING: IStorageOptions & any =
   };
 
 
-export class TestHelper {
+export class TestHelper extends TestHelperBase {
 
 
   static async storage(name: string = 'default', options = TESTDB_SETTING) {
@@ -41,7 +41,7 @@ export class TestHelper {
     const storageRef = await storage.register(name, options);
     // await storageRef.prepare();
     Injector.set('storage.' + name, storageRef);
-    const schemaDef = EntityRegistry.getSchema(name);
+    const schemaDef = EntityRegistry.$().getSchemaRefByName(name);
     const framework = FrameworkFactory.$().get(storageRef);
     const xsem = new EntityController(name, schemaDef, storageRef, framework);
     await xsem.initialize();
@@ -70,11 +70,11 @@ export class TestHelper {
   */
 
   static async bootstrap_basic(options: any = {},
-                               config: IConfigOptions[] = [{type: 'system'}],
-                               settings = {startup: true}) {
+    config: IConfigOptions[] = [{ type: 'system' }],
+    settings = { startup: true }) {
     // TestHelper.resetTypeorm();
-
-    const _options = _.clone(options);
+    Bootstrap.reset();
+    const _options = clone(options);
     const bootstrap = Bootstrap
       .setConfigSources(config)
       .configure(_options)
@@ -90,9 +90,10 @@ export class TestHelper {
 
 
   static async bootstrap_auth(name: string, options: any = {},
-                              config: IConfigOptions[] = [{type: 'system'}], settings = {startup: true}) {
+    config: IConfigOptions[] = [{ type: 'system' }], settings = { startup: true }) {
+
     const bootstrap = await TestHelper.bootstrap_basic(options, config, settings);
-    const schemaDef = EntityRegistry.getSchema(name);
+    const schemaDef = EntityRegistry.$().getSchemaRefByName(name);
     const ref = bootstrap.getStorage().get(name);
     const framework = FrameworkFactory.$().get(ref);
 

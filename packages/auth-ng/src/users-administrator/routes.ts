@@ -1,7 +1,7 @@
-import {Routes} from '@angular/router';
-import {AuthGuardService} from '@typexs/ng-base';
-import {PermissionsRolesComponent} from './components/permissions-roles/permissions-roles.component';
-import {PERMISSION_ALLOW_ADMINISTER_PERMISSIONS} from '../../libs/Constants';
+import { Routes } from '@angular/router';
+import { AuthGuardService } from '@typexs/base-ng';
+import { PermissionsRolesComponent } from './components/permissions-roles/permissions-roles.component';
+import { PERMISSION_ALLOW_ADMINISTER_PERMISSIONS } from '@typexs/auth/libs/Constants';
 
 /**
  * TODO

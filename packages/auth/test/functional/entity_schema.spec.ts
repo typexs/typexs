@@ -1,17 +1,18 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Injector, StorageRef, TypeOrmEntityRegistry} from '@typexs/base';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { Bootstrap, Injector, StorageRef, TypeOrmEntityRegistry } from '@typexs/base';
 import * as _ from 'lodash';
-import {expect} from 'chai';
-import {TESTDB_SETTING, TestHelper} from './TestHelper';
-import {EntityController} from '@typexs/schema';
-import {User} from '../../src/entities/User';
-import {Permission} from '@typexs/roles';
-import {Role} from '@typexs/roles/entities/Role';
-import {TypeOrmConnectionWrapper} from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { expect } from 'chai';
+import { TESTDB_SETTING, TestHelper } from './TestHelper';
+import { EntityController } from '@typexs/entity';
+import { User } from '../../src/entities/User';
+import { Permission } from '@typexs/roles';
+import { Role } from '@typexs/roles/entities/Role';
+import { TypeOrmConnectionWrapper } from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
 
-
+const logValue = TestHelper.logEnable(false);
 const settingsTemplate = {
-  logging: {enable: false, level: 'debug'},
+  logging: { enable: logValue, level: 'debug' },
+  modules: { paths: [TestHelper.root()] },
   storage: {
     default: TESTDB_SETTING
   }
@@ -19,7 +20,7 @@ const settingsTemplate = {
 
 let bootstrap: Bootstrap;
 
-@suite('functional/entity_schema') @timeout(20000)
+@suite('functional/entity_schema')
 class EntitySchemaSpec {
 
   static async before() {
@@ -70,7 +71,7 @@ class EntitySchemaSpec {
 
     role = await controller.save(role);
 
-    let found = await controller.find(Role, {id: 1});
+    let found = await controller.find(Role, { id: 1 });
 
     // TODO current reseted permission, because of double insertes
     role.permissions = null;
@@ -84,7 +85,7 @@ class EntitySchemaSpec {
 
     user = await controller.save(user);
 
-    found = await controller.find(Role, {id: 1});
+    found = await controller.find(Role, { id: 1 });
 
     const results: any[] = await c.connection.query('SELECT * FROM r_belongsto;');
     expect(results).to.have.length(2);

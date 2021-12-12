@@ -1,13 +1,11 @@
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {Bootstrap, Config, Injector, FileUtils, Invoker, ITypexsOptions, PlatformUtils, RuntimeLoader} from '@typexs/base';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { Bootstrap, Injector, ITypexsOptions } from '@typexs/base';
 
-import {Auth} from '../../../src/middleware/Auth';
-import {IAuthConfig} from '../../../src/libs/auth/IAuthConfig';
-import {User} from '../../../src/entities/User';
-import {TestHelper} from '../TestHelper';
-import {AuthManager} from '../../../src/libs/auth/AuthManager';
-import {TEST_STORAGE_OPTIONS} from '../config';
+import { Auth } from '../../../src/middleware/Auth';
+import { User } from '../../../src/entities/User';
+import { TestHelper } from '../TestHelper';
+import { TEST_STORAGE_OPTIONS } from '../config';
 
 let bootstrap: Bootstrap;
 
@@ -56,18 +54,23 @@ class AuthLdapConfigSpec {
 
     bootstrap = await TestHelper.bootstrap_basic(<ITypexsOptions & any>{
       // app: {name: 'test', nodeId: 'worker'},
-      logging: {enable: true, level: 'debug'},
+      logging: { enable: true, level: 'debug' },
       // modules: {paths: [__dirname + '/../../..']},
-      storage: {default: TEST_STORAGE_OPTIONS},
+      storage: { default: TEST_STORAGE_OPTIONS },
       // workers: {access: [{name: 'TaskMonitorWorker', access: 'allow'}]},
       auth: {
         userClass: User, // ./User as string
         methods: {
           default: {
-            type: 'ldap',
+            type: 'ldap'
 
           }
         }
+      },
+      modules: {
+        paths: [
+          TestHelper.root()
+        ]
       }
     });
 

@@ -1,35 +1,24 @@
-// import {
-//   AfterInsert,
-//   AfterLoad,
-//   AfterUpdate,
-//   BeforeInsert,
-//   BeforeUpdate,
-//   CreateDateColumn,
-//   Index,
-//   Entity,
-//   Column,
-//   UpdateDateColumn,
-//   PrimaryGeneratedColumn
-// } from 'typeorm';
-
-import {IAuthMethod} from '../libs/models/IAuthMethod';
-import {Entity, Property} from '@typexs/schema/browser';
+import { IAuthMethod } from '../libs/models/IAuthMethod';
+import { NAMESPACE_BUILT_ENTITY } from '@typexs/entity/libs/Constants';
+import { Entity, Namespace, Property, Schema } from '@allgemein/schema-api';
 
 
+@Namespace(NAMESPACE_BUILT_ENTITY)
+@Schema({ name: 'default' })
 @Entity()
 // @Index(['authId', 'identifier'], {unique: true})
 export class AuthMethod implements IAuthMethod {
 
-  @Property({auto: true})
+  @Property({ auto: true })
   id: number;
 
-  @Property({type: 'string', length: 128})
+  @Property({ type: 'string', length: 128 })
   authId: string;
 
-  @Property({type: 'string', length: 32})
+  @Property({ type: 'string', length: 32 })
   type: string;
 
-  @Property({type: 'string', length: 256, nullable: true})
+  @Property({ type: 'string', length: 256, nullable: true })
   mail: string;
 
   @Property()
@@ -42,10 +31,10 @@ export class AuthMethod implements IAuthMethod {
   @Property()
   standard: boolean = false;
 
-  @Property({type: 'string', length: 256, nullable: true})
+  @Property({ type: 'string', length: 256, nullable: true })
   identifier: string;
 
-  @Property({type: 'string', length: 256, nullable: true})
+  @Property({ type: 'string', length: 256, nullable: true })
   secret: string;
 
   @Property()
@@ -57,13 +46,13 @@ export class AuthMethod implements IAuthMethod {
   @Property()
   disabled: boolean = false;
 
-  @Property({type: 'date:created'})
+  @Property({ type: 'date:created' })
   created_at: Date;
 
-  @Property({type: 'date:updated'})
+  @Property({ type: 'date:updated' })
   updated_at: Date;
 
-  @Property({nullable: true})
+  @Property({ nullable: true })
   data: any = null;
 
   //

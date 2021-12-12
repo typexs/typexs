@@ -1,16 +1,17 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
-import {DefaultUserSignup} from '../../../../libs/models/DefaultUserSignup';
-import {Router} from '@angular/router';
-import {UserAuthService} from './../../user-auth.service';
-import {AuthService, IMessage, LogMessage, MessageChannel, MessageService, MessageType, NavigatorService} from '@typexs/ng-base';
+import { DefaultUserSignup } from '@typexs/auth/libs/models/DefaultUserSignup';
+import { Router } from '@angular/router';
+import { UserAuthService } from './../../user-auth.service';
+import { AuthService, IMessage, LogMessage, MessageChannel, MessageService, MessageType } from '@typexs/base-ng';
+import { NavigatorService } from '@typexs/ng-router-menu';
 import * as _ from 'lodash';
-import {mergeMap} from 'rxjs/operators';
+import { mergeMap } from 'rxjs/operators';
 
 
 @Component({
   selector: 'txs-user-signup',
-  templateUrl: './user_signup.component.html',
+  templateUrl: './user_signup.component.html'
 })
 export class UserSignupComponent implements OnInit, OnDestroy {
 

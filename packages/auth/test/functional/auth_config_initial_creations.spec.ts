@@ -1,16 +1,17 @@
 import * as _ from 'lodash';
-import {IEntityRef, IPropertyRef} from 'commons-schema-api/browser';
-import {suite, test} from '@testdeck/mocha';
-import {Bootstrap, Injector, Invoker} from '@typexs/base';
-import {expect} from 'chai';
-import {User} from '../../src/entities/User';
-import {TESTDB_SETTING} from './TestHelper';
-import {ITypexsOptions} from '@typexs/base/libs/ITypexsOptions';
-import {AuthHelper} from '../../src/libs/auth/AuthHelper';
-import {AuthManager} from '../../src';
-import {EntityController} from '@typexs/schema';
+import { suite, test } from '@testdeck/mocha';
+import { Bootstrap, Injector, Invoker } from '@typexs/base';
+import { expect } from 'chai';
+import { User } from '../../src/entities/User';
+import { TESTDB_SETTING, TestHelper } from './TestHelper';
+import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
+import { AuthHelper } from '../../src/libs/auth/AuthHelper';
+import { AuthManager } from '../../src';
+import { EntityController } from '@typexs/entity';
+import { IEntityRef, IPropertyRef } from '@allgemein/schema-api';
 
 let bootstrap: Bootstrap = null;
+const logValue = TestHelper.logEnable(false);
 
 @suite('functional/auth_config_initial_creations')
 class AuthConfigInitialCreationSpec {
@@ -19,11 +20,12 @@ class AuthConfigInitialCreationSpec {
   static async before() {
     Bootstrap.reset();
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
         // app: {name: 'test', nodeId: 'worker'},
-        logging: {enable: true, level: 'debug'},
+        logging: { enable: logValue, level: 'debug' },
         // modules: {paths: [__dirname + '/../../..']},
+        modules: { paths: [TestHelper.root()] },
         storage: {
           default: TESTDB_SETTING
         },
@@ -31,7 +33,7 @@ class AuthConfigInitialCreationSpec {
           // allowSignup: true,
           methods: {
             default: {
-              type: 'database',
+              type: 'database'
             }
           }
         },
@@ -49,8 +51,8 @@ class AuthConfigInitialCreationSpec {
                 'allow see profile',
                 'allow edit profile'
               ]
-            },
-          ],
+            }
+          ]
         }
       });
     bootstrap.activateLogger();
@@ -92,18 +94,22 @@ class AuthConfigInitialCreationSpec {
     users = await AuthHelper.initUsers(invoker, entityController, authManager, initUsers);
     expect(users).to.have.length(0);
 
-    users = await entityController.find(User, null, {limit: 0});
+    users = await entityController.find(User, null, { limit: 0 });
     expect(users).to.have.length(1);
     expect(users[0].getRoles()).to.have.length(1);
     expect(users[0].getRoles()[0].role).to.be.eq('admin');
 
     // return user with role and permissions
 
-    const user = await entityController.findOne(User, {id: users[0].id}, {
+    const user = await entityController.findOne(User, { id: users[0].id }, {
       hooks: {
-        abortCondition: (entityRef: IEntityRef, propertyDef: IPropertyRef, results: any, op: any) => {
-          return op.entityDepth > 1; // get permissions!
-        }
+        abortCondition:
+          (
+            entityRef: IEntityRef,
+            propertyDef: IPropertyRef,
+            results: any,
+            op: any
+          ) => op.entityDepth > 1
       }
     });
 

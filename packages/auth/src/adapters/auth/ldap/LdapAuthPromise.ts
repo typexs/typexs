@@ -1,12 +1,11 @@
-import {ILdapAuthOptions} from "./ILdapAuthOptions";
-
+import { ILdapAuthOptions } from './ILdapAuthOptions';
 import * as ldapjs from 'ldapjs';
-import {SearchOptions} from 'ldapjs';
-import {Log} from "@typexs/base";
-import {EventEmitter} from 'events';
-import * as _ from 'lodash';
-import {ClientOptions} from "./LdapOptions";
-import {UserNotFoundError} from "../../../libs/exceptions/UserNotFoundError";
+import { SearchOptions } from 'ldapjs';
+import { Log } from '@typexs/base';
+import { EventEmitter } from 'events';
+import { ClientOptions } from './LdapOptions';
+import { UserNotFoundError } from '../../../libs/exceptions/UserNotFoundError';
+import { defaults, isEmpty, isUndefined } from 'lodash';
 
 
 export class LdapClient {
@@ -57,25 +56,25 @@ export class LdapClient {
 
           }
           resolve(this.bound);
-        })
+        });
       } else {
         reject(new Error('ldap client not connected'));
       }
-    })
+    });
   }
 
 
   search(searchBase: string, options: SearchOptions): Promise<any[]> {
     return new Promise((resolve, reject) => {
       if (!this.bound) {
-        reject(new Error('ldap not bound'))
+        reject(new Error('ldap not bound'));
       }
       this.client.search(searchBase, options, (err, res) => {
         if (err) {
           return reject(err);
         }
 
-        let items: any[] = [];
+        const items: any[] = [];
         res.on('searchEntry', (entry) => {
           items.push(entry.object);
           /*
@@ -87,21 +86,21 @@ export class LdapClient {
 
         res.on('error', reject);
 
-        res.on('end', function (result) {
+        res.on('end', function(result) {
           if (result.status !== 0) {
             const err = 'non-zero status from LDAP search: ' + result.status;
             reject(err);
           }
           resolve(items);
         });
-      })
+      });
 
     });
   }
 
   onConnect() {
     this.connected = true;
-    this.client.emit('_connected', this.connected)
+    this.client.emit('_connected', this.connected);
   }
 
 
@@ -128,7 +127,7 @@ export class LdapClient {
 
 export class LdapAuthPromise extends EventEmitter {
 
-  //ldap: LdapAuth;
+  // ldap: LdapAuth;
 
   options: ILdapAuthOptions;
 
@@ -145,7 +144,7 @@ export class LdapAuthPromise extends EventEmitter {
 
   constructor(options: ILdapAuthOptions) {
     super();
-    _.defaults(options, {
+    defaults(options, {
       searchScope: 'sub',
       bindProperty: 'dn',
       groupSearchScope: 'sub',
@@ -153,12 +152,12 @@ export class LdapAuthPromise extends EventEmitter {
     });
     this.options = options;
 
-    if (_.isEmpty(this.options.url)) {
-      throw new Error('LDAP server URL is not defined.')
+    if (isEmpty(this.options.url)) {
+      throw new Error('LDAP server URL is not defined.');
     }
 
-    if (_.isEmpty(this.options.searchFilter)) {
-      throw new Error('LDAP search filter is not defined.')
+    if (isEmpty(this.options.searchFilter)) {
+      throw new Error('LDAP search filter is not defined.');
     }
 
 
@@ -187,7 +186,7 @@ export class LdapAuthPromise extends EventEmitter {
       queueSize: this.options.queueSize,
       queueTimeout: this.options.queueTimeout,
       queueDisable: this.options.queueDisable
-    }
+    };
   }
 
   get bindDN() {
@@ -199,17 +198,17 @@ export class LdapAuthPromise extends EventEmitter {
   }
 
   async findUser(username: string, client: string = 'admin') {
-    if (_.isEmpty(username)) {
-      throw new Error('empty username')
+    if (isEmpty(username)) {
+      throw new Error('empty username');
     }
 
     const searchFilter = this.options.searchFilter.replace(/{{username}}/g, LdapAuthPromise.sanitizeInput(username));
-    let opts: any = {filter: searchFilter, scope: this.options.searchScope};
+    const opts: any = { filter: searchFilter, scope: this.options.searchScope };
     if (this.options.searchAttributes) {
       opts.attributes = this.options.searchAttributes;
     }
 
-    let results = await this.clients[client].search(this.options.searchBase, opts)
+    const results = await this.clients[client].search(this.options.searchBase, opts);
     switch (results.length) {
       case 0:
         return null;
@@ -220,7 +219,7 @@ export class LdapAuthPromise extends EventEmitter {
     }
   }
 
-// TODO find groups
+  // TODO find groups
 
 
   static sanitizeInput(input: string) {
@@ -231,23 +230,24 @@ export class LdapAuthPromise extends EventEmitter {
       .replace(/\\/g, '\\5c')
       .replace(/\0/g, '\\00')
       .replace(/\//g, '\\2f');
-  };
+  }
 
 
   async authenticate(username: string, password: string): Promise<any> {
     let user = null, result = null;
-    if (_.isUndefined(password) || password === null || password === '') {
+    if (isUndefined(password) || password === null || password === '') {
       throw new Error('no password given');
     }
 
+    let error = null;
     try {
       let connected = await this.clients.admin.connect();
       if (!connected) {
-        throw new Error('ldap admin client can\'t connect')
+        throw new Error('ldap admin client can\'t connect');
       }
 
 
-      let bound = await this.clients.admin.bind(this.bindDN, this.bindCredentials);
+      const bound = await this.clients.admin.bind(this.bindDN, this.bindCredentials);
       if (!bound) {
         throw new Error('ldap can\'t bind');
       }
@@ -259,16 +259,19 @@ export class LdapAuthPromise extends EventEmitter {
 
       connected = await this.clients.user.connect();
       if (!connected) {
-        throw new Error('ldap admin user can\'t connect')
+        throw new Error('ldap admin user can\'t connect');
       }
 
       result = await this.clients.user.bind(user[this.options.bindProperty], password);
       // TODO on success read groups
 
-    }catch (e) {
-      throw e;
+    } catch (e) {
+      error = e;
     } finally {
       await Promise.all([this.clients.user.close(), this.clients.admin.close()]);
+    }
+    if (error) {
+      throw error;
     }
     return result ? user : null;
     /*

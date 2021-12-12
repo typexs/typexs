@@ -1,19 +1,8 @@
-// import {
-//   AfterInsert,
-//   AfterLoad,
-//   AfterUpdate,
-//   BeforeInsert,
-//   BeforeUpdate,
-//   Column,
-//   CreateDateColumn,
-//   Entity,
-//   PrimaryColumn,
-//   UpdateDateColumn
-// } from 'typeorm';
-//
-import {Entity, Property} from '@typexs/schema/browser';
+import { Entity, Namespace, Property, Schema } from '@allgemein/schema-api';
+import { NAMESPACE_BUILT_ENTITY } from '@typexs/entity/libs/Constants';
 
-
+@Namespace(NAMESPACE_BUILT_ENTITY)
+@Schema({ name: 'default' })
 @Entity()
 export class AuthSession {
 

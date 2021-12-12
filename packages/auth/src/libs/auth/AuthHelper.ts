@@ -1,19 +1,18 @@
-import {IAuthAdapter} from '../adapter/IAuthAdapter';
-import {AuthDataContainer} from './AuthDataContainer';
-import {AbstractUserSignup} from '../models/AbstractUserSignup';
-import {AbstractUserLogin} from '../models/AbstractUserLogin';
-import {AuthMethod} from '../../entities/AuthMethod';
+import { IAuthAdapter } from '../adapter/IAuthAdapter';
+import { AuthDataContainer } from './AuthDataContainer';
+import { AbstractUserSignup } from '../models/AbstractUserSignup';
+import { AbstractUserLogin } from '../models/AbstractUserLogin';
+import { AuthMethod } from '../../entities/AuthMethod';
 import * as _ from 'lodash';
-import {User} from '../../entities/User';
-import {Invoker} from '@typexs/base';
-import {IConfigUser} from '../models/IConfigUser';
-import {DefaultUserSignup} from '../models/DefaultUserSignup';
-import {AuthManager} from './AuthManager';
-import {UserAuthApi} from '../../api/UserAuth.api';
-import {Role} from '@typexs/roles/entities/Role';
+import { User } from '../../entities/User';
+import { Invoker } from '@typexs/base';
+import { IConfigUser } from '../models/IConfigUser';
+import { DefaultUserSignup } from '../models/DefaultUserSignup';
+import { AuthManager } from './AuthManager';
+import { UserAuthApi } from '../../api/UserAuth.api';
+import { Role } from '@typexs/roles/entities/Role';
 // import {TypeOrmConnectionWrapper} from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
-import {IEntityController} from '@typexs/base/browser';
-import assert = require('assert');
+import { IEntityController } from '@typexs/base/browser';
 
 export class AuthHelper {
 
@@ -39,8 +38,8 @@ export class AuthHelper {
   // }
 
   static async createMethod(invoker: Invoker,
-                            adapter: IAuthAdapter,
-                            dataContainer: AuthDataContainer<AbstractUserSignup | AbstractUserLogin>) {
+    adapter: IAuthAdapter,
+    dataContainer: AuthDataContainer<AbstractUserSignup | AbstractUserLogin>) {
     const method = new AuthMethod();
     const signup = dataContainer.instance;
     method.identifier = signup.getIdentifier();
@@ -74,9 +73,9 @@ export class AuthHelper {
 
 
   static async createUser(entityController: IEntityController,
-                          invoker: Invoker,
-                          adapter: IAuthAdapter,
-                          dataContainer: AuthDataContainer<AbstractUserSignup | AbstractUserLogin>) {
+    invoker: Invoker,
+    adapter: IAuthAdapter,
+    dataContainer: AuthDataContainer<AbstractUserSignup | AbstractUserLogin>) {
     const user = new User();
     const signup = dataContainer.instance;
     user.username = signup.getIdentifier();
@@ -84,7 +83,7 @@ export class AuthHelper {
 
     const roleName = adapter.getDefaultRole();
     if (roleName) {
-      user.roles = await entityController.find(Role, {rolename: roleName}) as Role[];
+      user.roles = await entityController.find(Role, { rolename: roleName }) as Role[];
     }
 
     await invoker.use(UserAuthApi).onUserCreate(user, adapter, dataContainer);
@@ -108,14 +107,20 @@ export class AuthHelper {
   }
 
 
-  static async createUserAndMethod(invoker: Invoker,
-                                   controller: IEntityController,
-                                   adapter: IAuthAdapter,
-                                   dataContainer: AuthDataContainer<AbstractUserSignup | AbstractUserLogin>) {
+  static async createUserAndMethod(
+    invoker: Invoker,
+    controller: IEntityController,
+    adapter: IAuthAdapter,
+    dataContainer: AuthDataContainer<AbstractUserSignup | AbstractUserLogin>) {
     // const c = await controller.storageRef.connect() as TypeOrmConnectionWrapper;
     const user = await AuthHelper.createUser(controller, invoker, adapter, dataContainer);
     await controller.save(user);
-    assert(user.id, 'user id must be set.');
+    if (!user) {
+      throw new Error('user not found.');
+    }
+    if (!user.id) {
+      throw new Error('user id must be set.');
+    }
     const method = await AuthHelper.createMethod(invoker, adapter, dataContainer);
     method.standard = true;
     method.userId = user.id;
@@ -151,7 +156,7 @@ export class AuthHelper {
   // }
 
   private static async buildOrWhere<T>(list: string[], key: string) {
-    const query: any = {$or: []};
+    const query: any = { $or: [] };
     for (const perm of list) {
       const d = {};
       d[key] = perm;
@@ -161,9 +166,9 @@ export class AuthHelper {
   }
 
   static async initUsers(invoker: Invoker,
-                         entityController: IEntityController,
-                         authManager: AuthManager,
-                         users: IConfigUser[]): Promise<User[]> {
+    entityController: IEntityController,
+    authManager: AuthManager,
+    users: IConfigUser[]): Promise<User[]> {
     // TODO check if autocreation is enabled
     if (users.length === 0) {
       return [];

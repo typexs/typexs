@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import * as _ from 'lodash';
-import {AuthService} from '@typexs/ng-base';
-import {UserAuthService} from './user-auth.service';
+import { AuthService } from '@typexs/base-ng';
+import { UserAuthService } from './user-auth.service';
 
 @Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {

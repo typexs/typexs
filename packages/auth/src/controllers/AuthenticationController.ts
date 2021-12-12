@@ -1,5 +1,5 @@
 import {Body, ContentType, CurrentUser, Get, JsonController, Post, Req, Res} from 'routing-controllers';
-import {Authorized} from 'routing-controllers/decorator/Authorized';
+import {Authorized} from 'routing-controllers';
 
 import {Inject} from '@typexs/base';
 import {ContextGroup, IRequest, IResponse} from '@typexs/server';

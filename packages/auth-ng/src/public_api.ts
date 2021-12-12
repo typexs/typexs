@@ -11,3 +11,4 @@ export { UserSignupComponent } from './user/components/signup/user_signup.compon
 
 
 export { PROVIDERS, UserAdminModule } from './users-administrator/module';
+export { PermissionsRolesComponent } from './users-administrator/components/permissions-roles/permissions-roles.component';

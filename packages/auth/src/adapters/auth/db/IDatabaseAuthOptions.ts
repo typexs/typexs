@@ -1,4 +1,4 @@
-import {IAuthOptions} from "../../../libs/auth/IAuthOptions";
+import { IAuthOptions } from '../../../libs/auth/IAuthOptions';
 
 
 export interface IDatabaseAuthOptions extends IAuthOptions {

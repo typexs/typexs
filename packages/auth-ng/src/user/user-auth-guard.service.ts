@@ -1,12 +1,13 @@
-import {AuthMessage, AuthService, IAuthGuardProvider, IMenuLinkGuard, NavEntry} from '@typexs/ng-base';
-import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
-import {Observable, BehaviorSubject, of, Subject, Subscription} from 'rxjs';
-import {Injectable} from '@angular/core';
+import { AuthMessage, AuthService, IAuthGuardProvider } from '@typexs/base-ng';
+import { IMenuLinkGuard, NavEntry } from '@typexs/ng-router-menu';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
+import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
-import {filter, mergeMap, tap} from 'rxjs/operators';
-import {PermissionHelper} from '@typexs/roles-api';
-import {UserAuthHelper} from './lib/UserAuthHelper';
-import {Route} from '@angular/compiler/src/core';
+import { filter, mergeMap, tap } from 'rxjs/operators';
+import { PermissionHelper } from '@typexs/roles-api';
+import { UserAuthHelper } from './lib/UserAuthHelper';
+import { Route } from '@angular/compiler/src/core';
 
 // import {Log} from '@typexs/ng-base/modules/base/lib/log/Log';
 
@@ -151,13 +152,12 @@ export class UserAuthGuardService implements IAuthGuardProvider, IMenuLinkGuard 
         return this.validateAccess(hasAuth, route, subscribe);
       } else {
         // @ts-ignore
-        return this.isReady.pipe(filter(x => x)).pipe(mergeMap(x => {
-          return this.validateAccess(hasAuth, route, subscribe);
-        }));
+        return this.isReady.pipe(filter(x => x)).pipe(mergeMap(x => this.validateAccess(hasAuth, route, subscribe)));
       }
     }
     return new BehaviorSubject(true);
   }
+
 
   private validateAccess(hasAuth: boolean, route: Route, subscribe: boolean = true): Observable<boolean> {
     const permissions = UserAuthHelper.getRoutePermissions(route);

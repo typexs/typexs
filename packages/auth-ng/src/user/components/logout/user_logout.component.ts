@@ -1,12 +1,12 @@
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
-import {Router} from '@angular/router';
-import {UserAuthService} from './../../user-auth.service';
-import {AuthService} from '@typexs/ng-base';
+import { Router } from '@angular/router';
+import { UserAuthService } from './../../user-auth.service';
+import { AuthService } from '@typexs/base-ng';
 
 @Component({
   selector: 'txs-user-logout',
-  templateUrl: './user_logout.components.html',
+  templateUrl: './user_logout.components.html'
 })
 export class UserLogoutComponent implements OnInit {
 

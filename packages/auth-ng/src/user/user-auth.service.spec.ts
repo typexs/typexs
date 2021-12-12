@@ -1,14 +1,13 @@
-import {getTestBed, TestBed} from '@angular/core/testing';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {UserAuthService} from './user-auth.service';
-import {RouterTestingModule} from '@angular/router/testing';
-import {AuthService, BackendService, BaseModule, HttpBackendService} from '@typexs/ng-base';
-import {API_CTRL_SERVER_PING, API_CTRL_SERVER_ROUTES, IRoute} from '@typexs/server/browser';
-import {API_USER, API_USER_CONFIG, API_USER_IS_AUTHENTICATED} from '../../libs/Constants';
-import {IAuthMethodInfo} from '../../libs/auth/IAuthMethodInfo';
-import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {AuthTokenInterceptor} from './authtoken.interceptor';
-import {User} from '../../entities/User';
+import { getTestBed, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { UserAuthService } from './user-auth.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AuthService, BackendService, BaseModule, HttpBackendService } from '@typexs/base-ng';
+import { API_CTRL_SERVER_PING, API_CTRL_SERVER_ROUTES } from '@typexs/server/libs/Constants';
+import { API_USER, API_USER_CONFIG, API_USER_IS_AUTHENTICATED, IAuthMethodInfo, User } from '@typexs/auth';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthTokenInterceptor } from './authtoken.interceptor';
+import { IRoute } from '@typexs/base-ng/api/backend/IRoute';
 
 
 /**
@@ -41,8 +40,8 @@ describe('UserAuthService', () => {
         BaseModule
       ],
       providers: [
-        {provide: BackendService, useClass: HttpBackendService},
-        {provide: AuthService, useClass: UserAuthService},
+        { provide: BackendService, useClass: HttpBackendService },
+        { provide: AuthService, useClass: UserAuthService },
         {
           provide: HTTP_INTERCEPTORS,
           useClass: AuthTokenInterceptor,
@@ -74,7 +73,7 @@ describe('UserAuthService', () => {
 
     // app backend check calls ping
     const reqPings = httpMock.expectOne('/api' + API_CTRL_SERVER_PING);
-    reqPings.flush({time: new Date()});
+    reqPings.flush({ time: new Date() });
 
     // app backend check calls accessible routes
     const reqRoutes = httpMock.expectOne('/api' + API_CTRL_SERVER_ROUTES);
@@ -97,37 +96,37 @@ describe('UserAuthService', () => {
 
     // app backend check calls ping
     const reqPings = httpMock.expectOne(backService.apiUrl(API_CTRL_SERVER_PING));
-    reqPings.flush({time: new Date()});
+    reqPings.flush({ time: new Date() });
 
     // app backend check calls accessible routes
     const reqRoutes = httpMock.match(backService.apiUrl(API_CTRL_SERVER_ROUTES));
     reqRoutes.map(x => x.flush(<IRoute[]>[
-        // reqRoutes.flush([
-        {
-          route: backService.apiUrl(API_CTRL_SERVER_PING),
-          method: 'get',
-          context: 'api',
-          authorized: false
-        },
-        {
-          route: backService.apiUrl(API_CTRL_SERVER_ROUTES),
-          method: 'get',
-          context: 'api',
-          authorized: false
-        },
-        {
-          route: backService.apiUrl(API_USER_CONFIG),
-          method: 'get',
-          context: 'api',
-          authorized: false
-        },
-        {
-          route: backService.apiUrl(API_USER_IS_AUTHENTICATED),
-          method: 'get',
-          context: 'api',
-          authorized: false
-        }
-      ])
+      // reqRoutes.flush([
+      {
+        route: backService.apiUrl(API_CTRL_SERVER_PING),
+        method: 'get',
+        context: 'api',
+        authorized: false
+      },
+      {
+        route: backService.apiUrl(API_CTRL_SERVER_ROUTES),
+        method: 'get',
+        context: 'api',
+        authorized: false
+      },
+      {
+        route: backService.apiUrl(API_USER_CONFIG),
+        method: 'get',
+        context: 'api',
+        authorized: false
+      },
+      {
+        route: backService.apiUrl(API_USER_IS_AUTHENTICATED),
+        method: 'get',
+        context: 'api',
+        authorized: false
+      }
+    ])
     );
 
     const reqCfg = httpMock.expectOne(backService.apiUrl(API_USER_CONFIG));
@@ -158,37 +157,37 @@ describe('UserAuthService', () => {
 
     // app backend check calls ping
     const reqPings = httpMock.expectOne(backService.apiUrl(API_CTRL_SERVER_PING));
-    reqPings.flush({time: new Date()});
+    reqPings.flush({ time: new Date() });
 
     // app backend check calls accessible routes
     const reqRoutes = httpMock.match(backService.apiUrl(API_CTRL_SERVER_ROUTES));
     reqRoutes.map(x => x.flush(<IRoute[]>[
-        // reqRoutes.flush([
-        {
-          route: backService.apiUrl(API_CTRL_SERVER_PING),
-          method: 'get',
-          context: 'api',
-          authorized: false
-        },
-        {
-          route: backService.apiUrl(API_CTRL_SERVER_ROUTES),
-          method: 'get',
-          context: 'api',
-          authorized: false
-        },
-        {
-          route: backService.apiUrl(API_USER_CONFIG),
-          method: 'get',
-          context: 'api',
-          authorized: false
-        },
-        {
-          route: backService.apiUrl(API_USER_IS_AUTHENTICATED),
-          method: 'get',
-          context: 'api',
-          authorized: false
-        }
-      ])
+      // reqRoutes.flush([
+      {
+        route: backService.apiUrl(API_CTRL_SERVER_PING),
+        method: 'get',
+        context: 'api',
+        authorized: false
+      },
+      {
+        route: backService.apiUrl(API_CTRL_SERVER_ROUTES),
+        method: 'get',
+        context: 'api',
+        authorized: false
+      },
+      {
+        route: backService.apiUrl(API_USER_CONFIG),
+        method: 'get',
+        context: 'api',
+        authorized: false
+      },
+      {
+        route: backService.apiUrl(API_USER_IS_AUTHENTICATED),
+        method: 'get',
+        context: 'api',
+        authorized: false
+      }
+    ])
     );
 
     const reqCfg = httpMock.expectOne(backService.apiUrl(API_USER_CONFIG));
@@ -240,7 +239,7 @@ describe('UserAuthService', () => {
     ;
 
     const reqUserData = httpMock.expectOne(backService.apiUrl(API_USER));
-    reqUserData.flush(<User>{id: 1, username: 'bestuser'});
+    reqUserData.flush(<User>{ id: 1, username: 'bestuser' });
 
   });
 

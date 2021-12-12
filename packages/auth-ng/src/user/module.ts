@@ -1,16 +1,18 @@
-import {NgModule} from '@angular/core';
-import {UserProfileComponent} from './components/profile/user_profile.component';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {UserSignupComponent} from './components/signup/user_signup.component';
-import {UserLoginComponent} from './components/login/user_login.component';
-import {UserLogoutComponent} from './components/logout/user_logout.component';
-import {FormsModule as NgFormsModule} from '@angular/forms';
-import {CommonModule} from '@angular/common';
-import {AuthTokenInterceptor} from './authtoken.interceptor';
-import {AuthGuardService, AuthService, BaseModule, FormsModule, NavigatorModule} from '@typexs/ng-base';
-import {UserAuthGuardService} from './user-auth-guard.service';
-import {APP_ROUTES} from './routes';
-import {UserAuthService} from './user-auth.service';
+import { NgModule } from '@angular/core';
+import { UserProfileComponent } from './components/profile/user_profile.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { UserSignupComponent } from './components/signup/user_signup.component';
+import { UserLoginComponent } from './components/login/user_login.component';
+import { UserLogoutComponent } from './components/logout/user_logout.component';
+import { FormsModule as NgFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { AuthTokenInterceptor } from './authtoken.interceptor';
+import { AuthGuardService, AuthService, BaseModule } from '@typexs/base-ng';
+import { UserAuthGuardService } from './user-auth-guard.service';
+import { APP_ROUTES } from './routes';
+import { UserAuthService } from './user-auth.service';
+import { FormsModule } from '@typexs/ng-forms';
+import { RouterMenuModule } from '@typexs/ng-router-menu';
 
 const PROVIDERS = [
   {
@@ -41,7 +43,7 @@ const PROVIDERS = [
     NgFormsModule,
     FormsModule,
     BaseModule,
-    NavigatorModule
+    RouterMenuModule
   ],
   exports: [
     UserProfileComponent,

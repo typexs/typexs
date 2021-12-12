@@ -1,21 +1,35 @@
 import * as _ from 'lodash';
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
-import {AbstractUserSignup} from '../../libs/models/AbstractUserSignup';
-import {DefaultUserLogin} from '../../libs/models/DefaultUserLogin';
-import {DefaultUserSignup} from '../../libs/models/DefaultUserSignup';
-import {AbstractUserLogin} from '../../libs/models/AbstractUserLogin';
-import {AbstractUserLogout} from '../../libs/models/AbstractUserLogout';
-import {DefaultUserLogout} from '../../libs/models/DefaultUserLogout';
-import {Observable, BehaviorSubject, of, Subject, Subscription} from 'rxjs';
-import {IAuthServiceProvider} from '@typexs/ng-base/modules/base/api/auth/IAuthServiceProvider';
-import {User} from '../../entities/User';
-import {AuthMessage, LogMessage, MessageChannel, MessageService, MessageType, BackendService} from '@typexs/ng-base';
-import {filter, first, map, mergeMap} from 'rxjs/operators';
-import {IAuthSettings} from '../../libs/auth/IAuthSettings';
-import {API_USER, API_USER_CONFIG, API_USER_IS_AUTHENTICATED, API_USER_LOGIN, API_USER_LOGOUT, API_USER_SIGNUP} from '../../libs/Constants';
-import {ISecuredResource, PermissionHelper} from '@typexs/roles-api';
-import {UserAuthHelper} from './lib/UserAuthHelper';
+import { Injectable } from '@angular/core';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {
+  AbstractUserLogin,
+  AbstractUserLogout,
+  AbstractUserSignup,
+  API_USER,
+  API_USER_CONFIG,
+  API_USER_IS_AUTHENTICATED,
+  API_USER_LOGIN,
+  API_USER_LOGOUT,
+  API_USER_SIGNUP,
+  DefaultUserLogin,
+  DefaultUserLogout,
+  DefaultUserSignup,
+  IAuthSettings,
+  User
+} from '@typexs/auth';
+import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
+import {
+  AuthMessage,
+  BackendService,
+  IAuthServiceProvider,
+  LogMessage,
+  MessageChannel,
+  MessageService,
+  MessageType
+} from '@typexs/base-ng';
+import { filter, first, map, mergeMap } from 'rxjs/operators';
+import { ISecuredResource, PermissionHelper } from '@typexs/roles-api';
+import { UserAuthHelper } from './lib/UserAuthHelper';
 
 
 function parseUser(user: any) {
@@ -64,7 +78,7 @@ export class UserAuthService implements IAuthServiceProvider {
   private authSubs: Subscription;
 
   constructor(private backendClientService: BackendService,
-              private messageService: MessageService) {
+    private messageService: MessageService) {
     this.logChannel = this.messageService.getLogService();
   }
 
@@ -110,13 +124,9 @@ export class UserAuthService implements IAuthServiceProvider {
         .pipe(filter(x => x === 'online'))
         .pipe(first())
         .pipe(mergeMap(x => this.backendClientService.reloadRoutes()))
-        .pipe(mergeMap(x => {
-          return this.configure();
-        }))
+        .pipe(mergeMap(x => this.configure()))
         // .pipe(first())
-        .pipe(mergeMap(x => {
-          return this.checkAuthentication();
-        }))
+        .pipe(mergeMap(x => this.checkAuthentication()))
         // .pipe(first())
         .subscribe(x => {
           this.authSubs = this._isAuthenticated$
@@ -252,18 +262,18 @@ export class UserAuthService implements IAuthServiceProvider {
       } else {
         this.loading = true;
         this.backendClientService.callApi<User>(API_USER).subscribe(x => {
-            this.setUser(x);
-            this.loading = true;
-            subject.next(this.cacheUser);
-          }, error => {
-            this.resetUser();
-            this.loading = true;
-            subject.next(null);
-          },
-          () => {
-            this.loading = false;
-            subject.complete();
-          });
+          this.setUser(x);
+          this.loading = true;
+          subject.next(this.cacheUser);
+        }, error => {
+          this.resetUser();
+          this.loading = true;
+          subject.next(null);
+        },
+        () => {
+          this.loading = false;
+          subject.complete();
+        });
       }
     } else {
       subject.next(null);
@@ -294,7 +304,7 @@ export class UserAuthService implements IAuthServiceProvider {
   signup(signup: AbstractUserSignup): Observable<AbstractUserSignup> {
     this.loading = true;
     const subject = new Subject<AbstractUserSignup>();
-    this.backendClientService.callApi(API_USER_SIGNUP, {content: signup})
+    this.backendClientService.callApi(API_USER_SIGNUP, { content: signup })
       .subscribe(
         (value: AbstractUserSignup) => {
           subject.next(value);
@@ -316,7 +326,7 @@ export class UserAuthService implements IAuthServiceProvider {
   authenticate(login: AbstractUserLogin): Observable<AbstractUserLogin> {
     this.loading = true;
     const subject = new Subject<AbstractUserLogin>();
-    this.backendClientService.callApi(API_USER_LOGIN, {content: login})
+    this.backendClientService.callApi(API_USER_LOGIN, { content: login })
       .subscribe(
         (user: AbstractUserLogin) => {
           this.loading = false;
@@ -428,17 +438,17 @@ export class UserAuthService implements IAuthServiceProvider {
 
   hasPermission(right: string, params?: any): Observable<boolean> {
     const permissions = [right];
-    return this.getPermissions().pipe(mergeMap(async userPermissions => {
-      return await PermissionHelper.checkOnePermission(userPermissions, permissions);
-    }));
+    return this.getPermissions()
+      .pipe(
+        mergeMap(async userPermissions => await PermissionHelper.checkOnePermission(userPermissions, permissions)));
   }
 
 
   hasPermissionsFor(object: ISecuredResource): Observable<boolean> {
     const permissions = object.getPermissions().map(p => _.isString(p) ? p : p.permission);
-    return this.getPermissions().pipe(mergeMap(async userPermissions => {
-      return await PermissionHelper.checkOnePermission(userPermissions, permissions);
-    }));
+    return this.getPermissions()
+      .pipe(
+        mergeMap(async userPermissions => await PermissionHelper.checkOnePermission(userPermissions, permissions)));
   }
 
 
@@ -458,16 +468,16 @@ export class UserAuthService implements IAuthServiceProvider {
 
 
   hasRoutePermissions(route: ActivatedRouteSnapshot,
-                      state: RouterStateSnapshot): Observable<boolean> {
+    state: RouterStateSnapshot): Observable<boolean> {
     const permissions = UserAuthHelper.getRoutePermissions(route);
     if (_.isNull(permissions)) {
       // no permissions to check
       return new BehaviorSubject(true);
     }
 
-    return this.getPermissions().pipe(mergeMap(async userPermissions => {
-      return await PermissionHelper.checkOnePermission(userPermissions, permissions);
-    }));
+    return this.getPermissions()
+      .pipe(
+        mergeMap(async userPermissions => await PermissionHelper.checkOnePermission(userPermissions, permissions)));
   }
 
 

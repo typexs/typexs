@@ -9,12 +9,12 @@ import {DefaultUserLogin} from '../../../libs/models/DefaultUserLogin';
 import {IDatabaseAuthOptions} from './IDatabaseAuthOptions';
 import {AbstractAuthAdapter} from '../../../libs/adapter/AbstractAuthAdapter';
 import {User} from '../../../entities/User';
-import {EntityController} from '@typexs/schema';
+import {EntityController} from '@typexs/entity';
 import {AuthDataContainer} from '../../../libs/auth/AuthDataContainer';
 import {AbstractUserSignup} from '../../../libs/models/AbstractUserSignup';
 import {UserAuthApi} from '../../../api/UserAuth.api';
 import {DatabaseUserAuthExtenstion} from './DatabaseUserAuthExtenstion';
-import {IEntityRef, IPropertyRef} from 'commons-schema-api';
+import {IEntityRef, IPropertyRef} from '@allgemein/schema-api';
 
 
 export const K_AUTH_DATABASE = 'database';
@@ -79,9 +79,7 @@ export class DatabaseAdapter extends AbstractAuthAdapter {
         container.user = await this.entityController.findOne(User, {id: authMethod.userId}, {
           limit: 1,
           hooks: {
-            abortCondition: (entityRef: IEntityRef, propertyDef: IPropertyRef, results: any, op: any) => {
-              return op.entityDepth > 1;
-            }
+            abortCondition: (entityRef: IEntityRef, propertyDef: IPropertyRef, results: any, op: any) => op.entityDepth > 1
           }
         });
         return true;

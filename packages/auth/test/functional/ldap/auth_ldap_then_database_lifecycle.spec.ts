@@ -53,6 +53,11 @@ const settingsTemplate = {
     enable: true,
     level: 'debug',
     transports: [{console: {name: 'ldap_then_database'}}]
+  },
+  modules: {
+    paths: [
+      TestHelper.root()
+    ]
   }
 };
 let bootstrap: Bootstrap = null;
