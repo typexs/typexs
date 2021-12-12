@@ -139,7 +139,7 @@ const testConfig = [
       ]
     }
   },
-  // Nr. 5: use @typexs/schema for entity management
+  // Nr. 5: use @typexs/entity for entity management
   {
     app: { path: join(__dirname, 'scenarios', 'app_with_entities') },
     modules: { paths: [resolve], disableCache: true },

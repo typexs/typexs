@@ -1,6 +1,6 @@
 import {suite, test} from '@testdeck/mocha';
 import {expect} from 'chai';
-import {Entity, EntityRegistry, Property} from '@typexs/schema';
+import {Entity, EntityRegistry, Property} from '@typexs/entity';
 import {ComponentRegistry} from '../../../src/lib/views/ComponentRegistry';
 import {FormBuilder} from '../../../src/lib/forms/FormBuilder';
 import {FORM_ELEMENTS} from '../../../src/lib/forms/elements/index';

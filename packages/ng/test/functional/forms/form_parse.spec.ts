@@ -3,7 +3,7 @@ import {suite, test} from '@testdeck/mocha';
 import {MaxLength, MinLength} from 'class-validator';
 import {inspect} from 'util';
 import {Log} from '@typexs/base';
-import {Entity, EntityRegistry, Property} from '@typexs/schema';
+import {Entity, EntityRegistry, Property} from '@typexs/entity';
 import {Form, FORM_ELEMENTS} from '../../../src/lib/forms/elements';
 import {FormBuilder} from '../../../src/lib/forms/FormBuilder';
 import {ComponentRegistry, Text, Type} from '../../../src';

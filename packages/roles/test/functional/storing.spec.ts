@@ -5,7 +5,7 @@ import {suite, test} from '@testdeck/mocha';
 import {TEST_STORAGE_OPTIONS} from './config';
 import {Permission, RBelongsTo} from '../../src';
 import {Role} from '../../src/entities/Role';
-import {EntityController} from '@typexs/schema';
+import {EntityController} from '@typexs/entity';
 import {PermissionsRegistryLoader} from '../../src/libs/PermissionsRegistryLoader';
 import {RolesHelper} from '../../src/libs/RolesHelper';
 import { TestHelper } from './TestHelper';

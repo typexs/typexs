@@ -38,7 +38,7 @@ class IndexRegistrySpec {
   }
 
   @test.pending
-  async 'TODO register of @typexs/schema stuff'() {
+  async 'TODO register of @typexs/entity stuff'() {
   }
 
   @test.pending
