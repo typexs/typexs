@@ -51,6 +51,18 @@ services:
     networks:
       - txs_base_net
 
+  psql-auth:
+    image: postgres:14
+    ports:
+      - 127.0.0.1:5437:5432
+    environment:
+      POSTGRES_DATABASES: auth
+      POSTGRES_USER: auth
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_PASSWORD:
+    networks:
+      - txs_base_net
+
   mysql:
     image: mysql:5
     ports:

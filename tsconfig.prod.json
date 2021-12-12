@@ -38,6 +38,22 @@
         "./build/packages/base-ng/out/*",
         "./build/packages/base-ng/out"
       ],
+      "@typexs/entity-ng": [
+        "./build/packages/entity-ng/out/*",
+        "./build/packages/entity-ng/out"
+      ],
+      "@typexs/entity-ng/*": [
+        "./build/packages/entity-ng/out/*",
+        "./build/packages/entity-ng/out"
+      ],
+      "@typexs/auth-ng": [
+        "./build/packages/auth-ng/out/*",
+        "./build/packages/auth-ng/out"
+      ],
+      "@typexs/auth-ng/*": [
+        "./build/packages/auth-ng/out/*",
+        "./build/packages/auth-ng/out"
+      ],
       "@typexs/ng-forms/*": [
         "./build/packages/ng-forms/out/*",
         "./build/packages/ng-forms/out"

@@ -8,17 +8,23 @@
       "@typexs/base/*": [
         "./packages/base/src/*"
       ],
+      "@typexs/auth": [
+        "./packages/auth/src/browser"
+      ],
+      "@typexs/auth/*": [
+        "./packages/auth/src/*"
+      ],
       "@typexs/server": [
         "./packages/server/src/browser",
       ],
       "@typexs/server/*": [
         "./packages/server/src/*"
       ],
-      "@typexs/schema": [
-        "./packages/schema/src/browser",
+      "@typexs/entity": [
+        "./packages/entity/src/browser",
       ],
-      "@typexs/schema/*": [
-        "./packages/schema/src/*",
+      "@typexs/entity/*": [
+        "./packages/entity/src/*",
       ],
       "@typexs/ng": [
         "./packages/ng/src/browser",

@@ -1,6 +1,6 @@
 import {Label} from '@typexs/ng';
 import { Entity, Namespace, Property, Schema } from '@allgemein/schema-api';
-import { NAMESPACE_BUILT_ENTITY } from '../../../packages/schema/src';
+import { NAMESPACE_BUILT_ENTITY } from '../../../packages/entity/src';
 import { C_DEFAULT } from '@allgemein/base';
 import { InnerValue } from './InnerValue';
 

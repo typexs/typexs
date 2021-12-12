@@ -2,8 +2,8 @@
   "name": "@typexs/search",
   "version": "0.0.0-PLACEHOLDER",
   "description": "",
-  "main": "index.js",
-  "browser": "browser.js",
+  "main": "index",
+  "browser": "browser",
   "scripts": {
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
     "posttest": "nyc report --reporter=json"
@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@typexs/base": "0.0.0-PLACEHOLDER",
-    "@typexs/schema": "0.0.0-PLACEHOLDER",
+    "@typexs/entity": "0.0.0-PLACEHOLDER",
     "@typexs/pipelines": "0.0.0-PLACEHOLDER",
     "@typexs/roles-api": "0.0.0-PLACEHOLDER"
   },

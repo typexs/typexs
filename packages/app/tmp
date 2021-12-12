@@ -10,11 +10,11 @@
       "@typexs/server/*": [
         "./../server/src/*"
       ],
-      "@typexs/schema": [
-        "./../schema/src/browser"
+      "@typexs/entity": [
+        "./../entity/src/browser"
       ],
-      "@typexs/schema/*": [
-        "./../schema/src/*"
+      "@typexs/entity/*": [
+        "./../entity/src/*"
       ],
       "@typexs/ng": [
         "./../ng/src/browser"

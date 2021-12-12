@@ -21,11 +21,11 @@
       "@typexs/server/*": [
         "./packages/server/src/*"
       ],
-      "@typexs/schema": [
-        "./packages/schema/src/browser"
+      "@typexs/entity": [
+        "./packages/entity/src/browser"
       ],
-      "@typexs/schema/*": [
-        "./packages/schema/src/*"
+      "@typexs/entity/*": [
+        "./packages/entity/src/*"
       ],
       "@typexs/ng": [
         "./packages/ng/src/browser"
