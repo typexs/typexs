@@ -9,6 +9,7 @@ export { Entity } from './libs/decorators/Entity';
 export { Property } from './libs/decorators/Property';
 export { PropertyOf } from './libs/decorators/PropertyOf';
 export { Schema } from './libs/decorators/Schema';
+export { EntityRegistry } from './libs/EntityRegistry';
 
 // conditions
 export { JoinDesc, From, Join, KeyMapDesc, KeyMapType, To } from './libs/descriptors/JoinDesc';
