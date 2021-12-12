@@ -1,4 +1,4 @@
-import * as http from 'http';
+// import * as http from 'http';
 import {IApplication} from './IApplication';
 import {IRequestRanges} from './IRequestRanges';
 import {IMediaType} from './IMediaType';
@@ -7,7 +7,7 @@ import {IMediaType} from './IMediaType';
 /**
  * Copy from core.Request of express
  */
-export interface IRequest extends http.IncomingMessage {
+export interface IRequest /* extends http.IncomingMessage */ {
 
   /**
    * Return an array of Accepted media types
@@ -185,6 +185,7 @@ export interface IRequest extends http.IncomingMessage {
    */
   accepts(): string[];
   accepts(type: string): string | false;
+  // eslint-disable-next-line @typescript-eslint/unified-signatures
   accepts(type: string[]): string | false;
   accepts(...type: string[]): string | false;
 
@@ -199,6 +200,7 @@ export interface IRequest extends http.IncomingMessage {
 
   acceptsCharsets(charset: string): string | false;
 
+  // eslint-disable-next-line @typescript-eslint/unified-signatures
   acceptsCharsets(charset: string[]): string | false;
 
   acceptsCharsets(...charset: string[]): string | false;
@@ -214,6 +216,7 @@ export interface IRequest extends http.IncomingMessage {
 
   acceptsEncodings(encoding: string): string | false;
 
+  // eslint-disable-next-line @typescript-eslint/unified-signatures
   acceptsEncodings(encoding: string[]): string | false;
 
   acceptsEncodings(...encoding: string[]): string | false;
@@ -229,6 +232,7 @@ export interface IRequest extends http.IncomingMessage {
 
   acceptsLanguages(lang: string): string | false;
 
+  // eslint-disable-next-line @typescript-eslint/unified-signatures
   acceptsLanguages(lang: string[]): string | false;
 
   acceptsLanguages(...lang: string[]): string | false;

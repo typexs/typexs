@@ -1,5 +1,5 @@
-import {Entity} from '@typexs/schema/libs/decorators/Entity';
-import {Property} from '@typexs/schema/libs/decorators/Property';
+import {Entity} from '@typexs/entity/libs/decorators/Entity';
+import {Property} from '@typexs/entity/libs/decorators/Property';
 import {Readonly, Text} from '@typexs/ng';
 import {IsNotEmpty} from '@allgemein/schema-api';
 

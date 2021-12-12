@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SelectComponent } from './select.component';
 import { ComponentFactoryResolver, Injector, NgModule } from '@angular/core';
 import { Entity, Property } from '@allgemein/schema-api';
-import { K_STORABLE } from '@typexs/schema';
+import { K_STORABLE } from '@typexs/entity';
 import { Select } from '@typexs/ng';
 import { FormService } from '@typexs/ng-forms/form.service';
 import { ComponentRegistryService, EntityResolverService, ObjectToComponentResolver } from '@typexs/base-ng';

@@ -1,4 +1,4 @@
-import {CObject, Property} from '@typexs/schema';
+import {CObject, Property} from '@typexs/entity';
 
 
 @CObject({name: 'r_belongsto'})

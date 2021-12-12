@@ -1,4 +1,4 @@
-import {Entity, K_STORABLE, Property} from '@typexs/schema';
+import {Entity, K_STORABLE, Property} from '@typexs/entity';
 import {CheckboxMatrixRow} from './CheckboxMatrixRow';
 import {Grid} from '@typexs/ng';
 

@@ -1,5 +1,5 @@
 import { Select, Text } from '@typexs/ng';
-import { Property } from '@typexs/schema/libs/decorators/Property';
+import { Property } from '@typexs/entity/libs/decorators/Property';
 
 
 export class Places {

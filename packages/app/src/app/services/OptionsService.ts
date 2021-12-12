@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ISelectOption, ISelectOptionsService} from '@typexs/ng-forms';
-import {PropertyRef} from '@typexs/schema/libs/registry/PropertyRef';
+import {PropertyRef} from '@typexs/entity/libs/registry/PropertyRef';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable()

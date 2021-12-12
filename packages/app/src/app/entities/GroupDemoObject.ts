@@ -1,6 +1,6 @@
 
-import {Entity} from '@typexs/schema/libs/decorators/Entity';
-import {Property} from '@typexs/schema/libs/decorators/Property';
+import {Entity} from '@typexs/entity/libs/decorators/Entity';
+import {Property} from '@typexs/entity/libs/decorators/Property';
 import {Grid} from '@typexs/ng';
 import {Places} from './Places';
 

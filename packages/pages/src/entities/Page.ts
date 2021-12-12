@@ -1,4 +1,4 @@
-// import {Entity, Property} from '@typexs/schema';
+// import {Entity, Property} from '@typexs/entity';
 //
 // @Entity()
 // export class Page {

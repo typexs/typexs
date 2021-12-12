@@ -1,15 +1,19 @@
-import * as http from 'http';
-import {IApplication} from './IApplication';
-import {ICookieOptions} from './ICookieOptions';
+// eslint-disable @typescript-eslint/unified-signatures
 
+// import * as http from 'http';
+import { IApplication } from './IApplication';
+import { ICookieOptions } from './ICookieOptions';
 
+// eslint-disable-next-line no-use-before-define
 export type ISend = (body?: any) => IResponse;
 
 export type IErrback = (err: Error) => void;
+
 /**
  * Copy from core.Response of express
  */
-export interface IResponse extends http.ServerResponse {
+export interface IResponse /* extends http.ServerResponse*/
+{
 
   /**
    * ISend a response.
@@ -56,6 +60,7 @@ export interface IResponse extends http.ServerResponse {
   charset: string;
 
   app: IApplication;
+
   /**
    * Set status `code`.
    */
@@ -80,9 +85,9 @@ export interface IResponse extends http.ServerResponse {
    * Examples:
    *
    *    res.links({
-     *      next: 'http://api.example.com/users?page=2',
-     *      last: 'http://api.example.com/users?page=5'
-     *    });
+   *      next: 'http://api.example.com/users?page=2',
+   *      last: 'http://api.example.com/users?page=5'
+   *    });
    */
   links(links: any): IResponse;
 
@@ -112,41 +117,30 @@ export interface IResponse extends http.ServerResponse {
    *  the same code, so HTTP cache support etc is identical.
    *
    *     app.get('/user/:uid/photos/:file', function(req, res){
-     *       var uid = req.params.uid
-     *         , file = req.params.file;
-     *
-     *       req.user.mayViewFilesFrom(uid, function(yes){
-     *         if (yes) {
-     *           res.sendFile('/uploads/' + uid + '/' + file);
-     *         } else {
-     *           res.send(403, 'Sorry! you cant see that.');
-     *         }
-     *       });
-     *     });
+   *       var uid = req.params.uid
+   *         , file = req.params.file;
+   *
+   *       req.user.mayViewFilesFrom(uid, function(yes){
+   *         if (yes) {
+   *           res.sendFile('/uploads/' + uid + '/' + file);
+   *         } else {
+   *           res.send(403, 'Sorry! you cant see that.');
+   *         }
+   *       });
+   *     });
    *
    * @api public
    */
   sendFile(path: string): void;
+  // eslint-disable-next-line @typescript-eslint/unified-signatures
   sendFile(path: string, options: any): void;
+
+  // eslint-disable-next-line @typescript-eslint/unified-signatures
   sendFile(path: string, fn: IErrback): void;
+
+  // eslint-disable-next-line @typescript-eslint/unified-signatures
   sendFile(path: string, options: any, fn: IErrback): void;
 
-  /**
-   * @deprecated Use sendFile instead.
-   */
-  sendfile(path: string): void;
-  /**
-   * @deprecated Use sendFile instead.
-   */
-  sendfile(path: string, options: any): void;
-  /**
-   * @deprecated Use sendFile instead.
-   */
-  sendfile(path: string, fn: IErrback): void;
-  /**
-   * @deprecated Use sendFile instead.
-   */
-  sendfile(path: string, options: any, fn: IErrback): void;
 
   /**
    * Transfer the file at the given `path` as an attachment.
@@ -159,8 +153,11 @@ export interface IResponse extends http.ServerResponse {
    * This method uses `res.sendfile()`.
    */
   download(path: string): void;
+
   download(path: string, filename: string): void;
+
   download(path: string, fn: IErrback): void;
+
   download(path: string, filename: string, fn: IErrback): void;
 
   /**
@@ -207,35 +204,35 @@ export interface IResponse extends http.ServerResponse {
    * or `res.set('Content-Type', ...)`.
    *
    *    res.format({
-     *      'text/plain': function(){
-     *        res.send('hey');
-     *      },
-     *
-     *      'text/html': function(){
-     *        res.send('<p>hey</p>');
-     *      },
-     *
-     *      'appliation/json': function(){
-     *        res.send({ message: 'hey' });
-     *      }
-     *    });
+   *      'text/plain': function(){
+   *        res.send('hey');
+   *      },
+   *
+   *      'text/html': function(){
+   *        res.send('<p>hey</p>');
+   *      },
+   *
+   *      'appliation/json': function(){
+   *        res.send({ message: 'hey' });
+   *      }
+   *    });
    *
    * In addition to canonicalized MIME types you may
    * also use extnames mapped to these types:
    *
    *    res.format({
-     *      text: function(){
-     *        res.send('hey');
-     *      },
-     *
-     *      html: function(){
-     *        res.send('<p>hey</p>');
-     *      },
-     *
-     *      json: function(){
-     *        res.send({ message: 'hey' });
-     *      }
-     *    });
+   *      text: function(){
+   *        res.send('hey');
+   *      },
+   *
+   *      html: function(){
+   *        res.send('<p>hey</p>');
+   *      },
+   *
+   *      json: function(){
+   *        res.send({ message: 'hey' });
+   *      }
+   *    });
    *
    * By default Express passes an `Error`
    * with a `.status` of 406 to `next(err)`
@@ -263,9 +260,11 @@ export interface IResponse extends http.ServerResponse {
    * Aliased as `res.header()`.
    */
   set(field: any): IResponse;
+
   set(field: string, value?: string): IResponse;
 
   header(field: any): IResponse;
+
   header(field: string, value?: string): IResponse;
 
   /** Get value for header `field`. */
@@ -292,7 +291,9 @@ export interface IResponse extends http.ServerResponse {
    *    res.cookie('rememberme', '1', { maxAge: 900000, httpOnly: true })
    */
   cookie(name: string, val: string, options: ICookieOptions): IResponse;
+
   cookie(name: string, val: any, options: ICookieOptions): IResponse;
+
   cookie(name: string, val: any): IResponse;
 
   /**
@@ -340,7 +341,9 @@ export interface IResponse extends http.ServerResponse {
    *    res.redirect('../login'); // /blog/post/1 -> /blog/login
    */
   redirect(url: string): void;
+
   redirect(status: number, url: string): void;
+
   redirect(url: string, status: number): void;
 
   /**
@@ -354,6 +357,7 @@ export interface IResponse extends http.ServerResponse {
    *  - `filename`  filename of the view being rendered
    */
   render(view: string, options?: Object, callback?: (err: Error, html: string) => void): void;
+
   render(view: string, callback?: (err: Error, html: string) => void): void;
 
   /**
@@ -374,6 +378,8 @@ export interface IResponse extends http.ServerResponse {
    *
    * @since 4.11.0
    */
-  append(field: string, value?: string[]|string): IResponse;
+  append(field: string, value?: string[] | string): IResponse;
 
 }
+
+

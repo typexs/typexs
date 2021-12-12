@@ -1,4 +1,4 @@
-import {IFindOptions} from '@typexs/schema';
+import {IFindOptions} from '@typexs/entity';
 import {IElasticOptions} from './IElasticOptions';
 import {IElasticHighlight} from './IElasticHighlight';
 import {IElasticFacets} from './IElasticFacets';

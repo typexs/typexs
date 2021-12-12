@@ -1,6 +1,5 @@
 import {Readonly, Text, Type} from '@typexs/ng';
-import {Property} from '@typexs/schema/libs/decorators/Property';
-import {Entity} from '@typexs/schema/libs/decorators/Entity';
+import {Property, Entity} from '@typexs/entity';
 import {IsEmail} from 'class-validator';
 
 @Entity()

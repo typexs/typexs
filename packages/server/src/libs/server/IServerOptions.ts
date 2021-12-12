@@ -1,4 +1,5 @@
-import {ILoggerApi} from '@typexs/base';
+import { ILoggerApi } from '@allgemein/base';
+import * as buffer from 'buffer';
 
 export interface IServerOptions {
 
@@ -16,19 +17,19 @@ export interface IServerOptions {
 
   cert_file?: string;
 
-  cert?: string | Buffer;
+  cert?: string | any;
 
   key_file?: string;
 
-  key?: string | Buffer;
+  key?: string | any;
 
   ca_file?: string;
 
-  ca?: string | Buffer;
+  ca?: string | any;
 
   ca_key_file?: string;
 
-  ca_key?: string | Buffer;
+  ca_key?: string | any;
 
   strictSSL?: boolean;
 

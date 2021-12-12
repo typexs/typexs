@@ -1,7 +1,9 @@
-import {IPermissionDef} from './IPermissionDef';
-import {IRolesHolder} from './IRolesHolder';
-import {ISecuredResource} from './ISecuredResource';
-import {IRole} from './IRole';
+import { IPermissionDef } from './IPermissionDef';
+import { IRolesHolder } from './IRolesHolder';
+import { ISecuredResource } from './ISecuredResource';
+import { IRole } from './IRole';
+// @ts-ignore
+import { Minimatch } from '@cezaryrk/minimatch';
 
 
 export class PermissionHelper {
@@ -9,14 +11,15 @@ export class PermissionHelper {
   static MATCHER: any;
 
   static miniMatch(pattern: string, string: string) {
-    try {
-      if (!this.MATCHER) {
-        this.MATCHER = require('@cezaryrk/minimatch');
-      }
-      return new this.MATCHER.Minimatch(pattern).match(string);
-    } catch (e) {
-      throw e;
-    }
+    // try {
+    //   if (!this.MATCHER) {
+    //     this.MATCHER = require('@cezaryrk/minimatch');
+    //   }
+    //   return new this.MATCHER.Minimatch(pattern).match(string);
+    // } catch (e) {
+    //   throw e;
+    // }
+    return new Minimatch(pattern).match(string);
   }
 
   static getPermissionFromResource(obj: ISecuredResource) {
@@ -101,7 +104,7 @@ export class PermissionHelper {
     let usePermissions: IPermissionDef[] = [];
     if (permissions && permissions.length > 0 && typeof permissions[0] === 'string') {
       usePermissions = (permissions as string[]).map((x: string) => {
-        return <IPermissionDef>{type: /\*/.test(x) ? 'pattern' : 'single', permission: x};
+        return <IPermissionDef>{ type: /\*/.test(x) ? 'pattern' : 'single', permission: x };
       });
     } else {
       usePermissions = permissions as IPermissionDef[];

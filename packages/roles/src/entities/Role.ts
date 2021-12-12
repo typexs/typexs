@@ -1,4 +1,4 @@
-import {Asc, Entity, From, Join, Property, To} from '@typexs/schema';
+import {Asc, Entity, From, Join, Property, To} from '@typexs/entity';
 import {And, Eq, Key, Value} from '@allgemein/expressions';
 import {RBelongsTo} from './RBelongsTo';
 import {Permission} from './Permission';
