@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { EntityService } from './../entity.service';
 import { IEntityRef } from '@allgemein/schema-api';
-import { K_STORABLE } from '@typexs/schema';
+import { K_STORABLE } from '@typexs/entity/libs/Constants';
 
 
 @Component({

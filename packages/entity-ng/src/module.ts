@@ -14,15 +14,16 @@ import { FormsModule as NgFormsModule } from '@angular/forms';
 import { EntityQueryEmbeddedComponent } from './query/embedded/entity-query-embedded.component';
 import { ENTITY_ROUTES } from './routes';
 import { CommonModule } from '@angular/common';
-// import { RegistryFactory } from '@allgemein/schema-api';
-// import { EntityRegistry, NAMESPACE_BUILT_ENTITY } from '@typexs/schema';
 
 export const ENTITY_OPTIONS_SERVICE = EntityOptionsService.name;
 
 const PROVIDERS = [
   EntityService,
   EntityOptionsService,
-  { provide: ENTITY_OPTIONS_SERVICE, useClass: EntityOptionsService }
+  {
+    provide: ENTITY_OPTIONS_SERVICE,
+    useClass: EntityOptionsService
+  }
 ];
 
 @NgModule({
@@ -51,7 +52,8 @@ const PROVIDERS = [
     EntityDeleteComponent,
     EntityQueryComponent,
     EntityViewComponent,
-    EntityStructComponent
+    EntityStructComponent,
+    EntityQueryEmbeddedComponent
   ],
   providers: PROVIDERS,
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

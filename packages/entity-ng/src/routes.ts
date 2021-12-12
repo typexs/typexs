@@ -1,11 +1,11 @@
-import {Routes} from '@angular/router';
-import {EntityTypesComponent} from './types/entity-types.component';
-import {AuthGuardService} from '@typexs/base-ng';
-import {EntityModifyComponent} from './modify/entity-modify.component';
-import {EntityViewComponent} from './view/entity-view.component';
-import {EntityDeleteComponent} from './delete/entity-delete.component';
-import {EntityQueryComponent} from './query/page/entity-query.component';
-import {EntityStructComponent} from './struct/entity-struct.component';
+import { Routes } from '@angular/router';
+import { EntityTypesComponent } from './types/entity-types.component';
+import { AuthGuardService } from '@typexs/base-ng';
+import { EntityModifyComponent } from './modify/entity-modify.component';
+import { EntityViewComponent } from './view/entity-view.component';
+import { EntityDeleteComponent } from './delete/entity-delete.component';
+import { EntityQueryComponent } from './query/page/entity-query.component';
+import { EntityStructComponent } from './struct/entity-struct.component';
 import {
   PERMISSION_ALLOW_ACCESS_ENTITY,
   PERMISSION_ALLOW_ACCESS_ENTITY_METADATA,
@@ -16,7 +16,7 @@ import {
   PERMISSION_ALLOW_DELETE_ENTITY_PATTERN,
   PERMISSION_ALLOW_UPDATE_ENTITY,
   PERMISSION_ALLOW_UPDATE_ENTITY_PATTERN
-} from '@typexs/schema';
+} from '@typexs/entity/libs/Constants';
 
 export const ENTITY_ROUTES: Routes = [
   {
@@ -83,6 +83,6 @@ export const ENTITY_ROUTES: Routes = [
       permissions: [PERMISSION_ALLOW_ACCESS_ENTITY_METADATA]
     },
     canActivate: [AuthGuardService]
-  },
+  }
 
 ];

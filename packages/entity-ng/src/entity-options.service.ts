@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { EntityService } from './entity.service';
-// import { EntityRef, K_STORABLE, PropertyRef } from '@typexs/schema';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ISelectOptionsService } from '@typexs/ng-forms';
 import { ISelectOption } from '@typexs/ng/lib/forms/elements/ISelectOption';
 import { IClassRef, IEntityRef, IPropertyRef } from '@allgemein/schema-api';
 import { Log } from '@typexs/base-ng';
-import { K_STORABLE } from '@typexs/schema';
+import { K_STORABLE } from '@typexs/entity/libs/Constants';
 import { Expressions } from '@allgemein/expressions';
-import { LabelHelper } from '@typexs/base';
+import { LabelHelper } from '@typexs/base/libs/utils/LabelHelper';
 
 @Injectable()
 export class EntityOptionsService implements ISelectOptionsService {

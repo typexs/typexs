@@ -18,7 +18,7 @@ import {
   API_CTRL_ENTITY_UPDATE_ENTITY,
   API_ENTITY_PREFIX,
   NAMESPACE_BUILT_ENTITY
-} from '@typexs/schema';
+} from '@typexs/entity/libs/Constants';
 import { IBuildOptions, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
 import { C_RAW } from '@typexs/ng';
 

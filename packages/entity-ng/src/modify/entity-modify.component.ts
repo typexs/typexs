@@ -3,9 +3,7 @@ import { EntityService } from './../entity.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IEntityRef } from '@allgemein/schema-api';
 import { Expressions } from '@allgemein/expressions';
-import { LabelHelper } from '@typexs/base';
-// import {EntityRegistry} from '@typexs/schema/libs/EntityRegistry';
-// import {EntityRef} from '@typexs/schema/libs/registry/EntityRef';
+import { LabelHelper } from '@typexs/base/libs/utils/LabelHelper';
 
 @Component({
   selector: 'entity-modify',
