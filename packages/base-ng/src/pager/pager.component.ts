@@ -1,9 +1,9 @@
-import {isNumber, isString, isUndefined} from 'lodash';
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {PagerAction} from './PagerAction';
-import {ActivatedRoute, Router} from '@angular/router';
-import {PagerService} from './PagerService';
-import {Pager} from './Pager';
+import { isNumber, isString, isUndefined } from 'lodash';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { PagerAction } from './PagerAction';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PagerService } from './PagerService';
+import { Pager } from './Pager';
 
 @Component({
   selector: 'txs-pager',
@@ -38,7 +38,7 @@ export class PagerComponent implements OnInit, OnDestroy {
 
   @Input()
   set frameSize(nr: number) {
-    nr = isNumber(nr) ? nr : parseInt(nr, 0);
+    nr = isNumber(nr) ? nr : parseInt(nr, 10);
     if (this.pager) {
       this.pager.frameSize = nr;
     } else {
@@ -57,7 +57,7 @@ export class PagerComponent implements OnInit, OnDestroy {
 
   @Input()
   set currentPage(nr: number) {
-    nr = isNumber(nr) ? nr : parseInt(nr, 0);
+    nr = isNumber(nr) ? nr : parseInt(nr, 10);
     if (this.pager) {
       this.pager.currentPage = nr;
     } else {
@@ -77,7 +77,7 @@ export class PagerComponent implements OnInit, OnDestroy {
 
   @Input()
   set totalPages(nr: number) {
-    nr = isNumber(nr) ? nr : parseInt(nr, 0);
+    nr = isNumber(nr) ? nr : parseInt(nr, 10);
     if (this.pager) {
       this.pager.totalPages = nr;
     } else {
@@ -88,9 +88,10 @@ export class PagerComponent implements OnInit, OnDestroy {
   @Input()
   pager: Pager;
 
-  constructor(private router: Router,
-              private activatedRoute: ActivatedRoute,
-              private pagerService: PagerService) {
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    private pagerService: PagerService) {
 
   }
 
@@ -125,7 +126,7 @@ export class PagerComponent implements OnInit, OnDestroy {
       this.totalPages = 0;
     } else {
       if (isString(this.totalPages)) {
-        this.totalPages = parseInt(this.totalPages, 0);
+        this.totalPages = parseInt(this.totalPages, 10);
       }
     }
   }
@@ -136,7 +137,7 @@ export class PagerComponent implements OnInit, OnDestroy {
       this.currentPage = 1;
     } else {
       if (isString(this.currentPage)) {
-        this.currentPage = parseInt(this.currentPage, 0);
+        this.currentPage = parseInt(this.currentPage, 10);
       }
     }
   }
@@ -146,7 +147,7 @@ export class PagerComponent implements OnInit, OnDestroy {
       this.frameSize = 1;
     } else {
       if (isString(this.frameSize)) {
-        this.frameSize = parseInt(this.frameSize, 0);
+        this.frameSize = parseInt(this.frameSize, 10);
       }
     }
   }

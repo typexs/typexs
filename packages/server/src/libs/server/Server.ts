@@ -12,6 +12,7 @@ import { Exceptions } from './Exceptions';
 
 export interface IServerApi {
 
+  // eslint-disable-next-line no-use-before-define
   beforeStart?(server: Server): Promise<any>;
 
 }
@@ -43,7 +44,7 @@ export class Server {
 
   initialize(options: IServerOptions, wrapper: IServerApi = null) {
     this._options = _.defaultsDeep(options, DEFAULT_SERVER_OPTIONS);
-    this.logger = _.get(options, 'logger', Log.getLoggerFor(Server));
+    this.logger = _.get(options, 'logger', Log.getLoggerFor(Server)) as any;
     this._secured = /^https/.test(this._options.protocol);
 
     if (this._options.cert_file) {
@@ -141,6 +142,7 @@ export class Server {
   shutdown(): Promise<any> {
     this._abort = true;
     for (const x in this.cache) {
+      // eslint-disable-next-line no-prototype-builtins
       if (this.cache.hasOwnProperty(x)) {
         if (this.cache[x].t) {
           clearTimeout(this.cache[x].t);
@@ -208,7 +210,7 @@ export class Server {
   // private onServerConnection(socket: net.Socket): void {  }
 
   async start(done?: Function): Promise<boolean> {
-    const self = this;
+    // const self = this;
     this.prepare();
     this.server = this.createServer();
 
@@ -229,7 +231,7 @@ export class Server {
     }
 
     const p = new Promise<boolean>((resolve, reject) => {
-      self.server.once('error', (err) => {
+      this.server.once('error', (err) => {
         const nErr = Exceptions.handle(err);
         if (nErr.code === Exceptions.EADDRINUSE) {
           reject(err);
@@ -238,8 +240,8 @@ export class Server {
         }
       });
 
-      self.server = self.server.listen(self._options.port, self._options.ip, () => {
-        self.debug('start server on ' + self.url() + ' (SSL: ' + self.isSecured + ')');
+      this.server = this.server.listen(this._options.port, this._options.ip, () => {
+        this.debug('start server on ' + this.url() + ' (SSL: ' + this.isSecured + ')');
         resolve(true);
       });
     });
@@ -261,6 +263,7 @@ export class Server {
       // destroy and unref socket connections
       this.debug('server-stop: ' + this.url() + ' ' + _.keys(this.$connections).length);
       for (const conn in this.$connections) {
+        // eslint-disable-next-line no-prototype-builtins
         if (this.$connections.hasOwnProperty(conn)) {
           try {
             this.$connections[conn].unref();

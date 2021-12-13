@@ -91,28 +91,33 @@ export class Log {
 
   static info(...args: any[]) {
     args.unshift('INFO');
+    // eslint-disable-next-line prefer-spread
     Log.log.apply(Log, args);
   }
 
 
   static warn(...args: any[]) {
     args.unshift('WARN');
+    // eslint-disable-next-line prefer-spread
     Log.log.apply(Log, args);
   }
 
 
   static debug(...args: any[]) {
     args.unshift('DEBUG');
+    // eslint-disable-next-line prefer-spread
     Log.log.apply(Log, args);
   }
 
   static trace(...args: any[]) {
     args.unshift('SILLY');
+    // eslint-disable-next-line prefer-spread
     Log.log.apply(Log, args);
   }
 
   static error(...args: any[]) {
     args.unshift('ERROR');
+    // eslint-disable-next-line prefer-spread
     Log.log.apply(Log, args);
   }
 

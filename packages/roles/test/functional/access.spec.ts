@@ -30,7 +30,7 @@ class AccessSpec {
             '**/packages/base**',
             '**/packages/server**',
             '**/packages/roles-api**',
-            '**/packages/schema**'
+            '**/packages/entity**'
           ],
 
         },

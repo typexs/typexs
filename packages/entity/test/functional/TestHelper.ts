@@ -13,8 +13,9 @@ import {EntityController} from '../../src/libs/EntityController';
 import {EntityRegistry} from '../../src/libs/EntityRegistry';
 import {FrameworkFactory} from '../../src/libs/framework/FrameworkFactory';
 import {RegistryFactory} from '@allgemein/schema-api';
+import {TestHelper as _TestHelper} from '@typexs/testing';
 
-export class TestHelper {
+export class TestHelper extends _TestHelper {
 
   static suiteName(filename: string) {
     return filename.split('/test/').pop();
@@ -52,45 +53,4 @@ export class TestHelper {
     // PlatformTools.getGlobalVariable().typeormMetadataArgsStorage = null;
   }
 
-  static wait(ms: number) {
-    return new Promise((resolve, reject) => {
-      setTimeout(resolve, ms);
-    });
-  }
-
-
-  static logEnable(set?: boolean) {
-    return process.env.CI_RUN ? false : _.isBoolean(set) ? set : true;
-  }
-
-
-  static typeOrmReset() {
-
-    const e: string[] = ['SystemNodeInfo', 'TaskLog'];
-    _.keys(getMetadataArgsStorage()).forEach(x => {
-      _.remove(getMetadataArgsStorage()[x], y => y['target'] && e.indexOf(y['target'].name) === -1);
-    });
-  }
-
-  static waitFor(fn: Function, ms: number = 50, rep: number = 30) {
-    return new Promise((resolve, reject) => {
-      const c = 0;
-      const i = setInterval(() => {
-        if (c >= rep) {
-          clearInterval(i);
-          reject(new Error('max repeats reached ' + rep));
-        }
-        try {
-          const r = fn();
-          if (r) {
-            clearInterval(i);
-            resolve(null);
-          }
-        } catch (err) {
-          clearInterval(i);
-          reject(err);
-        }
-      }, ms);
-    });
-  }
 }

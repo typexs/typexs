@@ -24,7 +24,7 @@ const settingsTemplate: any = {
 
   app: {
     name: 'demo',
-    path: __dirname + '/../../../../..'
+    path: TestHelper.root()
   },
 
   modules: {
@@ -34,9 +34,15 @@ const settingsTemplate: any = {
     ],
     disableCache: true,
     include: [
+      '**/@typexs',
+      '**/@typexs/base*',
+      '**/@typexs/server*',
+      '**/@typexs/entity*',
+      '**/@allgemein',
+      '**/@allgemein/eventbus*',
       '**/packages/base**',
       '**/packages/server**',
-      '**/packages/schema**',
+      '**/packages/entity**',
       '**/packages/fake_app**'
     ]
   },

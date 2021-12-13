@@ -36,7 +36,7 @@ const settingsTemplate: any = {
     include: [
       '**/packages/base**',
       '**/packages/server**',
-      '**/packages/schema**',
+      '**/packages/entity**',
       // '**/packages/fake_app**'
     ],
 

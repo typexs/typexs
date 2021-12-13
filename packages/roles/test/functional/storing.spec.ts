@@ -46,7 +46,7 @@ class StoringSpec {
             '**/packages/base**',
             '**/packages/server**',
             '**/packages/roles-api**',
-            '**/packages/schema**',
+            '**/packages/entity**',
             '**/packages/roles**'
           ],
         },
@@ -93,7 +93,7 @@ class StoringSpec {
             '**/packages/base**',
             '**/packages/server**',
             '**/packages/roles-api**',
-            '**/packages/schema**',
+            '**/packages/entity**',
             '**/packages/roles**'
 
           ],
@@ -139,7 +139,7 @@ class StoringSpec {
             '**/packages/base**',
             '**/packages/server**',
             '**/packages/roles-api**',
-            '**/packages/schema**',
+            '**/packages/entity**',
             '**/packages/roles**'
 
           ],
@@ -195,7 +195,7 @@ class StoringSpec {
             '**/packages/base**',
             '**/packages/server**',
             '**/packages/roles-api**',
-            '**/packages/schema**',
+            '**/packages/entity**',
             '**/packages/roles**'
           ],
         },
@@ -237,7 +237,7 @@ class StoringSpec {
             '**/packages/base**',
             '**/packages/server**',
             '**/packages/roles-api**',
-            '**/packages/schema**',
+            '**/packages/entity**',
             '**/packages/roles**'
           ],
         },
