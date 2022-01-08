@@ -128,6 +128,16 @@ export class AppModule {
 
     this.compService.setComponentForClass(PersonComponent, Person, { context: 'default', label: 'Default' });
     this.compService.setComponentForClass(BookComponent, Book, { context: 'default', label: 'Default' });
+
+    /**
+     * Add template for BuildSimpleItem
+     */
+    this.compService.setComponentForClass(BuildSimpleItemComponent, BuildSimpleItem, { context: 'default', label: 'Default' });
+    /**
+     * Add template for BuildSimpleItemIdx (search index results)
+     */
+    this.compService.setComponentForClass(BuildSimpleItemComponent, 'BuildSimpleItemIdx', { context: 'default', label: 'Default' });
+
     this.compService.setComponentForClass(BuildSimpleItemComponent, BuildSimpleItem, { context: 'default', label: 'Default' });
 
     authService.init();

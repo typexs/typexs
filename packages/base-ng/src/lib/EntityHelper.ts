@@ -27,8 +27,9 @@ export class EntityHelper {
     }
 
     if (def) {
+      const classRef = def.getClassRef();
       const dynamic = def.getOptions(C_FLEXIBLE);
-      if (get(options, C_SKIP_BUILDS, false) || dynamic === true) {
+      if (get(options, C_SKIP_BUILDS, false) || dynamic === true || classRef.isPlaceholder()) {
         const x = def.create(false);
         delete entity[__CLASS__];
         delete entity[__REGISTRY__];
