@@ -61,14 +61,14 @@
 
     <div class="collapse navbar-collapse">
 
-      <ul class="navbar-nav mr-auto">
+      <ul class="navbar-nav me-auto">
         <li *ngIf="(appStateService.isAdmin | async) && requestCount > 0">
           <span class="badge badge-secondary"><i class="icon icon-spinner fa-spin"></i> {{requestCount}}</span>
         </li>
         <ng-content select="header-left-list-entries"></ng-content>
       </ul>
 
-      <ul class="navbar-nav ml-auto">
+      <ul class="navbar-nav ms-auto">
         <ng-content select="header-right-list-entries"></ng-content>
         <li *ngIf="!(appStateService.isAdmin | async)">
           <p class="btn btn-sm btn-{{getBackendService().getState() | async}}">

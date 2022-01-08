@@ -1,6 +1,6 @@
 import { assign, isArray, uniq } from 'lodash';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, ParamMap } from '@angular/router';
 import { IEntityRef } from '@allgemein/schema-api';
 import { EntityResolverService } from '../../../services/entity-resolver.service';
 import { C_FLEXIBLE, LabelHelper } from '@typexs/base';
@@ -29,6 +29,7 @@ export class EntityViewPageComponent implements OnInit {
     private resolver: EntityResolverService) {
   }
 
+
   label(): string {
     if (this.instance) {
       return LabelHelper.labelForEntity(this.instance, this.entityRef);
@@ -42,17 +43,32 @@ export class EntityViewPageComponent implements OnInit {
       if (isArray(x)) {
         const f = uniq(x);
         if (f.length > 0 && f[0]) {
-          this.load();
+          this.route.paramMap.subscribe(this.onRouteChange.bind(this));
         }
       }
-
     });
   }
 
 
-  load() {
-    this.name = this.route.snapshot.paramMap.get('name');
-    this.id = this.route.snapshot.paramMap.get('id');
+  onRouteChange(x: ParamMap) {
+    const name = x.get('name');
+    const id = x.get('id');
+
+    if (this.name !== name || this.id !== id) {
+      let query = {};
+      try {
+        query = this.route.snapshot.queryParamMap.get('opts');
+      } catch (e) {
+        query = {};
+      }
+      this.load(name, id, query);
+    }
+  }
+
+
+  load(name: string, id: string, queryMap: any) {
+    this.name = name;
+    this.id = id;
 
     const opts = {};
     this.entityRef = this.resolver.getEntityRef(this.name);
@@ -62,7 +78,7 @@ export class EntityViewPageComponent implements OnInit {
     }
 
     try {
-      const _opts = JSON.parse(this.route.snapshot.queryParamMap.get('opts'));
+      const _opts = JSON.parse(queryMap);
       assign(opts, _opts);
     } catch (e) {
     }

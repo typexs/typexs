@@ -1,13 +1,22 @@
 {
   "extends": "./../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "build/app",
+    "outDir": "build/app-auth",
     "types": [
       "node"
     ],
     "paths": {
-      "react-native-sqlite-storage": [
-        "./src/dummy.ts"
+      "@typexs/auth": [
+        "./packages/auth/src/browser"
+      ],
+      "@typexs/auth/*": [
+        "./packages/auth/src/*"
+      ],
+      "@typexs/auth-ng": [
+        "./packages/auth-ng/src/public_api"
+      ],
+      "@typexs/auth-ng/*": [
+        "./packages/auth-ng/src/*"
       ],
       "@typexs/base": [
         "./packages/base/src/browser"
@@ -22,10 +31,16 @@
         "./packages/server/src/*"
       ],
       "@typexs/entity": [
-        "./packages/schema/src/browser"
+        "./packages/entity/src/browser"
       ],
       "@typexs/entity/*": [
-        "./packages/schema/src/*"
+        "./packages/entity/src/*"
+      ],
+      "@typexs/entity-ng/*": [
+        "./packages/entity-ng/src/*"
+      ],
+      "@typexs/entity-ng": [
+        "./packages/entity-ng/src/public_api"
       ],
       "@typexs/ng": [
         "./packages/ng/src/browser"
@@ -63,12 +78,7 @@
       "@typexs/search-ng": [
         "./packages/search-ng/src/public_api"
       ],
-      "@typexs/entity-ng/*": [
-        "./packages/entity-ng/src/*"
-      ],
-      "@typexs/entity-ng": [
-        "./packages/entity-ng/src/public_api"
-      ],
+
       "@typexs/ng-router-menu/*": [
         "./packages/ng-router-menu/src/*"
       ],
@@ -108,12 +118,15 @@
     }
   },
   "include": [
-    "src/polyfills.ts",
-    "src/main.ts",
-    "src/dummy.ts"
+    "./src/polyfills.ts",
+    "./src/main.ts",
+    "./src/dummy.ts"
+  ],
+  "files": [
+    "./src/dummy.ts"
   ],
   "angularCompilerOptions": {
-    "genDir": "build/app--auth",
+    "genDir": "build/app-auth",
     "skipMetadataEmit": false,
     "skipTemplateCodegen": false,
     "enableI18nLegacyMessageIdFormat": false,

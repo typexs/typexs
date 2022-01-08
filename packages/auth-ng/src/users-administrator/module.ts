@@ -8,6 +8,7 @@ import { NavigatorService, RouterMenuModule } from '@typexs/ng-router-menu';
 import { EntityModule } from '@typexs/entity-ng';
 import { CommonModule } from '@angular/common';
 import { BaseAdminThemeModule } from '@typexs/ng-theme-base';
+import { FormsModule as NgFormModule } from '@typexs/ng-forms';
 
 export const PROVIDERS: any[] = [];
 
@@ -22,7 +23,8 @@ export const PROVIDERS: any[] = [];
     UserModule,
     RouterMenuModule,
     EntityModule,
-    BaseAdminThemeModule
+    BaseAdminThemeModule,
+    NgFormModule
   ],
   exports: [
     PermissionsRolesComponent

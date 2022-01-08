@@ -11,7 +11,6 @@ import { AdminComponent } from '@typexs/ng-admin-ui';
 import { TasksModule } from '@typexs/tasks-ng';
 import { StorageModule } from '@typexs/storage-ng';
 import { EntityModule } from '@typexs/entity-ng';
-import { DistributedStorageModule } from '@typexs/distributed-storage-ng';
 
 
 export const APP_ROUTES: Routes = [
@@ -76,7 +75,6 @@ export const APP_ROUTES: Routes = [
       ...TasksModule.getRoutes(),
       ...StorageModule.getRoutes(),
       ...EntityModule.getRoutes(),
-      ...DistributedStorageModule.getRoutes()
     ]
   },
   {

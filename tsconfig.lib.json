@@ -14,6 +14,12 @@
       "@typexs/auth/*": [
         "./packages/auth/src/*"
       ],
+      "@typexs/auth-ng": [
+        "./packages/auth-ng/src/public_api"
+      ],
+      "@typexs/auth-ng/*": [
+        "./packages/auth-ng/src/*"
+      ],
       "@typexs/server": [
         "./packages/server/src/browser",
       ],

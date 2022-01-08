@@ -44,6 +44,8 @@ import { BookComponent } from './components/entities/book/book.component';
 import { Book } from './entities/Book';
 import { AppService, AuthService, ComponentRegistryService } from '@typexs/base-ng';
 import { FormSelectionsComponent } from './components/forms/selection/form-selections.component';
+import { BuildSimpleItemComponent } from './components/entities/build-simple-item/build-simple-item.component';
+import { BuildSimpleItem } from '../../../../demo/testtask/entities/BuildSimpleItem';
 
 
 @NgModule({
@@ -79,6 +81,7 @@ import { FormSelectionsComponent } from './components/forms/selection/form-selec
     DataViewComponent,
     PersonComponent,
     BookComponent,
+    BuildSimpleItemComponent,
     SimpleViewVariantsComponent
   ],
   entryComponents: [
@@ -88,7 +91,8 @@ import { FormSelectionsComponent } from './components/forms/selection/form-selec
     ViewParentComponent,
     AgGridWrapperComponent,
     PersonComponent,
-    BookComponent
+    BookComponent,
+    BuildSimpleItemComponent
   ],
   imports: APP_MODULES,
   providers: [
@@ -124,6 +128,7 @@ export class AppModule {
 
     this.compService.setComponentForClass(PersonComponent, Person, { context: 'default', label: 'Default' });
     this.compService.setComponentForClass(BookComponent, Book, { context: 'default', label: 'Default' });
+    this.compService.setComponentForClass(BuildSimpleItemComponent, BuildSimpleItem, { context: 'default', label: 'Default' });
 
     authService.init();
     // navigatorService.addGroupEntry('tables', {label: 'Tables', group: 'demo'});

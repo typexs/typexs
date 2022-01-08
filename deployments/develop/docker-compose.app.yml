@@ -1,0 +1,20 @@
+version: '3'
+networks:
+  dev: {}
+services:
+
+  elastic:
+    image: elasticsearch:7.14.2
+    environment:
+      - TAKE_FILE_OWNERSHIP=true
+      - discovery.type=single-node
+      - node.name=es01
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    volumes:
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - 127.0.0.1:9200:9200
+      - 127.0.0.1:9300:9300
+    networks:
+      - dev
+

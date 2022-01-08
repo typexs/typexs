@@ -39,5 +39,8 @@
     "files",
     "node_modules"
   ],
+  "files": [
+    "./src/dummy.ts"
+  ],
   "compileOnSave": true
 }

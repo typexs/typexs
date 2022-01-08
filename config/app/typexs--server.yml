@@ -9,10 +9,6 @@ tasks:
   access:
     - task: '*'
       access: allow
-#    - task: '*'
-#      access: deny
-#    - task: simple_task
-#      access: allow
 
 workers:
   access:
@@ -31,7 +27,7 @@ server:
         routePrefix: api
       - type: static_files
         routePrefix: public
-        path: public
+        path: packages/app/public
 
 
 filesystem:

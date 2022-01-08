@@ -3,7 +3,10 @@
   "version": "0.0.0-PLACEHOLDER",
   "description": "Auth module for typexs",
   "main": "index",
-  "browser": "browser",
+  "browser": {
+    "./index.js": "./browser.js",
+    "./index.ts": "./browser.ts"
+  },
   "directories": {
     "doc": "docs/de"
   },

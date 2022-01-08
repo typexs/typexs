@@ -166,13 +166,13 @@
     }
   }
 
-  .mr-auto {
+  .me-auto {
     .dropdown-menu {
       margin-left: -20px;
     }
   }
 
-  .ml-auto {
+  .ms-auto {
     float: right;
 
     .dropdown-menu {
@@ -1649,7 +1649,7 @@
       }
     }
 
-    .navbar-nav.mr-auto {
+    .navbar-nav.me-auto {
       // display: none;
       li {
         display: none;

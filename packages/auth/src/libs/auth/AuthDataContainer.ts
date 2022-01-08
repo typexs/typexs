@@ -1,7 +1,9 @@
 import * as _ from 'lodash';
-import {DataContainer} from '@typexs/base';
-import {EntityRegistry} from '@typexs/entity';
+import { DataContainer } from '@allgemein/schema-api';
+import { EntityRegistry } from '@typexs/entity/libs/EntityRegistry';
+
 export const STATE_KEY = '$state';
+
 export class AuthDataContainer<T> extends DataContainer<T> {
 
   // authId: string;

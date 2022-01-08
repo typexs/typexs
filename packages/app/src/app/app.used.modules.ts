@@ -16,10 +16,12 @@ import {StorageModule} from '@typexs/storage-ng';
 import {EntityModule} from '@typexs/entity-ng';
 import {DistributedStorageModule} from '@typexs/distributed-storage-ng';
 import { SearchModule } from '@typexs/search-ng';
+import { CommonModule } from '@angular/common';
 
 
 export const APP_MODULES: Array<Type<any> | ModuleWithProviders<any> | any[]> = [
   BrowserModule,
+  CommonModule,
   HttpClientModule,
   BaseModule.forRoot(),
   NgFormsModule,

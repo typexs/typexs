@@ -3,6 +3,7 @@ networks:
   dev: {}
 services:
 
+
   mongo:
     image: mongo:4
     ports:
@@ -39,20 +40,7 @@ services:
   psql:
     image: postgres:14
     ports:
-      - 127.0.0.1:5436:5432
-    environment:
-      POSTGRES_DATABASES: txsbase
-      POSTGRES_USER: txsbase
-      POSTGRES_HOST_AUTH_METHOD: trust
-      POSTGRES_PASSWORD:
-    networks:
-      - dev
-
-
-  psql-auth:
-    image: postgres:14
-    ports:
-      - 127.0.0.1:5437:5432
+      - 127.0.0.1:5234:5432
     environment:
       POSTGRES_DATABASES: auth
       POSTGRES_USER: auth

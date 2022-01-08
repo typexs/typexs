@@ -1,0 +1,18 @@
+<div class="build-simple-item-wrapper" *ngIf="instance">
+  <div>
+    <h5>BuildSimpleItem: {{instance.name}}</h5>
+  </div>
+
+  <div>
+    <p>
+      Next entry:
+      <a [routerLink]="['/','entity', 'build_simple_item', (instance.id + 1)]">Next entry {{instance.id + 1}}</a>
+    </p>
+  </div>
+
+  <div>
+  <pre class="language-js">
+    {{ instance | json }}
+  </pre>
+  </div>
+</div>

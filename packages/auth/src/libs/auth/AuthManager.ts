@@ -1,14 +1,14 @@
-import {ClassesLoader, Config, Inject, Injector, Log, RuntimeLoader} from '@typexs/base';
-import {CryptUtils} from '@allgemein/base';
+import { ClassesLoader, Config, Inject, Injector, Log, RuntimeLoader } from '@typexs/base';
+import { CryptUtils } from '@allgemein/base';
 
-import {K_LIB_AUTH_ADAPTERS, K_LIB_AUTH_CONFIGURATIONS} from '../Constants';
-import {IAuthConfiguration} from '../adapter/IAuthConfiguration';
+import { K_LIB_AUTH_ADAPTERS, K_LIB_AUTH_CONFIGURATIONS } from '../Constants';
+import { IAuthConfiguration } from '../adapter/IAuthConfiguration';
 import * as _ from 'lodash';
-import {IAuthConfigurationDef} from './IAuthConfigurationDef';
-import {IAuthConfig} from './IAuthConfig';
-import {User} from '../../entities/User';
-import {IAuthAdapter} from '../adapter/IAuthAdapter';
-import {IAdapterDef} from '../adapter/IAdapterDef';
+import { IAuthConfigurationDef } from './IAuthConfigurationDef';
+import { IAuthConfig } from './IAuthConfig';
+import { User } from '../../entities/User';
+import { IAuthAdapter } from '../adapter/IAuthAdapter';
+import { IAdapterDef } from '../adapter/IAdapterDef';
 
 
 const DEFAULT_CONFIG_OPTIONS: IAuthConfig = {
@@ -141,7 +141,7 @@ export class AuthManager {
 
 
   getConfiguration(id: string) {
-    const cfg = _.find(this.configurations, {id: id});
+    const cfg = _.find(this.configurations, { id: id });
     if (cfg) {
       return <IAuthConfiguration>Injector.get(cfg.cls);
     }

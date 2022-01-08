@@ -6,12 +6,7 @@
     "types": [
       "jasmine",
       "node"
-    ],
-    "paths": {
-      "core-js/es7/reflect": [
-        "node_modules/core-js/proposals/reflect-metadata"
-      ]
-    }
+    ]
   },
   "files": [
     "src/test.ts",

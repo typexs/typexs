@@ -1,12 +1,6 @@
 
 app:
-  name: typexs-auth
-
-logging:
-  enable: true
-  level: debug
-  transports:
-  - console: {}
+  name: app-auth
 
 
 server:
@@ -24,13 +18,20 @@ server:
 
 storage:
   default:
-    type: postgres
-    database: auth
-    username: auth
-    port: 5234
+#    type: postgres
+#    database: auth
+    type: sqlite
+#    username: auth
+#    port: 5437
     synchronize: true
     # database: ':memory:'
-    # database: 'tmp/db_${app.name}.db'
+    database: 'tmp/db_${app.name}.db'
+    connectOnStartup: true
     # logger: simple-console
     # logging: all
 
+
+modules:
+  exclude:
+    - '**/@typexs/search{,**/*}'
+    - '**/@typexs/pipelines{,**/*}'

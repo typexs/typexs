@@ -15,6 +15,12 @@
       "@typexs/base/*": [
         "./packages/base/src/*"
       ],
+      "@typexs/auth": [
+        "./packages/auth/src/browser"
+      ],
+      "@typexs/auth/*": [
+        "./packages/auth/src/*"
+      ],
       "@typexs/server": [
         "./packages/server/src/browser"
       ],
@@ -26,6 +32,12 @@
       ],
       "@typexs/entity/*": [
         "./packages/entity/src/*"
+      ],
+      "@typexs/entity-ng/*": [
+        "./packages/entity-ng/src/*"
+      ],
+      "@typexs/entity-ng": [
+        "./packages/entity-ng/src/public_api"
       ],
       "@typexs/ng": [
         "./packages/ng/src/browser"
@@ -63,12 +75,7 @@
       "@typexs/search-ng": [
         "./packages/search-ng/src/public_api"
       ],
-      "@typexs/entity-ng/*": [
-        "./packages/entity-ng/src/*"
-      ],
-      "@typexs/entity-ng": [
-        "./packages/entity-ng/src/public_api"
-      ],
+
       "@typexs/ng-router-menu/*": [
         "./packages/ng-router-menu/src/*"
       ],

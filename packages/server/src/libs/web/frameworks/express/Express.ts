@@ -10,7 +10,8 @@ import * as http from 'http';
 import {IRoute} from '../../../server/IRoute';
 import {C_DEFAULT, K_ROUTE_CONTROLLER, K_ROUTE_STATIC} from '../../../Constants';
 import {RoutePermissionsHelper} from '../../../RoutePermissionsHelper';
-import * as path from 'path';
+// import * as path from 'path';
+import {PlatformUtils} from '@allgemein/base';
 import {IApplication} from '../../../server/IApplication';
 import {ActionType} from 'routing-controllers/types/metadata/types/ActionType';
 import {ActionMetadataArgs} from 'routing-controllers/types/metadata/args/ActionMetadataArgs';
@@ -65,11 +66,10 @@ export class Express implements IFrameworkSupport {
   useStaticRoute(options: IStaticFiles) {
     let app: express.Application = null;
     let resolvePath: string = null;
-    if (path.isAbsolute(options.path)) {
+    if (PlatformUtils.isAbsolute(options.path)) {
       resolvePath = options.path;
     } else {
-      const rootDir = Config.get('app.path');
-      resolvePath = path.resolve(rootDir, options.path);
+      resolvePath = PlatformUtils.pathResolve(options.path);
     }
     express.static(resolvePath);
     if (options.routePrefix) {

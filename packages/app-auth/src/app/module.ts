@@ -10,7 +10,6 @@ import { UsersListComponent } from './demos/bat-auth-users-list/users-list.compo
 import { NavigatorService } from '@typexs/ng-router-menu';
 import { StorageService } from '@typexs/storage-ng';
 import { EntityService } from '@typexs/entity-ng';
-import { DistributedStorageService } from '@typexs/distributed-storage-ng';
 
 
 @NgModule({
@@ -34,15 +33,12 @@ export class AppModule {
     private navigatorService: NavigatorService,
     private storageService: StorageService,
     private entityService: EntityService,
-    private dStorageService: DistributedStorageService
   ) {
     entityService.setNgUrlPrefix('/admin/entity');
     storageService.setNgUrlPrefix('/admin/storage');
-    dStorageService.setNgUrlPrefix('/admin/distributed-storage');
 
     this.navigatorService.addGroupEntry('admin/entity/.*', { label: 'Entity', group: 'admin' });
     this.navigatorService.addGroupEntry('admin/storage/.*', { label: 'Storage', group: 'admin' });
-    this.navigatorService.addGroupEntry('admin/distributed-storage/.*', { label: 'Distributed Storage', group: 'admin' });
 
     authService.init();
     // authGuardService.init();
