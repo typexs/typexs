@@ -1,10 +1,10 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Injector, RuntimeLoader, Config} from '@typexs/base';
-import {WebServer} from '../../../src/libs/web/WebServer';
-import {C_DEFAULT, K_ROUTE_CONTROLLER, K_ROUTE_STATIC} from '../../../src/libs/Constants';
+import { suite, test } from '@testdeck/mocha';
+import { Bootstrap, Config, Injector, RuntimeLoader } from '@typexs/base';
+import { WebServer } from '../../../src/libs/web/WebServer';
+import { C_DEFAULT, K_ROUTE_CONTROLLER, K_ROUTE_STATIC } from '../../../src/libs/Constants';
 import request from 'supertest';
-import {expect} from 'chai';
-import {IStaticFiles} from '../../../src/libs/web/IStaticFiles';
+import { expect } from 'chai';
+import { IStaticFiles } from '../../../src/libs/web/IStaticFiles';
 
 process.setMaxListeners(1000);
 Bootstrap._().activateErrorHandling();
@@ -32,7 +32,7 @@ class WebserverSpec {
       libs: [{
         'topic': 'server.controllers',
         'refs': [
-          'controllers',
+          'controllers'
         ]
       }]
     });
@@ -60,7 +60,7 @@ class WebserverSpec {
       .expect(200);
     const stopped = await web.stop();
     expect(stopped).to.be.true;
-    expect(res.body).to.deep.eq({json: 'test'});
+    expect(res.body).to.deep.eq({ json: 'test' });
     expect(routes).to.deep.eq([
       {
         'authorized': false,
@@ -97,7 +97,9 @@ class WebserverSpec {
 
     const web = Injector.get(WebServer);
     await web.initialize({
-      type: 'web', framework: 'express', routes: [<IStaticFiles>{
+      type: 'web',
+      framework: 'express',
+      routes: [<IStaticFiles>{
         type: K_ROUTE_STATIC,
         path: __dirname + '/fake_app/public'
       }]
@@ -137,7 +139,9 @@ class WebserverSpec {
 
     const web = Injector.get(WebServer);
     await web.initialize({
-      type: 'web', framework: 'express', routes: [<IStaticFiles>{
+      type: 'web',
+      framework: 'express',
+      routes: [<IStaticFiles>{
         type: K_ROUTE_STATIC,
         path: 'public'
       }]
@@ -146,11 +150,8 @@ class WebserverSpec {
     await web.prepare();
     const uri = web.getUri();
     const routes = web.getRoutes();
-
     const started = await web.start();
-
-    const res = await request(uri).get('/index.html')
-      .expect(200);
+    const res = await request(uri).get('/index.html').expect(200);
     const stopped = await web.stop();
 
     expect(started).to.be.true;
@@ -220,7 +221,7 @@ class WebserverSpec {
       libs: [{
         'topic': 'server.controllers',
         'refs': [
-          'controllers',
+          'controllers'
         ]
       }]
     });
@@ -257,8 +258,8 @@ class WebserverSpec {
 
     expect(started).to.be.true;
     expect(stopped).to.be.true;
-    expect(res1.body).to.deep.eq({json: 'test'});
-    expect(res2.body).to.deep.eq({json: 'api'});
+    expect(res1.body).to.deep.eq({ json: 'test' });
+    expect(res2.body).to.deep.eq({ json: 'api' });
     expect(routes).to.deep.eq(
       [
         {
@@ -269,7 +270,7 @@ class WebserverSpec {
           'permissions': null,
           'method': 'get',
           'params': [],
-          'route': '/get4',
+          'route': '/get4'
         },
         {
           'authorized': false,
@@ -279,7 +280,7 @@ class WebserverSpec {
           'permissions': null,
           'method': 'get',
           'params': [],
-          'route': '/get',
+          'route': '/get'
         },
         {
           'authorized': false,
@@ -300,7 +301,7 @@ class WebserverSpec {
       libs: [{
         'topic': 'server.controllers',
         'refs': [
-          'controllers',
+          'controllers'
         ]
       }]
     });
@@ -336,7 +337,7 @@ class WebserverSpec {
     const stopped = await web.stop();
     expect(started).to.be.true;
     expect(stopped).to.be.true;
-    expect(res1.body).to.deep.eq({json: 'test'});
+    expect(res1.body).to.deep.eq({ json: 'test' });
     expect(res2.text).to.eq('<html>\n<body>TEST</body>\n</html>\n');
     expect(res2.type).to.eq('text/html');
     expect(routes).to.deep.eq(

@@ -1,20 +1,20 @@
 // @ts-ignore
 import express from 'express';
 import * as _ from 'lodash';
-import {createExpressServer, getMetadataArgsStorage} from 'routing-controllers';
-import {IStaticFiles} from '../../IStaticFiles';
-import {IRoutingController} from '../../IRoutingController';
-import {IFrameworkSupport} from '../IFrameworkSupport';
-import {Config} from '@typexs/base';
+import { createExpressServer, getMetadataArgsStorage } from 'routing-controllers';
+import { IStaticFiles } from '../../IStaticFiles';
+import { IRoutingController } from '../../IRoutingController';
+import { IFrameworkSupport } from '../IFrameworkSupport';
+import { Config } from '@typexs/base';
 import * as http from 'http';
-import {IRoute} from '../../../server/IRoute';
-import {C_DEFAULT, K_ROUTE_CONTROLLER, K_ROUTE_STATIC} from '../../../Constants';
-import {RoutePermissionsHelper} from '../../../RoutePermissionsHelper';
-// import * as path from 'path';
-import {PlatformUtils} from '@allgemein/base';
-import {IApplication} from '../../../server/IApplication';
-import {ActionType} from 'routing-controllers/types/metadata/types/ActionType';
-import {ActionMetadataArgs} from 'routing-controllers/types/metadata/args/ActionMetadataArgs';
+import { IRoute } from '../../../server/IRoute';
+import { C_DEFAULT, K_ROUTE_CONTROLLER, K_ROUTE_STATIC } from '../../../Constants';
+import { RoutePermissionsHelper } from '../../../RoutePermissionsHelper';
+import { resolve } from 'path';
+import { PlatformUtils } from '@allgemein/base';
+import { IApplication } from '../../../server/IApplication';
+import { ActionType } from 'routing-controllers/types/metadata/types/ActionType';
+import { ActionMetadataArgs } from 'routing-controllers/types/metadata/args/ActionMetadataArgs';
 
 
 interface ActionResolved {
@@ -51,25 +51,28 @@ export class Express implements IFrameworkSupport {
     app.disable('x-powered-by');
     // TODO create settings
     if (options.limit) {
-      this.app().use(express.json({limit: options.limit}));
+      this.app().use(express.json({ limit: options.limit }));
       // this.app().use(express.json({limit: options.limit}));
       // this.app().use(bodyParser.urlencoded({limit: options.limit, extended: true}));
       // this.app().use(bodyParser());
     }
 
     this.app().use(app);
-    this._mapOptions.push({options: options, mounted: app});
+    this._mapOptions.push({ options: options, mounted: app });
     return this;
   }
 
 
   useStaticRoute(options: IStaticFiles) {
+
     let app: express.Application = null;
     let resolvePath: string = null;
     if (PlatformUtils.isAbsolute(options.path)) {
       resolvePath = options.path;
     } else {
-      resolvePath = PlatformUtils.pathResolve(options.path);
+      // TODO add sometimes appDir  
+      const appDir = Config.get('app.path', '.');
+      resolvePath = resolve(appDir, options.path);
     }
     express.static(resolvePath);
     if (options.routePrefix) {
@@ -78,7 +81,7 @@ export class Express implements IFrameworkSupport {
     } else {
       app = <express.Application>this.app().use(express.static(resolvePath));
     }
-    this._mapOptions.push({options: options, mounted: app});
+    this._mapOptions.push({ options: options, mounted: app });
     return this;
   }
 
@@ -107,7 +110,7 @@ export class Express implements IFrameworkSupport {
           action: action,
           permission: permissions ? permissions.accessPermissions : null,
           authorized: authorized,
-          params: params.map(p => ({name: p.name, required: p.required, index: p.index, parse: p.parse}))
+          params: params.map(p => ({ name: p.name, required: p.required, index: p.index, parse: p.parse }))
         };
         res.push(entry);
       });
