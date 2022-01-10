@@ -13,6 +13,7 @@ export class DefinedEntity {
 }
 
 
+
 @suite('functional/queue-reader')
 export class EntityTypeReaderSpec {
 
