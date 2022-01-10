@@ -10,4 +10,10 @@ export interface IReaderOptions extends IPullableQueueOptions {
    * callback for finish
    */
   finishCallback?: any;
+
+  /**
+   * Activates or disables passing whole array as results
+   */
+  passArray?: boolean;
+
 }

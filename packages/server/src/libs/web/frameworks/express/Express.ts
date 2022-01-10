@@ -1,12 +1,12 @@
 // @ts-ignore
 import express from 'express';
 import * as _ from 'lodash';
+import * as http from 'http';
 import { createExpressServer, getMetadataArgsStorage } from 'routing-controllers';
 import { IStaticFiles } from '../../IStaticFiles';
 import { IRoutingController } from '../../IRoutingController';
 import { IFrameworkSupport } from '../IFrameworkSupport';
 import { Config } from '@typexs/base';
-import * as http from 'http';
 import { IRoute } from '../../../server/IRoute';
 import { C_DEFAULT, K_ROUTE_CONTROLLER, K_ROUTE_STATIC } from '../../../Constants';
 import { RoutePermissionsHelper } from '../../../RoutePermissionsHelper';
@@ -64,13 +64,12 @@ export class Express implements IFrameworkSupport {
 
 
   useStaticRoute(options: IStaticFiles) {
-
     let app: express.Application = null;
     let resolvePath: string = null;
     if (PlatformUtils.isAbsolute(options.path)) {
       resolvePath = options.path;
     } else {
-      // TODO add sometimes appDir  
+      // TODO add sometimes appDir
       const appDir = Config.get('app.path', '.');
       resolvePath = resolve(appDir, options.path);
     }

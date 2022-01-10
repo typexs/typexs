@@ -10,3 +10,4 @@ export const XS_LIBS_PIPELINE_PROCESSORS = 'adapters_pipeline_processors';
 
 
 export const C_PIPELINES = 'pipelines';
+export const TN_PIPELINE = 'pipeline';

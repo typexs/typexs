@@ -186,11 +186,12 @@ export class PullingQueue extends EventEmitter {
 
     // if(this.$pre_enqueue)
 
-    if (_.isArray(data)) {
-      this.$enqueued += data.length;
+    const size = _.isArray(data) ? data.length : 1;
+    if (_.isArray(data) && !get(this.$options, 'passArray', false)) {
+      this.$enqueued += size;
       this.$queue = this.$queue.concat(data);
     } else {
-      this.$enqueued += 1;
+      this.$enqueued += size;
       this.$queue.push(data);
     }
 
@@ -294,6 +295,7 @@ export class PullingQueue extends EventEmitter {
 
     this.removeAllListeners('next');
     this.emit('finished', err, stats);
+    this.removeAllListeners();
   }
 
   _next() {
@@ -356,6 +358,8 @@ export class PullingQueue extends EventEmitter {
               self.$enqueued === self.$processed
             ) {
               return self._finish();
+            } else {
+              Log.error('should not happen');
             }
           });
 

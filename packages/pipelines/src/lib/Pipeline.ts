@@ -3,6 +3,7 @@
 import * as _ from 'lodash';
 import {Processor} from './Processor';
 import {Log} from '@typexs/base';
+import { get } from 'lodash';
 
 
 export class Pipeline {
@@ -116,7 +117,7 @@ export class Pipeline {
         self.$handles.forEach(function (handle) {
           $p = $p.then((data: any) => {
             if (data) {
-              if (_.isArray(data)) {
+              if (_.isArray(data)  && !get(self.$options, 'passArray', false)) {
                 const promises = [];
                 for (const _data of data) {
                   promises.push(handle.execute.bind(handle)(_data));
