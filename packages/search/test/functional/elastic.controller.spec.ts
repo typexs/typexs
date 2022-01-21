@@ -574,4 +574,13 @@ class ElasticControllerSpec {
     expect(checkQueryResults).to.have.length(0);
     expect(checkQueryResults[XS_P_$COUNT]).to.be.eq(0);
   }
+
+  @test
+  async 'throw errors if shared fail'() {
+  }
+
+  @test
+  async ''() {
+  }
+
 }

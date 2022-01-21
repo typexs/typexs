@@ -37,8 +37,6 @@ class TypexsSearchConnection {
 
 
   async before() {
-
-
     bootstrap = Bootstrap
       .setConfigSources([{type: 'system'}])
       .configure(testConfig.shift());
@@ -115,8 +113,7 @@ class TypexsSearchConnection {
       }
     );
 
-
-    // await TestHelper.wait(100);
-
   }
+
+
 }

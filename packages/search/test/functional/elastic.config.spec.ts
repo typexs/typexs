@@ -6,7 +6,6 @@ import * as path from 'path';
 import { join } from 'path';
 import { IElasticStorageRefOptions } from '../../src/lib/elastic/IElasticStorageRefOptions';
 import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
-
 import { Client } from '@elastic/elasticsearch';
 import { ES_host, ES_port } from './config';
 import { IndexProcessingWorker } from '../../src/workers/IndexProcessingWorker';
@@ -391,6 +390,26 @@ class TypexsSearchConfiguration {
     await beforeCall(testConfig[4]);
     const status = Injector.get(IndexRuntimeStatus);
     expect(status.isWorkerActive()).to.be.true;
+  }
+
+  /**
+   * For building/passing the correct query/fields we need the field types of the mapping
+   *
+   * Test if filtering for types:
+   * - date
+   * - float
+   * - boolean
+   * - text
+   * - long
+   *
+   * source for this detection is ElasticStorageRef.prepare method
+   *
+   * for primative types in our modell we must generate the correct mapping
+   *
+   *
+   */
+  @test.pending
+  async 'TODO: check initialized fields for difference types output'() {
   }
 
 
