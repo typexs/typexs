@@ -3,6 +3,12 @@ export interface IElasticFieldDef {
    * JS data type
    */
   type: string;
+
+  /**
+   * Elastic search types
+   */
+  esType: string;
+
   /**
    * Property name
    */

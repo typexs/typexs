@@ -14,6 +14,8 @@ import { IElasticFieldDef } from './IElasticFieldDef';
 import { OpsHelper } from './ops/OpsHelper';
 import { IIndexStorageRef } from '../IIndexStorageRef';
 import { __ID__, __TYPE__, C_ELASTIC_SEARCH, C_SEARCH_INDEX, ES_ALLFIELD, ES_IDFIELD, ES_LABELFIELD } from '../Constants';
+import { BASE_MAPPING_STRUCTURE } from './Constants';
+import { has, keys, orderBy, uniq } from 'lodash';
 
 
 export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
@@ -197,7 +199,8 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
           let indexExists = existResponses[i].body;
 
           if (!indexExists) {
-            indexExists = await this.createIndex(client, indexName);
+            const indexData = await this.getIndexCreateData(indexName);
+            indexExists = await this.createIndex(client, indexName, indexData);
           } else {
             // check mapping for updates
             // TODO fix this compare two objects deep
@@ -228,86 +231,26 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     const indexData: any = {
       index: indexName,
       body: {
-        mappings: {
-          dynamic_templates: [
-            {
-              strings: {
-                'match_mapping_type': 'string',
-                'mapping': {
-                  'type': 'text',
-                  'fields': {
-                    'keyword': {
-                      'type': 'keyword',
-                      'ignore_above': 256
-                    }
-                  },
-                  copy_to: [ES_ALLFIELD]
-                }
-              }
-            },
-            {
-              longs: {
-                'match_mapping_type': 'long',
-                'mapping': {
-                  'type': 'long',
-                  copy_to: [ES_ALLFIELD]
-                }
-              }
-            }
-          ],
-          properties: {
-            [__ID__]: {
-              type: 'text',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  ignore_above: 256
-                }
-              },
-              copy_to: [ES_ALLFIELD]
-            },
-            [__TYPE__]: {
-              type: 'text',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  ignore_above: 256
-                }
-              },
-              copy_to: [ES_ALLFIELD]
-            },
-            [ES_LABELFIELD]: {
-              type: 'text',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  ignore_above: 256
-                }
-              },
-              copy_to: [ES_ALLFIELD]
-            },
-            [ES_ALLFIELD]: {
-              type: 'text',
-              fields: {
-                keyword: {
-                  type: 'keyword',
-                  ignore_above: 256
-                }
-              }
-            }
-          }
-        }
+        mappings: BASE_MAPPING_STRUCTURE
       }
     };
 
-    await this.invoker.use(IndexElasticApi)
-      .doBeforeIndexRepositoryCreate(indexData, this.getIndexTypes(indexName));
+    const entityRefs = this.getIndexTypes(indexName);
+    for (const ref of entityRefs) {
+      const properties = ElasticUtils.buildMappingPropertiesTree(ref);
+      keys(properties).map(x => {
+        if (!has(indexData.body.mappings.properties, x)) {
+          indexData.body.mappings.properties[x] = properties[x];
+        }
+      });
+    }
+
+    await this.invoker.use(IndexElasticApi).doBeforeIndexRepositoryCreate(indexData, entityRefs);
     return indexData;
   }
 
 
-  async createIndex(client: Client, indexName: string) {
-    const indexData = await this.getIndexCreateData(indexName);
+  async createIndex(client: Client, indexName: string, indexData: any) {
 
     // overwrite to prevent change
     indexData.index = indexName;
@@ -372,8 +315,8 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
   /**
    * Return names of indices
    */
-  getIndiciesNames() {
-    return _.uniq(_.orderBy(this.types.map(x => x.getIndexName())));
+  getIndiciesNames(): string[] {
+    return uniq(orderBy(this.types.map(x => x.getIndexName())));
   }
 
   /**

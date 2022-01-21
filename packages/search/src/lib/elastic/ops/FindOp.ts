@@ -20,6 +20,7 @@ import {
 import { IElasticFieldDef } from '../IElasticFieldDef';
 import { IElasticFindOptions } from './IElasticFindOptions';
 import { OpsHelper } from './OpsHelper';
+import { uniq, uniqBy } from 'lodash';
 
 
 export class FindOp<T> implements IFindOp<T> {
@@ -117,8 +118,8 @@ export class FindOp<T> implements IFindOp<T> {
           .filter(x => x.indexName === i.getIndexName() && x.typeName === i.getTypeName()));
       }
 
-      indexNames = _.uniq(indexNames);
-      fields = _.uniqBy(fields, x => JSON.stringify(x));
+      indexNames = uniq(indexNames);
+      fields = uniqBy(fields, x => JSON.stringify(x));
       const opts: any = {
         index: indexNames,
         // type: typeNames.join(','),
