@@ -20,42 +20,47 @@ export const DEFAULT_TEXT_MAPPING = {
   }
 };
 
-export const BASE_MAPPING_STRUCTURE = {
-  dynamic_templates: [
-    {
-      strings: {
-        'match_mapping_type': 'string',
-        'mapping': {
-          ...DEFAULT_TEXT_MAPPING,
-          copy_to: [ES_ALLFIELD]
-        }
-      }
-    },
-    {
-      longs: {
-        'match_mapping_type': 'long',
-        'mapping': {
-          'type': 'long',
-          copy_to: [ES_ALLFIELD]
-        }
+
+export const BASE_MAPPING_DYNAMIC_STRUCTURE = [
+  {
+    strings: {
+      'match_mapping_type': 'string',
+      'mapping': {
+        ...DEFAULT_TEXT_MAPPING,
+        copy_to: [ES_ALLFIELD]
       }
     }
-  ],
-  properties: {
-    [__ID__]: {
-      ...DEFAULT_TEXT_MAPPING,
-      copy_to: [ES_ALLFIELD]
-    },
-    [__TYPE__]: {
-      ...DEFAULT_TEXT_MAPPING,
-      copy_to: [ES_ALLFIELD]
-    },
-    [ES_LABELFIELD]: {
-      ...DEFAULT_TEXT_MAPPING,
-      copy_to: [ES_ALLFIELD]
-    },
-    [ES_ALLFIELD]: {
-      ...DEFAULT_TEXT_MAPPING
+  },
+  {
+    longs: {
+      'match_mapping_type': 'long',
+      'mapping': {
+        'type': 'long',
+        copy_to: [ES_ALLFIELD]
+      }
     }
   }
+];
+
+export const BASE_MAPPING_PROPERTIES_STRUCTURE = {
+  [__ID__]: {
+    ...DEFAULT_TEXT_MAPPING,
+    copy_to: [ES_ALLFIELD]
+  },
+  [__TYPE__]: {
+    ...DEFAULT_TEXT_MAPPING,
+    copy_to: [ES_ALLFIELD]
+  },
+  [ES_LABELFIELD]: {
+    ...DEFAULT_TEXT_MAPPING,
+    copy_to: [ES_ALLFIELD]
+  },
+  [ES_ALLFIELD]: {
+    ...DEFAULT_TEXT_MAPPING
+  }
+};
+
+export const BASE_MAPPING_STRUCTURE = {
+  dynamic_templates: BASE_MAPPING_DYNAMIC_STRUCTURE,
+  properties: BASE_MAPPING_PROPERTIES_STRUCTURE
 };

@@ -96,7 +96,6 @@ class TypexsSearchElasticMappingSpec {
       await TestHelper.wait(50);
     }
     Bootstrap.reset();
-    // IndexEntityRegistry.$().clear();
   }
 
 
@@ -105,8 +104,8 @@ class TypexsSearchElasticMappingSpec {
     await beforeCall(testConfig[0]);
     const storageRef = Injector.get<ElasticStorageRef>('storage.elastic');
     const mappingData = await storageRef.getIndexCreateData('core');
-    expect(mappingData.body.mappings.properties).to.exist;
-    expect(mappingData.body.mappings.properties).to.be.deep.include(Y);
+    expect(mappingData.properties).to.exist;
+    expect(mappingData.properties).to.be.deep.include(Y);
   }
 
 

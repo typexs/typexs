@@ -5,6 +5,7 @@ import {IFindOp} from '@typexs/base/libs/storage/framework/IFindOp';
 import {IUpdateOp} from '@typexs/base/libs/storage/framework/IUpdateOp';
 import {IDeleteOp} from '@typexs/base/libs/storage/framework/IDeleteOp';
 import {IAggregateOp} from '@typexs/base/libs/storage/framework/IAggregateOp';
+import { ElasticMapping } from '../lib/elastic/mapping/ElasticMapping';
 
 
 export class IndexElasticApi implements IIndexElasticApi {
@@ -16,7 +17,7 @@ export class IndexElasticApi implements IIndexElasticApi {
   onOptions(stage: 'find' | 'update' | 'aggregate' | 'remove' | 'save', options: any) {
   }
 
-  doBeforeIndexRepositoryCreate(indexData: any, types: IndexEntityRef[]) {
+  doBeforeIndexRepositoryCreate(indexData: ElasticMapping, types: IndexEntityRef[]) {
   }
 
   /**

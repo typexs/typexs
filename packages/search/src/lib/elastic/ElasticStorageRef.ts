@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { defaults, get, has, isArray, isEmpty, isNull, isString, keys, orderBy, remove, snakeCase, uniq } from 'lodash';
 import { ClassRef, ClassType, IClassRef, IEntityRef, LookupRegistry, METATYPE_ENTITY, RegistryFactory } from '@allgemein/schema-api';
 import { ICollection, Injector, Invoker, Log, NotYetImplementedError, StorageRef } from '@typexs/base';
 import { ElasticConnection } from './ElasticConnection';
@@ -13,9 +13,9 @@ import { Client, ClientOptions } from '@elastic/elasticsearch';
 import { IElasticFieldDef } from './IElasticFieldDef';
 import { OpsHelper } from './ops/OpsHelper';
 import { IIndexStorageRef } from '../IIndexStorageRef';
-import { __ID__, __TYPE__, C_ELASTIC_SEARCH, C_SEARCH_INDEX, ES_ALLFIELD, ES_IDFIELD, ES_LABELFIELD } from '../Constants';
-import { BASE_MAPPING_STRUCTURE } from './Constants';
-import { has, keys, orderBy, uniq } from 'lodash';
+import { C_ELASTIC_SEARCH, C_SEARCH_INDEX, ES_IDFIELD } from '../Constants';
+import { ElasticMapping } from './mapping/ElasticMapping';
+import { ElasticMappingUpdater } from './mapping/ElasticMappingUpdater';
 
 
 export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
@@ -34,13 +34,15 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
 
   private _checkedReady = false;
 
+  private mappings: { [k: string]: ElasticMapping } = {};
+
   private fields: IElasticFieldDef[] = [];
 
   private invoker: Invoker;
 
 
   constructor(options: IElasticStorageRefOptions) {
-    super(_.defaults(options, <IElasticStorageRefOptions>{
+    super(defaults(options, <IElasticStorageRefOptions>{
       framework: C_SEARCH_INDEX,
       type: C_ELASTIC_SEARCH,
       host: '127.0.0.1',
@@ -78,7 +80,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
    * Check if storage is readonly
    */
   isReadonly(): boolean {
-    return _.get(this.getOptions(), 'readonly', false);
+    return get(this.getOptions(), 'readonly', false);
   }
 
   getRegistry(): IndexEntityRegistry {
@@ -98,20 +100,20 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     this.invoker = Injector.get(Invoker.NAME);
 
     const indexTypes = this.getOptions().indexTypes;
-    if (indexTypes && _.isArray(indexTypes)) {
+    if (indexTypes && isArray(indexTypes)) {
       for (const indexType of indexTypes) {
         const indexName = indexType.index;
-        const allowAutoAppendAllField = _.get(indexType, 'autoAppendAllField', false);
+        const allowAutoAppendAllField = get(indexType, 'autoAppendAllField', false);
         for (const e of indexType.entities) {
-          if (_.isString(e)) {
-            const machineName = _.snakeCase(e);
+          if (isString(e)) {
+            const machineName = snakeCase(e);
             // TODO lookupregistry can be null???
             const registries = LookupRegistry.getLookupRegistries().filter(x => !!x);
             const results = [].concat(...registries
               .map(r =>
                 r.filter<IEntityRef>(METATYPE_ENTITY,
                   (x: IEntityRef) =>
-                    _.snakeCase(x.getClassRef().name) === machineName || x.storingName === machineName
+                    snakeCase(x.getClassRef().name) === machineName || x.storingName === machineName
                 )
               )
             );
@@ -131,7 +133,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
       }
     }
 
-    if (!_.isEmpty(this.types)) {
+    if (!isEmpty(this.types)) {
       for (const type of this.types) {
         const fields = ElasticUtils.flattenProperties(type);
         for (const field of fields) {
@@ -189,27 +191,34 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     this._checkedReady = false;
     try {
       this._checked = {};
-      const connection = await this.connect(true);
-      const client = connection.getClient();
       const indicies = this.getIndiciesNames();
-      if (_.isArray(indicies) && !_.isEmpty(indicies)) {
-        const existResponses = (await Promise.all(indicies.map(x => client.indices.exists({ index: x }))));
+      if (isArray(indicies) && !isEmpty(indicies)) {
+        const connection = await this.connect(true);
+        const client = connection.getClient();
+        const mappingUpdater = new ElasticMappingUpdater(client);
+        await mappingUpdater.reload();
         for (let i = 0; i < indicies.length; i++) {
           const indexName = indicies[i];
-          let indexExists = existResponses[i].body;
-
-          if (!indexExists) {
-            const indexData = await this.getIndexCreateData(indexName);
-            indexExists = await this.createIndex(client, indexName, indexData);
+          let mapping = mappingUpdater.get(indexName);
+          let neededMapping = await this.getIndexCreateData(indexName);
+          let res: boolean = null;
+          if (!mapping) {
+            res = await mappingUpdater.create(neededMapping);
           } else {
-            // check mapping for updates
-            // TODO fix this compare two objects deep
-            // indexExists = await this.updateIndexIfChanged(client, indexName);
+            neededMapping.merge(mapping, false);
+            if (neededMapping.reindex) {
+              res = await mappingUpdater.reindex(neededMapping);
+            } else {
+              res = await mappingUpdater.update(neededMapping);
+            }
           }
-          this._checked[indexName] = indexExists;
+          await mappingUpdater.reload(indexName);
+          mapping = mappingUpdater.get(indexName);
+          this.mappings[indexName] = mapping;
+          this._checked[indexName] = res;
         }
+        await connection.close();
       }
-      await connection.close();
     } catch (e) {
       Log.error(e);
     }
@@ -228,76 +237,20 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
 
 
   async getIndexCreateData(indexName: string) {
-    const indexData: any = {
-      index: indexName,
-      body: {
-        mappings: BASE_MAPPING_STRUCTURE
-      }
-    };
+    const mapping = new ElasticMapping(indexName);
 
     const entityRefs = this.getIndexTypes(indexName);
     for (const ref of entityRefs) {
       const properties = ElasticUtils.buildMappingPropertiesTree(ref);
       keys(properties).map(x => {
-        if (!has(indexData.body.mappings.properties, x)) {
-          indexData.body.mappings.properties[x] = properties[x];
-        }
+        mapping.add(x, properties[x]);
       });
     }
 
-    await this.invoker.use(IndexElasticApi).doBeforeIndexRepositoryCreate(indexData, entityRefs);
-    return indexData;
+    await this.invoker.use(IndexElasticApi).doBeforeIndexRepositoryCreate(mapping, entityRefs);
+    return mapping;
   }
 
-
-  async createIndex(client: Client, indexName: string, indexData: any) {
-
-    // overwrite to prevent change
-    indexData.index = indexName;
-    // TODO call mapping
-    try {
-      const createIndexResponse = await client.indices.create(indexData);
-      return _.get(createIndexResponse.body, 'acknowledged', false);
-    } catch (e) {
-      Log.error(e);
-      return false;
-    }
-  }
-
-
-  async updateIndexIfChanged(client: any, indexName: string): Promise<boolean> {
-    const demandedIndexData = await this.getIndexCreateData(indexName);
-
-    const { body } = await client.indices.get({ index: indexName });
-    const indexData = body[indexName];
-    const demandBody = demandedIndexData.body;
-
-    let update = false;
-
-    // check mapping
-    if (_.has(indexData, 'mappings.properties') && _.has(demandBody, 'mappings.properties')) {
-      for (const fieldName of _.keys(demandBody.mappings.properties)) {
-        const demandedFieldMapping = demandBody.mappings.properties[fieldName];
-        if (_.has(indexData, 'mappings.properties.' + fieldName)) {
-          // check if changed
-          if (!_.isEqual(indexData.mappings.properties[fieldName], demandedFieldMapping)) {
-            _.merge(indexData.mappings.properties[fieldName], demandedFieldMapping);
-            update = true;
-          }
-        } else {
-          // add
-          _.set(indexData, 'mappings.properties.' + fieldName, demandedFieldMapping);
-          update = true;
-        }
-      }
-    }
-
-    if (update) {
-      Log.info('update elastic index mapping for index: ' + indexName);
-      await client.indices.putMapping({ index: indexName, body: indexData.mappings });
-    }
-    return true;
-  }
 
 
   /**
@@ -341,7 +294,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     };
     const passParams = ['apiVersion'];
     for (const param of passParams) {
-      if (_.has(opts, param)) {
+      if (has(opts, param)) {
         esOpts[param] = opts[param];
       }
     }
@@ -359,7 +312,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
    * Checks if necessary mappings are already passed
    */
   isChecked() {
-    return this._checkedReady && !_.isNull(this._checked);
+    return this._checkedReady && !isNull(this._checked);
   }
 
   /**
@@ -377,7 +330,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     byIndexedType: boolean = false): any {
     let tEntry = null;
     let className = null;
-    if (!_.isString(name)) {
+    if (!isString(name)) {
       if (name instanceof ClassRef) {
         className = name.name;
       } else if (name['getClass']) {
@@ -391,7 +344,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
 
     if (className) {
       const refs = OpsHelper.getEntityRefByPattern(className, this.getEntityRefs(), byIndexedType);
-      if (_.isEmpty(refs)) {
+      if (isEmpty(refs)) {
         return null;
       }
 
@@ -401,11 +354,11 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
         return refs;
       }
       //
-      // const _name = _.snakeCase(className);
+      // const _name = snakeCase(className);
       // tEntry = this.types.find(type =>
       //   byIndexedType ?
-      //     _.snakeCase(type.getEntityRef().name) === _name || _.snakeCase(type.name) === _name :
-      //     _.snakeCase(type.name) === _name
+      //     snakeCase(type.getEntityRef().name) === _name || snakeCase(type.name) === _name :
+      //     snakeCase(type.name) === _name
       // );
     }
 
@@ -436,7 +389,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
   }
 
   hasEntityClass(cls: string | Function | IClassRef, byIndexedType: boolean = false): boolean {
-    if (_.isString(cls) &&
+    if (isString(cls) &&
       OpsHelper.hasEntityRefByPattern(cls, this.getEntityRefs())) {
       return true;
     }
@@ -463,7 +416,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
    * @param wrapper
    */
   async remove(wrapper: ElasticConnection) {
-    _.remove(this.connections, { inc: wrapper.inc });
+    remove(this.connections, { inc: wrapper.inc });
   }
 
 

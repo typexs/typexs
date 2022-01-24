@@ -4,6 +4,7 @@ import { IUpdateOp } from '@typexs/base/libs/storage/framework/IUpdateOp';
 import { IDeleteOp } from '@typexs/base/libs/storage/framework/IDeleteOp';
 import { IAggregateOp } from '@typexs/base/libs/storage/framework/IAggregateOp';
 import { ISaveOp } from '@typexs/base/libs/storage/framework/ISaveOp';
+import { ElasticMapping } from '../lib/elastic/mapping/ElasticMapping';
 
 export interface IIndexElasticApi {
 
@@ -11,7 +12,7 @@ export interface IIndexElasticApi {
 
   isIndexable?(className: string, obj: any, registry: string): boolean;
 
-  doBeforeIndexRepositoryCreate?(indexData: any, types: IndexEntityRef[]): void;
+  doBeforeIndexRepositoryCreate?(indexData: ElasticMapping, types: IndexEntityRef[]): void;
 
   prepareBeforeSave?<T>(className: string, object: T): void;
 

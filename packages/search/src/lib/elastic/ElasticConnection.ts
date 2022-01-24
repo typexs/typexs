@@ -8,6 +8,7 @@ export class ElasticConnection implements IConnection {
 
   inc: number = ElasticConnection.$INC++;
 
+  // TODO is this necessary to keep this
   private storageRef: ElasticStorageRef;
 
   private client: Client;
