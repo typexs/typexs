@@ -93,10 +93,10 @@ export class SaveOp<T> implements ISaveOp<T> {
         //   }
         // }
 
-        indices.push(entityRef.getIndexName());
+        indices.push(entityRef.getAliasName());
         promises.push(client.index(<Index>{
           id: id,
-          index: entityRef.getIndexName(),
+          index: entityRef.getAliasName(),
           body: jsonEntity,
           ...preparedOpts
         }));

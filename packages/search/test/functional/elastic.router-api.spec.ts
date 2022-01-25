@@ -15,6 +15,9 @@ import { TestHelper } from './TestHelper';
 import { __ID__, __TYPE__, C_ELASTIC_SEARCH, C_SEARCH_INDEX, ES_IDFIELD } from '../../src/lib/Constants';
 import { IElasticStorageRefOptions } from '../../src';
 import { __NS__ } from '@allgemein/schema-api';
+import { ElasticUtils } from '../../src/lib/elastic/ElasticUtils';
+import { ElasticMappingUpdater } from '../../src/lib/elastic/mapping/ElasticMappingUpdater';
+import { clear } from './testdata';
 
 const lorem = 'lorem ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod ' +
   'tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero ' +
@@ -96,6 +99,9 @@ let controller: ElasticEntityController;
 let client: Client;
 let http: IHttp;
 let server: WebServer;
+const C_DATA_INDEX = ElasticUtils.indexName('data_index');
+const C_SEARCH_INDEX_2 = ElasticUtils.indexName('search_index');
+const C_CORE_INDEX = ElasticUtils.indexName('core');
 
 @suite('functional/typexs-search/elastic/router-api') @timeout(300000)
 class TypexsSearchRouterApi {
@@ -106,22 +112,10 @@ class TypexsSearchRouterApi {
 
     client = new Client({ node: 'http://' + ES_host + ':' + ES_port });
     await client.ping();
-
+    const updater = new ElasticMappingUpdater(client);
     const words = lorem.split(' ');
     const words2 = lorem2.split(' ');
-    const existsData = await client.indices.exists({ index: 'data_index' });
-    const existsSearch = await client.indices.exists({ index: 'search_index' });
-    if (existsData.body) {
-      await client.indices.delete({ index: 'data_index' });
-    }
-    if (existsSearch.body) {
-      await client.indices.delete({ index: 'search_index' });
-    }
-    // delete index
-    const { body } = await client.indices.exists({ index: 'core' });
-    if (body) {
-      await client.indices.delete({ index: 'core' });
-    }
+    await clear(updater);
 
 
     bootstrap = Bootstrap
@@ -153,7 +147,7 @@ class TypexsSearchRouterApi {
         d.text = words2.slice(i).join(' ');
       }
       promises.push(client.index({
-        index: 'data_index',
+        index: C_DATA_INDEX,
         id: 'data_entity--' + i,
         body: d
       }));
@@ -172,12 +166,12 @@ class TypexsSearchRouterApi {
         s.textus = words2.slice(i + 1).join(' ');
       }
       promises.push(client.index({
-        index: 'search_index',
+        index: C_SEARCH_INDEX_2,
         id: 'search_entity--' + i,
         body: s
       }));
       await Promise.all(promises);
-      await client.indices.refresh({ index: ['data_index', 'search_index'] });
+      await client.indices.refresh({ index: [C_DATA_INDEX, C_SEARCH_INDEX_2] });
 
 
     }
@@ -487,6 +481,10 @@ class TypexsSearchRouterApi {
     expect(response['entities']).to.have.length(50);
   }
 
+  @test.pending()
+  async 'find entities - throwing error'() {
+  }
+
 
   @test
   async 'get entity'() {
@@ -520,17 +518,17 @@ class TypexsSearchRouterApi {
   }
 
 
-  @test.skip()
+  @test.pending()
   async 'save entity'() {
 
   }
 
-  @test.skip()
+  @test.pending()
   async 'update entity'() {
 
   }
 
-  @test.skip()
+  @test.pending()
   async 'delete entity'() {
 
   }

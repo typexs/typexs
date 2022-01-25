@@ -94,9 +94,9 @@ export class DeleteOp<T> implements IDeleteOp<T> {
       let indexNames = [];
       let fields: IElasticFieldDef[] = [];
       for (const i of indexEntityRefs) {
-        indexNames.push(i.getIndexName());
+        indexNames.push(i.getAliasName());
         fields.push(...this.controller.getStorageRef().getFields()
-          .filter(x => x.indexName === i.getIndexName() && x.typeName === i.getTypeName()));
+          .filter(x => x.indexName === i.getAliasName() && x.typeName === i.getTypeName()));
       }
 
       indexNames = _.uniq(indexNames);
@@ -153,10 +153,10 @@ export class DeleteOp<T> implements IDeleteOp<T> {
         const indexType = indexTypes.find(x => x.getEntityRef().name === className);
         const id = OpsHelper.getId(indexType, e);
         promises.push(client.delete({
-          index: indexType.getIndexName(),
+          index: indexType.getAliasName(),
           id: id
         }));
-        indices.push(indexType.getIndexName());
+        indices.push(indexType.getAliasName());
       }
 
       const results = await Promise.all(promises);

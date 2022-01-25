@@ -6,7 +6,7 @@ import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
 import { ElasticEntityController } from '../../src/lib/elastic/ElasticEntityController';
 import { Client } from '@elastic/elasticsearch';
 import { ES_host, ES_port } from './config';
-import { lorem, lorem2 } from './testdata';
+import { clear, lorem, lorem2 } from './testdata';
 import { TaskExecutor } from '@typexs/base/libs/tasks/TaskExecutor';
 import { __ID__, __TYPE__, C_ELASTIC_SEARCH, C_SEARCH_INDEX, TN_INDEX } from '../../src/lib/Constants';
 import { ITaskRunnerResult } from '@typexs/base/libs/tasks/ITaskRunnerResult';
@@ -17,6 +17,7 @@ import { expect } from 'chai';
 import { IndexProcessingWorker } from '../../src/workers/IndexProcessingWorker';
 import { TestHelper } from './TestHelper';
 import { IElasticStorageRefOptions } from '../../src/lib/elastic/IElasticStorageRefOptions';
+import { ElasticMappingUpdater } from '../../src/lib/elastic/mapping/ElasticMappingUpdater';
 
 
 let bootstrap: Bootstrap = null;
@@ -75,23 +76,8 @@ class TypexsSearchEntityController {
 
     client = new Client({ node: 'http://' + ES_host + ':' + ES_port });
     await client.ping();
-
-
-    const existsData = await client.indices.exists({ index: 'data_index' });
-    const existsSearch = await client.indices.exists({ index: 'search_index' });
-    if (existsData.body) {
-      await client.indices.delete({ index: 'data_index' });
-    }
-    if (existsSearch.body) {
-      await client.indices.delete({ index: 'search_index' });
-    }
-    // delete index
-    const { body } = await client.indices.exists({ index: 'core' });
-    if (body) {
-      await client.indices.delete({ index: 'core' });
-    }
-
-
+    const updater = new ElasticMappingUpdater(client);
+    await clear(updater);
     bootstrap = Bootstrap
       .setConfigSources([{ type: 'system' }])
       .configure(testConfig.shift());

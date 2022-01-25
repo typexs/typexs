@@ -8,6 +8,17 @@ import { DEFAULT_TEXT_MAPPING, ELASTIC_TYPES } from './Constants';
 
 export class ElasticUtils {
 
+  static indexName(name: string) {
+    if (/_xdx$/.test(name)) {
+      return name;
+    }
+    return name + '_xdx';
+  }
+
+  static aliasName(name: string) {
+    return name.replace(/_xdx$/, '');
+  }
+
   static mapType(jsType: string): ELASTIC_TYPES {
     // TODO add override here ...
     switch (jsType) {
@@ -74,7 +85,7 @@ export class ElasticUtils {
       const _prefix = [prefix, prop.name].filter(x => !!x).join('.');
       if (prop.isReference()) {
         const ref = prop.getTargetRef();
-        if(done.includes(ref)){
+        if (done.includes(ref)) {
           continue;
         }
         done.push(ref);
@@ -107,7 +118,7 @@ export class ElasticUtils {
   static resolveNameByIndex(instance: any): string {
     const xsdef: IndexEntityRef = IndexEntityRegistry.$().getEntityRefFor(instance);
     if (xsdef) {
-      return xsdef.getIndexName();
+      return xsdef.getAliasName();
     } else {
       throw new Error('resolveNameByIndex not found for instance: ' + JSON.stringify(instance));
     }

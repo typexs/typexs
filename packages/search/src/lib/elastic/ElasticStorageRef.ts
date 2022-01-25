@@ -34,6 +34,11 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
 
   private _checkedReady = false;
 
+  /**
+   * Cached elastic mappings
+   *
+   * @private
+   */
   private mappings: { [k: string]: ElasticMapping } = {};
 
   private fields: IElasticFieldDef[] = [];
@@ -107,7 +112,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
         for (const e of indexType.entities) {
           if (isString(e)) {
             const machineName = snakeCase(e);
-            // TODO lookupregistry can be null???
+            // TODO lookup registry can be null???
             const registries = LookupRegistry.getLookupRegistries().filter(x => !!x);
             const results = [].concat(...registries
               .map(r =>
@@ -137,7 +142,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
       for (const type of this.types) {
         const fields = ElasticUtils.flattenProperties(type);
         for (const field of fields) {
-          field.indexName = type.getIndexName();
+          field.indexName = type.getAliasName();
           field.typeName = type.getTypeName();
           if ([ES_IDFIELD].includes(field.name)) {
             continue;
@@ -191,16 +196,17 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     this._checkedReady = false;
     try {
       this._checked = {};
-      const indicies = this.getIndiciesNames();
-      if (isArray(indicies) && !isEmpty(indicies)) {
+      const aliasNames = this.getAliasNames();
+      if (isArray(aliasNames) && !isEmpty(aliasNames)) {
         const connection = await this.connect(true);
         const client = connection.getClient();
         const mappingUpdater = new ElasticMappingUpdater(client);
         await mappingUpdater.reload();
-        for (let i = 0; i < indicies.length; i++) {
-          const indexName = indicies[i];
-          let mapping = mappingUpdater.get(indexName);
-          let neededMapping = await this.getIndexCreateData(indexName);
+        for (let i = 0; i < aliasNames.length; i++) {
+          const aliasName = aliasNames[i];
+          let neededMapping = await this.getIndexCreateData(aliasName);
+          const indexName = neededMapping.indexName;
+          let mapping = mappingUpdater.getBy(indexName, 'name');
           let res: boolean = null;
           if (!mapping) {
             res = await mappingUpdater.create(neededMapping);
@@ -213,9 +219,9 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
             }
           }
           await mappingUpdater.reload(indexName);
-          mapping = mappingUpdater.get(indexName);
-          this.mappings[indexName] = mapping;
-          this._checked[indexName] = res;
+          mapping = mappingUpdater.getBy(indexName, 'name');
+          this.mappings[mapping.indexName] = mapping;
+          this._checked[mapping.indexName] = res;
         }
         await connection.close();
       }
@@ -258,9 +264,9 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
    *
    * @param indexName
    */
-  getIndexTypes(indexName?: string) {
-    if (indexName) {
-      return this.types.filter(x => x.getIndexName() === indexName);
+  getIndexTypes(aliasName?: string) {
+    if (aliasName) {
+      return this.types.filter(x => x.getAliasName() === aliasName);
     }
     return this.types;
   }
@@ -268,8 +274,8 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
   /**
    * Return names of indices
    */
-  getIndiciesNames(): string[] {
-    return uniq(orderBy(this.types.map(x => x.getIndexName())));
+  getAliasNames(): string[] {
+    return uniq(orderBy(this.types.map(x => x.getAliasName())));
   }
 
   /**
@@ -381,7 +387,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
   }
 
   getRawCollectionNames(): string[] | Promise<string[]> {
-    return this.types.map(x => x.getIndexName() + '.' + x.getTypeName());
+    return this.types.map(x => x.getAliasName() + '.' + x.getTypeName());
   }
 
   getRawCollections(collectionNames: string[]): ICollection[] | Promise<ICollection[]> {

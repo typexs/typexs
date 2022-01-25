@@ -1,11 +1,12 @@
-import { suite, test, timeout } from '@testdeck/mocha';
+import { suite, test } from '@testdeck/mocha';
 import { Bootstrap, Injector, XS_P_$COUNT, XS_P_$LIMIT } from '@typexs/base';
 import * as path from 'path';
 import * as _ from 'lodash';
 import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
 import { GreatEntity } from './fake_app_controller/entities/GreatEntity';
 import { IndexEntityRef } from '../../src/lib/registry/IndexEntityRef';
-import { expect } from 'chai';
+import { expect, use } from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import { ElasticEntityController } from '../../src/lib/elastic/ElasticEntityController';
 import { Client } from '@elastic/elasticsearch';
 import { DataEntity } from './fake_app_controller/entities/DataEntity';
@@ -23,6 +24,10 @@ import {
 import { ClassUtils } from '@allgemein/base';
 import { ES_host, ES_port } from './config';
 import { TestHelper } from './TestHelper';
+import { ElasticMappingUpdater } from '../../src/lib/elastic/mapping/ElasticMappingUpdater';
+import { C_CORE_INDEX, C_DATA_INDEX, C_SEARCH_INDEX_2, clear } from './testdata';
+
+use(chaiAsPromised);
 
 const lorem = 'lorem ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod ' +
   'tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero ' +
@@ -69,6 +74,7 @@ const testConfig = [
           { index: 'core', entities: ['GreatEntity'] },
           { index: 'data_index', entities: ['DataEntity'] },
           { index: 'search_index', entities: ['SearchEntity'] }
+          // { index: 'failing', entities: ['FailingEntity'] }
         ]
       }
     }
@@ -86,23 +92,13 @@ class ElasticControllerSpec {
 
   static async before() {
     client = new Client({ node: 'http://' + ES_host + ':' + ES_port });
+    const updater = new ElasticMappingUpdater(client);
     await client.ping();
 
     const words = lorem.split(' ');
     const words2 = lorem2.split(' ');
-    const existsData = await client.indices.exists({ index: 'data_index' });
-    const existsSearch = await client.indices.exists({ index: 'search_index' });
-    if (existsData.body) {
-      await client.indices.delete({ index: 'data_index' });
-    }
-    if (existsSearch.body) {
-      await client.indices.delete({ index: 'search_index' });
-    }
-    // delete index
-    const { body } = await client.indices.exists({ index: 'core' });
-    if (body) {
-      await client.indices.delete({ index: 'core' });
-    }
+
+    await clear(updater);
 
 
     bootstrap = Bootstrap
@@ -134,7 +130,7 @@ class ElasticControllerSpec {
         d.text = words2.slice(i).join(' ');
       }
       promises.push(client.index({
-        index: 'data_index',
+        index: C_DATA_INDEX,
         id: 'data_entity--' + i,
         body: d
       }));
@@ -153,16 +149,14 @@ class ElasticControllerSpec {
         s.textus = words2.slice(i + 1).join(' ');
       }
       promises.push(client.index({
-        index: 'search_index',
+        index: C_SEARCH_INDEX_2,
         id: 'search_entity--' + i,
         body: s
       }));
-
-
     }
     await Promise.all(promises);
-    await client.indices.refresh({ index: ['data_index', 'search_index'] });
 
+    await client.indices.refresh({ index: [C_DATA_INDEX, C_SEARCH_INDEX_2] });
   }
 
   static async after() {
@@ -175,10 +169,10 @@ class ElasticControllerSpec {
 
 
   async before() {
-    const { body } = await client.indices.exists({ index: 'core' });
+    const { body } = await client.indices.exists({ index: C_CORE_INDEX });
     if (body) {
-      await client.deleteByQuery({ index: 'core', body: { query: { match_all: {} } } });
-      await client.indices.refresh({ index: 'core' });
+      await client.deleteByQuery({ index: C_CORE_INDEX, body: { query: { match_all: {} } } });
+      await client.indices.refresh({ index: C_CORE_INDEX });
     }
 
   }
@@ -201,7 +195,7 @@ class ElasticControllerSpec {
     let saved = await controller.save(ge01, { passResults: true });
 
     let { body } = (await client.get({
-      index: entityRef.getIndexName(),
+      index: entityRef.getAliasName(),
       id: genId
     })) as any;
 
@@ -210,14 +204,14 @@ class ElasticControllerSpec {
 
     expect(body._id).to.be.eq(genId);
     expect(body._source).to.be.deep.include(saved);
-    expect(index).to.be.deep.include({ _id: genId, _index: 'core', result: 'created' });
+    expect(index).to.be.deep.include({ _id: genId, _index: C_CORE_INDEX, result: 'created' });
 
     // Update data
     saved = await controller.save(ge01 as any, { passResults: true, refresh: true });
     expect(saved[XS_P_$INDEX]._version).to.be.eq(2);
 
     const resp = (await client.get({
-      index: entityRef.getIndexName(),
+      index: entityRef.getAliasName(),
       id: genId,
       refresh: true
     })) as any;
@@ -227,7 +221,7 @@ class ElasticControllerSpec {
     delete ge01['$index'];
     expect(body._id).to.be.eq(genId);
     expect(body._source).to.be.deep.include(saved);
-    expect(index).to.be.deep.include({ _id: genId, _index: 'core', result: 'updated' });
+    expect(index).to.be.deep.include({ _id: genId, _index: C_CORE_INDEX, result: 'updated' });
   }
 
   @test
@@ -255,7 +249,7 @@ class ElasticControllerSpec {
     expect(pResults).to.be.deep.eq(['created', 'created']);
 
     const results = (await client.search({
-      index: entityRef.getIndexName(),
+      index: entityRef.getAliasName(),
       body: {
         query: {
           match_all: {}
@@ -265,7 +259,7 @@ class ElasticControllerSpec {
 
     expect(results.body.hits.total.value).to.be.eq(2);
     expect(results.body.hits.hits).to.have.length(2);
-    let sources = results.body.hits.hits.map((hit: any) => entityRef.build(hit._source, {skipClassNamespaceInfo: true}));
+    let sources = results.body.hits.hits.map((hit: any) => entityRef.build(hit._source, { skipClassNamespaceInfo: true }));
     sources = _.orderBy(sources, x => JSON.stringify(x));
     g = _.orderBy(g, x => JSON.stringify(x));
     expect(sources).to.be.deep.eq(g);
@@ -575,12 +569,71 @@ class ElasticControllerSpec {
     expect(checkQueryResults[XS_P_$COUNT]).to.be.eq(0);
   }
 
+
   @test
-  async 'throw errors if shared fail'() {
+  async 'throw errors - cause query error'() {
+    const termQuery = { multi_match: {} };
+    termQuery.multi_match = {
+      query: 'harsut',
+      'operator': 'and',
+      'minimum_should_match': 1,
+      'analyzer': 'standard',
+      'zero_terms_query': 'none',
+      'lenient': false,
+      'prefix_length': 0,
+      'max_expansions': 50,
+      'boost': 1,
+      fields: ['someNumber']
+    };
+
+    let error = null;
+    try {
+      await controller.find(DataEntity,
+        termQuery,
+        {
+          rawQuery: true,
+          limit: 10
+        }
+      );
+    } catch (e) {
+      error = e;
+    }
+
+    expect(error.name).to.be.eq('ResponseError');
+    expect(error.message).to.be.eq('search_phase_execution_exception: [query_shard_exception] Reason: failed to create query: For input string: "harsut"');
   }
 
   @test
-  async ''() {
+  async 'throw errors from shares - cause query error'() {
+    const termQuery = { multi_match: {} };
+    termQuery.multi_match = {
+      query: 'harsut',
+      'operator': 'and',
+      'minimum_should_match': 1,
+      'analyzer': 'standard',
+      'zero_terms_query': 'none',
+      'lenient': false,
+      'prefix_length': 0,
+      'max_expansions': 50,
+      'boost': 1,
+      fields: ['someNumber']
+    };
+
+    let error = null;
+    try {
+      await controller.find('*',
+        termQuery,
+        {
+          rawQuery: true,
+          limit: 10
+        }
+      );
+    } catch (e) {
+      error = e;
+    }
+
+    expect(error.name).to.be.eq('StorageError');
+    expect(error.message).to.be.eq('[number_format_exception] error on index "data_index_xdx" failed to create query: For input string: "harsut"');
   }
 
 }

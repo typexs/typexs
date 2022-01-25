@@ -17,8 +17,12 @@ import { __ID__, __TYPE__, C_SEARCH_INDEX } from '../Constants';
 
 export class IndexEntityRef extends AbstractRef implements IEntityRef {
 
-
-  private indexName: string;
+  /**
+   * Index name or alias
+   *
+   * @private
+   */
+  private aliasName: string;
 
   private typeName: string;
 
@@ -38,7 +42,7 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
     this.setOptions(options || {});
     this.typeName = snakeCase(classRef.name);
     if (indexName) {
-      this.indexName = snakeCase(indexName);
+      this.aliasName = snakeCase(indexName);
     } else {
       let schema = entityRef.getClassRef().getOptions('schema', false);
       if (!schema) {
@@ -47,7 +51,7 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
         schema = schema.join('--');
       }
       const registry = entityRef.getNamespace();
-      this.indexName = snakeCase([registry, schema, this.typeName].filter(x => !!x).join('__'));
+      this.aliasName = snakeCase([registry, schema, this.typeName].filter(x => !!x).join('__'));
     }
     this.entityRef = entityRef;
   }
@@ -69,8 +73,8 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
     return this.typeName;
   }
 
-  getIndexName() {
-    return this.indexName;
+  getAliasName() {
+    return this.aliasName;
   }
 
   getEntityRef() {
@@ -78,7 +82,7 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
   }
 
   id(): string {
-    return snakeCase([this.getIndexName(), this.getTypeName()].join('--'));
+    return snakeCase([this.getAliasName(), this.getTypeName()].join('--'));
   }
 
   getPropertyRefs() {

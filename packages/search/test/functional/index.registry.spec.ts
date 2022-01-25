@@ -26,7 +26,7 @@ class IndexRegistrySpec {
     const r = registry.createEntity(tableDef);
     const indexRef = new IndexEntityRef(r);
 
-    expect(indexRef.getIndexName()).to.be.eq('typeorm_default_registry_entity');
+    expect(indexRef.getAliasName()).to.be.eq('typeorm_default_registry_entity');
     expect(indexRef.getTypeName()).to.be.eq('registry_entity');
 
     const props = indexRef.getPropertyRefs();

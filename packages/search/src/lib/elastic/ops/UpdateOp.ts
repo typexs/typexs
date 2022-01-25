@@ -94,9 +94,9 @@ export class UpdateOp<T> implements IUpdateOp<T> {
       let fields: IElasticFieldDef[] = [];
 
       for (const i of indexEntityRefs) {
-        indexNames.push(i.getIndexName());
+        indexNames.push(i.getAliasName());
         fields.push(...this.controller.getStorageRef().getFields()
-          .filter(x => x.indexName === i.getIndexName() && x.typeName === i.getTypeName()));
+          .filter(x => x.indexName === i.getAliasName() && x.typeName === i.getTypeName()));
       }
 
       indexNames = _.uniq(indexNames);

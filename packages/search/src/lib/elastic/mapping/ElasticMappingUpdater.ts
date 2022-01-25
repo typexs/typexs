@@ -2,6 +2,7 @@ import { Log } from '@typexs/base';
 import { Client } from '@elastic/elasticsearch';
 import { ElasticMapping } from './ElasticMapping';
 import { get, has, keys } from 'lodash';
+import { ElasticUtils } from '../ElasticUtils';
 
 
 const K_INDICES_BODY = 'body';
@@ -14,6 +15,9 @@ export class ElasticMappingUpdater {
 
   private client: Client;
 
+  /**
+   * Index to mapping
+   */
   mappings: { [k: string]: ElasticMapping } = {};
 
 
@@ -32,7 +36,7 @@ export class ElasticMappingUpdater {
     if (has(indices, K_INDICES_BODY)) {
       const mappings = get(indices, K_INDICES_BODY);
       for (const k of keys(mappings)) {
-        this.mappings[k] = new ElasticMapping(k);
+        this.mappings[k] = new ElasticMapping(k, {skipGenerated: true});
         this.mappings[k].parse(mappings[k]);
       }
     }
@@ -44,16 +48,39 @@ export class ElasticMappingUpdater {
     return Promise.all(indicies.map(x => this.client.indices.exists({ index: x }).then(y => {return {[x]: y.body}})));
   }
 
-
-  get(name: string): ElasticMapping {
-    return this.mappings[name] ? this.mappings[name] : null;
+  doExists(index:string){
+    return this.client.indices.exists({ index: index }).then(y => y.body);
   }
 
-  async create(mapping: ElasticMapping): Promise<boolean> {
+
+  getBy(name: string, mode: 'alias' | 'name' | 'both' = 'both'): ElasticMapping {
+    for(const k of keys(this.mappings)){
+      if((mode === 'both' && (this.mappings[k].aliasName === name || this.mappings[k].indexName === name))) {
+        return this.mappings[k];
+      }else     if((mode === 'name' && this.mappings[k].indexName === name)){
+       return this.mappings[k];
+      }else     if((mode === 'alias' && this.mappings[k].aliasName === name)){
+        return this.mappings[k];
+      }
+    }
+    return  null;
+  }
+
+  async create(mapping: ElasticMapping, options: {skipAlias: boolean, removeCollidingIndex:boolean} = {skipAlias: false, removeCollidingIndex: true}): Promise<boolean> {
     let result: boolean = false;
     try {
-      const createIndexResponse = await this.client.indices.create(mapping.toRequest());
-      result = get(createIndexResponse.body, K_ACKNOWLEDGMENT, false);
+      result = await this.doCreateIndex(mapping.toRequest());
+      if(result && !options.skipAlias){
+        result = await this.doExists(mapping.aliasName);
+        if(result && options.removeCollidingIndex){
+          // remove index with this name
+          result = await this.doDeleteIndex(mapping.aliasName);
+        }
+        result = await this.doAliasExists(mapping.indexName, mapping.aliasName);
+        if(!result){
+          result = await this.doAddAlias(mapping.indexName, mapping.aliasName)
+        }
+      }
     } catch (e) {
       Log.error(e);
       result = false;
@@ -75,38 +102,99 @@ export class ElasticMappingUpdater {
     return result;
   }
 
+
+  /**
+   * Create a new temporary index with the necessary mapping.
+   * reindex the data from old to new temporary index and delete the old index.
+   *
+   * @param mapping
+   */
   async reindex(mapping: ElasticMapping): Promise<boolean> {
     let result = false;
     try {
-      const tmpIndex = mapping.name + '_tmp';
+      const tmpIndex = mapping.indexName + '_tmp';
       const tmpMapping = mapping.toRequest();
       tmpMapping.index = tmpIndex;
       let stage = 'create';
-      let res = await this.client.indices.create(tmpMapping);
-      result = get(res.body, K_ACKNOWLEDGMENT, false);
+
+      // create the temporary index
+      result = await this.doExists(tmpIndex);
+      if(result){
+        result = await this.doDeleteIndex(tmpIndex)
+      }
+      result = await this.doCreateIndex(tmpMapping);
       if (!result) {
         return false;
       }
-      result = await this.doReindex(mapping.name, tmpIndex);
+      // reindex from old to new index
+      result = await this.doReindex(mapping.indexName, tmpIndex);
       if (!result) {
         return false;
       }
-      result = await this.doDeleteIndex(mapping.name);
-      res = await this.client.indices.create(mapping.toRequest());
-      result = get(res.body, K_ACKNOWLEDGMENT, false);
+
+      // set alias for tmp index and remove from old
+      result = await this.doAddAlias(tmpIndex, mapping.aliasName);
+      result = await this.doAliasExists(mapping.indexName, mapping.aliasName);
+      if(result){
+        result = await this.doRemoveAlias(mapping.indexName, mapping.aliasName);
+      }
+
+
+      // delete old index and create new one
+      result = await this.doDeleteIndex(mapping.indexName);
+      result = await this.create(mapping, {skipAlias: true, removeCollidingIndex: true});
       if (!result) {
         return false;
       }
-      result = await this.doReindex(tmpIndex, mapping.name);
+
+      // reindex back from temporary to original
+      result = await this.doReindex(tmpIndex, mapping.indexName);
       if (!result) {
         return false;
       }
+      // remove alias and delete temporary index
+      result = await this.doAddAlias(mapping.indexName, mapping.aliasName);
+      result = await this.doRemoveAlias(tmpIndex, mapping.aliasName);
       result = await this.doDeleteIndex(tmpIndex);
     } catch (e) {
       Log.error(e);
       result = false;
     }
     return result;
+  }
+
+
+  doCreateIndex(body: any) {
+    return this.client.indices.create(body).then(x => get(x.body, K_ACKNOWLEDGMENT, false));
+  }
+
+
+  /**
+   * Elastic API operation to set an alias for an index
+   * @param index
+   * @param alias
+   */
+  doAliasExists(index: string, alias: string) {
+    return this.client.indices.existsAlias({index: index, name: alias }).then(x => get(x.body, K_ACKNOWLEDGMENT, false));
+  }
+
+
+  /**
+   * Elastic API operation to set an alias for an index
+   * @param index
+   * @param alias
+   */
+  doAddAlias(index: string, alias: string) {
+    return this.client.indices.putAlias({index: index, name: alias }).then(x => get(x.body, K_ACKNOWLEDGMENT, false));
+  }
+
+  /**
+   * Elastic API operation to remove an alias for an index
+   * @param index
+   * @param alias
+   */
+  doRemoveAlias(index: string, alias: string) {
+    return this.client.indices.deleteAlias({index: index, name: alias }).then(x => get(x.body, K_ACKNOWLEDGMENT, false));
   }
 
 

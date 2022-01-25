@@ -120,7 +120,7 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
         if (!indexNames[x.ref]) {
           indexNames[x.ref] = [];
         }
-        indexNames[x.ref].push(indexType.getIndexName());
+        indexNames[x.ref].push(indexType.getAliasName());
       });
 
       for (const refKey of _.keys(indexNames)) {

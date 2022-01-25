@@ -13,6 +13,8 @@ import { IndexProcessingWorker } from '../../src/workers/IndexProcessingWorker';
 import { TestHelper } from './TestHelper';
 import { C_ELASTIC_SEARCH, C_SEARCH_INDEX } from '../../src/lib/Constants';
 import { IElasticStorageRefOptions } from '../../src';
+import { clear } from './testdata';
+import { ElasticMappingUpdater } from '../../src/lib/elastic/mapping/ElasticMappingUpdater';
 
 const lorem = 'lorem ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod ' +
   'tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero ' +
@@ -78,22 +80,8 @@ class ElasticStorageExtensionSpec {
   static async before() {
     client = new Client({ node: 'http://' + ES_host + ':' + ES_port });
     await client.ping();
-
-
-    const existsData = await client.indices.exists({ index: 'data_index' });
-    const existsSearch = await client.indices.exists({ index: 'search_index' });
-    if (existsData.body) {
-      await client.indices.delete({ index: 'data_index' });
-    }
-    if (existsSearch.body) {
-      await client.indices.delete({ index: 'search_index' });
-    }
-    // delete index
-    const { body } = await client.indices.exists({ index: 'core' });
-    if (body) {
-      await client.indices.delete({ index: 'core' });
-    }
-
+    const updater = new ElasticMappingUpdater(client);
+    await clear(updater);
 
     bootstrap = Bootstrap
       .setConfigSources([{ type: 'system' }])

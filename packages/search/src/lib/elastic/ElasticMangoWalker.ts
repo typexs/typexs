@@ -3,6 +3,7 @@ import {AbstractCompare, And, IMangoWalker, MangoExpression, MultiArgs, Not, Or,
 import {IMangoWalkerControl} from '@allgemein/mango-expressions/IMangoWalker';
 import {NotYetImplementedError} from '@typexs/base';
 import {ES_ALLFIELD, ES_IDFIELD} from '../Constants';
+import { IElasticFieldDef } from './IElasticFieldDef';
 
 export interface IElasticQuery {
   [k: string]: any;
@@ -18,14 +19,14 @@ export class ElasticMangoWalker implements IMangoWalker {
 
   must_not: any[] = [];
 
-  readonly fields: { type: string, name: string }[] = [];
+  readonly fields: IElasticFieldDef[] = [];
 
-  constructor(fields: { type: string, name: string }[] = []) {
+  constructor(fields: IElasticFieldDef[] = []) {
     this.fields = fields;
   }
 
   getFields(type?: string, additional = [ES_ALLFIELD, '_label']) {
-    const fields: string[] = type ? this.fields.filter(x => x.type === type).map(x => x.name) : this.fields.map(x => x.name);
+    const fields: string[] = type ? this.fields.filter(x => x.type === type || x.esType === type).map(x => x.name) : this.fields.map(x => x.name);
     return _.uniq(_.concat(additional, fields));
   }
 
@@ -184,7 +185,7 @@ export class ElasticMangoWalker implements IMangoWalker {
         'prefix_length': 0,
         'max_expansions': 50,
         'boost': 1,
-        fields: this.getFields('string')
+        fields: this.getFields('text')
       };
       return termQuery;
     } else if (key === ES_IDFIELD) {
@@ -219,7 +220,7 @@ export class ElasticMangoWalker implements IMangoWalker {
         'prefix_length': 0,
         'max_expansions': 50,
         'boost': 1,
-        fields: this.getFields('string')
+        fields: this.getFields('text')
       };
       return termQuery;
     } else {

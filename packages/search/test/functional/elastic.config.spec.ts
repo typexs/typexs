@@ -244,37 +244,37 @@ class TypexsSearchConfiguration {
     expect(storageRef).to.be.instanceOf(ElasticStorageRef);
     const data = storageRef.getRawCollectionNames();
     expect(data).to.be.deep.eq(['core.test_entity']);
-    const indicies = storageRef.getIndiciesNames();
+    const indicies = storageRef.getAliasNames();
     expect(indicies).to.be.deep.eq(['core']);
     const indexTypes = storageRef.getIndexTypes();
-    expect(indexTypes.map(t => ({ indexName: t.getIndexName(), typeName: t.getTypeName() }))).to.be.deep.eq([{
-      indexName: 'core',
+    expect(indexTypes.map(t => ({ aliasName: t.getAliasName(), typeName: t.getTypeName() }))).to.be.deep.eq([{
+      aliasName: 'core',
       typeName: 'test_entity'
     }]);
 
     // create new index
     const checkIndex = await storageRef.checkIndices();
-    expect(checkIndex).to.be.deep.eq({ core: true });
+    expect(checkIndex).to.be.deep.eq({ core_xdx: true });
     expect(storageRef.isChecked()).to.be.true;
     storageRef.resetCheck();
 
     // no change index
     const checkIndex2 = await storageRef.checkIndices();
-    expect(checkIndex2).to.be.deep.eq({ core: true });
+    expect(checkIndex2).to.be.deep.eq({ core_xdx: true });
     expect(storageRef.isChecked()).to.be.true;
     storageRef.resetCheck();
 
     // extend index
     process.env.ES_EXT_NEW = '1';
     const checkIndexAdd = await storageRef.checkIndices();
-    expect(checkIndexAdd).to.be.deep.eq({ core: true });
+    expect(checkIndexAdd).to.be.deep.eq({ core_xdx: true });
     delete process.env.ES_EXT_NEW;
     expect(storageRef.isChecked()).to.be.true;
     storageRef.resetCheck();
 
     process.env.ES_EXT_UPDATE = '1';
     const checkIndexUpdate = await storageRef.checkIndices();
-    expect(checkIndexUpdate).to.be.deep.eq({ core: true });
+    expect(checkIndexUpdate).to.be.deep.eq({ core_xdx: true });
     delete process.env.ES_EXT_UPDATE;
     expect(storageRef.isChecked()).to.be.true;
     storageRef.resetCheck();
@@ -294,10 +294,10 @@ class TypexsSearchConfiguration {
     const storageRef = Injector.get<ElasticStorageRef>('storage.elastic');
     expect(storageRef).to.be.instanceOf(ElasticStorageRef);
     expect(storageRef).to.eq(elasticRef);
-    const indicies = storageRef.getIndiciesNames();
+    const indicies = storageRef.getAliasNames();
     expect(indicies).to.be.deep.eq(['typeorm_default_test_entity']);
     const checkIndex2 = await storageRef.checkIndices();
-    expect(checkIndex2).to.be.deep.eq({ typeorm_default_test_entity: true });
+    expect(checkIndex2).to.be.deep.eq({ typeorm_default_test_entity_xdx: true });
     expect(storageRef.isChecked()).to.be.true;
     storageRef.resetCheck();
 
@@ -317,10 +317,10 @@ class TypexsSearchConfiguration {
     const storageRef = Injector.get<ElasticStorageRef>('storage.elastic');
     expect(storageRef).to.be.instanceOf(ElasticStorageRef);
     expect(storageRef).to.eq(elasticRef);
-    const indicies = storageRef.getIndiciesNames();
+    const indicies = storageRef.getAliasNames();
     expect(indicies).to.be.deep.eq(['built_entity_default_entity_by_schema_api']);
     const checkIndex2 = await storageRef.checkIndices();
-    expect(checkIndex2).to.be.deep.eq({ built_entity_default_entity_by_schema_api: true });
+    expect(checkIndex2).to.be.deep.eq({ built_entity_default_entity_by_schema_api_xdx: true });
     expect(storageRef.isChecked()).to.be.true;
     storageRef.resetCheck();
 

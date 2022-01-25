@@ -77,7 +77,7 @@ const beforeCall = async function(cfg: any) {
 };
 
 
-@suite('functional/elastic/mapping')
+@suite('functional/elastic/mapping - startup')
 class TypexsSearchElasticMappingSpec {
 
   static before() {

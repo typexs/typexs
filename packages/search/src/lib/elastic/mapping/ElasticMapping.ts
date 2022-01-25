@@ -1,9 +1,18 @@
 import { BASE_MAPPING_DYNAMIC_STRUCTURE, BASE_MAPPING_PROPERTIES_STRUCTURE } from '../Constants';
 import { cloneDeep, get, has, isEmpty, isEqual, keys } from 'lodash';
+import { ElasticUtils } from '../ElasticUtils';
 
 export class ElasticMapping {
 
-  name: string;
+  /**
+   * Generated index name
+   */
+  indexName: string;
+
+  /**
+   * Alias name for the index
+   */
+  aliasName: string;
 
   dynamicTemplates: any = cloneDeep(BASE_MAPPING_DYNAMIC_STRUCTURE);
 
@@ -15,9 +24,13 @@ export class ElasticMapping {
   reindex: boolean = false;
 
 
-  constructor(name: string = null) {
-    if (name) {
-      this.name = name;
+  constructor(name: string = null, options: {skipGenerated: boolean} = {skipGenerated: false}) {
+    if (name && !options.skipGenerated) {
+      this.aliasName = ElasticUtils.aliasName(name);
+      this.indexName = ElasticUtils.indexName(name);
+    }else{
+      this.aliasName = name;
+      this.indexName = name;
     }
   }
 
@@ -64,7 +77,7 @@ export class ElasticMapping {
 
   toRequest() {
     return {
-      index: this.name,
+      index: this.indexName,
       body: {
         mappings: this.toJson()
       }

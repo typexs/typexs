@@ -1,9 +1,10 @@
 import * as _ from 'lodash';
+import { get, uniq, uniqBy } from 'lodash';
 import { JsonUtils } from '@allgemein/base';
 import { ClassType } from '@allgemein/schema-api';
 import { ElasticEntityController } from '../ElasticEntityController';
 import { IFindOp } from '@typexs/base/libs/storage/framework/IFindOp';
-import { NotYetImplementedError, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
+import { NotYetImplementedError, StorageError, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
 import { IndexElasticApi } from '../../../api/IndexElastic.api';
 import { ElasticMangoWalker } from '../ElasticMangoWalker';
 import { IndexEntityRef } from '../../registry/IndexEntityRef';
@@ -20,7 +21,7 @@ import {
 import { IElasticFieldDef } from '../IElasticFieldDef';
 import { IElasticFindOptions } from './IElasticFindOptions';
 import { OpsHelper } from './OpsHelper';
-import { uniq, uniqBy } from 'lodash';
+import { ElasticUtils } from '../ElasticUtils';
 
 
 export class FindOp<T> implements IFindOp<T> {
@@ -113,9 +114,9 @@ export class FindOp<T> implements IFindOp<T> {
       let fields: IElasticFieldDef[] = [];
 
       for (const i of indexEntityRefs) {
-        indexNames.push(i.getIndexName());
+        indexNames.push(i.getAliasName());
         fields.push(...this.controller.getStorageRef().getFields()
-          .filter(x => x.indexName === i.getIndexName() && x.typeName === i.getTypeName()));
+          .filter(x => x.indexName === i.getAliasName() && x.typeName === i.getTypeName()));
       }
 
       indexNames = uniq(indexNames);
@@ -219,6 +220,15 @@ export class FindOp<T> implements IFindOp<T> {
       let recordCount = 0;
       let maxScore = 0;
       const { body } = await client.search(opts);
+
+      const failures = get(body, '_shards.failures', []);
+      if (failures.length > 0) {
+        const msg = failures.map((x: any) => `[${x.reason.caused_by.type}] error on index "${x.index}" ${x.reason.reason}`);
+        const error = new StorageError(msg);
+        error.set('failures', failures);
+        throw error;
+      }
+
       if (_.has(body, 'hits')) {
         const hits = body.hits;
         maxScore = hits.max_score;
@@ -232,14 +242,11 @@ export class FindOp<T> implements IFindOp<T> {
             const _index = hit._index;
             let object = null;
             if (!this.options.raw && _type && _index) {
-              const indexEntityRef = indexEntityRefs.find(x => x.getIndexName() === _index && x.getTypeName() === _type);
+              const aliasName = ElasticUtils.aliasName(_index);
+              const indexEntityRef = indexEntityRefs.find(x => x.getAliasName() === aliasName && x.getTypeName() === _type);
               if (indexEntityRef) {
                 const correctedType = JsonUtils.correctTypes(_source);
-                // if (!_.has(_source, '_id')) {
-                //   object = indexEntityRef.build<T>(correctedType);
-                // } else {
                 object = indexEntityRef.build<T>(correctedType, { createAndCopy: true });
-                // }
               }
             }
             if (!object) {
