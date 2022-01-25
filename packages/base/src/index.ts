@@ -78,6 +78,7 @@ export { TypeOrmSqlConditionsBuilder } from './libs/storage/framework/typeorm/Ty
 export { IStorageOptions } from './libs/storage/IStorageOptions';
 export { IDBType } from './libs/storage/IDBType';
 export { Storage } from './libs/storage/Storage';
+export { StorageError } from './libs/storage/exceptions/StorageError';
 export { StorageRef } from './libs/storage/StorageRef';
 export { AbstractSchemaHandler } from './libs/storage/AbstractSchemaHandler';
 export { EntityControllerRegistry } from './libs/storage/EntityControllerRegistry';

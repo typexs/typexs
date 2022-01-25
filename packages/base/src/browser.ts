@@ -7,6 +7,7 @@ export {
   MetaArgs
 } from '@allgemein/base';
 
+export { TxsError } from './libs/exceptions/TxsError';
 export { Injector } from './libs/di/Injector';
 
 export { Invoker } from './base/Invoker';
