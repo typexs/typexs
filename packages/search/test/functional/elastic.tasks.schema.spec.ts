@@ -68,21 +68,20 @@ class TypexsSearchEntityController {
 
 
   static async before() {
-    const words = lorem.split(' ');
-    const words2 = lorem2.split(' ');
+    // const words = lorem.split(' ');
+    // const words2 = lorem2.split(' ');
 
     client = new Client({ node: 'http://' + ES_host + ':' + ES_port });
     await client.ping();
 
-
-    const existsData = await client.indices.exists({ index: 'car_index' });
+    const existsData = await client.indices.exists({ index: 'car_index_xdx' });
     if (existsData.body) {
-      await client.indices.delete({ index: 'car_index' });
+      await client.indices.delete({ index: 'car_index_xdx' });
     }
     // delete index
-    const { body } = await client.indices.exists({ index: 'core' });
+    const { body } = await client.indices.exists({ index: 'core_xdx' });
     if (body) {
-      await client.indices.delete({ index: 'core' });
+      await client.indices.delete({ index: 'core_xdx' });
     }
 
 
@@ -122,7 +121,6 @@ class TypexsSearchEntityController {
     const inc = worker.queue.queue.getInc();
     await dbController.save(entities, <any>{ refresh: true });
     try {
-
       await worker.queue.await();
       await TestHelper.waitFor(() =>
         worker.queue.queue.getInc() >= inc + 30

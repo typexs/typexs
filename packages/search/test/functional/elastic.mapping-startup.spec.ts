@@ -3,7 +3,7 @@ import { suite, test } from '@testdeck/mocha';
 import { ES_host, ES_port } from './config';
 import path from 'path';
 import { TestHelper } from './TestHelper';
-import { IElasticStorageRefOptions } from '../../src';
+import { IElasticStorageRefOptions } from '../../src/lib/elastic/IElasticStorageRefOptions';
 import { C_ELASTIC_SEARCH, C_SEARCH_INDEX } from '../../src/lib/Constants';
 import { Bootstrap, Injector } from '@typexs/base';
 import { Client } from '@elastic/elasticsearch';

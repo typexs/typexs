@@ -55,33 +55,100 @@ class TypexsSearchElasticMappingSpec {
 
 
   @test
-  async 'merge mappings without reindexing - adding single field'() {
+  async 'check if changes are correctly not detected - empty mappings'() {
     const mapping1 = new ElasticMapping('test_map_01');
     const mapping2 = new ElasticMapping('test_map_02');
-    mapping2.add('str', DEFAULT_TEXT_MAPPING);
-
     mapping1.merge(mapping2);
+    expect(mapping1.hasChanges()).to.be.false;
+    expect(mapping1.toReindex()).to.be.false;
+  }
 
-    expect(mapping1.reindex).to.be.false;
-    expect(mapping1.properties).to.be.include.keys(['str']);
-    expect(mapping1.properties.str).to.be.deep.eq(DEFAULT_TEXT_MAPPING);
-
+  @test
+  async 'check if changes are correctly detected - single change'() {
+    const source = new ElasticMapping('test_map_01');
+    const dest = new ElasticMapping('test_map_02');
+    dest.add('test', {type: 'text'});
+    source.merge(dest);
+    expect(source.hasChanges()).to.be.true;
+    expect(source.toReindex()).to.be.false;
   }
 
 
   @test
-  async 'merge mappings with reindexing - replace single field'() {
+  async 'check if changes are correctly detected - equal'() {
+    const source = new ElasticMapping('test_map_01');
+    source.add('test', {type: 'text'});
+    const dest = new ElasticMapping('test_map_02');
+    dest.add('test', {type: 'text'});
+    source.merge(dest);
+    expect(source.hasChanges()).to.be.false;
+    expect(source.toReindex()).to.be.false;
+    expect(source.toJson()).to.be.deep.eq(dest.toJson());
+  }
+
+  @test
+  async 'check if changes are correctly detected - different type'() {
+    const source = new ElasticMapping('test_map_01');
+    source.add('test', {type: 'text'});
+    const dest = new ElasticMapping('test_map_02');
+    dest.add('test', {type: 'long'});
+    source.merge(dest);
+    expect(source.hasChanges()).to.be.true;
+    expect(source.toReindex()).to.be.true;
+    expect(source.toJson()).to.be.deep.eq(dest.toJson());
+  }
+
+  @test
+  async 'check if changes are correctly detected - deep change type'() {
+    const source = new ElasticMapping('test_map_01');
+    source.add('test', {properties: {hallo: {type:'text'}}});
+    const dest = new ElasticMapping('test_map_02');
+    dest.add('test', {properties: {hallo: {type:'long'}}});
+    source.merge(dest);
+    expect(source.hasChanges()).to.be.true;
+    expect(source.toReindex()).to.be.true;
+    expect(source.toJson()).to.be.deep.eq(dest.toJson());
+  }
+
+
+  @test
+  async 'check if changes are correctly detected - deep merge two types'() {
+    const source = new ElasticMapping('test_map_01');
+    source.add('test', {properties: {hallo: {type:'text'}}});
+    const dest = new ElasticMapping('test_map_02');
+    dest.add('test', {properties: {hallo2: {type:'long'}}});
+    source.merge(dest);
+    expect(source.hasChanges()).to.be.true;
+    expect(source.toReindex()).to.be.true;
+    const prop = source.toJson();
+    prop.properties.test.properties.hallo2 = {type: 'long'};
+    expect(source.toJson()).to.be.deep.eq(prop);
+  }
+
+
+  @test
+  async 'merge mappings without reindexing - adding single field'() {
+    const mapping1 = new ElasticMapping('test_map_01');
+    const mapping2 = new ElasticMapping('test_map_02');
+    mapping2.add('str', DEFAULT_TEXT_MAPPING);
+    mapping1.merge(mapping2);
+    expect(mapping1.toReindex()).to.be.false;
+    expect(mapping1.properties).to.be.include.keys(['str']);
+    expect(mapping1.properties.str).to.be.deep.eq(DEFAULT_TEXT_MAPPING);
+  }
+
+
+  @test
+  async 'merge mappings with reindexing - partially same data then do nothing'() {
     const mapping1 = new ElasticMapping('test_map_01');
     mapping1.add('str', DEFAULT_TEXT_MAPPING);
     const mapping2 = new ElasticMapping('test_map_02');
     mapping2.add('str', { type: 'text' });
-
     mapping1.merge(mapping2);
-
-    expect(mapping1.reindex).to.be.true;
+    expect(mapping1.toReindex()).to.be.false;
+    expect(mapping1.hasChanges()).to.be.false;
     expect(mapping1.properties).to.be.include.keys(['str']);
-    expect(mapping1.properties.str).to.be.deep.eq({ type: 'text' });
-
+    expect(mapping1.properties.str).to.be.deep.eq(DEFAULT_TEXT_MAPPING);
   }
 
 
@@ -91,13 +158,11 @@ class TypexsSearchElasticMappingSpec {
     mapping1.add('str', DEFAULT_TEXT_MAPPING);
     const mapping2 = new ElasticMapping('test_map_02');
     mapping2.add('str', DEFAULT_TEXT_MAPPING);
-
     mapping1.merge(mapping2);
-
-    expect(mapping1.reindex).to.be.false;
+    expect(mapping1.hasChanges()).to.be.false;
+    expect(mapping1.toReindex()).to.be.false;
     expect(mapping1.properties).to.be.include.keys(['str']);
     expect(mapping1.properties.str).to.be.deep.eq(DEFAULT_TEXT_MAPPING);
-
   }
 
 
@@ -147,35 +212,33 @@ class TypexsSearchElasticMappingSpec {
     const INDEX_NAME = 'demo_index_2';
 
 
-
     const mapping = new ElasticMapping(INDEX_NAME);
-    mapping.add('number', {'type': 'text'});
+    mapping.add('number', { 'type': 'text' });
 
     const existsData = await client.indices.exists({ index: mapping.indexName });
     if (existsData.body) {
       await update.doDeleteIndex(mapping.indexName);
     }
 
-    const existsTmpData = await client.indices.exists({ index:  mapping.indexName  + '_tmp' });
+    const existsTmpData = await client.indices.exists({ index: mapping.indexName + '_tmp' });
     if (existsTmpData.body) {
-      await update.doDeleteIndex( mapping.indexName  + '_tmp');
+      await update.doDeleteIndex(mapping.indexName + '_tmp');
     }
     await update.create(mapping);
 
-
-    await update.reload( mapping.indexName );
-    const loadedMapping = update.getBy( mapping.indexName );
-    const generatedMapping = new ElasticMapping( mapping.indexName );
+    await update.reload(mapping.indexName);
+    const loadedMapping = update.getBy(mapping.indexName);
+    const generatedMapping = new ElasticMapping(mapping.indexName);
     generatedMapping.add('number', { type: 'long' });
-    generatedMapping.merge(loadedMapping, false);
-    expect(generatedMapping.reindex).to.be.true;
-    let res = await update.reindex(generatedMapping);
+    loadedMapping.merge(generatedMapping);
+    expect(loadedMapping.toReindex()).to.be.true;
+    let res = await update.reindex(loadedMapping);
     expect(res).to.be.true;
     const indicesNames = await update.reload();
     await client.close();
 
-    expect(indicesNames).to.include.members([ mapping.indexName ]);
-    const x = update.getBy( mapping.indexName );
+    expect(indicesNames).to.include.members([mapping.indexName]);
+    const x = update.getBy(mapping.indexName);
     expect(x.toJson()).to.be.deep.eq({
       'dynamic_templates': BASE_MAPPING_DYNAMIC_STRUCTURE,
       'properties': {
@@ -195,25 +258,23 @@ class TypexsSearchElasticMappingSpec {
     // index name
     const INDEX_NAME = 'demo_index_3';
     const mapping = new ElasticMapping(INDEX_NAME);
-    mapping.add('number', {'type': 'text'});
+    mapping.add('number', { 'type': 'text' });
 
     const existsData = await client.indices.exists({ index: mapping.indexName });
     if (existsData.body) {
       await update.doDeleteIndex(mapping.indexName);
     }
 
-    const existsTmpData = await client.indices.exists({ index:  mapping.indexName  + '_tmp' });
+    const existsTmpData = await client.indices.exists({ index: mapping.indexName + '_tmp' });
     if (existsTmpData.body) {
-      await update.doDeleteIndex( mapping.indexName  + '_tmp');
+      await update.doDeleteIndex(mapping.indexName + '_tmp');
     }
-
     await update.create(mapping);
 
+    await update.reload(mapping.indexName);
+    const loadedMapping = update.getBy(mapping.indexName);
 
-    await update.reload(mapping.indexName );
-    const loadedMapping = update.getBy(mapping.indexName );
-
-    const generatedMapping = new ElasticMapping(mapping.indexName );
+    const generatedMapping = new ElasticMapping(mapping.indexName);
     generatedMapping.merge(loadedMapping, false);
 
     let res = await update.update(generatedMapping);
@@ -221,8 +282,8 @@ class TypexsSearchElasticMappingSpec {
     const indicesNames = await update.reload();
     await client.close();
 
-    expect(indicesNames).to.include.members([mapping.indexName ]);
-    const x = update.getBy(mapping.indexName );
+    expect(indicesNames).to.include.members([mapping.indexName]);
+    const x = update.getBy(mapping.indexName);
     expect(x.toJson()).to.be.deep.eq({
       'dynamic_templates': BASE_MAPPING_DYNAMIC_STRUCTURE,
       'properties': {
