@@ -9,7 +9,7 @@ import { ClassUtils, LockFactory } from '@allgemein/base';
 import { IndexEntityRef } from '../registry/IndexEntityRef';
 import { IndexEntityRegistry } from '../registry/IndexEntityRegistry';
 import { ElasticUtils } from './ElasticUtils';
-import { Client, ClientOptions } from '@elastic/elasticsearch';
+import { ClientOptions } from '@elastic/elasticsearch';
 import { IElasticFieldDef } from './IElasticFieldDef';
 import { OpsHelper } from './ops/OpsHelper';
 import { IIndexStorageRef } from '../IIndexStorageRef';
@@ -211,11 +211,15 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
           if (!mapping) {
             res = await mappingUpdater.create(neededMapping);
           } else {
-            neededMapping.merge(mapping, false);
-            if (neededMapping.reindex) {
-              res = await mappingUpdater.reindex(neededMapping);
+            mapping.merge(neededMapping);
+            if (neededMapping.hasChanges()) {
+              if (neededMapping.toReindex()) {
+                res = await mappingUpdater.reindex(neededMapping);
+              } else {
+                res = await mappingUpdater.update(neededMapping);
+              }
             } else {
-              res = await mappingUpdater.update(neededMapping);
+              res = true;
             }
           }
           await mappingUpdater.reload(indexName);
@@ -256,7 +260,6 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     await this.invoker.use(IndexElasticApi).doBeforeIndexRepositoryCreate(mapping, entityRefs);
     return mapping;
   }
-
 
 
   /**

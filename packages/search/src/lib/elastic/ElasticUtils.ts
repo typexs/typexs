@@ -3,8 +3,9 @@ import { IndexEntityRef } from '../registry/IndexEntityRef';
 import { ClassRef, IClassRef, IEntityRef } from '@allgemein/schema-api';
 import { IElasticFieldDef } from './IElasticFieldDef';
 import { ClassUtils } from '@allgemein/base';
-import { isString, keys } from 'lodash';
+import { clone, get, isArray, isNull, isNumber, isObjectLike, isString, isUndefined, keys, set } from 'lodash';
 import { DEFAULT_TEXT_MAPPING, ELASTIC_TYPES } from './Constants';
+import { TreeUtils, WalkValues } from '@allgemein/base/utils/TreeUtils';
 
 export class ElasticUtils {
 
@@ -30,10 +31,10 @@ export class ElasticUtils {
       case 'int':
         return 'integer';
       case 'bigint':
+      case 'long':
       case 'number':
         return 'long';
       case 'double':
-        return 'double';
       case 'float':
         return 'double';
     }
@@ -94,7 +95,6 @@ export class ElasticUtils {
           properties[prop.name] = {
             properties: refProperties
           };
-
         }
       } else {
         let type = prop.getType();
@@ -158,5 +158,104 @@ export class ElasticUtils {
 
   static buildIdQuery(entityRef: IndexEntityRef, id: any) {
     return [entityRef.getTypeName(), id].join('--');
+  }
+
+
+  static merge(source: any, dest: any) {
+    const changes: any[] = [];
+    TreeUtils.walk(dest, (x: WalkValues) => {
+      // new sub-property
+      const location = x.location.join('.');
+
+      if (x.isLeaf) {
+        // is leaf - check content
+        if (isNull(x.index) && x.key) {
+          // object path
+          const value = get(source, location, undefined);
+          if (isUndefined(value)) {
+            // not exists, append to source
+            set(source, location, x.value);
+            changes.push({ type: 'missing', key: location });
+          }
+        } else if (isNull(x.key) && isNumber(x.index)) {
+          // array element
+          // check if array exists
+          const parent = clone(x.location);
+          parent.pop();
+          const parentLocation = parent.join('.');
+          const sourceArray = get(source, parentLocation, undefined);
+          if (isArray(sourceArray)) {
+            // source array exists check if value present
+            const exists = sourceArray.find((y: any) => x === x.value);
+            if (!exists) {
+              // add missing value
+              const position = sourceArray.length;
+              sourceArray.push(x.value);
+              changes.push({ type: 'push', key: parentLocation, position: position, value: x.value });
+            }
+          } else if (isUndefined(sourceArray)) {
+            // source parent for appending structure is not the same
+            set(source, parentLocation, [x.value]);
+            changes.push({ type: 'create-push', key: parentLocation, position: 0, value: x.value });
+          } else if (isObjectLike(sourceArray)) {
+            // source parent is an object like entry
+            // todo replace this with the array
+            throw new Error('structural inconsistencies: needed array to add value found object-like entry [' + parentLocation + ']');
+          } else {
+            throw new Error('structural inconsistencies: needed array to add value found unknown [' + parentLocation + ']');
+          }
+        } else {
+          throw new Error('no object or array node on leaf');
+        }
+
+        // in array
+        const value = get(source, location, undefined);
+        if (!isUndefined(value)) {
+          let change = value !== x.value;
+          if (change) {
+            set(source, location, x.value);
+            changes.push({ type: 'value', key: location, src: value, dst: x.value });
+          }
+        }
+      } else {
+        // is branch - check structure
+        if (isNull(x.index) && x.key) {
+          // object path
+          const value = get(source, location, undefined);
+          if (isUndefined(value)) {
+            // not exists, append to source
+            set(source, location, x.value);
+            changes.push({ type: 'missing', key: location });
+          }
+        } else if (isNull(x.key) && isNumber(x.index)) {
+          // array element
+          const value = get(source, location, undefined);
+          if (isUndefined(value)) {
+            // not exists, append to source
+            set(source, location, value);
+          }
+
+
+        } else {
+          throw new Error('no object or array node on branch');
+        }
+      }
+      // const _get = get(source, location, undefined);
+      // if (x.key) {
+      //
+      // } else if (x.isLeaf) {
+      //   const path = x.location.join('.');
+      //   const _get = get(source, path, undefined);
+      //   if (!isUndefined(_get)) {
+      //     let _change = _get !== x.value;
+      //     // changes = changes || _change;
+      //     //
+      //     // if (/type|copy/.test(path) && _change) {
+      //     //   reindex = reindex || _change;
+      //     // }
+      //   }
+      // }
+    });
+    return changes;
   }
 }
