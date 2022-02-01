@@ -3,8 +3,21 @@ import {IEntityRef} from '@allgemein/schema-api';
 
 
 export interface IElasticIndexOptions {
+  /**
+   * Define name/alias for the index (if not given, name will be generated)
+   */
   index?: string;
+
+  /**
+   * Default is true, each found text field will copy data to _all field
+   */
   autoAppendAllField?: boolean;
+
+  /**
+   * Entities registered to the index
+   *
+   * todo conditions for filtering entities
+   */
   entities: (string | IEntityRef | { entityName: string; registry: string })[];
 }
 
