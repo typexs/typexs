@@ -1,3 +1,4 @@
+import { __CLASS__, __NS__ } from '@allgemein/schema-api';
 import { __ID__, __TYPE__, ES_ALLFIELD, ES_LABELFIELD } from '../Constants';
 
 export type ELASTIC_TYPES =
@@ -6,8 +7,6 @@ export type ELASTIC_TYPES =
   'keyword' | 'constant_keyword' | 'wildcard' |
   'long' | 'double' | 'integer' | 'short' | 'byte' | 'half_float' | 'scaled_float' | 'unsigned_long' |
   'object' | 'flattened' | 'nested' | 'join';
-
-
 
 
 export const DEFAULT_TEXT_MAPPING = {
@@ -44,12 +43,16 @@ export const BASE_MAPPING_DYNAMIC_STRUCTURE = [
 
 export const BASE_MAPPING_PROPERTIES_STRUCTURE = {
   [__ID__]: {
-    ...DEFAULT_TEXT_MAPPING,
-    copy_to: [ES_ALLFIELD]
+    ...DEFAULT_TEXT_MAPPING
   },
   [__TYPE__]: {
-    ...DEFAULT_TEXT_MAPPING,
-    copy_to: [ES_ALLFIELD]
+    ...DEFAULT_TEXT_MAPPING
+  },
+  [__NS__]: {
+    ...DEFAULT_TEXT_MAPPING
+  },
+  [__CLASS__]: {
+    ...DEFAULT_TEXT_MAPPING
   },
   [ES_LABELFIELD]: {
     ...DEFAULT_TEXT_MAPPING,

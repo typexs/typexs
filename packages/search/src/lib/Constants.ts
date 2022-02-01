@@ -1,5 +1,4 @@
 export const K_CLS_STORAGE_INDEX_TYPES = 'index.types';
-// export const C_INDEX = 'index';
 export const C_SEARCH_INDEX: string = 'search-index';
 export const C_ELASTIC_SEARCH: string = 'elastic';
 export const XS_P_$MAX_SCORE = '$max_score';
