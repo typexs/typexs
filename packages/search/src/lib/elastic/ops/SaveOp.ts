@@ -1,13 +1,16 @@
-import * as _ from 'lodash';
+import { clone, cloneDeep, defaults, has, isArray, uniq } from 'lodash';
+
 import { ISaveOp } from '@typexs/base/libs/storage/framework/ISaveOp';
 import { ElasticEntityController } from '../ElasticEntityController';
 import { IndexElasticApi } from '../../../api/IndexElastic.api';
 import { IndexEntityRegistry } from '../../registry/IndexEntityRegistry';
-import { DataContainer, Log } from '@typexs/base';
+import {  DataContainer, Log } from '@typexs/base';
 import { Index } from '@elastic/elasticsearch/api/requestParams';
 import { IElasticSaveOptions } from './IElasticSaveOptions';
 import { OpsHelper } from './OpsHelper';
 import { __ID__, __TYPE__, C_SEARCH_INDEX, ES_IDFIELD, ES_TYPEFIELD } from '../../Constants';
+import { __CLASS__, __NS__ } from '@allgemein/schema-api';
+
 
 export class SaveOp<T> implements ISaveOp<T> {
 
@@ -45,10 +48,10 @@ export class SaveOp<T> implements ISaveOp<T> {
 
   async run(object: T[] | T, options?: IElasticSaveOptions): Promise<T | T[]> {
     options = options || {};
-    _.defaults(options, { validate: false, raw: false, passResults: false });
+    defaults(options, { validate: false, raw: false, passResults: false });
     await this.controller.getInvoker().use(IndexElasticApi).onOptions('save', options);
     this.options = options;
-    this.isArray = _.isArray(object);
+    this.isArray = isArray(object);
     this.objects = this.prepare(object);
 
     await this.controller.getInvoker().use(IndexElasticApi).doBeforeSave(this.objects, this);
@@ -57,7 +60,7 @@ export class SaveOp<T> implements ISaveOp<T> {
     const connection = await this.controller.connect();
     try {
 
-      const preparedOpts = _.clone(options);
+      const preparedOpts = clone(options);
       ['refresh', 'id', 'index', 'type', 'body', 'validate', 'raw', 'passResults', 'noTransaction'].map(k => delete preparedOpts[k]);
       const indices: string[] = [];
       const client = connection.getClient();
@@ -74,24 +77,14 @@ export class SaveOp<T> implements ISaveOp<T> {
         //   throw new Error('no id property found for ' + entityName);
         // }
 
-        const jsonEntity = _.cloneDeep(entity);
+        const jsonEntity = cloneDeep(entity);
+        jsonEntity[__CLASS__] = entityRef.getEntityRef().getClassRef().name;
+        jsonEntity[__NS__] = entityRef.getEntityRef().getClassRef().getNamespace();
 
-        if (!_.has(entity, __TYPE__)) {
+        if (!has(entity, __TYPE__)) {
           jsonEntity[__TYPE__] = entityRef.getTypeName();
         }
         jsonEntity[__ID__] = id;
-        // jsonEntity.__id = jsonEntity._id + '';
-        //
-        // if (_.has(jsonEntity, '_id')) {
-        //   jsonEntity.__id = jsonEntity._id + '';
-        //   delete jsonEntity._id;
-        // } else {
-        //   jsonEntity.__id = idPropertyRefs.map(x => _.get(entity, x.name) + '').join('--');
-        //   if (_.isEmpty(jsonEntity.__id)) {
-        //     throw new Error(
-        //       'no id could be generate for ' + entityName + ' with properties ' + idPropertyRefs.map(x => x.name).join(', '));
-        //   }
-        // }
 
         indices.push(entityRef.getAliasName());
         promises.push(client.index(<Index>{
@@ -121,7 +114,7 @@ export class SaveOp<T> implements ISaveOp<T> {
             }
           }
           if (options.refresh && results.length > 0) {
-            await client.indices.refresh({ index: _.uniq(indices) });
+            await client.indices.refresh({ index: uniq(indices) });
           }
         }
       }
@@ -145,7 +138,7 @@ export class SaveOp<T> implements ISaveOp<T> {
 
   prepare(object: T | T[]): T[] {
     let objs: T[] = [];
-    if (_.isArray(object)) {
+    if (isArray(object)) {
       objs = object;
     } else {
       objs.push(object);
@@ -156,7 +149,7 @@ export class SaveOp<T> implements ISaveOp<T> {
 
   private async validate() {
     let valid = true;
-    await Promise.all(_.map(this.objects, o => new DataContainer(o, IndexEntityRegistry.$())).map(async c => {
+    await Promise.all(this.objects.map(o => new DataContainer(o, IndexEntityRegistry.$())).map(async c => {
       valid = valid && await c.validate();
       c.applyState();
     }));

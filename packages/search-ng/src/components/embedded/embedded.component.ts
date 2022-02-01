@@ -26,7 +26,7 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
 
   @Input()
   facets: ISearchFacet[] = [
-    { name: 'Type', type: 'value', field: __CLASS__ + '.keyword' },
+    { name: 'Class', type: 'value', field: __CLASS__ + '.keyword' },
     { name: 'Namespace', type: 'value', field: __NS__ + '.keyword' },
     // { name: 'sap_client', type: 'value', field: '_clientId.keyword' }
   ];
