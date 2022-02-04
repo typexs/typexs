@@ -19,6 +19,7 @@ storage:
       - entities:
           - TypeOrmSimpleItem
           - BuildSimpleItem
+          - BuildDemoEntity
 
 
 filesystem:

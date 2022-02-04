@@ -1,7 +1,8 @@
-import {find, isFunction, isArray, isEmpty} from 'lodash';
-import {IAPIDef} from '../libs/api/IAPIDef';
-import {ClassType} from '@allgemein/schema-api';
-import {Injector} from '../libs/di/Injector';
+import { find, isArray, isEmpty, isFunction, isUndefined } from 'lodash';
+import { IAPIDef } from '../libs/api/IAPIDef';
+import { ClassType } from '@allgemein/schema-api';
+import { Injector } from '../libs/di/Injector';
+import { isPromiseLike } from '@allgemein/base';
 
 
 export class Invoker {
@@ -24,12 +25,12 @@ export class Invoker {
         }
         const desc = Object.getOwnPropertyDescriptor(api.prototype, p);
         if (isFunction(desc.value)) {
-          obj[p] = function (...args: any[]) {
+          obj[p] = function(...args: any[]) {
             return invoker.execute(api, p, ...args);
           };
         }
       });
-      def = {api: api, impl: [], handle: obj};
+      def = { api: api, impl: [], handle: obj };
       this.apiImpls.push(def);
     }
     if (isArray(impl)) {
@@ -45,17 +46,21 @@ export class Invoker {
     }
   }
 
-  private async execute(api: Function, method: string, ...args: any[]) {
+
+  private execute(api: Function, method: string, ...args: any[]) {
     const def = find(this.apiImpls, apiImpl => apiImpl.api === api);
     const instances = def.impl.map(impl => Injector.get(impl));
     const results = [];
-    // TODO maybe parallel
+    let isPromised = false;
     for (const instance of instances) {
-      let ret = null;
-      if (instance[method]) {
-        ret = await instance[method].apply(instance, args);
+      if (!isUndefined(instance[method]) && isFunction(instance[method])) {
+        let ret = instance[method].apply(instance, args);
+        isPromised = isPromised || isPromiseLike(ret);
+        results.push(ret);
       }
-      results.push(ret);
+    }
+    if (isPromised && results.length > 0) {
+      return Promise.all(results);
     }
     return results;
   }

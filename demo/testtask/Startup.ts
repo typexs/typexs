@@ -3,6 +3,7 @@ import { C_STORAGE_DEFAULT, IBootstrap, IEntityController, Inject, StorageRef, X
 import { TypeOrmSimpleItem } from './entities/TypeOrmSimpleItem';
 import { BuildSimpleItem } from './entities/BuildSimpleItem';
 import { InnerValue } from './entities/InnerValue';
+import { BuildDemoEntity } from './entities/BuildDemoEntity';
 
 export class Startup implements IBootstrap {
 
@@ -45,6 +46,22 @@ export class Startup implements IBootstrap {
         si.inner = new InnerValue();
         si.inner.name = 'inner-' + r;
         si.inner.text = 'testinner-' + r;
+        add.push(si);
+
+      }
+      await this.entityController.save(add);
+    }
+
+    results = await this.entityController.find(BuildDemoEntity, {}, { limit: 1 }) as any[];
+    if (results[XS_P_$COUNT] < 490) {
+      const add = [];
+      for (const r of _.range(1, 500)) {
+        const si = new BuildDemoEntity();
+        si.someId = r + '';
+        si.start = r * 2;
+        si.stop = r * 11 + 6;
+        si.text = 'T-Data ' + r;
+        si.name = 'T-Name ' + r;
         add.push(si);
 
       }

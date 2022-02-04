@@ -14,15 +14,15 @@ import { assign, cloneDeep, isArray, isFunction } from 'lodash';
 export class ExtendEntityControllerApi implements IEntityControllerApi {
   // check if worker is online, pass objects
 
-  invoker: Invoker;
+
 
   status: IndexRuntimeStatus;
 
   getStatus() {
     if (!this.status) {
-      try{
+      try {
         this.status = Injector.get(IndexRuntimeStatus.NAME);
-      }catch (e) {
+      } catch (e) {
 
       }
     }
@@ -30,24 +30,13 @@ export class ExtendEntityControllerApi implements IEntityControllerApi {
   }
 
 
-  getInvoker() {
-    if (!this.invoker) {
-      this.invoker = Injector.get(Invoker.NAME);
-    }
-    return this.invoker;
-  }
-
 
   filterIndexableObject<T>(object: T[], registry: string) {
     const indexable: { ref: string; class: string; registry: string; obj: T }[] = [];
     for (const obj of object) {
       const name = ClassRef.getClassName(obj as any);
       if (this.getStatus().hasType(name, registry)) {
-        const results = this.getInvoker().use(IndexElasticApi).isIndexable(name, obj, registry);
-        let pass = true;
-        if (results && isArray(results) && results.length > 0) {
-          pass = results.reduce((previousValue, currentValue) => previousValue && currentValue, pass);
-        }
+        const pass = this.getStatus().isIndexable(name, obj, registry);
         if (pass) {
           indexable.push({
             ...this.getStatus().getType(name, registry),
@@ -102,7 +91,7 @@ export class ExtendEntityControllerApi implements IEntityControllerApi {
       const prepared = filterIndexable
         .map(x => {
           const o = cloneDeep(x.obj);
-          this.getInvoker().use(IndexElasticApi).prepareBeforeSave(x.class, o);
+          this.getStatus().getInvoker().use(IndexElasticApi).prepareBeforeSave(x.class, o);
           const r = assign(x, <any>{ action: 'save', obj: o });
           return r;
         });

@@ -1,11 +1,13 @@
 import * as _ from 'lodash';
 import { LockFactory, Semaphore } from '@allgemein/base';
-import { AsyncWorkerQueue, ILoggerApi, Inject, IQueueProcessor, Log, Storage } from '@typexs/base';
+import { AsyncWorkerQueue, ILoggerApi, Inject, Invoker, IQueueProcessor, Log, Storage } from '@typexs/base';
 import { IndexRuntimeStatus } from '../IndexRuntimeStatus';
 import { IIndexData } from './IIndexData';
 import { IIndexStorageRef } from '../IIndexStorageRef';
 import { IndexEvent } from './IndexEvent';
 import { ClassRef } from '@allgemein/schema-api';
+import { IndexElasticApi } from '../../api/IndexElastic.api';
+import { isArray } from 'lodash';
 
 
 export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
@@ -17,6 +19,9 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
 
   @Inject(Storage.NAME)
   storage: Storage;
+
+  @Inject(Invoker.NAME)
+  invoker: Invoker;
 
   LOCK: Semaphore;
 
@@ -48,7 +53,7 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
     for (const entry of event.data) {
       if (entry.action === 'save' || entry.action === 'delete') {
         const classRef = ClassRef.get(entry.class, entry.registry);
-        const obj = classRef.build(entry.obj, {createAndCopy: true});
+        const obj = classRef.build(entry.obj, { createAndCopy: true });
         this.push(<IIndexData>{
           ref: entry.ref,
           action: entry.action,
@@ -73,8 +78,17 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
     }
   }
 
+  getStatus(){
+    return this.status;
+  }
+
 
   do(event: IIndexData) {
+    const pass = this.getStatus().isIndexable(event.class, event.obj, event.registry);
+    if (!pass) {
+      return null;
+    }
+
     let res = null;
     try {
       if (event.ref && event.registry && event.class) {
@@ -83,6 +97,7 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
       }
 
       if (event.action === 'save') {
+
         // TODO resolve by refs
         res = this.storage.get(event.ref).getController().save(event.obj, event.options);
       } else if (event.action === 'delete') {

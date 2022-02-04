@@ -12,6 +12,7 @@ services:
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     volumes:
       - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./local/elastic/nodes:/usr/share/elasticsearch/data/nodes
     ports:
       - 127.0.0.1:9200:9200
       - 127.0.0.1:9300:9300

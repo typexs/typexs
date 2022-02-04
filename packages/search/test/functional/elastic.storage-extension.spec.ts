@@ -78,6 +78,8 @@ class ElasticStorageExtensionSpec {
 
 
   static async before() {
+    Bootstrap.reset();
+
     client = new Client({ node: 'http://' + ES_host + ':' + ES_port });
     await client.ping();
     const updater = new ElasticMappingUpdater(client);

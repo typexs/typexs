@@ -7,19 +7,19 @@ export class LabelHelper {
 
 
   static labelForEntity(entity: any, ref: IClassRef | IEntityRef, sep: string = ' ', max: number = 1024): string {
-    if (Reflect.has(entity, C_LABEL)) {
+    let labelProperties = ref.getPropertyRefs().filter(x => x.getOptions(C_ENTITY_LABEL, false));
+    if (labelProperties.length === 0 && Reflect.has(entity, C_LABEL)) {
       // check if label function or value is present
       if (isFunction(entity[C_LABEL])) {
         return entity.label();
       } else {
         return entity.label;
       }
-    } else if (Reflect.has(entity, C_$LABEL)) {
+    } else if (labelProperties.length === 0 && Reflect.has(entity, C_$LABEL)) {
       // check if older label key value is present
       return entity[C_$LABEL];
     } else {
       // take label as value
-      let labelProperties = ref.getPropertyRefs().filter(x => x.getOptions(C_ENTITY_LABEL, false));
       const label: string[] = [];
       if (labelProperties.length === 0) {
         // take id as value

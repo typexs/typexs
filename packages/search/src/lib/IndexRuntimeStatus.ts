@@ -1,9 +1,10 @@
-import { Inject, Injector, Log, Storage } from '@typexs/base';
+import { Inject, Injector, Invoker, Log, Storage } from '@typexs/base';
 import { C_SEARCH_INDEX } from './Constants';
 import { IndexEntityRef } from './registry/IndexEntityRef';
-import { isString } from 'lodash';
+import { isArray, isString } from 'lodash';
 import { IIndexStorageRef } from './IIndexStorageRef';
 import { ClassRef, ClassType } from '@allgemein/schema-api';
+import { IndexElasticApi } from '../api/IndexElastic.api';
 
 export class IndexRuntimeStatus {
 
@@ -11,6 +12,8 @@ export class IndexRuntimeStatus {
 
   @Inject(Storage.NAME)
   private storage: Storage;
+
+  private invoker: Invoker;
 
   private _checked: boolean = false;
 
@@ -87,6 +90,28 @@ export class IndexRuntimeStatus {
       this.enabled = this.types.length > 0;
     }
     return this.enabled;
+  }
+
+
+  isIndexable(className: string, obj: any, registry: string){
+    const results = this.getInvoker().use(IndexElasticApi).isIndexable(className, obj, registry);
+    let pass = false;
+    if (results && isArray(results)) {
+      if (results.length > 0) {
+        pass = results.reduce((previousValue, currentValue) => previousValue && currentValue, true);
+      } else {
+        pass = true;
+      }
+    }
+    return pass;
+  }
+
+
+  getInvoker() {
+    if (!this.invoker) {
+      this.invoker = Injector.get(Invoker.NAME);
+    }
+    return this.invoker;
   }
 
 }

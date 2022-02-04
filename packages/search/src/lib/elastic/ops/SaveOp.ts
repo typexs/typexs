@@ -1,5 +1,4 @@
 import { clone, cloneDeep, defaults, has, isArray, uniq } from 'lodash';
-
 import { ISaveOp } from '@typexs/base/libs/storage/framework/ISaveOp';
 import { ElasticEntityController } from '../ElasticEntityController';
 import { IndexElasticApi } from '../../../api/IndexElastic.api';
@@ -17,7 +16,6 @@ export class SaveOp<T> implements ISaveOp<T> {
   error: Error = null;
 
   readonly controller: ElasticEntityController;
-
 
   protected options: IElasticSaveOptions;
 
@@ -71,11 +69,6 @@ export class SaveOp<T> implements ISaveOp<T> {
 
         delete entity[ES_IDFIELD];
         delete entity[ES_TYPEFIELD];
-
-        // const idPropertyRefs = entityRef.getPropertyRefs().filter(p => p.isIdentifier());
-        // if (idPropertyRefs.length === 0) {
-        //   throw new Error('no id property found for ' + entityName);
-        // }
 
         const jsonEntity = cloneDeep(entity);
         jsonEntity[__CLASS__] = entityRef.getEntityRef().getClassRef().name;

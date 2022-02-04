@@ -50,7 +50,7 @@ class InvokerSpec {
     api = invoker.use(AwesomeApi);
     expect(api.doNotSomethingGreat).to.exist;
     ret = await api.doNotSomethingGreat('data');
-    expect(ret).to.be.deep.eq([null]);
+    expect(ret).to.be.deep.eq([]);
 
   }
 

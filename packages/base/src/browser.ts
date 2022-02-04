@@ -1,3 +1,6 @@
+/**
+ * Extern libraries
+ */
 export {
   NestedException,
   TodoException,
@@ -6,6 +9,8 @@ export {
   StringOrFunction,
   MetaArgs
 } from '@allgemein/base';
+
+
 
 export { TxsError } from './libs/exceptions/TxsError';
 export { Injector } from './libs/di/Injector';

@@ -79,7 +79,10 @@ export class SearchIndexTask implements ITask {
         }
         this.runtime.counter('index').inc();
         this.runtime.counter('class.' + clazz.name).inc();
-        dispatcher.queue.push({ action: 'save', ref: type.ref, obj: x, class: clazz.name, registry: registry });
+        const pass = this.status.isIndexable(clazz.name, x, registry);
+        if (pass) {
+          dispatcher.queue.push({ action: 'save', ref: type.ref, obj: x, class: clazz.name, registry: registry });
+        }
       });
 
       doit.onCatch(

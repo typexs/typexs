@@ -26,6 +26,12 @@ export class EntityResolverService {
     return forkJoin(this.queryServices.map(x => x.isLoaded()));
   }
 
+  /**
+   * Puts idKeys of an entity correctly to an uri path together
+   *
+   * @param entityRef
+   * @param idKeys
+   */
   defaultRouteBuilder(entityRef: IEntityRef, idKeys: { [prop: string]: any }) {
     return ['', this.ngEntityPrefix, snakeCase(entityRef.name), encodeURIComponent(values(idKeys).join('--'))].join('/');
   }
@@ -36,7 +42,7 @@ export class EntityResolverService {
     if (['Object', 'Array'].includes(className)) {
       return returnRef;
     }
-    const key = 'class.' + snakeCase(className);
+    // const key = 'class.' + snakeCase(className);
     // if (this.cache[key]) {
     //   return this.cache[key];
     // }
@@ -86,7 +92,6 @@ export class EntityResolverService {
     }
     const idProps = entityRef.getPropertyRefs().filter(x => x.isIdentifier());
 
-
     this.cache[key] = (obj: any) => {
       const ret = {};
       idProps.forEach(x => {
@@ -96,20 +101,6 @@ export class EntityResolverService {
     };
     return this.cache[key](obj);
   }
-
-
-  // getLabelKeysFor(obj: any) {
-  //   const entityRef = this.getEntityRef(obj);
-  //   if (!entityRef) {
-  //     return null;
-  //   }
-  //   const key = 'label.' + snakeCase(entityRef.name);
-  //
-  //   const label = LabelHelper.labelForEntity(obj, entityRef);
-  //
-  //
-  //   return label;
-  // }
 
 
   getRouteFor(obj: any) {
