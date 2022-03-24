@@ -1,18 +1,18 @@
-import {first, get, isEmpty, set} from 'lodash';
-import {Component, ComponentRef, OnInit} from '@angular/core';
-import {GridRowComponent} from './grid-row.component';
-import {FormObject, GridHandle, isFormObject, ViewComponent} from '@typexs/ng';
-import {Observable} from 'rxjs';
-import {GridColumnDef} from './GridColumnDef';
-import {AbstractFormComponent} from '../component/AbstractFormComponent';
-import {AbstractComponent} from '@typexs/base-ng';
-import {EnumHandle} from '../libs/EnumHandle';
+import { first, get, isEmpty, set } from 'lodash';
+import { Component, ComponentRef, OnInit } from '@angular/core';
+import { GridRowComponent } from './grid-row.component';
+import { FormObject, GridHandle, isFormObject, ViewComponent } from '@typexs/ng';
+import { Observable } from 'rxjs';
+import { GridColumnDef } from './GridColumnDef';
+import { AbstractFormComponent } from '../component/AbstractFormComponent';
+import { AbstractInstancableComponent } from '@typexs/base-ng';
+import { EnumHandle } from '../libs/EnumHandle';
 
 
 @ViewComponent('grid')
 @Component({
   selector: 'txs-grid',
-  templateUrl: 'grid.component.html',
+  templateUrl: 'grid.component.html'
 })
 export class GridComponent extends AbstractFormComponent<GridHandle> implements OnInit {
 
@@ -73,7 +73,7 @@ export class GridComponent extends AbstractFormComponent<GridHandle> implements 
   }
 
 
-  build(form: FormObject): AbstractComponent<any>[] {
+  build(form: FormObject): AbstractInstancableComponent<any>[] {
     this.context.labelDisplay = 'none';
     const dataEntries = this.getInstance().getBinding().get(this.data.instance);
     this.findColumns(form, first(dataEntries));

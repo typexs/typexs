@@ -1,0 +1,17 @@
+<!-- -->
+<div class="facets div-container">
+  <div class="div-header" (click)="display = !display">
+    <p class="label">
+      Filter
+      <i class="fa fa-arrow-alt-circle-down"
+         [ngClass]="{'fa-arrow-alt-circle-down': display, 'fa-arrow-alt-circle-up': !display}"></i>
+    </p>
+  </div>
+  <div class="div-body collapse" [ngClass]="{'show': display}">
+    <div class="d-flex flex-sm-row justify-content-sm-start align-content-stretch">
+      <div *ngFor="let facet of facets">
+        <txs-search-facet class="facet-item" [facet]="facet" (change)="onFacetChange($event)"></txs-search-facet>
+      </div>
+    </div>
+  </div>
+</div>

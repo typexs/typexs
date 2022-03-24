@@ -9,12 +9,14 @@ import { SearchQueryFormComponent } from './components/query-form/query-form.com
 import { CommonModule } from '@angular/common';
 import { BaseAdminThemeModule } from '@typexs/ng-theme-base';
 import { StorageModule } from '@typexs/storage-ng';
+import { SearchFacetsComponent } from './components/facets/facets.component';
 
 
 const COMPONENTS = [
   SearchEmbeddedComponent,
   SearchPageComponent,
   SearchFacetComponent,
+  SearchFacetsComponent,
   SearchQueryFormComponent
 ];
 

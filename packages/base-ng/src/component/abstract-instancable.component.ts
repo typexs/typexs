@@ -2,21 +2,22 @@ import { filter, find, first, isArray, isEmpty, isFunction, keys, remove } from 
 import { Component, ComponentFactoryResolver, ComponentRef, Inject, Injector, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { ComponentRegistryService } from './component-registry.service';
 import { Log } from '../lib/log/Log';
+import { t } from '../lib/i18n/t';
 import { NotYetImplementedError } from '@allgemein/base';
 import { ClassType } from '@allgemein/schema-api';
 import { IInstanceableComponent } from './IInstanceableComponent';
-import { C_DEFAULT, C_ID, M_getViewContext, M_setViewContext, PROP_METADATA } from '../constants';
+import { C_DEFAULT, C_ID, MTHD_getViewContext, MTHD_setViewContext, PROP_METADATA } from '../constants';
 import { Context, isTreeObject, TreeObject } from '@typexs/ng';
+import { AbstractComponent } from './abstract.component';
 
 
 let INC = 0;
 
 
 @Component({
-  // selector: 'txs-abstract-component',
   template: ''
 })
-export class AbstractComponent<T> implements IInstanceableComponent<T> {
+export class AbstractInstancableComponent<T> extends AbstractComponent implements IInstanceableComponent<T> {
 
   inputKeys: string[] = [];
 
@@ -24,20 +25,10 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
 
   _instance: T;
 
-  @ViewChild('content', { read: ViewContainerRef, static: true })
-  vc: ViewContainerRef;
-
   _created = false;
 
   _components: ComponentRef<any>[] = [];
 
-  constructor(@Inject(Injector) public injector: Injector,
-    @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver) {
-    this.construct();
-  }
-
-  construct() {
-  }
 
 
   getInstance(): T {
@@ -48,20 +39,20 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
     this._instance = instance;
   }
 
-  getViewContainerRef(): ViewContainerRef {
-    return this.vc;
-  }
-
-  getComponentRegistry(): ComponentRegistryService {
-    return this.injector.get(ComponentRegistryService);
-  }
-
   isCreated() {
     return this._created;
   }
 
-  buildComponentForObject(content: any) {
-    const context = this[M_getViewContext] ? this[M_getViewContext]() : C_DEFAULT;
+  /**
+   * Build component for passed object by given context mostly "default",
+   * when implementing class has method "getViewContext" the given context will be
+   * used to find the appropriate component.
+   *
+   * @param content
+   * @param context = C_DEFAULT
+   */
+  buildComponentForObject(content: any, context: string = C_DEFAULT) {
+    context = this[MTHD_getViewContext] ? this[MTHD_getViewContext]() : content;
     const obj = this.getComponentRegistry().getComponentForObject(content, context);
     if (obj && obj.component) {
       return this.buildComponent(obj.component as any, content);
@@ -124,15 +115,15 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
       // }
 
       // pass changing context
-      if (this[M_setViewContext] && instance.setViewContext) {
-        const fn = this[M_setViewContext].bind(this);
-        this[M_setViewContext] = (context: string) => {
+      if (this[MTHD_setViewContext] && instance.setViewContext) {
+        const fn = this[MTHD_setViewContext].bind(this);
+        this[MTHD_setViewContext] = (context: string) => {
           fn(context);
           instance.setViewContext(context);
         };
         // pass data
-        if (this[M_getViewContext]) {
-          instance.setViewContext(this[M_getViewContext]());
+        if (this[MTHD_getViewContext]) {
+          instance.setViewContext(this[MTHD_getViewContext]());
         }
       }
 
@@ -149,7 +140,7 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
         }
       }
 
-      if (instance instanceof AbstractComponent && instance.build) {
+      if (instance instanceof AbstractInstancableComponent && instance.build) {
         const refs = instance.build(content);
 
         if (metadata) {
@@ -177,7 +168,7 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
       }
       return instance;
     } else {
-      Log.error('No view content setted');
+      Log.error(t('No view content setted'));
       return null;
     }
   }
@@ -196,11 +187,5 @@ export class AbstractComponent<T> implements IInstanceableComponent<T> {
     return refs;
   }
 
-
-  reset() {
-    if (this.getViewContainerRef()) {
-      this.getViewContainerRef().clear();
-    }
-  }
 
 }

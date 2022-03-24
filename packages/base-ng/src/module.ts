@@ -47,10 +47,11 @@ import { EntityViewPageComponent } from './component/entities/page/page.componen
 import { BackendService } from './api/backend/backend.service';
 import { AbstractGridComponent } from './datatable/abstract-grid.component';
 import { AbstractEntityViewComponent } from './component/entities/abstract-entity-view.component';
-import { AbstractComponent } from './component/AbstractComponent';
+import { AbstractInstancableComponent } from './component/abstract-instancable.component';
 import { AbstractQueryComponent } from './api/querying/abstract-query.component';
 import { AbstractAggregateEmbeddedComponent } from './api/querying/abstract-aggregate-embedded.component';
 import { QueryEmbeddedComponent } from './component/query/query-embedded.component';
+import { AbstractComponent } from './component/abstract.component';
 
 
 const PROVIDERS = [
@@ -87,9 +88,10 @@ const COMPONENTS = [
   SimpleHtmlCellEntityOperationsRendererComponent,
   SimpleHtmlCellRouterLinkRendererComponent,
   FreeQueryInputComponent,
+  AbstractComponent,
   AbstractGridComponent,
   AbstractEntityViewComponent,
-  AbstractComponent,
+  AbstractInstancableComponent,
   AbstractQueryComponent,
   AbstractAggregateEmbeddedComponent,
   QueryEmbeddedComponent

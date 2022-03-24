@@ -1,12 +1,11 @@
-import * as _ from 'lodash';
-import { get, uniq, uniqBy } from 'lodash';
+import { assign, cloneDeep, defaults, get, has, isArray, isNull, isNumber, keys, uniq, uniqBy } from 'lodash';
 import { JsonUtils } from '@allgemein/base';
 import { ClassType } from '@allgemein/schema-api';
 import { ElasticEntityController } from '../ElasticEntityController';
 import { IFindOp } from '@typexs/base/libs/storage/framework/IFindOp';
-import { NotYetImplementedError, StorageError, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
+import { Config, NotYetImplementedError, StorageError, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
 import { IndexElasticApi } from '../../../api/IndexElastic.api';
-import { ElasticMangoWalker } from '../ElasticMangoWalker';
+import { ElasticMangoWalker, ES_DEFAULT_TERM_QUERY, ES_DEFAULT_TERM_QUERY_LIKE, IElasticQueryConfig } from '../ElasticMangoWalker';
 import { IndexEntityRef } from '../../registry/IndexEntityRef';
 import {
   __TYPE__,
@@ -71,7 +70,7 @@ export class FindOp<T> implements IFindOp<T> {
     entityType: Function | string | ClassType<T> | (Function | string | ClassType<T>)[],
     findConditions?: any,
     options?: IElasticFindOptions): Promise<T[]> {
-    this.entityTypes = _.isArray(entityType) ? entityType : [entityType];
+    this.entityTypes = isArray(entityType) ? entityType : [entityType];
     const indexEntityRefs = OpsHelper.getIndexTypes(this.controller, this.entityTypes);
 
     options = options || {};
@@ -79,7 +78,7 @@ export class FindOp<T> implements IFindOp<T> {
     this.findConditions = findConditions;
     let results: T[] = null;
 
-    _.defaults(options, <IElasticFindOptions>{
+    defaults(options, <IElasticFindOptions>{
       limit: 50,
       offset: null,
       sort: null,
@@ -99,7 +98,6 @@ export class FindOp<T> implements IFindOp<T> {
     if (this.error) {
       throw this.error;
     }
-
     return results;
   }
 
@@ -123,8 +121,7 @@ export class FindOp<T> implements IFindOp<T> {
       fields = uniqBy(fields, x => JSON.stringify(x));
       const opts: any = {
         index: indexNames,
-        // type: typeNames.join(','),
-        body: _.get(this.options, 'body', {})
+        body: get(this.options, 'body', {})
       };
 
 
@@ -132,10 +129,30 @@ export class FindOp<T> implements IFindOp<T> {
         if (this.options.rawQuery) {
           opts.body.query = findConditions;
         } else {
-          const builder = new ElasticMangoWalker(fields);
-          // const builder = new ElasticMangoWalker();
-          opts.body = _.assign(opts.body, builder.build(findConditions));
+          // TODO check if options passed for query walker
+          const queryOptions: IElasticQueryConfig = Config.get(
+            ['elastic', 'queryPresets', this.options.assignPreset].join('.'),
+            {
+              assign: {
+                $eq: ES_DEFAULT_TERM_QUERY,
+                $like: ES_DEFAULT_TERM_QUERY_LIKE
+              }
+            });
+          let assignData = null;
+          if (this.options.assignPreset) {
+            // check if configured presets are defined
+            assignData = Config.get(['elastic', 'queryPresets', this.options.assignPreset].join('.'), null);
+          } else if (this.options.assign) {
+            // check if configured presets are defined
+            assignData = this.options.assign;
+          }
 
+          if (assignData) {
+            queryOptions.assign = assign(queryOptions.assign, cloneDeep(assignData));
+          }
+
+          const builder = new ElasticMangoWalker(fields, queryOptions);
+          opts.body = assign(opts.body, builder.build(findConditions));
         }
       } else {
         if (this.options.onEmptyConditions) {
@@ -152,17 +169,17 @@ export class FindOp<T> implements IFindOp<T> {
 
       if (opts.body.query) {
         // do this only when query present
-        if (!_.isNull(this.options.limit) && _.isNumber(this.options.limit)) {
+        if (!isNull(this.options.limit) && isNumber(this.options.limit)) {
           opts.size = this.options.limit;
         }
 
-        if (!_.isNull(this.options.offset) && _.isNumber(this.options.offset)) {
+        if (!isNull(this.options.offset) && isNumber(this.options.offset)) {
           opts.from = this.options.offset;
         }
 
-        if (!_.isNull(this.options.sort)) {
+        if (!isNull(this.options.sort)) {
           const s: any[] = [];
-          _.keys(this.options.sort).forEach(sortKey => {
+          keys(this.options.sort).forEach(sortKey => {
             const _sort = {};
             const v = this.options.sort[sortKey];
             _sort[sortKey] = v.toLocaleLowerCase();
@@ -175,7 +192,7 @@ export class FindOp<T> implements IFindOp<T> {
         opts.size = 0;
       }
 
-      if (_.has(this.options, 'highlight')) {
+      if (has(this.options, 'highlight')) {
         opts.body.highlight = this.options.highlight || {};
         this.options.passResults = true;
         if (!opts.body.highlight.fields) {
@@ -189,15 +206,15 @@ export class FindOp<T> implements IFindOp<T> {
       }
 
       let aggsMode = null;
-      if (_.has(this.options, 'facets')) {
+      if (has(this.options, 'facets')) {
         aggsMode = 'facets';
         opts.body.aggs = {};
 
-        _.keys(this.options.facets).forEach(key => {
+        keys(this.options.facets).forEach(key => {
           let aggInc = 0;
           const list = this.options.facets[key];
           for (const entry of list) {
-            const name = _.get(entry, 'name', key + '_' + (aggInc++));
+            const name = get(entry, 'name', key + '_' + (aggInc++));
             const type = entry.type;
             if (type === 'value') {
               opts.body.aggs[name] = {
@@ -212,7 +229,7 @@ export class FindOp<T> implements IFindOp<T> {
         });
       }
 
-      if (_.has(this.options, 'aggs')) {
+      if (has(this.options, 'aggs')) {
         aggsMode = 'aggs';
         opts.body.aggs = this.options.aggs;
       }
@@ -229,13 +246,13 @@ export class FindOp<T> implements IFindOp<T> {
         throw error;
       }
 
-      if (_.has(body, 'hits')) {
+      if (has(body, 'hits')) {
         const hits = body.hits;
         maxScore = hits.max_score;
-        if (_.has(hits, 'total.value')) {
+        if (has(hits, 'total.value')) {
           recordCount = hits.total.value;
         }
-        if (_.has(hits, 'hits')) {
+        if (has(hits, 'hits')) {
           for (const hit of hits.hits) {
             const _source = hit._source;
             const _type = _source[__TYPE__];
@@ -263,18 +280,18 @@ export class FindOp<T> implements IFindOp<T> {
         }
       }
 
-      if (_.has(body, 'aggregations')) {
+      if (has(body, 'aggregations')) {
         if (aggsMode === 'facets') {
           results[XS_P_$FACETS] = [];
-          _.keys(body.aggregations).forEach(name => {
+          keys(body.aggregations).forEach(name => {
             const facet = {
               name: name,
-              values: _.get(body.aggregations, name + '.buckets', [])
+              values: get(body.aggregations, name + '.buckets', [])
             };
             results[XS_P_$FACETS].push(facet);
           });
         } else {
-          results[XS_P_$AGGREGATION] = _.get(body, 'aggregations', null);
+          results[XS_P_$AGGREGATION] = get(body, 'aggregations', null);
         }
       }
       results[XS_P_$MAX_SCORE] = maxScore;

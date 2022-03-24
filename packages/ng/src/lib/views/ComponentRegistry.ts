@@ -1,8 +1,7 @@
-import {get, has, isArray, isFunction, isRegExp, isString, merge, orderBy, remove, snakeCase} from 'lodash';
-import {IBindingInfo, IComponentBinding} from './IComponentBinding';
-import {ClassUtils} from '@allgemein/base';
+import { get, has, isArray, isFunction, isRegExp, isString, merge, orderBy, remove, snakeCase } from 'lodash';
+import { IComponentBinding, IExtraBindingInfo } from './IComponentBinding';
 import { __CLASS__, ClassRef } from '@allgemein/schema-api';
-import {NoFormHandlerDefinedForTypeError} from '../exceptions/NoFormHandlerDefinedForTypeError';
+import { NoFormHandlerDefinedForTypeError } from '../exceptions/NoFormHandlerDefinedForTypeError';
 import { __REGISTRY__, C_DEFAULT } from '../Constants';
 
 export class ComponentRegistry {
@@ -108,7 +107,7 @@ export class ComponentRegistry {
     return null;
   }
 
-  setComponentClass(name: string | string[], fn: Function, extra: IBindingInfo = null): IComponentBinding {
+  setComponentClass(name: string | string[], fn: Function, extra: IExtraBindingInfo = null): IComponentBinding {
     const binding = this.addComponent(name, fn);
     if (binding) {
       if (extra) {
@@ -132,24 +131,29 @@ export class ComponentRegistry {
   forHandle(handle: Function | string) {
     const lookup = isString(handle) ? handle : handle.name;
     return this.handler.filter(x =>
-      x.handle && (
-        (
-          isFunction(x.handle) && x.handle.name === lookup
+        x.handle && (
+          (
+            isFunction(x.handle) && x.handle.name === lookup
+          )
+          || (
+            isString(x.handle) && (new RegExp(x.handle)).test(lookup)
+          ) ||
+          (
+            isRegExp(x.handle) && x.handle.test(lookup)
+          )
         )
-        || (
-          isString(x.handle) && (new RegExp(x.handle)).test(lookup)
-        ) ||
-        (
-          isRegExp(x.handle) && x.handle.test(lookup)
-        )
-      )
     );
-
   }
 
+  /**
+   * Get or create definition for a component
+   *
+   * @param typeName
+   * @param normalize
+   */
   getOrCreateDef(typeName: string | string[], normalize: boolean = false): IComponentBinding {
-    const _typeName = normalize || isArray(typeName) ? this.normalizeContext(typeName) : typeName;
-    let exists: IComponentBinding = this.handler.find(x => x.key === _typeName);
+    const keyValue = normalize || isArray(typeName) ? this.normalizeContext(typeName) : typeName;
+    let exists: IComponentBinding = this.handler.find(x => x.key === keyValue);
     if (!exists) {
       const tags = [];
       if (isArray(typeName)) {
@@ -158,7 +162,7 @@ export class ComponentRegistry {
         tags.push(...typeName.split('.'));
       }
       exists = {
-        key: _typeName,
+        key: keyValue,
         extra: {
           tags: tags,
           weight: 0
@@ -181,13 +185,13 @@ export class ComponentRegistry {
 
 
   /**
-   *
+   * Describe a provided component
    *
    * @param comp
    * @param handle
    * @param extra
    */
-  setComponentForClass(comp: Function, handle: Function | RegExp | string, extra: IBindingInfo = null): IComponentBinding {
+  setComponentForClass(comp: Function, handle: Function | RegExp | string, extra: IExtraBindingInfo = null): IComponentBinding {
     let className = null;
     if (isFunction(handle)) {
       className = snakeCase(ComponentRegistry.getClassName(handle));

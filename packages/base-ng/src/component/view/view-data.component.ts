@@ -1,6 +1,6 @@
 import {clone, get, isEmpty, isFunction, isNull, upperFirst} from 'lodash';
 import {Component, ComponentFactoryResolver, Inject, Injector, Input, OnInit} from '@angular/core';
-import {AbstractComponent} from '../AbstractComponent';
+import {AbstractInstancableComponent} from '../abstract-instancable.component';
 import {C_DEFAULT} from '../../constants';
 import {ComponentRegistryService} from '../component-registry.service';
 import {ComponentRegistry, IComponentBinding} from '@typexs/ng';
@@ -10,7 +10,7 @@ import {ComponentRegistry, IComponentBinding} from '@typexs/ng';
   templateUrl: 'view-data.component.html',
   styleUrls: ['./view-data.component.scss']
 })
-export class ViewDataComponent<T> extends AbstractComponent<T> implements OnInit {
+export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implements OnInit {
 
   private _build = false;
 

@@ -28,10 +28,7 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
   facets: ISearchFacet[] = [
     { name: 'Class', type: 'value', field: __CLASS__ + '.keyword' },
     { name: 'Namespace', type: 'value', field: __NS__ + '.keyword' },
-    // { name: 'sap_client', type: 'value', field: '_clientId.keyword' }
   ];
-
-  showFilter: boolean = true;
 
 
   constructor(private storageService: StorageService) {

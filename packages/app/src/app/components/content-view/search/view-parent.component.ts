@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ComponentFactoryResolver, Inject, Injector, OnInit, ViewChild} from '@angular/core';
 import {SearchEntryComponent} from './search-entry.component';
 import {TreeObject, ViewComponent, ViewContent} from '@typexs/ng';
-import {AbstractComponent} from '@typexs/base-ng';
+import {AbstractInstancableComponent} from '@typexs/base-ng';
 
 
 @ViewContent('view-parent')
@@ -15,7 +15,7 @@ export class ViewParent extends TreeObject {
   selector: 'view-parent',
   templateUrl: 'view-parent.component.html',
 })
-export class ViewParentComponent extends AbstractComponent<ViewParent> implements AfterViewInit, OnInit {
+export class ViewParentComponent extends AbstractInstancableComponent<ViewParent> implements AfterViewInit, OnInit {
 
   @ViewChild(SearchEntryComponent, {static: true})
   searchEntry: SearchEntryComponent;

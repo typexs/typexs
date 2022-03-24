@@ -3,13 +3,13 @@ import { ClassRef, DataContainer, METATYPE_PROPERTY } from '@allgemein/schema-ap
 import { Expressions } from '@allgemein/expressions';
 import { Context, FormObject, isFormObject, NoFormTypeDefinedError } from '@typexs/ng';
 import { Component, ComponentFactoryResolver, Inject, Injector } from '@angular/core';
-import { AbstractComponent, UrlHelper } from '@typexs/base-ng';
+import { AbstractInstancableComponent, UrlHelper } from '@typexs/base-ng';
 import { K_READONLY } from '../constants';
 
 @Component({
   template: ''
 })
-export class AbstractFormComponent<T extends FormObject> extends AbstractComponent<T> {
+export class AbstractFormComponent<T extends FormObject> extends AbstractInstancableComponent<T> {
 
   static _inc = 0;
 
@@ -167,8 +167,8 @@ export class AbstractFormComponent<T extends FormObject> extends AbstractCompone
   }
 
 
-  build(form: FormObject): AbstractComponent<T>[] {
-    const comp: AbstractComponent<T>[] = [];
+  build(form: FormObject): AbstractInstancableComponent<T>[] {
+    const comp: AbstractInstancableComponent<T>[] = [];
     for (const formObject of form.getChildren()) {
       // console.log(formObject);
       if (isFormObject(formObject)) {

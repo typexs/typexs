@@ -2,7 +2,7 @@ import {Component, ComponentFactoryResolver, Inject, Injector} from '@angular/co
 import {ViewContent} from '@typexs/ng';
 import {TreeObject} from '@typexs/ng';
 import {ViewComponent} from '@typexs/ng';
-import {AbstractComponent} from '@typexs/base-ng';
+import {AbstractInstancableComponent} from '@typexs/base-ng';
 
 
 @ViewContent('search-result')
@@ -16,7 +16,7 @@ export class SearchResult extends TreeObject {
   templateUrl: 'search-result.component.html',
 
 })
-export class SearchResultComponent extends AbstractComponent<SearchResult> {
+export class SearchResultComponent extends AbstractInstancableComponent<SearchResult> {
 
 
   title = 'SuperSearch';

@@ -1,15 +1,13 @@
-import {Component, HostBinding} from '@angular/core';
-import {GridComponent} from './grid.component';
-import {GridCellComponent} from './grid-cell.component';
-import {NoFormTypeDefinedError} from '@typexs/ng';
-import {FormObject, isFormObject} from '@typexs/ng';
-import {Log} from '@typexs/base-ng';
-import {AbstractFormComponent} from '../component/AbstractFormComponent';
-import {AbstractComponent} from '@typexs/base-ng';
+import { Component, HostBinding } from '@angular/core';
+import { GridComponent } from './grid.component';
+import { GridCellComponent } from './grid-cell.component';
+import { FormObject, isFormObject, NoFormTypeDefinedError } from '@typexs/ng';
+import { AbstractInstancableComponent, Log } from '@typexs/base-ng';
+import { AbstractFormComponent } from '../component/AbstractFormComponent';
 
 @Component({
   selector: 'txs-gridrow',
-  templateUrl: './grid-row.component.html',
+  templateUrl: './grid-row.component.html'
 })
 export class GridRowComponent extends AbstractFormComponent<any> {
 
@@ -39,8 +37,8 @@ export class GridRowComponent extends AbstractFormComponent<any> {
     this.grid.removeRow(this.context.idx);
   }
 
-  build(form: FormObject): AbstractComponent<any>[] {
-    const comp: AbstractComponent<any>[] = [];
+  build(form: FormObject): AbstractInstancableComponent<any>[] {
+    const comp: AbstractInstancableComponent<any>[] = [];
     const columns = this.grid.columns;
     columns.forEach(column => {
       const formObject = column.elem;

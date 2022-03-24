@@ -5,7 +5,7 @@ export { Context } from './lib/views/Context';
 export { TreeObject } from './lib/views/TreeObject';
 export { ITreeObject, isTreeObject } from './lib/views/ITreeObject';
 export { ComponentRegistry } from './lib/views/ComponentRegistry';
-export { IComponentBinding, IBindingInfo } from './lib/views/IComponentBinding';
+export { IComponentBinding, IExtraBindingInfo } from './lib/views/IComponentBinding';
 export { ViewContent } from './lib/views/decorators/ViewContent';
 export { ViewComponent } from './lib/views/decorators/ViewComponent';
 

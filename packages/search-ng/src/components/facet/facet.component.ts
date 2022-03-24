@@ -25,10 +25,10 @@ export class SearchFacetComponent {
     } else {
       entry.selected = true;
     }
-
     this.change.emit({ name: this.facet.name, entry: entry });
   }
 
+  
   label() {
     return _.upperFirst(this.facet.name);
   }

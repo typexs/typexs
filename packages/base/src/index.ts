@@ -1,4 +1,6 @@
-export * from './browser';
+export * from './shared';
+
+export { t } from './libs/i18n/t';
 
 // extern exports
 export { Inject, Service } from 'typedi';

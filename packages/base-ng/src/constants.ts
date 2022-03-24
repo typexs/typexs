@@ -39,7 +39,7 @@ export const MESSAGE_TYPE_LOG_SERVICE = 'LogService';
 export const SIMPLE_TABLE = 'simple-table';
 export const LIST_VIEW = 'list-view';
 
-export const M_getViewContext = 'getViewContext';
-export const M_setViewContext = 'setViewContext';
+export const MTHD_getViewContext = 'getViewContext';
+export const MTHD_setViewContext = 'setViewContext';
 
 export const PROP_METADATA = '__prop__metadata__';

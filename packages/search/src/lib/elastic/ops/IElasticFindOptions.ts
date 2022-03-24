@@ -2,6 +2,7 @@ import {IFindOptions} from '@typexs/entity';
 import {IElasticOptions} from './IElasticOptions';
 import {IElasticHighlight} from './IElasticHighlight';
 import {IElasticFacets} from './IElasticFacets';
+import { IElasticQueryAssign } from '../ElasticMangoWalker';
 
 export interface IElasticFindOptions extends IFindOptions, IElasticOptions {
 
@@ -37,4 +38,14 @@ export interface IElasticFindOptions extends IFindOptions, IElasticOptions {
    * Get facets for search results
    */
   facets?: IElasticFacets;
+
+  /**
+   * Options for assign
+   */
+  assign?: IElasticQueryAssign;
+
+  /**
+   * Options for assign
+   */
+  assignPreset?: string;
 }

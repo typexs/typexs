@@ -1,7 +1,7 @@
 import {find, has} from 'lodash';
 import {Component, ComponentFactoryResolver, EmbeddedViewRef, Inject, Injector, ViewChild} from '@angular/core';
 import {ComponentRegistry, TreeObject, ViewComponent, ViewContent} from '@typexs/ng';
-import {AbstractComponent} from '@typexs/base-ng';
+import {AbstractInstancableComponent} from '@typexs/base-ng';
 
 
 @ViewContent('search-entry')
@@ -27,7 +27,7 @@ export class SearchEntry extends TreeObject {
   templateUrl: 'search-entry.component.html',
   styleUrls: ['search-entry.component.scss']
 })
-export class SearchEntryComponent extends AbstractComponent<SearchEntry> {
+export class SearchEntryComponent extends AbstractInstancableComponent<SearchEntry> {
 
   title = 'SuperSearch';
 

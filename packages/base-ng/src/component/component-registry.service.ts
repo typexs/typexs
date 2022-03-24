@@ -2,7 +2,7 @@ import {first} from 'lodash';
 import {Inject, Injectable} from '@angular/core';
 import {C_DEFAULT} from '../constants';
 import {ObjectToComponentResolver} from './ObjectToComponentResolver';
-import {ComponentRegistry, IBindingInfo, IComponentBinding} from '@typexs/ng';
+import {ComponentRegistry, IExtraBindingInfo, IComponentBinding} from '@typexs/ng';
 
 @Injectable()
 export class ComponentRegistryService {
@@ -55,11 +55,11 @@ export class ComponentRegistryService {
   }
 
 
-  setComponentClass(name: string | string[], fn: Function, extra: IBindingInfo = null) {
+  setComponentClass(name: string | string[], fn: Function, extra: IExtraBindingInfo = null) {
     return this.registry.setComponentClass(name, fn, extra);
   }
 
-  setComponentForClass(comp: Function, handle: Function | string | RegExp, extra: IBindingInfo = null) {
+  setComponentForClass(comp: Function, handle: Function | string | RegExp, extra: IExtraBindingInfo = null) {
     return this.registry.setComponentForClass(comp, handle, extra);
   }
 

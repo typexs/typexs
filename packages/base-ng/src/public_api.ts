@@ -47,6 +47,8 @@ export { ErrorHelper } from './lib/ErrorHelper';
 export { UrlHelper } from './lib/UrlHelper';
 export { EntityHelper } from './lib/EntityHelper';
 
+export { t } from './lib/i18n/t';
+
 export * from './lib/http/IApiCallOptions';
 export * from './lib/http/IGetOptions';
 export * from './lib/http/IHttpRequestOptions';
@@ -73,7 +75,8 @@ export * from './datatable/IQueryParams';
 export * from './datatable/IGridColumn';
 export * from './datatable/IDTGridOptions';
 
-export { AbstractComponent } from './component/AbstractComponent';
+export { AbstractComponent } from './component/abstract.component';
+export { AbstractInstancableComponent } from './component/abstract-instancable.component';
 export * from './component/component-registry.service';
 export * from './component/IInstanceableComponent';
 export * from './component/ObjectToComponentResolver';

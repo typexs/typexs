@@ -1,13 +1,63 @@
 import * as _ from 'lodash';
-import {AbstractCompare, And, IMangoWalker, MangoExpression, MultiArgs, Not, Or, PAst, PValue} from '@allgemein/mango-expressions';
-import {IMangoWalkerControl} from '@allgemein/mango-expressions/IMangoWalker';
-import {NotYetImplementedError} from '@typexs/base';
-import {ES_ALLFIELD, ES_IDFIELD} from '../Constants';
+import { get } from 'lodash';
+import { AbstractCompare, And, IMangoWalker, MangoExpression, MultiArgs, Not, Or, PAst, PValue } from '@allgemein/mango-expressions';
+import { IMangoWalkerControl } from '@allgemein/mango-expressions/IMangoWalker';
+import { NotYetImplementedError } from '@typexs/base';
+import { ES_ALLFIELD, ES_IDFIELD } from '../Constants';
 import { IElasticFieldDef } from './IElasticFieldDef';
 
 export interface IElasticQuery {
   [k: string]: any;
 }
+
+
+/**
+ * Configuration options for elastic query like
+ * - default text search
+ */
+export interface IElasticQueryAssign {
+
+  $eq?: any;
+
+  $like?: any;
+}
+
+
+/**
+ * Configuration options for elastic query like
+ * - default text search
+ */
+export interface IElasticQueryConfig {
+  assign?: IElasticQueryAssign;
+
+  [k: string]: any;
+
+}
+
+export const ES_DEFAULT_TERM_QUERY = {
+  'operator': 'and',
+  'minimum_should_match': 1,
+  'analyzer': 'standard',
+  'zero_terms_query': 'none',
+  'lenient': false,
+  'prefix_length': 0,
+  'max_expansions': 50,
+  'boost': 1
+};
+
+export const ES_DEFAULT_TERM_QUERY_LIKE = {
+  'fuzziness': 'AUTO',
+  'fuzzy_transpositions': true,
+  'operator': 'and',
+  'minimum_should_match': 1,
+  'analyzer': 'standard',
+  'zero_terms_query': 'none',
+  'lenient': false,
+  'prefix_length': 0,
+  'max_expansions': 50,
+  'boost': 1
+};
+
 
 export class ElasticMangoWalker implements IMangoWalker {
 
@@ -21,8 +71,19 @@ export class ElasticMangoWalker implements IMangoWalker {
 
   readonly fields: IElasticFieldDef[] = [];
 
-  constructor(fields: IElasticFieldDef[] = []) {
+  /**
+   * Configuration
+   */
+  readonly config: IElasticQueryConfig = {};
+
+  constructor(fields: IElasticFieldDef[] = [], config: IElasticQueryConfig = {
+    assign: {
+      $eq: ES_DEFAULT_TERM_QUERY,
+      $like: ES_DEFAULT_TERM_QUERY_LIKE
+    }
+  }) {
     this.fields = fields;
+    this.config = config;
   }
 
   getFields(type?: string, additional = [ES_ALLFIELD, '_label']) {
@@ -53,7 +114,7 @@ export class ElasticMangoWalker implements IMangoWalker {
 
     if (_.isEmpty(brackets)) {
       if (this.must.length > 0 || this.should.length > 0 || this.must_not.length > 0 || this.filter.length > 0) {
-        brackets = {bool: {}};
+        brackets = { bool: {} };
         if (this.must.length > 0) {
           brackets.bool.must = this.must;
         }
@@ -69,7 +130,7 @@ export class ElasticMangoWalker implements IMangoWalker {
       }
     }
 
-    return {query: brackets};
+    return { query: brackets };
   }
 
 
@@ -174,31 +235,24 @@ export class ElasticMangoWalker implements IMangoWalker {
 
   private $eq(op: string, key: string = null, value: any = null, ast: PAst = null) {
     if (key === ES_ALLFIELD) {
-      const termQuery = {multi_match: {}};
+      const termQuery = { multi_match: {} };
       termQuery.multi_match = {
+        ...get(this.config, 'assign.$eq', ES_DEFAULT_TERM_QUERY),
         query: value,
-        'operator': 'and',
-        'minimum_should_match': 1,
-        'analyzer': 'standard',
-        'zero_terms_query': 'none',
-        'lenient': false,
-        'prefix_length': 0,
-        'max_expansions': 50,
-        'boost': 1,
         fields: this.getFields('text')
       };
       return termQuery;
     } else if (key === ES_IDFIELD) {
-      const termQuery = {ids: {}};
-      termQuery.ids = {values: _.isArray(value) ? value : [value]};
+      const termQuery = { ids: {} };
+      termQuery.ids = { values: _.isArray(value) ? value : [value] };
       return termQuery;
     } else if (_.isNumber(value)) {
-      const termQuery = {range: {}};
-      termQuery.range[key] = {gte: value, lte: value};
+      const termQuery = { range: {} };
+      termQuery.range[key] = { gte: value, lte: value };
       return termQuery;
     } else {
-      const termQuery = {term: {}};
-      termQuery.term[key] = {value: value};
+      const termQuery = { term: {} };
+      termQuery.term[key] = { value: value };
       return termQuery;
 
     }
@@ -207,33 +261,24 @@ export class ElasticMangoWalker implements IMangoWalker {
 
   private $like(op: string, key: string = null, value: any = null, ast: PAst = null) {
     if (key === ES_ALLFIELD) {
-      const termQuery = {multi_match: {}};
+      const termQuery = { multi_match: {} };
       termQuery.multi_match = {
+        ...get(this.config, 'assign.$like', ES_DEFAULT_TERM_QUERY_LIKE),
         query: value,
-        'fuzziness': 'AUTO',
-        'fuzzy_transpositions': true,
-        'operator': 'and',
-        'minimum_should_match': 1,
-        'analyzer': 'standard',
-        'zero_terms_query': 'none',
-        'lenient': false,
-        'prefix_length': 0,
-        'max_expansions': 50,
-        'boost': 1,
         fields: this.getFields('text')
       };
       return termQuery;
     } else {
-      const termQuery = {match: {}};
-      termQuery.match[key] = {query: value, operator: 'and'};
+      const termQuery = { match: {} };
+      termQuery.match[key] = { query: value, operator: 'and' };
       return termQuery;
 
     }
   }
 
   private $regex(op: string, key: string = null, value: MultiArgs = null, ast: PAst = null) {
-    const termQuery = {regexp: {}};
-    termQuery.regexp[key] = {value: _.first(value.args), flags: 'ALL', 'case_insensitive': true};
+    const termQuery = { regexp: {} };
+    termQuery.regexp[key] = { value: _.first(value.args), flags: 'ALL', 'case_insensitive': true };
     return termQuery;
   }
 
@@ -243,8 +288,8 @@ export class ElasticMangoWalker implements IMangoWalker {
 
   private $le(op: string, key: string = null, value: any = null, ast: PAst = null) {
     if (_.isNumber(value)) {
-      const termQuery = {range: {}};
-      termQuery.range[key] = {lte: value};
+      const termQuery = { range: {} };
+      termQuery.range[key] = { lte: value };
       return termQuery;
     }
     throw new NotYetImplementedError('');
@@ -252,8 +297,8 @@ export class ElasticMangoWalker implements IMangoWalker {
 
   private $lt(op: string, key: string = null, value: any = null, ast: PAst = null) {
     if (_.isNumber(value)) {
-      const termQuery = {range: {}};
-      termQuery.range[key] = {lt: value};
+      const termQuery = { range: {} };
+      termQuery.range[key] = { lt: value };
       return termQuery;
     }
     throw new NotYetImplementedError('');
@@ -265,8 +310,8 @@ export class ElasticMangoWalker implements IMangoWalker {
 
   private $ge(op: string, key: string = null, value: any = null, ast: PAst = null) {
     if (_.isNumber(value)) {
-      const termQuery = {range: {}};
-      termQuery.range[key] = {gte: value};
+      const termQuery = { range: {} };
+      termQuery.range[key] = { gte: value };
       return termQuery;
     }
     throw new NotYetImplementedError('');
@@ -274,8 +319,8 @@ export class ElasticMangoWalker implements IMangoWalker {
 
   private $gt(op: string, key: string = null, value: any = null, ast: PAst = null) {
     if (_.isNumber(value)) {
-      const termQuery = {range: {}};
-      termQuery.range[key] = {gt: value};
+      const termQuery = { range: {} };
+      termQuery.range[key] = { gt: value };
       return termQuery;
     }
     throw new NotYetImplementedError('');
@@ -284,11 +329,11 @@ export class ElasticMangoWalker implements IMangoWalker {
   private $in(op: string, key: string = null, value: any = null, ast: PAst = null) {
     if (_.isArray(value)) {
       if (key === ES_IDFIELD) {
-        const termQuery = {ids: {}};
-        termQuery.ids = {values: value};
+        const termQuery = { ids: {} };
+        termQuery.ids = { values: value };
         return termQuery;
       } else if (value.length > 0 && (_.isString(value[0]) || _.isNumber(value[0]))) {
-        const termQuery = {terms: {}};
+        const termQuery = { terms: {} };
         termQuery.terms[key] = value;
         return termQuery;
       }
