@@ -113,9 +113,7 @@ export class AbstractAggregateEmbeddedComponent implements OnInit {
 
 
   findEntityDef() {
-    this.entityRef = LookupRegistry.$(this.registryName).find(METATYPE_ENTITY, (e: IEntityRef) => {
-      return e.machineName === snakeCase(this.name);
-    });
+    this.entityRef = LookupRegistry.$(this.registryName).find(METATYPE_ENTITY, (e: IEntityRef) => e.machineName === snakeCase(this.name));
 
     if (!this.entityRef) {
       this.error = `Can't find entity type for ${this.name}.`;
