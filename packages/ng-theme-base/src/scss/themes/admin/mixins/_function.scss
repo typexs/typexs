@@ -1,8 +1,10 @@
+@use "sass:math";
+
 @function color-yiq($color) {
   $red: red($color);
   $green: green($color);
   $blue: blue($color);
-  $yiq: (($red * 299) + ($green * 587) + ($blue * 114)) / 1000;
+  $yiq: math.div($red * 299 + $green * 587 + $blue * 114, 1000);
   @if ($yiq >= $yiq-contrasted-threshold) {
     @return $yiq-dark-color;
   } @else {
