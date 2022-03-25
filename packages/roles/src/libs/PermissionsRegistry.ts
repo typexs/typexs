@@ -24,6 +24,7 @@ export class PermissionsRegistry {
    */
   static getModulName(cls: Function) {
     if (Reflect && Reflect['getOwnMetadata']) {
+      // @ts-ignore
       return Reflect['getOwnMetadata'](MODULE_NAME, cls);
     } else {
       return cls[MODULE_NAME] ? cls[MODULE_NAME] : null;

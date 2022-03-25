@@ -42,5 +42,8 @@
   "files": [
     "./src/dummy.ts"
   ],
+  "include": [
+    "packages/**/*"
+  ],
   "compileOnSave": true
 }
