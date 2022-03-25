@@ -68,6 +68,7 @@
     "@angular-devkit/core": "v12-lts",
     "@angular-devkit/schematics": "v12-lts",
     "@angular-eslint/eslint-plugin": "12.7.0",
+    "@angular-eslint/eslint-plugin-template": "12.7.0",
     "@angular/animations": "v12-lts",
     "@angular/cli": "v12-lts",
     "@angular/common": "v12-lts",
