@@ -64,6 +64,7 @@ describe('Component: Menu', () => {
 
 
     beforeEach(async () => {
+      const MC = MenuComponent;
       await TestBed.configureTestingModule({
         imports: [
           BrowserTestingModule,
@@ -77,11 +78,11 @@ describe('Component: Menu', () => {
           MockGuard
         ],
         declarations: [
-          MenuComponent,
+          MC,
           MenuLinkComponent
         ]
       }).compileComponents();
-      fixture = TestBed.createComponent(MenuComponent);
+      fixture = TestBed.createComponent(MC);
       component = fixture.componentInstance;
     });
 
