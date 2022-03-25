@@ -27,11 +27,11 @@
   "peerDependencies": {
   },
   "devDependencies": {
-    "@angular/core": "12.0.3",
-    "@angular/platform-browser": "12.0.3",
+    "@angular/core": "v12-lts",
+    "@angular/platform-browser": "v12-lts",
     "lodash": "4.17.21",
-    "@angular/common": "12.0.3",
-    "@angular/router": "12.0.3",
+    "@angular/common": "v12-lts",
+    "@angular/router": "v12-lts",
     "rxjs": "6.6.7"
   }
 }

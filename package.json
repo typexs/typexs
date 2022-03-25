@@ -1,6 +1,7 @@
 {
   "name": "@typexs/typexs",
   "version": "2.0.0",
+  "tag": "v2-lts",
   "description": "Angular for typexs",
   "main": "index.js",
   "browser": "browser.js",
@@ -62,7 +63,7 @@
   "devDependencies": {
     "@allgemein/http": "1.2.0",
     "@allgemein/moduls": "1.6.5",
-    "@allgemein/packaging": "1.2.14",
+    "@allgemein/packaging": "1.2.15",
     "@angular-devkit/build-angular": "12.0.3",
     "@angular-devkit/core": "12.0.3",
     "@angular-devkit/schematics": "12.0.3",

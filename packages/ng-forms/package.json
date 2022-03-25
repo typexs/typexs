@@ -29,10 +29,10 @@
     "@typexs/ng": "0.0.0-PLACEHOLDER"
   },
   "devDependencies": {
-    "@angular/core": "12.0.3",
-    "@angular/forms": "12.0.3",
-    "@angular/common": "12.0.3",
-    "@angular/router": "12.0.3",
+    "@angular/core": "v12-lts",
+    "@angular/forms": "v12-lts",
+    "@angular/common": "v12-lts",
+    "@angular/router": "v12-lts",
     "rxjs": "6.6.7"
   }
 }
