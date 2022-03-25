@@ -155,6 +155,7 @@ export class Injector {
    */
   private initializeParams(type: Function, paramTypes: any[]): any[] {
     return paramTypes.map((paramType, index) => {
+      // @ts-ignore
       const paramHandler = Container.handlers.find(handler => handler.object === type && handler.index === index);
       if (paramHandler) {
         return paramHandler.value(this.globalContainer);
