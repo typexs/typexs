@@ -49,7 +49,7 @@ export { EntityHelper } from './lib/EntityHelper';
 
 export { t } from './lib/i18n/t';
 
-export * from './lib/http/IApiCallOptions';
+export { IApiCallOptions } from './lib/http/IApiCallOptions';
 export * from './lib/http/IGetOptions';
 export * from './lib/http/IHttpRequestOptions';
 
@@ -77,14 +77,14 @@ export * from './datatable/IDTGridOptions';
 
 export { AbstractComponent } from './component/abstract.component';
 export { AbstractInstancableComponent } from './component/abstract-instancable.component';
-export * from './component/component-registry.service';
-export * from './component/IInstanceableComponent';
-export * from './component/ObjectToComponentResolver';
-export * from './component/IObjectToComponentResolver';
-export * from './component/entities/json/json.component';
-export * from './component/entities/abstract-entity-view.component';
-export * from './component/view/view-data.component';
-export * from './component/entities/page/page.component';
+export { ComponentRegistryService } from './component/component-registry.service';
+export { IInstanceableComponent } from './component/IInstanceableComponent';
+export { ObjectToComponentResolver } from './component/ObjectToComponentResolver';
+export { IObjectToComponentResolver } from './component/IObjectToComponentResolver';
+export { JsonComponent } from './component/entities/json/json.component';
+export { AbstractEntityViewComponent } from './component/entities/abstract-entity-view.component';
+export { ViewDataComponent } from './component/view/view-data.component';
+export { EntityViewPageComponent } from './component/entities/page/page.component';
 
 
 export * from './datatable/simple-html-table/simple-html-table.component';

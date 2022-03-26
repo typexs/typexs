@@ -21,6 +21,11 @@ export { IEntityIndexRef } from './lib/elastic/IEntityIndexRef';
 export { IElasticIndexOptions, IElasticStorageRefOptions } from './lib/elastic/IElasticStorageRefOptions';
 export { IElasticFieldDef } from './lib/elastic/IElasticFieldDef';
 export { IIndexRef } from './lib/elastic/IIndexRef';
+export { IIndexStorageRef } from './lib/IIndexStorageRef';
+export { IIndexStorageRefOptions } from './lib/IIndexStorageRefOptions';
+export { IIndexType } from './lib/IIndexType';
+
+export { IIndexElasticApi } from './api/IIndexElasticApi';
 
 export { IElasticFindOptions } from './lib/elastic/ops/IElasticFindOptions';
 export { IElasticAggregateOptions } from './lib/elastic/ops/IElasticAggregateOptions';
