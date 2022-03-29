@@ -27,7 +27,6 @@ export class TestHelper extends _TestHelper {
     RegistryFactory.register(/^typeorm\..*/, TypeOrmEntityRegistry);
     RegistryFactory.get(REGISTRY_TYPEORM);
 
-
     const invoker = new Invoker();
     [EntityControllerApi].forEach(api => {
       invoker.register(api, []);
