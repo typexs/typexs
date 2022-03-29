@@ -1,13 +1,13 @@
-import * as _ from 'lodash';
-import {EventEmitter} from 'events';
-import {System} from '../../libs/system/System';
-import {ILoggerApi} from '../../libs/logging/ILoggerApi';
-import {EventBus, subscribe, unsubscribe} from '@allgemein/eventbus';
-import {ClassType} from '@allgemein/schema-api';
-import {IMessageOptions} from './IMessageOptions';
-import {AbstractEvent} from './AbstractEvent';
-import {Log} from '../../libs/logging/Log';
-import {K_NODE_ID} from './Constants';
+import { defaults, get, isArray, isEmpty, isUndefined, remove, uniq } from 'lodash';
+import { EventEmitter } from 'events';
+import { System } from '../../libs/system/System';
+import { ILoggerApi } from '../../libs/logging/ILoggerApi';
+import { EventBus, subscribe, unsubscribe } from '@allgemein/eventbus';
+import { ClassType } from '@allgemein/schema-api';
+import { IMessageOptions } from './IMessageOptions';
+import { AbstractEvent } from './AbstractEvent';
+import { Log } from '../../libs/logging/Log';
+import { K_NODE_ID } from './Constants';
 
 
 export abstract class AbstractMessage<REQ extends AbstractEvent, RES extends AbstractEvent> extends EventEmitter {
@@ -53,8 +53,8 @@ export abstract class AbstractMessage<REQ extends AbstractEvent, RES extends Abs
     this.system = system;
     this.reqClass = reqClass;
     this.resClass = resClass;
-    this.logger = _.get(options, 'logger', Log.getLogger());
-    if (options.targetIds && _.isArray(options.targetIds)) {
+    this.logger = get(options, 'logger', Log.getLogger());
+    if (options.targetIds && isArray(options.targetIds)) {
       this.detectTargets = false;
       options.targetIds.forEach(x => {
         this.target(x);
@@ -63,7 +63,7 @@ export abstract class AbstractMessage<REQ extends AbstractEvent, RES extends Abs
       this.detectTargets = true;
     }
     this.options = options;
-    _.defaults(this.options, {
+    defaults(this.options, {
       filter: (x: any) => !!x
     });
     this.once('postprocess', this.postProcess.bind(this));
@@ -105,26 +105,23 @@ export abstract class AbstractMessage<REQ extends AbstractEvent, RES extends Abs
   async send(req: REQ): Promise<any[]> {
     this.start = new Date();
     this.targetIds = this.targetIds ? this.targetIds : [];
-    if (_.isEmpty(this.targetIds)) {
+    if (isEmpty(this.targetIds)) {
       this.targetIds = this.getSystem().nodes.map(n => n.nodeId);
     }
 
     const myNodeId = this.getSystem().node.nodeId;
     this.request = req || Reflect.construct(this.getReqClass(), []);
     this.request.nodeId = myNodeId;
-    this.request.targetIds = _.uniq(this.targetIds);
-
-    // remove self from target list
-    // _.remove(this.targetIds, x => x === myNodeId);
+    this.request.targetIds = uniq(this.targetIds);
 
     if (this.beforeSend) {
       await this.beforeSend(this.request);
     }
 
     // when no targets given, we don't know for how many worker we should listen
-    if (!this.targetIds || _.isEmpty(this.targetIds)) {
-      if (_.isUndefined(this.options.waitIfNoTarget) ||
-        !_.get(this.options, 'waitIfNoTarget', false)) {
+    if (!this.targetIds || isEmpty(this.targetIds)) {
+      if (isUndefined(this.options.waitIfNoTarget) ||
+        !get(this.options, 'waitIfNoTarget', false)) {
         const ready = this.ready();
         this.emit('postprocess');
         this.results = await ready;
@@ -210,7 +207,7 @@ export abstract class AbstractMessage<REQ extends AbstractEvent, RES extends Abs
       return;
     }
 
-    _.remove(this.targetIds, x => x === res.nodeId);
+    remove(this.targetIds, x => x === res.nodeId);
 
     res[K_NODE_ID] = res.nodeId;
     if (!res.skipping) {
@@ -239,7 +236,7 @@ export abstract class AbstractMessage<REQ extends AbstractEvent, RES extends Abs
         if (err) {
           this.logger.error(err);
 
-          if (_.isArray(err)) {
+          if (isArray(err)) {
             this.logger.error(...err);
           } else {
             this.logger.error(err);

@@ -168,7 +168,7 @@ class TasksWorkerSpec {
     // ---- startup done
 
 
-    const workers: Workers = Container.get(Workers.NAME);
+    const workers: Workers = Injector.get(Workers.NAME);
     const workerInfos = workers.infos();
 
     expect(workerInfos).to.have.length(1);
@@ -416,7 +416,7 @@ class TasksWorkerSpec {
     await handle.started;
     await TestHelper.wait(50);
 
-    const tasks: Tasks = Container.get(Tasks.NAME);
+    const tasks: Tasks = Injector.get(Tasks.NAME);
     const infos = tasks.infos(true);
     // Log.debug(infos);
 
@@ -503,7 +503,7 @@ class TasksWorkerSpec {
     bootstrap = await bootstrap.startup();
     await TestHelper.wait(50);
 
-    const command = Container.get(TaskCommand);
+    const command = Injector.get(TaskCommand);
     // expect(commands.length).to.be.gt(0);
 
     // let command: TaskCommand = _.find(commands, e => e.command == 'task');
@@ -573,15 +573,15 @@ class TasksWorkerSpec {
     const l = new T2();
     await EventBus.register(l);
 
-    const tasks: Tasks = Container.get(Tasks.NAME);
+    const tasks: Tasks = Injector.get(Tasks.NAME);
     const ref = tasks.addTask(SimpleTaskWithLog, null, { worker: true });
 
-    const execReq = Container.get(TaskRequestFactory).executeRequest();
+    const execReq = Injector.get(TaskRequestFactory).executeRequest();
     const results = await execReq.create([ref.name]).run();
     await TestHelper.waitFor(() => !!events.find(x => x.state === 'stopped'));
 
-    await (Container.get(TaskMonitorWorker) as TaskMonitorWorker).queue.await();
-    const storeRef: StorageRef = Container.get(C_STORAGE_DEFAULT);
+    await (Injector.get(TaskMonitorWorker) as TaskMonitorWorker).queue.await();
+    const storeRef: StorageRef = Injector.get(C_STORAGE_DEFAULT);
     const logs: any[] = await storeRef.getController().find(TaskLog);
 
 

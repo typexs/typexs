@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { AbstractMessage } from '../../../messaging/AbstractMessage';
 import { Tasks } from '../../Tasks';
 import { TASK_RUNNER_SPEC } from '../../Constants';
@@ -9,6 +8,7 @@ import { System } from '../../../../libs/system/System';
 import { TaskFuture } from './TaskFuture';
 import { TaskEvent } from '../../event/TaskEvent';
 import { TaskProposeEvent } from '../../event/TaskProposeEvent';
+import { clone, get, intersection, isArray, keys, shuffle } from 'lodash';
 
 export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent> {
 
@@ -35,7 +35,7 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
       skipTargetCheck: false
     }) {
     this.requestOptions = options;
-    this.timeout = _.get(options, 'timeout', 10000);
+    this.timeout = get(options, 'timeout', 10000);
 
     if (options.passingTaskState) {
       this.passingTaskStates.push(options.passingTaskState);
@@ -44,14 +44,14 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
     }
 
     let workerNodes = null;
-    if (!options.targetIds || !_.isArray(options.targetIds)) {
+    if (!options.targetIds || !isArray(options.targetIds)) {
       workerNodes = TasksHelper.getWorkerNodes(this.system);
       let onNodes = options.executeOnMultipleNodes ? options.executeOnMultipleNodes : 1;
 
-      let nodesForSelection = _.clone(workerNodes);
+      let nodesForSelection = clone(workerNodes);
 
       if (options.randomWorkerSelection) {
-        nodesForSelection = _.shuffle(nodesForSelection);
+        nodesForSelection = shuffle(nodesForSelection);
       }
       this.targetIds = [];
       while (nodesForSelection.length > 0 && onNodes > 0) {
@@ -71,12 +71,12 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
         possibleTargetIds.push(taskRef.nodeInfos.filter(x => x.hasWorker).map(x => x.nodeId));
       }
 
-      if (options.targetIds && _.isArray(options.targetIds)) {
+      if (options.targetIds && isArray(options.targetIds)) {
         if (options.targetIds.length === 0) {
           // get intersection of nodeInfos
-          this.targetIds = _.intersection(...possibleTargetIds);
+          this.targetIds = intersection(...possibleTargetIds);
         } else {
-          this.targetIds = _.intersection(options.targetIds, ...possibleTargetIds);
+          this.targetIds = intersection(options.targetIds, ...possibleTargetIds);
         }
       }
 
@@ -92,13 +92,14 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
 
     this.event = new TaskProposeEvent();
     this.event.taskSpec = taskSpec;
-    for (const k of _.keys(parameters)) {
+    for (const k of keys(parameters)) {
       if (!/^_/.test(k)) {
-        this.event.addParameter(k, _.get(parameters, k));
+        this.event.addParameter(k, get(parameters, k));
       }
     }
     return this;
   }
+
 
   async run() {
     await this.send(this.event);

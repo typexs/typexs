@@ -73,8 +73,6 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
     if (this.options.loadAverageInterval && isNumber(this.options.loadAverageInterval)) {
       this.intervalId = setInterval(this.loadAverage.bind(this), this.options.loadAverageInterval);
     }
-
-
   }
 
 
@@ -94,20 +92,18 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
       `| free = ${this.memStr(freemem())} | total = ${this.memStr(totalmem())} | rss = ${this.memStr(mem.rss)} ` +
       `| external = ${this.memStr(mem.external)} | ${this.queue.getConcurrent()}`
     );
-
   }
 
-  //
-  // onNext() {
-  // }
 
   memStr(mem: number) {
     return (Math.round(mem / 1024 / 1024 * 100) / 100) + ' MB';
   }
 
+
   getTasksRegistry() {
     return this.taskRunnerRegistry.tasks;
   }
+
 
   @subscribe(TaskProposeEvent)
   onTaskEvent(proposeEvent: TaskProposeEvent) {
@@ -177,7 +173,6 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
         message: 'The task a not supported by this worker.'
       });
     }
-
 
     const firedEvent = this.fireState(event);
     if (event.state === 'enqueue') {
