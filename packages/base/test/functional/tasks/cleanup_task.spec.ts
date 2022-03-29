@@ -62,7 +62,7 @@ class CleanupTaskSpec {
     const storageRef = Injector.get(C_STORAGE_DEFAULT) as StorageRef;
 
     const logs = [];
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i <= 14; i++) {
       const x = new TaskLog();
       x.callerId = 'x' + i;
       x.data = {} as any;
@@ -76,7 +76,6 @@ class CleanupTaskSpec {
       x.respId = 'node';
       x.nodeId = 'node';
       logs.push(x);
-
     }
     await storageRef.getController().save(logs);
   }

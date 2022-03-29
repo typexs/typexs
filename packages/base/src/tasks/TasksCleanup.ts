@@ -53,7 +53,6 @@ export class TasksCleanup implements ITask {
         break;
       }
       logger.debug('remove task log entries ' + entries.length + ' of ' + entries[XS_P_$COUNT]);
-
       await controller.remove(TaskLog, { tasksId: { $in: entries.map(x => x.tasksId) } });
       await this.invoker.use(TasksApi).onCleanup(entries, this.offset);
       entries.map(x => {
