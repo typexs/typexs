@@ -17,7 +17,13 @@ import { TypeOrmConnectionWrapper } from './TypeOrmConnectionWrapper';
 import { StorageRef } from '../../StorageRef';
 import { ICollection } from '../../ICollection';
 import { BaseConnectionOptions } from 'typeorm/connection/BaseConnectionOptions';
-import { EVENT_STORAGE_ENTITY_ADDED, EVENT_STORAGE_REF_PREPARED, EVENT_STORAGE_REF_SHUTDOWN, REGISTRY_TYPEORM } from './Constants';
+import {
+  C_BACKUP_TYPE,
+  EVENT_STORAGE_ENTITY_ADDED,
+  EVENT_STORAGE_REF_PREPARED,
+  EVENT_STORAGE_REF_SHUTDOWN,
+  REGISTRY_TYPEORM
+} from './Constants';
 import { ColumnMetadataArgs } from 'typeorm/metadata-args/ColumnMetadataArgs';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
@@ -221,15 +227,25 @@ export class TypeOrmStorageRef extends StorageRef {
       if (x.mode === 'regular') {
         const type = x.options.type;
         if (this.getSchemaHandler()) {
-          if (!has(x.options, 'backupType')) {
-            set(x.options, 'backupType', type);
+          if (!has(x.options, C_BACKUP_TYPE)) {
+            set(x.options, C_BACKUP_TYPE, type);
             const resolved = this.getSchemaHandler()
               .translateToStorageType(type, x.options as any);
-            x.options.type = resolved.type;
+            if (resolved && resolved.type) {
+              x.options.type = resolved.type;
+            } else {
+              Log.warn(`TypeOrmStorageRef: Can't resolve type ${type} of property ${x.propertyName} of class ${cls.name}.`);
+            }
           } else {
             const resolved = this.getSchemaHandler()
-              .translateToStorageType(get(x.options, 'backupType'), x.options as any);
-            x.options.type = resolved.type;
+              .translateToStorageType(get(x.options, C_BACKUP_TYPE), x.options as any);
+            if (resolved && resolved.type) {
+              x.options.type = resolved.type;
+            } else {
+              Log.warn(`TypeOrmStorageRef: Can't resolve type ${type} of property ${x.propertyName} of class ${cls.name}.`);
+            }
+
+
           }
         }
       }
@@ -540,7 +556,6 @@ export class TypeOrmStorageRef extends StorageRef {
     const name = this.name;
     remove(getConnectionManager()['connections'], (connection) => connection.name === name);
   }
-
 
 
   async shutdown(full: boolean = true): Promise<void> {
