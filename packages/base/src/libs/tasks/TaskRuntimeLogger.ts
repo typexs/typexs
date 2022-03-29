@@ -1,7 +1,6 @@
-import {ILogLevel} from '@allgemein/base';
-import {ILoggerApi} from '../logging/ILoggerApi';
-import {ILoggerOptions} from '../logging/ILoggerOptions';
-import {LogEvent} from '../logging/LogEvent';
+import { ILogLevel } from '@allgemein/base';
+import { ILoggerApi } from '../logging/ILoggerApi';
+import { ILoggerOptions } from '../logging/ILoggerOptions';
 
 export class TaskRuntimeLogger implements ILoggerApi {
 
@@ -16,9 +15,9 @@ export class TaskRuntimeLogger implements ILoggerApi {
   private baseLogger: ILoggerApi;
 
   constructor(taskId: string,
-              taskName: string,
-              taskNr: number,
-              baseLogger: ILoggerApi) {
+    taskName: string,
+    taskNr: number,
+    baseLogger: ILoggerApi) {
     this.taskId = taskId;
     this.taskName = taskName;
     this.taskNr = taskNr;
@@ -81,6 +80,11 @@ export class TaskRuntimeLogger implements ILoggerApi {
 
   remove() {
 
+  }
+
+
+  getBaseLogger() {
+    return this.baseLogger;
   }
 
 }

@@ -39,7 +39,7 @@ export class Storage {
       this.storageRefs[name] = ref;
       return ref;
     } else {
-      throw new Error('not framework with ' + useFramework + ' exists');
+      throw new Error('no framework with ' + useFramework + ' exists');
     }
   }
 
