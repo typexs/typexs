@@ -21,25 +21,20 @@ import { Expressions } from '@allgemein/expressions';
 import { __CLASS__, LabelHelper } from '@typexs/base';
 
 const DEFAULT_OPTIONS: IEntity = {
-  storable: true
+  [K_STORABLE]: true
 };
 
-const REGEX_ID = /(([\w_]+)=((\d+)|(\d+(\.|\,)\d+)|\'([^\']*)\'),?)/;
-const REGEX_ID_G = /(([\w_]+)=((\d+)|(\d+(\.|\,)\d+)|\'([^\']*)\'),?)/g;
-
-const REGEX_ID_K = /((\d+)|(\d+(\.|\,)\d+)|\'([^\']*)\',?)/;
-const REGEX_ID_KG = /((\d+)|(\d+(\.|\,)\d+)|\'([^\']*)\',?)/g;
+// const REGEX_ID = /(([\w_]+)=((\d+)|(\d+(\.|\,)\d+)|\'([^\']*)\'),?)/;
+// const REGEX_ID_G = /(([\w_]+)=((\d+)|(\d+(\.|\,)\d+)|\'([^\']*)\'),?)/g;
+//
+// const REGEX_ID_K = /((\d+)|(\d+(\.|\,)\d+)|\'([^\']*)\',?)/;
+// const REGEX_ID_KG = /((\d+)|(\d+(\.|\,)\d+)|\'([^\']*)\',?)/g;
 
 export class EntityRef extends DefaultEntityRef {
 
 
   constructor(options: IEntity = {}) {
     super(defaults(assign(options, { metaType: METATYPE_ENTITY }), DEFAULT_OPTIONS));
-    // super(METATYPE_ENTITY, fn instanceof ClassRef ? fn.className : fn.name, fn, NAMESPACE_BUILT_ENTITY);
-    // OptionsHelper.merge(this.object, options);
-
-    // options = _.defaults(options, DEFAULT_OPTIONS);
-    // this.setOptions(options);
   }
 
 
@@ -61,6 +56,7 @@ export class EntityRef extends DefaultEntityRef {
   getPropertyRefs(): PropertyRef[] {
     return this.getRegistry().getPropertyRefs(this as IEntityRef) as PropertyRef[];
   }
+
 
   getPropertyRef(name: string): PropertyRef {
     return this.getPropertyRefs().find(p => p.name === name) as PropertyRef;
@@ -149,4 +145,5 @@ export class EntityRef extends DefaultEntityRef {
   getClassRefFor(object: string | Function | IClassRef, type: METADATA_TYPE): IClassRef {
     return this.getRegistry().getClassRefFor(object, type);
   }
+
 }
