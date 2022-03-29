@@ -1,6 +1,8 @@
 
 export const REGISTRY_TYPEORM = 'typeorm';
 
+export const C_BACKUP_TYPE = 'backupType';
+
 export const EVENT_STORAGE_ENTITY_ADDED = 'storage_entity_added';
 export const EVENT_STORAGE_ENTITY_REMOVED = 'storage_entity_removed';
 
