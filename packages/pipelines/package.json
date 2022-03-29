@@ -1,8 +1,8 @@
 {
   "name": "@typexs/pipelines",
   "version": "0.0.0-PLACEHOLDER",
-  "main": "index.js",
-  "browser": "browser.js",
+  "main": "./index",
+  "browser": "./browser",
   "dependencies": {
     "sha1": "^1.1.1"
   },
