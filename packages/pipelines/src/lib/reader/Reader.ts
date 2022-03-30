@@ -1,12 +1,14 @@
 /* eslint-disable */
 import * as _ from 'lodash';
-import {IReaderOptions} from './IReaderOptions';
-import {IPullable} from '../IPullable';
-import {PullingQueue} from '../PullingQueue';
-import {IReader} from './IReader';
-import {AbstractReader} from './AbstractReader';
+import { IReaderOptions } from './IReaderOptions';
+import { IPullable } from '../IPullable';
+import { PullingQueue } from '../PullingQueue';
+import { IReader } from './IReader';
+import { AbstractReader } from './AbstractReader';
 
-
+/**
+ * TODO Rename to
+ */
 export abstract class Reader extends AbstractReader implements IPullable, IReader {
 
   $queue: PullingQueue;
@@ -22,7 +24,7 @@ export abstract class Reader extends AbstractReader implements IPullable, IReade
     if (_.isFunction(pipe)) {
       this.$queue.onCatch(pipe);
     }
-    return this;
+    return super.onCatch(pipe);
   }
 
   onFinish(): Promise<any> {
@@ -40,7 +42,6 @@ export abstract class Reader extends AbstractReader implements IPullable, IReade
 
 // from Pullable class
   abstract doFetch(done?: Function): any;
-
 
 
   enqueue(data: any) {
