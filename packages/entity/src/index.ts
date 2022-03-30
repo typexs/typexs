@@ -3,25 +3,27 @@
 export * from './browser';
 
 // API
-export {EntityApi} from './api/entity.api';
-export {IEntityApi} from './api/IEntityApi';
-export {EntityControllerApi} from './api/entity.controller.api';
-export {IEntityControllerApi} from './api/IEntityControllerApi';
+export { EntityApi } from './api/entity.api';
+export { IEntityApi } from './api/IEntityApi';
+export { EntityControllerApi } from './api/entity.controller.api';
+export { IEntityControllerApi } from './api/IEntityControllerApi';
 
 
-export {ObjectsNotValidError} from './libs/exceptions/ObjectsNotValidError';
-export {HttpObjectsNotValidError} from './libs/exceptions/HttpObjectsNotValidError';
-export {ConditionValidationError} from './libs/exceptions/ConditionValidationError';
+export { ObjectsNotValidError } from './libs/exceptions/ObjectsNotValidError';
+export { HttpObjectsNotValidError } from './libs/exceptions/HttpObjectsNotValidError';
+export { ConditionValidationError } from './libs/exceptions/ConditionValidationError';
 
 
-export {EntityController} from './libs/EntityController';
-export {EntityControllerFactory} from './libs/EntityControllerFactory';
+export { EntityController } from './libs/EntityController';
+export { EntityControllerFactory } from './libs/EntityControllerFactory';
+
+export { EntityControllerReader, IEntityControllerReaderOptions } from './adapters/pipeline/readers/EntityControllerReader';
 
 
-export {EntityDefTreeWorker} from './libs/framework/EntityDefTreeWorker';
-export {FrameworkFactory} from './libs/framework/FrameworkFactory';
+export { EntityDefTreeWorker } from './libs/framework/EntityDefTreeWorker';
+export { FrameworkFactory } from './libs/framework/FrameworkFactory';
 
-export {EntityRef} from './libs/registry/EntityRef';
-export {PropertyRef} from './libs/registry/PropertyRef';
-export {SchemaRef} from './libs/registry/SchemaRef';
-export {EntityRegistry} from './libs/EntityRegistry';
+export { EntityRef } from './libs/registry/EntityRef';
+export { PropertyRef } from './libs/registry/PropertyRef';
+export { SchemaRef } from './libs/registry/SchemaRef';
+export { EntityRegistry } from './libs/EntityRegistry';

@@ -55,7 +55,7 @@ export class EntityControllerReader<T> extends Reader {
 
     this.schemaName = options.storageName;
     if (!this.schemaName) {
-      const schemas = (<ClassRef>this.entityRef.getClassRef()).getOptions('schema');
+      const schemas = this.entityRef.getOptions('schema', []);
       if (!isEmpty(schemas)) {
         if (isArray(schemas)) {
           this.schemaName = first(schemas);
