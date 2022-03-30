@@ -1,14 +1,15 @@
-import {IPipelineSpecification} from './IPipelineSpecification';
+import { IPipelineSpecification } from './IPipelineSpecification';
 import * as _ from 'lodash';
-import {AbstractRef, ClassRef, ClassType, IEntityRef, METATYPE_ENTITY} from '@allgemein/schema-api';
-import {TreeUtils} from '@allgemein/base';
-import {IOptionsOverride} from './IOptionsOverride';
-import {IPipelineProcessor} from './IPipelineProcessor';
-import {PipelineRegistry} from './PipelineRegistry';
-import {PipelineBuilder} from './PipelineBuilder';
-import {Reader} from './reader/Reader';
+import { isEmpty, last } from 'lodash';
+import { ClassRef, ClassType } from '@allgemein/schema-api';
+import { TreeUtils } from '@allgemein/base';
+import { IOptionsOverride } from './IOptionsOverride';
+import { IPipelineProcessor } from './IPipelineProcessor';
+import { PipelineRegistry } from './PipelineRegistry';
+import { PipelineBuilder } from './PipelineBuilder';
+import { Reader } from './reader/Reader';
 
-export class PipelineRef  {
+export class PipelineRef {
 
   registry: PipelineRegistry;
 
@@ -22,19 +23,15 @@ export class PipelineRef  {
     this.specification = spec;
   }
 
+
   findEntityClazz(name: string) {
-    const ref = ClassRef.find(name);
-    if (ref) {
-      return ref.getClass();
+    const refs = ClassRef.filter(x => x.name === name);
+    if (!isEmpty(refs)) {
+      return last(refs).getClass();
     }
-    // for (const lookupRegistry of LookupRegistry.getLookupRegistries()) {
-    //   const classRef: ClassRef = lookupRegistry.find(METATYPE_CLASS_REF, (x: ClassRef) => x.className === name);
-    //   if (classRef) {
-    //     return classRef.getClass();
-    //   }
-    // }
     return null;
   }
+
 
   createOptions(opts: any) {
     const readerOpts = _.clone(opts);

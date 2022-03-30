@@ -5,6 +5,7 @@ import {EventEmitter} from 'events';
 import {Log} from '@typexs/base';
 import {FINISHED, WAITING} from './queue/Constants';
 import {IPullableQueueOptions} from './queue/IPullableQueueOptions';
+import { ERROR_FUNCTION } from './Constants';
 
 
 // TODO Work in progress!!!
@@ -77,7 +78,7 @@ export class PullingQueue extends EventEmitter {
     });
   }
 
-  $onCatch: Function = (data: any, error: Error) => {
+  $onCatch: ERROR_FUNCTION = (error: Error, data: any) => {
     Log.error('pulling', error, data);
   };
 
@@ -101,7 +102,7 @@ export class PullingQueue extends EventEmitter {
   }
 
 
-  onCatch(pipe: Function) {
+  onCatch(pipe: ERROR_FUNCTION) {
     if (_.isFunction(pipe)) {
       this.$onCatch = pipe;
     }

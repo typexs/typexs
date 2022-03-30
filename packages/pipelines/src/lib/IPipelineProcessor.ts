@@ -1,6 +1,7 @@
 import {ClassType} from '@allgemein/schema-api';
-import {IProcessorOptions, Processor} from './Processor';
+import {Processor} from './Processor';
 import {IPipelineEntry} from './IPipelineEntry';
+import { IProcessorOptions } from './processor/IProcessorOptions';
 
 export interface IPipelineProcessor extends IPipelineEntry {
   processor: {

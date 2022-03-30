@@ -1,6 +1,22 @@
-import * as _ from 'lodash';
+import {
+  assign,
+  chunk,
+  concat,
+  defaults,
+  find,
+  get,
+  has,
+  isArray,
+  isEmpty,
+  isNull,
+  isString,
+  isUndefined,
+  keys,
+  remove,
+  set,
+  values
+} from 'lodash';
 import sha1 from 'sha1';
-import {chunk, find, isArray, isEmpty, isNull, remove} from 'lodash';
 import {
   AsyncWorkerQueue,
   IConnection,
@@ -13,13 +29,13 @@ import {
   StorageRef,
   TypeOrmConnectionWrapper,
   TypeOrmEntityRegistry
-
 } from '@typexs/base';
-import { ClassType, IEntityRef, ClassRef} from '@allgemein/schema-api';
-import {LockFactory, TreeUtils} from '@allgemein/base';
-import { IProcessorOptions, Processor } from '../../../lib/Processor';
+import { ClassRef, ClassType, IEntityRef } from '@allgemein/schema-api';
+import { LockFactory, TreeUtils } from '@allgemein/base';
+import { Processor } from '../../../lib/Processor';
 import { XS_ID_SEP, XS_STATE_KEY } from '../../../lib/Constants';
 import { IRevisionSupport } from '../../../lib/IRevisionSupport';
+import { IProcessorOptions } from '../../../lib/processor/IProcessorOptions';
 
 
 export interface IStorageControllerProcessorOptions<T> extends IProcessorOptions, ISaveOptions {
@@ -41,10 +57,10 @@ export interface IInstruction {
 
 }
 
-export class StorageControllerProcessor<T> extends Processor implements IQueueProcessor<any> {
+export class StorageControllerProcessor<T> extends Processor implements IQueueProcessor<T> {
 
   constructor(opts: IStorageControllerProcessorOptions<T>) {
-    super(_.defaults(opts, {revisions: false, revisionLimit: 5, queued: false}));
+    super(defaults(opts, { revisions: false, revisionLimit: 5, queued: false }));
 
     this.entityRef = TypeOrmEntityRegistry.$().getEntityRefFor(opts.targetType);
     if (opts.targetRevType) {
@@ -82,7 +98,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
   };
 
   static sha1(json: any) {
-    return sha1(JSON.stringify(json) + JSON.stringify(_.keys(json)));
+    return sha1(JSON.stringify(json) + JSON.stringify(keys(json)));
   }
 
   revisionLimit() {
@@ -96,7 +112,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
     this.statistic.entityRef = this.entityRef.name;
 
     if (this.getOptions().queued) {
-      this.queue = new AsyncWorkerQueue<any>(this, {concurrent: 10, name: 'storage-controller-processor'});
+      this.queue = new AsyncWorkerQueue<any>(this, { concurrent: 10, name: 'storage-controller-processor' });
     }
   }
 
@@ -111,7 +127,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
 
 
   supportsRevisions() {
-    return !_.isNull(this.entityRevRef) && !_.isUndefined(this.entityRevRef);
+    return !isNull(this.entityRevRef) && !isUndefined(this.entityRevRef);
   }
 
 
@@ -149,13 +165,13 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
       return null;
     }
 
-    let processInstructions: IInstruction[] = [];
+    const processInstructions: IInstruction[] = [];
 
     const dataChunks = chunk(arrData, 100);
     const chunksAmount = dataChunks.length;
     const semaphore = LockFactory.$().semaphore(50);
     let inc = 1;
-    let promises: Promise<any>[] = [];
+    const promises: Promise<any>[] = [];
     while (dataChunks.length > 0) {
 
       const dataChunk = dataChunks.shift();
@@ -164,17 +180,17 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
         if (!isEmpty(chunkedInstruction)) {
           processInstructions.push(...chunkedInstruction);
           for (const inst of chunkedInstruction) {
-            const state = _.get(inst, XS_STATE_KEY, 'none');
+            const state = get(inst, XS_STATE_KEY, 'none');
             this.statistic.count++;
-            _.set(this.statistic, state, _.get(this.statistic, state, 0) + 1);
-            if(chunksAmount === 1){
-              this.logger.debug(`storage process ` + this.entityRef.name + '[' + inc + '/' + chunksAmount +
+            set(this.statistic, state, get(this.statistic, state, 0) + 1);
+            if (chunksAmount === 1) {
+              this.logger.debug('storage process ' + this.entityRef.name + '[' + inc + '/' + chunksAmount +
                 '] with id=' + inst.id + ' state=' + state + ' count=' + this.statistic.count);
             }
             ret.push(inst.instance);
           }
-          if(chunksAmount !== 1){
-            this.logger.debug(`storage chunk processed ` + this.entityRef.name + ' [' + inc + '/' + chunksAmount +
+          if (chunksAmount !== 1) {
+            this.logger.debug('storage chunk processed ' + this.entityRef.name + ' [' + inc + '/' + chunksAmount +
               '] with ' + JSON.stringify(this.statistic));
           }
         }
@@ -204,15 +220,15 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
 
 
   async _doProcessChunk(dataChunk: any[]) {
-    let chunkedInstruction = [];
+    const chunkedInstruction = [];
 
 
     for (const x of dataChunk) {
       const ref = ClassRef.getGlobal(x.constructor);
       const idprops = ref.getPropertyRefs().filter(p => p.isIdentifier());
       const instance = this.entityRef.create();
-      _.assign(instance, x);
-      let processInstruction: IInstruction = {instance: instance};
+      assign(instance, x);
+      const processInstruction: IInstruction = { instance: instance };
       processInstruction[XS_STATE_KEY] = 'new';
       chunkedInstruction.push(processInstruction);
 
@@ -225,7 +241,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
 
         // remove $-fields for save
         await TreeUtils.walk(instance, x => {
-          if (x.key && _.isString(x.key) && ['$'].includes(x.key[0])) {
+          if (x.key && isString(x.key) && ['$'].includes(x.key[0])) {
             delete x.parent[x.key];
           }
         });
@@ -235,10 +251,10 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
         });
 
         // generate _id if not exists!
-        if (!_.has(instance, '_id')) {
-          (<any>instance)._id = _.concat([
-              this.entityRef.getClassRef().storingName],
-            _.values(searchCond)).join(XS_ID_SEP);
+        if (!has(instance, '_id')) {
+          (<any>instance)._id = concat([
+            this.entityRef.getClassRef().storingName],
+          values(searchCond)).join(XS_ID_SEP);
         }
       }
 
@@ -247,7 +263,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
 
           const json = JSON.parse(JSON.stringify(instance));
           await TreeUtils.walk(json, x => {
-            if (x.key && _.isString(x.key) && ['_'].includes(x.key[0])) {
+            if (x.key && isString(x.key) && ['_'].includes(x.key[0])) {
               delete x.parent[x.key];
             }
           });
@@ -273,8 +289,8 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
     const deleteConditions = [];
 
     if (this.supportsRevisions() && this.storageRef.getType() === 'mongodb') {
-      const searchConds = {$or: chunkedInstruction.map(x => x.searchCond).filter(x => !isNull(x))};
-      const previousEntities = await this.controller.find(this.entityRef.getClassRef().getClass(), searchConds, {raw: true, limit: 0});
+      const searchConds = { $or: chunkedInstruction.map(x => x.searchCond).filter(x => !isNull(x)) };
+      const previousEntities = await this.controller.find(this.entityRef.getClassRef().getClass(), searchConds, { raw: true, limit: 0 });
 
       for (const instruction of chunkedInstruction) {
         const instanceRev = instruction.instanceRev;
@@ -290,7 +306,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
             // instanceRev._updated = new Date();
 
             const newRev = this.entityRevRef.create();
-            _.assign(newRev, instanceRev);
+            assign(newRev, instanceRev);
             (<any>newRev)._id = [orgId, instanceRev._revNo].join(XS_ID_SEP);
 
             saveEntities.push(instanceRev, newRev);
@@ -299,7 +315,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
 
             if (this.revisionLimit() < 0 && instanceRev._revNo > this.revisionLimit()) {
               // Remove revisions
-              deleteConditions.push({_orgId: instanceRev._id, _revNo: {$lt: instanceRev._revNo - this.revisionLimit()}});
+              deleteConditions.push({ _orgId: instanceRev._id, _revNo: { $lt: instanceRev._revNo - this.revisionLimit() } });
             }
 
           } else {
@@ -309,9 +325,9 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
         } else {
           // NEW
           // clear previous
-          deleteConditions.push({_orgId: instanceRev._id});
+          deleteConditions.push({ _orgId: instanceRev._id });
           const newRev = this.entityRevRef.create();
-          _.assign(newRev, instanceRev);
+          assign(newRev, instanceRev);
           (<any>newRev)._id = [orgId, instanceRev._revNo].join(XS_ID_SEP);
           instruction[XS_STATE_KEY] = 'new';
           saveEntities.push(instanceRev, newRev);
@@ -322,11 +338,11 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
 
       if (!isEmpty(deleteConditions)) {
         await (this.connection as TypeOrmConnectionWrapper).manager.getMongoRepository(this.entityRevRef.getClassRef().getClass())
-          .deleteMany({$or: deleteConditions});
+          .deleteMany({ $or: deleteConditions });
       }
 
     } else {
-      if(chunkedInstruction.length > 0){
+      if (chunkedInstruction.length > 0) {
         saveEntities.push(...chunkedInstruction.map(x => x.instance));
       }
     }
@@ -345,13 +361,13 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
   //   const idprops = ref.getPropertyRefs().filter(p => p.isIdentifier());
   //
   //   const instance = this.entityRef.create();
-  //   _.assign(instance, data);
+  //   assign(instance, data);
   //   let id = idprops.map(id => id.get(instance)).join(':');
   //   if (this.storageRef.getType() === 'mongodb') {
   //
   //     // remove $-fields for save
   //     await TreeHelper.walk(instance, x => {
-  //       if (x.key && _.isString(x.key) && ['$'].includes(x.key[0])) {
+  //       if (x.key && isString(x.key) && ['$'].includes(x.key[0])) {
   //         delete x.parent[x.key];
   //       }
   //     });
@@ -361,10 +377,10 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
   //     });
   //
   //     // generate _id if not exists!
-  //     if (!_.has(instance, '_id')) {
-  //       (<any>instance)._id = _.concat([
+  //     if (!has(instance, '_id')) {
+  //       (<any>instance)._id = concat([
   //           this.entityRef.getClassRef().storingName],
-  //         _.values(searchCond)).join(XS_ID_SEP);
+  //         values(searchCond)).join(XS_ID_SEP);
   //     }
   //   }
   //
@@ -373,7 +389,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
   //
   //       const json = JSON.parse(JSON.stringify(instance));
   //       await TreeHelper.walk(json, x => {
-  //         if (x.key && _.isString(x.key) && ['_'].includes(x.key[0])) {
+  //         if (x.key && isString(x.key) && ['_'].includes(x.key[0])) {
   //           delete x.parent[x.key];
   //         }
   //       });
@@ -399,7 +415,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
   //           // instanceRev._updated = new Date();
   //
   //           const newRev = this.entityRevRef.create();
-  //           _.assign(newRev, instanceRev);
+  //           assign(newRev, instanceRev);
   //           (<any>newRev)._id = [orgId, instanceRev._revNo].join(XS_ID_SEP);
   //
   //           await this.controller.save([instanceRev, newRev], this.getOptions());
@@ -422,7 +438,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
   //           .deleteMany({_orgId: instanceRev._id});
   //
   //         const newRev = this.entityRevRef.create();
-  //         _.assign(newRev, instanceRev);
+  //         assign(newRev, instanceRev);
   //         (<any>newRev)._id = [orgId, instanceRev._revNo].join(XS_ID_SEP);
   //         await this.controller.save([instanceRev, newRev], this.getOptions());
   //         (<any>instance)[XS_STATE_KEY] = 'new';
@@ -435,10 +451,11 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
   //     await this.controller.save(instance, this.getOptions());
   //   }
   //
-  //   const state = _.get(instance, XS_STATE_KEY, 'none');
+  //   const state = get(instance, XS_STATE_KEY, 'none');
   //   this.statistic.count++;
-  //   _.set(this.statistic, state, _.get(this.statistic, state, 0) + 1);
-  //   this.logger.debug(`storage process ` + this.entityRef.name + ' with id=' + id + ' state=' + state + ' count=' + this.statistic.count);
+  //   set(this.statistic, state, get(this.statistic, state, 0) + 1);
+  //   this.logger.debug(`storage process ` +
+  //      this.entityRef.name + ' with id=' + id + ' state=' + state + ' count=' + this.statistic.count);
   //   return instance;
   // }
 

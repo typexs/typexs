@@ -1,5 +1,5 @@
 
-
+export type ERROR_FUNCTION = (err: Error, data: any) => void;
 export const XS_ID_SEP = '-';
 
 export const XS_STATE_KEY = '_state_';

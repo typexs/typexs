@@ -13,3 +13,6 @@ export { IPipelineProcessor } from './lib/IPipelineProcessor';
 export { IPullable } from './lib/IPullable';
 export { IPipelineTransform } from './lib/IPipelineTransform';
 export { IPipelineRegistrySettings } from './lib/IPipelineRegistrySettings';
+export { IPipeline } from './lib/pipeline/IPipeline';
+export { IProcessor } from './lib/processor/IProcessor';
+export { IProcessorOptions } from './lib/processor/IProcessorOptions';

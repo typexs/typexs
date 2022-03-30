@@ -1,11 +1,14 @@
 /* eslint-disable */
-import {EventEmitter} from 'events';
+import { EventEmitter } from 'events';
 import * as _ from 'lodash';
-import {ProcessingHelper} from './ProcessingHelper';
-import {ILoggerApi, Log} from '@typexs/base';
+import { ProcessingHelper } from './ProcessingHelper';
+import { ILoggerApi, Log } from '@typexs/base';
+import { IProcessor } from './processor/IProcessor';
+import { IProcessorOptions } from './processor/IProcessorOptions';
+import { PipeHandle } from './pipeline/PipeHandle';
 
 
-const handleCallResults = function (res: any, cb: any, data: any) {
+const handleCallResults = function(res: any, cb: any, data: any) {
   if (res) {
     if (ProcessingHelper.isPromise(res)) {
       // Log.info('asdasdasd3 ');
@@ -34,14 +37,8 @@ const handleCallResults = function (res: any, cb: any, data: any) {
 
 };
 
-export interface IProcessorOptions {
-  logger?: ILoggerApi;
 
-  [k: string]: any;
-}
-
-
-export abstract class Processor extends EventEmitter {
+export abstract class Processor extends EventEmitter implements IProcessor {
 
 
   constructor(options: IProcessorOptions = {}) {
@@ -65,7 +62,7 @@ export abstract class Processor extends EventEmitter {
 
     this.on('process', this.processEvent.bind(this));
 
-    this.on('init', function (cb) {
+    this.on('init', function(cb) {
       if (self.doInit.length === 0) {
         try {
           const res = self.doInit();
@@ -80,7 +77,7 @@ export abstract class Processor extends EventEmitter {
       }
     });
 
-    this.on('finish', function (cb) {
+    this.on('finish', function(cb) {
 
       if (self.doFinish.length === 0) {
         try {
@@ -118,7 +115,7 @@ export abstract class Processor extends EventEmitter {
       }
 
     } else {
-      this.doProcess(data, function (err: Error, res: any) {
+      this.doProcess(data, function(err: Error, res: any) {
         this.$process_calls++;
         this.$process_time = (this.$process_time + (new Date().getTime() - start.getTime()));
         if (err) {
@@ -149,15 +146,18 @@ export abstract class Processor extends EventEmitter {
 
   $options: any;
   $broker: any;
-  $pipe_handle: any;
+  private $pipe_handle: PipeHandle;
   $process_time: any;
   $process_calls: any;
   $pipeline: any;
 
+  setPipeHandle(p: PipeHandle) {
+    this.$pipe_handle = p;
+  }
 
   static createEmitPromise(eventname: string, self: any, ...args: any[]) {
-    return new Promise(function (resolve, reject) {
-      args.push(function (err: Error, res: any) {
+    return new Promise(function(resolve, reject) {
+      args.push(function(err: Error, res: any) {
         if (err) {
           return reject(err);
         }

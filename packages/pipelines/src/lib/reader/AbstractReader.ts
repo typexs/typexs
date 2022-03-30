@@ -5,6 +5,7 @@ import {ILoggerApi, Log} from '@typexs/base';
 import * as _ from 'lodash';
 import {createEmbeddedPromise, PIPE_HANDLER} from './Constants';
 import {Processor} from '../Processor';
+import { ERROR_FUNCTION } from '../Constants';
 
 export abstract class AbstractReader implements IReader {
 
@@ -91,7 +92,7 @@ export abstract class AbstractReader implements IReader {
     });
   }
 
-  onCatch(pipe: Function): IReader {
+  onCatch(pipe: ERROR_FUNCTION): IReader {
     // throw new Error('Method not implemented.');
     // this.$pipe.
     this.$pipe.setErrorCallback(pipe);

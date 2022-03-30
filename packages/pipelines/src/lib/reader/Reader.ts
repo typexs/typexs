@@ -5,6 +5,8 @@ import { IPullable } from '../IPullable';
 import { PullingQueue } from '../PullingQueue';
 import { IReader } from './IReader';
 import { AbstractReader } from './AbstractReader';
+import { isFunction } from 'lodash';
+import { ERROR_FUNCTION } from '../Constants';
 
 /**
  * TODO Rename to
@@ -20,8 +22,8 @@ export abstract class Reader extends AbstractReader implements IPullable, IReade
     this.$queue.onData(this.doProcess.bind(this));
   }
 
-  onCatch(pipe: Function) {
-    if (_.isFunction(pipe)) {
+  onCatch(pipe: ERROR_FUNCTION) {
+    if (isFunction(pipe)) {
       this.$queue.onCatch(pipe);
     }
     return super.onCatch(pipe);
