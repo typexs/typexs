@@ -50,13 +50,13 @@ export class Role implements IRole {
   @Property({
     type: 'Permission', cardinality: 0,
     join: Join(RBelongsTo, [
-        From(Eq('ownerid', Key('id'))),
-        To(Eq('id', Key('refid')))
-      ],
-      And(
-        Eq('ownertab', Value('role')),
-        Eq('reftab', Value('permission'))),
-      [Asc(Key('sort')), Asc(Key('id'))])
+      From(Eq('ownerid', Key('id'))),
+      To(Eq('id', Key('refid')))
+    ],
+    And(
+      Eq('ownertab', Value('role')),
+      Eq('reftab', Value('permission'))),
+    [Asc(Key('sort')), Asc(Key('id'))])
   })
   permissions: Permission[];
 

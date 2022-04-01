@@ -6,16 +6,16 @@ import { NAMESPACE_BUILT_ENTITY } from '@typexs/entity/libs/Constants';
 @Entity()
 export class AuthSession {
 
-  @Property({type: 'string', id: true})
+  @Property({type: 'string', id: true, length: 128})
   token: string;
 
-  @Property({type: 'string'})
+  @Property({type: 'string', length: 64})
   ip: string;
 
   @Property()
   userId: number = null;
 
-  @Property()
+  @Property({ type: 'string', length: 128 })
   authId: string;
 
   @Property({nullable: true})
