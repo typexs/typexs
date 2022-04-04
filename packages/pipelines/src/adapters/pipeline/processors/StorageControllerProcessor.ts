@@ -226,7 +226,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
     for (const x of dataChunk) {
       const ref = ClassRef.getGlobal(x.constructor);
       const idprops = ref.getPropertyRefs().filter(p => p.isIdentifier());
-      const instance = this.entityRef.create();
+      const instance = this.entityRef.create(false);
       assign(instance, x);
       const processInstruction: IInstruction = { instance: instance };
       processInstruction[XS_STATE_KEY] = 'new';
@@ -252,9 +252,11 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
 
         // generate _id if not exists!
         if (!has(instance, '_id')) {
-          (<any>instance)._id = concat([
-            this.entityRef.getClassRef().storingName],
-          values(searchCond)).join(XS_ID_SEP);
+          (<any>instance)._id = concat(
+            [
+              this.entityRef.getClassRef().storingName
+            ],
+            values(searchCond)).join(XS_ID_SEP);
         }
       }
 
@@ -305,7 +307,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
             instanceRev._created = previousEntityRev._created;
             // instanceRev._updated = new Date();
 
-            const newRev = this.entityRevRef.create();
+            const newRev = this.entityRevRef.create(true);
             assign(newRev, instanceRev);
             (<any>newRev)._id = [orgId, instanceRev._revNo].join(XS_ID_SEP);
 
@@ -326,7 +328,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
           // NEW
           // clear previous
           deleteConditions.push({ _orgId: instanceRev._id });
-          const newRev = this.entityRevRef.create();
+          const newRev = this.entityRevRef.create(false);
           assign(newRev, instanceRev);
           (<any>newRev)._id = [orgId, instanceRev._revNo].join(XS_ID_SEP);
           instruction[XS_STATE_KEY] = 'new';
