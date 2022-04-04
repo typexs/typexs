@@ -21,3 +21,6 @@ export const DEFAULT_FACET = 'facets';
 
 
 export const PERMISSION_ACCESS_SEARCH_VIEW = 'access search view';
+
+// use to tasks processing large data
+export const ARGV_SKIP_INDEXING = 'argv.skipIndexing';
