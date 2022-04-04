@@ -1,5 +1,5 @@
 import {AbstractEvent} from '../../libs/messaging/AbstractEvent';
-import {TASK_STATES} from './Constants';
+import { TASK_STATE_PROPOSED, TASK_STATES } from './Constants';
 import {ITaskRunnerStatus} from './ITaskRunnerStatus';
 
 export class TaskRunnerEvent extends AbstractEvent implements ITaskRunnerStatus {
@@ -12,7 +12,7 @@ export class TaskRunnerEvent extends AbstractEvent implements ITaskRunnerStatus 
   /**
    * Runner states
    */
-  state: TASK_STATES = 'proposed';
+  state: TASK_STATES = TASK_STATE_PROPOSED;
 
   /**
    * all task names

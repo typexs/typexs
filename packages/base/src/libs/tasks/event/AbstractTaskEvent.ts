@@ -3,7 +3,7 @@ import {ITaskRunnerResult} from '../../tasks/ITaskRunnerResult';
 import {snakeCase} from 'lodash';
 import {AbstractEvent} from '../../messaging/AbstractEvent';
 import {IQueueWorkload} from '../../../libs/queue/IQueueWorkload';
-import {TASK_RUNNER_SPEC, TASK_STATES} from '../Constants';
+import { TASK_RUNNER_SPEC, TASK_STATE_PROPOSED, TASK_STATES } from '../Constants';
 import {DateUtils} from '../../utils/DateUtils';
 
 /**
@@ -29,7 +29,7 @@ export abstract class AbstractTaskEvent extends AbstractEvent implements IQueueW
   /**
    * Current state of task
    */
-  state: TASK_STATES = 'proposed';
+  state: TASK_STATES = TASK_STATE_PROPOSED;
 
   /**
    * Topic of this event

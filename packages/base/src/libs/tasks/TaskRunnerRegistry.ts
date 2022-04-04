@@ -6,7 +6,13 @@ import { isEmpty, keys, remove, values } from 'lodash';
 import { Inject } from 'typedi';
 import { EventBus, subscribe } from '@allgemein/eventbus';
 import { TaskRunner } from './TaskRunner';
-import { CL_TASK_RUNNER_REGISTRY, TASK_RUNNER_SPEC, TASKRUN_STATE_FINISH_PROMISE } from './Constants';
+import {
+  CL_TASK_RUNNER_REGISTRY,
+  TASK_RUNNER_SPEC,
+  TASK_STATE_ERRORED, TASK_STATE_REQUEST_ERROR,
+  TASK_STATE_STOPPED,
+  TASKRUN_STATE_FINISH_PROMISE
+} from './Constants';
 import { Counters } from '../helper/Counters';
 import { ITaskRunnerOptions } from './ITaskRunnerOptions';
 import { Tasks } from './Tasks';
@@ -65,7 +71,7 @@ export class TaskRunnerRegistry {
   @subscribe(TaskRunnerEvent)
   async onTaskRunnerEvent(event: TaskRunnerEvent) {
     // Log.debug('task runner event: ' + event.state + ' ' + event.id + ' ' + event.nodeId);
-    if (['stopped', 'errored', 'request_error'].includes(event.state)) {
+    if ([TASK_STATE_STOPPED, TASK_STATE_ERRORED, TASK_STATE_REQUEST_ERROR].includes(event.state)) {
       await this.removeTaskStatus(event.id);
     } else {
       await this.addTaskStatus(event);
@@ -77,7 +83,7 @@ export class TaskRunnerRegistry {
    */
   async cleanup() {
     let remove = await this.systemwideTaskStatus.filter(
-      (x: TaskRunnerEvent) => ['stopped', 'errored', 'request_error'].includes(x.state));
+      (x: TaskRunnerEvent) => [TASK_STATE_STOPPED, TASK_STATE_ERRORED, TASK_STATE_REQUEST_ERROR].includes(x.state));
     if (!isEmpty(remove)) {
       await Promise.all(remove.map((x: TaskRunnerEvent) => this.removeTaskStatus(x.id)));
     }

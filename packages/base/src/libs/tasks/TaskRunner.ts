@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 import { Tasks } from './Tasks';
 import { TaskRun } from './TaskRun';
 import {
-  TASK_RUNNER_SPEC,
+  TASK_RUNNER_SPEC, TASK_STATE_PROPOSED, TASK_STATE_RUNNING, TASK_STATE_STARTED, TASK_STATE_STOPPED,
   TASK_STATES,
   TASKRUN_STATE_DONE,
   TASKRUN_STATE_FINISH_PROMISE,
@@ -87,7 +87,7 @@ export class TaskRunner extends EventEmitter {
 
   undeclaredIncomingNames: string[] = [];
 
-  state: TASK_STATES = 'proposed';
+  state: TASK_STATES = TASK_STATE_PROPOSED;
 
   private invoker: Invoker;
 
@@ -146,7 +146,7 @@ export class TaskRunner extends EventEmitter {
     this.on(TASKRUN_STATE_DONE, this.taskDone.bind(this));
 
 
-    this.state = 'started';
+    this.state = TASK_STATE_STARTED;
 
     // For compatibility reasons
     if (!this.$options.skipRegistryAddition) {
@@ -416,7 +416,7 @@ export class TaskRunner extends EventEmitter {
     }
 
     const nextTask = this.selectNextTask();
-    this.state = 'running';
+    this.state = TASK_STATE_RUNNING;
     if (this.runningNrs.length === 0 && !nextTask) {
       throw new Error('Tasks are stucked!');
     }
@@ -559,7 +559,7 @@ export class TaskRunner extends EventEmitter {
 
 
   finish() {
-    this.state = 'stopped';
+    this.state = TASK_STATE_STOPPED;
     this.$stop = new Date();
     this.$duration = this.$stop.getTime() - this.$start.getTime();
     const status = this.collectStats();

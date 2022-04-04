@@ -1,6 +1,6 @@
 import { AbstractMessage } from '../../../messaging/AbstractMessage';
 import { Tasks } from '../../Tasks';
-import { TASK_RUNNER_SPEC } from '../../Constants';
+import { TASK_RUNNER_SPEC, TASK_STATE_ENQUEUE, TASK_STATE_REQUEST_ERROR, TASK_STATE_RUNNING } from '../../Constants';
 import { ITaskExecutionRequestOptions } from '../ITaskExecutionRequestOptions';
 import { TaskRef } from '../../TaskRef';
 import { TasksHelper } from '../../TasksHelper';
@@ -16,7 +16,7 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
 
   private requestOptions: ITaskExecutionRequestOptions;
 
-  private passingTaskStates = ['request_error'];
+  private passingTaskStates = [TASK_STATE_REQUEST_ERROR];
 
   private event: TaskProposeEvent;
 
@@ -40,7 +40,7 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
     if (options.passingTaskState) {
       this.passingTaskStates.push(options.passingTaskState);
     } else {
-      this.passingTaskStates.push('enqueue');
+      this.passingTaskStates.push(TASK_STATE_ENQUEUE);
     }
 
     let workerNodes = null;
@@ -120,7 +120,7 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
     return responses;
   }
 
-  async future(filter: (event: TaskEvent) => boolean = (event: TaskEvent) => event.state !== 'running') {
+  async future(filter: (event: TaskEvent) => boolean = (event: TaskEvent) => event.state !== TASK_STATE_RUNNING) {
     const future = new TaskFuture({
       eventId: this.event.id,
       filter: filter

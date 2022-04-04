@@ -1,7 +1,7 @@
 import { Inject } from 'typedi';
 import { Tasks } from './Tasks';
 import { TaskRunnerRegistry } from './TaskRunnerRegistry';
-import { TASK_RUNNER_SPEC } from './Constants';
+import { TASK_RUNNER_SPEC, TASK_STATE_REQUEST_ERROR } from './Constants';
 import { ITaskExectorOptions } from './ITaskExectorOptions';
 import * as _ from 'lodash';
 import { ILoggerApi } from '../../libs/logging/ILoggerApi';
@@ -253,7 +253,7 @@ export class TaskExecutor extends EventEmitter {
         return null;
       }
     } else if (enqueueEvents && enqueueEvents.length > 0) {
-      if (enqueueEvents[0].state === 'request_error') {
+      if (enqueueEvents[0].state === TASK_STATE_REQUEST_ERROR) {
         if (_.isArray(enqueueEvents[0].errors) && enqueueEvents[0].errors.length > 0) {
           if (future) {
             await future.close();

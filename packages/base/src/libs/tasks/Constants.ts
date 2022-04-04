@@ -22,6 +22,14 @@ export const TASKRUN_STATE_FINISHED = 'finished';
 export const TASKRUN_STATE_FINISH_PROMISE = 'finish_promise';
 export const TASKRUN_STATE_UPDATE = 'update';
 
+export const TASK_STATE_STOPPED = 'stopped';
+export const TASK_STATE_STARTED = 'started';
+export const TASK_STATE_RUNNING = 'running';
+export const TASK_STATE_ERRORED = 'errored';
+export const TASK_STATE_ENQUEUE = 'enqueue';
+export const TASK_STATE_PROPOSED = 'proposed';
+export const TASK_STATE_REQUEST_ERROR = 'request_error';
+
 export const K_CLS_TASKS: string = 'tasks';
 export const K_CLS_TASK_DESCRIPTORS = 'task_descriptors';
 

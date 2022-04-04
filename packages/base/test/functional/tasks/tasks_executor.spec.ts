@@ -2,11 +2,10 @@ import * as _ from 'lodash';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { SimpleTaskPromise } from './tasks/SimpleTaskPromise';
-import { TestHelper } from '@typexs/testing';
+import { SpawnHandle, TestHelper } from '@typexs/testing';
 import { TaskExecutor } from '../../../src/libs/tasks/TaskExecutor';
 import { TEST_STORAGE_OPTIONS } from '../config';
 import { EventBus, IEventBusConfiguration, RedisEventBusAdapter } from '@allgemein/eventbus';
-import { SpawnHandle } from '@typexs/testing';
 import { TaskRequestFactory } from '../../../src/libs/tasks/worker/TaskRequestFactory';
 import { ITaskRunnerResult } from '../../../src/libs/tasks/ITaskRunnerResult';
 import { Bootstrap } from '../../../src/Bootstrap';
@@ -16,6 +15,7 @@ import { StorageRef } from '../../../src/libs/storage/StorageRef';
 import { TaskLog } from '../../../src/entities/TaskLog';
 import { C_STORAGE_DEFAULT } from '../../../src/libs/Constants';
 import { TaskEvent } from '../../../src/libs/tasks/event/TaskEvent';
+import { TASK_STATE_ENQUEUE, TASK_STATE_STOPPED } from '../../../src/libs/tasks/Constants';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -129,7 +129,7 @@ class TasksSpec {
       tasksId: runnerId,
       taskName: 'simple_task_promise',
       taskNr: 0,
-      state: 'stopped',
+      state: TASK_STATE_STOPPED,
       nodeId: 'system_0',
       respId: 'system_0',
       hasError: false,
@@ -178,7 +178,7 @@ class TasksSpec {
       tasksId: runnerId,
       taskName: 'simple_task_promise',
       taskNr: 0,
-      state: 'stopped',
+      state: TASK_STATE_STOPPED,
       nodeId: 'system_0',
       respId: 'system_0',
       hasError: false,
@@ -210,7 +210,7 @@ class TasksSpec {
 
     expect(data).to.have.length(1);
     const entry = data.shift();
-    expect(entry.state).to.be.eq('enqueue');
+    expect(entry.state).to.be.eq(TASK_STATE_ENQUEUE);
     expect(entry.topic).to.be.eq('data');
     expect(entry.nodeId).to.be.eq('system_0');
     expect(entry.respId).to.be.eq('system_0');
@@ -287,7 +287,7 @@ class TasksSpec {
     // expect(results.shift()).to.deep.include({
     //   taskName: 'simple_task_promise',
     //   taskNr: 0,
-    //   state: 'stopped',
+    //   state: TASK_STATE_STOPPED,
     //   callerId: 'system_0',
     //   nodeId: 'remote01',
     //   respId: 'remote01',
@@ -349,7 +349,7 @@ class TasksSpec {
     // const future = exchange.taskFuture();
     //
     expect(events).to.have.length(1);
-    expect(events[0].state).to.be.eq('enqueue');
+    expect(events[0].state).to.be.eq(TASK_STATE_ENQUEUE);
     expect(results).to.have.length(1);
     const entry = results.shift();
     expect(entry.results).to.not.be.empty;
@@ -507,7 +507,7 @@ class TasksSpec {
     expect(executor1.isExecuteable()).to.be.true;
     expect(executor2.isExecuteable()).to.be.false;
     expect(results).to.have.length(2);
-    expect((<any>results[0][0]).state).to.be.eq('stopped');
+    expect((<any>results[0][0]).state).to.be.eq(TASK_STATE_STOPPED);
     expect((<any>results[1])).to.be.null;
   }
 
@@ -548,7 +548,7 @@ class TasksSpec {
     expect(executor1.isExecuteable()).to.be.true;
     expect(executor2.isExecuteable()).to.be.false;
     expect(results).to.have.length(2);
-    expect((<any>results[0]).state).to.be.eq('stopped');
+    expect((<any>results[0]).state).to.be.eq(TASK_STATE_STOPPED);
     expect((<any>results[1])).to.be.null;
   }
 
@@ -596,7 +596,7 @@ class TasksSpec {
     expect(executor1.isExecuteable()).to.be.true;
     expect(executor2.isExecuteable()).to.be.false;
     expect(results).to.have.length(2);
-    expect((<any>results[0][0]).state).to.be.eq('stopped');
+    expect((<any>results[0][0]).state).to.be.eq(TASK_STATE_STOPPED);
     expect((<any>results[1])).to.be.null;
   }
 

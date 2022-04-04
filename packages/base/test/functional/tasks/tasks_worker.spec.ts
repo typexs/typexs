@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-
 import { Bootstrap } from '../../../src/Bootstrap';
 import { Container } from 'typedi';
 import { Config } from '@allgemein/config';
@@ -10,8 +9,7 @@ import { EventBus, IEventBusConfiguration, RedisEventBusAdapter, subscribe } fro
 import { TaskQueueWorker } from '../../../src/workers/TaskQueueWorker';
 import { SimpleWorkerTask } from './tasks/SimpleWorkerTask';
 import { TaskEvent } from '../../../src/libs/tasks/event/TaskEvent';
-import { TestHelper } from '@typexs/testing';
-import { SpawnHandle } from '@typexs/testing';
+import { SpawnHandle, TestHelper } from '@typexs/testing';
 import { TaskCommand } from '../../../src/commands/TaskCommand';
 import { SimpleTaskWithLog } from './tasks/SimpleTaskWithLog';
 import { TaskRequestFactory } from '../../../src/libs/tasks/worker/TaskRequestFactory';
@@ -24,6 +22,7 @@ import { TaskLog } from '../../../src/entities/TaskLog';
 import { StorageRef } from '../../../src/libs/storage/StorageRef';
 import { Injector } from '../../../src/libs/di/Injector';
 import { TaskProposeEvent } from '../../../src/libs/tasks/event/TaskProposeEvent';
+import { TASK_STATE_ENQUEUE, TASK_STATE_PROPOSED, TASK_STATE_STARTED, TASK_STATE_STOPPED } from '../../../src/libs/tasks/Constants';
 
 const LOG_EVENT = TestHelper.logEnable(false);
 let bootstrap: Bootstrap = null;
@@ -104,19 +103,19 @@ class TasksWorkerSpec {
     const work = _.find(res, (x: any) => x && x.nodeId === NODEID) as TaskEvent;
     expect(work.nodeId).to.be.eq(NODEID);
     expect(work.respId).to.be.eq(NODEID);
-    expect(work.state).to.be.eq('enqueue');
+    expect(work.state).to.be.eq(TASK_STATE_ENQUEUE);
 
     worker.queue.resume();
-    await TestHelper.waitFor(() => events.find(x => x.state === 'stopped' && x.id === work.id && x.topic === 'data'));
+    await TestHelper.waitFor(() => events.find(x => x.state === TASK_STATE_STOPPED && x.id === work.id && x.topic === 'data'));
     await worker.queue.pause();
     // await worker.queue.await();
     expect(events).to.have.length(4);
     expect(events.map(e => ({ state: e.state, result: e.data ? e.data.results[0].result : null }))).to.deep.eq([
-      { state: 'proposed', result: null },
-      { state: 'enqueue', result: null },
-      { state: 'started', result: null },
+      { state: TASK_STATE_PROPOSED, result: null },
+      { state: TASK_STATE_ENQUEUE, result: null },
+      { state: TASK_STATE_STARTED, result: null },
       // {state: 'running', result: null},
-      { state: 'stopped', result: 'test' }
+      { state: TASK_STATE_STOPPED, result: 'test' }
     ]);
 
     events = [];
@@ -128,16 +127,16 @@ class TasksWorkerSpec {
     const work2 = _.find(res2[0], (x: any) => x && x.nodeId === NODEID);
     expect(work2.nodeId).to.be.eq(NODEID);
     expect(work2.respId).to.be.eq(NODEID);
-    expect(work2.state).to.be.eq('enqueue');
+    expect(work2.state).to.be.eq(TASK_STATE_ENQUEUE);
 
     worker.queue.resume();
     await TestHelper.waitFor(() => events.length >= 4);
     expect(events).to.have.length(4);
     expect(events.map(e => ({ state: e.state, result: e.data ? e.data.results[0].result : null }))).to.deep.eq([
-      { state: 'proposed', result: null },
-      { state: 'enqueue', result: null },
-      { state: 'started', result: null },
-      { state: 'stopped', result: 'test' }
+      { state: TASK_STATE_PROPOSED, result: null },
+      { state: TASK_STATE_ENQUEUE, result: null },
+      { state: TASK_STATE_STARTED, result: null },
+      { state: TASK_STATE_STOPPED, result: 'test' }
     ]);
 
 
@@ -215,7 +214,7 @@ class TasksWorkerSpec {
 
     expect(results).to.have.length(1);
     expect(results[0]).to.deep.include({
-      'state': 'enqueue',
+      'state': TASK_STATE_ENQUEUE,
       'topic': 'data',
       'nodeId': 'worker',
       'taskSpec': [
@@ -280,7 +279,7 @@ class TasksWorkerSpec {
     // the result are null cause of not
     // registered subscribers of remote nodes
     const results = await EventBus.post(taskEvent);
-    await TestHelper.waitFor(() => !!events.find(x => x.state === 'stopped'));
+    await TestHelper.waitFor(() => !!events.find(x => x.state === TASK_STATE_STOPPED));
 
     p.shutdown();
     await p.done;
@@ -292,10 +291,10 @@ class TasksWorkerSpec {
 
     expect(events).to.have.length.gte(4);
     expect(events.map(x => ({ state: x.state, respId: x.respId }))).to.deep.eq([
-      { state: 'proposed', respId: undefined },
-      { state: 'enqueue', respId: 'fakeapp01' },
-      { state: 'started', respId: 'fakeapp01' },
-      { state: 'stopped', respId: 'fakeapp01' }
+      { state: TASK_STATE_PROPOSED, respId: undefined },
+      { state: TASK_STATE_ENQUEUE, respId: 'fakeapp01' },
+      { state: TASK_STATE_STARTED, respId: 'fakeapp01' },
+      { state: TASK_STATE_STOPPED, respId: 'fakeapp01' }
     ]);
     const x = events.map(x => ({ result: x.data ? x.data.results[0].result : null }));
     expect(x).to.deep.eq([
@@ -364,7 +363,7 @@ class TasksWorkerSpec {
     await bootstrap.shutdown();
 
     expect(events).to.have.length(2);
-    expect(events.map(x => ({ state: x.state }))).to.deep.eq([{ state: 'proposed' }, { state: 'request_error' }]);
+    expect(events.map(x => ({ state: x.state }))).to.deep.eq([{ state: TASK_STATE_PROPOSED }, { state: 'request_error' }]);
     const e = events.pop();
     expect(e.state).to.eq('request_error');
     expect(e.respId).to.eq('fakeapp01');
@@ -443,7 +442,7 @@ class TasksWorkerSpec {
     // the result are null cause of not
     // registered subscribers of remote nodes
     await EventBus.post(taskEvent2);
-    await TestHelper.waitFor(() => !!events.find(x => x.state === 'stopped'));
+    await TestHelper.waitFor(() => !!events.find(x => x.state === TASK_STATE_STOPPED));
     // await TestHelper.waitFor(() => events.length > 6);
     handle.shutdown();
 
@@ -462,13 +461,13 @@ class TasksWorkerSpec {
     expect(events_03).to.have.length(1);
 
     expect(events_01.map(x => ({ state: x.state, respId: x.respId }))).to.deep.eq([
-      { state: 'enqueue', respId: 'fakeapp01' },
-      { state: 'started', respId: 'fakeapp01' },
-      { state: 'stopped', respId: 'fakeapp01' }
+      { state: TASK_STATE_ENQUEUE, respId: 'fakeapp01' },
+      { state: TASK_STATE_STARTED, respId: 'fakeapp01' },
+      { state: TASK_STATE_STOPPED, respId: 'fakeapp01' }
     ]);
 
     expect(events_02.map(x => ({ state: x.state, respId: x.respId }))).to.deep.eq([
-      { state: 'proposed', respId: undefined }
+      { state: TASK_STATE_PROPOSED, respId: undefined }
     ]);
 
     expect(events_01.map(x => ({ result: x.data ? x.data.results[0].result : null }))).to.deep.eq([
@@ -528,7 +527,7 @@ class TasksWorkerSpec {
 
     await command.handler({});
 
-    await TestHelper.waitFor(() => !!events.find(x => x.state === 'stopped'));
+    await TestHelper.waitFor(() => !!events.find(x => x.state === TASK_STATE_STOPPED));
     handle.shutdown();
 
     await EventBus.unregister(l);
@@ -537,7 +536,7 @@ class TasksWorkerSpec {
     await handle.done;
     await bootstrap.shutdown();
     expect(events).to.have.length.gte(4);
-    expect(events.map(x => x.state)).to.contain.members(['proposed', 'enqueue', 'started', 'stopped']);
+    expect(events.map(x => x.state)).to.contain.members([TASK_STATE_PROPOSED, TASK_STATE_ENQUEUE, TASK_STATE_STARTED, TASK_STATE_STOPPED]);
   }
 
 
@@ -578,7 +577,7 @@ class TasksWorkerSpec {
 
     const execReq = Injector.get(TaskRequestFactory).executeRequest();
     const results = await execReq.create([ref.name]).run();
-    await TestHelper.waitFor(() => !!events.find(x => x.state === 'stopped'));
+    await TestHelper.waitFor(() => !!events.find(x => x.state === TASK_STATE_STOPPED));
 
     await (Injector.get(TaskMonitorWorker) as TaskMonitorWorker).queue.await();
     const storeRef: StorageRef = Injector.get(C_STORAGE_DEFAULT);
@@ -593,7 +592,7 @@ class TasksWorkerSpec {
 
     expect(results).to.have.length(1);
     expect(results[0]).to.deep.include({
-      'state': 'enqueue',
+      'state': TASK_STATE_ENQUEUE,
       'topic': 'data',
       'nodeId': 'worker',
       'taskSpec': [

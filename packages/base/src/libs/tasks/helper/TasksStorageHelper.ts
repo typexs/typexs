@@ -4,6 +4,7 @@ import { StorageRef } from '../../storage/StorageRef';
 import { TaskLog } from '../../../entities/TaskLog';
 import { concat, find, get, isArray, remove } from 'lodash';
 import { LockFactory, Semaphore } from '@allgemein/base';
+import { TASK_STATE_RUNNING } from '../Constants';
 
 export class TasksStorageHelper {
 
@@ -111,7 +112,7 @@ export class TasksStorageHelper {
           exists.progress = result.progress;
           exists.total = result.total;
           exists.done = get(result, 'done', false);
-          exists.running = get(result, 'running', false);
+          exists.running = get(result, TASK_STATE_RUNNING, false);
           exists.weight = get(result, 'weight', -1);
 
           exists.data = <any>{

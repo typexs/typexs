@@ -10,6 +10,7 @@ import {ITaskRunnerResult} from '../../ITaskRunnerResult';
 import { TaskEvent } from '../../event/TaskEvent';
 import { TaskProposeEvent } from '../../event/TaskProposeEvent';
 import { AbstractTaskEvent } from '../../event/AbstractTaskEvent';
+import { TASK_STATE_ERRORED, TASK_STATE_REQUEST_ERROR, TASK_STATE_STOPPED } from '../../Constants';
 
 
 const future_finished = 'future_finished';
@@ -71,7 +72,7 @@ export class TaskFuture extends EventEmitter {
         this.emit('future_event', event);
       }
       this.targetState[event.respId] = event.state;
-      if (event.state === 'stopped' || event.state === 'errored' || event.state === 'request_error') {
+      if (event.state === TASK_STATE_STOPPED || event.state === TASK_STATE_ERRORED || event.state === TASK_STATE_REQUEST_ERROR) {
         if (event.data) {
           this.targetResults[event.respId] = event.data;
         }
@@ -113,7 +114,7 @@ export class TaskFuture extends EventEmitter {
   isFinished() {
     let yes = true;
     for (const k of _.keys(this.targetState)) {
-      if (!['stopped', 'request_error', 'errored'].includes(this.targetState[k])) {
+      if (![TASK_STATE_STOPPED, TASK_STATE_REQUEST_ERROR, TASK_STATE_ERRORED].includes(this.targetState[k])) {
         yes = false;
         break;
       }

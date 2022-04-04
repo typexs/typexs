@@ -8,7 +8,7 @@ import {ITaskExecutionRequestOptions} from './ITaskExecutionRequestOptions';
 import {Tasks} from '../Tasks';
 import {TaskRef} from '../TaskRef';
 import {Log} from '../../logging/Log';
-import {TASK_RUNNER_SPEC} from '../Constants';
+import { TASK_RUNNER_SPEC, TASK_STATE_ENQUEUE, TASK_STATE_REQUEST_ERROR } from '../Constants';
 import {TasksHelper} from '../TasksHelper';
 import { TaskEvent } from '../event/TaskEvent';
 import { TaskProposeEvent } from '../event/TaskProposeEvent';
@@ -133,7 +133,7 @@ export class TaskExecutionRequest extends EventEmitter {
     }
 
     // check state
-    if (['enqueue', 'request_error'].indexOf(event.state) === -1) {
+    if ([TASK_STATE_ENQUEUE, TASK_STATE_REQUEST_ERROR].indexOf(event.state) === -1) {
       return null;
     }
 

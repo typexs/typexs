@@ -1,8 +1,18 @@
 # @typexs/search
 
 
+## Arguments
+
+* When running other tasks which processing indexable data you can disable the standalone
+indexing during the task execution by passing `--skipIndexing` as argument.
+(Or use an node configuration `--nodeId name` for standalone/cli tasks)
+
 ## Config
+
+* Enabled by configuration entry under storage
 
 ## Task
 
 * index {--entityNames names,?}
+
+

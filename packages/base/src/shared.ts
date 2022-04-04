@@ -11,7 +11,6 @@ export {
 } from '@allgemein/base';
 
 
-
 export { TxsError } from './libs/exceptions/TxsError';
 export { Injector } from './libs/di/Injector';
 
@@ -95,6 +94,37 @@ export {
   K_STRINGIFY_OPTION
 } from './libs/storage/framework/typeorm/Constants';
 export { INodeInfo } from './libs/system/INodeInfo';
+
+export {
+  TASK_STATE_RUNNING,
+  TASK_STATE_PROPOSED,
+  TASK_STATE_REQUEST_ERROR,
+  TASK_STATE_ENQUEUE,
+  TASK_STATE_ERRORED,
+  TASK_STATE_STOPPED,
+  TASK_STATE_STARTED,
+  CL_TASK_QUEUE_WORKER,
+  CL_TASK_RUNNER_REGISTRY,
+  TASK_RUNNER_SPEC,
+  TASK_STATES,
+  TASKRUN_STATE_DONE,
+  TASKRUN_STATE_FINISH_PROMISE,
+  TASKRUN_STATE_FINISHED,
+  TASKRUN_STATE_NEXT,
+  TASKRUN_STATE_RUN,
+  TASKRUN_STATE_UPDATE,
+  K_CLS_TASKS,
+  K_CLS_TASK_DESCRIPTORS,
+  K_TASK_CLASS_NAME,
+  K_TASK_NAME,
+  K_TASK_TYPE,
+  TASK_PROPERTY_TYPE,
+  K_EXCHANGE_REF_TYPE,
+  TN_TASKS_CLEANUP,
+  XS_TYPE_BINDING_TASK_DEPENDS_ON,
+  C_TASKS
+} from './libs/tasks/Constants';
+
 export { Tasks } from './libs/tasks/Tasks';
 export { TaskExchangeRef } from './libs/tasks/TaskExchangeRef';
 export { TaskRef } from './libs/tasks/TaskRef';

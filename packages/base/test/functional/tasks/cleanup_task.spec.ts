@@ -1,4 +1,3 @@
-import { TaskState } from '../../../src';
 import * as _ from 'lodash';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
@@ -13,7 +12,8 @@ import { StorageRef } from '../../../src/libs/storage/StorageRef';
 import { TaskLog } from '../../../src/entities/TaskLog';
 import { C_STORAGE_DEFAULT } from '../../../src/libs/Constants';
 import { DateUtils } from '../../../src/libs/utils/DateUtils';
-import { TN_TASKS_CLEANUP } from '../../../src/libs/tasks/Constants';
+import { TN_TASKS_CLEANUP, TASK_STATE_STOPPED } from '../../../src/libs/tasks/Constants';
+import { TaskState } from '../../../src/libs/tasks/TaskState';
 
 // process.env.SQL_LOG = '1';
 
@@ -62,7 +62,9 @@ class CleanupTaskSpec {
     const storageRef = Injector.get(C_STORAGE_DEFAULT) as StorageRef;
 
     const logs = [];
-    for (let i = 0; i <= 14; i++) {
+
+    const length = 14;
+    for (let i = 0; i <= length; i++) {
       const x = new TaskLog();
       x.callerId = 'x' + i;
       x.data = {} as any;
@@ -72,7 +74,7 @@ class CleanupTaskSpec {
       x.taskNr = i;
       x.tasksId = 'id' + i;
       x.taskName = 'id' + i;
-      x.state = 'stopped';
+      x.state = TASK_STATE_STOPPED;
       x.respId = 'node';
       x.nodeId = 'node';
       logs.push(x);
@@ -101,12 +103,13 @@ class CleanupTaskSpec {
         skipTargetCheck: true
       }).run() as ITaskRunnerResult;
 
+    const oddDate = (new Date()).getDay() % 2;
     expect(data.results).to.not.be.empty;
     const x = data.results.find(
       (x: any) => x.name === _.snakeCase('TasksCleanup'));
     expect(x.name).to.be.eq(_.snakeCase('TasksCleanup'));
     expect((x as TaskState).counters.asObject()).to.be.deep.eq({
-      'remove': 7
+      'remove': oddDate === 0 ? 7 : 8
     });
 
   }
