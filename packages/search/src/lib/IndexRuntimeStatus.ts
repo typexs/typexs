@@ -73,7 +73,7 @@ export class IndexRuntimeStatus {
     if (!this._checked) {
       this._checked = true;
       const skipIndexing = Config.get(ARGV_SKIP_INDEXING, false);
-      if (!skipIndexing) {
+      if (skipIndexing) {
         this.enabled = false;
       } else {
         this.storage.getNames().forEach(ref => {
