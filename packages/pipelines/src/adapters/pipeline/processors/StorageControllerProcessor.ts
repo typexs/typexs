@@ -307,7 +307,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
             instanceRev._created = previousEntityRev._created;
             // instanceRev._updated = new Date();
 
-            const newRev = this.entityRevRef.create(true);
+            const newRev = this.entityRevRef.create(false);
             assign(newRev, instanceRev);
             (<any>newRev)._id = [orgId, instanceRev._revNo].join(XS_ID_SEP);
 
