@@ -1,4 +1,4 @@
-import { defaults, get, isArray, remove } from 'lodash';
+import { defaults, get, has, isArray, remove } from 'lodash';
 import { EventEmitter } from 'events';
 import { IAsyncQueueOptions } from './IAsyncQueueOptions';
 import { IQueueProcessor } from './IQueueProcessor';
@@ -333,7 +333,6 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
       await this.await();
     }
     await this.pause();
-    this.logger = null;
     this.processor = null;
 
     await Promise.all(this.worker.map(async k => {
@@ -347,6 +346,11 @@ export class AsyncWorkerQueue<T extends IQueueWorkload> extends EventEmitter imp
     this.all = null;
     this.worker = [];
     this.active = null;
+
+    // remove only own logger, passed logger must be handelt by parent
+    if (!has(this.options, 'logger')) {
+      this.logger = null;
+    }
     this.removeAllListeners();
   }
 
