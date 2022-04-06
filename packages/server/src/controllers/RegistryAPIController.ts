@@ -42,7 +42,7 @@ export class RegistryAPIController {
   getRegistry(@Param('namespace') namespace: string,
               @QueryParam('options') options?: IJsonSchemaSerializeOptions): any {
     const registry = RegistryFactory.get(namespace);
-    options = options || {};
+    options = options || { };
     if (supportsJsonSchemaExport(registry)) {
       return registry.toJsonSchema(options);
     } else {

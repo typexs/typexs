@@ -794,6 +794,8 @@ export class StorageAPIController {
 
   private getSerializer(add: any = {}) {
     return JsonSchema.getSerializer({
+      onlyDecorated: true,
+      ignoreUnknownType: true,
       /**
        * Append storageName to entity object
        * @param src

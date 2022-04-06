@@ -123,6 +123,8 @@ export class EntityAPIController {
     const schemaRef = this.getRegistry().getSchemaRefByName(schemaName);
     if (schemaRef) {
       const serializer = JsonSchema.getSerializer({
+        onlyDecorated: true,
+        ignoreUnknownType: true,
         /**
          * Append storageName to entity object
          * @param src
