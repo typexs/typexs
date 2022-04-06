@@ -335,14 +335,12 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
           saveEntities.push(instanceRev, newRev);
         }
         instruction.id = (<any>instruction.instance)._id;
-
       }
 
       if (!isEmpty(deleteConditions)) {
         await (this.connection as TypeOrmConnectionWrapper).manager.getMongoRepository(this.entityRevRef.getClassRef().getClass())
           .deleteMany({ $or: deleteConditions });
       }
-
     } else {
       if (chunkedInstruction.length > 0) {
         saveEntities.push(...chunkedInstruction.map(x => x.instance));
@@ -352,118 +350,11 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
     if (!isEmpty(saveEntities)) {
       await this.controller.save(saveEntities, this.getOptions());
     }
-
     return chunkedInstruction;
-
   }
-
-  // async _doProcess(data: T) {
-  //   let searchCond: any = null;
-  //   const ref = ClassRef.getGlobal(data.constructor);
-  //   const idprops = ref.getPropertyRefs().filter(p => p.isIdentifier());
-  //
-  //   const instance = this.entityRef.create();
-  //   assign(instance, data);
-  //   let id = idprops.map(id => id.get(instance)).join(':');
-  //   if (this.storageRef.getType() === 'mongodb') {
-  //
-  //     // remove $-fields for save
-  //     await TreeHelper.walk(instance, x => {
-  //       if (x.key && isString(x.key) && ['$'].includes(x.key[0])) {
-  //         delete x.parent[x.key];
-  //       }
-  //     });
-  //     searchCond = {};
-  //     idprops.forEach(id => {
-  //       searchCond[id.storingName] = id.get(instance);
-  //     });
-  //
-  //     // generate _id if not exists!
-  //     if (!has(instance, '_id')) {
-  //       (<any>instance)._id = concat([
-  //           this.entityRef.getClassRef().storingName],
-  //         values(searchCond)).join(XS_ID_SEP);
-  //     }
-  //   }
-  //
-  //   if (this.supportsRevisions()) {
-  //     if (this.storageRef.getType() === 'mongodb') {
-  //
-  //       const json = JSON.parse(JSON.stringify(instance));
-  //       await TreeHelper.walk(json, x => {
-  //         if (x.key && isString(x.key) && ['_'].includes(x.key[0])) {
-  //           delete x.parent[x.key];
-  //         }
-  //       });
-  //
-  //       const instanceRev: IRevisionSupport = <IRevisionSupport><any>instance;
-  //       const orgId = instanceRev._id;
-  //       instanceRev._hash = StorageControllerProcessor.sha1(json);
-  //       instanceRev._orgId = orgId;
-  //       instanceRev._revNo = 1;
-  //       instanceRev._created = new Date();
-  //       instanceRev._updated = instanceRev._created;
-  //       searchCond['_id'] = orgId;
-  //
-  //       const previousEntity = await this.controller.findOne(this.entityRef.getClassRef().getClass(),
-  //         searchCond, {raw: true});
-  //       if (previousEntity) {
-  //         const previousEntityRev: IRevisionSupport = <IRevisionSupport><any>previousEntity;
-  //         // check if change happen
-  //         if (previousEntityRev._hash !== instanceRev._hash) {
-  //           // CHANGE
-  //           instanceRev._revNo = previousEntityRev._revNo + 1;
-  //           instanceRev._created = previousEntityRev._created;
-  //           // instanceRev._updated = new Date();
-  //
-  //           const newRev = this.entityRevRef.create();
-  //           assign(newRev, instanceRev);
-  //           (<any>newRev)._id = [orgId, instanceRev._revNo].join(XS_ID_SEP);
-  //
-  //           await this.controller.save([instanceRev, newRev], this.getOptions());
-  //           (<any>instance)[XS_STATE_KEY] = 'change';
-  //
-  //           if (this.revisionLimit() < 0 && instanceRev._revNo > this.revisionLimit()) {
-  //             // Remove revisions
-  //             await (this.connection as TypeOrmConnectionWrapper).manager.getMongoRepository(this.entityRevRef.getClassRef().getClass())
-  //               .deleteMany({_orgId: instanceRev._id, _revNo: {$lt: instanceRev._revNo - this.revisionLimit()}});
-  //           }
-  //
-  //         } else {
-  //           // NOT CHANGE
-  //           (<any>instance)[XS_STATE_KEY] = 'no_change';
-  //         }
-  //       } else {
-  //         // NEW
-  //         // clear previous
-  //         await (this.connection as TypeOrmConnectionWrapper).manager.getMongoRepository(this.entityRevRef.getClassRef().getClass())
-  //           .deleteMany({_orgId: instanceRev._id});
-  //
-  //         const newRev = this.entityRevRef.create();
-  //         assign(newRev, instanceRev);
-  //         (<any>newRev)._id = [orgId, instanceRev._revNo].join(XS_ID_SEP);
-  //         await this.controller.save([instanceRev, newRev], this.getOptions());
-  //         (<any>instance)[XS_STATE_KEY] = 'new';
-  //       }
-  //       id = (<any>instance)._id;
-  //     } else {
-  //       throw new NotYetImplementedError('only mongodb can have currently revision');
-  //     }
-  //   } else {
-  //     await this.controller.save(instance, this.getOptions());
-  //   }
-  //
-  //   const state = get(instance, XS_STATE_KEY, 'none');
-  //   this.statistic.count++;
-  //   set(this.statistic, state, get(this.statistic, state, 0) + 1);
-  //   this.logger.debug(`storage process ` +
-  //      this.entityRef.name + ' with id=' + id + ' state=' + state + ' count=' + this.statistic.count);
-  //   return instance;
-  // }
 
   async collect() {
     return this.statistic;
   }
-
 
 }

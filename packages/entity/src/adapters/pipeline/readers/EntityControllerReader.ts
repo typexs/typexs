@@ -1,7 +1,7 @@
 import { Injector, XS_P_$COUNT, XS_P_$OFFSET } from '@typexs/base';
 import { EntityController, EntityRegistry, IFindOptions } from '@typexs/entity';
 
-import { ClassRef, ClassType, IEntityRef } from '@allgemein/schema-api';
+import { ClassType, IEntityRef } from '@allgemein/schema-api';
 import * as _ from 'lodash';
 import { first, isArray, isEmpty } from 'lodash';
 import { IReaderOptions, Reader } from '@typexs/pipelines';

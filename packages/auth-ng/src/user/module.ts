@@ -28,7 +28,6 @@ const PROVIDERS = [
     useClass: AuthTokenInterceptor,
     multi: true
   }
-
 ];
 
 @NgModule({
