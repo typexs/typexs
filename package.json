@@ -1,6 +1,6 @@
 {
   "name": "@typexs/typexs",
-  "version": "2.0.7",
+  "version": "2.0.2",
   "tag": "v2-lts",
   "description": "Angular for typexs",
   "main": "index.js",
@@ -61,9 +61,9 @@
     "testtask": "file:./demo/testtask"
   },
   "devDependencies": {
-    "@allgemein/http": "1.2.0",
-    "@allgemein/moduls": "1.6.5",
-    "@allgemein/packaging": "1.2.15",
+    "@allgemein/http": "~1.2.0",
+    "@allgemein/moduls": "~1.6.5",
+    "@allgemein/packaging": "~1.2.15",
     "@angular-devkit/build-angular": "v12-lts",
     "@angular-devkit/core": "v12-lts",
     "@angular-devkit/schematics": "v12-lts",

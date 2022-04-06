@@ -23,8 +23,8 @@
   "author": "Robert Kania",
   "license": "MIT",
   "dependencies": {
-    "@allgemein/base": "1.6.8",
-    "@allgemein/config": "1.1.3",
+    "@allgemein/base": "~1.6.8",
+    "@allgemein/config": "~1.1.3",
     "@allgemein/eventbus": "0.14.2",
     "@allgemein/expressions": "1.1.0",
     "@allgemein/mango-expressions": "1.1.1",
