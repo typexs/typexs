@@ -36,6 +36,7 @@ export class EntityRegistry extends DefaultNamespacedRegistry implements IJsonSc
 
   static NAME = 'EntityRegistry';
 
+  // eslint-disable-next-line no-use-before-define
   private static _self: EntityRegistry; // = new Registry();
 
 
@@ -280,7 +281,10 @@ export class EntityRegistry extends DefaultNamespacedRegistry implements IJsonSc
   }
 
   toJsonSchema(options?: IJsonSchemaSerializeOptions): any {
-    const serializer = JsonSchema.getSerializer(options);
+    const serializer = JsonSchema.getSerializer(defaults(options || {}, <IJsonSchemaSerializeOptions>{
+      ignoreUnknownType: true,
+      onlyDecorated: true
+    }));
     for (const entityRef of this.getEntityRefs()) {
       serializer.serialize(entityRef);
     }

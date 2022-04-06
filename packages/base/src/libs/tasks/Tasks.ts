@@ -152,9 +152,9 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
   create<T>(
     context: string,
     options:
-    ITaskRefOptions &
-    ITaskInfo &
-    { title?: string; taskName?: string; nodeId?: string } | ITaskPropertyRefOptions): T {
+      ITaskRefOptions &
+      ITaskInfo &
+      { title?: string; taskName?: string; nodeId?: string } | ITaskPropertyRefOptions): T {
     let ref: any = null;
     if (context === METATYPE_ENTITY) {
       ref = this.createTaskRef(options) as TaskRef;
@@ -354,9 +354,11 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
 
   async toJsonSchema(options?: IJsonSchemaSerializeOptions) {
     const entities = this.getEntries(true);
-    const serializer = JsonSchema.getSerializer(defaults(options || {}, {
+    const serializer = JsonSchema.getSerializer(defaults(options || {}, <IJsonSchemaSerializeOptions>{
       namespace: this.namespace,
-      allowKeyOverride: true
+      allowKeyOverride: true,
+      ignoreUnknownType: true,
+      onlyDecorated: true
     }));
     entities.map(x => serializer.serialize(x));
     return serializer.getJsonSchema();
