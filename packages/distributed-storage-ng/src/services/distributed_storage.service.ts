@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { IBuildOptions, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
 import { AbstractQueryService, AuthService, BackendService, EntityResolverService, IQueringService } from '@typexs/base-ng';
 import {
   API_CTRL_DISTRIBUTED_STORAGE,
@@ -31,7 +32,8 @@ export class DistributedStorageService
         update: API_CTRL_DISTRIBUTED_STORAGE_UPDATE_ENTITY,
         update_by_condition: null
       },
-      ngRoutePrefix: API_CTRL_DISTRIBUTED_STORAGE
+      ngRoutePrefix: API_CTRL_DISTRIBUTED_STORAGE,
+      registryName: 'distributed'
     });
   }
 

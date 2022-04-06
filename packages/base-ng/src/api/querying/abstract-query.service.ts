@@ -1,7 +1,15 @@
 import { clone, isArray, isBoolean, isEmpty, isNumber, isObjectLike, isPlainObject, isString, snakeCase, values } from 'lodash';
 import { IQueringService } from './IQueringService';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
-import { IBuildOptions, IEntityRef, IJsonSchema, JsonSchema, METATYPE_ENTITY, supportsJsonSchemaImport } from '@allgemein/schema-api';
+import {
+  IBuildOptions,
+  IEntityRef,
+  IJsonSchema,
+  JsonSchema,
+  METATYPE_ENTITY,
+  RegistryFactory,
+  supportsJsonSchemaImport
+} from '@allgemein/schema-api';
 import { IApiCallOptions } from '../../lib/http/IApiCallOptions';
 import { STORAGE_REQUEST_MODE } from './Constants';
 import { Log } from '../../lib/log/Log';
@@ -77,7 +85,7 @@ export abstract class AbstractQueryService implements IQueringService {
 
   }
 
-  private initialize() {
+  initialize() {
     if (this._authService.isEnabled()) {
       this.getRegistry().reset();
       let subscription: Subscription = null;
@@ -105,6 +113,8 @@ export abstract class AbstractQueryService implements IQueringService {
   getRegistry() {
     if (this.options.registry) {
       return this.options.registry;
+    } else if (this.options.registryName) {
+      return RegistryFactory.get(this.options.registryName);
     }
     throw new Error('registry not supported for this service.');
   }

@@ -9,6 +9,7 @@ import {
   API_CTRL_STORAGE_GET_ENTITY,
   API_CTRL_STORAGE_METADATA_ALL_ENTITIES,
   API_CTRL_STORAGE_METADATA_ALL_STORES,
+  API_CTRL_STORAGE_PREFIX,
   API_CTRL_STORAGE_SAVE_ENTITY,
   API_CTRL_STORAGE_UPDATE_ENTITIES_BY_CONDITION,
   API_CTRL_STORAGE_UPDATE_ENTITY,
@@ -20,10 +21,10 @@ import {
   AbstractQueryService,
   AuthService,
   BackendService,
+  EntityHelper,
   EntityResolverService,
   IQueringService,
-  STORAGE_REQUEST_MODE,
-  EntityHelper
+  STORAGE_REQUEST_MODE
 } from '@typexs/base-ng';
 import { C_RAW } from '@typexs/ng';
 
@@ -52,7 +53,7 @@ export class StorageService extends AbstractQueryService implements IQueringServ
           update_by_condition: API_CTRL_STORAGE_UPDATE_ENTITIES_BY_CONDITION
         },
         registry: RegistryFactory.get(REGISTRY_TYPEORM),
-        ngRoutePrefix: '/storage',
+        ngRoutePrefix: API_CTRL_STORAGE_PREFIX,
         registryName: REGISTRY_TYPEORM
       });
   }
