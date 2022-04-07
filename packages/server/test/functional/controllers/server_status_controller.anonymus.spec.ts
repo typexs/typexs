@@ -68,7 +68,7 @@ let server: WebServer = null;
 let http: IHttp = null;
 let url: string = null;
 
-@suite('functional/controllers/server_status_controller - anonymus') @timeout(300000)
+@suite('functional/controllers/server_status_controller - anonymous') @timeout(300000)
 class ServerStatusControllerSpec {
 
 

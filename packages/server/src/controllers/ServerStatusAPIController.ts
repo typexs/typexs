@@ -103,7 +103,7 @@ export class ServerStatusAPIController {
     await Helper.walk(cfg, async (x: WalkValues) => {
       // TODO make this list configurable! system.info.hide.keys!
       if (_.isString(x.key)) {
-        const path = !!key ? [key, ...x.location].join('.') : x.location.join('.');
+        const path = key ? [key, ...x.location].join('.') : x.location.join('.');
         if (filterKeys.indexOf(x.key) !== -1 || filterKeys.indexOf(path) !== -1) {
           delete x.parent[x.key];
           return;
