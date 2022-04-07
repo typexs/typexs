@@ -115,7 +115,6 @@ const settingsTemplate: ITypexsOptions & any = {
       }]
     }
   }
-
 };
 
 let bootstrap: Bootstrap = null;
@@ -204,7 +203,6 @@ class Storage_api_controllerSpec {
     await defaultStorageRef.getController().save(entries);
   }
 
-
   static async after() {
     if (server) {
       await server.stop();
@@ -215,7 +213,6 @@ class Storage_api_controllerSpec {
     Injector.reset();
     Config.clear();
   }
-
 
   async before() {
     // delete + create dummy data
@@ -327,10 +324,10 @@ class Storage_api_controllerSpec {
     let res: any = await http.post(URL + '/api' +
 
       API_CTRL_STORAGE_SAVE_ENTITY.replace(':name', _.snakeCase(RandomData.name)),
-      {
-        json: d,
-        responseType: 'json'
-      }
+    {
+      json: d,
+      responseType: 'json'
+    }
     );
 
     expect(res).to.not.be.null;
@@ -374,10 +371,10 @@ class Storage_api_controllerSpec {
     let res: any = await http.post(URL + '/api' +
 
       API_CTRL_STORAGE_SAVE_ENTITY.replace(':name', _.snakeCase(RandomData.name)),
-      {
-        json: [d1, d2],
-        responseType: 'json'
-      }
+    {
+      json: [d1, d2],
+      responseType: 'json'
+    }
     );
 
     expect(res).to.not.be.null;
@@ -548,7 +545,7 @@ class Storage_api_controllerSpec {
     try {
       res = await http.get(URL + '/api' +
         API_CTRL_STORAGE_FIND_ENTITY.replace(':name', SecuredObject.name) + '?limit=5',
-        {responseType: 'json', passBody: true, retry: 1}
+      {responseType: 'json', passBody: true, retry: 1}
       ) as any;
       expect(true).to.be.false;
     } catch (err) {
@@ -556,7 +553,7 @@ class Storage_api_controllerSpec {
     }
     res = await http.get(URL + '/api' +
       API_CTRL_STORAGE_FIND_ENTITY.replace(':name', RandomData.name) + '?limit=5',
-      {responseType: 'json', passBody: true, retry: 1}
+    {responseType: 'json', passBody: true, retry: 1}
     ) as any;
     expect(res).to.not.be.null;
     expect(res.entities).to.have.length(5);
@@ -754,7 +751,7 @@ class Storage_api_controllerSpec {
 
       API_CTRL_STORAGE_DELETE_ENTITIES_BY_CONDITION.replace(':name', RandomData.name) +
       '?query=' + JSON.stringify({$and: [{long: 'test delete'}, {id: {$gte: 105}}]}),
-      {responseType: 'json'}
+    {responseType: 'json'}
     );
     expect(res).to.not.be.null;
     res = res.body;
