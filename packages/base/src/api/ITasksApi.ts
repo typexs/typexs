@@ -5,11 +5,11 @@ import { TaskLog } from '../entities/TaskLog';
 
 export interface ITasksApi {
 
-  beforeCleanup?(offset: number): void;
+  beforeCleanup?(offset: number, date?: Date): void;
 
-  onCleanup?(entry: TaskLog | TaskLog[], offset: number): void;
+  onCleanup?(entry: TaskLog | TaskLog[], offset: number, date?: Date): void;
 
-  afterCleanup?(offset: number): void;
+  afterCleanup?(offset: number, date?: Date): void;
 
   /**
    * on task command startup

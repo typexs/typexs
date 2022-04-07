@@ -6,14 +6,14 @@ import { TaskLog } from '../entities/TaskLog';
 
 export class TasksApi implements ITasksApi {
 
-  beforeCleanup(offset: number) {
+  beforeCleanup(offset: number, date?: Date) {
   }
 
-  onCleanup?(entry: TaskLog | TaskLog[], offset: number) {
+  onCleanup?(entry: TaskLog | TaskLog[], offset: number, date?: Date) {
 
   }
 
-  afterCleanup(offset: number) {
+  afterCleanup(offset: number, date?: Date) {
   }
 
   onInit(run: TaskRun | TaskRunner) {

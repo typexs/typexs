@@ -30,7 +30,14 @@ export class TasksCleanup implements ITask {
    * Offset in seconds default is 7 days
    */
   @Incoming({ optional: true })
+  date: string = (new Date()).toISOString();
+
+  /**
+   * Offset in seconds default is 7 days
+   */
+  @Incoming({ optional: true })
   offset: number = 7 * 24 * 60 * 60;
+
 
   /**
    *
@@ -41,9 +48,18 @@ export class TasksCleanup implements ITask {
 
   async exec() {
     const logger = this.runtime.logger();
+    let fromDate = new Date();
+    try {
+      if (this.date) {
+        fromDate = DateUtils.fromISO(this.date);
+      }
+    } catch (e) {
+      fromDate = new Date();
+    }
 
-    await this.invoker.use(TasksApi).beforeCleanup(this.offset);
-    const date = DateUtils.sub({ seconds: this.offset });
+
+    await this.invoker.use(TasksApi).beforeCleanup(this.offset, fromDate);
+    const date = DateUtils.sub({ seconds: this.offset }, fromDate);
     const controller = this.storageRef.getController();
     let running = true;
     while (running) {
@@ -54,13 +70,13 @@ export class TasksCleanup implements ITask {
       }
       logger.debug('remove task log entries ' + entries.length + ' of ' + entries[XS_P_$COUNT]);
       await controller.remove(TaskLog, { tasksId: { $in: entries.map(x => x.tasksId) } });
-      await this.invoker.use(TasksApi).onCleanup(entries, this.offset);
+      await this.invoker.use(TasksApi).onCleanup(entries, this.offset, fromDate);
       entries.map(x => {
         this.runtime.counter('remove').inc();
       });
     }
 
-    await this.invoker.use(TasksApi).afterCleanup(this.offset);
+    await this.invoker.use(TasksApi).afterCleanup(this.offset, fromDate);
   }
 
 }
