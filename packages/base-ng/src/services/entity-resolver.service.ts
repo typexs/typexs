@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ClassRef, IEntityRef, LookupRegistry, METATYPE_ENTITY } from '@allgemein/schema-api';
 import { IQueringService } from './../api/querying/IQueringService';
 import { forkJoin } from 'rxjs';
-import { LabelHelper } from '@typexs/base';
+import { C_LABEL, LabelHelper } from '@typexs/base';
 
 
 @Injectable()
@@ -114,15 +114,18 @@ export class EntityResolverService {
 
 
   getLabelFor(obj: any) {
-    if (obj['label'] && isFunction(obj['label'])) {
-      return obj['label']();
-    }
-    if (obj['ngLabel'] && isFunction(obj['ngLabel'])) {
+    if (obj[C_LABEL] && isFunction(obj[C_LABEL])) {
+      return obj[C_LABEL]();
+    } else if (obj[C_LABEL]) {
+      return obj[C_LABEL];
+    } else if (obj['ngLabel'] && isFunction(obj['ngLabel'])) {
       return obj['ngLabel']();
+    } else if (obj['ngLabel']) {
+      return obj['ngLabel'];
+    } else {
+      const entityRef = this.getEntityRef(obj);
+      return LabelHelper.labelForEntity(obj, entityRef);
     }
-    const entityRef = this.getEntityRef(obj);
-    const label = LabelHelper.labelForEntity(obj, entityRef);
-    return isEmpty(label) ? 'No label found' : label;
   }
 
 }

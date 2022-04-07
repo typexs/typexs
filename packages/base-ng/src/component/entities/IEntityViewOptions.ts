@@ -3,13 +3,13 @@ export interface IEntityViewOptions {
    * Allow reloading of content
    */
   elem?: {
-    reload?: boolean
+    reload?: boolean;
   };
 
   /**
    * Request options
    */
   req?: {
-    raw?: boolean
+    raw?: boolean;
   };
 }

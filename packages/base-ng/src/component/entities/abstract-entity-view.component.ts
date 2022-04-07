@@ -1,15 +1,19 @@
-import {get, has} from 'lodash';
-import {Component, Inject, Input} from '@angular/core';
-import {IInstanceableComponent} from '../IInstanceableComponent';
-import {EntityResolverService} from '../../services/entity-resolver.service';
-import {IQueringService} from '../../api/querying/IQueringService';
-import {IEntityViewOptions} from './IEntityViewOptions';
-import {ComponentRegistry} from '@typexs/ng';
+import { get, has, isUndefined } from 'lodash';
+import { Component, Inject, Input } from '@angular/core';
+import { IInstanceableComponent } from '../IInstanceableComponent';
+import { EntityResolverService } from '../../services/entity-resolver.service';
+import { IQueringService } from '../../api/querying/IQueringService';
+import { IEntityViewOptions } from './IEntityViewOptions';
+import { ComponentRegistry } from '@typexs/ng';
 
 @Component({
   template: ''
 })
 export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T> {
+
+  private _label: string;
+
+  private _url: string;
 
   @Input()
   instance: T;
@@ -74,11 +78,17 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
   }
 
   url() {
-    return this.resolverService.getRouteFor(this.getInstance());
+    if (isUndefined(this._url)) {
+      this._url = this.resolverService.getRouteFor(this.getInstance());
+    }
+    return this._url;
   }
 
   label() {
-    return this.resolverService.getLabelFor(this.getInstance());
+    if (isUndefined(this._label)) {
+      this._label = this.resolverService.getLabelFor(this.getInstance());
+    }
+    return this._label;
   }
 
   getService(): IQueringService {

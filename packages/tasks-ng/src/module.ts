@@ -1,19 +1,21 @@
-import {NgModule} from '@angular/core';
-import {FormsModule} from '@typexs/ng-forms';
-import {BaseModule} from '@typexs/base-ng';
-import {RouterModule} from '@angular/router';
-import {FormsModule as NgFormsModule} from '@angular/forms';
-import {BackendTasksService} from './backend-tasks.service';
-import {TasksMetadataComponent} from './metadata/tasks-metadata.component';
-import {TasksExecutionComponent} from './execution/tasks-execution.component';
-import {TaskStatusComponent} from './status/task-status.component';
-import {TaskStatusRowComponent} from './status/task-status-row.component';
-import {StorageModule} from '@typexs/storage-ng';
-import {CommonModule, DatePipe} from '@angular/common';
-import {TasksLogComponent} from './log/tasks-log.component';
-import {TaskStatusPageComponent} from './status/task-status-page.component';
-import {TasksLogViewerComponent} from './status/log-viewer/tasks-log-viewer.component';
-import {TASK_ROUTES} from './routes';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@typexs/ng-forms';
+import { BaseModule } from '@typexs/base-ng';
+import { RouterModule } from '@angular/router';
+import { FormsModule as NgFormsModule } from '@angular/forms';
+import { BackendTasksService } from './backend-tasks.service';
+import { TasksMetadataComponent } from './metadata/tasks-metadata.component';
+import { TasksExecutionComponent } from './execution/tasks-execution.component';
+import { TaskStatusComponent } from './status/task-status.component';
+import { TaskStatusRowComponent } from './status/task-status-row.component';
+import { StorageModule } from '@typexs/storage-ng';
+import { CommonModule, DatePipe } from '@angular/common';
+import { TasksLogComponent } from './log/tasks-log.component';
+import { TaskStatusPageComponent } from './status/task-status-page.component';
+import { TasksLogViewerComponent } from './status/log-viewer/tasks-log-viewer.component';
+import { TASK_ROUTES } from './routes';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { C_TASKS, Tasks } from '@typexs/base';
 
 const PROVIDERS = [
   BackendTasksService,
@@ -43,7 +45,7 @@ const PROVIDERS = [
     TasksExecutionComponent,
     TaskStatusComponent,
     TasksLogComponent,
-    TaskStatusRowComponent,
+    TaskStatusRowComponent
   ],
   providers: PROVIDERS
 })
@@ -61,5 +63,8 @@ export class TasksModule {
     return TASK_ROUTES;
   }
 
+  constructor() {
+    RegistryFactory.register(C_TASKS, Tasks);
+  }
 
 }

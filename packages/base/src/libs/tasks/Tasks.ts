@@ -357,7 +357,7 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
     const serializer = JsonSchema.getSerializer(defaults(options || {}, <IJsonSchemaSerializeOptions>{
       namespace: this.namespace,
       allowKeyOverride: true,
-      ignoreUnknownType: true,
+      ignoreUnknownType: true
       // onlyDecorated: true
     }));
     entities.map(x => serializer.serialize(x));
@@ -371,7 +371,7 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
 
 
   fromJsonSchema(orgJson: any): Promise<TaskRef | TaskRef[]> {
-    return JsonSchema.unserialize(orgJson, { namespace: this.namespace }) as Promise<TaskRef | TaskRef[]>;
+    return JsonSchema.unserialize(orgJson, { namespace: this.namespace, forceEntityRefCreation: true }) as Promise<TaskRef | TaskRef[]>;
   }
 
 

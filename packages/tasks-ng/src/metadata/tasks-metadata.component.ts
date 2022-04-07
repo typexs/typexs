@@ -12,7 +12,7 @@ import {Subscription} from 'rxjs';
 })
 export class TasksMetadataComponent implements OnInit, OnDestroy {
 
-  private _tasks: Tasks;
+  private registry: Tasks;
 
   tasks: TaskRef[];
 
@@ -35,7 +35,7 @@ export class TasksMetadataComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.tasksService.getTaskList(true).subscribe(x => {
-      this._tasks = x;
+      this.registry = x;
       this.tasks = [];
       x.names(true).forEach(y => {
         const ref = x.get(y);

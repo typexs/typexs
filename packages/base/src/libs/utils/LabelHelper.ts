@@ -5,9 +5,22 @@ import { C_$LABEL, C_ENTITY_LABEL, C_LABEL } from '../Constants';
 
 export class LabelHelper {
 
-
+  /**
+   * Get label for an entity if exists
+   * - looking for properties marked with @Label
+   * - looking for function "label()" or variable "label"
+   * - looking for variable "$label"
+   *
+   * @param entity
+   * @param ref
+   * @param sep
+   * @param max
+   */
   static labelForEntity(entity: any, ref: IClassRef | IEntityRef, sep: string = ' ', max: number = 1024): string {
-    let labelProperties = ref.getPropertyRefs().filter(x => x.getOptions(C_ENTITY_LABEL, false));
+    let labelProperties: IPropertyRef[] = [];
+    if (ref) {
+      labelProperties = ref.getPropertyRefs().filter(x => x.getOptions(C_ENTITY_LABEL, false));
+    }
     if (labelProperties.length === 0 && Reflect.has(entity, C_LABEL)) {
       // check if label function or value is present
       if (isFunction(entity[C_LABEL])) {
@@ -18,7 +31,7 @@ export class LabelHelper {
     } else if (labelProperties.length === 0 && Reflect.has(entity, C_$LABEL)) {
       // check if older label key value is present
       return entity[C_$LABEL];
-    } else {
+    } else if (ref) {
       // take label as value
       const label: string[] = [];
       if (labelProperties.length === 0) {
@@ -43,6 +56,7 @@ export class LabelHelper {
       }
       return str;
     }
+    return null;
   }
 
 

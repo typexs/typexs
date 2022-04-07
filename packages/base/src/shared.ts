@@ -35,6 +35,9 @@ export { IError } from './libs/exceptions/IError';
 export { SystemNodeInfo } from './entities/SystemNodeInfo';
 export { TaskLog } from './entities/TaskLog';
 export { K_INST_ID, K_NODE_ID, C_EXCHANGE_MESSAGE } from './libs/messaging/Constants';
+export { IMessageOptions } from './libs/messaging/IMessageOptions';
+export { C_WORKERS } from './libs/worker/Constants';
+
 export { IFileOptions, IFileSelectOptions } from './adapters/exchange/filesystem/IFileOptions';
 export * from './libs/Constants';
 export { ITypexsOptions } from './libs/ITypexsOptions';

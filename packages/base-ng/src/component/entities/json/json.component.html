@@ -1,6 +1,6 @@
 <div class="json-wrapper language-js" *ngIf="isLoaded()">
 
-  <div class="json-header">
+  <div class="json-header" *ngIf="label()">
     <div>
       <label><a [routerLink]="url()">{{label()}}</a> </label>
     </div>
@@ -15,7 +15,6 @@
         <i class="icon icon-spinner fa-spin" *ngIf="loading"></i>
       </div>
     </div>
-
   </div>
 
   <pre class="language-js">{{ instance | json }}</pre>

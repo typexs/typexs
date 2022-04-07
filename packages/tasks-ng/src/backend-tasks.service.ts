@@ -7,16 +7,11 @@ import {
   API_CTRL_TASK_STATUS,
   API_CTRL_TASKS_METADATA
 } from '@typexs/server';
-import { Tasks } from '@typexs/base';
+import { C_TASKS, C_WORKERS, IMessageOptions, ITaskExectorOptions, SystemNodeInfo, TaskEvent, TaskLog, TaskRef, Tasks } from '@typexs/base';
 import { combineLatest, Observable, Subject, timer } from 'rxjs';
-import { C_WORKERS } from '@typexs/base/libs/worker/Constants';
 import { AbstractQueryService, AppService, BackendService, IApiCallOptions, Log, SystemInfoService } from '@typexs/base-ng';
-import { TaskEvent } from '@typexs/base/libs/tasks/event/TaskEvent';
-import { TaskLog } from '@typexs/base/entities/TaskLog';
-import { SystemNodeInfo } from '@typexs/base/entities/SystemNodeInfo';
 import { ExprDesc } from '@allgemein/expressions';
-import { IMessageOptions } from '@typexs/base/libs/messaging/IMessageOptions';
-import { ITaskExectorOptions } from '@typexs/base/libs/tasks/ITaskExectorOptions';
+import { RegistryFactory } from '@allgemein/schema-api';
 import { filter, first, mergeMap, takeUntil, tap } from 'rxjs/operators';
 import { StorageService } from '@typexs/storage-ng';
 
@@ -197,22 +192,30 @@ export class BackendTasksService {
             return false;
           });
 
-          this.backend.callApi(API_CTRL_TASKS_METADATA).subscribe(
-            (data: any[]) => {
-              this.tasks = new Tasks(null);
-              data.forEach(async (d: any) => {
-                d.nodeIds = intersection(d.nodeIds, this.workerNodes.map(w => w.nodeId));
-                await this.tasks.fromJsonSchema(d);
+          this.backend.callApi(API_CTRL_TASKS_METADATA).subscribe((data: any) => {
+            this.tasks = RegistryFactory.get(C_TASKS);
+            this.tasks.reset();
+            if (data) {
+              const workerNodeIds = this.workerNodes.map(w => w.nodeId);
+              this.tasks.fromJsonSchema(data).then((refs: TaskRef[]) => {
+                refs.forEach(ref => {
+                  const workers = intersection(ref.nodeInfos.map(x => x.nodeId), workerNodeIds);
+                  ref.setOption('nodeIds', workers);
+                });
+              }).catch(x => {
+                x.error(x);
+              }).finally(() => {
+                x.next(this.tasks);
+                x.complete();
               });
+            } else {
               x.next(this.tasks);
-            },
-            error => {
-              Log.error(error);
-            },
-            () => {
               x.complete();
             }
-          );
+          },
+          error => {
+            Log.error(error);
+          });
         });
 
     } else {
