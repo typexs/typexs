@@ -358,7 +358,7 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
       namespace: this.namespace,
       allowKeyOverride: true,
       ignoreUnknownType: true,
-      onlyDecorated: true
+      // onlyDecorated: true
     }));
     entities.map(x => serializer.serialize(x));
     return serializer.getJsonSchema();
