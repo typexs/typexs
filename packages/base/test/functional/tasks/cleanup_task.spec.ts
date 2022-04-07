@@ -21,6 +21,7 @@ import { TaskState } from '../../../src/libs/tasks/TaskState';
 const LOG_EVENT = TestHelper.logEnable(false);
 
 let bootstrap: Bootstrap;
+let dateNow: Date;
 
 
 @suite('functional/tasks/cleanup_task')
@@ -65,7 +66,7 @@ class CleanupTaskSpec {
 
     const length = 14;
     const dateStr = new Date().toISOString().split('T').shift();
-    const dateNow = DateUtils.fromISO(dateStr + 'T12:00:00+02:00');
+    dateNow = DateUtils.fromISO(dateStr + 'T12:00:00+02:00');
     for (let i = 0; i <= length; i++) {
       const x = new TaskLog();
       x.callerId = 'x' + i;
@@ -105,14 +106,14 @@ class CleanupTaskSpec {
         skipTargetCheck: true
       }).run() as ITaskRunnerResult;
 
-    // const oddDate = (new Date()).getDay() % 2;
+    const oddDate = (new Date()) <= dateNow ? 7 : 8 ;
     expect(data.results).to.not.be.empty;
     const x = data.results.find(
       (x: any) => x.name === _.snakeCase('TasksCleanup'));
     expect(x.name).to.be.eq(_.snakeCase('TasksCleanup'));
     expect((x as TaskState).counters.asObject()).to.be.deep.eq({
       // 'remove': oddDate === 0 ? 7 : 8
-      'remove': 7
+      'remove': oddDate
     });
 
   }
