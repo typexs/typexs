@@ -64,13 +64,15 @@ class CleanupTaskSpec {
     const logs = [];
 
     const length = 14;
+    const dateStr = new Date().toISOString().split('T').shift();
+    const dateNow = DateUtils.fromISO(dateStr + 'T12:00:00+02:00');
     for (let i = 0; i <= length; i++) {
       const x = new TaskLog();
       x.callerId = 'x' + i;
       x.data = {} as any;
-      x.created = DateUtils.sub({ days: i });
-      x.started = DateUtils.sub({ days: i });
-      x.stopped = DateUtils.sub({ days: i });
+      x.created = DateUtils.sub({ days: i }, dateNow);
+      x.started = DateUtils.sub({ days: i }, dateNow);
+      x.stopped = DateUtils.sub({ days: i }, dateNow);
       x.taskNr = i;
       x.tasksId = 'id' + i;
       x.taskName = 'id' + i;
@@ -103,13 +105,14 @@ class CleanupTaskSpec {
         skipTargetCheck: true
       }).run() as ITaskRunnerResult;
 
-    const oddDate = (new Date()).getDay() % 2;
+    // const oddDate = (new Date()).getDay() % 2;
     expect(data.results).to.not.be.empty;
     const x = data.results.find(
       (x: any) => x.name === _.snakeCase('TasksCleanup'));
     expect(x.name).to.be.eq(_.snakeCase('TasksCleanup'));
     expect((x as TaskState).counters.asObject()).to.be.deep.eq({
-      'remove': oddDate === 0 ? 7 : 8
+      // 'remove': oddDate === 0 ? 7 : 8
+      'remove': 7
     });
 
   }
