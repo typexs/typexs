@@ -11,7 +11,7 @@ import { AuthGuardService, AuthService, BaseModule } from '@typexs/base-ng';
 import { UserAuthGuardService } from './user-auth-guard.service';
 import { APP_ROUTES } from './routes';
 import { UserAuthService } from './user-auth.service';
-import { FormsModule } from '@typexs/ng-forms';
+import { FormsModule } from '@typexs/forms-ng';
 import { RouterMenuModule } from '@typexs/ng-router-menu';
 
 const PROVIDERS = [

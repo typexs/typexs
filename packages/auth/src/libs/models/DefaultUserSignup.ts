@@ -1,12 +1,11 @@
 import { AbstractUserSignup } from './AbstractUserSignup';
-import { EqualWith } from '@typexs/ng/lib/validators/EqualWith';
 import { Entity } from '@typexs/entity/libs/decorators/Entity';
 import { Property } from '@typexs/entity/libs/decorators/Property';
 import { ALLOWED_USER_PASSWORD_REGEX } from '../Constants';
-import { Type } from '@typexs/ng/lib/forms/decorators/Type';
-import { Text } from '@typexs/ng/lib/forms/decorators/Text';
+import { Text, Type } from '@typexs/forms';
 import { IsEmail, MaxLength, MinLength, Regex } from '@allgemein/schema-api';
 import { K_STORABLE } from '@typexs/entity/libs/Constants';
+import { EqualWith } from '@typexs/base';
 
 @Entity(<any>{ [K_STORABLE]: false })
 export class DefaultUserSignup extends AbstractUserSignup {

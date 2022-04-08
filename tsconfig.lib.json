@@ -51,8 +51,8 @@
       "@typexs/base-ng": [
         "./packages/base-ng/src/public_api"
       ],
-      "@typexs/ng-forms/*": [
-        "./packages/ng-forms/src/*"
+      "@typexs/forms-ng/*": [
+        "./packages/forms-ng/src/*"
       ],
       "@typexs/storage-ng/*": [
         "./packages/storage-ng/src/*"

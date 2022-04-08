@@ -1,6 +1,6 @@
 import {Entity} from '@typexs/entity/libs/decorators/Entity';
 import {Property} from '@typexs/entity/libs/decorators/Property';
-import {Readonly, Text} from '@typexs/ng';
+import {Readonly, Text} from '@typexs/forms';
 import {IsNotEmpty} from '@allgemein/schema-api';
 
 @Entity()

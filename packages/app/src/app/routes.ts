@@ -1,7 +1,7 @@
 import {Routes} from '@angular/router';
 
 import {DemosComponent} from './demos.component';
-import {GroupDemoComponent} from './group-demo.component';
+import {GroupDemoComponent} from './components/group-fields/group-demo.component';
 import {CheckboxMatrixDemoComponent} from './checkbox-matrix-demo/checkbox-matrix-demo.component';
 import {MenuDemoComponent} from './menu-demo/menu-demo.component';
 import {DummyComponent} from './dummy/dummy.component';

@@ -4,8 +4,7 @@ import { AuthService, IMessage, MessageChannel, MessageService, MessageType } fr
 import { Role } from '@typexs/roles/entities/Role';
 import { Permission } from '@typexs/roles/entities/Permission';
 import { Entity, Property } from '@allgemein/schema-api';
-import { ISelectOption } from '@typexs/ng/lib/forms/elements';
-import { Checkbox, Grid, Label } from '@typexs/ng';
+import { Checkbox, Grid, ISelectOption, Label } from '@typexs/forms';
 import { EntityService } from '@typexs/entity-ng';
 import { K_STORABLE } from '@typexs/entity/libs/Constants';
 

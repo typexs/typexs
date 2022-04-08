@@ -1,0 +1,16 @@
+<div>
+
+  <h3>GroupDemo</h3>
+
+  <hr/>
+
+  <div class="bd">
+    <txs-form formName="group-demo-form" [instance]="object01"  (ngSubmit)="onSubmit($event)" [options]="options"></txs-form>
+    <pre>
+      {{result | json}}
+    </pre>
+  </div>
+
+  <hr/>
+
+</div>

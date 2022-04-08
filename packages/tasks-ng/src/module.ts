@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@typexs/ng-forms';
+import { FormsModule } from '@typexs/forms-ng';
 import { BaseModule } from '@typexs/base-ng';
 import { RouterModule } from '@angular/router';
 import { FormsModule as NgFormsModule } from '@angular/forms';

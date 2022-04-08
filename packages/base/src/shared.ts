@@ -157,3 +157,32 @@ export { IWorkerStatisitic } from './libs/worker/IWorkerStatisitic';
 
 export { DateUtils } from './libs/utils/DateUtils';
 export { LabelHelper } from './libs/utils/LabelHelper';
+
+
+/**
+ * temporary Bindings location (moved from ng)
+ */
+
+export { IExtraBindingInfo } from './libs/bindings/IExtraBindingInfo';
+export { IComponentBinding } from './libs/bindings/IComponentBinding';
+export { IBindingRegistry } from './libs/bindings/IBindingRegistry';
+export { ITreeObject, isTreeObject } from './libs/bindings/ITreeObject';
+export { Context, LABEL_DISPLAY, ALIGNMENT } from './libs/bindings/Context';
+export { TreeObject } from './libs/bindings/TreeObject';
+export { ComponentRegistry } from './libs/bindings/ComponentRegistry';
+export { ViewComponent } from './libs/bindings/decorators/ViewComponent';
+export { ViewContent } from './libs/bindings/decorators/ViewContent';
+
+/**
+ * Validators
+ */
+export { EqualWith, IEqualWithOptions } from './libs/validators/EqualWith';
+// export { IsUrl } from './libs/validators/IsUrl';
+
+
+/**
+ * User
+ */
+export { IUser } from './libs/auth/IUser';
+export { AnonymusUser, ANONYMUS_USER } from './libs/auth/AnonymusUser';
+

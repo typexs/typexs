@@ -97,11 +97,17 @@
       "@typexs/ng-theme-base": [
         "./packages/ng-theme-base/src/public_api"
       ],
-      "@typexs/ng-forms/*": [
-        "./packages/ng-forms/src/*"
+      "@typexs/forms/*": [
+        "./packages/forms/src/*"
       ],
-      "@typexs/ng-forms": [
-        "./packages/ng-forms/src/public_api"
+      "@typexs/forms": [
+        "./packages/forms/src/browser"
+      ],
+      "@typexs/forms-ng/*": [
+        "./packages/forms-ng/src/*"
+      ],
+      "@typexs/forms-ng": [
+        "./packages/forms-ng/src/public_api"
       ],
       "@typexs/tasks-ng/*": [
         "./packages/tasks-ng/src/*"

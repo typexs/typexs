@@ -1,10 +1,10 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { APP_MODULES } from './app.used.modules';
-import { GroupDemoComponent } from './group-demo.component';
+import { GroupDemoComponent } from './components/group-fields/group-demo.component';
 import { DemosComponent } from './demos.component';
 import { CheckboxMatrixDemoComponent } from './checkbox-matrix-demo/checkbox-matrix-demo.component';
-import { FORM_COMPONENTS } from '@typexs/ng-forms';
+import { FORM_COMPONENTS } from '@typexs/forms-ng';
 import { MenuDemoComponent } from './menu-demo/menu-demo.component';
 import { MenuAccessService } from './menu-demo/MenuAccessService';
 import { DummyComponent } from './dummy/dummy.component';

@@ -1,4 +1,4 @@
-import {IComponentBinding} from '@typexs/ng';
+import { IComponentBinding } from '@typexs/base';
 
 export interface IObjectToComponentResolver {
   /**

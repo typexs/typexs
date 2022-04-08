@@ -4,7 +4,7 @@ import { IInstanceableComponent } from '../IInstanceableComponent';
 import { EntityResolverService } from '../../services/entity-resolver.service';
 import { IQueringService } from '../../api/querying/IQueringService';
 import { IEntityViewOptions } from './IEntityViewOptions';
-import { ComponentRegistry } from '@typexs/ng';
+import { ComponentRegistry } from '@typexs/base';
 
 @Component({
   template: ''

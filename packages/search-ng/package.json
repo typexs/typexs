@@ -20,7 +20,7 @@
     "@typexs/search": "0.0.0-PLACEHOLDER",
     "@typexs/base-ng": "0.0.0-PLACEHOLDER",
     "@typexs/storage-ng": "0.0.0-PLACEHOLDER",
-    "@typexs/ng-forms": "0.0.0-PLACEHOLDER"
+    "@typexs/forms-ng": "0.0.0-PLACEHOLDER"
   },
   "devDependencies": {
     "@angular/common": "v12-lts",

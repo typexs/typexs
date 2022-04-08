@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { ModuleWithProviders, Type } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@typexs/ng-forms';
+import { FormsModule } from '@typexs/forms-ng';
 import { AdminModule } from '@typexs/ng-admin-ui';
 import { BaseModule } from '@typexs/base-ng';
 import { BaseAdminThemeModule } from '@typexs/ng-theme-base';

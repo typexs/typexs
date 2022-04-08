@@ -54,13 +54,13 @@
         "./build/packages/auth-ng/out/*",
         "./build/packages/auth-ng/out"
       ],
-      "@typexs/ng-forms/*": [
-        "./build/packages/ng-forms/out/*",
-        "./build/packages/ng-forms/out"
+      "@typexs/forms-ng/*": [
+        "./build/packages/forms-ng/out/*",
+        "./build/packages/forms-ng/out"
       ],
-      "@typexs/ng-forms": [
-        "./build/packages/ng-forms/out/*",
-        "./build/packages/ng-forms/out"
+      "@typexs/forms-ng": [
+        "./build/packages/forms-ng/out/*",
+        "./build/packages/forms-ng/out"
       ],
       "@typexs/storage-ng/*": [
         "./build/packages/storage-ng/out/*",

@@ -6,8 +6,6 @@ import { IIndexData } from './IIndexData';
 import { IIndexStorageRef } from '../IIndexStorageRef';
 import { IndexEvent } from './IndexEvent';
 import { ClassRef } from '@allgemein/schema-api';
-import { IndexElasticApi } from '../../api/IndexElastic.api';
-import { isArray } from 'lodash';
 
 
 export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {

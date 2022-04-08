@@ -69,7 +69,7 @@ export class EntityResolverService {
     if (!entityRef) {
       return null;
     }
-    return this.queryServices.find(x => !isEmpty(x.getRegistry().listEntities(x => x === entityRef)));
+    return this.queryServices.find(x => !isEmpty(x.getRegistry().getEntityRefs(x => x === entityRef)));
   }
 
   getServiceFor(obj: any) {

@@ -1,6 +1,6 @@
 {
   "name": "@typexs/typexs",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "tag": "v2-lts",
   "description": "Angular for typexs",
   "main": "index.js",
@@ -45,7 +45,8 @@
     "@typexs/entity-ng": "file:./packages/entity-ng/src",
     "@typexs/ng": "file:./packages/ng/src",
     "@typexs/ng-admin-ui": "file:./packages/ng-admin-ui/src",
-    "@typexs/ng-forms": "file:./packages/ng-forms/src",
+    "@typexs/forms": "file:./packages/forms/src",
+    "@typexs/forms-ng": "file:./packages/forms-ng/src",
     "@typexs/ng-router-menu": "file:./packages/ng-router-menu/src",
     "@typexs/ng-theme-base": "file:./packages/ng-theme-base/src",
     "@typexs/notification": "file:./packages/notification/src",

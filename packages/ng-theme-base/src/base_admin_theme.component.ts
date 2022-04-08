@@ -1,13 +1,13 @@
-import {isBoolean, values} from 'lodash';
-import {ChangeDetectorRef, Component, Input, OnDestroy, OnInit, Renderer2, TemplateRef, ViewEncapsulation} from '@angular/core';
-import {IUser} from '@typexs/ng';
+import { isBoolean, values } from 'lodash';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, Renderer2, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { IUser } from '@typexs/base';
 import PerfectScrollbar from 'perfect-scrollbar';
-import {IMenuOptions, NavigatorService} from '@typexs/ng-router-menu';
-import {AppService, CTXT_ROUTE_USER_LOGOUT, CTXT_ROUTE_USER_PROFILE, Log, LogMessage, SystemInfoService} from '@typexs/base-ng';
-import {INotifyOptions} from './components/notifications/INotifyOptions';
-import {NotificationsService} from './components/notifications/notifications.service';
-import {of, Subscription} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import { IMenuOptions, NavigatorService } from '@typexs/ng-router-menu';
+import { AppService, CTXT_ROUTE_USER_LOGOUT, CTXT_ROUTE_USER_PROFILE, Log, LogMessage, SystemInfoService } from '@typexs/base-ng';
+import { INotifyOptions } from './components/notifications/INotifyOptions';
+import { NotificationsService } from './components/notifications/notifications.service';
+import { of, Subscription } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 
 @Component({
@@ -38,7 +38,7 @@ export class BaseAdminThemeComponent implements OnInit, OnDestroy {
   baseRouterLink = '/';
 
   @Input()
-  userRouterLinks: { profile: string; logout: string } = {profile: 'user/profile', logout: 'user/logout'};
+  userRouterLinks: { profile: string; logout: string } = { profile: 'user/profile', logout: 'user/logout' };
 
   user: IUser;
 

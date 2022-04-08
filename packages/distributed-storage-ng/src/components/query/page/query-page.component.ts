@@ -1,6 +1,6 @@
-import {get, isArray} from 'lodash';
-import {Component, OnInit} from '@angular/core';
-import {ClassType} from '@allgemein/schema-api';
+import { get, isArray } from 'lodash';
+import { Component, OnInit } from '@angular/core';
+import { ClassType } from '@allgemein/schema-api';
 import {
   AbstractGridComponent,
   CC_GRID_CELL_ENTITY_OPERATIONS,
@@ -8,9 +8,9 @@ import {
   IGridColumn,
   IQueryComponentApi
 } from '@typexs/base-ng';
-import {IComponentBinding} from '@typexs/ng';
-import {ActivatedRoute} from '@angular/router';
-import {IDSOptions} from '../../../lib/IDSOptions';
+import { IComponentBinding } from '@typexs/base';
+import { ActivatedRoute } from '@angular/router';
+import { IDSOptions } from '../../../lib/IDSOptions';
 
 
 @Component({

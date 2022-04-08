@@ -1,7 +1,7 @@
 import {NgModule, Provider} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {RouterMenuModule} from '@typexs/ng-router-menu';
-import {FormsModule} from '@typexs/ng-forms';
+import {FormsModule} from '@typexs/forms-ng';
 import {BaseModule} from '@typexs/base-ng';
 import {BaseAdminThemeComponent} from './base_admin_theme.component';
 import {ToggleDirective} from './toggle.directive';

@@ -1,8 +1,8 @@
-import {first} from 'lodash';
-import {Inject, Injectable} from '@angular/core';
-import {C_DEFAULT} from '../constants';
-import {ObjectToComponentResolver} from './ObjectToComponentResolver';
-import {ComponentRegistry, IExtraBindingInfo, IComponentBinding} from '@typexs/ng';
+import { first } from 'lodash';
+import { Inject, Injectable } from '@angular/core';
+import { C_DEFAULT } from '../constants';
+import { ObjectToComponentResolver } from './ObjectToComponentResolver';
+import { ComponentRegistry, IComponentBinding, IExtraBindingInfo } from '@typexs/base';
 
 @Injectable()
 export class ComponentRegistryService {
@@ -21,6 +21,13 @@ export class ComponentRegistryService {
 
   getDef(typeName: string | string[], normalize: boolean = false): IComponentBinding {
     return this.registry.getDef(typeName, normalize);
+  }
+
+  /**
+   * Return the component registry
+   */
+  getRegistry() {
+    return this.registry;
   }
 
 

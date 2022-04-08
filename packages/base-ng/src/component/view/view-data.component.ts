@@ -1,9 +1,9 @@
-import {clone, get, isEmpty, isFunction, isNull, upperFirst} from 'lodash';
-import {Component, ComponentFactoryResolver, Inject, Injector, Input, OnInit} from '@angular/core';
-import {AbstractInstancableComponent} from '../abstract-instancable.component';
-import {C_DEFAULT} from '../../constants';
-import {ComponentRegistryService} from '../component-registry.service';
-import {ComponentRegistry, IComponentBinding} from '@typexs/ng';
+import { clone, get, isEmpty, isFunction, isNull, upperFirst } from 'lodash';
+import { Component, ComponentFactoryResolver, Inject, Injector, Input, OnInit } from '@angular/core';
+import { AbstractInstancableComponent } from '../abstract-instancable.component';
+import { C_DEFAULT } from '../../constants';
+import { ComponentRegistryService } from '../component-registry.service';
+import { ComponentRegistry, IComponentBinding } from '@typexs/base';
 
 @Component({
   selector: 'txs-view',

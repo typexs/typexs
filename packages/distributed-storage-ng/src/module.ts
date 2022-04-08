@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { FormsModule as NgFormsModule } from '@typexs/ng-forms';
+import { FormsModule as NgFormsModule } from '@typexs/forms-ng';
 import { AppService, BaseModule } from '@typexs/base-ng';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';

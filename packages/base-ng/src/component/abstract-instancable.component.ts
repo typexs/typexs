@@ -1,13 +1,12 @@
 import { filter, find, first, isArray, isEmpty, isFunction, keys, remove } from 'lodash';
-import { Component, ComponentFactoryResolver, ComponentRef, Inject, Injector, Type, ViewChild, ViewContainerRef } from '@angular/core';
-import { ComponentRegistryService } from './component-registry.service';
+import { Component, ComponentRef, Type } from '@angular/core';
 import { Log } from '../lib/log/Log';
 import { t } from '../lib/i18n/t';
 import { NotYetImplementedError } from '@allgemein/base';
 import { ClassType } from '@allgemein/schema-api';
 import { IInstanceableComponent } from './IInstanceableComponent';
 import { C_DEFAULT, C_ID, MTHD_getViewContext, MTHD_setViewContext, PROP_METADATA } from '../constants';
-import { Context, isTreeObject, TreeObject } from '@typexs/ng';
+import { Context, isTreeObject, TreeObject } from '@typexs/base';
 import { AbstractComponent } from './abstract.component';
 
 
@@ -28,7 +27,6 @@ export class AbstractInstancableComponent<T> extends AbstractComponent implement
   _created = false;
 
   _components: ComponentRef<any>[] = [];
-
 
 
   getInstance(): T {

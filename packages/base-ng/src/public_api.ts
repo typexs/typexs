@@ -43,10 +43,14 @@ export { IRoutePointer } from './api/backend/IRoutePointer';
 export { IBackendClientService } from './api/backend/IBackendClientService';
 export { BackendService } from './api/backend/backend.service';
 
+
+/**
+ * Helper
+ */
+export { Helper } from './lib/Helper';
 export { ErrorHelper } from './lib/ErrorHelper';
 export { UrlHelper } from './lib/UrlHelper';
 export { EntityHelper } from './lib/EntityHelper';
-
 export { t } from './lib/i18n/t';
 
 export { IApiCallOptions } from './lib/http/IApiCallOptions';
@@ -105,3 +109,4 @@ export { QueryAction } from './api/querying/QueryAction';
 export { STORAGE_REQUEST_MODE, DEFAULT_DT_GRID_OPTIONS, QUERY_MODE } from './api/querying/Constants';
 export { FreeQueryInputComponent } from './api/querying/free-query/free-query-input.component';
 export { QueryEmbeddedComponent } from './component/query/query-embedded.component';
+

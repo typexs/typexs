@@ -1,4 +1,4 @@
-import { Select, Text } from '@typexs/ng';
+import { Select, Text } from '@typexs/forms';
 import { Property } from '@typexs/entity/libs/decorators/Property';
 
 

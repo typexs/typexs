@@ -1,8 +1,8 @@
-import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
-import {IUser} from '@typexs/ng';
-import {Observable} from 'rxjs';
-import {MessageChannel} from '../../messages/MessageChannel';
-import {AuthMessage} from '../../messages/types/AuthMessage';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { IUser } from '@typexs/base';
+import { Observable } from 'rxjs';
+import { MessageChannel } from '../../messages/MessageChannel';
+import { AuthMessage } from '../../messages/types/AuthMessage';
 
 
 export interface IAuthServiceProvider {

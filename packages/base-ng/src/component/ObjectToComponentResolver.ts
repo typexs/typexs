@@ -1,5 +1,6 @@
-import {IObjectToComponentResolver} from './IObjectToComponentResolver';
-import {IComponentBinding} from '@typexs/ng';
+import { IObjectToComponentResolver } from './IObjectToComponentResolver';
+import { IComponentBinding } from '@typexs/base';
+
 export class ObjectToComponentResolver implements IObjectToComponentResolver {
   /**
    * Returns component class for given object or null if nothing declared

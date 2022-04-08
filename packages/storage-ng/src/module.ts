@@ -2,7 +2,7 @@ import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { AppService, BaseModule } from '@typexs/base-ng';
 import { RouterModule } from '@angular/router';
 import { FormsModule as NgFormsModule } from '@angular/forms';
-import { FormsModule } from '@typexs/ng-forms';
+import { FormsModule } from '@typexs/forms-ng';
 import { StorageService } from './storage.service';
 import { StorageTypesComponent } from './types/storage-types.component';
 import { StorageStructComponent } from './struct/storage-struct.component';

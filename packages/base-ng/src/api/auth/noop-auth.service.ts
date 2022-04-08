@@ -1,14 +1,14 @@
-import {Injectable} from '@angular/core';
-import {IAuthServiceProvider} from './IAuthServiceProvider';
-import {ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
-import {MessageService} from '../../messages/message.service';
-import {MessageChannel} from '../../messages/MessageChannel';
-import {MessageType} from '../../messages/IMessage';
-import {Observable, BehaviorSubject, of} from 'rxjs';
-import {MESSAGE_TYPE_AUTH_SERVICE, MSG_TOPIC_AUTH_SET_USER} from '../../constants';
-import {AuthMessage} from '../../messages/types/AuthMessage';
-import {BackendService} from '../backend/backend.service';
-import {AnonymusUser, IUser} from '@typexs/ng';
+import { Injectable } from '@angular/core';
+import { IAuthServiceProvider } from './IAuthServiceProvider';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { MessageService } from '../../messages/message.service';
+import { MessageChannel } from '../../messages/MessageChannel';
+import { MessageType } from '../../messages/IMessage';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { MESSAGE_TYPE_AUTH_SERVICE, MSG_TOPIC_AUTH_SET_USER } from '../../constants';
+import { AuthMessage } from '../../messages/types/AuthMessage';
+import { BackendService } from '../backend/backend.service';
+import { AnonymusUser, IUser } from '@typexs/base';
 
 @Injectable()
 export class NoopAuthService implements IAuthServiceProvider {

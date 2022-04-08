@@ -1,7 +1,7 @@
-import {find, has} from 'lodash';
-import {Component, ComponentFactoryResolver, EmbeddedViewRef, Inject, Injector, ViewChild} from '@angular/core';
-import {ComponentRegistry, TreeObject, ViewComponent, ViewContent} from '@typexs/ng';
-import {AbstractInstancableComponent} from '@typexs/base-ng';
+import { find, has } from 'lodash';
+import { Component, ComponentFactoryResolver, EmbeddedViewRef, Inject, Injector, ViewChild } from '@angular/core';
+import { ComponentRegistry, TreeObject, ViewComponent, ViewContent } from '@typexs/base';
+import { AbstractInstancableComponent } from '@typexs/base-ng';
 
 
 @ViewContent('search-entry')
@@ -31,11 +31,11 @@ export class SearchEntryComponent extends AbstractInstancableComponent<SearchEnt
 
   title = 'SuperSearch';
 
-  @ViewChild('content', {static: false})
+  @ViewChild('content', { static: false })
   child: any;
 
   constructor(@Inject(Injector) public injector: Injector,
-              @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver) {
+    @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver) {
     super(injector, r);
   }
 

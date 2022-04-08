@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import { NAMESPACE_BUILT_ENTITY } from '@typexs/entity/libs/Constants';
 import { And, Eq, Key, Value } from '@allgemein/expressions';
 import { RBelongsTo } from '@typexs/roles/entities/RBelongsTo';
-import { Readonly } from '@typexs/ng/lib/forms/decorators/Readonly';
+import { Readonly } from '@typexs/forms';
 import { IAuthUser } from '../libs/models/IAuthUser';
 import { Role } from '@typexs/roles/entities/Role';
 import { IRolesHolder } from '@typexs/roles-api';

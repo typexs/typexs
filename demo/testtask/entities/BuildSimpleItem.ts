@@ -1,4 +1,4 @@
-import { Label } from '@typexs/ng';
+import { Label } from '@typexs/forms';
 import { Entity, Namespace, Property, Schema } from '@allgemein/schema-api';
 import { NAMESPACE_BUILT_ENTITY } from '@typexs/entity';
 import { C_DEFAULT } from '@allgemein/base';

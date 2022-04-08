@@ -12,7 +12,7 @@
     "src/test.ts",
     "../ng/src/browser.ts",
     "../base-ng/src/public_api.ts",
-    "../ng-forms/src/public_api.ts",
+    "../forms-ng/src/public_api.ts",
     "../storage-ng/src/public_api.ts"
   ],
   "include": [

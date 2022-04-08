@@ -10,7 +10,7 @@ import {APP_ROUTES} from './routes';
 
 import {AdminModule} from '@typexs/ng-admin-ui';
 import {RouterMenuModule} from '@typexs/ng-router-menu';
-import {FormsModule} from '@typexs/ng-forms';
+import {FormsModule} from '@typexs/forms-ng';
 import {BaseAdminThemeModule} from '@typexs/ng-theme-base';
 import {StorageModule} from '@typexs/storage-ng';
 import {EntityModule} from '@typexs/entity-ng';

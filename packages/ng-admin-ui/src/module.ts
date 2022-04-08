@@ -8,7 +8,7 @@ import {SystemRoutesComponent} from './system/routes/system-routes.component';
 import {SystemStoragesComponent} from './system/storages/system-storages.component';
 import {SystemConfigComponent} from './system/config/system-config.component';
 import {NgRoutesComponent} from './ng/routes/ng-routes.component';
-import {FormsModule} from '@typexs/ng-forms';
+import {FormsModule} from '@typexs/forms-ng';
 import {AppService, BaseModule} from '@typexs/base-ng';
 import {BaseAdminThemeModule} from '@typexs/ng-theme-base';
 import {DashboardComponent} from './dashboard/dashboard.component';

@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
-import {ISelectOption, ISelectOptionsService} from '@typexs/ng-forms';
+import {ISelectOptionsService} from '@typexs/forms-ng';
 import {PropertyRef} from '@typexs/entity/libs/registry/PropertyRef';
 import {BehaviorSubject, Observable} from 'rxjs';
+import { ISelectOption } from '@typexs/forms';
 
 @Injectable()
 export class OptionsService implements ISelectOptionsService {

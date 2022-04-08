@@ -7,7 +7,7 @@ import { EntityViewComponent } from './view/entity-view.component';
 import { EntityStructComponent } from './struct/entity-struct.component';
 import { EntityService } from './entity.service';
 import { EntityOptionsService } from './entity-options.service';
-import { FormsModule } from '@typexs/ng-forms';
+import { FormsModule } from '@typexs/forms-ng';
 import { AppService, BaseModule } from '@typexs/base-ng';
 import { RouterModule } from '@angular/router';
 import { FormsModule as NgFormsModule } from '@angular/forms';

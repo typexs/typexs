@@ -1,19 +1,16 @@
+import { clone, get, isArray, set } from 'lodash';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
-  defaults, find, isArray, isEmpty, isFunction, isNumber, intersection,
-  get, clone, upperFirst, isNull, keys, values, isString, filter, merge, isPlainObject,
-  concat, kebabCase, has, snakeCase, isRegExp, orderBy, remove, first, set, assign,
-  capitalize, isUndefined
-} from 'lodash';
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {IDTGridOptions} from '@typexs/base-ng';
-import {IGridColumn} from '@typexs/base-ng';
-import {CC_GRID_CELL_ENTITY_OPERATIONS} from '@typexs/base-ng';
-import {IQueryComponentApi} from '@typexs/base-ng';
-import {ComponentRegistryService} from '@typexs/base-ng';
-import {IComponentBinding} from '@typexs/ng';
-import {ClassType} from '@allgemein/schema-api';
-import {AbstractGridComponent} from '@typexs/base-ng';
+  AbstractGridComponent,
+  CC_GRID_CELL_ENTITY_OPERATIONS,
+  ComponentRegistryService,
+  IDTGridOptions,
+  IGridColumn,
+  IQueryComponentApi
+} from '@typexs/base-ng';
+import { IComponentBinding } from '@typexs/base';
+import { ClassType } from '@allgemein/schema-api';
 
 
 @Component({
@@ -21,9 +18,7 @@ import {AbstractGridComponent} from '@typexs/base-ng';
   templateUrl: './storage-query.component.html',
   styleUrls: ['./storage-query.component.scss']
 })
-export class StorageQueryComponent
-  // extends StorageQueryEmbeddedComponent
-  implements OnInit {
+export class StorageQueryComponent implements OnInit {
 
   options: IDTGridOptions = {};
 

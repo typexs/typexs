@@ -1,4 +1,4 @@
-import {Readonly, Text, Type} from '@typexs/ng';
+import {Readonly, Text, Type} from '@typexs/forms';
 import {Property, Entity} from '@typexs/entity';
 import {IsEmail} from 'class-validator';
 

@@ -1,8 +1,9 @@
-import { EqualWith, Text, Type } from '@typexs/ng';
+import { Text, Type } from '@typexs/forms';
 import { Property } from '@typexs/entity/libs/decorators/Property';
 import { Entity } from '@typexs/entity/libs/decorators/Entity';
 import { IsEmail, MaxLength, MinLength } from '@allgemein/schema-api';
 import { OptionsService } from '../services/OptionsService';
+import { EqualWith } from '@typexs/base';
 
 
 @Entity({ storable: false })
@@ -93,7 +94,7 @@ export class InputDemoObject {
   })
   favoredMusic: string;
 
-  @Property({virtual: true})
+  @Property({ virtual: true })
   favoredMusicTypes: any[] = [
     { 'label': 'Rock', 'value': 'rock' },
     { 'label': 'Punk', 'value': 'punk' },
