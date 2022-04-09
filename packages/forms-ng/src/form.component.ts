@@ -1,14 +1,29 @@
 // noinspection AngularMissingOrInvalidDeclarationInModule
 
-import { cloneDeep, find } from 'lodash';
+import { cloneDeep, defaults, find } from 'lodash';
 import { Component, ComponentFactoryResolver, EventEmitter, Injector, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormService } from './form.service';
 import { Form, IFormOptions } from '@typexs/forms';
 import { EntityResolverService, IMessage, MessageChannel } from '@typexs/base-ng';
 import { AbstractFormComponent } from './component/AbstractFormComponent';
-import { DataContainer, RegistryFactory } from '@allgemein/schema-api';
+import { DataContainer, ILookupRegistry, RegistryFactory } from '@allgemein/schema-api';
 import { ViewComponent } from '@typexs/base/libs/bindings/decorators/ViewComponent';
 
+
+export const DEFAULT_FORM_OPTIONS: IFormOptions = {
+  buttons: [
+    {
+      key: 'submit',
+      label: 'Submit',
+      type: 'submit'
+    },
+    {
+      key: 'reset',
+      label: 'Reset',
+      type: 'restore'
+    }
+  ]
+};
 
 @ViewComponent('form')
 @Component({
@@ -20,6 +35,9 @@ import { ViewComponent } from '@typexs/base/libs/bindings/decorators/ViewCompone
 })
 export class FormComponent extends AbstractFormComponent<Form> implements OnInit, OnDestroy {
 
+  /**
+   * TODO dynamically create needed buttons
+   */
   @Output()
   ngSubmit = new EventEmitter();
 
@@ -33,21 +51,7 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
   channel: MessageChannel<IMessage>;
 
   @Input()
-  options: IFormOptions = {
-    buttons: [
-      {
-        key: 'submit',
-        label: 'Submit',
-        type: 'submit'
-      },
-      {
-        key: 'reset',
-        label: 'Reset',
-        type: 'restore'
-      }
-    ]
-  };
-
+  options: IFormOptions = DEFAULT_FORM_OPTIONS;
 
   @Input()
   formName: string;
@@ -56,11 +60,11 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
   instance: any;
 
   @Input()
-  registry: any;
+  registry: ILookupRegistry;
 
   original: any;
 
-  formObject: any;
+  formObject: Form;
 
   constructor(
     // eslint-disable-next-line no-unused-vars
@@ -80,6 +84,7 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
 
   ngOnInit() {
     this.original = cloneDeep(this.instance);
+    this.options = defaults(this.options, DEFAULT_FORM_OPTIONS);
     this.reset();
   }
 
@@ -87,7 +92,6 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
   reset() {
     // TODO instance must be present
     super.reset();
-
     if (!this.registry) {
       const service = this.resolver.getServiceFor(this.instance);
       if (service) {
@@ -96,8 +100,10 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
         this.registry = RegistryFactory.get();
       }
     }
-    this.data = new DataContainer(this.instance, this.registry);
-    this.formObject = this.formService.get(this.formName, this.instance, this.registry, this.options);
+    this.dataContainer = new DataContainer(this.instance, this.registry);
+    this.formObject = this.formService.get(
+      this.formName, this.instance, this.registry, this.options
+    );
     // TODO restructure form
     this.build(this.formObject);
   }
@@ -114,9 +120,8 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
         // clear
         this.channel.publish(null);
       }
-      await this.data.validate();
-      this.ngSubmit.emit({ event: $event, data: this.data });
-
+      await this.dataContainer.validate();
+      this.ngSubmit.emit({ event: $event, data: this.dataContainer });
     }
     return false;
   }
@@ -127,11 +132,10 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
       // clear
       this.channel.publish(null);
     }
-
     this.instance = cloneDeep(this.original);
 
     this.reset();
-    this.ngReset.emit({ event: $event, data: this.data });
+    this.ngReset.emit({ event: $event, data: this.dataContainer });
     return false;
   }
 
@@ -143,7 +147,7 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
     } else if (btn.type === 'restore') {
       return this.onReset($event);
     } else {
-      this.ngButton.emit({ button: btn, event: $event, data: this.data });
+      this.ngButton.emit({ button: btn, event: $event, data: this.dataContainer });
     }
     return false;
   }

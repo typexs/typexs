@@ -1,8 +1,8 @@
 import {isEmpty, set} from 'lodash';
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {IDTGridOptions, IQueryParams} from '@typexs/base-ng';
+import {IDTGridOptions, IQueryParams} from 'packages/base-ng/src';
 import {Like, Value} from '@allgemein/expressions';
-import {StorageQueryEmbeddedComponent, StorageService} from '@typexs/storage-ng';
+import {StorageQueryEmbeddedComponent, StorageService} from 'packages/storage-ng/src';
 import {IEntityRef} from '@allgemein/schema-api';
 
 
@@ -25,7 +25,7 @@ export class C {
 })
 export class EmbeddedStorageDefaultComponent implements OnInit {
 
-  simpleItemName = 'SimpleItem';
+  simpleItemName = 'TypeOrmSimpleItem';
 
   simpleItemOptions: IDTGridOptions = {
     limit: 10,
@@ -55,7 +55,7 @@ export class EmbeddedStorageDefaultComponent implements OnInit {
 
   ngOnInit(): void {
     this.storageService.isLoaded().subscribe(x => {
-      this.entityRef = this.storageService.getEntityRefForName('SimpleItem');
+      this.entityRef = this.storageService.getEntityRefForName(this.simpleItemName);
     });
   }
 

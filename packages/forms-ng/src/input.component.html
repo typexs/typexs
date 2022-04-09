@@ -2,16 +2,16 @@
   <label *ngSwitchCase="'top'" for="{{id}}">{{label}}</label>
   <input id="{{id}}"
          type="{{type}}"
-         class="form-control {{data.checked(name) ? data.valid(name) ? 'is-valid' : 'is-invalid' : '' }}"
+         class="form-control {{getDataContainer().checked(name) ? getDataContainer().valid(name) ? 'is-valid' : 'is-invalid' : '' }}"
          placeholder="{{name}} ..."
          [(ngModel)]="value"
          name="{{ name }}"
          [attr.readonly]="isReadOnly"
   >
   <small *ngIf="help" id="{{name}}Help" class="form-text text-muted">{{help}}</small>
-  <div [hidden]="!(data.checked(name) && !data.valid(name))" class="invalid-feedback">
+  <div [hidden]="!(getDataContainer().checked(name) && !getDataContainer().valid(name))" class="invalid-feedback">
     <ul>
-      <li *ngFor="let message of data.messages(name)" class="message-validator-{{ message.type }}">{{ message.content
+      <li *ngFor="let message of getDataContainer().messages(name)" class="message-validator-{{ message.type }}">{{ message.content
         }}
       </li>
     </ul>

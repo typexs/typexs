@@ -21,6 +21,7 @@ import { Cache } from '../libs/cache/Cache';
 import { getHeapStatistics } from 'v8';
 import { TaskProposeEvent } from '../libs/tasks/event/TaskProposeEvent';
 import { TaskEvent } from '../libs/tasks/event/TaskEvent';
+import { LOG_EVENT_NAME } from '../libs/logging/Constants';
 
 
 export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker {
@@ -200,9 +201,9 @@ export class TaskQueueWorker implements IQueueProcessor<ITaskWorkload>, IWorker 
       local: false
     };
     const runner = this.taskRunnerRegistry.createNewRunner(workLoad.names, taskOptions);
-    runner.getReadStream().on('data', (x: any) => {
+    runner.on(LOG_EVENT_NAME, (x: any) => {
       e.topic = 'log';
-      e.log = x.toString().split('\n').filter((x: string) => !isEmpty(x));
+      e.log = x;
       this.fireState(e);
     });
 

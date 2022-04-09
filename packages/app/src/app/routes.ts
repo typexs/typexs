@@ -1,7 +1,7 @@
 import {Routes} from '@angular/router';
 
 import {DemosComponent} from './demos.component';
-import {GroupDemoComponent} from './components/group-fields/group-demo.component';
+import {GridFieldsComponent} from './components/grid-fields/grid-fields.component';
 import {CheckboxMatrixDemoComponent} from './checkbox-matrix-demo/checkbox-matrix-demo.component';
 import {MenuDemoComponent} from './menu-demo/menu-demo.component';
 import {DummyComponent} from './dummy/dummy.component';
@@ -9,20 +9,20 @@ import {MenuAccessService} from './menu-demo/MenuAccessService';
 import {PagerDemoComponent} from './pager-demo/pager-demo.component';
 import {LogoutComponent} from './dummy/logout/logout.component';
 import {ProfileComponent} from './dummy/profile/profile.component';
-import {NotificationDemoComponent} from './components/demos/notification/notification-demo.component';
+import {NotificationDemoComponent} from './components/notification/notification-demo.component';
 import {InputDemoComponent} from './components/forms/input/input-demo.component';
-import {TablesDemoComponent} from './components/demos/tables/tables-demo.component';
-import {SimpleHtmlTableDemoComponent} from './components/demos/tables/simple-html-table-demo.component';
+import {TablesDemoComponent} from './components/tables/tables-demo.component';
+import {SimpleHtmlTableDemoComponent} from './components/tables/simple-html-table-demo.component';
 import {StorageModule} from '@typexs/storage-ng';
 import {EntityModule} from '@typexs/entity-ng';
 import {DistributedStorageModule} from '@typexs/distributed-storage-ng';
 import {TasksModule} from '@typexs/tasks-ng';
 import {DataViewComponent} from './dataview/dataview.component';
-import {EmbeddedDistributedStorageComponent} from './components/demos/embedded-distributed-storage/embedded-distributed-storage.component';
+import {EmbeddedDistributedStorageComponent} from './components/embedded-distributed-storage/embedded-distributed-storage.component';
 import {AdminModule} from '@typexs/ng-admin-ui';
-import {EmbeddedStorageOverviewComponent} from './components/demos/embedded-storage/overview.component';
-import {EmbeddedStorageDefaultComponent} from './components/demos/embedded-storage/default.component';
-import {EmbeddedStorageAgGridComponent} from './components/demos/embedded-storage/ag-grid.component';
+import {EmbeddedStorageOverviewComponent} from './components/embedded-storage/overview.component';
+import {EmbeddedStorageDefaultComponent} from './components/embedded-storage/default.component';
+import {EmbeddedStorageAgGridComponent} from './components/embedded-storage/ag-grid.component';
 import {TreeContentDynamicChangeComponent} from './components/content-view/tree-content-dynamic-change.component';
 import {TreeContentComponent} from './components/content-view/tree-content.component';
 import {SimpleViewVariantsComponent} from './components/content-view/simple-view-variants.component';
@@ -56,7 +56,7 @@ export const APP_ROUTES: Routes = [
       },
       {
         path: 'group',
-        component: GroupDemoComponent,
+        component: GridFieldsComponent,
         data: {label: 'Group Demo', group: 'demo'},
       },
       {

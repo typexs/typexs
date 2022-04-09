@@ -1,8 +1,10 @@
-import {isEmpty, set} from 'lodash';
-import {AfterViewInit, ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {IQueryParams} from '@typexs/base-ng';
-import {Like, Value} from '@allgemein/expressions';
-import {DistributedStorageQueryEmbeddedComponent, DistributedStorageService, IDSOptions} from '@typexs/distributed-storage-ng';
+import { isEmpty, set } from 'lodash';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { Like, Value } from '@allgemein/expressions';
+import { StorageQueryEmbeddedComponent, StorageService } from 'packages/storage-ng/src';
+import { IEntityRef } from '@allgemein/schema-api';
+import { IDTGridOptions, IQueryParams } from 'packages/base-ng/src';
+import { AgGridWrapperComponent } from '../../addons/ag-grid/ag-grid-wrapper.component';
 
 
 export class C {
@@ -19,14 +21,14 @@ export class C {
  *
  */
 @Component({
-  selector: 'embedded-distributed-storage',
-  templateUrl: 'embedded-distributed-storage.component.html',
+  selector: 'embedded-storage-ag-grid',
+  templateUrl: 'ag-grid.component.html'
 })
-export class EmbeddedDistributedStorageComponent implements OnInit, OnChanges, AfterViewInit {
+export class EmbeddedStorageAgGridComponent implements OnInit {
 
-  simpleItemName = 'SimpleItem';
+  simpleItemName = 'TypeOrmSimpleItem';
 
-  simpleItemOptions: IDSOptions = {
+  simpleItemOptions: IDTGridOptions = {
     limit: 10,
     enablePager: true,
     freeQueryBuilder: false,
@@ -35,40 +37,30 @@ export class EmbeddedDistributedStorageComponent implements OnInit, OnChanges, A
 
   simpleItemParams: IQueryParams = {};
 
-  @ViewChild('simpleItem01', {static: true})
-  simpleItemQuery: DistributedStorageQueryEmbeddedComponent;
+  @ViewChild('simpleItem01', { static: true })
+  simpleItemQuery: StorageQueryEmbeddedComponent;
 
   simpleQueryModul = new C();
 
-  _columns: any[] = [];
+  entityRef: IEntityRef;
+
+  gridClass = AgGridWrapperComponent;
 
   constructor(
-    private service: DistributedStorageService,
+    private storageService: StorageService,
     private changeDetector: ChangeDetectorRef) {
-
   }
 
 
   ngOnInit(): void {
-    this.simpleItemQuery.datatable.gridReady.subscribe((x: any) => {
-      this._columns = this.simpleItemQuery.datatable.api().getColumns();
+    this.storageService.isLoaded().subscribe(x => {
+      this.entityRef = this.storageService.getEntityRefForName(this.simpleItemName);
     });
   }
 
 
   ngAfterContentChecked(): void {
     this.changeDetector.detectChanges();
-  }
-
-
-  ngAfterViewInit() {
-    this.service.isLoaded().subscribe(x => {
-      this.simpleItemQuery.requery();
-    });
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-
   }
 
 
@@ -85,8 +77,8 @@ export class EmbeddedDistributedStorageComponent implements OnInit, OnChanges, A
     set(p, 'filters.text', Like('text', Value('Text 5*')));
     this.simpleItemParams = p;
     this.simpleItemQuery.requery();
-
   }
+
 
   doSubmit() {
     const p = this.simpleItemParams;

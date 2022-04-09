@@ -20,14 +20,14 @@ export class RadioComponent extends AbstractFormComponent<RadioHandle> {
   }
 
   get isChecked() {
-    return this.data.instance[this.name];
+    return this.getDataContainer().instance[this.name];
   }
 
   set isChecked(value: boolean) {
     if (value) {
-      this.data.instance[this.name] = true;
+      this.getDataContainer().instance[this.name] = true;
     } else {
-      this.data.instance[this.name] = false;
+      this.getDataContainer().instance[this.name] = false;
     }
   }
 }

@@ -15,6 +15,9 @@ import { isUndefined } from 'lodash';
 import { TaskLog } from '../entities/TaskLog';
 import { PlatformUtils } from '@allgemein/base';
 import { unlink } from 'fs/promises';
+import { Writable } from 'stream';
+import { LOG_EVENT_NAME } from '../libs/logging/Constants';
+import { TASKRUN_STATE_FINISHED } from '../libs/tasks/Constants';
 
 
 @UseAPI(TasksApi)
@@ -98,15 +101,32 @@ export class WinstonTaskLoggingExtension implements ITasksApi {
           );
         }
 
-        runner.getReadStream().on('data', chunk => {
+        // const writeStream = new Writable({
+        //   write(chunk: any, encoding: any, next: any) {
+        //     try {
+        //       const entry = JSON.parse(chunk) as ILogEntry;
+        //       newLogger.log(entry.level as string, entry);
+        //     } catch (e) {
+        //       newLogger.error(e);
+        //     }
+        //     next();
+        //   }
+        // });
+        // runner.getReadStream().pipe(writeStream);
+        // writeStream.on('close', () => {
+        //   newLogger.close();
+        //   Log._().removeLogger(name);
+        // });
+
+        runner.on(LOG_EVENT_NAME, (chunk: ILogEntry) => {
           try {
-            const entry = JSON.parse(chunk) as ILogEntry;
+            const entry = chunk as ILogEntry;
             newLogger.log(entry.level as string, entry);
           } catch (e) {
             newLogger.error(e);
           }
         });
-        runner.getReadStream().on('close', () => {
+        runner.on(TASKRUN_STATE_FINISHED, () => {
           newLogger.close();
           Log._().removeLogger(name);
         });

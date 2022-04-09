@@ -1,4 +1,4 @@
-import { capitalize, defaults, isArray, isString, keys, remove } from 'lodash';
+import { capitalize, defaults, get, isArray, isString, keys, remove } from 'lodash';
 import { NotYetImplementedError } from '@allgemein/base';
 import { AbstractRef, ClassRef, IEntityRef, IPropertyRef, METATYPE_ENTITY, METATYPE_PROPERTY } from '@allgemein/schema-api';
 import { FormObject } from './FormObject';
@@ -8,7 +8,7 @@ import { ComponentRegistry } from '@typexs/base/libs/bindings/ComponentRegistry'
 import { LabelHelper } from '@typexs/base/libs/utils/LabelHelper';
 import { NoFormTypeDefinedError } from './exceptions/NoFormTypeDefinedError';
 import { IFormOptions } from './IFormOptions';
-import { K_FORM, K_NAME, K_READONLY, K_SELECT, K_TEXT, K_VIRTUAL } from './Constants';
+import { K_CHECKBOX, K_FORM, K_GRID, K_HIDDEN, K_NAME, K_READONLY, K_SELECT, K_TEXT, K_VIRTUAL } from './Constants';
 
 export class FormBuilder {
 
@@ -22,7 +22,10 @@ export class FormBuilder {
 
   constructor(registry: ComponentRegistry, options?: IFormOptions) {
     this.registry = registry;
-    this.options = defaults(options || {}, <IFormOptions>{ onlyDecoratedFields: true });
+    this.options = defaults(options || {}, <IFormOptions>{
+      onlyDecoratedFields: true,
+      defaultFormType: K_TEXT
+    });
   }
 
   buildFromJSON(data: any): Form {
@@ -59,13 +62,17 @@ export class FormBuilder {
           if (property.getTargetRef().hasEntityRef()) {
             formType = K_SELECT;
           } else {
-            formType = 'grid';
+            formType = K_GRID;
           }
         } else {
           if (property['getType'] && property['getType']() === 'boolean') {
-            formType = 'checkbox';
+            formType = K_CHECKBOX;
           } else {
-            formType = K_TEXT;
+            // no form declared
+            if (this.options.onlyDecoratedFields) {
+              return null;
+            }
+            formType = get(this.options, 'defaultFormType', K_HIDDEN);
           }
         }
         property.setOption(K_FORM, formType);
@@ -94,7 +101,9 @@ export class FormBuilder {
         const properties = (<IEntityRef>entity).getPropertyRefs().filter(x => !x.getOptions(K_VIRTUAL, false));
         for (const property of properties) {
           const childObject = this._buildFormObject(property, formObject, { level: nextLevel });
-          formObject.insert(childObject);
+          if (childObject) {
+            formObject.insert(childObject);
+          }
         }
       }
     } else if ((<AbstractRef><any>entity).metaType === METATYPE_PROPERTY) {
@@ -112,7 +121,9 @@ export class FormBuilder {
           const properties = property.getTargetRef().getPropertyRefs().filter(x => !x.getOptions(K_VIRTUAL, false));
           for (const property of properties) {
             const childObject = this._buildFormObject(property, formObject, { level: nextLevel });
-            formObject.insert(childObject);
+            if (childObject) {
+              formObject.insert(childObject);
+            }
           }
         }
       }

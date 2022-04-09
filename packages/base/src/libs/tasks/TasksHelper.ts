@@ -99,7 +99,7 @@ export class TasksHelper {
   static getTaskLogFile(
     runnerId: string, nodeId: string, relative: boolean = false, options: { parseDate: boolean } = { parseDate: true }
   ) {
-    const appPath = Config.get('app.path');
+    const appPath = Config.get('app.path', PlatformUtils.pathResolve('.'));
     let logdir =
       Config.get('tasks.logdir',
         Config.get('os.tmpdir', '/tmp')

@@ -28,7 +28,9 @@ filesystem:
     - /tmp/tasklog
 
 
+
 config:
   anonymous:
     allow: true
   permissions: [ ]
+

@@ -9,9 +9,7 @@ import { C_DEFAULT, C_ID, MTHD_getViewContext, MTHD_setViewContext, PROP_METADAT
 import { Context, isTreeObject, TreeObject } from '@typexs/base';
 import { AbstractComponent } from './abstract.component';
 
-
 let INC = 0;
-
 
 @Component({
   template: ''

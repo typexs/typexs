@@ -13,9 +13,9 @@ export class AppComponent implements OnInit {
 
 
   constructor(private appState: AppService) {
-    appState.getViewContext().subscribe(x => {
-      console.log(x);
-    });
+    // appState.getViewContext().subscribe(x => {
+    //   console.log(x);
+    // });
   }
 
   getContext() {

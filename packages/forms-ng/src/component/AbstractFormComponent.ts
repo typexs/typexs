@@ -14,8 +14,7 @@ export class AbstractFormComponent<T extends FormObject> extends AbstractInstanc
 
   static _inc = 0;
 
-
-  data: DataContainer<any>;
+  dataContainer: DataContainer<any>;
 
   inc = 0;
 
@@ -66,11 +65,19 @@ export class AbstractFormComponent<T extends FormObject> extends AbstractInstanc
 
 
   get isValid() {
-    return this.data.checked(this.name) && this.data.valid(this.name);
+    return this.dataContainer.checked(this.name) && this.dataContainer.valid(this.name);
   }
 
   get defaultValue() {
     return this._defaultValue;
+  }
+
+  getDataContainer() {
+    return this.dataContainer;
+  }
+
+  setDataContainer(container: DataContainer<any>) {
+    this.dataContainer = container;
   }
 
   setDefaultValue(v: any) {
@@ -98,12 +105,12 @@ export class AbstractFormComponent<T extends FormObject> extends AbstractInstanc
 
   getValue() {
     const path = this.context.path();
-    return get(this.data.instance, path, null);
+    return get(this.dataContainer.instance, path, null);
   }
 
   setValue(v: any) {
     const path = this.context.path();
-    return set(this.data.instance, path, v);
+    return set(this.dataContainer.instance, path, v);
   }
 
   get value() {
@@ -163,7 +170,6 @@ export class AbstractFormComponent<T extends FormObject> extends AbstractInstanc
           this.setValue(v);
         }
       }
-
     }
   }
 
@@ -171,14 +177,13 @@ export class AbstractFormComponent<T extends FormObject> extends AbstractInstanc
   build(form: FormObject): AbstractInstancableComponent<T>[] {
     const comp: AbstractInstancableComponent<T>[] = [];
     for (const formObject of form.getChildren()) {
-      // console.log(formObject);
       if (isFormObject(formObject)) {
         const handle = this.getComponentRegistry().getOrCreateDef(formObject.type);
         if (handle && handle.component) {
           if (this.vc) {
             const ref = this.createComponentView(<any>handle.component);
             const instance = <AbstractFormComponent<any>>ref.instance;
-            instance.data = this.data;
+            instance.setDataContainer(this.getDataContainer());
             instance.setData(formObject, this.context);
             instance.build(formObject);
             comp.push(instance);

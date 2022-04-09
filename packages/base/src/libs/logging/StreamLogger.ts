@@ -1,41 +1,45 @@
-import {ILoggerApi} from './ILoggerApi';
-import {ILoggerOptions} from './ILoggerOptions';
-import {ILogLevel} from '@allgemein/base';
-import {Writable} from 'stream';
-import {ILogEntry} from './ILogEntry';
+import { ILoggerApi } from './ILoggerApi';
+import { ILoggerOptions } from './ILoggerOptions';
+import { ILogLevel } from '@allgemein/base';
+import { ILogEntry } from './ILogEntry';
+import { EventEmitter } from 'events';
+import { LOG_EVENT_NAME } from './Constants';
 
 export interface IStreamLoggerOptions extends ILoggerOptions {
-  writeStream: Writable;
-
+  // writeStream: Writable;
+  // readStream: Readable;
+  emitter: EventEmitter;
 }
 
 export class StreamLogger implements ILoggerApi {
 
   name: string;
 
-  writeStream: Writable;
+  // writeStream: Writable;
 
-  options: ILoggerOptions;
+  // readStream: Readable;
+
+  options: IStreamLoggerOptions;
 
   constructor(name: string, opts?: IStreamLoggerOptions) {
     this.name = name;
     this.options = opts;
-    if (!opts.writeStream || !(opts.writeStream instanceof Writable)) {
-      throw new Error('no stream passed');
-    }
-    this.writeStream = opts.writeStream;
+    // if (!opts.readStream || !(opts.readStream instanceof Readable)) {
+    //   throw new Error('no stream passed');
+    // }
+    // this.readStream = opts.readStream;
   }
 
   clear(): void {
   }
 
   close(): void {
-    this.writeStream = null;
+    // this.readStream = null;
   }
 
 
   getLevel(): ILogLevel {
-    return {name: this.getOptions().level, nr: null};
+    return { name: this.getOptions().level, nr: null };
   }
 
 
@@ -72,7 +76,11 @@ export class StreamLogger implements ILoggerApi {
       prefix: this.options.prefix,
       parameters: this.options.parameters
     };
-    this.writeStream.write(JSON.stringify(event));
+    this.getEmitter().emit(LOG_EVENT_NAME, event);
+  }
+
+  getEmitter() {
+    return this.options.emitter;
   }
 
   trace(...msg: any[]): void {

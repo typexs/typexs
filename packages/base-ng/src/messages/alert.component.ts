@@ -46,14 +46,14 @@ export class AlertComponent implements OnInit, OnDestroy{
 
     // return css class based on alert type
     switch (alert.type) {
-    case MessageType.SUCCESS:
-      return 'alert alert-success';
-    case MessageType.ERROR:
-      return 'alert alert-danger';
-    case MessageType.INFO:
-      return 'alert alert-info';
-    case MessageType.WARNING:
-      return 'alert alert-warning';
+      case MessageType.SUCCESS:
+        return 'alert alert-success';
+      case MessageType.ERROR:
+        return 'alert alert-danger';
+      case MessageType.INFO:
+        return 'alert alert-info';
+      case MessageType.WARNING:
+        return 'alert alert-warning';
     }
 
     return '';

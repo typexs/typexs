@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {IGridColumn} from '@typexs/base-ng';
-import {SimpleHtmlTableComponent} from '@typexs/base-ng';
-import {AgGridWrapperComponent} from '../../../addons/ag-grid/ag-grid-wrapper.component';
+import {IGridColumn} from 'packages/base-ng/src';
+import {SimpleHtmlTableComponent} from 'packages/base-ng/src';
+import {AgGridWrapperComponent} from '../../addons/ag-grid/ag-grid-wrapper.component';
 
 
 @Component({

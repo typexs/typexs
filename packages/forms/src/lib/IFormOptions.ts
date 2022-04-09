@@ -12,5 +12,10 @@ export interface IFormOptions {
    */
   onlyDecoratedFields?: boolean;
 
+  /**
+   * When no form type found then
+   */
+  defaultFormType?: string;
+
   buttons?: IButton[];
 }

@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { APP_MODULES } from './app.used.modules';
-import { GroupDemoComponent } from './components/group-fields/group-demo.component';
+import { GridFieldsComponent } from './components/grid-fields/grid-fields.component';
 import { DemosComponent } from './demos.component';
 import { CheckboxMatrixDemoComponent } from './checkbox-matrix-demo/checkbox-matrix-demo.component';
 import { FORM_COMPONENTS } from '@typexs/forms-ng';
@@ -16,22 +16,22 @@ import { EmbeddedContentDirective } from './embedded-content/embedded-content.di
 import { EmbeddedContent2Component } from './embedded-content/embedded-content-2.component';
 import { LogoutComponent } from './dummy/logout/logout.component';
 import { ProfileComponent } from './dummy/profile/profile.component';
-import { NotificationDemoComponent } from './components/demos/notification/notification-demo.component';
+import { NotificationDemoComponent } from './components/notification/notification-demo.component';
 import { InputDemoComponent } from './components/forms/input/input-demo.component';
-import { TablesDemoComponent } from './components/demos/tables/tables-demo.component';
+import { TablesDemoComponent } from './components/tables/tables-demo.component';
 import { AgGridWrapperComponent } from './addons/ag-grid/ag-grid-wrapper.component';
 import { NavigatorService } from '@typexs/ng-router-menu';
-import { SimpleHtmlTableDemoComponent } from './components/demos/tables/simple-html-table-demo.component';
+import { SimpleHtmlTableDemoComponent } from './components/tables/simple-html-table-demo.component';
 import { StorageService } from '@typexs/storage-ng';
 import { EntityService } from '@typexs/entity-ng';
 import { DistributedStorageService } from '@typexs/distributed-storage-ng';
 import { DataViewComponent } from './dataview/dataview.component';
 // eslint-disable-next-line max-len
-import { EmbeddedDistributedStorageComponent } from './components/demos/embedded-distributed-storage/embedded-distributed-storage.component';
+import { EmbeddedDistributedStorageComponent } from './components/embedded-distributed-storage/embedded-distributed-storage.component';
 import { UI_ADMIN_LAYOUT } from '@typexs/ng-admin-ui';
-import { EmbeddedStorageDefaultComponent } from './components/demos/embedded-storage/default.component';
-import { EmbeddedStorageOverviewComponent } from './components/demos/embedded-storage/overview.component';
-import { EmbeddedStorageAgGridComponent } from './components/demos/embedded-storage/ag-grid.component';
+import { EmbeddedStorageDefaultComponent } from './components/embedded-storage/default.component';
+import { EmbeddedStorageOverviewComponent } from './components/embedded-storage/overview.component';
+import { EmbeddedStorageAgGridComponent } from './components/embedded-storage/ag-grid.component';
 import { SearchResultComponent } from './components/content-view/search/search-result.component';
 import { SearchEntryComponent } from './components/content-view/search/search-entry.component';
 import { ViewParentComponent } from './components/content-view/search/view-parent.component';
@@ -55,7 +55,7 @@ import { BuildSimpleItem } from '../../../../demo/testtask/entities/BuildSimpleI
     InputDemoComponent,
     FormSelectionsComponent,
     TablesDemoComponent,
-    GroupDemoComponent,
+    GridFieldsComponent,
     CheckboxMatrixDemoComponent,
     TreeContentComponent,
     SearchResultComponent,

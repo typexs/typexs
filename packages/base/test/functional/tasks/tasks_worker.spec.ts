@@ -580,6 +580,8 @@ class TasksWorkerSpec {
     await TestHelper.waitFor(() => !!events.find(x => x.state === TASK_STATE_STOPPED));
 
     await (Injector.get(TaskMonitorWorker) as TaskMonitorWorker).queue.await();
+
+    await TestHelper.wait(100);
     const storeRef: StorageRef = Injector.get(C_STORAGE_DEFAULT);
     const logs: any[] = await storeRef.getController().find(TaskLog);
 

@@ -38,7 +38,7 @@ class FormParseSpec {
   @test
   async 'tree data parse'() {
 
-    const builder = new FormBuilder(ComponentRegistry.$());
+    const builder = new FormBuilder(ComponentRegistry.$(), {onlyDecoratedFields: false});
     const entityDef = EntityRegistry.$().getEntityRefFor('TreeTestData');
     const tree = builder.buildFromEntity(entityDef);
     expect(tree.children).to.have.length(2);

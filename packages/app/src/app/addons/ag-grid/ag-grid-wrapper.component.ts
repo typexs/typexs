@@ -15,11 +15,9 @@ export interface IAgGridColumn {
 export class AgGridWrapperComponent extends AbstractGridComponent {
 
   get columnDefs() {
-    return this.columns.map(column => {
-      return <IAgGridColumn>{
-        headerName: column.label,
-        field: column.field
-      };
+    return this.columns.map(column => <IAgGridColumn>{
+      headerName: column.label,
+      field: column.field
     });
   }
 

@@ -1,6 +1,6 @@
 import {ITask} from '../../../../src/libs/tasks/ITask';
-import {TaskRuntime} from "../../../../src/libs/tasks/decorators/TaskRuntime";
-import {ITaskRuntimeContainer} from "../../../../src/libs/tasks/ITaskRuntimeContainer";
+import {TaskRuntime} from '../../../../src/libs/tasks/decorators/TaskRuntime';
+import {ITaskRuntimeContainer} from '../../../../src/libs/tasks/ITaskRuntimeContainer';
 
 export class SimpleTaskWithLog implements ITask {
 
@@ -8,7 +8,7 @@ export class SimpleTaskWithLog implements ITask {
   runtime: ITaskRuntimeContainer;
 
   async exec() {
-    let logger = this.runtime.logger();
+    const logger = this.runtime.logger();
 
     this.runtime.progress(20);
 

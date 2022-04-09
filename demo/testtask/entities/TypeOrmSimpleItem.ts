@@ -1,5 +1,5 @@
-import {Column, CreateDateColumn, Entity, PrimaryGeneratedColumn} from 'typeorm';
-import {Label} from '@typexs/ng';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Label } from '@typexs/forms';
 
 
 @Entity()

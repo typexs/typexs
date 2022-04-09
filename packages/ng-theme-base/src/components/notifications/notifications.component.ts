@@ -1,10 +1,10 @@
-import {defaults} from 'lodash';
-import {Component, Input, OnInit} from '@angular/core';
-import {NotificationsService} from './notifications.service';
-import {NotifyItem} from './NotifyItem';
-import {INotifyOptions} from './INotifyOptions';
+import { defaults } from 'lodash';
+import { Component, Input, OnInit } from '@angular/core';
+import { NotificationsService } from './notifications.service';
+import { NotifyItem } from './NotifyItem';
+import { INotifyOptions } from './INotifyOptions';
 
-const DEFAULT_OPTIONS: INotifyOptions = {displayTime: 10000, maxAlerts: 10};
+const DEFAULT_OPTIONS: INotifyOptions = { displayTime: 10000, maxAlerts: 10 };
 
 @Component({
   selector: 'bat-notify',

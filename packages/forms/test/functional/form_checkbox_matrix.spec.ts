@@ -41,7 +41,7 @@ class FormParseSpec {
     const registry = RegistryFactory.get();
     const entityRef = registry.getEntityRefFor(CheckboxMatrix);
     expect(entityRef.getPropertyRefs()).to.have.length(1);
-    const formBuilder = new FormBuilder(ComponentRegistry.$());
+    const formBuilder = new FormBuilder(ComponentRegistry.$(), {onlyDecoratedFields: false});
     const formElements = formBuilder.buildFromEntity(entityRef);
     const children = formElements.getChildren();
     expect(children).to.have.length(1);

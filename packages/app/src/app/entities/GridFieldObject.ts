@@ -5,7 +5,7 @@ import { Places } from './Places';
 
 
 @Entity({ storable: false })
-export class GroupDemoObject {
+export class GridFieldObject {
 
   @Grid()
   @Property({ type: Places, cardinality: 0 })

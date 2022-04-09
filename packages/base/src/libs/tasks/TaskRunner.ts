@@ -3,7 +3,11 @@ import { EventEmitter } from 'events';
 import { Tasks } from './Tasks';
 import { TaskRun } from './TaskRun';
 import {
-  TASK_RUNNER_SPEC, TASK_STATE_PROPOSED, TASK_STATE_RUNNING, TASK_STATE_STARTED, TASK_STATE_STOPPED,
+  TASK_RUNNER_SPEC,
+  TASK_STATE_PROPOSED,
+  TASK_STATE_RUNNING,
+  TASK_STATE_STARTED,
+  TASK_STATE_STOPPED,
   TASK_STATES,
   TASKRUN_STATE_DONE,
   TASKRUN_STATE_FINISH_PROMISE,
@@ -17,7 +21,6 @@ import { Bootstrap } from '../../Bootstrap';
 import { Invoker } from '../../base/Invoker';
 import { TasksHelper } from './TasksHelper';
 import { ILoggerApi } from '../logging/ILoggerApi';
-import { Readable, Writable } from 'stream';
 import { ITaskRunnerOptions } from './ITaskRunnerOptions';
 import { CryptUtils } from '@allgemein/base';
 import { TasksApi } from '../../api/Tasks.api';
@@ -95,9 +98,9 @@ export class TaskRunner extends EventEmitter {
 
   private taskLogger: ILoggerApi;
 
-  writeStream: Writable;
+  // writeStream: Writable;
 
-  readStream: Readable;
+  // readStream: Readable;
 
 
   constructor(
@@ -137,7 +140,7 @@ export class TaskRunner extends EventEmitter {
     this.todoNrs = this.$tasks.map(x => x.nr);
     this.loggerName = 'task-runner-' + this.id;
 
-    this.initStreams();
+    // this.initStreams();
     this.initTaskLogger();
 
     this.on(TASKRUN_STATE_FINISHED, this.finish.bind(this));
@@ -145,6 +148,7 @@ export class TaskRunner extends EventEmitter {
     this.on(TASKRUN_STATE_RUN, this.taskRun.bind(this));
     this.on(TASKRUN_STATE_DONE, this.taskDone.bind(this));
 
+    this.api().onInit(this);
 
     this.state = TASK_STATE_STARTED;
 
@@ -157,8 +161,6 @@ export class TaskRunner extends EventEmitter {
         this.getLogger().debug(`couldn't locally register task nr=${this.nr} id=${this.id}`);
       }
     }
-
-    this.api().onInit(this);
     this.getLogger().info('execute tasks: ' + this.$tasks.map(t => t.taskRef().name).join(', '));
     this.fireStateEvent();
   }
@@ -167,22 +169,31 @@ export class TaskRunner extends EventEmitter {
    * Initialize streams for input and output communication with runnings tasks
    * @private
    */
-  private initStreams() {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const self = this;
-    this.readStream = new Readable({
-      read(size: number) {
-        return size > 0;
-      }
-    });
-
-    this.writeStream = new Writable({
-      write(chunk: any, encoding: any, next: any) {
-        (<any>self.readStream).push(chunk, encoding);
-        next();
-      }
-    });
-  }
+  // private initStreams() {
+  //   // eslint-disable-next-line @typescript-eslint/no-this-alias
+  //   const self = this;
+  //   this.readStream = new Readable({
+  //     read(size: number) {
+  //     }
+  //   });
+  //
+  //   this.readStream.on('data', (chunk: any) => {
+  //     console.log(chunk);
+  //   });
+  //
+  //   const res = this.readStream.push('hallo');
+  //   console.log(res);
+  //
+  //
+  //   // this.writeStream = new Writable({
+  //   //   write(chunk: any, encoding: any, next: any) {
+  //   //     (<any>self.readStream).push(chunk, encoding);
+  //   //     next();
+  //   //   }
+  //   // });
+  //   //
+  //   // this.readStream.pipe(this.writeStream);
+  // }
 
 
   /**
@@ -195,7 +206,7 @@ export class TaskRunner extends EventEmitter {
     this.taskLogger = new StreamLogger(
       this.loggerName,
       {
-        writeStream: this.getWriteStream(),
+        emitter: this,
         enable: true,
         prefix: this.loggerName,
         force: true,
@@ -259,13 +270,13 @@ export class TaskRunner extends EventEmitter {
   }
 
 
-  getReadStream() {
-    return this.readStream;
-  }
+  // getReadStream() {
+  //   return this.readStream;
+  // }
 
-  getWriteStream() {
-    return this.writeStream;
-  }
+  // getWriteStream() {
+  //   return this.writeStream;
+  // }
 
   getTaskNames(): string[] {
     return this.$tasks.map(x => x.getTaskName());
@@ -570,13 +581,10 @@ export class TaskRunner extends EventEmitter {
     }
     this.getLogger().close();
 
-    this.writeStream.end();
-    if (this.writeStream) {
-      this.writeStream.destroy();
-    }
-    if (this.readStream) {
-      this.readStream.destroy();
-    }
+    // this.writeStream.end();
+    // if (this.writeStream) {
+    //   this.writeStream.destroy();
+    // }
     this.fireStateEvent();
     this.emit(TASKRUN_STATE_FINISH_PROMISE, status);
   }
@@ -612,16 +620,18 @@ export class TaskRunner extends EventEmitter {
       this.taskLogger = null;
     }
 
-    if (this.writeStream) {
-      this.writeStream.removeAllListeners();
-      // this.writeStream.destroy();
-      this.writeStream = null;
-    }
-    if (this.readStream) {
-      this.readStream.removeAllListeners();
-      // this.readStream.destroy();
-      this.readStream = null;
-    }
+    // if (this.writeStream) {
+    //   this.writeStream.removeAllListeners();
+    //   // this.writeStream.destroy();
+    //   this.writeStream = null;
+    // }
+    // if (this.readStream) {
+    //   this.readStream.push(null);
+    //   this.readStream.destroy();
+    //   this.readStream.removeAllListeners();
+    //   // this.readStream.destroy();
+    //   this.readStream = null;
+    // }
 
     this.removeAllListeners();
     this.event = null;

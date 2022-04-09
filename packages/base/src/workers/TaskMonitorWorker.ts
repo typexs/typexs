@@ -61,8 +61,10 @@ export class TaskMonitorWorker implements IQueueProcessor<TaskEvent>, IWorker {
 
   @subscribe(TaskEvent)
   onTaskEvent(event: TaskEvent) {
-    // listen only on implicit source
-    this.queue.push(event);
+    // listen only remote sources
+    if(this.nodeId !== event.nodeId){
+      this.queue.push(event);
+    }
   }
 
 
@@ -83,7 +85,7 @@ export class TaskMonitorWorker implements IQueueProcessor<TaskEvent>, IWorker {
       } else if (event.topic === 'log') {
         const filename = TasksHelper.getTaskLogFile(event.id, event.nodeId);
         await new Promise((resolve) => {
-          const out = event.log.join('\n') + '\n';
+          const out = JSON.stringify(event.log) + '\n';
           fs.appendFile(filename, out, (err) => {
             if (err) {
               this.logger.error('appending log to file ' + filename, err);

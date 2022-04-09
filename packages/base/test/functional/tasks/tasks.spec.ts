@@ -1,39 +1,40 @@
 import * as _ from 'lodash';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
 
-import {DateUtils} from '../../../src/libs/utils/DateUtils';
-import {SimpleTask} from './tasks/SimpleTask';
-import {SimpleTaskPromise} from './tasks/SimpleTaskPromise';
-import {SimpleTaskWithArgs} from './tasks/SimpleTaskWithArgs';
-import {DependentTask} from './tasks/DependentTask';
-import {DependingTask} from './tasks/DependingTask';
-import {GroupedTask1} from './tasks/GroupedTask1';
-import {GroupedTask2} from './tasks/GroupedTask2';
-import {GroupedTask3} from './tasks/GroupedTask3';
-import {GroupedTask4} from './tasks/GroupedTask4';
-import {GroupingTask} from './tasks/GroupingTask';
-import {SimpleTaskNoName} from './tasks/SimpleTaskNoName';
-import {SimpleTaskInstance} from './tasks/SimpleTaskInstance';
-import {SimpleTaskUngrouped01} from './tasks/SimpleTaskUngrouped01';
-import {SimpleTaskUngrouped02} from './tasks/SimpleTaskUngrouped02';
-import {SimpleTaskError} from './tasks/SimpleTaskError';
-import {SimpleTaskWithRuntimeLog} from './tasks/SimpleTaskWithRuntimeLog';
-import {TestHelper} from '@typexs/testing';
-import {SimpleTaskWithDefaultArgs} from './tasks/SimpleTaskWithDefaultArgs';
-import {SimpleOtherTask, SimpleTaskStartingOtherTask} from './tasks/SimpleTaskStartingOtherTask';
-import {Log} from '../../../src/libs/logging/Log';
-import {Invoker} from '../../../src/base/Invoker';
-import {TasksApi} from '../../../src/api/Tasks.api';
-import {TaskRunner} from '../../../src/libs/tasks/TaskRunner';
-import {Tasks} from '../../../src/libs/tasks/Tasks';
-import {TaskRunnerRegistry} from '../../../src/libs/tasks/TaskRunnerRegistry';
-import {TasksHelper} from '../../../src/libs/tasks/TasksHelper';
-import {Injector} from '../../../src/libs/di/Injector';
-import {Config} from '@allgemein/config';
-import {RegistryFactory} from '@allgemein/schema-api';
+import { DateUtils } from '../../../src/libs/utils/DateUtils';
+import { SimpleTask } from './tasks/SimpleTask';
+import { SimpleTaskPromise } from './tasks/SimpleTaskPromise';
+import { SimpleTaskWithArgs } from './tasks/SimpleTaskWithArgs';
+import { DependentTask } from './tasks/DependentTask';
+import { DependingTask } from './tasks/DependingTask';
+import { GroupedTask1 } from './tasks/GroupedTask1';
+import { GroupedTask2 } from './tasks/GroupedTask2';
+import { GroupedTask3 } from './tasks/GroupedTask3';
+import { GroupedTask4 } from './tasks/GroupedTask4';
+import { GroupingTask } from './tasks/GroupingTask';
+import { SimpleTaskNoName } from './tasks/SimpleTaskNoName';
+import { SimpleTaskInstance } from './tasks/SimpleTaskInstance';
+import { SimpleTaskUngrouped01 } from './tasks/SimpleTaskUngrouped01';
+import { SimpleTaskUngrouped02 } from './tasks/SimpleTaskUngrouped02';
+import { SimpleTaskError } from './tasks/SimpleTaskError';
+import { SimpleTaskWithRuntimeLog } from './tasks/SimpleTaskWithRuntimeLog';
+import { TestHelper } from '@typexs/testing';
+import { SimpleTaskWithDefaultArgs } from './tasks/SimpleTaskWithDefaultArgs';
+import { SimpleOtherTask, SimpleTaskStartingOtherTask } from './tasks/SimpleTaskStartingOtherTask';
+import { Log } from '../../../src/libs/logging/Log';
+import { Invoker } from '../../../src/base/Invoker';
+import { TasksApi } from '../../../src/api/Tasks.api';
+import { TaskRunner } from '../../../src/libs/tasks/TaskRunner';
+import { Tasks } from '../../../src/libs/tasks/Tasks';
+import { TaskRunnerRegistry } from '../../../src/libs/tasks/TaskRunnerRegistry';
+import { TasksHelper } from '../../../src/libs/tasks/TasksHelper';
+import { Injector } from '../../../src/libs/di/Injector';
+import { Config } from '@allgemein/config';
+import { RegistryFactory } from '@allgemein/schema-api';
 import { C_TASKS, TASK_STATE_STOPPED } from '../../../src/libs/tasks/Constants';
-import {TaskRef} from '../../../src/libs/tasks/TaskRef';
+import { TaskRef } from '../../../src/libs/tasks/TaskRef';
+import { LOG_EVENT_NAME } from '../../../src/libs/logging/Constants';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -45,7 +46,7 @@ class TasksSpec {
   static async before() {
     await TestHelper.clearCache();
     Log.reset();
-    Log.options({level: 'debug', enable: LOG_EVENT});
+    Log.options({ level: 'debug', enable: LOG_EVENT });
     const i = new Invoker();
     Injector.set(Invoker.NAME, i);
     i.register(TasksApi, []);
@@ -141,7 +142,7 @@ class TasksSpec {
 
   @test
   async 'register function callback and run'() {
-    const taskRef = tasks.addTask('callback_task', function (done: Function) {
+    const taskRef = tasks.addTask('callback_task', function(done: Function) {
       done(null, 'test');
     });
     expect(taskRef.name).to.be.eq('callback_task');
@@ -156,7 +157,7 @@ class TasksSpec {
 
   @test
   async 'register function callback and run as promise'() {
-    const taskRef = tasks.addTask('callback_task_async', async function () {
+    const taskRef = tasks.addTask('callback_task_async', async function() {
       return 'test';
     });
     expect(taskRef.name).to.be.eq('callback_task_async');
@@ -209,7 +210,7 @@ class TasksSpec {
     expect(data.results).to.have.length(1);
 
     const res = data.results.shift();
-    expect(res.incoming).to.be.deep.eq({value: 'SomeValue', list: ['asd', 'bfr']});
+    expect(res.incoming).to.be.deep.eq({ value: 'SomeValue', list: ['asd', 'bfr'] });
   }
 
   @test
@@ -227,7 +228,7 @@ class TasksSpec {
     expect(data.results).to.have.length(1);
 
     const res = data.results.shift();
-    expect(res.incoming).to.be.deep.eq({value: 'SomeValue', list: ['asd', 'bfr']});
+    expect(res.incoming).to.be.deep.eq({ value: 'SomeValue', list: ['asd', 'bfr'] });
   }
 
   @test
@@ -268,7 +269,7 @@ class TasksSpec {
     const data = await runner.run();
     expect(data.results).to.have.length(2);
     const res = data.results.find(r => r.name === depending.name);
-    expect(res.result).to.deep.eq({new: 'data', test: 'true'});
+    expect(res.result).to.deep.eq({ new: 'data', test: 'true' });
   }
 
 
@@ -320,7 +321,7 @@ class TasksSpec {
   async 'map task to new one (callback-registered task)'() {
     const oldName = 'callback_test';
     const newName = 'copy_callback_test';
-    const taskRef = tasks.addTask(oldName, function (done: Function) {
+    const taskRef = tasks.addTask(oldName, function(done: Function) {
       done(null, 'test');
     });
     expect(taskRef.name).to.be.eq(oldName);
@@ -390,8 +391,8 @@ class TasksSpec {
             taskName: 'simple_task_ungrouped_01',
             taskType: 1,
             properties: {
-              name: {type: 'string', default: 'simple_task_ungrouped_01'},
-              content: {type: 'string', default: 'test'}
+              name: { type: 'string', default: 'simple_task_ungrouped_01' },
+              content: { type: 'string', default: 'test' }
             }
           },
           simple_task_ungrouped_02: {
@@ -407,8 +408,8 @@ class TasksSpec {
             $id: '#simple_task_ungrouped_02',
             taskType: 1,
             properties: {
-              name: {type: 'string', default: 'simple_task_ungrouped_02'},
-              content: {type: 'string', default: 'test'}
+              name: { type: 'string', default: 'simple_task_ungrouped_02' },
+              content: { type: 'string', default: 'test' }
             }
           },
           simple_task_with_args: {
@@ -424,15 +425,15 @@ class TasksSpec {
             $id: '#simple_task_with_args',
             taskType: 1,
             properties: {
-              runtime: {type: 'object', propertyType: 'runtime'},
-              incoming: {type: 'string', optional: false, propertyType: 'incoming'},
+              runtime: { type: 'object', propertyType: 'runtime' },
+              incoming: { type: 'string', optional: false, propertyType: 'incoming' },
               list: {
                 type: 'array',
-                items: {type: 'object'},
+                items: { type: 'object' },
                 propertyType: 'incoming'
               },
-              outgoing: {type: 'string', propertyType: 'outgoing'},
-              name: {type: 'string', default: 'simple_task_with_args'}
+              outgoing: { type: 'string', propertyType: 'outgoing' },
+              name: { type: 'string', default: 'simple_task_with_args' }
             }
           },
           simple_task_with_runtime_log: {
@@ -447,7 +448,7 @@ class TasksSpec {
             taskName: 'simple_task_with_runtime_log',
             $id: '#simple_task_with_runtime_log',
             taskType: 1,
-            properties: {runtime: {type: 'object', propertyType: 'runtime'}}
+            properties: { runtime: { type: 'object', propertyType: 'runtime' } }
           }
         },
         'anyOf': [
@@ -531,24 +532,24 @@ class TasksSpec {
 
     // stdMocks.use();
     const runner = new TaskRunner(tasks, [taskRef.name]);
-    runner.getLogger().info('extern use ;)');
-    await TestHelper.wait(50);
-
     const x: any[] = [];
-    const reader = runner.getReadStream();
-    reader.on('data', (data: any) => {
+    runner.on(LOG_EVENT_NAME, (data: any) => {
       try {
-        x.push(JSON.parse(data));
+        x.push(data);
       } catch (e) {
       }
     });
 
-    reader.on('close', () => {
-      x.push('close');
-    });
-    reader.on('end', () => {
-      x.push('end');
-    });
+    runner.getLogger().info('extern use ;)');
+    await TestHelper.wait(50);
+
+
+    // reader.on('close', () => {
+    //   x.push('close');
+    // });
+    // reader.on('end', () => {
+    //   x.push('end');
+    // });
 
     try {
       const data = await runner.run();
@@ -560,13 +561,13 @@ class TasksSpec {
       expect(e).to.be.false;
     }
     await TestHelper.wait(100);
-    expect(x).to.have.length(8);
+    expect(x).to.have.length(6);
 
     await runner.finalize();
 
     let entry = x.shift();
-    expect(entry.args[0]).to.contain('execute tasks: simple_task_with_runtime_log');
-    entry = x.shift();
+    // expect(entry.args[0]).to.contain('execute tasks: simple_task_with_runtime_log');
+    // entry = x.shift();
     expect(entry.args[0]).to.contain('extern use ;)');
     entry = x.shift();
     expect(entry.args[0]).to.contain('taskRef start: simple_task_with_runtime_log');
@@ -578,8 +579,8 @@ class TasksSpec {
     expect(entry.args[0]).to.contain('doing something wrong\nnewline');
     entry = x.shift();
     expect(entry.args[0]).to.contain('stop: simple_task_with_runtime_log');
-    entry = x.shift();
-    expect(entry).to.contain('close');
+    // entry = x.shift();
+    // expect(entry).to.contain('close');
   }
 
 
@@ -629,7 +630,7 @@ class TasksSpec {
     // const x = data.results.find(x => x.name === taskRef.name);
     // expect(x.name).to.be.eq(taskRef.name);
     // expect(x.result).to.be.eq('test');
-    const data = await TasksHelper.exec(['simple_task_promise'], {isLocal: true, skipTargetCheck: true}) as any;
+    const data = await TasksHelper.exec(['simple_task_promise'], { isLocal: true, skipTargetCheck: true }) as any;
     const x = data.results.find((x: any) => x.name === taskRef.name);
     expect(x.name).to.be.eq(taskRef.name);
     expect(x.result).to.be.eq('test');

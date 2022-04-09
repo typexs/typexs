@@ -58,7 +58,9 @@ export class TasksStorageExtension implements ITasksApi {
 
       const results = _runner.collectStats();
       // TasksStorageHelper.saveEnvelopedInTimeout(results, this.storageRef);
-      TasksStorageHelper.save(results, this.storageRef).catch(() => {});
+      TasksStorageHelper.save(results, this.storageRef).catch((e: any) => {
+        console.log('');
+      });
     }
     // return null;
   }

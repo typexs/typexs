@@ -7,7 +7,9 @@
 
     <div class="btn-form-ops">
       <button *ngFor="let button of options.buttons"
-              type="{{button.type == 'restore' ? 'button' : button.type }}" class="btn btn-primary" (click)="onButton(button.key,$event)" >{{button.label}}</button>
+              type="{{button.type == 'restore' ? 'button' : button.type }}"
+              class="btn btn-primary"
+              (click)="onButton(button.key,$event)">{{button.label}}</button>
     </div>
 
   </form>

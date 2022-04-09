@@ -54,7 +54,7 @@ export class Invoker {
     let isPromised = false;
     for (const instance of instances) {
       if (!isUndefined(instance[method]) && isFunction(instance[method])) {
-        let ret = instance[method].apply(instance, args);
+        const ret = instance[method].apply(instance, args);
         isPromised = isPromised || isPromiseLike(ret);
         results.push(ret);
       }

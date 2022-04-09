@@ -16,11 +16,9 @@ import { ViewComponent } from '@typexs/base/libs/bindings/decorators/ViewCompone
 })
 export class GridComponent extends AbstractFormComponent<GridHandle> implements OnInit {
 
-
   entries: ComponentRef<GridRowComponent>[] = [];
 
   columns: GridColumnDef[] = [];
-
 
   ngOnInit() {
   }
@@ -75,7 +73,7 @@ export class GridComponent extends AbstractFormComponent<GridHandle> implements 
 
   build(form: FormObject): AbstractInstancableComponent<any>[] {
     this.context.labelDisplay = 'none';
-    const dataEntries = this.getInstance().getBinding().get(this.data.instance);
+    const dataEntries = this.getInstance().getBinding().get(this.dataContainer.instance);
     this.findColumns(form, first(dataEntries));
 
     const ret = [];
@@ -90,15 +88,15 @@ export class GridComponent extends AbstractFormComponent<GridHandle> implements 
     if (!this.isFixed()) {
       const c = this.addRow();
       ret.push(c);
-
     }
     return ret;
   }
 
+
   addRow(row: any = null, index: number = -1) {
     const factory = this.r.resolveComponentFactory(GridRowComponent);
     const cGridRow = this.vc.createComponent(factory);
-    cGridRow.instance.data = this.data;
+    cGridRow.instance.dataContainer = this.dataContainer;
     cGridRow.instance.setGridComponent(this);
     cGridRow.instance.setData(this.getInstance(), this.context, this.entries.length);
     this.entries.push(cGridRow);
@@ -106,18 +104,16 @@ export class GridComponent extends AbstractFormComponent<GridHandle> implements 
     if (!row) {
       const object = Reflect.construct(this.getInstance().getBinding().getTargetRef().getClass(), []);
       const path = this.context.path();
-
       if (this.getInstance().isMultiple()) {
-        let arraySetted = get(this.data.instance, path, null);
+        let arraySetted = get(this.dataContainer.instance, path, null);
         if (!arraySetted) {
           arraySetted = [];
         }
         arraySetted[cGridRow.instance.context.idx] = object;
-        set(this.data.instance, path, arraySetted);
+        set(this.dataContainer.instance, path, arraySetted);
       } else {
-        set(this.data.instance, path, object);
+        set(this.dataContainer.instance, path, object);
       }
-
     }
 
     cGridRow.instance.build(this.getInstance());
@@ -134,15 +130,14 @@ export class GridComponent extends AbstractFormComponent<GridHandle> implements 
 
     this.vc.remove(idx);
     if (this.getInstance().getBinding().isCollection()) {
-      let arraySetted = get(this.data.instance, path, null);
+      let arraySetted = get(this.dataContainer.instance, path, null);
       if (!arraySetted) {
         arraySetted = [];
       }
       arraySetted.splice(idx, 1);
-
-      set(this.data.instance, path, arraySetted);
+      set(this.dataContainer.instance, path, arraySetted);
     } else {
-      set(this.data.instance, path, null);
+      set(this.dataContainer.instance, path, null);
     }
 
     for (let i = this.entries.length - 1; i >= 0; i--) {
