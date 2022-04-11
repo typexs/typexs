@@ -15,6 +15,7 @@
       <div *ngIf="error" class="error">{{error}}</div>
       <txs-form *ngIf="instance" formName="entity-create-form'"
                 [instance]="instance"
+                [options]="formOptions"
                 (ngSubmit)="onSubmit($event)"></txs-form>
     </div>
   </div>

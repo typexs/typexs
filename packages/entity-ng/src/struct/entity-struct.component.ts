@@ -18,23 +18,23 @@ export class EntityStructComponent implements OnInit {
 
   name: string;
 
-  entityDef: IEntityRef;
+  entityRef: IEntityRef;
 
   referrerProps: IPropertyRef[] = [];
 
-  propertyDefs: { property: IPropertyRef; level: number }[] = [];
+  propertyRefs: { ref: IPropertyRef; level: number }[] = [];
 
   validationEntries: IValidatorEntry[] = [];
 
   constructor(
-    public entityService: EntityService,
+    public service: EntityService,
     private route: ActivatedRoute,
     private router: Router) {
 
   }
 
   ngOnInit() {
-    this.entityService.isReady(() => {
+    this.service.isReady(() => {
       this.route.params.subscribe((params => {
         if (params.name) {
           this.load(params.name);
@@ -45,62 +45,70 @@ export class EntityStructComponent implements OnInit {
 
   load(name: string) {
     this.referrerProps = [];
-    this.propertyDefs = [];
+    this.propertyRefs = [];
 
     this.name = name;
-    this.entityDef = this.entityDef.getRegistry().getEntityRefFor(this.name);
-    this.referrerProps = this.entityDef.getRegistry().filter(METATYPE_PROPERTY,
-      (referrer: IPropertyRef) => referrer.isReference() && referrer.getTargetRef() === this.entityDef.getClassRef());
-    this.scan(this.entityDef);
-    from(Validator.getValidationEntries(this.entityDef)).subscribe((x: IValidatorEntry[]) => {
+    this.entityRef = this.getRegistry().getEntityRefFor(this.name);
+    this.referrerProps = this.getRegistry().filter(METATYPE_PROPERTY,
+      (referrer: IPropertyRef) => referrer.isReference() && referrer.getTargetRef() === this.entityRef.getClassRef());
+    this.scan(this.entityRef);
+    from(Validator.getValidationEntries(this.entityRef)).subscribe((x: IValidatorEntry[]) => {
       this.validationEntries = x;
     });
   }
 
+  getRegistry() {
+    return this.service.getRegistry();
+  }
+
+
 
   type(propertyDef: IPropertyRef): string {
-    if ((<any>propertyDef).isEmbedded()) {
-      return propertyDef.getTargetRef().name;
-    } else if (propertyDef.isReference()) {
+    if (propertyDef.isReference() && propertyDef.getTargetRef().hasEntityRef()) {
       return propertyDef.getTargetRef().name;
     } else {
-      return (<any>propertyDef).dataType;
+      return propertyDef.getOptions('type');
     }
   }
+
 
   scan(source: IClassRef | IEntityRef, level: number = 0) {
     if (level > 8) {
       return;
     }
-    for (const props of <IPropertyRef[]>source.getPropertyRefs()) {
-      this.propertyDefs.push({ property: props, level: level });
-      if (props.isReference()) {
-        this.scan(props.getTargetRef(), level + 1);
-        // } else if (!props.isInternal()) {
-        //   this.scan(props.getTargetRef(), level + 1);
+    if (source) {
+      for (const props of source.getPropertyRefs()) {
+        this.propertyRefs.push({ref: props, level: level});
+        if (props.isReference()) {
+          this.scan(props.getTargetRef(), level + 1);
+        }
       }
     }
   }
 
   // validator(property: PropertyRef) {
-  //   const validators = getMetadataStorage().getTargetValidationMetadatas(this.entityDef.getClass(), null, true, false);
+  //   const validators = getMetadataStorage().getTargetValidationMetadatas(this.entityRef.getClass(), null, true, false);
   //   return filter(validators, v => v.propertyName === property.name);
   // }
-
-  cardinality(propDef: IPropertyRef) {
-    return propDef.getOptions('cardinality', 1);
-  }
-
-  options(propDef: IPropertyRef) {
-    const opts = clone(propDef.getOptions());
-    if (opts.sourceClass) {
-      delete opts.sourceClass._cacheEntity;
-    }
-    return opts;
-  }
 
   async validator(property: IPropertyRef) {
     return filter(this.validationEntries, v => v.property === property.name);
   }
+
+  cardinality(propDef: IPropertyRef) {
+    return propDef.isCollection() ? 0 : 1;
+  }
+
+  options(propDef: IPropertyRef) {
+    const opts = clone(propDef.getOptions());
+    if (opts.target) {
+      delete opts.target;
+    }
+    return opts;
+  }
+  //
+  // async validator(property: IPropertyRef) {
+  //   return filter(this.validationEntries, v => v.property === property.name);
+  // }
 
 }

@@ -1,12 +1,15 @@
-import { clone, isArray, isBoolean, isEmpty, isNumber, isObjectLike, isPlainObject, isString, snakeCase, values } from 'lodash';
+import { clone, isArray, isBoolean, isEmpty, isNumber, isObjectLike, isPlainObject, isString, keys, snakeCase, values } from 'lodash';
 import { IQueringService } from './IQueringService';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import {
   IBuildOptions,
   IEntityRef,
   IJsonSchema,
+  ILookupRegistry,
+  IParseOptions,
   JsonSchema,
   METATYPE_ENTITY,
+  METATYPE_PROPERTY,
   RegistryFactory,
   supportsJsonSchemaImport
 } from '@allgemein/schema-api';
@@ -191,14 +194,14 @@ export abstract class AbstractQueryService implements IQueringService {
               if (supportsJsonSchemaImport(reg)) {
                 await reg.fromJsonSchema(entityDefJson);
               } else {
-                await JsonSchema.unserialize(entityDefJson, { namespace: reg.getLookupRegistry().getNamespace() });
+                await this.unserialize(entityDefJson, reg);
               }
             }
           } else if (isObjectLike(value) && value['$schema']) {
             if (supportsJsonSchemaImport(reg)) {
               await reg.fromJsonSchema(value);
             } else {
-              await JsonSchema.unserialize(value, { namespace: reg.getLookupRegistry().getNamespace() });
+              await this.unserialize(value, reg);
             }
           }
           this.$isReady.next(true);
@@ -210,6 +213,25 @@ export abstract class AbstractQueryService implements IQueringService {
     }
   }
 
+
+  unserialize(value: any, reg: ILookupRegistry) {
+    return JsonSchema.unserialize(value, {
+      namespace: reg.getLookupRegistry().getNamespace(),
+      collector: [
+        {
+          type: METATYPE_PROPERTY,
+          fn: function (key: string, data: any, options: IParseOptions) {
+            // passing all properties
+            const r = {};
+            keys(data)
+              .filter(k => !(['type', 'metaType', 'propertyName', 'properties'].includes(k) || k.startsWith('$')))
+              .map(x => r[x] = data[x]);
+            return r;
+          }
+        }
+      ]
+    });
+  }
 
   setNgUrlPrefix(prefix: string) {
     this.options.ngRoutePrefix = prefix;

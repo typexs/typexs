@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-
-import {StorageService} from '../storage.service';
-import {IEntityRef} from '@allgemein/schema-api';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { StorageService } from '../storage.service';
+import { IEntityRef } from '@allgemein/schema-api';
+import { IViewOptions } from '@typexs/base-ng';
 
 @Component({
   selector: 'storage-view',
@@ -21,6 +21,8 @@ export class StorageViewComponent implements OnInit {
   instance: any;
 
   error: any = null;
+
+  viewOptions: IViewOptions = { elem: { reload: true } };
 
   constructor(public service: StorageService, private route: ActivatedRoute) {
   }

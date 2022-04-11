@@ -1,5 +1,5 @@
-import {isArray, isString, keys, values} from 'lodash';
-import {IClassRef, IEntityRef, IPropertyRef} from '@allgemein/schema-api';
+import { isArray, isString, keys, values } from 'lodash';
+import { IClassRef, IEntityRef, IPropertyRef } from '@allgemein/schema-api';
 
 export class UrlHelper {
 
@@ -38,6 +38,7 @@ export class UrlHelper {
       return this._buildLookupconditions(idProps, data);
     }
   }
+
 
   static buildId(data: { [k: string]: any }) {
     return values(data).join(',');

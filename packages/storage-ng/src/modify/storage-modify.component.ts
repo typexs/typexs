@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-
-import {ActivatedRoute, Router} from '@angular/router';
-import {StorageService} from '../storage.service';
-import {IEntityRef} from '@allgemein/schema-api';
-import {UrlHelper} from '@typexs/base-ng';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { StorageService } from '../storage.service';
+import { IEntityRef } from '@allgemein/schema-api';
+import { IFormOptions, K_HIDDEN } from '@typexs/forms';
+import { UrlHelper } from '@typexs/base-ng';
 
 @Component({
   selector: 'storage-modify',
@@ -25,9 +25,11 @@ export class StorageModifyComponent implements OnInit {
 
   error: any = null;
 
+  formOptions: IFormOptions = { onlyDecoratedFields: false, defaultFormType: K_HIDDEN, readonlyIdentifier: false };
+
   constructor(private storageService: StorageService,
-              private route: ActivatedRoute,
-              private router: Router) {
+    private route: ActivatedRoute,
+    private router: Router) {
   }
 
 

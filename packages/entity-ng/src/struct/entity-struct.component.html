@@ -1,22 +1,20 @@
 <div class="card">
   <div class="card-header">
-    <h3>Entity structure {{entityDef ? entityDef.name : ''}}</h3>
+    <h3>Entity structure {{entityRef ? entityRef.name : ''}}</h3>
   </div>
   <div class="card-body">
 
-    <div *ngIf="entityDef">
+    <div *ngIf="entityRef">
       Options:
-      <pre>
-      {{ entityDef.getOptions() | json }}
-      </pre>
+      <pre class="language-js">{{ entityRef.getOptions() | json }}</pre>
 
-      <div *ngIf="propertyDefs.length > 0">
+      <div *ngIf="propertyRefs.length > 0">
         <h3>Properties</h3>
         <table class="table hover">
           <thead>
           <tr>
-            <th>Name</th>
             <th>Source</th>
+            <th>Name</th>
             <th>Type</th>
             <th>Cardinality</th>
             <th>Options</th>
@@ -24,37 +22,36 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let propertyRef of propertyDefs">
+          <tr *ngFor="let propertyRef of propertyRefs">
+            <td>{{propertyRef.ref.getClassRef().name}}</td>
             <td>
               <span class="{{ 'level-' + propertyRef.level}}"></span>
-              {{ propertyRef.property.name }}
+              {{ propertyRef.ref.name }}
             </td>
-            <td>{{propertyRef.property.object.className}}</td>
             <td>
-              <div *ngIf="propertyRef.property.isEntityReference()">
+              <div *ngIf="propertyRef.ref.isReference()">
                 <a
-                  [routerLink]="[entityService.getNgUrlPrefix(),propertyRef.property.getTargetRef().name,'structure']"
+                  [routerLink]="[service.getNgUrlPrefix(),propertyRef.ref.getTargetRef().name,'structure']"
                   routerLinkActive="true">
-                  {{type(propertyRef.property)}}{{propertyRef.property.isCollection() ? '[]' : ''}}
+                  {{type(propertyRef.ref)}}{{propertyRef.ref.isCollection() ? '[]' : ''}}
                 </a>
               </div>
-              <div *ngIf="!propertyRef.property.isEntityReference()">
-                {{type(propertyRef.property)}}{{propertyRef.property.isCollection() ? '[]' : ''}}
+              <div *ngIf="!propertyRef.ref.isReference()">
+                {{type(propertyRef.ref)}}{{propertyRef.ref.isCollection() ? '[]' : ''}}
               </div>
             </td>
 
-            <td>{{cardinality(propertyRef.property)}}</td>
+            <td>{{cardinality(propertyRef.ref)}}</td>
             <td>
               <details>
                 <summary>JSON</summary>
-                <pre class="language-js">{{options(propertyRef.property) | json}}</pre>
+                <pre class="language-json">{{options(propertyRef.ref) | json}}</pre>
               </details>
             </td>
             <td>
               <details>
                 <summary>JSON</summary>
-                <pre>{{validator(propertyRef.property) | json}}</pre>
-                <pre class="language-js">{{options(propertyRef.property) | json}}</pre>
+                <pre class="language-json">{{validator(propertyRef.ref) | json}}</pre>
               </details>
             </td>
           </tr>
@@ -80,23 +77,23 @@
               {{ propertyRef.name }}
             </td>
             <td>
-              <a [routerLink]="[entityService.getNgUrlPrefix(),propertyRef.getSourceRef().name,'structure']"
+              <a [routerLink]="[service.getNgUrlPrefix(),propertyRef.getClassRef().name,'structure']"
                  routerLinkActive="active">
-                {{propertyRef.object.className}}</a>
+                {{propertyRef.getClassRef().getClass().name}}</a>
             </td>
             <td>
-              <div *ngIf="propertyRef.isEntityReference()">
-                <a [routerLink]="[entityService.getNgUrlPrefix(),propertyRef.getTargetRef().name,'structure']"
+              <div *ngIf="propertyRef.isReference()">
+                <a [routerLink]="[service.getNgUrlPrefix(),propertyRef.getTargetRef().name,'structure']"
                    routerLinkActive="active">
                   {{type(propertyRef)}}{{propertyRef.isCollection() ? '[]' : ''}}
                 </a>
               </div>
-              <div *ngIf="!propertyRef.isEntityReference()">
+              <div *ngIf="!propertyRef.isReference()">
                 {{type(propertyRef)}}{{propertyRef.isCollection() ? '[]' : ''}}
               </div>
             </td>
 
-            <td>{{propertyRef.cardinality}}</td>
+            <td>{{propertyRef.getOptions('cardinality', 1)}}</td>
           </tr>
           </tbody>
         </table>
@@ -105,3 +102,4 @@
 
   </div>
 </div>
+

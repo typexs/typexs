@@ -9,7 +9,7 @@
     </div>
 
     <div *ngIf="ready">
-      <txs-view [instance]="instance" allowViewModeSwitch="true" mode="full">
+      <txs-view [instance]="instance" allowViewModeSwitch="true" mode="full" [options]="viewOptions">
         <div txsViewFallback>
           <txs-simple-json [instance]="instance"></txs-simple-json>
         </div>

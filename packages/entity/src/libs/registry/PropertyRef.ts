@@ -27,8 +27,9 @@ export class PropertyRef extends DefaultPropertyRef {
     return this.getClassRef().name;
   }
 
-  constructor(options: IProperty) {
-    super(assign(options, { metaType: METATYPE_PROPERTY }));
+  constructor(_options: IProperty) {
+    super(assign(_options, { metaType: METATYPE_PROPERTY }));
+    const options = this.getOptions();
     let targetRef = null;
     if (!options.type && !options.propertyClass) {
       throw new NotSupportedError(`property ${this.name} has no defined type nor property class`);

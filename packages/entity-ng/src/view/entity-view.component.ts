@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
-import {EntityService} from './../entity.service';
-import {ActivatedRoute} from '@angular/router';
-import {IEntityRef} from '@allgemein/schema-api';
+import { Component, OnInit } from '@angular/core';
+import { EntityService } from './../entity.service';
+import { ActivatedRoute } from '@angular/router';
+import { IEntityRef } from '@allgemein/schema-api';
+import { IViewOptions } from '@typexs/base-ng';
 
 @Component({
   selector: 'txs-entity-view',
@@ -21,6 +22,8 @@ export class EntityViewComponent implements OnInit {
 
   error: any = null;
 
+  viewOptions: IViewOptions = { elem: { reload: true } };
+
   constructor(public entityService: EntityService, private route: ActivatedRoute) {
   }
 
@@ -35,7 +38,7 @@ export class EntityViewComponent implements OnInit {
   load() {
     this.name = this.route.snapshot.paramMap.get('name');
     this.id = this.route.snapshot.paramMap.get('id');
-    this.entityDef = this.entityService.getEntityRefForName(this.name);
+    this.entityDef = this.entityService.getRegistry().getEntityRefFor(this.name);
     if (this.entityDef) {
       this.entityService.get(this.name, this.id).subscribe((entity: any) => {
         this.instance = entity;

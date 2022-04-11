@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IEntityRef } from '@allgemein/schema-api';
 import { Expressions } from '@allgemein/expressions';
 import { LabelHelper } from '@typexs/base/libs/utils/LabelHelper';
+import { IFormOptions, K_HIDDEN } from '@typexs/forms';
 
 @Component({
   selector: 'entity-modify',
@@ -24,6 +25,8 @@ export class EntityModifyComponent implements OnInit {
   instance: any;
 
   error: any = null;
+
+  formOptions: IFormOptions = { onlyDecoratedFields: false, defaultFormType: K_HIDDEN, readonlyIdentifier: false };
 
   constructor(
     private entityService: EntityService,

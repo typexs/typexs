@@ -17,5 +17,10 @@ export interface IFormOptions {
    */
   defaultFormType?: string;
 
+  /**
+   * Set identifiers as readonly
+   */
+  readonlyIdentifier?: boolean;
+
   buttons?: IButton[];
 }

@@ -57,6 +57,7 @@ export { IApiCallOptions } from './lib/http/IApiCallOptions';
 export * from './lib/http/IGetOptions';
 export * from './lib/http/IHttpRequestOptions';
 
+
 export { ILoggerOptions } from './lib/log/ILoggerOptions';
 export { Log, LOGLEVEL, LOGLEVELS } from './lib/log/Log';
 
@@ -110,3 +111,4 @@ export { STORAGE_REQUEST_MODE, DEFAULT_DT_GRID_OPTIONS, QUERY_MODE } from './api
 export { FreeQueryInputComponent } from './api/querying/free-query/free-query-input.component';
 export { QueryEmbeddedComponent } from './component/query/query-embedded.component';
 
+export { IViewOptions } from './component/view/IViewOptions';

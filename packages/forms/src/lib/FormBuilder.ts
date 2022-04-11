@@ -1,4 +1,4 @@
-import { capitalize, defaults, get, isArray, isString, keys, remove } from 'lodash';
+import { capitalize, defaults, get, isArray, isFunction, isNull, isString, keys, remove } from 'lodash';
 import { NotYetImplementedError } from '@allgemein/base';
 import { AbstractRef, ClassRef, IEntityRef, IPropertyRef, METATYPE_ENTITY, METATYPE_PROPERTY } from '@allgemein/schema-api';
 import { FormObject } from './FormObject';
@@ -8,6 +8,7 @@ import { ComponentRegistry } from '@typexs/base/libs/bindings/ComponentRegistry'
 import { LabelHelper } from '@typexs/base/libs/utils/LabelHelper';
 import { NoFormTypeDefinedError } from './exceptions/NoFormTypeDefinedError';
 import { IFormOptions } from './IFormOptions';
+import { Log } from '@typexs/base-ng';
 import { K_CHECKBOX, K_FORM, K_GRID, K_HIDDEN, K_NAME, K_READONLY, K_SELECT, K_TEXT, K_VIRTUAL } from './Constants';
 
 export class FormBuilder {
@@ -24,9 +25,11 @@ export class FormBuilder {
     this.registry = registry;
     this.options = defaults(options || {}, <IFormOptions>{
       onlyDecoratedFields: true,
-      defaultFormType: K_TEXT
+      defaultFormType: K_TEXT,
+      readonlyIdentifier: true
     });
   }
+
 
   buildFromJSON(data: any): Form {
     this.data = data;
@@ -52,32 +55,10 @@ export class FormBuilder {
       // TODO support also other types
       const property: IPropertyRef = <IPropertyRef>entity;
 
-      let formType = property.getOptions(K_FORM); // || 'text';
-      if (!formType) {
-        // form type is not set, try detect
-        // TODO Defaults for the field
-        if (property.isIdentifier()) {
-          formType = K_READONLY;
-        } else if (property.isReference()) {
-          if (property.getTargetRef().hasEntityRef()) {
-            formType = K_SELECT;
-          } else {
-            formType = K_GRID;
-          }
-        } else {
-          if (property['getType'] && property['getType']() === 'boolean') {
-            formType = K_CHECKBOX;
-          } else {
-            // no form declared
-            if (this.options.onlyDecoratedFields) {
-              return null;
-            }
-            formType = get(this.options, 'defaultFormType', K_HIDDEN);
-          }
-        }
-        property.setOption(K_FORM, formType);
+      const formType = this.formTypeFromProperty(property);
+      if (isNull(formType)) {
+        return null;
       }
-
       const methodName = 'for' + capitalize(formType);
       if (this[methodName]) {
         formObject = this[methodName](formType, property);
@@ -132,6 +113,53 @@ export class FormBuilder {
     return formObject;
   }
 
+
+  private formTypeFromProperty(property: IPropertyRef) {
+    let formType = property.getOptions(K_FORM); // || 'text';
+    if (!formType) {
+      if (this.options.onlyDecoratedFields) {
+        // no form declared skip then
+        return null;
+      }
+      // form type is not set, try detect
+      // TODO Defaults for the field
+      if (property.isIdentifier() && get(this.options, 'readonlyIdentifier', true)) {
+        formType = K_READONLY;
+      } else if (property.isReference()) {
+        if (property.getTargetRef().hasEntityRef()) {
+          formType = K_SELECT;
+        } else {
+          formType = K_GRID;
+        }
+      } else {
+        let datatype = property.getType();
+        if (isFunction(datatype)) {
+          try {
+            datatype = datatype();
+          } catch (e) {
+            Log.error(e);
+          }
+        }
+        if (isString(datatype)) {
+          switch (datatype) {
+            case 'number':
+            case 'string':
+            case 'date':
+              formType = K_TEXT;
+              break;
+            case 'boolean':
+              formType = K_CHECKBOX;
+              break;
+            default:
+              formType = get(this.options, 'defaultFormType', K_HIDDEN);
+              break;
+          }
+        }
+      }
+      // property.setOption(K_FORM, formType);
+    }
+    return formType;
+  }
 
   private forDefault(formType: string, property: IPropertyRef) {
     const formObject: FormObject = this.registry.createHandle(formType);
