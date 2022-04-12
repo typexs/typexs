@@ -7,6 +7,7 @@ import { Entity, Property } from '@allgemein/schema-api';
 import { Checkbox, Grid, ISelectOption, Label } from '@typexs/forms';
 import { EntityService } from '@typexs/entity-ng';
 import { K_STORABLE } from '@typexs/entity/libs/Constants';
+import { mergeMap, filter } from 'rxjs/operators';
 
 
 @Entity({ [K_STORABLE]: false })
@@ -57,9 +58,19 @@ export class PermissionsRolesComponent implements OnInit, OnDestroy {
     private messageService: MessageService) {
   }
 
+  ngOnInit(): void {
+    this.channel = this.messageService.get('form.permissions-roles');
+    this.authService.isInitialized()
+      .pipe(filter(x => x))
+      .pipe(mergeMap(x => this.entityService.isLoaded()))
+      .subscribe(x => {
+        this.isReady();
+      });
+  }
+
+
   isReady() {
     const permissionsMatrix = new PermissionMatrix();
-
     this.entityService.query(Permission.name, null, { limit: 0 }).subscribe((permissions) => {
       if (permissions) {
         this.permissions = permissions.entities;
@@ -73,15 +84,6 @@ export class PermissionsRolesComponent implements OnInit, OnDestroy {
               value: r.rolename,
               label: r.displayName ? r.displayName : r.rolename
             });
-            //
-            // this.roles.forEach(x => {
-            //   x.permissions.forEach(y => {
-            //     const erg = this.permissions.find(z => z.permission === y.permission);
-            //     if (erg) {
-            //       erg.roles.push(x);
-            //     }
-            //   });
-            // });
 
             this.permissions.forEach((p: Permission) => {
               const per = new PermissionData();
@@ -99,31 +101,6 @@ export class PermissionsRolesComponent implements OnInit, OnDestroy {
     });
   }
 
-
-  ngOnInit(): void {
-    this.channel = this.messageService.get('form.permissions-roles');
-    const observable = this.authService.isInitialized();
-    if (_.isBoolean(observable)) {
-      if (observable) {
-        this.entityService.isReady().subscribe(x => {
-          if (x) {
-            this.isReady();
-          }
-        });
-      }
-    } else {
-      observable.subscribe(x => {
-        if (x) {
-          this.entityService.isReady().subscribe(y => {
-            if (y) {
-              this.isReady();
-            }
-          });
-        }
-      });
-    }
-
-  }
 
   ngOnDestroy(): void {
     this.channel.finish();
@@ -151,19 +128,18 @@ export class PermissionsRolesComponent implements OnInit, OnDestroy {
           });
         }
       }, (error: Error) => {
-        // console.error(error);
         this.channel.publish({
           type: MessageType.SUCCESS,
           content: error.message
         });
       });
-
     } else {
       this.channel.publish({
         type: MessageType.ERROR,
         content: 'Validation failed.'
       });
     }
-
   }
+
+
 }

@@ -1,10 +1,11 @@
 import { AnnotationsHelper } from '@allgemein/schema-api';
-import { C_ENTITY_LABEL } from '../lib/Constants';
+import { C_ENTITY_LABEL, K_FORM, K_LABEL } from '../lib/Constants';
 
 export function Label() {
   return function(object: any, property: string) {
     // use enum attribute, but later it will be deprecated
     AnnotationsHelper.forPropertyOn(object.constructor, property, {
+      [K_FORM]: K_LABEL,
       [C_ENTITY_LABEL]: true
     });
   };

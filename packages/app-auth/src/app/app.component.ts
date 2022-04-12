@@ -11,7 +11,7 @@ export class AppComponent implements OnInit {
   title = 'app';
 
   constructor(public auth: AuthService, private appService: AppService) {
-    appService.getViewContext().subscribe(x => console.log(x));
+    // appService.getViewContext().subscribe(x => console.log(x));
   }
 
 

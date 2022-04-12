@@ -27,7 +27,12 @@
   "peerDependencies": {
     "@typexs/base-ng": "0.0.0-PLACEHOLDER",
     "@typexs/ng": "0.0.0-PLACEHOLDER",
-    "@typexs/forms-ng": "0.0.0-PLACEHOLDER"
+    "@typexs/forms-ng": "0.0.0-PLACEHOLDER",
+    "@typexs/forms": "0.0.0-PLACEHOLDER",
+    "@typexs/entity": "0.0.0-PLACEHOLDER",
+    "@typexs/entity-ng": "0.0.0-PLACEHOLDER",
+    "@typexs/auth": "0.0.0-PLACEHOLDER",
+    "@typexs/ng-theme-base": "0.0.0-PLACEHOLDER"
   },
   "devDependencies": {
     "@angular/core": "v12-lts",

@@ -10,7 +10,7 @@ import { BaseAdminThemeModule } from '@typexs/ng-theme-base';
 import { StorageModule } from '@typexs/storage-ng';
 import { EntityModule } from '@typexs/entity-ng';
 import { RouterMenuModule } from '@typexs/ng-router-menu';
-import { UserModule } from '@typexs/auth-ng';
+import { UserAdminModule, UserModule } from '@typexs/auth-ng';
 
 
 export const APP_MODULES: Array<Type<any> | ModuleWithProviders<any> | any[]> = [
@@ -24,7 +24,7 @@ export const APP_MODULES: Array<Type<any> | ModuleWithProviders<any> | any[]> = 
   BaseAdminThemeModule,
   StorageModule,
   EntityModule,
-  UserModule.forRoot()
-  // UserAdminModule.forRoot()
+  UserModule.forRoot(),
+  UserAdminModule
 
 ];

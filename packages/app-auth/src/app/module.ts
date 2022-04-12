@@ -10,6 +10,7 @@ import { UsersListComponent } from './demos/bat-auth-users-list/users-list.compo
 import { NavigatorService } from '@typexs/ng-router-menu';
 import { StorageService } from '@typexs/storage-ng';
 import { EntityService } from '@typexs/entity-ng';
+import { UserAuthGuardService, UserAuthService } from '@typexs/auth-ng';
 
 
 @NgModule({
@@ -22,7 +23,16 @@ import { EntityService } from '@typexs/entity-ng';
     UsersListComponent
   ],
   imports: APP_MODULES,
-  providers: [],
+  providers: [
+    // {
+    //   provide: AuthService,
+    //   useClass: UserAuthService
+    // },
+    // {
+    //   provide: AuthGuardService,
+    //   useClass: UserAuthGuardService
+    // }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
@@ -32,7 +42,7 @@ export class AppModule {
     private authGuardService: AuthGuardService,
     private navigatorService: NavigatorService,
     private storageService: StorageService,
-    private entityService: EntityService,
+    private entityService: EntityService
   ) {
     entityService.setNgUrlPrefix('/admin/entity');
     storageService.setNgUrlPrefix('/admin/storage');
