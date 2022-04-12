@@ -41,7 +41,7 @@ export class StorageDeleteComponent implements OnInit {
   load() {
     this.name = this.route.snapshot.paramMap.get('name');
     this.id = this.route.snapshot.paramMap.get('id');
-    this.entityDef = this.entityService.getRegistry().find(METATYPE_ENTITY, (e: IEntityRef) => e.machineName === snakeCase(this.name));
+    this.entityDef = this.entityService.getEntityRefForName(this.name);
     if (this.entityDef) {
       this.entityService.get(this.name, this.id).subscribe((entity) => {
         this.instance = entity;
@@ -60,7 +60,7 @@ export class StorageDeleteComponent implements OnInit {
           // TODO maybe wait
           this.instance = entity;
           this.deleted = true;
-//          await this.router.navigate([storageService.getNgUrlPrefix(), this.name, 'query']);
+          // await this.router.navigate([storageService.getNgUrlPrefix(), this.name, 'query']);
         });
       }
     }

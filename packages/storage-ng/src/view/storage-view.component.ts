@@ -38,7 +38,7 @@ export class StorageViewComponent implements OnInit {
   load() {
     this.name = this.route.snapshot.paramMap.get('name');
     this.id = this.route.snapshot.paramMap.get('id');
-    this.entityDef = this.service.getRegistry().getEntityRefFor(this.name);
+    this.entityDef = this.service.getEntityRefForName(this.name);
     if (this.entityDef) {
       this.service.get(this.name, this.id).subscribe((entity: any) => {
         this.instance = entity;

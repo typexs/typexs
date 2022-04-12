@@ -52,9 +52,9 @@ export class StorageService extends AbstractQueryService implements IQueringServ
           // eslint-disable-next-line @typescript-eslint/naming-convention
           update_by_condition: API_CTRL_STORAGE_UPDATE_ENTITIES_BY_CONDITION
         },
-        registry: RegistryFactory.get(REGISTRY_TYPEORM),
+        // registry: RegistryFactory.get(REGISTRY_TYPEORM),
         ngRoutePrefix: API_CTRL_STORAGE_PREFIX,
-        registryName: REGISTRY_TYPEORM
+        // registryName: REGISTRY_TYPEORM
       });
   }
 

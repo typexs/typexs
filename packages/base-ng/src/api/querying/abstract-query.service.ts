@@ -1,4 +1,18 @@
-import { clone, isArray, isBoolean, isEmpty, isNumber, isObjectLike, isPlainObject, isString, keys, snakeCase, values } from 'lodash';
+import {
+  clone,
+  isArray,
+  isBoolean,
+  isEmpty,
+  isNumber,
+  isObjectLike,
+  isPlainObject,
+  isString,
+  keys,
+  snakeCase,
+  uniq,
+  values,
+  concat
+} from 'lodash';
 import { IQueringService } from './IQueringService';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
 import {
@@ -27,6 +41,8 @@ import { ISaveOptions } from './ISaveOptions';
 import { IUpdateOptions } from './IUpdateOptions';
 import { IBackendClientService } from '../backend/IBackendClientService';
 import { IAuthServiceProvider } from '../auth/IAuthServiceProvider';
+import { resolveNamespaces } from '../../lib/functions';
+import { C_DEFAULT } from '../../constants';
 
 
 export abstract class AbstractQueryService implements IQueringService {
@@ -40,6 +56,8 @@ export abstract class AbstractQueryService implements IQueringService {
   private _authService: IAuthServiceProvider;
 
   private options: IQueryServiceOptions;
+
+  private namespaces: string[] = [];
 
 
   constructor(
@@ -90,7 +108,7 @@ export abstract class AbstractQueryService implements IQueringService {
 
   initialize() {
     if (this._authService.isEnabled()) {
-      this.getRegistry().reset();
+      // this.getRegistry().reset();
       let subscription: Subscription = null;
       this._authService.isInitialized().subscribe(x => {
         if (x) {
@@ -113,25 +131,29 @@ export abstract class AbstractQueryService implements IQueringService {
     }
   }
 
-  getRegistry() {
-    if (this.options.registry) {
-      return this.options.registry;
-    } else if (this.options.registryName) {
-      return RegistryFactory.get(this.options.registryName);
-    }
-    throw new Error('registry not supported for this service.');
+  getNamespaces(): string[] {
+    return this.namespaces;
   }
+
+  // getRegistry() {
+  //   if (this.options.registry) {
+  //     return this.options.registry;
+  //   } else if (this.options.registryName) {
+  //     return RegistryFactory.get(this.options.registryName);
+  //   }
+  //   throw new Error('registry not supported for this service.');
+  // }
 
   /**
    * return the Entity describing reference or null if not present
    * @param name
    */
   getEntityRefForName(name: string): IEntityRef {
-    if (!this.options.registry) {
+    if (this.namespaces.length === 0) {
       return null;
     }
     const snakeCaseName = snakeCase(name);
-    return this.getRegistry().find(METATYPE_ENTITY, (x: IEntityRef) =>
+    return this.getEntityRefs().find((x: IEntityRef) =>
       x.name === name ||
       x.getClassRef().name === name ||
       snakeCase(x.name) === snakeCaseName ||
@@ -184,33 +206,48 @@ export abstract class AbstractQueryService implements IQueringService {
       return;
     }
     if (!this.$isReady.getValue()) {
-      const reg = this.getRegistry();
+      this.namespaces.map(ns => RegistryFactory.get(ns).reset());
+      this.namespaces = [];
+      // const reg = this.getRegistry();
       const observable = this._backend.callApi<IJsonSchema>(this.getRoute('metadata'), {});
       observable.subscribe(
         async value => {
           if (isArray(value)) {
             // if multiple json schemas are
             for (const entityDefJson of value) {
-              if (supportsJsonSchemaImport(reg)) {
-                await reg.fromJsonSchema(entityDefJson);
-              } else {
-                await this.unserialize(entityDefJson, reg);
-              }
+              await this.loadJsonSchema(entityDefJson);
             }
-          } else if (isObjectLike(value) && value['$schema']) {
-            if (supportsJsonSchemaImport(reg)) {
-              await reg.fromJsonSchema(value);
-            } else {
-              await this.unserialize(value, reg);
-            }
+          } else {
+            await this.loadJsonSchema(value);
           }
           this.$isReady.next(true);
         },
         error => {
           this.$isReady.next(false);
         });
-
     }
+  }
+
+  private loadJsonSchema(value: any) {
+    if (isObjectLike(value) && value['$schema']) {
+      const namespaces = resolveNamespaces(value);
+      let namespace = C_DEFAULT;
+      if (namespaces.length === 1) {
+        namespace = namespaces.shift();
+      } else if (namespaces.length > 1) {
+        throw new Error('mulitple namespaces in single schema description not allowed.');
+      }
+      if (!this.namespaces.includes(namespace)) {
+        this.namespaces.push(namespace);
+      }
+      const reg = RegistryFactory.get(namespace);
+      if (supportsJsonSchemaImport(reg)) {
+        return reg.fromJsonSchema(value);
+      } else {
+        return this.unserialize(value, reg);
+      }
+    }
+    return null;
   }
 
 
@@ -220,7 +257,7 @@ export abstract class AbstractQueryService implements IQueringService {
       collector: [
         {
           type: METATYPE_PROPERTY,
-          fn: function (key: string, data: any, options: IParseOptions) {
+          fn: function(key: string, data: any, options: IParseOptions) {
             // passing all properties
             const r = {};
             keys(data)
@@ -241,8 +278,23 @@ export abstract class AbstractQueryService implements IQueringService {
     return this.options.ngRoutePrefix;
   }
 
+
+  getRegistries() {
+    return this.namespaces.map(ns => RegistryFactory.get(ns));
+  }
+
   getEntityRefs() {
-    return this.getRegistry().getEntityRefs();
+    return concat([], ...this.getRegistries().map(reg => reg.getEntityRefs()));
+  }
+
+  getEntityRefFor(fn: string | object | Function, skipNsCheck?: boolean) {
+    for (const reg of this.getRegistries()) {
+      const ref = reg.getEntityRefFor(fn, skipNsCheck);
+      if (ref) {
+        return ref;
+      }
+    }
+    return null;
   }
 
 

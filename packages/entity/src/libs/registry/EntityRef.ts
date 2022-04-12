@@ -1,6 +1,6 @@
 import { PropertyRef } from './PropertyRef';
 import { IEntity } from './IEntity';
-import { assign, defaults, isArray } from 'lodash';
+import { assign, defaults, has, isArray } from 'lodash';
 
 
 import {
@@ -21,7 +21,8 @@ import { Expressions } from '@allgemein/expressions';
 import { __CLASS__, LabelHelper } from '@typexs/base';
 
 const DEFAULT_OPTIONS: IEntity = {
-  [K_STORABLE]: true
+  [K_STORABLE]: true,
+  namespace: NAMESPACE_BUILT_ENTITY
 };
 
 // const REGEX_ID = /(([\w_]+)=((\d+)|(\d+(\.|\,)\d+)|\'([^\']*)\'),?)/;

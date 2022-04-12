@@ -93,9 +93,9 @@ export class FormComponent extends AbstractFormComponent<Form> implements OnInit
     // TODO instance must be present
     super.reset();
     if (!this.registry) {
-      const service = this.resolver.getServiceFor(this.instance);
-      if (service) {
-        this.registry = service.getRegistry();
+      const entityRef = this.resolver.getEntityRef(this.instance);
+      if (entityRef) {
+        this.registry = entityRef.getRegistry();
       } else {
         this.registry = RegistryFactory.get();
       }

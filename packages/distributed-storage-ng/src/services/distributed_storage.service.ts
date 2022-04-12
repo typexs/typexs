@@ -33,7 +33,7 @@ export class DistributedStorageService
         update_by_condition: null
       },
       ngRoutePrefix: API_CTRL_DISTRIBUTED_STORAGE,
-      registryName: 'distributed'
+      // registryName: 'distributed'
     });
   }
 

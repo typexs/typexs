@@ -44,14 +44,10 @@ export class StorageModifyComponent implements OnInit {
   }
 
 
-  getRegistry() {
-    return this.storageService.getRegistry();
-  }
-
   load() {
     this.name = this.route.snapshot.paramMap.get('name');
     this.id = this.route.snapshot.paramMap.get('id');
-    this.entityDef = this.storageService.getRegistry().getEntityRefFor(this.name);
+    this.entityDef = this.storageService.getEntityRefForName(this.name);
     if (this.entityDef) {
       if (this.id) {
         this.new = false;
@@ -68,6 +64,10 @@ export class StorageModifyComponent implements OnInit {
       this.error = `Can't find entity type for ${this.name}.`;
     }
     this.ready = true;
+  }
+
+  getRegistry() {
+    return this.entityDef.getRegistry();
   }
 
 

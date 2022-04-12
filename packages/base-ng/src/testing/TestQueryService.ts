@@ -23,9 +23,6 @@ export class TestQueryService implements IQueringService {
     return '';
   }
 
-  getRegistry(): ILookupRegistry {
-    return undefined;
-  }
 
   isLoaded(): Observable<boolean> {
     return undefined;
@@ -36,7 +33,7 @@ export class TestQueryService implements IQueringService {
   isReady(callback: (status: boolean, error: Error) => void): void;
   // eslint-disable-next-line no-dupe-class-members
   isReady(callback?: (status: boolean, error: Error) => void): void | Observable<boolean> {
-    return ;
+    return;
   }
 
   query(entityName: string, query?: any, options?: any): Observable<any> {
@@ -53,6 +50,26 @@ export class TestQueryService implements IQueringService {
 
   updateByCondition(entityName: string, condition: any, update: any, options?: any): Observable<any> {
     return undefined;
+  }
+
+  getEntityRefFor(fn: string | object | Function, skipNsCheck?: boolean): any {
+    return undefined;
+  }
+
+  getEntityRefForName(name: string): any {
+    return undefined;
+  }
+
+  getEntityRefs(): [] {
+    return [];
+  }
+
+  getNamespaces(): string[] {
+    return [];
+  }
+
+  getRegistries(): [] {
+    return [];
   }
 
 }

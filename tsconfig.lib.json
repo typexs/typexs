@@ -45,6 +45,12 @@
       "@typexs/roles/*": [
         "./packages/roles/src/*",
       ],
+      "@typexs/roles-api": [
+        "./packages/roles-api/src/browser",
+      ],
+      "@typexs/roles-api/*": [
+        "./packages/roles-api/src/*",
+      ],
       "@typexs/base-ng/*": [
         "./packages/base-ng/src/*"
       ],

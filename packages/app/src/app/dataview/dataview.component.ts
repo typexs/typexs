@@ -88,18 +88,7 @@ export class DataViewComponent implements OnInit, OnChanges, OnDestroy, AfterVie
   }
 
   getRegistryEntries() {
-    const service = this.getService();
-    if (service) {
-      if (service instanceof StorageService) {
-        return (<any>service.getRegistry()).getEntityRefs();
-      } else {
-        return (<any>service.getRegistry()).listEntities();
-      }
-
-    } else {
-      return [];
-    }
-
+    return this.getService().getEntityRefs();
   }
 
   onServiceSelect($event: any) {

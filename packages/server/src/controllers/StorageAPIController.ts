@@ -185,19 +185,6 @@ export class StorageAPIController {
     }
 
     const entry = this.getSerializer({ storage: ref.getName() }).serialize(entityRef);
-    //
-    // const entry = JsonSchema.serialize(entityRef, {
-    //   /**
-    //    * Append storageName to entity object
-    //    * @param src
-    //    * @param dst
-    //    */
-    //   postProcess: (src, dst) => {
-    //     if (isEntityRef(src)) {
-    //       dst.storage = ref.getName();
-    //     }
-    //   }
-    // });
     return entry;
   }
 

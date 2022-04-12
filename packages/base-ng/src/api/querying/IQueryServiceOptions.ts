@@ -17,10 +17,10 @@ export interface IQueryServiceOptions {
   /**
    * Name of the registry
    */
-  registryName?: string;
+  // registryName?: string;
 
   /**
    * Registry handle from type ILookupRegistry
    */
-  registry?: ILookupRegistry;
+  // registry?: ILookupRegistry;
 }

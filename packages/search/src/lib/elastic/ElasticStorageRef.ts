@@ -204,7 +204,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
         await mappingUpdater.reload();
         for (let i = 0; i < aliasNames.length; i++) {
           const aliasName = aliasNames[i];
-          let neededMapping = await this.getIndexCreateData(aliasName);
+          const neededMapping = await this.getIndexCreateData(aliasName);
           const indexName = neededMapping.indexName;
           let mapping = mappingUpdater.getBy(indexName, 'name');
           let res: boolean = null;

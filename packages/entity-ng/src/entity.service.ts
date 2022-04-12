@@ -48,7 +48,7 @@ export class EntityService extends AbstractQueryService implements IQueringServi
       },
       // namespace: NAMESPACE_BUILT_ENTITY
       // registry: RegistryFactory.get(NAMESPACE_BUILT_ENTITY)
-      registryName: NAMESPACE_BUILT_ENTITY
+      // registryName: NAMESPACE_BUILT_ENTITY
     });
   }
 

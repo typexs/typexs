@@ -43,7 +43,7 @@ export class EntityModifyComponent implements OnInit {
 
 
   getRegistry() {
-    return this.entityService.getRegistry();
+    return this.entityDef.getRegistry();
   }
 
   getNgUrlPrefix() {
@@ -53,7 +53,7 @@ export class EntityModifyComponent implements OnInit {
   load() {
     this.name = this.route.snapshot.paramMap.get('name');
     this.id = this.route.snapshot.paramMap.get('id');
-    this.entityDef = this.getRegistry().getEntityRefFor(this.name);
+    this.entityDef = this.entityService.getEntityRefForName(this.name);
     if (this.entityDef) {
       if (this.id) {
         this.new = false;

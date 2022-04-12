@@ -117,7 +117,6 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
 
   create<T>(addInfo?: boolean): T {
     return this.getClassRef().create(addInfo);
-    // return this.entityRef.create();
   }
 
 

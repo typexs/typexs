@@ -8,6 +8,7 @@ import { snakeCase } from 'lodash';
 
 export class IndexEntityRegistry extends AbstractRegistry {
 
+  // eslint-disable-next-line no-use-before-define
   private static $self: IndexEntityRegistry;
 
   // lookupRegistry: LookupRegistry;

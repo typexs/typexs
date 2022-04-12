@@ -56,7 +56,7 @@ import { EntityControllerApi } from '../api/entity.controller.api';
 import { IEntityRef, IJsonSchemaUnserializeOptions, JsonSchema, METATYPE_PROPERTY, RegistryFactory, T_STRING } from '@allgemein/schema-api';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import { EntityRegistry } from '../libs/EntityRegistry';
-import { first, get, isArray, isNumber, isPlainObject, keys } from 'lodash';
+import { assign, first, get, isArray, isNumber, isPlainObject, keys } from 'lodash';
 
 
 @ContextGroup(C_API)
@@ -122,31 +122,7 @@ export class EntityAPIController {
     @QueryParam('opts') options?: IJsonSchemaUnserializeOptions) {
     const schemaRef = this.getRegistry().getSchemaRefByName(schemaName);
     if (schemaRef) {
-      const serializer = JsonSchema.getSerializer({
-        onlyDecorated: true,
-        ignoreUnknownType: true,
-        /**
-         * Append storageName to entity object
-         * @param src
-         * @param dst
-         */
-        postProcess: (src, dst, serializer) => {
-          if (isEntityRef(src)) {
-            dst.schemaName = schemaName;
-          } else if (src.metaType === METATYPE_PROPERTY) {
-            const type = src.getType();
-            const opts = src.getOptions();
-            if (type === 'datetime' ||
-              get(opts, 'metadata.options.sourceType') === 'datetime' ||
-              get(opts, 'metadata.options.sourceType') === 'date') {
-              dst.type = T_STRING;
-              dst.format = 'date-time';
-            }
-          }
-
-          this.invoker.use(StorageAPIControllerApi).serializationPostProcess(src, dst, serializer);
-        }
-      });
+      const serializer = this.getSerializer({ schemaName: schemaName });
       for (const ref of schemaRef.getEntityRefs()) {
         if (ref && isEntityRef(ref)) {
           serializer.serialize(ref);
@@ -166,7 +142,11 @@ export class EntityAPIController {
   @Get(_API_CTRL_ENTITY_METADATA_ALL_ENTITIES)
   @ContentType('application/json')
   async entities(@CurrentUser() user: any, @QueryParam('opts') options?: IJsonSchemaUnserializeOptions) {
-    return this.getRegistry().toJsonSchema(options);
+    const serializer = this.getSerializer();
+    for (const ref of this.getRegistry().getEntityRefs()) {
+      serializer.serialize(ref);
+    }
+    return serializer.getJsonSchema();
   }
 
 
@@ -177,7 +157,13 @@ export class EntityAPIController {
   @Get(_API_CTRL_ENTITY_METADATA_GET_ENTITY)
   @ContentType('application/json')
   async entity(@Param('name') entityName: string, @CurrentUser() user: any, @QueryParam('opts') options?: IJsonSchemaUnserializeOptions) {
-    return this.getRegistry().getEntityRefByName(entityName).toJsonSchema(options);
+    const entityRef = this.getRegistry().getEntityRefByName(entityName) as IEntityRef;
+    if (isArray(entityRef)) {
+      throw new Error('multiple entity refs found');
+    }
+
+    const entry = this.getSerializer().serialize(entityRef);
+    return entry;
   }
 
 
@@ -386,6 +372,37 @@ export class EntityAPIController {
   private getRegistry() {
     return RegistryFactory.get(NAMESPACE_BUILT_ENTITY) as EntityRegistry;
   }
+
+
+  private getSerializer(add: any = {}) {
+    return JsonSchema.getSerializer({
+      onlyDecorated: true,
+      ignoreUnknownType: true,
+      /**
+       * Append storageName to entity object
+       * @param src
+       * @param dst
+       */
+      postProcess: (src, dst, serializer) => {
+        if (isEntityRef(src)) {
+          assign(dst, add);
+          // dst.storage = storageName;
+          dst.namespace = src.getNamespace();
+        } else if (src.metaType === METATYPE_PROPERTY) {
+          const type = src.getType();
+          const opts = src.getOptions();
+          if (type === 'datetime' ||
+            get(opts, 'metadata.options.sourceType') === 'datetime' ||
+            get(opts, 'metadata.options.sourceType') === 'date') {
+            dst.type = T_STRING;
+            dst.format = 'date-time';
+          }
+        }
+        this.invoker.use(StorageAPIControllerApi).serializationPostProcess(src, dst, serializer);
+      }
+    });
+  }
+
 }
 
 

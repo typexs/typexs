@@ -1,9 +1,9 @@
-import {clone, filter} from 'lodash';
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {IClassRef, IEntityRef, IPropertyRef, IValidatorEntry, METATYPE_PROPERTY, Validator} from '@allgemein/schema-api';
-import {StorageService} from '../storage.service';
-import {from} from 'rxjs';
+import { clone, filter } from 'lodash';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { IClassRef, IEntityRef, IPropertyRef, IValidatorEntry, METATYPE_PROPERTY, Validator } from '@allgemein/schema-api';
+import { StorageService } from '../storage.service';
+import { from } from 'rxjs';
 
 
 @Component({
@@ -23,8 +23,9 @@ export class StorageStructComponent implements OnInit {
 
   validationEntries: IValidatorEntry[] = [];
 
-  constructor(public storageService: StorageService,
-              private route: ActivatedRoute) {
+  constructor(
+    public storageService: StorageService,
+    private route: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -42,10 +43,13 @@ export class StorageStructComponent implements OnInit {
     this.referrerProps = [];
     this.propertyRefs = [];
     this.name = name;
-    this.entityRef = this.getRegistry().getEntityRefFor(this.name);
-    this.referrerProps = this.getRegistry().filter(METATYPE_PROPERTY, (referrer: IPropertyRef) => {
-      return referrer.isReference() && referrer.getTargetRef() === this.entityRef.getClassRef();
-    });
+    this.entityRef = this.storageService.getEntityRefForName(this.name);
+    this.referrerProps = [].concat(...this.storageService.getRegistries().map(reg => reg.filter(METATYPE_PROPERTY,
+      (referrer: IPropertyRef) => referrer.isReference() && referrer.getTargetRef() === this.entityRef.getClassRef())));
+
+    // this.referrerProps = this.getRegistry().filter(METATYPE_PROPERTY, (referrer: IPropertyRef) => {
+    //   return referrer.isReference() && referrer.getTargetRef() === this.entityRef.getClassRef();
+    // });
     this.scan(this.entityRef);
     from(Validator.getValidationEntries(this.entityRef)).subscribe((x: IValidatorEntry[]) => {
       this.validationEntries = x;
@@ -61,10 +65,6 @@ export class StorageStructComponent implements OnInit {
     }
   }
 
-  getRegistry() {
-    return this.storageService.getRegistry();
-  }
-
 
   scan(source: IClassRef | IEntityRef, level: number = 0) {
     if (level > 8) {
@@ -72,7 +72,7 @@ export class StorageStructComponent implements OnInit {
     }
     if (source) {
       for (const props of source.getPropertyRefs()) {
-        this.propertyRefs.push({ref: props, level: level});
+        this.propertyRefs.push({ ref: props, level: level });
         if (props.isReference()) {
           this.scan(props.getTargetRef(), level + 1);
         }

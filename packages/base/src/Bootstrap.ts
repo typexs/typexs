@@ -48,6 +48,7 @@ export class Bootstrap {
   }
 
 
+  // eslint-disable-next-line no-use-before-define
   private static $self: Bootstrap = null;
 
   private nodeId: string = CryptUtils.shorthash(CryptUtils.random(8));

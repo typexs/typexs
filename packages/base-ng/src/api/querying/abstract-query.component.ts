@@ -1,21 +1,27 @@
-import { get, has, isArray, isEmpty, isNumber, keys, snakeCase, defaults, set, assign} from 'lodash';
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
-import {ClassType, IEntityRef, JS_DATA_TYPES} from '@allgemein/schema-api';
-import {ExprDesc, Expressions} from '@allgemein/expressions';
-import {IDTGridOptions} from '../../datatable/IDTGridOptions';
-import {IGridColumn} from '../../datatable/IGridColumn';
-import {C_PROPERTY, C_URL_PREFIX, CC_GRID_CELL_ENTITY_REFERENCE, CC_GRID_CELL_OBJECT_REFERENCE, CC_GRID_CELL_VALUE} from '../../constants';
-import {IGridApi} from '../../datatable/IGridApi';
-import {DatatableComponent} from '../../datatable/datatable.component';
-import {IQueringService} from './IQueringService';
-import {QueryAction} from './QueryAction';
-import {IQueryParams} from '../../datatable/IQueryParams';
-import {DEFAULT_DT_GRID_OPTIONS} from './Constants';
-import {AbstractGridComponent} from '../../datatable/abstract-grid.component';
-import {Helper} from './Helper';
-import {IQueryComponentApi} from './IQueryComponentApi';
-import {first} from 'rxjs/operators';
-import {IFindOptions} from './IFindOptions';
+import { get, has, isArray, isEmpty, isNumber, keys, snakeCase, defaults, set, assign } from 'lodash';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ClassType, IEntityRef, JS_DATA_TYPES } from '@allgemein/schema-api';
+import { ExprDesc, Expressions } from '@allgemein/expressions';
+import { IDTGridOptions } from '../../datatable/IDTGridOptions';
+import { IGridColumn } from '../../datatable/IGridColumn';
+import {
+  C_PROPERTY,
+  C_URL_PREFIX,
+  CC_GRID_CELL_ENTITY_REFERENCE,
+  CC_GRID_CELL_OBJECT_REFERENCE,
+  CC_GRID_CELL_VALUE
+} from '../../constants';
+import { IGridApi } from '../../datatable/IGridApi';
+import { DatatableComponent } from '../../datatable/datatable.component';
+import { IQueringService } from './IQueringService';
+import { QueryAction } from './QueryAction';
+import { IQueryParams } from '../../datatable/IQueryParams';
+import { DEFAULT_DT_GRID_OPTIONS } from './Constants';
+import { AbstractGridComponent } from '../../datatable/abstract-grid.component';
+import { Helper } from './Helper';
+import { IQueryComponentApi } from './IQueryComponentApi';
+import { first } from 'rxjs/operators';
+import { IFindOptions } from './IFindOptions';
 import { LabelHelper, XS_P_$COUNT } from '@typexs/base';
 
 
@@ -70,7 +76,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
   @Input()
   componentClass: ClassType<AbstractGridComponent>;
 
-  @ViewChild('datatable', {static: true})
+  @ViewChild('datatable', { static: true })
   datatable: DatatableComponent;
 
   entityRef: IEntityRef;
@@ -112,7 +118,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     this.doInit();
   }
 
-  doInit(){
+  doInit() {
     if (!this.params) {
       this.params = {};
     }
@@ -154,13 +160,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
 
   findEntityDef() {
-    const registry = this.getQueryService().getRegistry();
-    if (!registry) {
-      return;
-    }
-
-    this.entityRef = registry.getEntityRefFor(this.name);
-
+    this.entityRef = this.getQueryService().getEntityRefForName(this.name);
     if (!this.entityRef) {
       this.error = `Can't find entity type for ${this.name}.`;
     }
@@ -175,7 +175,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
         const column: IGridColumn = {
           label: LabelHelper.labelForProperty(x),
-          field: x.name,
+          field: x.name
         };
 
         // add property reference to column definition
@@ -311,7 +311,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
       }
 
       if (filterQuery.length > 1) {
-        mangoQuery = {$and: filterQuery};
+        mangoQuery = { $and: filterQuery };
       } else if (filterQuery.length === 1) {
         mangoQuery = filterQuery.shift();
       } else {
@@ -350,7 +350,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
       }
 
       if (filterQuery.length > 1) {
-        mangoQuery = {$and: filterQuery};
+        mangoQuery = { $and: filterQuery };
       } else if (filterQuery.length === 1) {
         mangoQuery = filterQuery.shift();
       } else {
@@ -358,7 +358,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
       }
 
       if (mangoQuery) {
-        executeQuery.push({$match: mangoQuery});
+        executeQuery.push({ $match: mangoQuery });
       }
 
       this.queringService.aggregate(this.name, executeQuery, queryOptions)
@@ -389,11 +389,10 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
   }
 
 
-
   /**
    * Reset the component values
    */
-  reset(){
+  reset() {
     this.params.offset = 0;
     this.datatable.reset();
     this._isLoaded = false;

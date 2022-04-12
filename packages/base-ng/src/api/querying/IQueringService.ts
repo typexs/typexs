@@ -1,5 +1,6 @@
-import {Observable} from 'rxjs';
-import {ILookupRegistry} from '@allgemein/schema-api';
+import { Observable } from 'rxjs';
+import { ILookupRegistry, IEntityRef } from '@allgemein/schema-api';
+import { IEntity } from '@typexs/entity';
 
 
 export interface IQueringService {
@@ -22,7 +23,15 @@ export interface IQueringService {
    */
   isLoaded(): Observable<boolean>;
 
-  getRegistry(): ILookupRegistry;
+  getNamespaces(): string[];
+
+  getRegistries(): ILookupRegistry[];
+
+  getEntityRefs(): IEntityRef[];
+
+  getEntityRefFor(fn: string | object | Function, skipNsCheck?: boolean): IEntityRef;
+
+  getEntityRefForName(name: string): IEntityRef;
 
   get(entityName: string, entityId: any, options?: any): Observable<any>;
 
