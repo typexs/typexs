@@ -8,7 +8,6 @@ import { ComponentRegistry } from '@typexs/base/libs/bindings/ComponentRegistry'
 import { LabelHelper } from '@typexs/base/libs/utils/LabelHelper';
 import { NoFormTypeDefinedError } from './exceptions/NoFormTypeDefinedError';
 import { IFormOptions } from './IFormOptions';
-import { Log } from '@typexs/base-ng';
 import { K_CHECKBOX, K_FORM, K_GRID, K_HIDDEN, K_NAME, K_READONLY, K_SELECT, K_TEXT, K_VIRTUAL } from './Constants';
 
 export class FormBuilder {
@@ -137,7 +136,7 @@ export class FormBuilder {
           try {
             datatype = datatype();
           } catch (e) {
-            Log.error(e);
+            console.error(e);
           }
         }
         if (isString(datatype)) {
