@@ -1,6 +1,6 @@
 import {
   IDBType,
-  IStorageOptions,
+  IStorageOptions, K_ENTITY_BUILT,
   Log,
   NotSupportedError,
   NotYetImplementedError,
@@ -454,7 +454,8 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
     if (this.hasEntity(entityClass, name)) {
       return;
     }
-    Entity(name)(entityClass);
+    Object.defineProperty(entityClass, K_ENTITY_BUILT, { writable: false, value: true });
+    Entity({ name: name } as any)(entityClass);
     this.addType(entityClass);
   }
 

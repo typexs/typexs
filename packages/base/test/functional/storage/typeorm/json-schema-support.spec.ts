@@ -13,19 +13,24 @@ import { TEST_STORAGE_OPTIONS } from '../../config';
 import { IStorageOptions } from '../../../../src/libs/storage/IStorageOptions';
 import { BaseConnectionOptions } from 'typeorm/connection/BaseConnectionOptions';
 import { TreeUtils } from '@allgemein/base';
-import { EntityPassName } from './entities/EntityPassName';
+
 
 let registry: TypeOrmEntityRegistry = null;
 let storageOptions: IStorageOptions & BaseConnectionOptions = null;
+let EntityPassName: Function = null;
+
 
 @suite('functional/storage/typeorm/json-schema-support')
 class JsonSchemaSupportSpec {
 
-  static before() {
+  static async before() {
+    RegistryFactory.remove(REGISTRY_TYPEORM);
     RegistryFactory.register(REGISTRY_TYPEORM, TypeOrmEntityRegistry);
     RegistryFactory.register(/^typeorm\..*/, TypeOrmEntityRegistry);
-    registry = RegistryFactory.get(REGISTRY_TYPEORM) as TypeOrmEntityRegistry;
+    EntityPassName = require('./entities/EntityPassName').EntityPassName;
 
+    registry = RegistryFactory.get(REGISTRY_TYPEORM) as TypeOrmEntityRegistry;
+    await registry.isDrained();
     const invoker = new Invoker();
     Injector.set(Invoker.NAME, invoker);
   }
@@ -41,21 +46,23 @@ class JsonSchemaSupportSpec {
 
   @test
   async 'generate json schema for passing entity name'() {
+    // const EntityPassName = require('./entities/EntityPassName').EntityPassName;
     const regEntityDef = registry.getEntityRefFor(EntityPassName);
     expect(regEntityDef.name).to.be.eq('passing_other_name');
     expect(regEntityDef.getClassRef().name).to.be.eq('EntityPassName');
     const data = regEntityDef.toJsonSchema();
     expect(JSON.parse(JSON.stringify(data))).to.deep.eq({
-      '$ref': '#/definitions/EntityPassName',
+      '$ref': '#/definitions/passing_other_name',
       '$schema': 'http://json-schema.org/draft-07/schema#',
       'definitions': {
-        'EntityPassName': {
+        'passing_other_name': {
           '$id': '#passing_other_name',
           'metadata': {
             'type': 'regular'
           },
           'properties': {
             'id': {
+              'auto': true,
               'metadata': {
                 'mode': 'regular',
                 'options': {

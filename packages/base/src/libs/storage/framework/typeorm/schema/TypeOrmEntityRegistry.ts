@@ -107,7 +107,8 @@ const typeormMetadataKeys: TYPEORM_METADATA_KEYS[] = [
   'relationIds',
   'embeddeds',
   'inheritances',
-  'discriminatorValues'];
+  'discriminatorValues'
+];
 
 
 const MAP_PROP_KEYS = {
@@ -183,18 +184,6 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
     if (!this.validNamespace(options)) {
       return;
     }
-    //
-    // if (options.namespace) {
-    //   if (options.namespace !== this.namespace) {
-    //     // skip not my namespace
-    //     return;
-    //   }
-    // } else {
-    //   if (context !== METATYPE_PROPERTY) {
-    //     // skip if no namespace given
-    //     return;
-    //   }
-    // }
 
     const target = options.target;
     const tableExists = target ? this.metadatastore.tables.find(x => x.target === target) : null;
@@ -393,6 +382,8 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           this.metadatastore.tables.push(typeOrmOptions);
         }
       }
+      const metaOptionsForEntity = MetadataRegistry.$()
+        .getByContextAndTarget(METATYPE_ENTITY, options.target);
       const res = new TypeOrmEntityRef(options as ITypeOrmEntityOptions);
       this.register(res);
       const metaSchemaOptionsForEntity = MetadataRegistry.$()
@@ -685,7 +676,12 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
 
   getEntityRefByName(name: string): TypeOrmEntityRef {
-    return this.find(METATYPE_ENTITY, (e: TypeOrmEntityRef) => e.machineName === snakeCase(name));
+    const _name = snakeCase(name);
+    return this.find(METATYPE_ENTITY, (e: TypeOrmEntityRef) =>
+      snakeCase(e.getClassRef().name) === _name ||
+      e.machineName === _name ||
+      e.storingName === _name
+    );
   }
 
 

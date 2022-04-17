@@ -61,7 +61,7 @@ class EntityRegistryJsonSchemaSpec {
             'registry'
           ],
           'storable': true,
-          'title': 'passing_other_name',
+          'title': 'EntityPassName',
           'type': 'object'
         }
       }

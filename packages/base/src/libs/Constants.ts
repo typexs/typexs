@@ -1,4 +1,4 @@
-import {__NS__, ClassType, IClassRef, __CLASS__ as __CLASS___} from '@allgemein/schema-api';
+import { __NS__, ClassType, IClassRef, __CLASS__ as __CLASS___ } from '@allgemein/schema-api';
 
 export const K_CLS_USE_API = 'use_api';
 export const K_CLS_API = 'api';
@@ -34,7 +34,6 @@ export const C_ENTITY = 'entity';
 export const K_DEFAULT_FRAMEWORK = '_defaultFramework';
 
 
-
 export const APP_SYSTEM_DISTRIBUTED = 'app.system.distributed';
 export const APP_SYSTEM_UPDATE_INTERVAL = 'app.system.updateInterval';
 
@@ -64,3 +63,8 @@ export const C_CONFIG_FILTER_KEYS = [
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type CLS_DEF<T> = string | Function | ClassType<T> | IClassRef;
+
+/**
+ * Entity option signals that entity is generate by an other
+ */
+export const K_ENTITY_BUILT = '_built_';

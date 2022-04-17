@@ -8,13 +8,14 @@ import { ITypeOrmEntityOptions } from './ITypeOrmEntityOptions';
 
 export class TypeOrmEntityRef extends DefaultEntityRef {
 
-  constructor(options: ITypeOrmEntityOptions) {
-    super(defaults(options, <ITypeOrmEntityOptions>{
+  constructor(_options: ITypeOrmEntityOptions) {
+    super(defaults(_options, <ITypeOrmEntityOptions>{
       metaType: METATYPE_PROPERTY,
       namespace: REGISTRY_TYPEORM,
-      target: options.metadata.target,
-      name: ClassRef.getClassName(options.metadata.target)
+      target: _options.metadata.target,
+      name: ClassRef.getClassName(_options.metadata.target)
     }));
+    const options = this.getOptions();
     if (has(options, 'metadata.new')) {
       delete options.metadata['new'];
     }

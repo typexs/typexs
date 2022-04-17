@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { ClassRef, IEntityRef, LookupRegistry, METATYPE_ENTITY } from '@allgemein/schema-api';
 import { IQueringService } from './../api/querying/IQueringService';
 import { forkJoin } from 'rxjs';
-import { C_LABEL, LabelHelper } from '@typexs/base';
+import { C_LABEL, K_ENTITY_BUILT, LabelHelper } from '@typexs/base';
 
 
 @Injectable()
@@ -49,7 +49,9 @@ export class EntityResolverService {
     // const lookupNames = LookupRegistry.getRegistryNamespaces();
 
     const refs = LookupRegistry.filter(METATYPE_ENTITY,
-      (x: IEntityRef) => snakeCase(x.getClassRef().name) === snakeCase(className)) as IEntityRef[];
+      (x: IEntityRef) =>
+        snakeCase(x.getClassRef().name) === snakeCase(className) && !x.getOptions(K_ENTITY_BUILT, false)
+    ) as IEntityRef[];
 
     if (refs.length === 1) {
       returnRef = first(refs);
