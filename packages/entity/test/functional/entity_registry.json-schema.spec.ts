@@ -1,14 +1,15 @@
 /* eslint-disable no-useless-escape */
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
+import { suite, test } from '@testdeck/mocha';
 import * as _ from 'lodash';
-import {EntityRegistry} from '../../src/libs/EntityRegistry';
-import {RegistryFactory} from '@allgemein/schema-api';
-import {NAMESPACE_BUILT_ENTITY} from '../../src/libs/Constants';
-import {Injector, Invoker} from '@typexs/base';
-import {expect} from 'chai';
-import {Car} from './schemas/direct_property/Car';
-import {EntityRef} from '../../src';
+import { EntityRegistry } from '../../src/libs/EntityRegistry';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
+import { Injector, Invoker } from '@typexs/base';
+import { expect } from 'chai';
+import { Car } from './schemas/direct_property/Car';
+import { EntityRef } from '../../src';
+import { EntityPassName } from './schemas/registry/EntityPassName';
 
 let registry: EntityRegistry;
 
@@ -32,6 +33,40 @@ class EntityRegistryJsonSchemaSpec {
     RegistryFactory.remove(NAMESPACE_BUILT_ENTITY);
   }
 
+  /**
+   * Test if class name is keeped as id
+   */
+  @test
+  async 'generate json schema for passed entity name'() {
+    const regEntityDef = registry.getEntityRefFor(EntityPassName);
+    const data = regEntityDef.toJsonSchema();
+    expect(data).to.deep.eq({
+      '$ref': '#/definitions/passing_other_name',
+      '$schema': 'http://json-schema.org/draft-07/schema#',
+      'definitions': {
+        'passing_other_name': {
+          '$id': '#passing_other_name',
+          'properties': {
+            'id': {
+              'auto': true,
+              'generated': true,
+              'identifier': true,
+              'type': 'number'
+            },
+            'value': {
+              'type': 'string'
+            }
+          },
+          'schema': [
+            'registry'
+          ],
+          'storable': true,
+          'title': 'passing_other_name',
+          'type': 'object'
+        }
+      }
+    });
+  }
 
   @test
   async 'generate json schema and replay it after class changes back'() {
@@ -56,11 +91,11 @@ class EntityRegistryJsonSchemaSpec {
               identifier: true,
               generated: true
             },
-            producer: {type: 'string'},
-            driver: {'$ref': '#/definitions/Driver', nullable: true},
+            producer: { type: 'string' },
+            driver: { '$ref': '#/definitions/Driver', nullable: true },
             drivers: {
               type: 'array',
-              items: {'$ref': '#/definitions/Driver'},
+              items: { '$ref': '#/definitions/Driver' },
               nullable: true
             }
           }
@@ -69,9 +104,9 @@ class EntityRegistryJsonSchemaSpec {
           title: 'Driver',
           type: 'object',
           properties: {
-            age: {type: 'number'},
-            nickName: {type: 'string'},
-            skill: {'$ref': '#/definitions/Skil'}
+            age: { type: 'number' },
+            nickName: { type: 'string' },
+            skill: { '$ref': '#/definitions/Skil' }
           }
         },
         Skil: {
@@ -87,8 +122,8 @@ class EntityRegistryJsonSchemaSpec {
               identifier: true,
               generated: true
             },
-            label: {type: 'string'},
-            quality: {type: 'number'}
+            label: { type: 'string' },
+            quality: { type: 'number' }
           }
         }
       },

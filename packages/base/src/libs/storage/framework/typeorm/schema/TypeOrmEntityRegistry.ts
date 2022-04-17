@@ -17,7 +17,8 @@ import {
   map,
   snakeCase
 } from 'lodash';
-import { ITypeOrmEntityOptions, TypeOrmEntityRef } from './TypeOrmEntityRef';
+import { TypeOrmEntityRef } from './TypeOrmEntityRef';
+import { ITypeOrmEntityOptions } from './ITypeOrmEntityOptions';
 import { TableMetadataArgs } from 'typeorm/metadata-args/TableMetadataArgs';
 import {
   AbstractRef,
@@ -51,7 +52,7 @@ import { MetadataArgsStorage } from 'typeorm/metadata-args/MetadataArgsStorage';
 import { EmbeddedMetadataArgs } from 'typeorm/metadata-args/EmbeddedMetadataArgs';
 import { TypeOrmUtils } from '../TypeOrmUtils';
 import { isClassRef } from '@allgemein/schema-api/api/IClassRef';
-import { REGISTRY_TYPEORM } from '../Constants';
+import { C_COLUMN, C_EMBEDDED, C_RELATION, REGISTRY_TYPEORM, T_TABLETYPE } from '../Constants';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import { GeneratedMetadataArgs } from 'typeorm/metadata-args/GeneratedMetadataArgs';
 import { Log } from '../../../../logging/Log';
@@ -283,7 +284,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           const exists = foundEntity.getPropertyRefs()
             .find(x => x.storingName === columnMetadata.propertyName && x.getClassRef().getClass() === columnMetadata.target);
           if (!exists) {
-            this.createPropertyByArgs('column', columnMetadata, true);
+            this.createPropertyByArgs(C_COLUMN, columnMetadata, true);
           }
         }
         break;
@@ -297,7 +298,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           const exists = foundEntity.getPropertyRefs()
             .find(x => x.storingName === embedded.propertyName && x.getClassRef().getClass() === embedded.target);
           if (!exists) {
-            this.createPropertyByArgs('embedded', embedded, true);
+            this.createPropertyByArgs(C_EMBEDDED, embedded, true);
           }
         }
         break;
@@ -311,7 +312,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           const exists = foundEntity.getPropertyRefs()
             .find(x => x.storingName === relations.propertyName && x.getClassRef().getClass() === relations.target);
           if (!exists) {
-            this.createPropertyByArgs('relation', relations, true);
+            this.createPropertyByArgs(C_RELATION, relations, true);
           }
         }
         break;
@@ -409,7 +410,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
       // remove cardinality is checked by property ref
 
       let generated: GeneratedMetadataArgs = null;
-      let tableType = 'column';
+      let tableType = C_COLUMN;
       let isArray = !isUndefined(options.cardinality) && isNumber(options.cardinality) && options.cardinality !== 1;
       let columnType = 'regular';
       // correct type for typeorm
@@ -421,7 +422,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         if (!clsType) {
           if (!TypeOrmUtils.isSupportedType(options.type)) {
             // is an local type, so it is a relation
-            tableType = 'relation';
+            tableType = C_RELATION;
             clsRef = ClassRef.find(options.type);
             if (clsRef) {
               clsType = clsRef.getClass();
@@ -441,10 +442,10 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         }
       } else if (isClassRef(clsType) || isEntityRef(clsType)) {
         clsRef = isEntityRef(clsType) ? clsType.getClassRef() : clsType;
-        tableType = 'relation';
+        tableType = C_RELATION;
         clsType = clsType.getClass();
       } else {
-        tableType = 'relation';
+        tableType = C_RELATION;
         clsType = options.type;
       }
 
@@ -454,13 +455,13 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
       delete options['cardinality'];
 
       switch (tableType) {
-        case 'column':
+        case C_COLUMN:
           typeOrmOptions = this.metadatastore.columns.find(x => x.target === options.target && x.propertyName === options.propertyName);
           break;
-        case 'embedded':
+        case C_EMBEDDED:
           typeOrmOptions = this.metadatastore.embeddeds.find(x => x.target === options.target && x.propertyName === options.propertyName);
           break;
-        case 'relation':
+        case C_RELATION:
           typeOrmOptions = this.metadatastore.relations.find(x => x.target === options.target && x.propertyName === options.propertyName);
           break;
       }
@@ -503,7 +504,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
         let reversePropName = null;
         let refIdName = null;
-        if (tableType === 'relation' && !typeOrmOptions.type) {
+        if (tableType === C_RELATION && !typeOrmOptions.type) {
           typeOrmOptions.type = (type: any) => clsType;
           const ids = clsRef.getPropertyRefs().filter(x => x.isIdentifier());
           if (ids.length === 1) {
@@ -515,12 +516,12 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           } else {
             throw new NotYetImplementedError('TODO');
           }
-        } else if (tableType === 'column') {
+        } else if (tableType === C_COLUMN) {
           typeOrmOptions.mode = columnType;
         }
 
         if (typeOrmOptions.new) {
-          if (tableType === 'column') {
+          if (tableType === C_COLUMN) {
             const _defaults = <ColumnMetadataArgs>{
               options: {
                 type: clsType as any
@@ -539,7 +540,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
                 strategy: 'increment'
               };
             }
-          } else if (tableType === 'relation') {
+          } else if (tableType === C_RELATION) {
             defaultsDeep(typeOrmOptions, <RelationMetadataArgs>{
               type: () => clsType,
               isLazy: false,
@@ -557,16 +558,16 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
         if (update) {
           switch (tableType) {
-            case 'column':
+            case C_COLUMN:
               this.metadatastore.columns.push(typeOrmOptions);
               if (generated) {
                 this.metadatastore.generations.push(generated);
               }
               break;
-            case 'embedded':
+            case C_EMBEDDED:
               this.metadatastore.embeddeds.push(typeOrmOptions);
               break;
-            case 'relation':
+            case C_RELATION:
               this.metadatastore.relations.push(typeOrmOptions);
               if ((<RelationMetadataArgs>typeOrmOptions).relationType === 'one-to-one') {
                 this.metadatastore.joinColumns.push({
@@ -617,7 +618,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
   }
 
 
-  createPropertyByArgs(type: 'column' | 'relation' | 'embedded',
+  createPropertyByArgs(type: T_TABLETYPE,
     args: ColumnMetadataArgs | RelationMetadataArgs | EmbeddedMetadataArgs,
     recursive: boolean = false) {
     const propertyOptions: ITypeOrmPropertyOptions = {
@@ -650,16 +651,16 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
     const entity = this.create<TypeOrmEntityRef>(METATYPE_ENTITY, entityOptions);
     const properties: TypeOrmPropertyRef[] = <TypeOrmPropertyRef[]>concat(
       map(this.metadatastore.columns.filter(c => c.target === fn.target),
-        c => this.createPropertyByArgs('column', c)),
+        c => this.createPropertyByArgs(C_COLUMN, c)),
       map(this.metadatastore.filterRelations(fn.target),
-        c => this.createPropertyByArgs('relation', c))
+        c => this.createPropertyByArgs(C_RELATION, c))
     );
 
     map(this.metadatastore.filterEmbeddeds(fn.target),
       c => {
         const exists = properties.find(x => x.storingName === c.propertyName && x.getClass() === c.target);
         if (!exists) {
-          const r = this.createPropertyByArgs('embedded', c);
+          const r = this.createPropertyByArgs(C_EMBEDDED, c);
           properties.push(r);
         }
       });

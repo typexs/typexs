@@ -7,12 +7,12 @@ import { ClassUtils, NotSupportedError, NotYetImplementedError } from '@allgemei
 import { DefaultPropertyRef, IBuildOptions, IClassRef, IPropertyOptions, METATYPE_PROPERTY } from '@allgemein/schema-api';
 import { TypeOrmEntityRef } from './TypeOrmEntityRef';
 import { TypeOrmUtils } from '../TypeOrmUtils';
-import { REGISTRY_TYPEORM } from '../Constants';
+import { REGISTRY_TYPEORM, T_TABLETYPE } from '../Constants';
 import { C_CARDINALITY, C_IDENTIFIER } from '@allgemein/schema-api/lib/Constants';
 
 export interface ITypeOrmPropertyOptions extends IPropertyOptions {
   metadata: ColumnMetadataArgs | RelationMetadataArgs | EmbeddedMetadataArgs;
-  tableType: 'column' | 'relation' | 'embedded';
+  tableType: T_TABLETYPE;
 }
 
 

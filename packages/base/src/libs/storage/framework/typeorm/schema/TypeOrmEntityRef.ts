@@ -1,12 +1,10 @@
 import {defaults, has} from 'lodash';
-import {TableMetadataArgs} from 'typeorm/metadata-args/TableMetadataArgs';
 import {ClassRef, DefaultEntityRef, IEntityOptions, JsonSchema, METATYPE_PROPERTY} from '@allgemein/schema-api';
 import {IJsonSchemaSerializeOptions} from '@allgemein/schema-api/lib/json-schema/IJsonSchemaSerializeOptions';
 import {REGISTRY_TYPEORM} from '../Constants';
+import { ITypeOrmEntityOptions } from './ITypeOrmEntityOptions';
 
-export interface ITypeOrmEntityOptions extends IEntityOptions {
-  metadata: TableMetadataArgs;
-}
+
 
 export class TypeOrmEntityRef extends DefaultEntityRef {
 
@@ -20,7 +18,6 @@ export class TypeOrmEntityRef extends DefaultEntityRef {
     if (has(options, 'metadata.new')) {
       delete options.metadata['new'];
     }
-
     this.setOptions(options);
   }
 

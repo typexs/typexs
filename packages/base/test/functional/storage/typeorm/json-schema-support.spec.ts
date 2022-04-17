@@ -13,6 +13,7 @@ import { TEST_STORAGE_OPTIONS } from '../../config';
 import { IStorageOptions } from '../../../../src/libs/storage/IStorageOptions';
 import { BaseConnectionOptions } from 'typeorm/connection/BaseConnectionOptions';
 import { TreeUtils } from '@allgemein/base';
+import { EntityPassName } from './entities/EntityPassName';
 
 let registry: TypeOrmEntityRegistry = null;
 let storageOptions: IStorageOptions & BaseConnectionOptions = null;
@@ -36,6 +37,55 @@ class JsonSchemaSupportSpec {
 
   after() {
     RegistryFactory.remove(REGISTRY_TYPEORM);
+  }
+
+  @test
+  async 'generate json schema for passing entity name'() {
+    const regEntityDef = registry.getEntityRefFor(EntityPassName);
+    expect(regEntityDef.name).to.be.eq('passing_other_name');
+    expect(regEntityDef.getClassRef().name).to.be.eq('EntityPassName');
+    const data = regEntityDef.toJsonSchema();
+    expect(JSON.parse(JSON.stringify(data))).to.deep.eq({
+      '$ref': '#/definitions/EntityPassName',
+      '$schema': 'http://json-schema.org/draft-07/schema#',
+      'definitions': {
+        'EntityPassName': {
+          '$id': '#passing_other_name',
+          'metadata': {
+            'type': 'regular'
+          },
+          'properties': {
+            'id': {
+              'metadata': {
+                'mode': 'regular',
+                'options': {
+                  'name': 'id'
+                },
+                'propertyName': 'id'
+              },
+              'tableType': 'column',
+              'type': 'number'
+            },
+            'value': {
+              'metadata': {
+                'mode': 'regular',
+                'options': {
+                  'name': 'value'
+                },
+                'propertyName': 'value'
+              },
+              'tableType': 'column',
+              'type': 'string'
+            }
+          },
+          'schema': [
+            'default'
+          ],
+          'title': 'EntityPassName',
+          'type': 'object'
+        }
+      }
+    });
   }
 
   @test
