@@ -9,7 +9,7 @@ import {
   ILookupRegistry,
   ISchemaRef,
   METADATA_TYPE,
-  RegistryFactory
+  RegistryFactory, METATYPE_ENTITY
 } from '@allgemein/schema-api';
 import { IIndexEntityRefOptions } from '../IIndexEntityRefOptions';
 import { __CLASS__, C_FLEXIBLE } from '@typexs/base';
@@ -35,11 +35,13 @@ export class IndexEntityRef extends AbstractRef implements IEntityRef {
    * @param entityRef
    * @param indexName
    */
-  constructor(entityRef: IEntityRef, indexName?: string, options?: IIndexEntityRefOptions) {
-    super('entity', entityRef.getClassRef().name + 'Idx', <any>entityRef.getClassRef(), C_SEARCH_INDEX);
-    const classRef = entityRef.getClassRef();
-    options = assign(options || {}, { [C_FLEXIBLE]: true });
+  constructor(entityRef: IEntityRef, indexName?: string, _options?: IIndexEntityRefOptions) {
+    super(METATYPE_ENTITY, entityRef.getClassRef().name + 'Idx', <any>entityRef.getClassRef(), C_SEARCH_INDEX);
+    const options = this.getOptions();
+    assign(options || {}, _options, { [C_FLEXIBLE]: true });
     this.setOptions(options || {});
+
+    const classRef = entityRef.getClassRef();
     this.typeName = snakeCase(classRef.name);
     if (indexName) {
       this.aliasName = snakeCase(indexName);

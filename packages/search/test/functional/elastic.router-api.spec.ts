@@ -235,7 +235,7 @@ class TypexsSearchRouterApi {
         '$schema': 'http://json-schema.org/draft-07/schema#',
         'definitions': {
           'GreatEntityIdx': {
-            'title': 'GreatEntityIdx',
+            'title': 'GreatEntity',
             'type': 'object',
             '$id': '#GreatEntityIdx',
             'allowAutoAppendAllField': false,
@@ -270,7 +270,7 @@ class TypexsSearchRouterApi {
             }
           },
           'DataEntityIdx': {
-            'title': 'DataEntityIdx',
+            'title': 'DataEntity',
             'type': 'object',
             '$id': '#DataEntityIdx',
             'allowAutoAppendAllField': false,
@@ -350,7 +350,7 @@ class TypexsSearchRouterApi {
             }
           },
           'SearchEntityIdx': {
-            'title': 'SearchEntityIdx',
+            'title': 'SearchEntity',
             'type': 'object',
             '$id': '#SearchEntityIdx',
             'allowAutoAppendAllField': false,
