@@ -385,9 +385,8 @@ export class EntityAPIController {
        */
       postProcess: (src, dst, serializer) => {
         if (isEntityRef(src)) {
+          dst.namespace = NAMESPACE_BUILT_ENTITY;
           assign(dst, add);
-          // dst.storage = storageName;
-          dst.namespace = src.getNamespace();
         } else if (src.metaType === METATYPE_PROPERTY) {
           const type = src.getType();
           const opts = src.getOptions();

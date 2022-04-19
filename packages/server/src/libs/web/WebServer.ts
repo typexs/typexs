@@ -1,18 +1,18 @@
 import * as http from 'http';
 import * as _ from 'lodash';
-import {ClassLoader, Inject, Injector, Log, MatchUtils, MetaArgs, RuntimeLoader, TodoException} from '@typexs/base';
-import {Action, getMetadataArgsStorage, useContainer} from 'routing-controllers';
-import {Server} from './../server/Server';
-import {IFrameworkSupport} from './frameworks/IFrameworkSupport';
-import {C_DEFAULT, DEFAULT_ANONYMOUS, K_CORE_LIB_CONTROLLERS, K_ROUTE_CACHE, K_ROUTE_CONTROLLER, K_ROUTE_STATIC} from '../Constants';
-import {FrameworkSupportFactory} from './frameworks/FrameworkSupportFactory';
-import {IStaticFiles} from './IStaticFiles';
-import {IRoutingController} from './IRoutingController';
-import {Helper} from './../Helper';
-import {IWebServerInstanceOptions} from './IWebServerInstanceOptions';
-import {IServer} from '../server/IServer';
-import {IMiddleware} from '../server/IMiddleware';
-import {IRoute} from '../server/IRoute';
+import { ClassLoader, Inject, Injector, Log, MatchUtils, MetaArgs, RuntimeLoader, TodoException } from '@typexs/base';
+import { Action, getMetadataArgsStorage, useContainer } from 'routing-controllers';
+import { Server } from './../server/Server';
+import { IFrameworkSupport } from './frameworks/IFrameworkSupport';
+import { C_DEFAULT, DEFAULT_ANONYMOUS, K_CORE_LIB_CONTROLLERS, K_ROUTE_CACHE, K_ROUTE_CONTROLLER, K_ROUTE_STATIC } from '../Constants';
+import { FrameworkSupportFactory } from './frameworks/FrameworkSupportFactory';
+import { IStaticFiles } from './IStaticFiles';
+import { IRoutingController } from './IRoutingController';
+import { Helper } from './../Helper';
+import { IWebServerInstanceOptions } from './IWebServerInstanceOptions';
+import { IServer } from '../server/IServer';
+import { IMiddleware } from '../server/IMiddleware';
+import { IRoute } from '../server/IRoute';
 
 
 useContainer(Injector.getContainer());
@@ -32,7 +32,7 @@ export class WebServer extends Server implements IServer {
 
 
   initialize(options: IWebServerInstanceOptions) {
-    _.defaults(options, {routes: []});
+    _.defaults(options, { routes: [] });
     super.initialize(options);
     this.loadMiddleware();
   }
@@ -190,9 +190,13 @@ export class WebServer extends Server implements IServer {
     for (const cls of classes) {
       const skip = routingMiddleware.find(m => m.target === cls);
       if (!skip) {
-        const instance = <IMiddleware>Injector.get(cls);
-        if (instance['validate'] && instance.validate(_.clone(this.options()))) {
-          this._middlewares.push(instance);
+        try {
+          const instance = <IMiddleware>Injector.get(cls);
+          if (instance['validate'] && instance.validate(_.clone(this.options()))) {
+            this._middlewares.push(instance);
+          }
+        } catch (e) {
+          Log.error('web server: middleware ' + cls + ' can\'t be loaded.');
         }
       }
     }

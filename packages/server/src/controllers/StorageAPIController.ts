@@ -762,7 +762,7 @@ export class StorageAPIController {
       schema: null
     };
 
-    const serializer = this.getSerializer({ storage: storageName });
+    const serializer = this.getSerializer({ storage: storageName, namespace: storageRef.getRegistry().getLookupRegistry().getNamespace() });
 
     for (const ref of storageRef.getEntityRefs()) {
       if (ref && isEntityRef(ref)) {
@@ -790,9 +790,8 @@ export class StorageAPIController {
        */
       postProcess: (src, dst, serializer) => {
         if (isEntityRef(src)) {
-          assign(dst, add);
-          // dst.storage = storageName;
           dst.namespace = src.getNamespace();
+          assign(dst, add);
         } else if (src.metaType === METATYPE_PROPERTY) {
           const type = src.getType();
           const opts = src.getOptions();
