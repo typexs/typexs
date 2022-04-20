@@ -149,12 +149,12 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         this.metadatastore[key]['__txs'] = true;
         this.metadatastore[key].push = function(...args: any[]) {
           const result = Array.prototype.push.bind(this)(...args);
-          this.emitter.emit('metadata_push', key, ...args);
+          self.emitter.emit('metadata_push', key, ...args);
           return result;
         };
         this.metadatastore[key].splice = function(start: number, deletecount?: number) {
           const result = Array.prototype.splice.bind(this)(start, deletecount);
-          this.emitter.emit('metadata_splice', key, result, start, deletecount);
+          self.emitter.emit('metadata_splice', key, result, start, deletecount);
           return result;
         };
       }

@@ -202,6 +202,7 @@ class TypexsSearchRouterApi {
       'name': 'elastic',
       'type': 'elastic',
       'framework': 'search-index',
+      'namespace': 'search-index',
       'options': {
         'framework': 'search-index',
         'type': 'elastic',
