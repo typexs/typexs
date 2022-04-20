@@ -1,6 +1,7 @@
 import { IStorageAPIController, STORAGE_API_CONTROLLER_STATE } from './IStorageAPIController';
 import { IEntityRef } from '@allgemein/schema-api';
 import { IJsonSchemaSerializer } from '@allgemein/schema-api/lib/json-schema/IJsonSchemaSerializer';
+import { IStorageRefMetadata } from '../libs/storage_api/IStorageRefMetadata';
 
 
 /**
@@ -28,15 +29,12 @@ import { IJsonSchemaSerializer } from '@allgemein/schema-api/lib/json-schema/IJs
  */
 export class StorageAPIControllerApi implements IStorageAPIController {
 
-  // /**
-  //  * Allow to modify incoming parameter for get, query, save and update calls.
-  //  *
-  //  * @param state - which method called
-  //  * @param entityRef - definition of the entities
-  //  * @param callOptions - is a map with => paramName to value
-  //  */
-  // prepareParams(state: STORAGE_API_CONTROLLER_STATE, entityRef: IEntityRef, callOptions?: any): void {
-  // }
+  /**
+   * Hook allowing modification of storage schema information.
+   */
+  modifyStorageSchema?(storage: IStorageRefMetadata): void {
+  }
+
 
   /**
    * Allow to post process early produced results for get, query, save and update calls.

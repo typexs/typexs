@@ -6,6 +6,7 @@ export interface IStorageRefMetadata {
   name: string;
   framework: string;
   type: string;
+  namespace: string;
   options?: any;
   schema: IJsonSchema7;
   collections?: ICollection[];

@@ -62,7 +62,22 @@ import { Access } from '../decorators/Access';
 import { IRolesHolder, PermissionHelper } from '@typexs/roles-api';
 import { WalkValues } from '../libs/Helper';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
-import { assign, cloneDeep, concat, get, isArray, isEmpty, isFunction, isNumber, isPlainObject, isString, keys, uniq } from 'lodash';
+import {
+  assign,
+  cloneDeep,
+  concat,
+  get,
+  has,
+  isArray,
+  isEmpty,
+  isFunction,
+  isNumber,
+  isPlainObject,
+  isString,
+  keys,
+  set,
+  uniq
+} from 'lodash';
 
 @ContextGroup(C_API)
 @JsonController(API_CTRL_STORAGE_PREFIX)
@@ -753,23 +768,30 @@ export class StorageAPIController {
         }
       }
     });
+
+    const ns = storageRef.getRegistry().getLookupRegistry().getNamespace();
     entry = {
       name: storageName,
       type: storageRef.getType(),
       framework: storageRef.getFramework(),
+      namespace: ns,
       // synchronize: options.synchronize,
       options: options,
       schema: null
     };
 
-    const serializer = this.getSerializer({ storage: storageName, namespace: storageRef.getRegistry().getLookupRegistry().getNamespace() });
-
+    const serializer = this.getSerializer({ storage: storageName, namespace: ns });
     for (const ref of storageRef.getEntityRefs()) {
       if (ref && isEntityRef(ref)) {
         serializer.serialize(ref);
       }
     }
+
     entry.schema = serializer.getJsonSchema() ? serializer.getJsonSchema() : {};
+    try {
+      this.invoker.use(StorageAPIControllerApi).modifyStorageSchema(entry);
+    } catch (e) {
+    }
 
     if (withCollections) {
       entry.collections = await this.getStorageRefCollections(storageRef);

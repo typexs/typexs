@@ -232,10 +232,9 @@ export abstract class AbstractQueryService implements IQueringService {
     if (isObjectLike(value) && value['$schema']) {
       const namespaces = resolveNamespaces(value);
       let namespace = C_DEFAULT;
-      if (namespaces.length === 1) {
+      if (namespaces.length > 0) {
+        // take first namespace
         namespace = namespaces.shift();
-      } else if (namespaces.length > 1) {
-        throw new Error('mulitple namespaces in single schema description not allowed.');
       }
       if (!this.namespaces.includes(namespace)) {
         this.namespaces.push(namespace);
