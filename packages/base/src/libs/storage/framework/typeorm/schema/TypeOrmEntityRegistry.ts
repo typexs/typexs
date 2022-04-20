@@ -59,6 +59,7 @@ import { Log } from '../../../../logging/Log';
 import { getMetadataArgsStorage } from 'typeorm';
 import { IJsonSchemaSerializeOptions } from '@allgemein/schema-api/lib/json-schema/IJsonSchemaSerializeOptions';
 import { K_IDENTIFIER, K_NULLABLE } from '../../../Constants';
+import { EventEmitter } from 'events';
 
 
 export type TYPEORM_METADATA_KEYS =
@@ -127,13 +128,15 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
   // eslint-disable-next-line no-use-before-define
   private static _self: TypeOrmEntityRegistry;
 
+  private emitter = new EventEmitter();
+
 
   private metadatastore: MetadataArgsStorage = null;
 
 
   constructor(namespace: string = REGISTRY_TYPEORM) {
     super(namespace, { detectUnannotatedProperties: false });
-    this.setMaxListeners(1000);
+    this.emitter.setMaxListeners(1000);
 
     try {
       this.metadatastore = getMetadataArgsStorage();
@@ -146,17 +149,17 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         this.metadatastore[key]['__txs'] = true;
         this.metadatastore[key].push = function(...args: any[]) {
           const result = Array.prototype.push.bind(this)(...args);
-          self.emit('metadata_push', key, ...args);
+          this.emitter.emit('metadata_push', key, ...args);
           return result;
         };
         this.metadatastore[key].splice = function(start: number, deletecount?: number) {
           const result = Array.prototype.splice.bind(this)(start, deletecount);
-          self.emit('metadata_splice', key, result, start, deletecount);
+          this.emitter.emit('metadata_splice', key, result, start, deletecount);
           return result;
         };
       }
-      this.on('metadata_push', this.onMetaDataPush.bind(this));
-      this.on('metadata_splice', this.onMetaDataSplice.bind(this));
+      this.emitter.on('metadata_push', this.onMetaDataPush.bind(this));
+      this.emitter.on('metadata_splice', this.onMetaDataSplice.bind(this));
     } catch (e) {
       Log.error(e);
     }
@@ -242,7 +245,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
   }
 
   reset() {
-    this.removeAllListeners();
+    this.emitter.removeAllListeners();
     for (const key of typeormMetadataKeys) {
       delete this.metadatastore[key]['__txs'];
       this.metadatastore[key].push = Array.prototype.push.bind(this.metadatastore[key]);

@@ -30,7 +30,7 @@ class JsonSchemaSupportSpec {
     EntityPassName = require('./entities/EntityPassName').EntityPassName;
 
     registry = RegistryFactory.get(REGISTRY_TYPEORM) as TypeOrmEntityRegistry;
-    await registry.isDrained();
+    await registry.ready();
     const invoker = new Invoker();
     Injector.set(Invoker.NAME, invoker);
   }
