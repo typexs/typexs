@@ -119,14 +119,13 @@ class TasksSpec {
             $id: '#simple_task_with_args',
             taskType: 1,
             properties: {
-              runtime: { type: 'object', propertyType: 'runtime' },
               incoming: { type: 'string', optional: false, propertyType: 'incoming' },
               list: {
                 type: 'array',
                 items: { type: 'object' },
                 propertyType: 'incoming'
               },
-              outgoing: { type: 'string', propertyType: 'outgoing' },
+              outgoing: { type: 'string', propertyType: 'outgoing' }
               // name: { type: 'string', default: 'simple_task_with_args' }
             }
           },
@@ -142,7 +141,7 @@ class TasksSpec {
             taskName: 'simple_task_with_runtime_log',
             $id: '#simple_task_with_runtime_log',
             taskType: 1,
-            properties: { runtime: { type: 'object', propertyType: 'runtime' } }
+            properties: {}
           }
         },
         'anyOf': [
@@ -166,7 +165,7 @@ class TasksSpec {
     const taskList = await tasks.fromJsonSchema(out) as TaskRef[];
     expect(taskList).to.have.length(4);
     const properties = [].concat(...(taskList as TaskRef[]).map(x => x.getPropertyRefs()));
-    expect(properties).to.have.length(5);
+    expect(properties).to.have.length(3);
 
     const out2 = await tasks.toJsonSchema();
     expect(out).to.be.deep.eq(out2);
@@ -184,12 +183,12 @@ class TasksSpec {
     const task03 = taskList.shift();
     expect(task03.name).to.be.eq('simple_task_with_args');
     const props03 = task03.getPropertyRefs();
-    expect(props03).to.have.length(4);
+    expect(props03).to.have.length(3);
 
     const task04 = taskList.shift();
     expect(task04.name).to.be.eq('simple_task_with_runtime_log');
     const props04 = task04.getPropertyRefs();
-    expect(props04).to.have.length(1);
+    expect(props04).to.have.length(0);
   }
 
 
