@@ -357,8 +357,18 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
     const serializer = JsonSchema.getSerializer(defaults(options || {}, <IJsonSchemaSerializeOptions>{
       namespace: this.namespace,
       allowKeyOverride: true,
-      ignoreUnknownType: true
-      // onlyDecorated: true
+      ignoreUnknownType: true,
+      onlyDecorated: true,
+      allowedProperty: (entry: IPropertyRef | string, klass?: any) => {
+        if (entry instanceof TaskExchangeRef) {
+          const propertyType = entry.getPropertyType();
+          if (propertyType === 'runtime') {
+            return false;
+          }
+          return true;
+        }
+        return false;
+      }
     }));
     entities.map(x => serializer.serialize(x));
     return serializer.getJsonSchema();
