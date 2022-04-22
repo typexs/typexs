@@ -4,6 +4,11 @@ import { ElasticUtils } from '../ElasticUtils';
 import { ArrayUtils } from '@allgemein/base/utils/ArrayUtils';
 
 
+export interface IElasticMappingOptions {
+  skipGenerated: boolean;
+  skipPropertyNames: string[];
+}
+
 export class ElasticMapping {
 
   /**
@@ -33,8 +38,13 @@ export class ElasticMapping {
    */
   private changed: boolean = false;
 
+  private options: IElasticMappingOptions;
 
-  constructor(name: string = null, options: { skipGenerated: boolean } = { skipGenerated: false }) {
+  constructor(name: string = null, options: IElasticMappingOptions = {
+    skipGenerated: false,
+    skipPropertyNames: ['_id']
+  }) {
+    this.options = options;
     if (name && !options.skipGenerated) {
       this.aliasName = ElasticUtils.aliasName(name);
       this.indexName = ElasticUtils.indexName(name);
@@ -62,10 +72,13 @@ export class ElasticMapping {
 
 
   add(propertyName: string, definition: any, detectChanges: boolean = false) {
+    if (this.options.skipPropertyNames.includes(propertyName)) {
+      return;
+    }
+
     let reindex = false;
     let changes = false;
     const hasProperty = has(this.properties, propertyName);
-
     if (hasProperty) {
       const changeList = ArrayUtils.merge(this.properties[propertyName], definition);
       if (changeList.length > 0) {
@@ -86,7 +99,7 @@ export class ElasticMapping {
 
   }
 
-  resetFlags(){
+  resetFlags() {
     this.reindex = false;
     this.changed = false;
   }

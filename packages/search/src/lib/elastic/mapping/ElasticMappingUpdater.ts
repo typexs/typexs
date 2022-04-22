@@ -26,7 +26,7 @@ export class ElasticMappingUpdater {
 
 
   async reload(indicies?: string | string[]): Promise<string[]> {
-    let q: any = {};
+    const q: any = {};
     if (indicies) {
       q.index = indicies;
     }
@@ -44,9 +44,7 @@ export class ElasticMappingUpdater {
 
 
   exists(indicies: string[]) {
-    return Promise.all(indicies.map(x => this.client.indices.exists({ index: x }).then(y => {
-      return { [x]: y.body };
-    })));
+    return Promise.all(indicies.map(x => this.client.indices.exists({ index: x }).then(y => ({ [x]: y.body }))));
   }
 
   doExists(index: string) {
@@ -67,7 +65,7 @@ export class ElasticMappingUpdater {
     return null;
   }
 
-  async create(mapping: ElasticMapping, options: { skipAlias: boolean, removeCollidingIndex: boolean } = {
+  async create(mapping: ElasticMapping, options: { skipAlias: boolean; removeCollidingIndex: boolean } = {
     skipAlias: false,
     removeCollidingIndex: true
   }): Promise<boolean> {
@@ -119,7 +117,7 @@ export class ElasticMappingUpdater {
       const tmpIndex = mapping.indexName + '_tmp';
       const tmpMapping = mapping.toRequest();
       tmpMapping.index = tmpIndex;
-      let stage = 'create';
+      const stage = 'create';
 
       // create the temporary index
       result = await this.doExists(tmpIndex);

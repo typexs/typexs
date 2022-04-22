@@ -61,9 +61,11 @@ export class SearchIndexTask implements ITask {
       const sourceRef = this.status.getStorage().forClass(clazz);
 
       const raw = sourceRef.getType() === 'mongodb';
-
-      const deleted = await indexStorageRef.getController().remove(clazzIdx, {});
-      this.runtime.counter('deleted.' + clazz.name).value = deleted;
+      try {
+        const deleted = await indexStorageRef.getController().remove(clazzIdx, {});
+        this.runtime.counter('deleted.' + clazz.name).value = deleted;
+      } catch (e) {
+      }
 
       const doit = new ControllerReader({
         entityType: clazz as any,
