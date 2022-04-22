@@ -27,6 +27,7 @@ import { RestrictedAccessError } from '../libs/exceptions/RestrictedAccessError'
 import { IEntityRef, IPropertyRef } from '@allgemein/schema-api';
 import { Access } from '@typexs/roles/libs/Access';
 import { Injector, IStorageRef } from '@typexs/base/browser';
+import { remove } from 'lodash';
 
 export class Auth implements IMiddleware {
 
@@ -47,10 +48,7 @@ export class Auth implements IMiddleware {
   @Inject(Invoker.NAME)
   private invoker: Invoker;
 
-  // private connection: TypeOrmConnectionWrapper;
-
   private frameworkId: string;
-
 
   // support currently only express
   validate(cfg: any): boolean {
@@ -300,8 +298,8 @@ export class Auth implements IMiddleware {
     return v.replace('$', '');
   }
 
+
   /**
-   *
    * TODO impl. possibility to create account on first positiv login, like ldap
    *
    * @param {AbstractUserLogin} login
@@ -317,25 +315,29 @@ export class Auth implements IMiddleware {
     if (isAuthenticated) {
       container.isAuthenticated = isAuthenticated;
       login.resetSecret();
-      return container;
     } else {
-
       if (!_.isEmpty(login)) {
         const authIdsChain = this.authChain();
-
+        // remove previous method cause failed
+        remove(authIdsChain, x => x === id);
         for (const authId of authIdsChain) {
           container = await this.doLoginForAdapter(authId, login);
           if (container.isAuthenticated) {
             break;
           }
         }
-
+        login.resetSecret();
         if (container && container.isAuthenticated) {
           container = await this.doAuthenticatedLogin(container, req, res);
+        } else {
+          container.addError({
+            property: 'user',
+            value: login.getIdentifier(),
+            constraints: {
+              user_not_exists: '$property can not be created for this authentication.'
+            }
+          });
         }
-
-        return container;
-
       } else {
         container.addError({
           property: 'username',
@@ -344,9 +346,9 @@ export class Auth implements IMiddleware {
             empty_request_error: '$property empty, no access data passed.'
           }
         });
-        return container;
       }
     }
+    return container;
   }
 
 
@@ -509,12 +511,10 @@ export class Auth implements IMiddleware {
 
 
   private async doLoginForAdapter(authId: string, _login: AbstractUserLogin): Promise<AuthDataContainer<AbstractUserLogin>> {
-
     const login = this.getInstanceForLogin(authId, _login);
     const dataContainer = new AuthDataContainer(login);
     await dataContainer.validate();
     dataContainer.isAuthenticated = false;
-
     if (dataContainer.isSuccessValidated) {
       // everything is okay
       // check if username for type is already given
@@ -522,9 +522,10 @@ export class Auth implements IMiddleware {
       dataContainer.isAuthenticated = await adapter.authenticate(dataContainer);
     }
 
-    login.resetSecret();
+    if (dataContainer.isAuthenticated) {
+      login.resetSecret();
+    }
     return dataContainer;
-
   }
 
 

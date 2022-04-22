@@ -70,7 +70,6 @@ export class DatabaseAdapter extends AbstractAuthAdapter {
 
 
   async authenticate(container: AuthDataContainer<DefaultUserLogin>) {
-
     try {
       const login: DefaultUserLogin = container.instance;
       const authMethod = await this.getAuth(<any>login);
