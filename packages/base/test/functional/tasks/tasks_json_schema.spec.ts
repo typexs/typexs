@@ -36,7 +36,6 @@ class TasksSpec {
     const tasks = RegistryFactory.get(C_TASKS) as Tasks;
     Injector.set(Tasks.NAME, tasks);
 
-
     const registry = new TaskRunnerRegistry();
     Injector.set(TaskRunnerRegistry.NAME, registry);
   }
