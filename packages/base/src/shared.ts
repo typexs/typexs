@@ -44,6 +44,8 @@ export { ITypexsOptions } from './libs/ITypexsOptions';
 
 export { ILoggerOptions } from './libs/logging/ILoggerOptions';
 export { ILoggerApi } from './libs/logging/ILoggerApi';
+export { IMessage } from './libs/logging/IMessage';
+
 
 export { Cache } from './libs/cache/Cache';
 export { CacheBin } from './libs/cache/CacheBin';

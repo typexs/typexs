@@ -1,4 +1,4 @@
-import { __NS__, ClassType, IClassRef, __CLASS__ as __CLASS___ } from '@allgemein/schema-api';
+import { __NS__, ClassType, IClassRef, __CLASS__ as __CLASS___, IEntityRef } from '@allgemein/schema-api';
 
 export const K_CLS_USE_API = 'use_api';
 export const K_CLS_API = 'api';
@@ -62,7 +62,7 @@ export const C_CONFIG_FILTER_KEYS = [
 ];
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type CLS_DEF<T> = string | Function | ClassType<T> | IClassRef;
+export type CLS_DEF<T> = string | Function | ClassType<T> | IClassRef | IEntityRef;
 
 /**
  * Entity option signals that entity is generate by an other

@@ -8,7 +8,7 @@ import {
   ICollection,
   IDeleteOptions,
   IEntityController,
-  IFindOptions,
+  IFindOptions, IMessage,
   Inject,
   Invoker,
   ISaveOptions,
@@ -67,7 +67,6 @@ import {
   cloneDeep,
   concat,
   get,
-  has,
   isArray,
   isEmpty,
   isFunction,
@@ -107,16 +106,37 @@ export class StorageAPIController {
     if (isArray(entityRef)) {
       entity.forEach(e => {
         const _entityRef = entityRef.find(x => x.isOf(e));
-        const props = _entityRef.getPropertyRefs().filter(id => id.isIdentifier());
-        this.addMeta(_entityRef, e, props);
+        if (_entityRef) {
+          const props = _entityRef.getPropertyRefs().filter(id => id.isIdentifier());
+          this.addMeta(_entityRef, e, props);
+        } else {
+          this.addMetaError(e);
+        }
       });
-
-    } else {
+    } else if (entityRef) {
       const props = entityRef.getPropertyRefs().filter(id => id.isIdentifier());
       entity.forEach(e => {
         this.addMeta(entityRef, e, props);
       });
+    } else {
+      entity.forEach(e => {
+        this.addMetaError(e);
+      });
+
     }
+  }
+
+
+  static addMetaError(e: any) {
+    this.addMessage(e, { type: 'error', topic: 'entity_ref_not_found', content: 'EntityRef for this object can\'t be found.' });
+  }
+
+
+  static addMessage(e: any, msg: IMessage) {
+    if (!e['$message'] || !isArray(e['$message'])) {
+      e['$message'] = [];
+    }
+    e['$message'].push(msg);
   }
 
   private static addMeta(entityRef: IEntityRef, e: any, props: IPropertyRef[]) {
@@ -569,7 +589,8 @@ export class StorageAPIController {
       const results = await controller.find(
         ref.getClassRef().getClass(),
         conditions,
-        options);
+        options
+      );
 
       if (results.length > 0) {
         return controller.remove(results);
@@ -590,7 +611,7 @@ export class StorageAPIController {
 
   /**
    * Delete records by conditions
-
+   *
    * @param name
    * @param id
    * @param opts
@@ -617,11 +638,11 @@ export class StorageAPIController {
     const options: IDeleteOptions = {};
     StorageAPIController.checkOptions(opts, options);
     try {
-
       const results = await controller.remove(
         ref.getClassRef().getClass(),
         query,
-        options);
+        options
+      );
 
       this.invoker.use(StorageAPIControllerApi)
         .postProcessResults('delete', ref, results, {
@@ -676,8 +697,6 @@ export class StorageAPIController {
         // eslint-disable-next-line max-len
         throw new HttpResponseError(['storage', 'entity_ref_not_found'], 'Entity reference not found for ' + name + ' or permissions are not given.');
       }
-
-
     }
     return entityRef;
   }
@@ -690,14 +709,6 @@ export class StorageAPIController {
     return storageRef;
   }
 
-  // private getControllerFor(entityName: string): IEntityController {
-  //   const controller = this.entityControllerRegistry.getControllerForClass(entityName);
-  //   if (!controller) {
-  //     throw new HttpResponseError(['controller', 'reference_not_found'],
-  //       'Controller registry containing entity ' + entityName + ' not found');
-  //   }
-  //   return controller;
-  // }
 
   private prepareEntities(entityDef: IEntityRef, data: any, options: ISaveOptions = {}) {
     const buildOpts: IBuildOptions = {

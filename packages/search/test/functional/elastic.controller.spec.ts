@@ -289,6 +289,27 @@ class ElasticControllerSpec {
     expect(queryResults[XS_P_$MAX_SCORE]).to.be.eq(null);
     expect(queryResults[XS_P_$COUNT]).to.be.eq(40);
     expect(queryResults[XS_P_$LIMIT]).to.be.eq(10);
+    const classTypes = _.uniq(queryResults.map((x: any) => ClassUtils.getClassName(x))).sort();
+    expect(classTypes).to.have.length(1);
+    expect(classTypes).to.be.deep.eq(['DataEntity']);
+  }
+
+  @test
+  async 'query/search for selected multiple entity types by entity refs (limited 10)'() {
+    const entityRefs = [
+      controller.forClass('DataEntityIdx') as IndexEntityRef,
+      controller.forClass('SearchEntityIdx') as IndexEntityRef
+    ];
+
+    const queryResults = await controller.find(entityRefs, null, { limit: 10, sort: { id: 'asc' } });
+    expect(queryResults).to.have.length(10);
+    // $max_score
+    expect(queryResults[XS_P_$MAX_SCORE]).to.be.eq(null);
+    expect(queryResults[XS_P_$COUNT]).to.be.eq(80);
+    expect(queryResults[XS_P_$LIMIT]).to.be.eq(10);
+    const classTypes = _.uniq(queryResults.map((x: any) => ClassUtils.getClassName(x))).sort();
+    expect(classTypes).to.have.length(2);
+    expect(classTypes).to.be.deep.eq(['DataEntity', 'SearchEntity']);
   }
 
   @test
@@ -600,7 +621,9 @@ class ElasticControllerSpec {
     }
 
     expect(error.name).to.be.eq('ResponseError');
-    expect(error.message).to.be.eq('search_phase_execution_exception: [query_shard_exception] Reason: failed to create query: For input string: "harsut"');
+    expect(error.message).to.be.eq(
+      'search_phase_execution_exception: [query_shard_exception] Reason: failed to create query: For input string: "harsut"'
+    );
   }
 
   @test
@@ -633,7 +656,9 @@ class ElasticControllerSpec {
     }
 
     expect(error.name).to.be.eq('StorageError');
-    expect(error.message).to.be.eq('[number_format_exception] error on index "data_index_xdx" failed to create query: For input string: "harsut"');
+    expect(error.message).to.be.eq(
+      '[number_format_exception] error on index "data_index_xdx" failed to create query: For input string: "harsut"'
+    );
   }
 
 }

@@ -198,8 +198,6 @@ export class FindOp<T> implements IFindOp<T> {
         if (!opts.body.highlight.fields) {
           opts.body.highlight.fields = {};
           fields.forEach(field => {
-            // const f = {};
-            // f[field.name] = {};
             opts.body.highlight.fields[field.name] = {};
           });
         }

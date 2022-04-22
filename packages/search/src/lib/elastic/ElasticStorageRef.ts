@@ -1,6 +1,6 @@
 import { defaults, get, has, isArray, isEmpty, isNull, isString, keys, orderBy, remove, snakeCase, uniq } from 'lodash';
 import { ClassRef, ClassType, IClassRef, IEntityRef, LookupRegistry, METATYPE_ENTITY, RegistryFactory } from '@allgemein/schema-api';
-import { ICollection, Injector, Invoker, Log, NotYetImplementedError, StorageRef } from '@typexs/base';
+import { CLS_DEF, ICollection, Injector, Invoker, Log, NotYetImplementedError, StorageRef } from '@typexs/base';
 import { ElasticConnection } from './ElasticConnection';
 import { ElasticEntityController } from './ElasticEntityController';
 import { IElasticStorageRefOptions } from './IElasticStorageRefOptions';
@@ -335,8 +335,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     throw new NotYetImplementedError('getEntityNames');
   }
 
-  getEntityRef(name: string | Function | IClassRef,
-    byIndexedType: boolean = false): any {
+  getEntityRef(name: CLS_DEF<any>, byIndexedType: boolean = false): any {
     let tEntry = null;
     let className = null;
     if (!isString(name)) {
@@ -362,13 +361,6 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
       } else {
         return refs;
       }
-      //
-      // const _name = snakeCase(className);
-      // tEntry = this.types.find(type =>
-      //   byIndexedType ?
-      //     snakeCase(type.getEntityRef().name) === _name || snakeCase(type.name) === _name :
-      //     snakeCase(type.name) === _name
-      // );
     }
 
     if (tEntry) {
@@ -397,7 +389,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     throw new NotYetImplementedError('getRawCollections');
   }
 
-  hasEntityClass(cls: string | Function | IClassRef, byIndexedType: boolean = false): boolean {
+  hasEntityClass(cls: string | Function | IClassRef | IEntityRef, byIndexedType: boolean = false): boolean {
     if (isString(cls) &&
       OpsHelper.hasEntityRefByPattern(cls, this.getEntityRefs())) {
       return true;

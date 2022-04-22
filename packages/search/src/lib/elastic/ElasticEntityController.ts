@@ -32,11 +32,9 @@ export class ElasticEntityController implements IEntityController {
 
   aggregate<T>(baseClass: CLS_DEF<T>, pipeline: any[], options?: IElasticAggregateOptions): Promise<any[]> {
     throw new NotYetImplementedError('aggregate for elastic controller is currently not implemented');
-    // return new AggregateOp<T>(this).run(cls, pipeline, options);
-    // return Promise.resolve([]);
   }
 
-  find<T>(fn: CLS_DEF<T>, conditions?: any, options?: IElasticFindOptions): Promise<T[]> {
+  find<T>(fn: CLS_DEF<T> | CLS_DEF<T>[], conditions?: any, options?: IElasticFindOptions): Promise<T[]> {
     return new FindOp<T>(this).run(fn as any, conditions, options);
   }
 
@@ -45,7 +43,7 @@ export class ElasticEntityController implements IEntityController {
   }
 
   // forClass(cls: CLS_DEF<any> | IClassRef): IndexEntityRef | IndexEntityRef[] {
-  forClass(cls: CLS_DEF<any> | IClassRef): any {
+  forClass(cls: CLS_DEF<any>): any {
     if (_.isString(cls) && cls === '*') {
       return this.storageRef.getEntityRefs();
     }
@@ -55,7 +53,7 @@ export class ElasticEntityController implements IEntityController {
     return null;
   }
 
-  forIndexType(cls: CLS_DEF<any> | IClassRef): any {
+  forIndexType(cls: CLS_DEF<any>): any {
     if (this.storageRef.hasEntityClass(cls, true)) {
       return this.storageRef.getEntityRef(cls as any, true);
     }
