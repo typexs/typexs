@@ -237,6 +237,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     return this._checked;
   }
 
+
   async refresh(indexNames: string[]) {
     const connection = await this.connect(true);
     const client = connection.getClient();
@@ -248,7 +249,6 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
 
   async getIndexCreateData(indexName: string) {
     const mapping = new ElasticMapping(indexName);
-
     const entityRefs = this.getIndexTypes(indexName);
     for (const ref of entityRefs) {
       const properties = ElasticUtils.buildMappingPropertiesTree(ref);
@@ -256,7 +256,6 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
         mapping.add(x, properties[x]);
       });
     }
-
     await this.invoker.use(IndexElasticApi).doBeforeIndexRepositoryCreate(mapping, entityRefs);
     return mapping;
   }
