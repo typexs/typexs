@@ -10,6 +10,7 @@ import {ITypexsOptions} from '@typexs/base/libs/ITypexsOptions';
 import {TESTDB_SETTING, TestHelper} from '../TestHelper';
 import {TypeOrmConnectionWrapper} from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
 import {API_GET_USER, API_USER_IS_AUTHENTICATED, API_USER_LOGIN, API_USER_LOGOUT, API_USER_SIGNUP} from '../../../src';
+import { LOGGING } from '../config';
 
 
 let bootstrap: Bootstrap = null;
@@ -27,11 +28,7 @@ const OPTIONS = <ITypexsOptions>{
       }
     }
   },
-  logging: {
-    enable: false,
-    level: 'debug',
-    transports: [{console: {}}]
-  },
+  logging: LOGGING,
   modules: {
     paths: [
       TestHelper.root()

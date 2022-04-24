@@ -1,24 +1,25 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Config, Injector, Log} from '@typexs/base';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { Bootstrap, Config, Injector, Log } from '@typexs/base';
 import * as _ from 'lodash';
-import {DefaultUserLogin} from '../../../src/libs/models/DefaultUserLogin';
-import {LdapAdapter} from '../../../src/adapters/auth/ldap/LdapAdapter';
-import {expect} from 'chai';
-import {TESTDB_SETTING, TestHelper} from '../TestHelper';
-import {AuthDataContainer} from '../../../src/libs/auth/AuthDataContainer';
-import {LDAP_CONFIG} from './ldap_config';
+import { DefaultUserLogin } from '../../../src/libs/models/DefaultUserLogin';
+import { LdapAdapter } from '../../../src/adapters/auth/ldap/LdapAdapter';
+import { expect } from 'chai';
+import { TESTDB_SETTING, TestHelper } from '../TestHelper';
+import { AuthDataContainer } from '../../../src/libs/auth/AuthDataContainer';
+import { LDAP_CONFIG } from './ldap_config';
+import { LOGGING } from '../config';
 
 
 process.setMaxListeners(1000);
 const settingsTemplate = {
-  logging: {enable: true, level: 'debug'},
+  logging: LOGGING,
   storage: {
     default: TESTDB_SETTING
   },
   auth: {
     methods: {
       default: {
-        type: 'ldap',
+        type: 'ldap'
       }
     }
   },
@@ -31,6 +32,7 @@ const settingsTemplate = {
 
 
 let bootstrap: Bootstrap = null;
+
 @suite('functional/ldap/auth_ldap_adapter')
 class AuthLdapAdapterSpec {
 

@@ -5,7 +5,7 @@ import { Bootstrap, Injector, ITypexsOptions } from '@typexs/base';
 import { Auth } from '../../../src/middleware/Auth';
 import { User } from '../../../src/entities/User';
 import { TestHelper } from '../TestHelper';
-import { TEST_STORAGE_OPTIONS } from '../config';
+import { LOGGING, TEST_STORAGE_OPTIONS } from '../config';
 
 let bootstrap: Bootstrap;
 
@@ -54,7 +54,7 @@ class AuthLdapConfigSpec {
 
     bootstrap = await TestHelper.bootstrap_basic(<ITypexsOptions & any>{
       // app: {name: 'test', nodeId: 'worker'},
-      logging: { enable: true, level: 'debug' },
+      logging: LOGGING,
       // modules: {paths: [__dirname + '/../../..']},
       storage: { default: TEST_STORAGE_OPTIONS },
       // workers: {access: [{name: 'TaskMonitorWorker', access: 'allow'}]},

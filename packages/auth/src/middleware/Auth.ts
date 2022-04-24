@@ -27,7 +27,6 @@ import { RestrictedAccessError } from '../libs/exceptions/RestrictedAccessError'
 import { IEntityRef, IPropertyRef } from '@allgemein/schema-api';
 import { Access } from '@typexs/roles/libs/Access';
 import { Injector, IStorageRef } from '@typexs/base/browser';
-import { remove } from 'lodash';
 
 export class Auth implements IMiddleware {
 
@@ -318,8 +317,6 @@ export class Auth implements IMiddleware {
     } else {
       if (!_.isEmpty(login)) {
         const authIdsChain = this.authChain();
-        // remove previous method cause failed
-        remove(authIdsChain, x => x === id);
         for (const authId of authIdsChain) {
           container = await this.doLoginForAdapter(authId, login);
           if (container.isAuthenticated) {
@@ -329,14 +326,14 @@ export class Auth implements IMiddleware {
         login.resetSecret();
         if (container && container.isAuthenticated) {
           container = await this.doAuthenticatedLogin(container, req, res);
-        } else {
-          container.addError({
-            property: 'user',
-            value: login.getIdentifier(),
-            constraints: {
-              user_not_exists: '$property can not be created for this authentication.'
-            }
-          });
+        // } else {
+        //   container.addError({
+        //     property: 'user',
+        //     value: login.getIdentifier(),
+        //     constraints: {
+        //       user_not_exists: '$property can\'t be authenticated. User or password is wrong.'
+        //     }
+        //   });
         }
       } else {
         container.addError({
@@ -371,8 +368,6 @@ export class Auth implements IMiddleware {
       if (adapter.canCreateOnLogin()) {
         // create method and user
         user = await this.getUserByUsername(loginInstance.getIdentifier());
-
-
         if (_.isEmpty(user)) {
           // user with name does not exists
           try {

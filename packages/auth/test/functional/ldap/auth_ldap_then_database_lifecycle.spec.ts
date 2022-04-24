@@ -1,20 +1,21 @@
-import {suite, test} from '@testdeck/mocha';
-import {Bootstrap, Config, Injector, StorageRef} from '@typexs/base';
+import { suite, test } from '@testdeck/mocha';
+import { Bootstrap, Config, Injector, StorageRef } from '@typexs/base';
 import * as _ from 'lodash';
-import {expect} from 'chai';
-import {DefaultUserLogin} from '../../../src/libs/models/DefaultUserLogin';
-import {MockResponse} from '../../helper/MockResponse';
-import {MockRequest} from '../../helper/MockRequest';
+import { expect } from 'chai';
+import { DefaultUserLogin } from '../../../src/libs/models/DefaultUserLogin';
+import { MockResponse } from '../../helper/MockResponse';
+import { MockRequest } from '../../helper/MockRequest';
 
-import {AuthMethod} from '../../../src/entities/AuthMethod';
-import {AuthSession} from '../../../src/entities/AuthSession';
-import {User} from '../../../src/entities/User';
-import {TESTDB_SETTING, TestHelper} from '../TestHelper';
-import {LDAP_CONFIG} from './ldap_config';
-import {IAuthConfig} from '../../../src/libs/auth/IAuthConfig';
-import {IDatabaseAuthOptions} from '../../../src/adapters/auth/db/IDatabaseAuthOptions';
-import {Auth} from '../../../src/middleware/Auth';
-import {TypeOrmConnectionWrapper} from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { AuthMethod } from '../../../src/entities/AuthMethod';
+import { AuthSession } from '../../../src/entities/AuthSession';
+import { User } from '../../../src/entities/User';
+import { TESTDB_SETTING, TestHelper } from '../TestHelper';
+import { LDAP_CONFIG } from './ldap_config';
+import { IAuthConfig } from '../../../src/libs/auth/IAuthConfig';
+import { IDatabaseAuthOptions } from '../../../src/adapters/auth/db/IDatabaseAuthOptions';
+import { Auth } from '../../../src/middleware/Auth';
+import { TypeOrmConnectionWrapper } from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { LOGGING } from '../config';
 
 
 const settingsTemplate = {
@@ -23,16 +24,16 @@ const settingsTemplate = {
   },
   initialise: {
     roles: [
-      {role: 'admin', label: 'Administrator', permissions: ['*']}
+      { role: 'admin', label: 'Administrator', permissions: ['*'] }
     ],
     users: [
       {
         username: 'admin',
         password: 'admin123',
         adapter: 'database',
-        mail: 'admin@local.txs',
+        mail: 'admin@local.txs'
       }
-    ],
+    ]
 
   },
 
@@ -49,11 +50,7 @@ const settingsTemplate = {
       }
     }
   },
-  logging: {
-    enable: true,
-    level: 'debug',
-    transports: [{console: {name: 'ldap_then_database'}}]
-  },
+  logging: LOGGING,
   modules: {
     paths: [
       TestHelper.root()
@@ -128,7 +125,7 @@ class AuthLdapLifecycleSpec {
 
     let sessionList = await c.manager.find(AuthSession);
     expect(sessionList).to.have.length(1);
-    expect(_.first(sessionList)).to.deep.include({authId: 'database'});
+    expect(_.first(sessionList)).to.deep.include({ authId: 'database' });
 
     req = res;
     const doLogout = await auth.doLogout(doingLogin.user, req, res);
@@ -149,7 +146,7 @@ class AuthLdapLifecycleSpec {
 
     sessionList = await c.manager.find(AuthSession);
     expect(sessionList).to.have.length(1);
-    expect(_.first(sessionList)).to.deep.include({authId: 'default'});
+    expect(_.first(sessionList)).to.deep.include({ authId: 'default' });
 
     req = res;
     await auth.doLogout(doingLogin.user, req, res);

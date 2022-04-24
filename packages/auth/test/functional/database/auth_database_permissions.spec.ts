@@ -18,6 +18,7 @@ import { RBelongsTo } from '@typexs/roles';
 import { EntityController } from '@typexs/entity';
 import { TypeOrmConnectionWrapper } from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
 import { RegistryFactory } from '@allgemein/schema-api';
+import { LOGGING } from '../config';
 
 let web: WebServer = null;
 
@@ -65,11 +66,7 @@ const OPTIONS = <ITypexsOptions>{
       }
     }
   },
-  logging: {
-    enable: true,
-    level: 'debug',
-    transports: [{ console: {} }]
-  },
+  logging: LOGGING,
   server: {
     default: {
       type: 'web',
