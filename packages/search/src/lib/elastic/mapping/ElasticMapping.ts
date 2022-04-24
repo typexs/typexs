@@ -1,12 +1,12 @@
 import { BASE_MAPPING_DYNAMIC_STRUCTURE, BASE_MAPPING_PROPERTIES_STRUCTURE } from '../Constants';
-import { cloneDeep, get, has, isEmpty, isEqual, keys } from 'lodash';
+import { cloneDeep, defaults, get, has, isEmpty, isEqual, keys } from 'lodash';
 import { ElasticUtils } from '../ElasticUtils';
 import { ArrayUtils } from '@allgemein/base/utils/ArrayUtils';
 
 
 export interface IElasticMappingOptions {
-  skipGenerated: boolean;
-  skipPropertyNames: string[];
+  skipGenerated?: boolean;
+  skipPropertyNames?: string[];
 }
 
 export class ElasticMapping {
@@ -40,11 +40,11 @@ export class ElasticMapping {
 
   private options: IElasticMappingOptions;
 
-  constructor(name: string = null, options: IElasticMappingOptions = {
-    skipGenerated: false,
-    skipPropertyNames: ['_id']
-  }) {
-    this.options = options;
+  constructor(name: string = null, options?: IElasticMappingOptions) {
+    this.options = defaults(options || {}, {
+      skipGenerated: false,
+      skipPropertyNames: ['_id']
+    });
     if (name && !options.skipGenerated) {
       this.aliasName = ElasticUtils.aliasName(name);
       this.indexName = ElasticUtils.indexName(name);
@@ -72,7 +72,7 @@ export class ElasticMapping {
 
 
   add(propertyName: string, definition: any, detectChanges: boolean = false) {
-    if (this.options.skipPropertyNames.includes(propertyName)) {
+    if (get(this.options, 'skipPropertyNames', []).includes(propertyName)) {
       return;
     }
 
