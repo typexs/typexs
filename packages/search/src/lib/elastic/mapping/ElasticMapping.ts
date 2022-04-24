@@ -45,7 +45,7 @@ export class ElasticMapping {
       skipGenerated: false,
       skipPropertyNames: ['_id']
     });
-    if (name && !options.skipGenerated) {
+    if (name && !this.options.skipGenerated) {
       this.aliasName = ElasticUtils.aliasName(name);
       this.indexName = ElasticUtils.indexName(name);
     } else {
