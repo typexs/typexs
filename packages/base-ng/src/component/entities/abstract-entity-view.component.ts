@@ -1,10 +1,11 @@
 import { get, has, isUndefined } from 'lodash';
 import { Component, Inject, Input } from '@angular/core';
 import { IInstanceableComponent } from '../IInstanceableComponent';
-import { EntityResolverService, IEntityResolveOptions } from '../../services/entity-resolver.service';
+import { EntityResolverService } from '../../services/entity-resolver.service';
 import { IQueringService } from '../../api/querying/IQueringService';
 import { IEntityViewOptions } from './IEntityViewOptions';
 import { ComponentRegistry } from '@typexs/base';
+import { IEntityResolveOptions } from '../../services/IEntityResolveOptions';
 
 @Component({
   template: ''
@@ -19,14 +20,15 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
   instance: T;
 
   @Input()
-  options: IEntityViewOptions = {};
-
-  @Input()
-  resolverOptions: IEntityResolveOptions = {};
+  options: IEntityViewOptions;
 
   viewContext: string;
 
   loading: boolean = false;
+
+  get resolverOptions() {
+    return get(this.options, 'resolver', {});
+  }
 
   constructor(@Inject(EntityResolverService) public resolverService: EntityResolverService) {
   }

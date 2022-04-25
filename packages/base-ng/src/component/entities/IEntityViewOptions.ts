@@ -1,12 +1,7 @@
-import { IEntityResolveOptions } from '../../services/entity-resolver.service';
+import { IEntityResolveOptions } from '../../services/IEntityResolveOptions';
+import { IViewOptions } from '../view/IViewOptions';
 
-export interface IEntityViewOptions {
-  /**
-   * Allow reloading of content
-   */
-  elem?: {
-    reload?: boolean;
-  };
+export interface IEntityViewOptions extends IViewOptions {
 
   /**
    * Request options
@@ -14,6 +9,11 @@ export interface IEntityViewOptions {
   req?: {
     raw?: boolean;
   };
+
+  /**
+   * Add entity resolver options
+   */
+  resolver?: IEntityResolveOptions;
 
 
 }

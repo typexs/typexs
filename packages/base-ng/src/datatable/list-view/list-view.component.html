@@ -16,7 +16,9 @@
                   [mode]="viewMode"
                   [options]="options.viewOptions">
           <div txsViewFallback>
-            <txs-simple-json [instance]="row"></txs-simple-json>
+            <txs-simple-json [instance]="row"
+                             [options]="options.viewOptions">
+            </txs-simple-json>
           </div>
         </txs-view>
       </div>

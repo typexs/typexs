@@ -1,20 +1,20 @@
 import * as _ from 'lodash';
-import {IFindOp} from '../IFindOp';
-import {IFindOptions} from '../IFindOptions';
-import {XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET} from '../../../Constants';
-import {TypeOrmSqlConditionsBuilder} from './TypeOrmSqlConditionsBuilder';
-import {TypeOrmEntityRegistry} from './schema/TypeOrmEntityRegistry';
-import {ClassUtils, TreeUtils} from '@allgemein/base';
-import {getMetadataArgsStorage, SelectQueryBuilder} from 'typeorm';
+import { IFindOp } from '../IFindOp';
+import { IFindOptions } from '../IFindOptions';
+import { XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '../../../Constants';
+import { TypeOrmSqlConditionsBuilder } from './TypeOrmSqlConditionsBuilder';
+import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
+import { ClassUtils, TreeUtils } from '@allgemein/base';
+import { getMetadataArgsStorage, SelectQueryBuilder } from 'typeorm';
 import { ClassType, RegistryFactory } from '@allgemein/schema-api';
-import {EntityControllerApi} from '../../../../api/EntityController.api';
-import {TypeOrmEntityController} from './TypeOrmEntityController';
-import {Injector} from '../../../di/Injector';
-import {Cache} from '../../../cache/Cache';
-import {TypeOrmConnectionWrapper} from './TypeOrmConnectionWrapper';
-import {convertPropertyValueStringToJson} from './Helper';
-import {TypeOrmUtils} from './TypeOrmUtils';
-import {REGISTRY_TYPEORM} from './Constants';
+import { EntityControllerApi } from '../../../../api/EntityController.api';
+import { TypeOrmEntityController } from './TypeOrmEntityController';
+import { Injector } from '../../../di/Injector';
+import { Cache } from '../../../cache/Cache';
+import { TypeOrmConnectionWrapper } from './TypeOrmConnectionWrapper';
+import { convertPropertyValueStringToJson } from './Helper';
+import { TypeOrmUtils } from './TypeOrmUtils';
+import { REGISTRY_TYPEORM } from './Constants';
 
 
 export class FindOp<T> implements IFindOp<T> {
@@ -104,7 +104,7 @@ export class FindOp<T> implements IFindOp<T> {
     }
 
     if (cacheKey) {
-      cache.set(cacheKey, results, 'storage_typeorm', {ttl: 120000}).catch(reason => {
+      cache.set(cacheKey, results, 'storage_typeorm', { ttl: 120000 }).catch(reason => {
       });
     }
 
@@ -172,7 +172,7 @@ export class FindOp<T> implements IFindOp<T> {
 
       if (_.isNull(this.options.sort)) {
         entityRef.getPropertyRefs().filter(x => x.isIdentifier()).forEach(x => {
-          qb.addOrderBy(TypeOrmUtils.aliasKey(qb, x.name), 'ASC');
+          qb.addOrderBy(TypeOrmUtils.aliasKey(qb, [x.name, x.storingName]), 'ASC');
         });
       } else {
         _.keys(this.options.sort).forEach(sortKey => {

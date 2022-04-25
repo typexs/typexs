@@ -2,9 +2,10 @@ import { assign, isArray, uniq } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { IEntityRef } from '@allgemein/schema-api';
-import { EntityResolverService, IEntityResolveOptions } from '../../../services/entity-resolver.service';
+import { EntityResolverService } from '../../../services/entity-resolver.service';
 import { C_FLEXIBLE, LabelHelper } from '@typexs/base';
 import { IViewOptions } from '../../view/IViewOptions';
+import { IEntityResolveOptions } from '../../../services/IEntityResolveOptions';
 
 
 @Component({

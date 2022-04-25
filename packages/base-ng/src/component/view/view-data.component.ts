@@ -15,6 +15,8 @@ export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implem
 
   private _build = false;
 
+  private _init = false;
+
   inputKeys = ['options'];
 
   private _mode: string = C_DEFAULT;
@@ -41,7 +43,9 @@ export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implem
   set instance(value: any) {
     this.setInstance(value);
     this._build = false;
-    this.__build();
+    if (this._init) {
+      this.__build();
+    }
   }
 
   get instance(): any {
@@ -70,6 +74,7 @@ export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implem
   }
 
   ngOnInit() {
+    this._init = true;
     this.__build();
   }
 

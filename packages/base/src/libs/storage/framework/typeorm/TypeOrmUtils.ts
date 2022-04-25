@@ -3,6 +3,7 @@ import { ColumnType, QueryBuilder } from 'typeorm';
 import * as _ from 'lodash';
 import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
 import { JS_DATA_TYPES } from '@allgemein/schema-api';
+import { first, isArray, last } from 'lodash';
 
 
 export class TypeOrmUtils {
@@ -43,16 +44,19 @@ export class TypeOrmUtils {
     return null;
   }
 
-  static aliasKey(qb: QueryBuilder<any>, k: string, sep: string = '.') {
-    const keyIsAlias = qb.expressionMap.selects.find(x => x.aliasName === k);
+  static aliasKey(qb: QueryBuilder<any>, k: string | string[], sep: string = '.') {
+    const keyIsAlias = qb.expressionMap.selects.find(x => isArray(k) ? k.includes(x.aliasName) : x.aliasName === k);
     if (keyIsAlias) {
-      return qb.escape(k);
+      return qb.escape(keyIsAlias.aliasName);
     }
-    const keyIsSelect = qb.expressionMap.selects.find(x => _.last(x.selection.split('.')) === k);
+    const keyIsSelect = qb.expressionMap.selects
+      .find(x =>
+        isArray(k) ? k.includes(last(x.selection.split('.'))) : last(x.selection.split('.')) === k);
     if (keyIsSelect) {
       return keyIsSelect.selection;
     }
 
+    k = first(k);
     const kSplit = k.split(sep).map(x => x.replace(/^\"+|\"+$|^\'+|\'+$/g, '').trim());
     if (kSplit.length === 1) {
       kSplit.unshift(qb.alias);

@@ -6,6 +6,10 @@ import { And, ExprDesc, Expressions, In, Key, Like, Value } from '@allgemein/exp
 import { QueryAction } from '../query-form/QueryAction';
 import { StorageService } from '@typexs/storage-ng';
 import { __CLASS__, __NS__ } from '@allgemein/schema-api';
+import { assign, defaults, defaultsDeep } from 'lodash';
+import { IDTListGridOptions } from '@typexs/base-ng/datatable/list-view/IDTListGridOptions';
+import { C_SEARCH_INDEX } from '../../Constants';
+import { IEntityViewOptions } from '@typexs/base-ng/component/entities/IEntityViewOptions';
 
 
 /**
@@ -27,7 +31,7 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
   @Input()
   facets: ISearchFacet[] = [
     { name: 'Class', type: 'value', field: __CLASS__ + '.keyword' },
-    { name: 'Namespace', type: 'value', field: __NS__ + '.keyword' },
+    { name: 'Namespace', type: 'value', field: __NS__ + '.keyword' }
   ];
 
 
@@ -47,10 +51,15 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
 
 
   ngOnInit() {
+    defaultsDeep(this.options, <IDTListGridOptions>{
+      viewOptions: <IEntityViewOptions>{
+        resolver: { namespace: C_SEARCH_INDEX }
+      }
+    });
     super.ngOnInit();
   }
 
-  doInit(){
+  doInit() {
     if (!this.params) {
       this.params = {};
     }

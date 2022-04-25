@@ -4,12 +4,8 @@ import { ClassRef, IEntityRef, LookupRegistry, METATYPE_ENTITY } from '@allgemei
 import { IQueringService } from './../api/querying/IQueringService';
 import { forkJoin } from 'rxjs';
 import { C_LABEL, K_ENTITY_BUILT, LabelHelper } from '@typexs/base';
-import { IViewOptions } from '@typexs/base-ng/component/view/IViewOptions';
+import { IEntityResolveOptions } from '@typexs/base-ng/services/IEntityResolveOptions';
 
-export interface IEntityResolveOptions {
-  namespace?: string;
-  selector?: (refs: IEntityRef[]) => IEntityRef;
-}
 
 
 @Injectable()
