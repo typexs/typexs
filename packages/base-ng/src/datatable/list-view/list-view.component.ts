@@ -7,6 +7,8 @@ import {Pager} from '../../pager/Pager';
 import {IGridColumn} from '../IGridColumn';
 import {Eq, ExprDesc, Like, Value, ValueDesc} from '@allgemein/expressions';
 import {IDTGridOptions} from '../IDTGridOptions';
+import { IViewOptions } from '../../component/view/IViewOptions';
+import { IDTListGridOptions } from './IDTListGridOptions';
 
 
 @Component({
@@ -28,6 +30,9 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
   @Input()
   viewMode: string = 'teaser';
 
+  @Input()
+  options: IDTListGridOptions;
+
   constructor(private pagerService: PagerService) {
     super();
   }
@@ -36,7 +41,7 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
     if (!this.options) {
       this.options = {enablePager: true, limit: 25};
     }
-    defaults(this.options, <IDTGridOptions>{enablePager: true});
+    defaults(this.options, <IDTListGridOptions>{enablePager: true});
 
     if (this.options.enablePager) {
       this.pager = this.pagerService.get(this.options.pagerId);
@@ -118,7 +123,7 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
           value = parseFloat(this.filterValue);
           break;
         case 'number':
-          value = parseInt(this.filterValue, 0);
+          value = parseInt(this.filterValue, 10);
           break;
         default:
           value = this.filterValue;

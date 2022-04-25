@@ -2,8 +2,9 @@ import { assign, isArray, uniq } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { IEntityRef } from '@allgemein/schema-api';
-import { EntityResolverService } from '../../../services/entity-resolver.service';
+import { EntityResolverService, IEntityResolveOptions } from '../../../services/entity-resolver.service';
 import { C_FLEXIBLE, LabelHelper } from '@typexs/base';
+import { IViewOptions } from '../../view/IViewOptions';
 
 
 @Component({
@@ -24,6 +25,10 @@ export class EntityViewPageComponent implements OnInit {
 
   error: any = null;
 
+  viewOptions: IViewOptions = {elem: {reload: true}};
+
+  resolverOptions: IEntityResolveOptions = {};
+
   constructor(
     private route: ActivatedRoute,
     private resolver: EntityResolverService) {
@@ -32,7 +37,7 @@ export class EntityViewPageComponent implements OnInit {
 
   label(): string {
     if (this.instance) {
-      return LabelHelper.labelForEntity(this.instance, this.entityRef);
+      return this.resolver.getLabelFor(this.instance, this.resolverOptions);
     }
     return undefined;
   }
@@ -71,7 +76,10 @@ export class EntityViewPageComponent implements OnInit {
     this.id = id;
 
     const opts = {};
-    this.entityRef = this.resolver.getEntityRef(this.name);
+    this.entityRef = this.resolver.getEntityRef(this.name, this.resolverOptions);
+    if(!this.entityRef){
+      throw new Error('Entity reference not found.');
+    }
     const dynamic = this.entityRef.getOptions(C_FLEXIBLE);
     if (dynamic === true) {
       opts['raw'] = true;

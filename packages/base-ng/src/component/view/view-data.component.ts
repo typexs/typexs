@@ -1,9 +1,10 @@
 import { clone, get, isEmpty, isFunction, isNull, upperFirst } from 'lodash';
 import { Component, ComponentFactoryResolver, Inject, Injector, Input, OnInit } from '@angular/core';
 import { AbstractInstancableComponent } from '../abstract-instancable.component';
-import { C_DEFAULT } from '../../constants';
+import { C_DEFAULT, MTHD_getViewContext } from '../../constants';
 import { ComponentRegistryService } from '../component-registry.service';
 import { ComponentRegistry, IComponentBinding } from '@typexs/base';
+import { IViewOptions } from './IViewOptions';
 
 @Component({
   selector: 'txs-view',
@@ -24,7 +25,7 @@ export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implem
   allowViewModeSwitch: boolean = false;
 
   @Input()
-  options: any;
+  options: IViewOptions = {};
 
   @Input()
   set mode(mode: string) {
@@ -107,7 +108,7 @@ export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implem
   }
 
   buildComponentForObject(content: any) {
-    const context = this['getViewContext'] ? this['getViewContext']() : C_DEFAULT;
+    const context = this[MTHD_getViewContext] ? this[MTHD_getViewContext]() : C_DEFAULT;
     const obj = this.getComponentRegistry().getComponentForObject(content, context);
     if (obj && obj.component) {
       if (!isNull(this.viewModes) && isFunction(obj.component['supportedViewModes'])) {
@@ -118,7 +119,6 @@ export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implem
           });
         }
       }
-
       this.addViewMode(obj, context);
       return this.buildComponent(obj.component as any, content);
     }

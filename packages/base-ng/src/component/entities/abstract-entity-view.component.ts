@@ -1,7 +1,7 @@
 import { get, has, isUndefined } from 'lodash';
 import { Component, Inject, Input } from '@angular/core';
 import { IInstanceableComponent } from '../IInstanceableComponent';
-import { EntityResolverService } from '../../services/entity-resolver.service';
+import { EntityResolverService, IEntityResolveOptions } from '../../services/entity-resolver.service';
 import { IQueringService } from '../../api/querying/IQueringService';
 import { IEntityViewOptions } from './IEntityViewOptions';
 import { ComponentRegistry } from '@typexs/base';
@@ -20,6 +20,9 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
 
   @Input()
   options: IEntityViewOptions = {};
+
+  @Input()
+  resolverOptions: IEntityResolveOptions = {};
 
   viewContext: string;
 
@@ -59,8 +62,8 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
 
   reload() {
     this.loading = true;
-    const entityRef = this.resolverService.getEntityRef(this.getInstance());
-    const id = this.resolverService.getIdKeysFor(this.getInstance());
+    const entityRef = this.resolverService.getEntityRef(this.getInstance(), this.resolverOptions);
+    const id = this.resolverService.getIdKeysFor(this.getInstance(), this.resolverOptions);
     this.getService().get(entityRef.name, id, get(this.options, 'req', {})).subscribe(x => {
       this.instance = x;
     }, error => {
@@ -70,7 +73,7 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
   }
 
   type() {
-    const obj = this.resolverService.getEntityRef(this.getInstance());
+    const obj = this.resolverService.getEntityRef(this.getInstance(), this.resolverOptions);
     if (obj) {
       return obj.name;
     }
@@ -79,19 +82,19 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
 
   url() {
     if (isUndefined(this._url)) {
-      this._url = this.resolverService.getRouteFor(this.getInstance());
+      this._url = this.resolverService.getRouteFor(this.getInstance(), this.resolverOptions);
     }
     return this._url;
   }
 
   label() {
     if (isUndefined(this._label)) {
-      this._label = this.resolverService.getLabelFor(this.getInstance());
+      this._label = this.resolverService.getLabelFor(this.getInstance(), this.resolverOptions);
     }
     return this._label;
   }
 
   getService(): IQueringService {
-    return this.resolverService.getServiceFor(this.getInstance());
+    return this.resolverService.getServiceFor(this.getInstance(), this.resolverOptions);
   }
 }

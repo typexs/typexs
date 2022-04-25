@@ -1,3 +1,5 @@
+import { IEntityResolveOptions } from '../../services/entity-resolver.service';
+
 export interface IEntityViewOptions {
   /**
    * Allow reloading of content
@@ -12,4 +14,6 @@ export interface IEntityViewOptions {
   req?: {
     raw?: boolean;
   };
+
+
 }

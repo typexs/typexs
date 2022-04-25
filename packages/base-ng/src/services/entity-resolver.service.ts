@@ -1,9 +1,15 @@
-import { first, isEmpty, isFunction, last, snakeCase, values } from 'lodash';
+import { first, get, isEmpty, isFunction, isNull, last, snakeCase, values } from 'lodash';
 import { Injectable } from '@angular/core';
 import { ClassRef, IEntityRef, LookupRegistry, METATYPE_ENTITY } from '@allgemein/schema-api';
 import { IQueringService } from './../api/querying/IQueringService';
 import { forkJoin } from 'rxjs';
 import { C_LABEL, K_ENTITY_BUILT, LabelHelper } from '@typexs/base';
+import { IViewOptions } from '@typexs/base-ng/component/view/IViewOptions';
+
+export interface IEntityResolveOptions {
+  namespace?: string;
+  selector?: (refs: IEntityRef[]) => IEntityRef;
+}
 
 
 @Injectable()
@@ -36,7 +42,8 @@ export class EntityResolverService {
     return ['', this.ngEntityPrefix, snakeCase(entityRef.name), encodeURIComponent(values(idKeys).join('--'))].join('/');
   }
 
-  getEntityRef(obj: any, namespace?: string): IEntityRef {
+  getEntityRef(obj: any, opts?: IEntityResolveOptions): IEntityRef {
+    opts = opts || {};
     let returnRef = null;
     const className = ClassRef.getClassName(obj);
     if (['Object', 'Array'].includes(className)) {
@@ -47,10 +54,13 @@ export class EntityResolverService {
     //   return this.cache[key];
     // }
     // const lookupNames = LookupRegistry.getRegistryNamespaces();
-
+    const namespace = get(opts, 'namespace', null);
     const refs = LookupRegistry.filter(METATYPE_ENTITY,
       (x: IEntityRef) =>
-        snakeCase(x.getClassRef().name) === snakeCase(className) && !x.getOptions(K_ENTITY_BUILT, false)
+        (snakeCase(x.getClassRef().name) === snakeCase(className)) || (snakeCase(x.name) === snakeCase(className))
+        &&
+        !x.getOptions(K_ENTITY_BUILT, false)
+        && (isNull(namespace) || x.getNamespace() === namespace)
     ) as IEntityRef[];
 
     if (refs.length === 1) {
@@ -59,7 +69,19 @@ export class EntityResolverService {
       if (namespace) {
         returnRef = refs.find(x => x.getNamespace() === namespace);
       }
+
+      if (opts.selector && isFunction(opts.selector)) {
+        // user defined search
+        returnRef = opts.selector(refs);
+      }
+
       if (!returnRef) {
+        // search for same name
+        returnRef = refs.find(x => snakeCase(x.name) === snakeCase(className));
+      }
+
+      if (!returnRef) {
+        // fallback take last entry
         returnRef = last(refs);
       }
     }
@@ -74,16 +96,16 @@ export class EntityResolverService {
     return this.queryServices.find(x => !isEmpty(x.getEntityRefs().find(x => x === entityRef)));
   }
 
-  getServiceFor(obj: any) {
-    const entityRef = this.getEntityRef(obj);
+  getServiceFor(obj: any, opts?: IEntityResolveOptions) {
+    const entityRef = this.getEntityRef(obj, opts);
     return this.getServiceForEntity(entityRef);
   }
 
-  getIdKeysFor(obj: any) {
+  getIdKeysFor(obj: any, opts?: IEntityResolveOptions) {
     if (obj['ngRoute'] && isFunction(obj['ngRoute'])) {
       return obj['ngRoute']();
     }
-    const entityRef = this.getEntityRef(obj);
+    const entityRef = this.getEntityRef(obj, opts);
     if (!entityRef) {
       return null;
     }
@@ -105,8 +127,8 @@ export class EntityResolverService {
   }
 
 
-  getRouteFor(obj: any) {
-    const entityRef = this.getEntityRef(obj);
+  getRouteFor(obj: any, opts?: IEntityResolveOptions) {
+    const entityRef = this.getEntityRef(obj, opts);
     if (!entityRef) {
       return null;
     }
@@ -115,7 +137,7 @@ export class EntityResolverService {
   }
 
 
-  getLabelFor(obj: any) {
+  getLabelFor(obj: any, opts?: IEntityResolveOptions) {
     if (obj[C_LABEL] && isFunction(obj[C_LABEL])) {
       return obj[C_LABEL]();
     } else if (obj[C_LABEL]) {
@@ -125,7 +147,7 @@ export class EntityResolverService {
     } else if (obj['ngLabel']) {
       return obj['ngLabel'];
     } else {
-      const entityRef = this.getEntityRef(obj);
+      const entityRef = this.getEntityRef(obj, opts);
       return LabelHelper.labelForEntity(obj, entityRef);
     }
   }

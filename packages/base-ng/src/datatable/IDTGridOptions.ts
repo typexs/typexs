@@ -67,4 +67,9 @@ export interface IDTGridOptions {
    */
   queryOnInit?: boolean;
 
+  /**
+   * TODO?
+   */
+  namespace?: string;
+
 }
