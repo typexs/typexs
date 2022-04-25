@@ -56,7 +56,7 @@ export class TypeOrmUtils {
       return keyIsSelect.selection;
     }
 
-    k = first(k);
+    k = isArray(k) ? first(k) : k;
     const kSplit = k.split(sep).map(x => x.replace(/^\"+|\"+$|^\'+|\'+$/g, '').trim());
     if (kSplit.length === 1) {
       kSplit.unshift(qb.alias);
