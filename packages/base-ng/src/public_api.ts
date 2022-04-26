@@ -112,3 +112,4 @@ export { FreeQueryInputComponent } from './api/querying/free-query/free-query-in
 export { QueryEmbeddedComponent } from './component/query/query-embedded.component';
 
 export { IViewOptions } from './component/view/IViewOptions';
+export { IEntityViewOptions } from './component/entities/IEntityViewOptions';

@@ -4,7 +4,7 @@ import { ClassRef, IEntityRef, LookupRegistry, METATYPE_ENTITY } from '@allgemei
 import { IQueringService } from './../api/querying/IQueringService';
 import { forkJoin } from 'rxjs';
 import { C_LABEL, K_ENTITY_BUILT, LabelHelper } from '@typexs/base';
-import { IEntityResolveOptions } from '@typexs/base-ng/services/IEntityResolveOptions';
+import { IEntityResolveOptions } from './IEntityResolveOptions';
 
 
 
