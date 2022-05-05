@@ -191,7 +191,8 @@ class ElasticControllerSpec {
     ge01.id = 122;
     ge01.name = 'great entity 1';
 
-    const genId = entityRef.getTypeName() + '--' + ge01.id;
+    // const genId = entityRef.getTypeName() + '--' + ge01.id;
+    const genId = '' + ge01.id;
     let saved = await controller.save(ge01, { passResults: true });
 
     let { body } = (await client.get({

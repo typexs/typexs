@@ -148,7 +148,7 @@ class TypexsSearchRouterApi {
       }
       promises.push(client.index({
         index: C_DATA_INDEX,
-        id: 'data_entity--' + i,
+        id: ''+i,
         body: d
       }));
 
@@ -167,13 +167,11 @@ class TypexsSearchRouterApi {
       }
       promises.push(client.index({
         index: C_SEARCH_INDEX_2,
-        id: 'search_entity--' + i,
+        id: '' + i,
         body: s
       }));
       await Promise.all(promises);
       await client.indices.refresh({ index: [C_DATA_INDEX, C_SEARCH_INDEX_2] });
-
-
     }
 
     server = Injector.get('server.default');
@@ -467,7 +465,7 @@ class TypexsSearchRouterApi {
         '$url': '/storage/entity/search_entity_idx/0',
         [__CLASS__]: 'SearchEntityIdx',
         [__NS__]: C_SEARCH_INDEX,
-        [ES_IDFIELD]: 'search_entity--0',
+        [ES_IDFIELD]: '0',
         [__ID__]: '0',
         [__TYPE__]: 'search_entity'
       }
@@ -508,7 +506,7 @@ class TypexsSearchRouterApi {
         'Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
       'numerus': 0,
       'enabled': false,
-      '_id': 'search_entity--0',
+      '_id': '0',
       '$score': 1,
       '$url': '/storage/entity/search_entity_idx/0',
       '$label': '0',
