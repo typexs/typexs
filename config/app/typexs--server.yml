@@ -15,6 +15,15 @@ workers:
     - name: '*'
       access: allow
 
+
+eventbus:
+  default:
+    adapter: redis
+    extra:
+      host: 127.0.0.1
+      port: 6379
+
+
 server:
   default:
     type: web

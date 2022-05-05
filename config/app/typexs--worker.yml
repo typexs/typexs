@@ -12,10 +12,12 @@ storage:
     database: '/tmp/db_${app.name}_worker.db'
 
 tasks:
-  logdir: /tmp/tasklog
+  logdir: ./tmp/tasklog
+  logger: 'winston'
+  logging: 'file'
   access:
     - task: '*'
-      access: 'allow'
+      access: allow
 
 workers:
   access:

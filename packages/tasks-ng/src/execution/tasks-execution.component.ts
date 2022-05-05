@@ -1,4 +1,4 @@
-import { isNumber, isString } from 'lodash';
+import { isNull, isNumber, isString, keys } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { TaskExchangeRef, TaskRef } from '@typexs/base';
 import { ActivatedRoute } from '@angular/router';
@@ -95,7 +95,13 @@ export class TasksExecutionComponent implements OnInit {
 
   execute() {
     this.waiting = true;
-    this.tasksService.execute(this.taskName, this.parameters, this.nodeIds).subscribe(
+    const parameters = {};
+    keys(this.parameters).forEach((k: string) => {
+      if (!isNull(this.parameters[k])) {
+        parameters[k] = this.parameters[k];
+      }
+    });
+    this.tasksService.execute(this.taskRef.name, parameters, this.nodeIds).subscribe(
       events => {
         this.waiting = false;
         this.events = events;

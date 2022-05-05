@@ -137,7 +137,7 @@ export class TasksExchange extends AbstractExchange<TasksRequest, TasksResponse>
       switch (request.op) {
         case 'logfile':
           // get log path
-          logFilePath2 = TasksHelper.getTaskLogFile(request.runnerId, this.getSystem().node.nodeId);
+          logFilePath2 = TasksHelper.getTaskLogFile(request.runnerId, this.getSystem().node.nodeId, true);
           // use fs exchange
           fsExchange = Injector.get(FileSystemExchange);
           opts = _.clone(request.fileOptions) as IFileOptions;

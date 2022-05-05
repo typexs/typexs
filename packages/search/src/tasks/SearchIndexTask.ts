@@ -12,8 +12,8 @@ export class SearchIndexTask implements ITask {
   name = TN_INDEX;
 
   @Incoming({
-    optional: true, handle: x =>
-      x.split(',').map((x: any) => x.trim()).filter((x: any) => !isEmpty(x))
+    optional: true, handle: x => x ?
+      x.split(',').map((x: any) => x.trim()).filter((x: any) => !isEmpty(x)) : []
   })
   entityNames: string[];
 
@@ -39,7 +39,7 @@ export class SearchIndexTask implements ITask {
     await dispatcher.prepare();
 
     let defs = [];
-    if (!this.entityNames) {
+    if (!this.entityNames || isEmpty(this.entityNames)) {
       defs = this.status.getTypes();
     } else {
       defs = this.status.getTypes().filter(x => this.entityNames.includes(x.className));

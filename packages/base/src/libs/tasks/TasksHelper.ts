@@ -16,6 +16,7 @@ import { IWorkerInfo } from '../worker/IWorkerInfo';
 import { System } from '../system/System';
 import { Injector } from '../di/Injector';
 import { DateUtils } from '../utils/DateUtils';
+import { defaults } from 'lodash';
 
 
 export class TasksHelper {
@@ -99,6 +100,7 @@ export class TasksHelper {
   static getTaskLogFile(
     runnerId: string, nodeId: string, relative: boolean = false, options: { parseDate: boolean } = { parseDate: true }
   ) {
+    options = defaults(options || { parseDate: true }, { parseDate: true });
     const appPath = Config.get('app.path', PlatformUtils.pathResolve('.'));
     let logdir =
       Config.get('tasks.logdir',

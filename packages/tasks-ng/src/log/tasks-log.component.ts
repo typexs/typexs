@@ -4,15 +4,15 @@ import {
   concat, kebabCase, has, snakeCase, isRegExp, orderBy, remove, first, set, assign,
   capitalize, isUndefined
 } from 'lodash';
-import {Component, OnInit} from '@angular/core';
-import {TaskRef} from '@typexs/base';
-import {BackendTasksService} from '../backend-tasks.service';
-import {SystemInfoService} from '@typexs/base-ng';
-import {StorageService} from '@typexs/storage-ng';
-import {TaskLog} from '@typexs/base/entities/TaskLog';
-import {IDTGridOptions} from '@typexs/base-ng';
-import {IGridColumn} from '@typexs/base-ng';
-import {C_URL_HANDLER, C_URL_TITLE, CC_GRID_CELL_ROUTER_LINK} from '@typexs/base-ng';
+import { Component, OnInit } from '@angular/core';
+import { TaskRef } from '@typexs/base';
+import { BackendTasksService } from '../backend-tasks.service';
+import { SystemInfoService } from '@typexs/base-ng';
+import { StorageService } from '@typexs/storage-ng';
+import { TaskLog } from '@typexs/base/entities/TaskLog';
+import { IDTGridOptions } from '@typexs/base-ng';
+import { IGridColumn } from '@typexs/base-ng';
+import { C_URL_HANDLER, C_URL_TITLE, CC_GRID_CELL_ROUTER_LINK } from '@typexs/base-ng';
 
 /**
  * Show tasks list which should be filtered for running tasks, runned task
@@ -39,26 +39,23 @@ export class TasksLogComponent implements OnInit {
   };
 
 
-  constructor(private tasksService: BackendTasksService,
-              private infoService: SystemInfoService,
-              private storageService: StorageService) {
+  constructor(
+    private tasksService: BackendTasksService,
+    private infoService: SystemInfoService,
+    private storageService: StorageService) {
   }
 
 
   columnsPostProcess(columns: IGridColumn[]) {
     const column = columns.find(x => x.field === 'tasksId');
     column.cellValueRenderer = CC_GRID_CELL_ROUTER_LINK;
-    set((<any>column), C_URL_HANDLER, (v: any, row: any) => {
-      return [this.tasksService.getNgUrlPrefix(), 'status', row.respId, row.tasksId];
-    });
-    set((<any>column), C_URL_TITLE, (v: any, row: any) => {
-      return v;
-    });
+    set((<any>column), C_URL_HANDLER, (v: any, row: any) => [this.tasksService.getNgUrlPrefix(), 'status', row.respId, row.tasksId]);
+    set((<any>column), C_URL_TITLE, (v: any, row: any) => v);
   }
 
 
   ngOnInit() {
-    this.storageService.isReady((x: boolean) => x ? this.onInit() : null);
+    this.storageService.isLoaded().subscribe((x: boolean) => x ? this.onInit() : null);
   }
 
 

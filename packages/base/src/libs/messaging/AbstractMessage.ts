@@ -31,7 +31,7 @@ export abstract class AbstractMessage<REQ extends AbstractEvent, RES extends Abs
 
   protected active = true;
 
-  protected timeout = 5000;
+  protected timeout = 10000;
 
   protected logger: ILoggerApi;
 

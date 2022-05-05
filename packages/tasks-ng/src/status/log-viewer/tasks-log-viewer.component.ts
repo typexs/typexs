@@ -4,13 +4,13 @@ import {
   concat, kebabCase, has, snakeCase, isRegExp, orderBy, remove, first, set, assign,
   capitalize, isUndefined
 } from 'lodash';
-import {Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {JsonUtils} from '@allgemein/base';
-import {DatePipe} from '@angular/common';
-import {BackendTasksService} from '../../backend-tasks.service';
-import {Observable, Subscriber, Subscription, timer} from 'rxjs';
-import {mergeMap} from 'rxjs/operators';
-import {Log} from '@typexs/base-ng';
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { JsonUtils } from '@allgemein/base';
+import { DatePipe } from '@angular/common';
+import { BackendTasksService } from '../../backend-tasks.service';
+import { Observable, Subscriber, Subscription, timer } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+import { Log } from '@typexs/base-ng';
 
 /**
  * Show tasks list which should be filtered for running tasks, runned task
@@ -49,7 +49,7 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
     this.handle();
   }
 
-  @ViewChild('logPanel', {static: false})
+  @ViewChild('logPanel', { static: false })
   elemRef: ElementRef;
 
   count: number = 0;
@@ -136,19 +136,19 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
       this.subscription = this.tasksService
         .getTaskLog(this.runnerId, this.nodeId, null, null, this._tail)
         .subscribe(x => {
-            if (x) {
-              this.reset();
-              const extractLines = this.extractLines(x);
-              this.append(extractLines);
-            }
-          }, error => {
-            this.logError = 'Log file not found. (' + error.message + ')';
-            this.finishUpdate();
-            this.resetSub();
-          },
-          () => {
-            this.resetSub();
-          });
+          if (x) {
+            this.reset();
+            const extractLines = this.extractLines(x);
+            this.append(extractLines);
+          }
+        }, error => {
+          this.logError = 'Log file not found. (' + error.message + ')';
+          this.finishUpdate();
+          this.resetSub();
+        },
+        () => {
+          this.resetSub();
+        });
     } else {
       this.resetSub();
     }
@@ -169,23 +169,23 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
         })
       )
       .subscribe(x => {
-          const extractLines = this.extractLines(x);
-          this.fetchedLines += extractLines.length;
-          const appended = this.append(extractLines);
-          if (appended > 0 || this.running) {
-            _subscriber.next(1);
-          } else {
-            _subscriber.complete();
-          }
-        },
-        error => {
-          Log.error(error);
-          _subscriber.error(error);
-          this.resetSub();
-        },
-        () => {
-          this.resetSub();
-        });
+        const extractLines = this.extractLines(x);
+        this.fetchedLines += extractLines.length;
+        const appended = this.append(extractLines);
+        if (appended > 0 || this.running) {
+          _subscriber.next(1);
+        } else {
+          _subscriber.complete();
+        }
+      },
+      error => {
+        Log.error(error);
+        _subscriber.error(error);
+        this.resetSub();
+      },
+      () => {
+        this.resetSub();
+      });
   }
 
 
@@ -208,25 +208,26 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
 
   buildLog(log: any[]): string[] {
     let logs = log.filter((x: any) => !isEmpty(x));
-    logs = logs.map((x: any) => JsonUtils.parse(x));
+    logs = logs.map((x: any) => JsonUtils.parse(x)).filter(x => has(x, 'message'));
     return logs
-      .map((e: any) =>
-        this.datePipe
-          .transform(
-            new Date(parseInt(e.timestamp, 0)), 'yyyy-MM-dd HH:mm:ss.SSS') + ''
-        + ' [' + e.level + '] ' + e.message);
+      .map((e: any) => e.message ?
+        this.datePipe.transform(new Date(e.timestamp), 'yyyy-MM-dd HH:mm:ss.SSS') + ''
+        + ' [' + e.level + '] ' + e.message
+        :
+        this.datePipe.transform(e.time, 'yyyy-MM-dd HH:mm:ss.SSS') + ''
+        + ' [' + e.level + '] ' + e.args.join('\n'));
   }
 
 
   getLog(from: number = 1, offset: number = 50) {
     this.tasksService.getTaskLog(this.runnerId, this.nodeId, from, offset).subscribe(x => {
-        if (x) {
-          this.append(x);
-        }
-      },
-      error => {
-        Log.debug(error);
-      });
+      if (x) {
+        this.append(x);
+      }
+    },
+    error => {
+      Log.debug(error);
+    });
   }
 
 
@@ -255,9 +256,7 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
 
 
   ngOnDestroy(): void {
-    if (!!this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.resetSub();
     this.finishUpdate();
   }
 

@@ -1,4 +1,4 @@
-import { assign, clone, defaults, get, has, isArray, isBoolean, isFunction, isObject, isUndefined } from 'lodash';
+import { assign, clone, defaults, get, has, isArray, isBoolean, isFunction, isObject, isUndefined, snakeCase } from 'lodash';
 import { TaskRef } from './TaskRef';
 import { MetaArgs, NotYetImplementedError } from '@allgemein/base';
 import {
@@ -91,7 +91,7 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
 
   get(name: string): TaskRef {
     if (this.containsTask(name)) {
-      return this.find(METATYPE_ENTITY, (t: TaskRef) => t.name === name);
+      return this.find(METATYPE_ENTITY, (t: TaskRef) => t.name === name || t.machineName === snakeCase(name));
     }
     const task = this.addTask(name, null, { group: true, namespace: this.namespace });
     return task;

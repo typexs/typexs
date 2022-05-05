@@ -32,17 +32,15 @@ export class FileReadUtils {
     let file: number = null;
     const NEW_LINE_CHARACTERS = ['\n', '\r'];
 
-    const readPreviousChar = (stat: Stats, file: number, currentCharacterCount: number) => {
-      return new Promise((resolve, reject) => {
-        fs.read(file, Buffer.alloc(1), 0, 1, stat.size - 1 - currentCharacterCount, (err: Error, bytesRead: number, buffer: Buffer) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(buffer.toString());
-          }
-        });
+    const readPreviousChar = (stat: Stats, file: number, currentCharacterCount: number) => new Promise((resolve, reject) => {
+      fs.read(file, Buffer.alloc(1), 0, 1, stat.size - 1 - currentCharacterCount, (err: Error, bytesRead: number, buffer: Buffer) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(buffer.toString());
+        }
       });
-    };
+    });
 
     if (!fs.existsSync(filepath)) {
       throw new Error('file does not exist');
@@ -92,17 +90,15 @@ export class FileReadUtils {
     let file: number = null;
     const NEW_LINE_CHARACTERS = ['\n', '\r'];
 
-    const readChar = (stat: Stats, file: number, currentCharacterCount: number) => {
-      return new Promise((resolve, reject) => {
-        fs.read(file, Buffer.alloc(1), 0, 1, currentCharacterCount, (err: Error, bytesRead: number, buffer: Buffer) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(buffer.toString());
-          }
-        });
+    const readChar = (stat: Stats, file: number, currentCharacterCount: number) => new Promise((resolve, reject) => {
+      fs.read(file, Buffer.alloc(1), 0, 1, currentCharacterCount, (err: Error, bytesRead: number, buffer: Buffer) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(buffer.toString());
+        }
       });
-    };
+    });
 
     if (!fs.existsSync(filepath)) {
       throw new Error('file does not exist');
