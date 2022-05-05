@@ -37,10 +37,17 @@ export class EntityResolverService {
     if (keys(idKeys).length === 0) {
       throw new Error('Can\'t build route with empty ids');
     }
+
+    let _idKeys = clone(idKeys);
+    if (has(_idKeys, '_id')) {
+      // TODO workaround for object of classes with inherited identifiers, reduce to _id
+      _idKeys = { _id: _idKeys._id };
+    }
+
     return ['',
       this.ngEntityPrefix,
       snakeCase(entityRef.name),
-      encodeURIComponent(values(idKeys).join('--'))
+      encodeURIComponent(values(_idKeys).join('--'))
     ].join('/');
   }
 

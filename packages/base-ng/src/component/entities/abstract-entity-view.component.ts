@@ -27,7 +27,7 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
   loading: boolean = false;
 
   get resolverOptions(): IEntityResolveOptions {
-    return get(this.options, 'resolver', {});
+    return get(this.options, 'resolver', { idKeys: [{ key: '_id', optional: true }] });
   }
 
   constructor(@Inject(EntityResolverService) public resolverService: EntityResolverService) {
