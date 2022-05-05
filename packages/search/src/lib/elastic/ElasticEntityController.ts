@@ -66,7 +66,7 @@ export class ElasticEntityController implements IEntityController {
 
   entityIdQuery(entityRef: IndexEntityRef, value: any): any {
     return {
-      _id: ElasticUtils.buildIdQuery(entityRef, value)
+      _id: value
     };
   }
 

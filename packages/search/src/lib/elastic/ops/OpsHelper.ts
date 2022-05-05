@@ -8,7 +8,7 @@ import { ElasticUtils } from '../ElasticUtils';
 
 export class OpsHelper {
 
-  static getId(entityRef: IndexEntityRef, entity: any, typed: boolean = true) {
+  static getId(entityRef: IndexEntityRef, entity: any, typed: boolean = false) {
     let id = null;
     if (_.has(entity, ES_IDFIELD)) {
       id = entity[ES_IDFIELD];
