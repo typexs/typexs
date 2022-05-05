@@ -5,7 +5,7 @@ import { EntityResolverService } from '../../services/entity-resolver.service';
 import { IQueringService } from '../../api/querying/IQueringService';
 import { IEntityViewOptions } from './IEntityViewOptions';
 import { ComponentRegistry } from '@typexs/base';
-import { IEntityResolveOptions } from '@typexs/base-ng/services/IEntityResolveOptions';
+import { IEntityResolveOptions } from '../../services/IEntityResolveOptions';
 
 @Component({
   template: ''

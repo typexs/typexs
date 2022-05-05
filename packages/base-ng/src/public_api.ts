@@ -113,3 +113,4 @@ export { QueryEmbeddedComponent } from './component/query/query-embedded.compone
 
 export { IViewOptions } from './component/view/IViewOptions';
 export { IEntityViewOptions } from './component/entities/IEntityViewOptions';
+export { IEntityResolveOptions } from './services/IEntityResolveOptions';
