@@ -5,7 +5,7 @@ import { EntityResolverService } from '../../services/entity-resolver.service';
 import { IQueringService } from '../../api/querying/IQueringService';
 import { IEntityViewOptions } from './IEntityViewOptions';
 import { ComponentRegistry } from '@typexs/base';
-import { IEntityResolveOptions } from '../../services/IEntityResolveOptions';
+import { IEntityResolveOptions } from '@typexs/base-ng/services/IEntityResolveOptions';
 
 @Component({
   template: ''
@@ -26,7 +26,7 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
 
   loading: boolean = false;
 
-  get resolverOptions() {
+  get resolverOptions(): IEntityResolveOptions {
     return get(this.options, 'resolver', {});
   }
 

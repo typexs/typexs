@@ -53,7 +53,12 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
   ngOnInit() {
     defaultsDeep(this.options, <IDTListGridOptions>{
       viewOptions: <IEntityViewOptions>{
-        resolver: { namespace: C_SEARCH_INDEX }
+        resolver: {
+          namespace: C_SEARCH_INDEX,
+          idKeys: [
+            { key: '_id', optional: true }
+          ]
+        }
       }
     });
     super.ngOnInit();

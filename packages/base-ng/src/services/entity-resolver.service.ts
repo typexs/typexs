@@ -1,11 +1,10 @@
-import { first, get, isEmpty, isFunction, isNull, last, snakeCase, values } from 'lodash';
+import { clone, first, get, has, isEmpty, isFunction, isNull, keys, last, snakeCase, values } from 'lodash';
 import { Injectable } from '@angular/core';
 import { ClassRef, IEntityRef, LookupRegistry, METATYPE_ENTITY } from '@allgemein/schema-api';
 import { IQueringService } from './../api/querying/IQueringService';
 import { forkJoin } from 'rxjs';
 import { C_LABEL, K_ENTITY_BUILT, LabelHelper } from '@typexs/base';
 import { IEntityResolveOptions } from './IEntityResolveOptions';
-
 
 
 @Injectable()
@@ -35,7 +34,14 @@ export class EntityResolverService {
    * @param idKeys
    */
   defaultRouteBuilder(entityRef: IEntityRef, idKeys: { [prop: string]: any }) {
-    return ['', this.ngEntityPrefix, snakeCase(entityRef.name), encodeURIComponent(values(idKeys).join('--'))].join('/');
+    if (keys(idKeys).length === 0) {
+      throw new Error('Can\'t build route with empty ids');
+    }
+    return ['',
+      this.ngEntityPrefix,
+      snakeCase(entityRef.name),
+      encodeURIComponent(values(idKeys).join('--'))
+    ].join('/');
   }
 
   getEntityRef(obj: any, opts?: IEntityResolveOptions): IEntityRef {
@@ -98,9 +104,27 @@ export class EntityResolverService {
   }
 
   getIdKeysFor(obj: any, opts?: IEntityResolveOptions) {
-    if (obj['ngRoute'] && isFunction(obj['ngRoute'])) {
-      return obj['ngRoute']();
+    const predefinedIdKeys: { key: string; optional: boolean }[] = get(opts, 'idKeys', []);
+    const retPre = {};
+    let optional = true;
+    if (!isEmpty(predefinedIdKeys)) {
+      for (const key of predefinedIdKeys) {
+        optional = optional && get(key, 'optional', true);
+        if (!get(key, 'optional', false) && !has(obj, key.key)) {
+          throw new Error('Can\'t resolve fixed key ' + JSON.stringify(key) + ' for object ' + JSON.stringify(obj));
+        } else if (has(obj, key.key)) {
+          retPre[key.key] = clone(obj[key.key]);
+        }
+      }
     }
+
+
+    if (keys(retPre).length > 0) {
+      return retPre;
+    } else if (!optional) {
+      throw new Error('Can\'t resolve fixed keys ' + JSON.stringify(predefinedIdKeys) + ' for object ' + JSON.stringify(obj));
+    }
+
     const entityRef = this.getEntityRef(obj, opts);
     if (!entityRef) {
       return null;
@@ -110,8 +134,8 @@ export class EntityResolverService {
     if (this.cache[key]) {
       return this.cache[key](obj);
     }
-    const idProps = entityRef.getPropertyRefs().filter(x => x.isIdentifier());
 
+    const idProps = entityRef.getPropertyRefs().filter(x => x.isIdentifier());
     this.cache[key] = (obj: any) => {
       const ret = {};
       idProps.forEach(x => {
@@ -128,8 +152,14 @@ export class EntityResolverService {
     if (!entityRef) {
       return null;
     }
-    const idKEys = this.getIdKeysFor(obj);
-    return this.defaultRouteBuilder(entityRef, idKEys);
+    let idKeys = {};
+    if (get(opts, 'idSelector', false)) {
+      idKeys = opts.idSelector(entityRef, obj);
+    }
+    if (keys(idKeys).length === 0) {
+      idKeys = this.getIdKeysFor(obj, opts);
+    }
+    return this.defaultRouteBuilder(entityRef, idKeys);
   }
 
 
