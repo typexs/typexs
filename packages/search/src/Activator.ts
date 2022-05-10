@@ -2,7 +2,7 @@ import { IActivator, Injector } from '@typexs/base';
 import { BasicPermission, IPermissionDef, IPermissions } from '@typexs/roles-api';
 import { PERMISSION_ACCESS_SEARCH_VIEW } from './lib/Constants';
 import { IndexRuntimeStatus } from './lib/IndexRuntimeStatus';
-import { IndexProcessingQueue } from './lib/events/IndexProcessingQueue';
+import { IndexProcessingQueue } from './lib/IndexProcessingQueue';
 
 export class Activator implements IActivator, IPermissions {
 

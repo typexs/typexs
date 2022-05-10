@@ -7,7 +7,7 @@ import { IndexRuntimeStatus } from '../lib/IndexRuntimeStatus';
 import { IndexEvent } from '../lib/events/IndexEvent';
 import { ClassRef, ClassType } from '@allgemein/schema-api';
 import { IndexElasticApi } from '../api/IndexElastic.api';
-import { IndexProcessingQueue } from '../lib/events/IndexProcessingQueue';
+import { IndexProcessingQueue } from '../lib/IndexProcessingQueue';
 import { assign, cloneDeep, isArray, isFunction } from 'lodash';
 
 @UseAPI(EntityControllerApi)

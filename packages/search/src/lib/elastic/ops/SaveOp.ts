@@ -92,6 +92,7 @@ export class SaveOp<T> implements ISaveOp<T> {
         let results = [];
 
         try {
+          // TODO fix this if only one entry of multiple throw an error this breaks all
           results = await Promise.all(promises);
         } catch (err) {
           this.error = err;

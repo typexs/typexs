@@ -1,5 +1,5 @@
 import { IBootstrap, IShutdown, Inject } from '@typexs/base';
-import { IndexProcessingQueue } from './lib/events/IndexProcessingQueue';
+import { IndexProcessingQueue } from './lib/IndexProcessingQueue';
 
 /**
  * Module activator for @typexs/search

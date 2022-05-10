@@ -10,7 +10,7 @@ import { lorem, lorem2 } from './testdata';
 import { TaskExecutor } from '@typexs/base/libs/tasks/TaskExecutor';
 import { __ID__, __TYPE__, C_ELASTIC_SEARCH, C_SEARCH_INDEX, TN_INDEX } from '../../src/lib/Constants';
 import { ITaskRunnerResult } from '@typexs/base/libs/tasks/ITaskRunnerResult';
-import { IndexProcessingQueue } from '../../src/lib/events/IndexProcessingQueue';
+import { IndexProcessingQueue } from '../../src/lib/IndexProcessingQueue';
 import { expect } from 'chai';
 import { IndexProcessingWorker } from '../../src/workers/IndexProcessingWorker';
 import { TestHelper } from './TestHelper';

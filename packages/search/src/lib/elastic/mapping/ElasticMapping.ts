@@ -21,6 +21,8 @@ export class ElasticMapping {
    */
   aliasName: string;
 
+  settings: any = {};
+
   dynamicTemplates: any = cloneDeep(BASE_MAPPING_DYNAMIC_STRUCTURE);
 
   properties: any = cloneDeep(BASE_MAPPING_PROPERTIES_STRUCTURE);
@@ -127,7 +129,8 @@ export class ElasticMapping {
   toJson() {
     return {
       ...(!isEmpty(this.dynamicTemplates) ? { dynamic_templates: this.dynamicTemplates } : {}),
-      properties: this.properties
+      properties: this.properties,
+      settings: this.settings
     };
   }
 

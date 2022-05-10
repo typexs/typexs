@@ -12,7 +12,7 @@ import { __ID__, __TYPE__, C_ELASTIC_SEARCH, C_SEARCH_INDEX, TN_INDEX } from '..
 import { ITaskRunnerResult } from '@typexs/base/libs/tasks/ITaskRunnerResult';
 import { SomeSearchEntity } from './fake_app_tasks/entities/SomeSearchEntity';
 import { SearchDataEntity } from './fake_app_tasks/entities/SearchDataEntity';
-import { IndexProcessingQueue } from '../../src/lib/events/IndexProcessingQueue';
+import { IndexProcessingQueue } from '../../src/lib/IndexProcessingQueue';
 import { expect } from 'chai';
 import { IndexProcessingWorker } from '../../src/workers/IndexProcessingWorker';
 import { TestHelper } from './TestHelper';

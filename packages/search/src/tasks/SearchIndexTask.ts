@@ -1,6 +1,6 @@
 import { EntityControllerRegistry, Incoming, Inject, Injector, ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/base';
 import { IndexRuntimeStatus } from '../lib/IndexRuntimeStatus';
-import { IndexProcessingQueue } from '../lib/events/IndexProcessingQueue';
+import { IndexProcessingQueue } from '../lib/IndexProcessingQueue';
 import { TN_INDEX } from '../lib/Constants';
 import { IReader } from '@typexs/pipelines/lib/reader/IReader';
 import { assign, isEmpty } from 'lodash';

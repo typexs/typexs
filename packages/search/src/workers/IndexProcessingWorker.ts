@@ -1,7 +1,7 @@
 import { Inject, IWorker } from '@typexs/base';
 import { EventBus, subscribe } from '@allgemein/eventbus';
 import { IndexEvent } from '../lib/events/IndexEvent';
-import { IndexProcessingQueue } from '../lib/events/IndexProcessingQueue';
+import { IndexProcessingQueue } from '../lib/IndexProcessingQueue';
 import { IndexRuntimeStatus } from '../lib/IndexRuntimeStatus';
 
 export class IndexProcessingWorker implements IWorker {
