@@ -21,10 +21,19 @@ export class ElasticMapping {
    */
   aliasName: string;
 
+  /**
+   * Settings for mapping
+   */
   settings: any = {};
 
+  /**
+   * Dynamic templates
+   */
   dynamicTemplates: any = cloneDeep(BASE_MAPPING_DYNAMIC_STRUCTURE);
 
+  /**
+   * Mapping properties
+   */
   properties: any = cloneDeep(BASE_MAPPING_PROPERTIES_STRUCTURE);
 
   /**
