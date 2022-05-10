@@ -129,8 +129,7 @@ export class ElasticMapping {
   toJson() {
     return {
       ...(!isEmpty(this.dynamicTemplates) ? { dynamic_templates: this.dynamicTemplates } : {}),
-      properties: this.properties,
-      settings: this.settings
+      properties: this.properties
     };
   }
 
@@ -138,7 +137,8 @@ export class ElasticMapping {
     return {
       index: this.indexName,
       body: {
-        mappings: this.toJson()
+        mappings: this.toJson(),
+        settings: this.settings
       }
     };
 
