@@ -30,7 +30,7 @@ import {
   TypeOrmConnectionWrapper,
   TypeOrmEntityRegistry
 } from '@typexs/base';
-import { ClassRef, ClassType, IEntityRef } from '@allgemein/schema-api';
+import { ClassRef, ClassType, IEntityRef, IPropertyRef } from '@allgemein/schema-api';
 import { LockFactory, TreeUtils } from '@allgemein/base';
 import { Processor } from '../../../lib/Processor';
 import { XS_ID_SEP, XS_STATE_KEY } from '../../../lib/Constants';
@@ -60,6 +60,8 @@ export interface IInstruction {
 }
 
 export class StorageControllerProcessor<T> extends Processor implements IQueueProcessor<T> {
+
+  private lookupCache = {};
 
   constructor(opts: IStorageControllerProcessorOptions<T>) {
     super(defaults(opts, { revisions: false, revisionLimit: 5, queued: false, arrayChunkSize: 100, arrayChunkParallel: 50 }));
@@ -226,8 +228,15 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
 
 
     for (const x of dataChunk) {
-      const ref = ClassRef.getGlobal(x.constructor);
-      const idprops = ref.getPropertyRefs().filter(p => p.isIdentifier());
+      const className = ClassRef.getClassName(x);
+      if (!this.lookupCache[className]) {
+        this.lookupCache[className] = { ref: ClassRef.getGlobal(x.constructor) };
+        this.lookupCache[className]['idProps'] = this.lookupCache[className]['ref']
+          .getPropertyRefs().filter((p: IPropertyRef) => p.isIdentifier());
+      }
+      const ref = this.lookupCache[className]['ref'];
+      const idprops = this.lookupCache[className]['idProps'];
+
       const instance = this.entityRef.create(false);
       assign(instance, x);
       const processInstruction: IInstruction = { instance: instance };
@@ -236,7 +245,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
 
 
       let searchCond: any = null;
-      processInstruction.id = idprops.map(id => id.get(instance)).join(':');
+      processInstruction.id = idprops.map((id: IPropertyRef) => id.get(instance)).join(':');
       if (this.storageRef.getType() === 'mongodb') {
 
         searchCond = {};
@@ -248,7 +257,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
           }
         });
 
-        idprops.forEach(id => {
+        idprops.forEach((id: IPropertyRef) => {
           searchCond[id.name] = id.get(instance);
         });
 
