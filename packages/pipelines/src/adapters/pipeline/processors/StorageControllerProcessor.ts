@@ -45,6 +45,8 @@ export interface IStorageControllerProcessorOptions<T> extends IProcessorOptions
   targetRevType?: ClassType<T>;
   revisionLimit?: number;
   // revisions?: boolean
+  arrayChunkSize?: number;
+  arrayChunkParallel?: number;
 }
 
 export interface IInstruction {
@@ -60,7 +62,7 @@ export interface IInstruction {
 export class StorageControllerProcessor<T> extends Processor implements IQueueProcessor<T> {
 
   constructor(opts: IStorageControllerProcessorOptions<T>) {
-    super(defaults(opts, { revisions: false, revisionLimit: 5, queued: false }));
+    super(defaults(opts, { revisions: false, revisionLimit: 5, queued: false, arrayChunkSize: 100, arrayChunkParallel: 50 }));
 
     this.entityRef = TypeOrmEntityRegistry.$().getEntityRefFor(opts.targetType);
     if (opts.targetRevType) {
@@ -167,9 +169,9 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
 
     const processInstructions: IInstruction[] = [];
 
-    const dataChunks = chunk(arrData, 100);
+    const dataChunks = chunk(arrData, this.getOptions().arrayChunkSize ? this.getOptions().arrayChunkSize : 100);
     const chunksAmount = dataChunks.length;
-    const semaphore = LockFactory.$().semaphore(50);
+    const semaphore = LockFactory.$().semaphore(this.getOptions().arrayChunkParallel ? this.getOptions().arrayChunkParallel : 50);
     let inc = 1;
     const promises: Promise<any>[] = [];
     while (dataChunks.length > 0) {
@@ -253,10 +255,9 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
         // generate _id if not exists!
         if (!has(instance, '_id')) {
           (<any>instance)._id = concat(
-            [
-              this.entityRef.getClassRef().storingName
-            ],
-            values(searchCond)).join(XS_ID_SEP);
+            [this.entityRef.getClassRef().storingName],
+            values(searchCond)
+          ).join(XS_ID_SEP);
         }
       }
 
