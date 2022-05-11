@@ -247,7 +247,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
         });
 
         idprops.forEach(id => {
-          searchCond[id.storingName] = id.get(instance);
+          searchCond[id.name] = id.get(instance);
         });
 
         // generate _id if not exists!
