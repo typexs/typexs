@@ -1,7 +1,24 @@
 version: '3'
 networks:
-  dev: {}
+  dev: { }
 services:
+  mongo:
+    image: mongo:4
+    ports:
+      - 127.0.0.1:27017:27017
+    volumes:
+      - ./local/mongodb:/data/db
+    networks:
+      - dev
+
+  redis:
+    image: redis:5
+    ports:
+      - 127.0.0.1:6379:6379
+    volumes:
+      - ./local/redis/db:/data
+    networks:
+      - dev
 
   elastic:
     image: elasticsearch:7.14.2
@@ -12,10 +29,22 @@ services:
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     volumes:
       - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ./local/elastic/nodes:/usr/share/elasticsearch/data/nodes
     ports:
       - 127.0.0.1:9200:9200
       - 127.0.0.1:9300:9300
     networks:
       - dev
+
+  psql:
+    image: postgres:14
+    ports:
+      - 127.0.0.1:5436:5432
+    environment:
+      POSTGRES_DATABASES: txsbase
+      POSTGRES_USER: txsbase
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_PASSWORD:
+    networks:
+      - dev
+
 
