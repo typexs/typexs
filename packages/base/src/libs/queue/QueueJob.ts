@@ -11,8 +11,6 @@ export class QueueJob<T extends IQueueWorkload> implements IdObject {
 
   private _id: string;
 
-  // private _queue: IQueue;
-
   private _workload: T;
 
   private _start: Date = null;
@@ -29,10 +27,9 @@ export class QueueJob<T extends IQueueWorkload> implements IdObject {
 
   constructor(/* queue: IQueue, */workload: T) {
     this._workload = workload;
-    // this._queue = queue;
     this._id = CryptUtils.shorthash((new Date()).getTime() + '' + (QueueJob._INC++));
-    // this._queue.once(this.jobEventName('stop'), this.onDone.bind(this));
   }
+
 
   prepare(queue: IQueue) {
     queue.once(this.jobEventName(QJ_STOP), this.onDone.bind(this, queue));

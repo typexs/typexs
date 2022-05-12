@@ -104,6 +104,8 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
       if (r > 0) {
         _.set(container, 'retry', --r);
         return this.authenticate(container);
+      }else{
+        return false;
       }
     }
     return queueJob.getResult();

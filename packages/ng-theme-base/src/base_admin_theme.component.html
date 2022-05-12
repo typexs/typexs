@@ -78,13 +78,13 @@
         </li>
         <li *ngIf="(appStateService.isAdmin | async)">
           <div class="dropdown drp-user">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"  role="button" aria-expanded="false" id="ddNodeList">
               <p class="btn btn-sm btn-{{getBackendService().getState() | async}}">
                 {{getBackendService().getState() | async}}
                 <span class="badge badge-success badge-border-white">{{getSystemService().nodesCount}}</span>
               </p>
             </a>
-            <div class="dropdown-menu dropdown-menu-right  profile-notification">
+            <div class="dropdown-menu dropdown-menu-right profile-notification" aria-labelledby="ddNodeList">
               <div class="pro-head">
                 <span>Nodes</span>
               </div>
@@ -114,10 +114,10 @@
         </li>
         <li *ngIf="appStateService.isAuthenticated()">
           <div class="dropdown drp-user">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <a href="#" class="dropdown-toggle"  role="button" id="ddUserLogout" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="icon  icon-settings"></i>
             </a>
-            <div class="dropdown-menu dropdown-menu-right profile-notification">
+            <div class="dropdown-menu  dropdown-menu-end profile-notification" aria-labelledby="ddUserLogout">
               <div class="pro-head">
                 <span>{{user ? user.username : 'loading ...'}}</span>
                 <a [routerLink]="userRouterLinks.logout" class="dud-logout" title="Logout">
