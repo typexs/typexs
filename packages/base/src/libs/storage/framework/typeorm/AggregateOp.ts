@@ -30,6 +30,7 @@ import { IMangoWalkerControl } from '@allgemein/mango-expressions/IMangoWalker';
 import { GROUP_ID } from '@allgemein/mango-expressions/operators/stage/Group';
 import { EntityControllerApi } from '../../../../api/EntityController.api';
 import { REGISTRY_TYPEORM } from './Constants';
+import { clone } from 'lodash';
 
 
 export interface ISqlAggregateParam {
@@ -264,9 +265,9 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
     const connection = await this.controller.connect();
     try {
       const repo = connection.manager.getMongoRepository(entityDef.getClassRef().getClass());
-
-      if (pipeline) {
-        TreeUtils.walk(pipeline, x => {
+      const clonePipeline = clone(pipeline);
+      if (clonePipeline) {
+        TreeUtils.walk(clonePipeline, x => {
           if (x.key && _.isString(x.key)) {
             if (x.key === '$like') {
               x.parent['$regex'] = x.parent[x.key].replace('%%', '#$#').replace('%', '.*').replace('#$#', '%%');
@@ -280,10 +281,10 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
         _.keys(this.sort).forEach(x => {
           sort[x] = this.sort[x] === 'asc' ? 1 : -1;
         });
-        pipeline.push({ $sort: sort });
+        clonePipeline.push({ $sort: sort });
       }
 
-      const countPipeline = _.clone(pipeline);
+      const countPipeline = _.clone(clonePipeline);
       countPipeline.push({ $count: 'count' });
       let count = -1;
       try {
@@ -294,7 +295,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
       }
 
 
-      const r = repo.aggregate(pipeline);
+      const r = repo.aggregate(clonePipeline);
 
       if (this.offset) {
         r.skip(this.offset);

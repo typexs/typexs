@@ -123,8 +123,11 @@ export class StorageControllerReader<T> extends Reader {
         findOptions.sort = this.getOptions().sort;
       }
 
-      this.chunk = await this.storageController.find(
-        this.entityType, this.conditions, findOptions);
+      if (this.getOptions().mode === 'aggregate') {
+        this.chunk = await this.storageController.aggregate(this.entityType, this.conditions, findOptions);
+      } else {
+        this.chunk = await this.storageController.find(this.entityType, this.conditions, findOptions);
+      }
       this.offset = this.chunk[XS_P_$OFFSET];
       this.size = this.size + this.chunk.length;
       // calc next offset
