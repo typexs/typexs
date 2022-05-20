@@ -12,7 +12,7 @@ export interface IFindOptions {
   /**
    * If raw the output records can be typed as passed entity type
    */
-  typed: boolean;
+  typed?: boolean;
 
   limit?: number;
 
