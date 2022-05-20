@@ -6,7 +6,7 @@ import { TypeOrmSqlConditionsBuilder } from './TypeOrmSqlConditionsBuilder';
 import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
 import { ClassUtils, TreeUtils } from '@allgemein/base';
 import { getMetadataArgsStorage, SelectQueryBuilder } from 'typeorm';
-import { ClassType, RegistryFactory } from '@allgemein/schema-api';
+import { ClassType, RegistryFactory, IEntityRef } from '@allgemein/schema-api';
 import { EntityControllerApi } from '../../../../api/EntityController.api';
 import { TypeOrmEntityController } from './TypeOrmEntityController';
 import { Injector } from '../../../di/Injector';
@@ -15,6 +15,7 @@ import { TypeOrmConnectionWrapper } from './TypeOrmConnectionWrapper';
 import { convertPropertyValueStringToJson } from './Helper';
 import { TypeOrmUtils } from './TypeOrmUtils';
 import { REGISTRY_TYPEORM } from './Constants';
+import { assign } from 'lodash';
 
 
 export class FindOp<T> implements IFindOp<T> {
@@ -28,6 +29,8 @@ export class FindOp<T> implements IFindOp<T> {
   protected findConditions: any;
 
   protected error: Error = null;
+
+  protected entityRef: IEntityRef = null;
 
   constructor(controller: TypeOrmEntityController) {
     this.controller = controller;
@@ -66,7 +69,9 @@ export class FindOp<T> implements IFindOp<T> {
       limit: 50,
       offset: null,
       sort: null,
-      cache: false
+      cache: false,
+      raw: false,
+      typed: false
     });
     this.options = options;
 
@@ -84,7 +89,7 @@ export class FindOp<T> implements IFindOp<T> {
       results = await cache.get(cacheKey, 'storage_typeorm');
     }
 
-
+    this.entityRef = this.controller.getStorageRef().getRegistry().getEntityRefFor(entityType);
     if (_.isNull(results)) {
       if (this.controller.storageRef.dbType === 'mongodb') {
         results = await this.findMongo(entityType, findConditions);
@@ -94,8 +99,8 @@ export class FindOp<T> implements IFindOp<T> {
     }
 
     if (!jsonPropertySupport) {
-      const entityRef = TypeOrmEntityRegistry.$().getEntityRefFor(entityType);
-      convertPropertyValueStringToJson(entityRef, results);
+      // const entityRef = TypeOrmEntityRegistry.$().getEntityRefFor(entityType);
+      convertPropertyValueStringToJson(this.entityRef, results);
     }
     await this.controller.invoker.use(EntityControllerApi).doAfterFind(results, this.error, this);
 
@@ -120,11 +125,10 @@ export class FindOp<T> implements IFindOp<T> {
       // const repo = connection.manager.getRepository(entityType);
       // const qb = repo.createQueryBuilder() as SelectQueryBuilder<T>;
       let qb: SelectQueryBuilder<T> = null;
-      const entityRef = this.controller.getStorageRef().getRegistry().getEntityRefFor(entityType);
       // connect only when type is already loaded
       connection = await this.controller.connect();
       if (findConditions && !_.isEmpty(findConditions)) {
-        const builder = new TypeOrmSqlConditionsBuilder<T>(connection.manager, entityRef, this.controller.getStorageRef(), 'select');
+        const builder = new TypeOrmSqlConditionsBuilder<T>(connection.manager, this.entityRef, this.controller.getStorageRef(), 'select');
         builder.build(findConditions);
         qb = builder.getQueryBuilder() as SelectQueryBuilder<T>;
       } else {
@@ -132,10 +136,10 @@ export class FindOp<T> implements IFindOp<T> {
       }
 
       if (this.options.eager) {
-        const refs = entityRef.getPropertyRefs().filter(x => x.isReference());
+        const refs = this.entityRef.getPropertyRefs().filter(x => x.isReference());
         for (const ref of refs) {
           const joinColumn = getMetadataArgsStorage().joinColumns
-            .find(x => x.target === entityRef.getClass() && x.propertyName === ref.name);
+            .find(x => x.target === this.entityRef.getClass() && x.propertyName === ref.name);
           if (joinColumn) {
             qb.leftJoinAndSelect(
               [qb.alias, joinColumn.propertyName].join('.'),
@@ -143,7 +147,7 @@ export class FindOp<T> implements IFindOp<T> {
             );
           } else {
             const relation = getMetadataArgsStorage().relations
-              .find(x => x.target === entityRef.getClass() && x.propertyName === ref.name);
+              .find(x => x.target === this.entityRef.getClass() && x.propertyName === ref.name);
             if (relation) {
               if (
                 relation.relationType === 'many-to-many' ||
@@ -171,7 +175,7 @@ export class FindOp<T> implements IFindOp<T> {
 
 
       if (_.isNull(this.options.sort)) {
-        entityRef.getPropertyRefs().filter(x => x.isIdentifier()).forEach(x => {
+        this.entityRef.getPropertyRefs().filter(x => x.isIdentifier()).forEach(x => {
           qb.addOrderBy(TypeOrmUtils.aliasKey(qb, [x.name, x.storingName]), 'ASC');
         });
       } else {
@@ -237,7 +241,14 @@ export class FindOp<T> implements IFindOp<T> {
 
       // const recordCount = await qb.count(false);
       while (await qb.hasNext()) {
-        results.push(await qb.next());
+        if (this.options.raw && this.options.typed) {
+          const instance = this.entityRef.create(false) as T;
+          assign(instance, await qb.next());
+          results.push(instance);
+        } else {
+          results.push(await qb.next());
+        }
+
       }
 
       results[XS_P_$COUNT] = recordCount;
