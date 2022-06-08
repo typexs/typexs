@@ -1,6 +1,6 @@
 {
   "name": "@typexs/typexs",
-  "version": "2.0.27",
+  "version": "2.0.28",
   "tag": "v2-lts",
   "description": "Angular for typexs",
   "main": "index.js",
