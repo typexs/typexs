@@ -23,6 +23,7 @@ export class ServerRegistry {
   async load(options: any) {
     const servers = {};
     for (const name in options) {
+      // eslint-disable-next-line no-prototype-builtins
       if (options.hasOwnProperty(name)) {
         const opts = options[name];
         servers[name] = await this.create(name, opts);

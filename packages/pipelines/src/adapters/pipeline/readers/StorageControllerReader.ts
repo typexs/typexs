@@ -13,6 +13,9 @@ import {
 import { ClassType, IEntityRef } from '@allgemein/schema-api';
 import { Reader } from '../../../lib/reader/Reader';
 import { IStorageControllerReaderOptions } from '../../../lib/reader/IStorageControllerReaderOptions';
+import { isBoolean, isFunction, isNumber, isObjectLike, isString, keys, values } from 'lodash';
+import { isPrimitive } from 'util';
+import { isBoxedPrimitive } from 'util/types';
 
 
 export class StorageControllerReader<T> extends Reader {
@@ -112,12 +115,17 @@ export class StorageControllerReader<T> extends Reader {
     this._hasNext = _.isUndefined(this.count) ? true : this.size < this.count;
 
     if (limit > 0 && this._hasNext) {
+      const opts = this.getOptions();
+      const selectedValues: any = {};
+      keys(opts).filter(k => isNumber(opts[k]) || isString(opts[k]) || isBoolean(opts[k])).map(k => selectedValues[k] = opts[k]);
 
       const findOptions: IFindOptions = {
+        ...selectedValues,
         offset: this.offset,
         limit: limit,
         raw: this.getRaw()
       };
+
 
       if (this.getOptions().sort) {
         findOptions.sort = this.getOptions().sort;

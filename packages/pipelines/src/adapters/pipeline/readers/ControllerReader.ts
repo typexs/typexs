@@ -3,6 +3,7 @@ import { C_RAW, EntityControllerRegistry, IEntityController, IFindOptions, Injec
 import { ClassType } from '@allgemein/schema-api';
 import { Reader } from '../../../lib/reader/Reader';
 import { IControllerReaderOptions } from '../../../lib/reader/IControllerReaderOptions';
+import { isBoolean, isNumber, isString, keys } from 'lodash';
 
 
 export class ControllerReader<T> extends Reader {
@@ -87,8 +88,12 @@ export class ControllerReader<T> extends Reader {
     this._hasNext = _.isUndefined(this.count) ? true : this.size < this.count;
 
     if (limit > 0 && this._hasNext) {
+      const opts = this.getOptions();
+      const selectedValues: any = {};
+      keys(opts).filter(k => isNumber(opts[k]) || isString(opts[k]) || isBoolean(opts[k])).map(k => selectedValues[k] = opts[k]);
 
       const findOptions: IFindOptions = {
+        ...selectedValues,
         offset: this.offset,
         limit: limit,
         raw: this.getRaw()
