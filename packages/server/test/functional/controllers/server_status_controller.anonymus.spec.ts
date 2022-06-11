@@ -132,7 +132,7 @@ class ServerStatusControllerSpec {
             'classTransformer': false,
             'context': 'api',
             'controllers': [
-              'DistributedStorageAPIController',
+              // 'DistributedStorageAPIController',
               'FileSystemAPIController',
               'RegistryAPIController',
               'ServerStatusAPIController',
@@ -196,7 +196,7 @@ class ServerStatusControllerSpec {
           'classTransformer': false,
           'context': 'api',
           'controllers': [
-            'DistributedStorageAPIController',
+            // 'DistributedStorageAPIController',
             'FileSystemAPIController',
             'RegistryAPIController',
             'ServerStatusAPIController',

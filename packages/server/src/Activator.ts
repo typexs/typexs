@@ -81,9 +81,9 @@ export class Activator implements IActivator, IPermissions {
       PERMISSION_ALLOW_DELETE_STORAGE_ENTITY,
       // PERMISSION_ALLOW_DELETE_STORAGE_ENTITY_PATTERN,
 
-      /**
-       * Distributed Storage Permissions
-       */
+      // /**
+      //  * Distributed Storage Permissions
+      //  */
       // PERMISSION_ALLOW_DISTRIBUTED_STORAGE_ACCESS_ENTITY,
       // PERMISSION_ALLOW_DISTRIBUTED_STORAGE_SAVE_ENTITY,
       // PERMISSION_ALLOW_DISTRIBUTED_STORAGE_UPDATE_ENTITY,
