@@ -1,6 +1,6 @@
 {
   "name": "@typexs/typexs",
-  "version": "2.0.28",
+  "version": "2.0.26",
   "tag": "v2-lts",
   "description": "Angular for typexs",
   "main": "index.js",
@@ -40,6 +40,7 @@
     "@typexs/auth-ng": "file:./packages/auth-ng/src",
     "@typexs/base": "file:./packages/base/src",
     "@typexs/base-ng": "file:./packages/base-ng/src",
+    "@typexs/distributed-storage": "file:./packages/distributed-storage/src",
     "@typexs/distributed-storage-ng": "file:./packages/distributed-storage-ng/src",
     "@typexs/entity": "file:./packages/entity/src",
     "@typexs/entity-ng": "file:./packages/entity-ng/src",

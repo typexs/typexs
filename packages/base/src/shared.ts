@@ -83,12 +83,6 @@ export { IAggregateOptions } from './libs/storage/framework/IAggregateOptions';
 export { ISaveOptions } from './libs/storage/framework/ISaveOptions';
 export { IConditionJoin } from './libs/storage/framework/IConditionJoin';
 
-export { IDistributedFindOptions } from './libs/distributed_storage/find/IDistributedFindOptions';
-export { IDistributedAggregateOptions } from './libs/distributed_storage/aggregate/IDistributedAggregateOptions';
-export { IDistributedSaveOptions } from './libs/distributed_storage/save/IDistributedSaveOptions';
-export { IDistributedUpdateOptions } from './libs/distributed_storage/update/IDistributedUpdateOptions';
-export { IDistributedRemoveOptions } from './libs/distributed_storage/remove/IDistributedRemoveOptions';
-
 export {
   REGISTRY_TYPEORM,
   EVENT_STORAGE_ENTITY_ADDED,

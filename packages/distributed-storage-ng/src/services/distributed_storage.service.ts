@@ -8,7 +8,7 @@ import {
   API_CTRL_DISTRIBUTED_STORAGE_GET_ENTITY,
   API_CTRL_DISTRIBUTED_STORAGE_SAVE_ENTITY,
   API_CTRL_DISTRIBUTED_STORAGE_UPDATE_ENTITY
-} from '@typexs/server';
+} from '@typexs/distributed-storage';
 
 
 @Injectable()

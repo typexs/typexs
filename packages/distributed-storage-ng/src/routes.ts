@@ -4,7 +4,7 @@ import {DistributedStorageQueryPageComponent} from './components/query/page/quer
 import {
   PERMISSION_ALLOW_DISTRIBUTED_STORAGE_ACCESS_ENTITY,
   PERMISSION_ALLOW_DISTRIBUTED_STORAGE_ACCESS_ENTITY_PATTERN
-} from '@typexs/server';
+} from '@typexs/distributed-storage/lib/Constants';
 
 export const DISTRIBUTED_STORAGE_ROUTES: Routes = [
   {

@@ -86,25 +86,6 @@ export { AbstractSchemaHandler } from './libs/storage/AbstractSchemaHandler';
 export { EntityControllerRegistry } from './libs/storage/EntityControllerRegistry';
 
 
-export { IDistributedQueryWorkerOptions } from './libs/distributed_storage/IDistributedQueryWorkerOptions';
-export { DistributedStorageEntityController } from './libs/distributed_storage/DistributedStorageEntityController';
-export { DistributedOperationFactory } from './libs/distributed_storage/DistributedOperationFactory';
-export { DistributedFindOp } from './libs/distributed_storage/find/DistributedFindOp';
-export { DistributedFindRequest } from './libs/distributed_storage/find/DistributedFindRequest';
-export { DistributedFindResponse } from './libs/distributed_storage/find/DistributedFindResponse';
-export { DistributedSaveOp } from './libs/distributed_storage/save/DistributedSaveOp';
-export { DistributedSaveRequest } from './libs/distributed_storage/save/DistributedSaveRequest';
-export { DistributedSaveResponse } from './libs/distributed_storage/save/DistributedSaveResponse';
-export { DistributedUpdateOp } from './libs/distributed_storage/update/DistributedUpdateOp';
-export { DistributedUpdateRequest } from './libs/distributed_storage/update/DistributedUpdateRequest';
-export { DistributedUpdateResponse } from './libs/distributed_storage/update/DistributedUpdateResponse';
-export { DistributedRemoveOp } from './libs/distributed_storage/remove/DistributedRemoveOp';
-export { DistributedRemoveRequest } from './libs/distributed_storage/remove/DistributedRemoveRequest';
-export { DistributedRemoveResponse } from './libs/distributed_storage/remove/DistributedRemoveResponse';
-export { DistributedAggregateOp } from './libs/distributed_storage/aggregate/DistributedAggregateOp';
-export { DistributedAggregateRequest } from './libs/distributed_storage/aggregate/DistributedAggregateRequest';
-export { DistributedAggregateResponse } from './libs/distributed_storage/aggregate/DistributedAggregateResponse';
-
 
 export { NullTaskRef } from './libs/tasks/NullTaskRef';
 
