@@ -11,8 +11,8 @@
   <small *ngIf="help" id="{{name}}Help" class="form-text text-muted">{{help}}</small>
   <div [hidden]="!(getDataContainer().checked(name) && !getDataContainer().valid(name))" class="invalid-feedback">
     <ul>
-      <li *ngFor="let message of getDataContainer().messages(name)" class="message-validator-{{ message.type }}">{{ message.content
-        }}
+      <li *ngFor="let message of getDataContainer().messages(name)" class="message-validator-{{ message.type }}">
+        {{ message.content }}
       </li>
     </ul>
   </div>

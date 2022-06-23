@@ -1,5 +1,5 @@
-import {IGridColumn} from './IGridColumn';
-import {IQueryComponentApi} from '../api/querying/IQueryComponentApi';
+import { IGridColumn } from './IGridColumn';
+import { IQueryComponentApi } from '../api/querying/IQueryComponentApi';
 
 export interface IDTGridOptions {
 
@@ -71,5 +71,13 @@ export interface IDTGridOptions {
    * TODO?
    */
   namespace?: string;
+
+
+  /**
+   * Define a function
+   *
+   * @param columns
+   */
+  beforeQuery?: (query: any, options: any) => void;
 
 }

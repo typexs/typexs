@@ -13,7 +13,7 @@ import { IDTListGridOptions } from './IDTListGridOptions';
 
 @Component({
   selector: 'txs-list-view',
-  templateUrl: 'list-view.component.html',
+  templateUrl: 'list-view.complist-viewonent.html',
   styleUrls: ['./list-view.component.scss']
 })
 export class ListViewComponent extends AbstractGridComponent implements OnInit, OnDestroy {

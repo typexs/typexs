@@ -322,6 +322,9 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
         executeQuery = mangoQuery;
       }
 
+      if (this.options.beforeQuery) {
+        this.options.beforeQuery(executeQuery, queryOptions);
+      }
       this.queringService.query(this.name, executeQuery, queryOptions)
         .subscribe(
           (results: any) => {

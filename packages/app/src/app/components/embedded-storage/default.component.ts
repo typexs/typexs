@@ -1,9 +1,9 @@
-import {isEmpty, set} from 'lodash';
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {IDTGridOptions, IQueryParams} from 'packages/base-ng/src';
-import {Like, Value} from '@allgemein/expressions';
-import {StorageQueryEmbeddedComponent, StorageService} from 'packages/storage-ng/src';
-import {IEntityRef} from '@allgemein/schema-api';
+import { isEmpty, set } from 'lodash';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { IDTGridOptions, IQueryParams } from 'packages/base-ng/src';
+import { Like, Value } from '@allgemein/expressions';
+import { StorageQueryEmbeddedComponent, StorageService } from 'packages/storage-ng/src';
+import { IEntityRef } from '@allgemein/schema-api';
 
 
 export class C {
@@ -21,7 +21,7 @@ export class C {
  */
 @Component({
   selector: 'embedded-storage-default',
-  templateUrl: 'default.component.html',
+  templateUrl: 'default.component.html'
 })
 export class EmbeddedStorageDefaultComponent implements OnInit {
 
@@ -36,15 +36,16 @@ export class EmbeddedStorageDefaultComponent implements OnInit {
 
   simpleItemParams: IQueryParams = {};
 
-  @ViewChild('simpleItem01', {static: true})
+  @ViewChild('simpleItem01', { static: true })
   simpleItemQuery: StorageQueryEmbeddedComponent;
 
   simpleQueryModul = new C();
 
   entityRef: IEntityRef;
 
-  constructor(private storageService: StorageService,
-              private changeDetector: ChangeDetectorRef) {
+  constructor(
+    private storageService: StorageService,
+    private changeDetector: ChangeDetectorRef) {
 
   }
 
