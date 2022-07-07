@@ -1,6 +1,6 @@
 import { isEmpty, set } from 'lodash';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { IDTGridOptions, IQueryParams } from 'packages/base-ng/src';
+import { IDatatableOptions, IQueryParams } from 'packages/base-ng/src';
 import { Like, Value } from '@allgemein/expressions';
 import { StorageQueryEmbeddedComponent, StorageService } from 'packages/storage-ng/src';
 import { IEntityRef } from '@allgemein/schema-api';
@@ -27,7 +27,7 @@ export class EmbeddedStorageDefaultComponent implements OnInit {
 
   simpleItemName = 'TypeOrmSimpleItem';
 
-  simpleItemOptions: IDTGridOptions = {
+  simpleItemOptions: IDatatableOptions = {
     limit: 10,
     enablePager: true,
     freeQueryBuilder: false,

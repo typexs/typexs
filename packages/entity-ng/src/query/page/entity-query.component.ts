@@ -5,7 +5,7 @@ import {
   AbstractGridComponent,
   CC_GRID_CELL_ENTITY_OPERATIONS,
   ComponentRegistryService,
-  IDTGridOptions,
+  IDatatableOptions,
   IGridColumn,
   IQueryComponentApi
 } from '@typexs/base-ng';
@@ -20,7 +20,7 @@ import { ClassType } from '@allgemein/schema-api';
 })
 export class EntityQueryComponent implements OnInit {
 
-  options: IDTGridOptions = {};
+  options: IDatatableOptions = {};
 
   name: string;
 

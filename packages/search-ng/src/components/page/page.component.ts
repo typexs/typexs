@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AppService, C_DEFAULT, IDTGridOptions, ListViewComponent } from '@typexs/base-ng';
+import { AppService, C_DEFAULT, IDatatableOptions, ListViewComponent } from '@typexs/base-ng';
 import { DEFAULT_FACET, ISearchFacet, SEARCH_PAGE, TXS_SEARCH } from '@typexs/search';
 import { __CLASS__, __NS__ } from '@allgemein/schema-api';
 
@@ -13,7 +13,7 @@ import { __CLASS__, __NS__ } from '@allgemein/schema-api';
 })
 export class SearchPageComponent {
 
-  options: IDTGridOptions = {};
+  options: IDatatableOptions = {};
 
   gridComponentClass = ListViewComponent;
 

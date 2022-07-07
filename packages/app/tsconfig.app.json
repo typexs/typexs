@@ -112,6 +112,12 @@
       "@typexs/tasks-ng": [
         "./packages/tasks-ng/src/public_api"
       ],
+      "@typexs/distributed-storage": [
+        "./packages/distributed-storage/src/browser"
+      ],
+      "@typexs/distributed-storage/*": [
+        "./packages/distributed-storage/src"
+      ],
       "@typexs/distributed-storage-ng/*": [
         "./packages/distributed-storage-ng/src/*"
       ],

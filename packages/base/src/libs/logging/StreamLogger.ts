@@ -54,7 +54,7 @@ export class StreamLogger implements ILoggerApi {
 
 
   isEnabled(set?: boolean): boolean {
-    return true;
+    return this.getOptions().enable;
   }
 
   remove(): void {
@@ -73,8 +73,8 @@ export class StreamLogger implements ILoggerApi {
       level: level,
       args: msg,
       time: new Date(),
-      prefix: this.options.prefix,
-      parameters: this.options.parameters
+      prefix: this.getOptions().prefix,
+      parameters: this.getOptions().parameters
     };
     this.getEmitter().emit(LOG_EVENT_NAME, event);
   }

@@ -27,7 +27,7 @@ export class FreeQueryInputComponent implements OnInit, OnDestroy {
   @Output()
   queryState: EventEmitter<QueryAction> = new EventEmitter();
 
-  history: { mode: 'aggregate' | 'query', text: string, query: any }[] = [];
+  history: { mode: 'aggregate' | 'query'; text: string; query: any }[] = [];
 
   historyToggle: boolean = false;
 
@@ -116,7 +116,7 @@ export class FreeQueryInputComponent implements OnInit, OnDestroy {
     $event.stopPropagation();
   }
 
-  selectEntry(entry: { mode: 'aggregate' | 'query', text: string, query: any }) {
+  selectEntry(entry: { mode: 'aggregate' | 'query'; text: string; query: any }) {
     this.mode = entry.mode;
     this.freeTextQuery = entry.text;
     this.build();

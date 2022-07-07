@@ -78,7 +78,7 @@ export * from './datatable/datatable.component';
 export * from './datatable/IGridApi';
 export * from './datatable/IQueryParams';
 export * from './datatable/IGridColumn';
-export * from './datatable/IDTGridOptions';
+export * from './datatable/IDatatableOptions';
 
 export { AbstractComponent } from './component/abstract.component';
 export { AbstractInstancableComponent } from './component/abstract-instancable.component';
@@ -107,7 +107,7 @@ export { AbstractAggregateEmbeddedComponent } from './api/querying/abstract-aggr
 export { IQueringService } from './api/querying/IQueringService';
 export { IQueryComponentApi } from './api/querying/IQueryComponentApi';
 export { QueryAction } from './api/querying/QueryAction';
-export { STORAGE_REQUEST_MODE, DEFAULT_DT_GRID_OPTIONS, QUERY_MODE } from './api/querying/Constants';
+export { STORAGE_REQUEST_MODE, DEFAULT_QUERY_OPTIONS, QUERY_MODE } from './api/querying/Constants';
 export { FreeQueryInputComponent } from './api/querying/free-query/free-query-input.component';
 export { QueryEmbeddedComponent } from './component/query/query-embedded.component';
 

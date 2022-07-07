@@ -4,17 +4,18 @@ import {
   concat, kebabCase, has, snakeCase, isRegExp, orderBy, remove, first, set, assign,
   capitalize, isUndefined, isDate, range
 } from 'lodash';
-import {Component} from '@angular/core';
-import {IGridColumn} from 'packages/base-ng/src';
-import {SimpleHtmlTableComponent} from 'packages/base-ng/src';
-import {IDTGridOptions} from 'packages/base-ng/src';
-import {IGridApi} from 'packages/base-ng/src';
-import {And, ExprDesc} from '@allgemein/expressions';
+import { Component } from '@angular/core';
+import { IGridColumn } from 'packages/base-ng/src';
+import { SimpleHtmlTableComponent } from 'packages/base-ng/src';
+import { IDatatableOptions } from 'packages/base-ng/src';
+import { IGridApi } from 'packages/base-ng/src';
+import { And, ExprDesc } from '@allgemein/expressions';
+import { K_PAGED } from '@typexs/base-ng/datatable/Constants';
 
 
 @Component({
   selector: 'simple-html-table-demo',
-  templateUrl: 'simple-html-table-demo.component.html',
+  templateUrl: 'simple-html-table-demo.component.html'
 })
 export class SimpleHtmlTableDemoComponent {
 
@@ -24,15 +25,25 @@ export class SimpleHtmlTableDemoComponent {
   maxRows: number;
 
 
-  options: IDTGridOptions = {
+  options: IDatatableOptions = {
+    mode: K_PAGED,
     pagerId: 'page',
     limit: 25,
     enablePager: true
   };
 
   columns: IGridColumn[] = [
-    {label: 'Id', field: 'id', filter: true, sorting: true, filterDataType: 'number'},
-    {label: 'Name', field: 'name'},
+    {
+      label: 'Id',
+      field: 'id',
+      filter: true,
+      sorting: true,
+      filterDataType: 'number'
+    },
+    {
+      label: 'Name',
+      field: 'name'
+    }
   ];
 
 
@@ -50,9 +61,12 @@ export class SimpleHtmlTableDemoComponent {
 
   update(key: string, v: any): void {
     if (key === 'maxRows') {
-
+      if (/\d+/.test(v)) {
+        const p = parseInt(v, 10);
+        const rows = range(1, p + 1).map(x => ({ id: x, name: 'Text ' + x }));
+        this.rows = rows;
+      }
     }
-
   }
 
   generateData(offset: number, limit: number) {

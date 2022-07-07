@@ -10,7 +10,7 @@ import { BackendTasksService } from '../backend-tasks.service';
 import { SystemInfoService } from '@typexs/base-ng';
 import { StorageService } from '@typexs/storage-ng';
 import { TaskLog } from '@typexs/base/entities/TaskLog';
-import { IDTGridOptions } from '@typexs/base-ng';
+import { IDatatableOptions } from '@typexs/base-ng';
 import { IGridColumn } from '@typexs/base-ng';
 import { C_URL_HANDLER, C_URL_TITLE, CC_GRID_CELL_ROUTER_LINK } from '@typexs/base-ng';
 
@@ -30,7 +30,7 @@ export class TasksLogComponent implements OnInit {
 
   ready = false;
 
-  options: IDTGridOptions = {
+  options: IDatatableOptions = {
     enablePager: true,
     limit: 25,
     pagerId: 'page',

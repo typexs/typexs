@@ -1,10 +1,13 @@
-import { IDTGridOptions } from '../../datatable/IDTGridOptions';
+import { IQueryOptions } from './IQueryOptions';
+import { K_PAGED } from '../../datatable/Constants';
 
-export const DEFAULT_DT_GRID_OPTIONS: IDTGridOptions = {
+export const DEFAULT_QUERY_OPTIONS: IQueryOptions = {
+  mode: K_PAGED,
   pagerId: 'page',
   enablePager: true,
   limit: 25,
-  freeQueryBuilder: true
+  freeQueryBuilder: true,
+  queryOnInit: true
 };
 
 

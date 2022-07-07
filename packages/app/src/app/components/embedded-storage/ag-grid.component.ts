@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Like, Value } from '@allgemein/expressions';
 import { StorageQueryEmbeddedComponent, StorageService } from 'packages/storage-ng/src';
 import { IEntityRef } from '@allgemein/schema-api';
-import { IDTGridOptions, IQueryParams } from 'packages/base-ng/src';
+import { IDatatableOptions, IQueryParams } from 'packages/base-ng/src';
 import { AgGridWrapperComponent } from '../../addons/ag-grid/ag-grid-wrapper.component';
 
 
@@ -28,7 +28,7 @@ export class EmbeddedStorageAgGridComponent implements OnInit {
 
   simpleItemName = 'TypeOrmSimpleItem';
 
-  simpleItemOptions: IDTGridOptions = {
+  simpleItemOptions: IDatatableOptions = {
     limit: 10,
     enablePager: true,
     freeQueryBuilder: false,

@@ -6,7 +6,7 @@ import {PagerService} from '../../pager/PagerService';
 import {Pager} from '../../pager/Pager';
 import {IGridColumn} from '../IGridColumn';
 import {Eq, ExprDesc, Like, Value, ValueDesc} from '@allgemein/expressions';
-import {IDTGridOptions} from '../IDTGridOptions';
+import {IDatatableOptions} from '../IDatatableOptions';
 import { IViewOptions } from '../../component/view/IViewOptions';
 import { IDTListGridOptions } from './IDTListGridOptions';
 

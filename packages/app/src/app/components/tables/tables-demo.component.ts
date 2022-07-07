@@ -1,14 +1,14 @@
-import {Component} from '@angular/core';
-import {IGridColumn} from 'packages/base-ng/src';
-import {SimpleHtmlTableComponent} from 'packages/base-ng/src';
-import {AgGridWrapperComponent} from '../../addons/ag-grid/ag-grid-wrapper.component';
+import { Component } from '@angular/core';
+import { IGridColumn } from 'packages/base-ng/src';
+import { SimpleHtmlTableComponent } from 'packages/base-ng/src';
+import { AgGridWrapperComponent } from '../../addons/ag-grid/ag-grid-wrapper.component';
 
 
 @Component({
   selector: 'tablesDemo',
-  templateUrl: 'tables-demo.component.html',
+  templateUrl: 'tables-demo.component.html'
 })
-export class TablesDemoComponent /*implements OnInit*/ {
+export class TablesDemoComponent {
 
   simpleTableComp = SimpleHtmlTableComponent;
 
@@ -17,8 +17,8 @@ export class TablesDemoComponent /*implements OnInit*/ {
   staticdata_1 = {
 
     columns: <IGridColumn[]>[
-      {label: 'Id', field: 'id'},
-      {label: 'Name', field: 'name'},
+      { label: 'Id', field: 'id' },
+      { label: 'Name', field: 'name' }
     ],
 
     rows: [

@@ -2,7 +2,6 @@ import { get, has, isArray, isEmpty, isNumber, keys, snakeCase, defaults, set, a
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ClassType, IEntityRef, JS_DATA_TYPES } from '@allgemein/schema-api';
 import { ExprDesc, Expressions } from '@allgemein/expressions';
-import { IDTGridOptions } from '../../datatable/IDTGridOptions';
 import { IGridColumn } from '../../datatable/IGridColumn';
 import {
   C_PROPERTY,
@@ -16,13 +15,14 @@ import { DatatableComponent } from '../../datatable/datatable.component';
 import { IQueringService } from './IQueringService';
 import { QueryAction } from './QueryAction';
 import { IQueryParams } from '../../datatable/IQueryParams';
-import { DEFAULT_DT_GRID_OPTIONS } from './Constants';
+import { DEFAULT_QUERY_OPTIONS } from './Constants';
 import { AbstractGridComponent } from '../../datatable/abstract-grid.component';
 import { Helper } from './Helper';
 import { IQueryComponentApi } from './IQueryComponentApi';
 import { first } from 'rxjs/operators';
 import { IFindOptions } from './IFindOptions';
 import { LabelHelper, XS_P_$COUNT } from '@typexs/base';
+import { IQueryOptions } from '@typexs/base-ng/api/querying/IQueryOptions';
 
 
 /**
@@ -39,6 +39,14 @@ import { LabelHelper, XS_P_$COUNT } from '@typexs/base';
 export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponentApi {
 
   @Input()
+  name: string;
+
+  @Input()
+  options: IQueryOptions = {};
+
+  _params: IQueryParams;
+
+  @Input()
   get params() {
     return this._params;
   }
@@ -48,19 +56,14 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     this.paramsChange.emit(this._params);
   }
 
-
-  @Input()
-  name: string;
+  @Output()
+  paramsChange: EventEmitter<IQueryParams> = new EventEmitter();
 
   @Input()
   columns: IGridColumn[];
 
-
-  @Input()
-  limit = 25;
-
-  @Input()
-  options: IDTGridOptions = {}; // = DEFAULT_DT_GRID_OPTIONS;
+  // @Input()
+  // limit = 25;
 
   @Input()
   freeQuery: any;
@@ -68,10 +71,6 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
   @Output()
   freeQueryChange: EventEmitter<any> = new EventEmitter();
 
-  _params: IQueryParams;
-
-  @Output()
-  paramsChange: EventEmitter<IQueryParams> = new EventEmitter();
 
   @Input()
   componentClass: ClassType<AbstractGridComponent>;
@@ -102,13 +101,15 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
   }
 
   applyInitialOptions() {
-    defaults(this.options, DEFAULT_DT_GRID_OPTIONS);
+    defaults(this.options, DEFAULT_QUERY_OPTIONS);
     if (this.options) {
       // set initial options
       this.params.offset = get(this.options, 'offset', 0);
       this.params.limit = get(this.options, 'limit', 25);
       if (has(this.options, 'sorting')) {
         this.params.sorting = get(this.options, 'sorting');
+      } else if (has(this.options, 'sort')) {
+        this.params.sorting = get(this.options, 'sort');
       }
     }
   }

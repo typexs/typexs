@@ -1,4 +1,4 @@
-import { get, keys } from 'lodash';
+import { defaults, get, keys, uniq } from 'lodash';
 import {
   Component,
   ComponentFactoryResolver,
@@ -17,11 +17,8 @@ import {
 import { AbstractGridComponent } from './abstract-grid.component';
 import { ComponentRegistryService } from '../component/component-registry.service';
 import { Log } from '../lib/log/Log';
-import { IDTGridOptions } from './IDTGridOptions';
-
-
-const inputKeys = ['columns', 'rows', 'maxRows', 'options', 'params'];
-const outputKeys = ['doQuery', 'gridReady', 'paramsChange'];
+import { IDatatableOptions } from './IDatatableOptions';
+import { inputKeys, K_PAGED, methodKeys, outputKeys } from '@typexs/base-ng/datatable/Constants';
 
 /**
  * Wrapper component for different grid implementiations
@@ -38,9 +35,9 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
   @Input()
   component: any;
 
-  @Input()
-  options: IDTGridOptions;
-
+  // Used in abstract grid
+  // @Input()
+  // options: IDatatableOptions;
 
   @ViewChild('content', { read: ViewContainerRef, static: true })
   vc: ViewContainerRef;
@@ -57,6 +54,21 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
 
 
   ngOnInit(): void {
+    defaults(this.options, <IDatatableOptions>{
+      mode: K_PAGED,
+      passInputs: [],
+      passOutputs: [],
+      passMethods: []
+    });
+
+    // apply default annotation pass
+    this.options.passInputs.push(...inputKeys);
+    this.options.passOutputs.push(...outputKeys);
+    this.options.passMethods.push(...methodKeys);
+    uniq(this.options.passInputs);
+    uniq(this.options.passOutputs);
+    uniq(this.options.passMethods);
+
     if (!this.component) {
       const binding = this.componentRegistryService.registry.find(x =>
         x.component &&
@@ -83,7 +95,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
    */
   ngOnChanges(changes: SimpleChanges) {
     if (changes['component']) {
-      if (changes['component'].currentValue) {
+      if (changes['component'].currentValue && !changes['component'].firstChange) {
         this.applyLayout(changes['component'].currentValue);
         this.rebuild();
       }
@@ -108,7 +120,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
 
 
     // passing through input parameters
-    for (const prop of inputKeys) {
+    for (const prop of this.options.passInputs) {
       // instance[prop] = this[prop];
       try {
         const propDesc = Object.getOwnPropertyDescriptor(this, prop);
@@ -121,7 +133,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
       }
     }
     // passing through output eventemitter
-    for (const prop of outputKeys) {
+    for (const prop of this.options.passOutputs) {
       (<EventEmitter<any>>this.api()[prop]).subscribe(
         (v: any) => (<EventEmitter<any>>this[prop]).emit(v),
         (error: any) => (<EventEmitter<any>>this[prop]).error(error),
@@ -129,9 +141,11 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
       );
     }
 
-    ['rebuild', 'setMaxRows', 'setColumns', 'setRows', 'getMaxRows', 'getColumns', 'getRows'].forEach(x => {
-      this[x] = this.api()[x].bind(this.api());
-    });
+    for (const method of this.options.passMethods) {
+      if (this.api()[method]) {
+        this[method] = this.api()[method].bind(this.api());
+      }
+    }
   }
 
   ngOnDestroy(): void {

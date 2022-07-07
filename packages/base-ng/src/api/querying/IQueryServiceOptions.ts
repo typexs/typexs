@@ -1,6 +1,5 @@
 import {STORAGE_REQUEST_MODE} from './Constants';
 import {IRoutePointer} from '../backend/IRoutePointer';
-import {ILookupRegistry} from '@allgemein/schema-api';
 
 /**
  * Options for query service

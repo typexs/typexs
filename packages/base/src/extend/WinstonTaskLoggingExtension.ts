@@ -15,7 +15,6 @@ import { isUndefined } from 'lodash';
 import { TaskLog } from '../entities/TaskLog';
 import { PlatformUtils } from '@allgemein/base';
 import { unlink } from 'fs/promises';
-import { Writable } from 'stream';
 import { LOG_EVENT_NAME } from '../libs/logging/Constants';
 import { TASKRUN_STATE_FINISHED } from '../libs/tasks/Constants';
 

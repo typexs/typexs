@@ -7,15 +7,15 @@ import {DatatableComponent} from '../../datatable/datatable.component';
 import {IQueringService} from './IQueringService';
 import {QueryAction} from './QueryAction';
 import {IQueryParams} from '../../datatable/IQueryParams';
-import {DEFAULT_DT_GRID_OPTIONS} from './Constants';
-import {IDTGridOptions} from '../../datatable/IDTGridOptions';
+import {DEFAULT_QUERY_OPTIONS} from './Constants';
+import {IDatatableOptions} from '../../datatable/IDatatableOptions';
 import {Log} from '../../lib/log/Log';
 import {C_DEFAULT} from '../../constants';
 import {IFindOptions} from './IFindOptions';
 
 
 /**
- * Storage query embedded component
+ * Aggregate query embedded component
  *
  * Possibilities:
  * - sorting
@@ -41,7 +41,7 @@ export class AbstractAggregateEmbeddedComponent implements OnInit {
   limit = 25;
 
   @Input()
-  options: IDTGridOptions = DEFAULT_DT_GRID_OPTIONS;
+  options: IDatatableOptions = DEFAULT_QUERY_OPTIONS;
 
   @Input()
   freeQuery: any;

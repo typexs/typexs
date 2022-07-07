@@ -1,4 +1,5 @@
 import {IReaderOptions} from './IReaderOptions';
+import { ERROR_FUNCTION } from '../Constants';
 
 export interface IReader {
 
@@ -16,7 +17,7 @@ export interface IReader {
   getOptions(): IReaderOptions;
 
 
-  onCatch?(fn: (data: any, err: Error) => void): IReader;
+  onCatch?(fn: ERROR_FUNCTION): IReader;
 
 
   finalize(): void;

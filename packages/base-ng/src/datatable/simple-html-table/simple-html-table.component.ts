@@ -1,12 +1,13 @@
-import {defaults, get, isEmpty, isNumber, set} from 'lodash';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AbstractGridComponent} from '../abstract-grid.component';
-import {PagerAction} from '../../pager/PagerAction';
-import {PagerService} from '../../pager/PagerService';
-import {Pager} from '../../pager/Pager';
-import {IGridColumn} from '../IGridColumn';
-import {Eq, ExprDesc, Like, Value, ValueDesc} from '@allgemein/expressions';
-import {IDTGridOptions} from '../IDTGridOptions';
+import { defaults, get, isEmpty, isNumber, set } from 'lodash';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractGridComponent } from '../abstract-grid.component';
+import { PagerAction } from '../../pager/PagerAction';
+import { PagerService } from '../../pager/PagerService';
+import { Pager } from '../../pager/Pager';
+import { IGridColumn } from '../IGridColumn';
+import { Eq, ExprDesc, Like, Value, ValueDesc } from '@allgemein/expressions';
+import { IDatatableOptions } from '../IDatatableOptions';
+import { K_PAGED } from '@typexs/base-ng/datatable/Constants';
 
 
 @Component({
@@ -22,18 +23,25 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements O
 
   filterValue: any = null;
 
+
   constructor(private pagerService: PagerService) {
     super();
   }
 
   ngOnInit(): void {
     if (!this.options) {
-      this.options = {enablePager: true, limit: 25};
+      this.options = {};
     }
-    defaults(this.options, <IDTGridOptions>{enablePager: true});
+    defaults(this.options, <IDatatableOptions>{
+      enablePager: true,
+      limit: 25,
+      mode: K_PAGED
+    });
 
-    if (this.options.enablePager) {
+    if (this.getGridMode() === K_PAGED) {
       this.pager = this.pagerService.get(this.options.pagerId);
+    } else {
+      this.options.enablePager = false;
     }
 
     if (isEmpty(this._params)) {
@@ -153,8 +161,8 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements O
         this.params.offset = 0;
         this.paramsChange.emit(this._params);
       }
-      this.pager.totalPages = Math.ceil(this.maxRows * 1.0 / this.params.limit * 1.0);
 
+      this.pager.totalPages = Math.ceil(this.maxRows * 1.0 / this.params.limit * 1.0);
       if (!this.pager.checkQueryParam()) {
         this.pager.currentPage = (this.params.offset / this.options.limit) + 1;
         this.pager.calculatePages();

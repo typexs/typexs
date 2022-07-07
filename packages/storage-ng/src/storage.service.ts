@@ -15,8 +15,7 @@ import {
   API_CTRL_STORAGE_UPDATE_ENTITY,
   IStorageRefMetadata
 } from '@typexs/server';
-import { REGISTRY_TYPEORM } from '@typexs/base';
-import { IBuildOptions, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
+import { IBuildOptions, IEntityRef } from '@allgemein/schema-api';
 import {
   AbstractQueryService,
   AuthService,

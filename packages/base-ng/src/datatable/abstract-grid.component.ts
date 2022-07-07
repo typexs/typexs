@@ -1,9 +1,11 @@
-import {IGridColumn} from './IGridColumn';
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {IDTGridOptions} from './IDTGridOptions';
-import {IQueryParams} from './IQueryParams';
-import {IGridApi} from './IGridApi';
-import {Helper} from '../api/querying/Helper';
+import { IGridColumn } from './IGridColumn';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { IDatatableOptions } from './IDatatableOptions';
+import { IQueryParams } from './IQueryParams';
+import { IGridApi } from './IGridApi';
+import { Helper } from '../api/querying/Helper';
+import { GRID_MODE } from '@typexs/base-ng/datatable/Constants';
+
 
 @Component({
   template: ''
@@ -35,7 +37,7 @@ export class AbstractGridComponent implements IGridApi {
   maxRows: number;
 
   @Input()
-  options: IDTGridOptions;
+  options: IDatatableOptions;
 
   @Output()
   doQuery: EventEmitter<IGridApi> = new EventEmitter<IGridApi>();
@@ -47,15 +49,24 @@ export class AbstractGridComponent implements IGridApi {
     this.construct();
   }
 
-
   construct() {
   }
-
 
   rebuild() {
     this.gridReady.emit();
   }
 
+  /**
+   * Method to check if grid mode is supported
+   * @param name
+   */
+  supportedGridMode(name: GRID_MODE) {
+    return true;
+  }
+
+  getGridMode() {
+    return this.options.mode;
+  }
 
   setRows(rows: any[]) {
     if (!this.columns) {

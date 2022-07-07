@@ -46,6 +46,7 @@ import { AppService, AuthService, ComponentRegistryService } from '@typexs/base-
 import { FormSelectionsComponent } from './components/forms/selection/form-selections.component';
 import { BuildSimpleItemComponent } from './components/entities/build-simple-item/build-simple-item.component';
 import { BuildSimpleItem } from '../../../../demo/testtask/entities/BuildSimpleItem';
+import { TablesOverviewComponent } from './components/tables/overview/tables-overview.component';
 
 
 @NgModule({
@@ -82,7 +83,8 @@ import { BuildSimpleItem } from '../../../../demo/testtask/entities/BuildSimpleI
     PersonComponent,
     BookComponent,
     BuildSimpleItemComponent,
-    SimpleViewVariantsComponent
+    SimpleViewVariantsComponent,
+    TablesOverviewComponent
   ],
   entryComponents: [
     ...FORM_COMPONENTS,

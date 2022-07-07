@@ -1,9 +1,9 @@
-import {IDTGridOptions} from '@typexs/base-ng';
+import {IDatatableOptions} from '@typexs/base-ng';
 
 /**
  * Options for distributed storage table view
  */
-export interface IDSOptions extends IDTGridOptions {
+export interface IDSOptions extends IDatatableOptions {
 
   /**
    * Disable / enable input for entity type

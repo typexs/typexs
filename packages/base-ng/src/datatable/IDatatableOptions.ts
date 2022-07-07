@@ -1,7 +1,15 @@
 import { IGridColumn } from './IGridColumn';
 import { IQueryComponentApi } from '../api/querying/IQueryComponentApi';
+import { GRID_MODE } from '@typexs/base-ng/datatable/Constants';
 
-export interface IDTGridOptions {
+export interface IDatatableOptions {
+
+  /**
+   * Mode of data fetching
+   * - infinite
+   * - generic
+   */
+  mode?: GRID_MODE;
 
   /**
    * enable or disable pager
@@ -22,6 +30,22 @@ export interface IDTGridOptions {
    * Initial offset
    */
   offset?: number;
+
+
+  /**
+   * Pass input annotations to underlying component
+   */
+  passInputs?: string[];
+
+  /**
+   * Pass output annotations to underlying component
+   */
+  passOutputs?: string[];
+
+  /**
+   * Pass methods to underlying component
+   */
+  passMethods?: string[];
 
   /**
    * Free Query builder
