@@ -7,7 +7,7 @@ import { Pager } from '../../pager/Pager';
 import { IGridColumn } from '../IGridColumn';
 import { Eq, ExprDesc, Like, Value, ValueDesc } from '@allgemein/expressions';
 import { IDatatableOptions } from '../IDatatableOptions';
-import { K_PAGED } from '@typexs/base-ng/datatable/Constants';
+import { K_PAGED } from '../Constants';
 
 
 @Component({

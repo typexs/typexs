@@ -4,7 +4,7 @@ import { IDatatableOptions } from './IDatatableOptions';
 import { IQueryParams } from './IQueryParams';
 import { IGridApi } from './IGridApi';
 import { Helper } from '../api/querying/Helper';
-import { GRID_MODE } from '@typexs/base-ng/datatable/Constants';
+import { GRID_MODE } from './Constants';
 
 
 @Component({

@@ -22,7 +22,7 @@ import { IQueryComponentApi } from './IQueryComponentApi';
 import { first } from 'rxjs/operators';
 import { IFindOptions } from './IFindOptions';
 import { LabelHelper, XS_P_$COUNT } from '@typexs/base';
-import { IQueryOptions } from '@typexs/base-ng/api/querying/IQueryOptions';
+import { IQueryOptions } from './IQueryOptions';
 import { Log } from '../../lib/log/Log';
 
 

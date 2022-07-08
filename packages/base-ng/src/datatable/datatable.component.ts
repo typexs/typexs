@@ -18,7 +18,7 @@ import { AbstractGridComponent } from './abstract-grid.component';
 import { ComponentRegistryService } from '../component/component-registry.service';
 import { Log } from '../lib/log/Log';
 import { IDatatableOptions } from './IDatatableOptions';
-import { inputKeys, K_PAGED, methodKeys, outputKeys } from '@typexs/base-ng/datatable/Constants';
+import { inputKeys, K_PAGED, methodKeys, outputKeys } from './Constants';
 
 /**
  * Wrapper component for different grid implementiations

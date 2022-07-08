@@ -1,8 +1,6 @@
-import { AbstractQueryService, IBackendClientService, IQueringService, QueryEmbeddedComponent } from '@typexs/base-ng';
+import { QueryEmbeddedComponent } from './query-embedded.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Observable } from 'rxjs';
-import { ILookupRegistry } from '@allgemein/schema-api';
-import { TestQueryService } from '@typexs/base-ng/testing/TestQueryService';
+import { TestQueryService } from '../../testing/TestQueryService';
 
 
 describe('Component: QueryEmbeddedComponent', () => {

@@ -1,9 +1,7 @@
-import { EntityResolverService, HttpBackendService, Log, MessageService } from '@typexs/base-ng';
+import { EntityResolverService } from './entity-resolver.service';
 import { getTestBed, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { API_CTRL_SERVER_PING } from '@typexs/server';
 import { Entity, Property } from '@allgemein/schema-api';
+import { Log } from '../lib/log/Log';
 
 @Entity()
 export class AnnoObjWithId {

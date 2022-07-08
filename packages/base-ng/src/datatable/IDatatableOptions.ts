@@ -1,6 +1,6 @@
 import { IGridColumn } from './IGridColumn';
 import { IQueryComponentApi } from '../api/querying/IQueryComponentApi';
-import { GRID_MODE } from '@typexs/base-ng/datatable/Constants';
+import { GRID_MODE } from './Constants';
 
 export interface IDatatableOptions {
 
