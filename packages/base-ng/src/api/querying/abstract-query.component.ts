@@ -1,4 +1,4 @@
-import { get, has, isArray, isEmpty, isNumber, keys, snakeCase, defaults, set, assign } from 'lodash';
+import { assign, defaults, get, has, isArray, isEmpty, isNumber, keys, set } from 'lodash';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ClassType, IEntityRef, JS_DATA_TYPES } from '@allgemein/schema-api';
 import { ExprDesc, Expressions } from '@allgemein/expressions';
@@ -23,6 +23,7 @@ import { first } from 'rxjs/operators';
 import { IFindOptions } from './IFindOptions';
 import { LabelHelper, XS_P_$COUNT } from '@typexs/base';
 import { IQueryOptions } from '@typexs/base-ng/api/querying/IQueryOptions';
+import { Log } from '../../lib/log/Log';
 
 
 /**
@@ -284,19 +285,15 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
     if (api.params && !isEmpty(api.params.filters)) {
       keys(api.params.filters).map(k => {
-        if (!isEmpty(api.params.filters[k])) {
+        try {
           const d = {};
           d[k] = api.params.filters[k];
           if (api.params.filters[k] instanceof ExprDesc) {
             d[k] = api.params.filters[k].toJson();
           }
           filterQuery.push(d);
-          // try {
-          //   const mq = Expressions.fromJson(api.params.filters[k]);
-          //   filterQuery.push(mq);
-          // } catch (e) {
-          //   Log.error(e);
-          // }
+        } catch (e) {
+          Log.error(e);
         }
       });
     }
