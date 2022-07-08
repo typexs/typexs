@@ -45,7 +45,7 @@ import {
   RegistryFactory
 } from '@allgemein/schema-api';
 import { C_DEFAULT, ClassUtils, NotSupportedError, NotYetImplementedError } from '@allgemein/base';
-import { ITypeOrmPropertyOptions, TypeOrmPropertyRef } from './TypeOrmPropertyRef';
+import { TypeOrmPropertyRef } from './TypeOrmPropertyRef';
 import { RelationMetadataArgs } from 'typeorm/metadata-args/RelationMetadataArgs';
 import { ColumnMetadataArgs } from 'typeorm/metadata-args/ColumnMetadataArgs';
 import { MetadataArgsStorage } from 'typeorm/metadata-args/MetadataArgsStorage';
@@ -60,6 +60,7 @@ import { getMetadataArgsStorage } from 'typeorm';
 import { IJsonSchemaSerializeOptions } from '@allgemein/schema-api/lib/json-schema/IJsonSchemaSerializeOptions';
 import { K_IDENTIFIER, K_NULLABLE } from '../../../Constants';
 import { EventEmitter } from 'events';
+import { ITypeOrmPropertyOptions } from './ITypeOrmPropertyOptions';
 
 
 export type TYPEORM_METADATA_KEYS =

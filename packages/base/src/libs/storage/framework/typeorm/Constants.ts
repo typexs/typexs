@@ -16,3 +16,5 @@ export const C_RELATION = 'relation';
 export const C_EMBEDDED = 'embedded';
 
 export type T_TABLETYPE = 'column' | 'relation' | 'embedded';
+
+export const JS_PRIMATIVE_PROPERTY_TYPES = ['string', 'number', 'boolean', 'date', 'float', 'array'];

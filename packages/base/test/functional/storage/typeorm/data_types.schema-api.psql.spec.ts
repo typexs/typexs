@@ -13,8 +13,8 @@ import { TestHelper } from '@typexs/testing';
 let bootstrap: Bootstrap = null;
 let storage: StorageRef;
 
-@suite('functional/storage/storage_ref_data_types - psql')
-class StorageRefDataTypesPsqlSpec {
+@suite('functional/storage/typeorm/data_types - schema-api - psql')
+class DataTypesSchemaApiPsqlSpec {
 
 
   static async before() {
@@ -52,6 +52,10 @@ class StorageRefDataTypesPsqlSpec {
     storage = storageManager.get('default');
   }
 
+
+  /**
+   * Annotations by @allgemein/schema-api to typeorm
+   */
 
   @test
   async 'bigint'() {

@@ -4,16 +4,12 @@ import { ColumnMetadataArgs } from 'typeorm/metadata-args/ColumnMetadataArgs';
 import { RelationMetadataArgs } from 'typeorm/metadata-args/RelationMetadataArgs';
 import { EmbeddedMetadataArgs } from 'typeorm/metadata-args/EmbeddedMetadataArgs';
 import { ClassUtils, NotSupportedError, NotYetImplementedError } from '@allgemein/base';
-import { DefaultPropertyRef, IBuildOptions, IClassRef, IPropertyOptions, METATYPE_PROPERTY } from '@allgemein/schema-api';
+import { DefaultPropertyRef, IBuildOptions, IClassRef, METATYPE_PROPERTY } from '@allgemein/schema-api';
 import { TypeOrmEntityRef } from './TypeOrmEntityRef';
 import { TypeOrmUtils } from '../TypeOrmUtils';
-import { REGISTRY_TYPEORM, T_TABLETYPE } from '../Constants';
+import { JS_PRIMATIVE_PROPERTY_TYPES, REGISTRY_TYPEORM } from '../Constants';
 import { C_CARDINALITY, C_IDENTIFIER } from '@allgemein/schema-api/lib/Constants';
-
-export interface ITypeOrmPropertyOptions extends IPropertyOptions {
-  metadata: ColumnMetadataArgs | RelationMetadataArgs | EmbeddedMetadataArgs;
-  tableType: T_TABLETYPE;
-}
+import { ITypeOrmPropertyOptions } from './ITypeOrmPropertyOptions';
 
 
 export class TypeOrmPropertyRef extends DefaultPropertyRef {
@@ -47,7 +43,7 @@ export class TypeOrmPropertyRef extends DefaultPropertyRef {
       }
       if (this.column.options.type && !isString(this.column.options.type)) {
         const className = ClassUtils.getClassName(this.column.options.type);
-        if (!['string', 'number', 'boolean', 'date', 'float', 'array'].includes(className.toLowerCase())) {
+        if (!JS_PRIMATIVE_PROPERTY_TYPES.includes(className.toLowerCase())) {
           this.targetRef = this.getClassRefFor(this.column.options.type, METATYPE_PROPERTY);
         }
       }
@@ -110,8 +106,8 @@ export class TypeOrmPropertyRef extends DefaultPropertyRef {
 
   isCollection(): boolean {
     return (
-      this.relation ?
-        this.relation.relationType === 'one-to-many' ||
+        this.relation ?
+          this.relation.relationType === 'one-to-many' ||
           this.relation.relationType === 'many-to-many' : false) ||
       (this.embedded ? this.embedded.isArray : false);
   }
@@ -242,7 +238,8 @@ export class TypeOrmPropertyRef extends DefaultPropertyRef {
           }
           return name;
         } else {
-          return TypeOrmUtils.toJsonType(type) as any;
+          const hintType = get(this.column.options, 'backupType', null);
+          return TypeOrmUtils.toJsonType(type, hintType) as any;
         }
       } else if (this.column.mode) {
         switch (this.column.mode) {

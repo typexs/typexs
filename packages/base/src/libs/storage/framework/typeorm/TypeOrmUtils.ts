@@ -90,7 +90,12 @@ export class TypeOrmUtils {
     return resolved;
   }
 
-  static toJsonType(type: ColumnType): JS_DATA_TYPES {
+  /**
+   * TODO Make extendable
+   *
+   * @param type
+   */
+  static toJsonType(type: ColumnType, hintType?: string): JS_DATA_TYPES {
     switch (type) {
       case 'timetz':
       case 'smalldatetime':
@@ -107,6 +112,9 @@ export class TypeOrmUtils {
       case 'timestamp without time zone':
       case 'timestamp with time zone':
       case 'timestamp with local time zone':
+        if (hintType && /date/.test(hintType)) {
+          return 'date';
+        }
         return 'number';
 
 
