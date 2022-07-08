@@ -1,11 +1,11 @@
-import {assign, concat, defaults, get, intersection, isUndefined, keys, orderBy, remove} from 'lodash';
-import {DistributedStorageEntityController} from '../DistributedStorageEntityController';
-import {IFindOp} from '@typexs/base/libs/storage/framework/IFindOp';
-import {System} from '@typexs/base/libs/system/System';
-import {ClassRef, ClassType} from '@allgemein/schema-api';
-import {IWorkerInfo} from '@typexs/base/libs/worker/IWorkerInfo';
-import {DistributedQueryWorker} from '../../workers/DistributedQueryWorker';
-import {C_WORKERS} from '@typexs/base/libs/worker/Constants';
+import { assign, concat, defaults, get, intersection, isUndefined, keys, orderBy, remove } from 'lodash';
+import { DistributedStorageEntityController } from '../DistributedStorageEntityController';
+import { IFindOp } from '@typexs/base/libs/storage/framework/IFindOp';
+import { System } from '@typexs/base/libs/system/System';
+import { ClassRef, ClassType } from '@allgemein/schema-api';
+import { IWorkerInfo } from '@typexs/base/libs/worker/IWorkerInfo';
+import { DistributedQueryWorker } from '../../workers/DistributedQueryWorker';
+import { C_WORKERS } from '@typexs/base/libs/worker/Constants';
 import {
   __CLASS__,
   __NODE_ID__,
@@ -15,12 +15,13 @@ import {
   XS_P_$LIMIT,
   XS_P_$OFFSET
 } from '@typexs/base/libs/Constants';
-import {DistributedFindResponse} from './DistributedFindResponse';
-import {DistributedFindRequest} from './DistributedFindRequest';
-import {IDistributedFindOptions} from './IDistributedFindOptions';
-import {AbstractMessage} from '@typexs/base/libs/messaging/AbstractMessage';
-import {EntityControllerRegistry} from '@typexs/base/libs/storage/EntityControllerRegistry';
-import {ClassUtils} from '@allgemein/base';
+import { DistributedFindResponse } from './DistributedFindResponse';
+import { DistributedFindRequest } from './DistributedFindRequest';
+import { IDistributedFindOptions } from './IDistributedFindOptions';
+import { AbstractMessage } from '@typexs/base/libs/messaging/AbstractMessage';
+import { EntityControllerRegistry } from '@typexs/base/libs/storage/EntityControllerRegistry';
+import { ClassUtils } from '@allgemein/base';
+import { Log } from '@typexs/base';
 
 
 export class DistributedFindOp<T>
@@ -157,11 +158,18 @@ export class DistributedFindOp<T>
           const registry = r[__REGISTRY__];
           const key = [classRefName, registry].join(C_KEY_SEPARATOR);
           const ref = classRefs[key];
-          return ref.build(r, {
-            afterBuild: (c: any, f: any, t: any) => keys(f)
-              .filter(k => k.startsWith('__') && isUndefined(t[k]))
-              .map(k => t[k] = f[k])
-          });
+          try {
+            return ref.build(r, {
+              afterBuild: (c: any, f: any, t: any) => keys(f)
+                .filter(k => k.startsWith('__') && isUndefined(t[k]))
+                .map(k => t[k] = f[k])
+            });
+          } catch (err) {
+            Log.error(err);
+            const e = ref.create();
+            assign(e, r);
+            return e;
+          }
         });
     }
 
