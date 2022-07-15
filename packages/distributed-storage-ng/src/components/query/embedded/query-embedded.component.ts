@@ -21,7 +21,7 @@ export class DistributedStorageQueryEmbeddedComponent
   extends AbstractQueryComponent {
 
   @Input()
-  iEntityName: string;
+  entityName: string;
 
   @Input()
   options: IDSOptions = DEFAULT_DS_OPTIONS;
@@ -39,15 +39,15 @@ export class DistributedStorageQueryEmbeddedComponent
 
   doInit(){
     // pass entity name to name
-    if (this.iEntityName && !this.name) {
-      this.name = this.iEntityName;
+    if (this.entityName && !this.name) {
+      this.name = this.entityName;
     }
     if (!this.params) {
       this.params = {};
     }
 
     this.applyInitialOptions();
-    if (this.iEntityName && !this.options.entityTypeSelection) {
+    if (this.entityName && !this.options.entityTypeSelection) {
       setTimeout(() => {
         this.requery();
       });
@@ -55,7 +55,7 @@ export class DistributedStorageQueryEmbeddedComponent
   }
 
   changeEntityName(): void {
-    this.name = this.iEntityName;
+    this.name = this.entityName;
   }
 
 
