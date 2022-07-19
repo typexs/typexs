@@ -43,7 +43,6 @@ export class RolesHelper {
       role.disabled = false;
       role.permissions = rolePermissionToSave;
       localRoles.push(role);
-
     }
 
     if (!_.isEmpty(localRoles)) {
