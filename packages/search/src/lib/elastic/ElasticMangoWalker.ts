@@ -76,18 +76,23 @@ export class ElasticMangoWalker implements IMangoWalker {
    */
   readonly config: IElasticQueryConfig = {};
 
-  constructor(fields: IElasticFieldDef[] = [], config: IElasticQueryConfig = {
-    assign: {
-      $eq: ES_DEFAULT_TERM_QUERY,
-      $like: ES_DEFAULT_TERM_QUERY_LIKE
+  constructor(
+    fields: IElasticFieldDef[] = [],
+    config: IElasticQueryConfig = {
+      assign: {
+        $eq: ES_DEFAULT_TERM_QUERY,
+        $like: ES_DEFAULT_TERM_QUERY_LIKE
+      }
     }
-  }) {
+  ) {
     this.fields = fields;
     this.config = config;
   }
 
   getFields(type?: string, additional = [ES_ALLFIELD, '_label']) {
-    const fields: string[] = type ? this.fields.filter(x => x.type === type || x.esType === type).map(x => x.name) : this.fields.map(x => x.name);
+    const fields: string[] = type ? this.fields
+      .filter(x => x.type === type || x.esType === type)
+      .map(x => x.name) : this.fields.map(x => x.name);
     return _.uniq(_.concat(additional, fields));
   }
 

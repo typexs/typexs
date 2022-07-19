@@ -1,5 +1,5 @@
 import { assign, cloneDeep, defaults, get, has, isArray, isNull, isNumber, keys, uniq, uniqBy } from 'lodash';
-import { JsonUtils } from '@allgemein/base';
+import { C_DEFAULT, JsonUtils } from '@allgemein/base';
 import { ClassType } from '@allgemein/schema-api';
 import { ElasticEntityController } from '../ElasticEntityController';
 import { IFindOp } from '@typexs/base/libs/storage/framework/IFindOp';
@@ -131,7 +131,7 @@ export class FindOp<T> implements IFindOp<T> {
         } else {
           // TODO check if options passed for query walker
           const queryOptions: IElasticQueryConfig = Config.get(
-            ['elastic', 'queryPresets', this.options.assignPreset].join('.'),
+            ['elastic', 'queryPresets', this.options.assignPreset ? this.options.assignPreset : C_DEFAULT].join('.'),
             {
               assign: {
                 $eq: ES_DEFAULT_TERM_QUERY,

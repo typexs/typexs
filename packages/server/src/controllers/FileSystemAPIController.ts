@@ -32,18 +32,18 @@ export class FileSystemAPIController {
     if (!_.isEmpty(opts)) {
       const checked = {};
       _.keys(opts).filter(k => [
-          'glob',
-          'unit',
-          'limit',
-          'offset',
-          'tail',
-          'stats',
-          'timeout',
-          'skipLocal',
-          'outputMode',
-          'targetIds',
-          'filterErrors'
-        ].indexOf(k) > -1 &&
+        'glob',
+        'unit',
+        'limit',
+        'offset',
+        'tail',
+        'stats',
+        'timeout',
+        'skipLocal',
+        'outputMode',
+        'targetIds',
+        'filterErrors'
+      ].indexOf(k) > -1 &&
         (_.isString(opts[k]) ||
           _.isNumber(opts[k]) ||
           _.isPlainObject(opts[k]) ||

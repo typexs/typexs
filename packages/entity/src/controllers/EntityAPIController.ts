@@ -161,7 +161,6 @@ export class EntityAPIController {
     if (isArray(entityRef)) {
       throw new Error('multiple entity refs found');
     }
-
     const entry = this.getSerializer().serialize(entityRef);
     return entry;
   }
