@@ -264,7 +264,12 @@ export class ConfigLoader {
 
       this.configOptions.configs.forEach(_c => {
         if (_c.state && _c.type !== 'system') {
-          Log.debug('Loaded configuration from ' + (isString(_c.file) ? _c.file : _c.file.dirname + '/' + _c.file.filename));
+          if (_c.type === 'file') {
+            Log.debug('Loaded configuration from file = ' + (isString(_c.file) ? _c.file : _c.file.dirname + '/' + _c.file.filename));
+          } else if (_c.type === 'directory') {
+            Log.debug('Loaded configuration from dirname = ' + (isString(_c.dirname) ? _c.dirname : ''));
+          }
+
         }
       });
 
