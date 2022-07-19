@@ -54,6 +54,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
 
 
   ngOnInit(): void {
+    this.options = this.options || {};
     defaults(this.options, <IDatatableOptions>{
       mode: K_PAGED,
       passInputs: [],

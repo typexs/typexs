@@ -565,8 +565,6 @@ export abstract class AbstractQueryService implements IQueringService {
     if (!condition) {
       throw new Error('Condition not found');
     }
-
-
     const entityDef = this.getEntityRefForName(entityName);
     const apiParams = { name: entityName };
     const additinalQuery: any = {

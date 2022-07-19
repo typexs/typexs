@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Route, RouterStateSnapshot } from '@angular/router';
 import {
   AbstractUserLogin,
   AbstractUserLogout,
@@ -467,8 +467,7 @@ export class UserAuthService implements IAuthServiceProvider {
   }
 
 
-  hasRoutePermissions(route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean> {
+  hasRoutePermissions(route: ActivatedRouteSnapshot | Route): Observable<boolean> {
     const permissions = UserAuthHelper.getRoutePermissions(route);
     if (_.isNull(permissions)) {
       // no permissions to check

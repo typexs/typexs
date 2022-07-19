@@ -1,7 +1,7 @@
-import {Component, Input} from '@angular/core';
-import {DistributedStorageService} from '../../../services/distributed_storage.service';
-import {DEFAULT_DS_OPTIONS, IDSOptions} from '../../../lib/IDSOptions';
-import {AbstractQueryComponent} from '@typexs/base-ng';
+import { Component, Input } from '@angular/core';
+import { DistributedStorageService } from '../../../services/distributed_storage.service';
+import { DEFAULT_DS_OPTIONS, IDSOptions } from '../../../lib/IDSOptions';
+import { AbstractQueryComponent } from '@typexs/base-ng';
 
 
 /**
@@ -11,6 +11,7 @@ import {AbstractQueryComponent} from '@typexs/base-ng';
  * - sorting
  * - filters
  * - extend/add specialized columns
+ *
  */
 @Component({
   selector: 'txs-distributed-storage-query-embedded',
@@ -37,11 +38,12 @@ export class DistributedStorageQueryEmbeddedComponent
     this.doInit();
   }
 
-  doInit(){
+  doInit() {
     // pass entity name to name
     if (this.entityName && !this.name) {
       this.name = this.entityName;
     }
+
     if (!this.params) {
       this.params = {};
     }

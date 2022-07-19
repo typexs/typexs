@@ -63,15 +63,11 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
   @Input()
   columns: IGridColumn[];
 
-  // @Input()
-  // limit = 25;
-
   @Input()
   freeQuery: any;
 
   @Output()
   freeQueryChange: EventEmitter<any> = new EventEmitter();
-
 
   @Input()
   componentClass: ClassType<AbstractGridComponent>;
@@ -252,12 +248,6 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
       } else {
         filterQuery.push(this.options.predefinedFilter);
       }
-      // try {
-      //   mangoQuery = Expressions.fromJson(this.options.predefinedFilter);
-      //   filterQuery.push(mangoQuery);
-      // } catch (e) {
-      //   Log.error(e);
-      // }
     }
 
     const _d: any = {};
@@ -383,7 +373,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     if (!get(this.options, 'columnsOverride', false)) {
       const columns = Helper.rebuildColumns(entities);
       if (this.options.columnsPostProcess) {
-        this.options.columnsPostProcess(this.columns, this);
+        this.options.columnsPostProcess(columns, this);
       }
       api.setColumns(columns);
     }

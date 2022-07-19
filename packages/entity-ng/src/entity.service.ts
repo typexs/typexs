@@ -4,10 +4,10 @@ import {
   AbstractQueryService,
   AuthService,
   BackendService,
+  EntityHelper,
   EntityResolverService,
   IQueringService,
-  STORAGE_REQUEST_MODE,
-  EntityHelper
+  STORAGE_REQUEST_MODE
 } from '@typexs/base-ng';
 import {
   API_CTRL_ENTITY_DELETE_ENTITY,
@@ -16,10 +16,9 @@ import {
   API_CTRL_ENTITY_METADATA_ALL_ENTITIES,
   API_CTRL_ENTITY_SAVE_ENTITY,
   API_CTRL_ENTITY_UPDATE_ENTITY,
-  API_ENTITY_PREFIX,
-  NAMESPACE_BUILT_ENTITY
+  API_ENTITY_PREFIX
 } from '@typexs/entity/libs/Constants';
-import { IBuildOptions, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
+import { IBuildOptions, IEntityRef } from '@allgemein/schema-api';
 import { C_RAW } from '@typexs/ng';
 
 
