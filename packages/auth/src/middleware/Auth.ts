@@ -363,6 +363,7 @@ export class Auth implements IMiddleware {
 
     let user: User = null;
 
+    // TODO this s
     if (_.isEmpty(method)) {
       // empty method => no account exists
       if (adapter.canCreateOnLogin()) {
