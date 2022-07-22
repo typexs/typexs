@@ -1,13 +1,13 @@
 import * as path from 'path';
 import * as _ from 'lodash';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {IStorageOptions} from '../../../../src/libs/storage/IStorageOptions';
-import {Bootstrap} from '../../../../src/Bootstrap';
-import {Config} from '@allgemein/config';
-import {TEST_STORAGE_OPTIONS} from '../../config';
-import {TypeOrmStorageRef} from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
-import {BaseConnectionOptions} from 'typeorm/connection/BaseConnectionOptions';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { IStorageOptions } from '../../../../src/libs/storage/IStorageOptions';
+import { Bootstrap } from '../../../../src/Bootstrap';
+import { Config } from '@allgemein/config';
+import { TEST_STORAGE_OPTIONS } from '../../config';
+import { TypeOrmStorageRef } from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
+import { BaseConnectionOptions } from 'typeorm/connection/BaseConnectionOptions';
 import { TestHelper } from '@typexs/testing';
 
 
@@ -54,16 +54,8 @@ class StorageGeneralSpec {
 
     const storageManager = bootstrap.getStorage();
     const storageDefault: TypeOrmStorageRef = storageManager.get('default');
-    const storageFake: TypeOrmStorageRef = storageManager.get('fake');
-
     expect(storageDefault.getOptions()).to.deep.include({
       name: 'default',
-      type: 'sqlite',
-      database: ':memory:'
-    });
-
-    expect(storageFake.getOptions()).to.deep.include({
-      name: 'fake',
       type: 'sqlite',
       database: ':memory:'
     });
@@ -72,13 +64,21 @@ class StorageGeneralSpec {
     expect(storageDefaultEntityNames).to.have.length.gt(1);
     expect(storageDefaultEntityNames).to.include.members(['Car']);
 
+    const schemaDefaultRefs = storageDefault.getSchemaRefs();
+    expect(schemaDefaultRefs).to.have.length(1);
+    expect(schemaDefaultRefs[0].name).to.be.eq('default');
+
+    const storageFake: TypeOrmStorageRef = storageManager.get('fake');
+    expect(storageFake.getOptions()).to.deep.include({
+      name: 'fake',
+      type: 'sqlite',
+      database: ':memory:'
+    });
+
     const storageFakeEntityNames = storageFake.getEntityNames();
     expect(storageFakeEntityNames).to.have.length.gte(1);
     expect(storageFakeEntityNames).to.include.members(['Driver']);
 
-    const schemaDefaultRefs = storageDefault.getSchemaRefs();
-    expect(schemaDefaultRefs).to.have.length(1);
-    expect(schemaDefaultRefs[0].name).to.be.eq('default');
 
     const schemaFakeRefs = storageFake.getSchemaRefs();
     expect(schemaFakeRefs).to.have.length(1);

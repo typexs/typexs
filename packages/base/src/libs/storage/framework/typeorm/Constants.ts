@@ -1,5 +1,7 @@
 
-export const REGISTRY_TYPEORM = 'typeorm';
+export const C_TYPEORM = 'typeorm';
+export const REGISTRY_TYPEORM = C_TYPEORM;
+
 
 export const C_BACKUP_TYPE = 'backupType';
 

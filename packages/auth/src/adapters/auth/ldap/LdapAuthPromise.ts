@@ -114,9 +114,10 @@ export class LdapClient {
   async close() {
     if (this.client) {
       if (this.connected) {
-
-        this.client.unbind(err => {
-          Log.error('ldap unbind', err);
+        this.client.unbind((err: Error) => {
+          if (err) {
+            Log.error('ldap unbind', err.message);
+          }
         });
       }
     }

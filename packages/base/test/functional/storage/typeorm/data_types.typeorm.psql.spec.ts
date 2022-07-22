@@ -2,12 +2,8 @@ import * as path from 'path';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Config } from '@allgemein/config';
-import { getMetadataArgsStorage } from 'typeorm';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { Bootstrap, REGISTRY_TYPEORM, StorageRef } from '../../../../src';
-import { WithNumbers } from './scenarios/app_types/entities/WithNumbers';
-import { WithJson } from './scenarios/app_types/entities/WithJson';
-import { WithDate } from './scenarios/app_types/entities/WithDate';
 import { TestHelper } from '@typexs/testing';
 import { WithDateAsOrm } from './scenarios/app_types/entities/WithDateAsOrm';
 

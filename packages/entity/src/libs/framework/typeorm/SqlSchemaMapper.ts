@@ -20,7 +20,7 @@ import {
 import { SchemaRef } from '../../registry/SchemaRef';
 import { EntityRef } from '../../registry/EntityRef';
 import * as _ from 'lodash';
-import { assign } from 'lodash';
+import { assign, clone, defaults } from 'lodash';
 import { PropertyRef } from '../../registry/PropertyRef';
 import { XS_P_PROPERTY, XS_P_PROPERTY_ID, XS_P_SEQ_NR, XS_P_TYPE } from '../../Constants';
 import { SchemaUtils } from '../../SchemaUtils';
@@ -29,11 +29,12 @@ import { IDataExchange } from '../IDataExchange';
 import { EntityDefTreeWorker } from '../EntityDefTreeWorker';
 import { NameResolver } from './NameResolver';
 import { JoinDesc } from '../../descriptors/JoinDesc';
-import { ClassRef, IClassRef, ILookupRegistry, METATYPE_CLASS_REF, RegistryFactory } from '@allgemein/schema-api';
+import { ClassRef, IClassRef, ILookupRegistry, METATYPE_CLASS_REF, RegistryFactory, IEntityRef } from '@allgemein/schema-api';
 import { ExprDesc } from '@allgemein/expressions';
 import { EntityRegistry } from '../../EntityRegistry';
 import { MetadataArgsStorage } from 'typeorm/metadata-args/MetadataArgsStorage';
 import { C_CLASS_WRAPPED } from './Constants';
+import { C_TYPEORM } from '@typexs/base/libs/storage/framework/typeorm/Constants';
 
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -131,8 +132,8 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
     // TODO can use other table name! Define an override attribute
 
     const tName = entityDef.storingName;
-    const entityClass = entityDef.getClassRef().getClass();
-    this.createEntityIfNotExists(entityClass, tName);
+    // const entityClass = entityDef.getClassRef().getClass();
+    const entityClass = this.createEntityIfNotExists(entityDef, tName);
     return { next: entityClass };
   }
 
@@ -350,8 +351,8 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
       tName = [prefix, tName].join('_');
     }
     classRef.storingName = tName;
-    const entityClass = classRef.getClass();
-    this.createEntityIfNotExists(entityClass, tName);
+    // const entityClass = classRef.getClass();
+    const entityClass = this.createEntityIfNotExists(classRef, tName);
     // check if an ID exists in class else add one
 
     if (targetRef) {
@@ -369,10 +370,9 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
 
   private handleCreatePropertyClass(propertyDef: PropertyRef, className: string) {
     propertyDef.joinRef = propertyDef.getRegistry().getClassRefFor(SchemaUtils.clazz(className), METATYPE_CLASS_REF);
-    const storeClass = propertyDef.joinRef.getClass();
+    // const storeClass = propertyDef.joinRef.getClass();
     const storingName = propertyDef.storingName;
-    this.createEntityIfNotExists(storeClass, storingName);
-    return storeClass;
+    return this.createEntityIfNotExists(propertyDef.joinRef, storingName);
   }
 
 
@@ -406,7 +406,6 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
       } else {
         [targetId, targetName] = this.nameResolver.for(name, property);
       }
-
       const dataType = this.detectDataTypeFromProperty(property);
       const propDef = assign(dataType, { name: targetName });
       this.createColumnIfNotExists('regular', targetClass, targetId, propDef);
@@ -425,7 +424,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
 
   private ColumnDef(property: PropertyRef, name: string, skipIdentifier: boolean = false) {
     if (property.isStorable()) {
-      let def = _.clone(property.getOptions(REGISTRY_TYPEORM) || {});
+      let def = clone(property.getOptions(REGISTRY_TYPEORM) || {});
       const dbType = this.detectDataTypeFromProperty(property);
       def = assign(def, dbType, { name: name });
       if (property.isNullable()) {
@@ -450,13 +449,18 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
   }
 
 
-  private createEntityIfNotExists(entityClass: Function, name: string) {
+  private createEntityIfNotExists(classRef: IEntityRef | IClassRef, name: string) {
+    const entityClass = classRef.getClass();
     if (this.hasEntity(entityClass, name)) {
-      return;
+      return entityClass;
     }
+
+    const opts = classRef.getOptions(C_TYPEORM, {});
+    defaults(opts, { name: name });
     Object.defineProperty(entityClass, K_ENTITY_BUILT, { writable: false, value: true });
-    Entity({ name: name } as any)(entityClass);
+    Entity(opts)(entityClass);
     this.addType(entityClass);
+    return entityClass;
   }
 
 
@@ -648,12 +652,6 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
     if (prop.getOptions(REGISTRY_TYPEORM)) {
       const typeorm = prop.getOptions(REGISTRY_TYPEORM);
       type = assign(type, typeorm);
-      // if (_.has(typeorm, 'type')) {
-      //   type.type = typeorm.type;
-      // }
-      // if (_.has(typeorm, 'length')) {
-      //   type.length = typeorm.length;
-      // }
     }
     return type;
   }

@@ -1,12 +1,14 @@
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
 import * as _ from 'lodash';
-import {TestHelper} from './TestHelper';
-import {TEST_STORAGE_OPTIONS} from './config';
-import {RegistryFactory} from '@allgemein/schema-api';
-import {NAMESPACE_BUILT_ENTITY} from '../../src/libs/Constants';
-import {EntityRegistry} from '../../src/libs/EntityRegistry';
+import { TestHelper } from './TestHelper';
+import { TEST_STORAGE_OPTIONS } from './config';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
+import { EntityRegistry } from '../../src/libs/EntityRegistry';
+import { Person } from './schemas/complex_entity/Person';
+import { getMetadataArgsStorage } from 'typeorm';
 
 
 let registry: EntityRegistry;
@@ -27,30 +29,6 @@ class SqlSchemaBasicGenerationsSpec {
     TestHelper.resetTypeorm();
   }
 
-  //
-  // static before() {
-  //   RegistryFactory.register(REGISTRY_TYPEORM, TypeOrmEntityRegistry);
-  //   RegistryFactory.register(/^typeorm\..*/, TypeOrmEntityRegistry);
-  //
-  //   // TypeOrmEntityRegistry.reset();
-  //   // TestHelper.resetTypeorm();
-  //
-  //
-  // }
-  //
-  // static after() {
-  //   RegistryFactory.reset();
-  // }
-  //
-  //
-  // before() {
-  //   TestHelper.resetTypeorm();
-  //   registry = RegistryFactory.get(NAMESPACE_BUILT_ENTITY);
-  // }
-  //
-  // after() {
-  //   RegistryFactory.reset();
-  // }
 
   @test
   async 'simple schema with one entity'() {
@@ -70,7 +48,7 @@ class SqlSchemaBasicGenerationsSpec {
     expect(tableNames).to.contain('author');
     const data = await c.connection.query('PRAGMA table_info(\'author\')');
     expect(data).to.have.length(3);
-    expect(_.find(data, {name: 'last_name'})).to.deep.include({name: 'last_name', type: 'varchar'});
+    expect(_.find(data, { name: 'last_name' })).to.deep.include({ name: 'last_name', type: 'varchar' });
     await c.close();
 
     const props = [];
@@ -106,7 +84,7 @@ class SqlSchemaBasicGenerationsSpec {
     expect(tableNames).to.contain('object_with_json');
     const data = await c.connection.query('PRAGMA table_info(\'object_with_json\')');
     expect(data).to.have.length(2);
-    expect(_.find(data, {name: 'json'})).to.deep.include({name: 'json', type: 'varchar'});
+    expect(_.find(data, { name: 'json' })).to.deep.include({ name: 'json', type: 'varchar' });
     await c.close();
 
     const props = [];
@@ -144,7 +122,7 @@ class SqlSchemaBasicGenerationsSpec {
     const data = await c.connection.query('PRAGMA table_info(\'author_with_new_name\')');
     expect(data).to.have.length(3);
 
-    expect(_.find(data, {name: 'id_new_name'})).to.deep.include({type: 'integer', pk: 1});
+    expect(_.find(data, { name: 'id_new_name' })).to.deep.include({ type: 'integer', pk: 1 });
     await c.close();
 
   }
@@ -391,6 +369,30 @@ class SqlSchemaBasicGenerationsSpec {
 
   }
 
+  @test
+  async 'entity with db schema'() {
+    const EntityWithOrmDbSchema = require('./schemas/registry/EntityWithOrmDbSchema').EntityWithOrmDbSchema;
+    registry.reload([EntityWithOrmDbSchema]);
+
+    const options = _.clone(TEST_STORAGE_OPTIONS);
+    (<any>options).name = 'registry';
+    const connect = await TestHelper.connect(options);
+    const xsem = connect.controller;
+    const ref = connect.ref;
+    const c = await ref.connect();
+
+    const tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
+    expect(_.map(tables, t => t.name)).to.have.include.members(['entity_with_orm_db_schema']);
+    await c.close();
+    const tableData = getMetadataArgsStorage().tables.find(x => x.target === EntityWithOrmDbSchema);
+    expect(tableData).to.deep.include({
+      schema: 'test',
+      name: 'entity_with_orm_db_schema',
+      type: 'regular'
+    });
+
+
+  }
 
 }
 

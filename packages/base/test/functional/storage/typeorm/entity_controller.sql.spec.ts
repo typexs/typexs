@@ -1,12 +1,12 @@
 import * as path from 'path';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {Bootstrap} from '../../../../src/Bootstrap';
-import {Config} from '@allgemein/config';
-import {ClassType} from '@allgemein/schema-api';
-import {XS_P_$COUNT} from '../../../../src/libs/Constants';
-import {TypeOrmStorageRef} from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
-import {IEntityController} from '../../../../src/libs/storage/IEntityController';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { Bootstrap } from '../../../../src/Bootstrap';
+import { Config } from '@allgemein/config';
+import { ClassType } from '@allgemein/schema-api';
+import { XS_P_$COUNT } from '../../../../src/libs/Constants';
+import { TypeOrmStorageRef } from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
+import { IEntityController } from '../../../../src/libs/storage/IEntityController';
 import { TestHelper } from '@typexs/testing';
 
 let bootstrap: Bootstrap;
@@ -83,26 +83,29 @@ class StorageControllerSqlSpec {
     const driver_save_res = await controller.save([car1, car2, car3]);
 
     expect(driver_save_res).to.deep.eq(
-      [{
-        firstName: 'Black',
-        lastName: 'Yellow',
-        '$state': {isValidated: true, isSuccessValidated: true},
-        id: 1
-      },
+      [
+        {
+          firstName: 'Black',
+          lastName: 'Yellow',
+          '$state': { isValidated: true, isSuccessValidated: true },
+          id: 1
+        },
         {
           firstName: 'Red',
           lastName: 'Green',
-          '$state': {isValidated: true, isSuccessValidated: true},
+          '$state': { isValidated: true, isSuccessValidated: true },
           id: 2
-        }, {
-        '$state': {
-          'isSuccessValidated': true,
-          'isValidated': true
         },
-        'firstName': 'Blue',
-        'id': 3,
-        'lastName': 'Pink'
-      }]
+        {
+          '$state': {
+            'isSuccessValidated': true,
+            'isValidated': true
+          },
+          'firstName': 'Blue',
+          'id': 3,
+          'lastName': 'Pink'
+        }
+      ]
     );
 
     const car = new CarSql();
@@ -129,11 +132,11 @@ class StorageControllerSqlSpec {
 
     const car_found_all = await controller.find(CarSql);
     expect(car_found_all).to.have.length(2);
-    expect(car_found_all).to.deep.eq([{id: 1, name: 'Team Blue'},
-      {id: 2, name: 'Team Yellow'}]);
+    expect(car_found_all).to.deep.eq([{ id: 1, name: 'Team Blue' },
+      { id: 2, name: 'Team Yellow' }]);
     expect(car_found_all[0]).to.be.instanceOf(CarSql);
 
-    const driver_found_all = await controller.find(DriverSql, null, {raw: true});
+    const driver_found_all = await controller.find(DriverSql, null, { raw: true });
     // console.log(driver_found_all);
     expect(driver_found_all).to.deep.eq([
       {
@@ -155,44 +158,44 @@ class StorageControllerSqlSpec {
         DriverSql_carId: 2
       }]);
 
-    const car_found = await controller.find(CarSql, {id: 1});
+    const car_found = await controller.find(CarSql, { id: 1 });
 
     expect(car_found).to.have.length(1);
     expect(car_found[XS_P_$COUNT]).to.be.eq(1);
 
-    const car_found_raw = await controller.find(CarSql, {id: 2}, {raw: true});
+    const car_found_raw = await controller.find(CarSql, { id: 2 }, { raw: true });
     // console.log(car_found_raw);
     expect(car_found_raw).to.have.length(1);
-    expect(car_found_raw[0]).to.deep.eq({CarSql_id: 2, CarSql_name: 'Team Yellow'});
+    expect(car_found_raw[0]).to.deep.eq({ CarSql_id: 2, CarSql_name: 'Team Yellow' });
     expect(car_found_raw[0]).to.be.not.instanceOf(CarSql);
 
     // search by string field
-    const drivers_2 = await controller.find(DriverSql, {'firstName': 'Blue'});
+    const drivers_2 = await controller.find(DriverSql, { 'firstName': 'Blue' });
     // console.log(car_by_driver);
     expect(drivers_2).to.have.length(1);
-    expect(drivers_2[0]).to.deep.eq({id: 3, firstName: 'Blue', lastName: 'Pink'});
+    expect(drivers_2[0]).to.deep.eq({ id: 3, firstName: 'Blue', lastName: 'Pink' });
 
-    let car_by_driver = await controller.find(CarSql, {'driver.id': 1});
+    let car_by_driver = await controller.find(CarSql, { 'driver.id': 1 });
     // console.log(car_by_driver);
     expect(car_by_driver).to.have.length(1);
-    expect(car_by_driver[0]).to.deep.eq({id: 1, name: 'Team Blue'});
+    expect(car_by_driver[0]).to.deep.eq({ id: 1, name: 'Team Blue' });
 
-    car_by_driver = await controller.find(CarSql, {'driver.firstName': 'Black'});
+    car_by_driver = await controller.find(CarSql, { 'driver.firstName': 'Black' });
     // console.log(car_by_driver);
     expect(car_by_driver).to.have.length(1);
-    expect(car_by_driver[0]).to.deep.eq({id: 1, name: 'Team Blue'});
+    expect(car_by_driver[0]).to.deep.eq({ id: 1, name: 'Team Blue' });
 
-    const car_by_driver_inv = await controller.find(DriverSql, {'car.id': 1});
+    const car_by_driver_inv = await controller.find(DriverSql, { 'car.id': 1 });
     // console.log(car_by_driver_inv);
     expect(car_by_driver_inv).to.have.length(2);
-    expect(car_by_driver_inv[0]).to.deep.eq({id: 1, firstName: 'Black', lastName: 'Yellow'});
-    expect(car_by_driver_inv[1]).to.deep.eq({id: 2, firstName: 'Red', lastName: 'Green'});
+    expect(car_by_driver_inv[0]).to.deep.eq({ id: 1, firstName: 'Black', lastName: 'Yellow' });
+    expect(car_by_driver_inv[1]).to.deep.eq({ id: 2, firstName: 'Red', lastName: 'Green' });
 
     // remove driver
     const remove_driver_count = await controller.remove(car_by_driver_inv);
     expect(remove_driver_count).to.be.eq(2);
 
-    const car_by_driver_inv_after_remove = await controller.find(DriverSql, {'car.id': 1});
+    const car_by_driver_inv_after_remove = await controller.find(DriverSql, { 'car.id': 1 });
     expect(car_by_driver_inv_after_remove).to.have.length(0);
 
     const remove_car_count = await controller.remove(car_by_driver);
@@ -203,13 +206,13 @@ class StorageControllerSqlSpec {
 
   @test
   async 'save and find object with property marked as stringify'() {
-    const subObj = {hallo: 'welt', das: 'ist', ein: {objekt: '!'}};
+    const subObj = { hallo: 'welt', das: 'ist', ein: { objekt: '!' } };
     const obj = new ObjectWithJson();
     obj.firstName = 'JsonTest';
     obj.lastName = subObj;
     const savedObject = await controller.save(obj);
     delete savedObject['$state'];
-    const foundObject = await controller.findOne(ObjectWithJson, {id: savedObject.id});
+    const foundObject = await controller.findOne(ObjectWithJson, { id: savedObject.id });
     expect(savedObject.lastName).to.be.deep.eq(subObj);
     expect(savedObject).to.be.deep.eq(foundObject);
     expect(foundObject.lastName).to.be.deep.eq(subObj);
@@ -235,7 +238,7 @@ class StorageControllerSqlSpec {
     const driver_found = await controller.find(DriverSql);
     expect(driver_found).to.have.length(3);
 
-    const driver_removed_count = await controller.remove(DriverSql, {firstName: 'Blue'});
+    const driver_removed_count = await controller.remove(DriverSql, { firstName: 'Blue' });
     expect(driver_removed_count).to.not.eq(-1);
 
     const driver_found_rest = await controller.find(DriverSql);
@@ -264,10 +267,10 @@ class StorageControllerSqlSpec {
     const driver_found = await controller.find(DriverSql);
     expect(driver_found).to.have.length(3);
 
-    const driver_removed_count = await controller.update(DriverSql, {firstName: 'Blue'}, {$set: {firstName: 'Black'}});
+    const driver_removed_count = await controller.update(DriverSql, { firstName: 'Blue' }, { $set: { firstName: 'Black' } });
     expect(driver_removed_count).to.not.eq(-1);
 
-    const driver_found_rest = await controller.find(DriverSql, {firstName: 'Black'});
+    const driver_found_rest = await controller.find(DriverSql, { firstName: 'Black' });
     expect(driver_found_rest).to.have.length(2);
   }
 

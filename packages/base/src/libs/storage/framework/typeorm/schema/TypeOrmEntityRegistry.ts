@@ -52,7 +52,7 @@ import { MetadataArgsStorage } from 'typeorm/metadata-args/MetadataArgsStorage';
 import { EmbeddedMetadataArgs } from 'typeorm/metadata-args/EmbeddedMetadataArgs';
 import { TypeOrmUtils } from '../TypeOrmUtils';
 import { isClassRef } from '@allgemein/schema-api/api/IClassRef';
-import { C_COLUMN, C_EMBEDDED, C_RELATION, REGISTRY_TYPEORM, T_TABLETYPE } from '../Constants';
+import { C_COLUMN, C_EMBEDDED, C_RELATION, C_TYPEORM, REGISTRY_TYPEORM, T_TABLETYPE } from '../Constants';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import { GeneratedMetadataArgs } from 'typeorm/metadata-args/GeneratedMetadataArgs';
 import { Log } from '../../../../logging/Log';
@@ -376,18 +376,19 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         typeOrmOptions = this._findTableMetadataArgs(options.target);
         if (!typeOrmOptions) {
           // create an default entry
-          typeOrmOptions = <TableMetadataArgs & { new: boolean }>{
+          typeOrmOptions = get(options, C_TYPEORM, {});
+          defaults(typeOrmOptions, <TableMetadataArgs & { new: boolean }>{
             new: true,
             target: options.target,
             type: 'regular'
-          };
+          });
+
           assign(typeOrmOptions, options.metadata ? options.metadata : {});
           options.metadata = typeOrmOptions;
           this.metadatastore.tables.push(typeOrmOptions);
         }
       }
-      const metaOptionsForEntity = MetadataRegistry.$()
-        .getByContextAndTarget(METATYPE_ENTITY, options.target);
+      // const metaOptionsForEntity = MetadataRegistry.$().getByContextAndTarget(METATYPE_ENTITY, options.target);
       const res = new TypeOrmEntityRef(options as ITypeOrmEntityOptions);
       this.register(res);
       const metaSchemaOptionsForEntity = MetadataRegistry.$()
@@ -579,6 +580,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
                 } else {
                   throw new NotYetImplementedError('TODO');
                 }
+                // TODO handle schema
                 const joinTable = {
                   name: snakeCase([(options.target as any).name, options.propertyName].join('_')),
                   target: options.target,

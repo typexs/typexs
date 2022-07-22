@@ -1,11 +1,12 @@
 import * as _ from 'lodash';
-import {expect} from 'chai';
-import {suite, test} from '@testdeck/mocha';
-import {TypeOrmEntityRegistry} from '../../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
-import {House} from './entities/House';
-import {Column, Entity, getMetadataArgsStorage} from 'typeorm';
-import {RegistryFactory, SchemaUtils} from '@allgemein/schema-api';
-import {REGISTRY_TYPEORM} from '../../../../src/libs/storage/framework/typeorm/Constants';
+import { expect } from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { TypeOrmEntityRegistry } from '../../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
+import { House } from './entities/House';
+import { EntityWithDbSchema } from './entities/EntityWithDbSchema';
+import { Column, Entity, getMetadataArgsStorage } from 'typeorm';
+import { RegistryFactory, SchemaUtils } from '@allgemein/schema-api';
+import { REGISTRY_TYPEORM } from '../../../../src/libs/storage/framework/typeorm/Constants';
 
 let registry: TypeOrmEntityRegistry = null;
 
@@ -88,20 +89,32 @@ class StorageTypeormRegistrySpec {
     expect(properties).to.have.length(0);
     let columns = metadata.columns.filter(x => _.get(x, 'target.name', '').startsWith('HouseOf'));
     expect(columns).to.have.length(0);
-    Column({type: 'string'})({constructor: clazz}, 'greatColumn');
+    Column({ type: 'string' })({ constructor: clazz }, 'greatColumn');
 
     properties = registry.listProperties();
     expect(properties).to.have.length(1);
 
     columns = metadata.columns.filter(x => _.get(x, 'target.name', '').startsWith('HouseOf'));
     expect(columns).to.have.length(1);
+  }
 
-    // const columns = metadata.columns.filter(x => _.get(x, 'target.name', '').startsWith('House'));
-    //
-    // expect(targets).to.have.length(2);
-    // expect(entities).to.have.length(2);
-    // expect(columns).to.have.length(6);
-    // expect(properties).to.have.length(6);
+
+  @test
+  async 'register entity with db schema'() {
+    const metadata = getMetadataArgsStorage();
+    const entityRef = registry.getEntityRefFor(EntityWithDbSchema);
+    const properties = entityRef.getPropertyRefs();
+    const target = metadata.tables.find(x => _.get(x, 'target.name', null) === 'EntityWithDbSchema');
+    const columns = metadata.columns.filter(x => _.get(x, 'target.name', null) === 'EntityWithDbSchema');
+
+    expect(entityRef).to.not.be.null;
+    expect(target).to.deep.eq({
+      schema: 'test',
+      target: EntityWithDbSchema,
+      type: 'regular'
+    });
+    expect(properties).to.have.length(2);
+    expect(columns).to.have.length(2);
   }
 
 }
