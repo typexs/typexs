@@ -1,11 +1,11 @@
-import {DateTime} from 'luxon';
-import {DateObject as WrapperDateObject} from 'luxon/src/datetime';
+import { DateObjectUnits, DateTime } from 'luxon';
+// import {DateObject as WrapperDateObject} from 'luxon';
 import {DurationInput} from 'luxon/src/duration';
 
 // tslint:disable-next-line:no-empty-interface
-export interface DateObject extends WrapperDateObject {
-
-}
+// export interface DateObject extends WrapperDateObject {
+//
+// }
 
 export class DateUtils {
 
@@ -24,7 +24,7 @@ export class DateUtils {
     return DateTime.fromISO(date).toJSDate();
   }
 
-  static get(object: DateObject) {
+  static get(object: DateObjectUnits) {
     return DateTime.fromObject(object);
   }
 

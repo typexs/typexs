@@ -122,7 +122,7 @@ class SqlSchemaBasicGenerationsSpec {
     const data = await c.connection.query('PRAGMA table_info(\'author_with_new_name\')');
     expect(data).to.have.length(3);
 
-    expect(_.find(data, { name: 'id_new_name' })).to.deep.include({ type: 'integer', pk: 1 });
+    expect(_.find(data, { name: 'id_new_name' })).to.deep.include({ type: 'INTEGER', pk: 1 });
     await c.close();
 
   }
@@ -198,7 +198,7 @@ class SqlSchemaBasicGenerationsSpec {
     const ref = connect.ref;
     const c = await ref.connect();
 
-//    let tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
+    //    let tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
     //  console.log(tables);
 
     const tableNames = await ref.getSchemaHandler().getCollectionNames();
@@ -230,8 +230,8 @@ class SqlSchemaBasicGenerationsSpec {
     const ref = connect.ref;
     const c = await ref.connect();
 
-//    let tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
-//    console.log(tables);
+    //    let tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
+    //    console.log(tables);
 
     const tableNames = await ref.getSchemaHandler().getCollectionNames();
     expect(tableNames).to.have.include.members(['level_one', 'object_level_two', 'object_level_three']);
@@ -263,14 +263,14 @@ class SqlSchemaBasicGenerationsSpec {
     const ref = connect.ref;
     const c = await ref.connect();
 
-//    let tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
-//    console.log(tables);
+    //    let tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
+    //    console.log(tables);
 
     const tableNames = await ref.getSchemaHandler().getCollectionNames();
     expect(tableNames).to.have.include.members([
-        'entity_with_embedded',
-        'p_entity_with_embedded_obj'
-      ]
+      'entity_with_embedded',
+      'p_entity_with_embedded_obj'
+    ]
     );
 
     const cols_level_one = await c.connection.query('PRAGMA table_info(\'entity_with_embedded\')');

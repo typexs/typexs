@@ -66,17 +66,17 @@ export class DefaultScheduleFactory implements IScheduleFactory {
         let m = null;
         if (time.length === 2) {
           m = DateUtils.get({
-            hour: (parseInt(time.shift(), 0)),
-            minute: (parseInt(time.shift(), 0)),
+            hour: (parseInt(time.shift(), 10)),
+            minute: (parseInt(time.shift(), 10)),
             second: 0,
             millisecond: 0
           });
           startDate = m.toJSDate();
         } else if (time.length === 3) {
           m = DateUtils.get({
-            hour: (parseInt(time.shift(), 0)),
-            minute: (parseInt(time.shift(), 0)),
-            second: (parseInt(time.shift(), 0)),
+            hour: (parseInt(time.shift(), 10)),
+            minute: (parseInt(time.shift(), 10)),
+            second: (parseInt(time.shift(), 10)),
             millisecond: 0
           });
           startDate = m.toJSDate();
@@ -94,7 +94,7 @@ export class DefaultScheduleFactory implements IScheduleFactory {
       if (isNumber(offset)) {
         offsetN = offset;
       } else if (/^\d+\w+$/.test(offset)) {
-        offsetN = parseInt(offset.substr(0, offset.length - 1), 0);
+        offsetN = parseInt(offset.substr(0, offset.length - 1), 10);
         unit = offset.replace(offsetN + '', '');
       }
 
