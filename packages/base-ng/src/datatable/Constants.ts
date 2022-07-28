@@ -3,7 +3,11 @@ export const K_INFINITE = 'infinite';
 export const K_VIEW = 'view';
 // export const K_VIEW = 'view';
 
-
+/**
+ * - paged - a pager will be integrated in the view
+ * - infinite - an infinite scoll with reload on page bottom reach
+ * - view - show only the once loaded rows
+ */
 export type GRID_MODE = 'paged' | 'infinite' | 'view';
 
 export const inputKeys = ['columns', 'rows', 'maxRows', 'options', 'params'];
