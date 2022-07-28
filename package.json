@@ -16,7 +16,9 @@
     "build": "cd packages/app && npx ng build --prod",
     "lint": "npx ng lint",
     "mocha": "npx mocha test/{**,**/**}/*.spec.ts",
-    "karma": "npx ng test typexs --code-coverage=true --watch=false"
+    "karma": "npx ng test typexs --code-coverage=true --watch=false",
+    "cleanup": "npx gulp cleanup && npm i",
+    "publish": "npx gulp packages && npx gulp packages_publish && npx gulp dist-tag"
   },
   "repository": {
     "type": "git",
