@@ -2,8 +2,7 @@ import { Injector, XS_P_$COUNT, XS_P_$OFFSET } from '@typexs/base';
 import { EntityController, EntityRegistry, IFindOptions } from '@typexs/entity';
 
 import { ClassType, IEntityRef } from '@allgemein/schema-api';
-import * as _ from 'lodash';
-import { first, isArray, isEmpty } from 'lodash';
+import { first, isArray, isEmpty, isUndefined, keys, merge } from 'lodash';
 import { IReaderOptions, Reader } from '@typexs/pipelines';
 
 
@@ -66,9 +65,13 @@ export class EntityControllerReader<T> extends Reader {
     }
 
     this.entityController = Injector.get('EntityController.' + this.schemaName);
-    ['hooks', 'maxConditionSplitingLimit', 'subLimit', 'raw', 'cache'].forEach(k =>
-      _.has(options, k) ? this.findOptions[k] = options[k] : null
-    );
+
+    keys(options).forEach(k => {
+      if (!['entityType', 'storageName', 'conditions', 'maxLimit',
+        'pipe_handler', 'logger', 'size', 'finishCallback', 'finishCallback'].includes(k)) {
+        this.findOptions[k] = options[k];
+      }
+    });
 
   }
 
@@ -119,17 +122,16 @@ export class EntityControllerReader<T> extends Reader {
       }
     }
 
-    this._hasNext = _.isUndefined(this.count) ? true : this.size < this.count;
+    this._hasNext = isUndefined(this.count) ? true : this.size < this.count;
 
     if (limit > 0 && this._hasNext) {
       const start = Date.now();
-      const options = _.merge(this.findOptions, <IFindOptions>{
+      const options = merge(this.findOptions, <IFindOptions>{
         offset: this.offset,
         limit: limit,
         subLimit: 0 // 100 * this.chunkSize
       });
-      this.chunk = await this.entityController.find(
-        this.entityType, this.conditions, options);
+      this.chunk = await this.entityController.find(this.entityType, this.conditions, options);
       this.offset = this.chunk[XS_P_$OFFSET];
       this.size = this.size + this.chunk.length;
       // calc next offset
