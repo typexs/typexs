@@ -27,7 +27,7 @@ import { TASK_STATE_ENQUEUE, TASK_STATE_PROPOSED, TASK_STATE_STARTED, TASK_STATE
 const LOG_EVENT = TestHelper.logEnable(false);
 let bootstrap: Bootstrap = null;
 
-@suite('functional/tasks/tasks_worker')
+@suite('functional/tasks/worker')
 class TasksWorkerSpec {
 
 
@@ -415,8 +415,8 @@ class TasksWorkerSpec {
     await handle.started;
     await TestHelper.wait(50);
 
-    const tasks: Tasks = Injector.get(Tasks.NAME);
-    const infos = tasks.infos(true);
+    // const tasks: Tasks = Injector.get(Tasks.NAME);
+    // const infos = tasks.infos(true);
     // Log.debug(infos);
 
     const taskEvent = new TaskProposeEvent();

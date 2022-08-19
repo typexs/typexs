@@ -1,12 +1,13 @@
-import {ITask, ITaskRuntimeContainer, TaskRuntime} from '@typexs/base';
-import {TestHelper} from '../../../TestHelper';
-
-
+import { Incoming, ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/base';
+import { TestHelper } from '../../../TestHelper';
 
 
 export class LocalSimpleTask implements ITask {
 
   name = 'local_simple_task';
+
+  @Incoming({ optional: true })
+  value: string;
 
   @TaskRuntime()
   r: ITaskRuntimeContainer;
@@ -20,7 +21,6 @@ export class LocalSimpleTask implements ITask {
     this.r.progress(50);
 
 
-
-    return {task: 'great local run'};
+    return { task: 'great local run' };
   }
 }

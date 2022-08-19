@@ -1,4 +1,4 @@
-import {suite, test} from '@testdeck/mocha';
+import { suite, test } from '@testdeck/mocha';
 import {
   __CLASS__,
   __NODE_ID__,
@@ -18,16 +18,16 @@ import {
   API_CTRL_DISTRIBUTED_STORAGE_UPDATE_ENTITIES_BY_CONDITION,
   API_CTRL_DISTRIBUTED_STORAGE_UPDATE_ENTITY
 } from '../../../src/lib/Constants';
-import {expect} from 'chai';
+import { expect } from 'chai';
 import * as _ from 'lodash';
-import {SpawnHandle} from '../../../../server/test/functional/SpawnHandle';
-import {TestHelper} from '../../../../server/test/functional/TestHelper';
-import {TEST_STORAGE_OPTIONS} from '../../../../server/test/functional/config';
-import {IEventBusConfiguration} from '@allgemein/eventbus';
-import {HttpFactory, IHttp} from '@allgemein/http';
-import {DistributedRandomData} from './fake_app_node/entities/DistributedRandomData';
-import {RandomData} from './fake_app_storage/entities/RandomData';
-import {WebServer} from '@typexs/server/libs/web/WebServer';
+import { SpawnHandle } from '@typexs/testing';
+import { TestHelper } from '../../../../server/test/functional/TestHelper';
+import { TEST_STORAGE_OPTIONS } from '../../../../server/test/functional/config';
+import { IEventBusConfiguration } from '@allgemein/eventbus';
+import { HttpFactory, IHttp } from '@allgemein/http';
+import { DistributedRandomData } from './fake_app_node/entities/DistributedRandomData';
+import { RandomData } from './fake_app_storage/entities/RandomData';
+import { WebServer } from '@typexs/server/libs/web/WebServer';
 import { K_ROUTE_CONTROLLER } from '@typexs/server';
 import { DistributedStorageEntityController } from '../../../src/lib/DistributedStorageEntityController';
 
@@ -41,7 +41,7 @@ const settingsTemplate: any = {
     default: TEST_STORAGE_OPTIONS
   },
 
-  app: {name: 'demo', path: __dirname + '/../../../../..', nodeId: 'server'},
+  app: { name: 'demo', path: __dirname + '/../../../../..', nodeId: 'server' },
 
   modules: {
     paths: [
@@ -55,13 +55,13 @@ const settingsTemplate: any = {
       '**/@typexs{,/server}*',
       '**/@typexs{,/distributed-storage}*',
       '**/fake_app_node**'
-    ],
+    ]
 
   },
   logging: {
     enable: LOG_EVENT,
     level: 'debug',
-    transports: [{console: {}}],
+    transports: [{ console: {} }]
   },
 
   server: {
@@ -78,8 +78,8 @@ const settingsTemplate: any = {
       }]
     }
   },
-  workers: {access: [{name: 'DistributedQueryWorker', access: 'allow'}]},
-  eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}},
+  workers: { access: [{ name: 'DistributedQueryWorker', access: 'allow' }] },
+  eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
 
 };
 
@@ -100,7 +100,7 @@ class DistributedStorageControllerSpec {
 
 
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(settings)
       .activateErrorHandling()
       .activateLogger();
@@ -139,7 +139,7 @@ class DistributedStorageControllerSpec {
     // delete + create dummy data
     await Injector.get(DistributedStorageEntityController)
       .remove(DistributedRandomData,
-        {id: {$gt: 10}});
+        { id: { $gt: 10 } });
   }
 
 
@@ -159,10 +159,10 @@ class DistributedStorageControllerSpec {
       API_CTRL_DISTRIBUTED_STORAGE_SAVE_ENTITY
         .replace(':nodeId', 'fake_app_node')
         .replace(':name', _.snakeCase(DistributedRandomData.name)),
-    {
-      json: d,
-      responseType: 'json'
-    }
+      {
+        json: d,
+        responseType: 'json'
+      }
     );
 
     expect(res).to.not.be.null;
@@ -180,7 +180,7 @@ class DistributedStorageControllerSpec {
     expect(res[0]).to.be.deep.include(d);
 
     const found = await Injector.get(DistributedStorageEntityController)
-      .findOne(DistributedRandomData, {id: 11});
+      .findOne(DistributedRandomData, { id: 11 });
 
     expect(found).to.be.deep.include(d);
 
@@ -194,10 +194,10 @@ class DistributedStorageControllerSpec {
         API_CTRL_DISTRIBUTED_STORAGE_SAVE_ENTITY
           .replace(':nodeId', 'fake_app_node_not')
           .replace(':name', _.snakeCase(DistributedRandomData.name)),
-      {
-        json: {},
-        responseType: 'json'
-      }
+        {
+          json: {},
+          responseType: 'json'
+        }
       );
       expect(true).to.be.false;
     } catch (e) {
@@ -239,10 +239,10 @@ class DistributedStorageControllerSpec {
       API_CTRL_DISTRIBUTED_STORAGE_SAVE_ENTITY
         .replace(':nodeId', 'fake_app_node')
         .replace(':name', _.snakeCase(DistributedRandomData.name)),
-    {
-      json: [d1, d2],
-      responseType: 'json'
-    }
+      {
+        json: [d1, d2],
+        responseType: 'json'
+      }
     );
 
     expect(res).to.not.be.null;
@@ -256,7 +256,7 @@ class DistributedStorageControllerSpec {
 
     const found = await Injector.get(DistributedStorageEntityController)
       .find(DistributedRandomData,
-        {id: {$in: res.map((x: any) => x['__remoteIds__']['fake_app_node'].id)}});
+        { id: { $in: res.map((x: any) => x['__remoteIds__']['fake_app_node'].id) } });
     expect(found).to.have.length(2);
     expect(found[0]).to.be.deep.include(d1);
     expect(found[1]).to.be.deep.include(d2);
@@ -270,7 +270,7 @@ class DistributedStorageControllerSpec {
       API_CTRL_DISTRIBUTED_STORAGE_GET_ENTITY
         .replace(':nodeId', 'fake_app_node')
         .replace(':name', _.snakeCase(DistributedRandomData.name))
-        .replace(':id', '1'), {responseType: 'json'}
+        .replace(':id', '1'), { responseType: 'json' }
     );
 
     expect(res).to.not.be.null;
@@ -303,7 +303,7 @@ class DistributedStorageControllerSpec {
       API_CTRL_DISTRIBUTED_STORAGE_GET_ENTITY
         .replace(':nodeId', 'fake_app_node')
         .replace(':name', _.snakeCase(DistributedRandomData.name))
-        .replace(':id', '1,2'), {responseType: 'json'}
+        .replace(':id', '1,2'), { responseType: 'json' }
     );
 
     expect(res).to.not.be.null;
@@ -353,7 +353,7 @@ class DistributedStorageControllerSpec {
   @test
   async 'find entities'() {
     const _url = (URL + '/api' + API_CTRL_DISTRIBUTED_STORAGE_FIND_ENTITY).replace(':name', DistributedRandomData.name);
-    const res: any = await http.get(_url, {responseType: 'json', passBody: true});
+    const res: any = await http.get(_url, { responseType: 'json', passBody: true });
     expect(res).to.not.be.null;
     expect(res.entities).to.have.length(10);
     expect(res.entities.map((x: any) => x.id)).to.deep.eq(_.range(1, 11));
@@ -365,7 +365,7 @@ class DistributedStorageControllerSpec {
     const _url = (URL + '/api' + API_CTRL_DISTRIBUTED_STORAGE_FIND_ENTITY).replace(':name', DistributedRandomData.name);
     let res: any = null;
     try {
-      res = await http.get(_url + '?query=' + JSON.stringify({short: 'short name 1'}), {
+      res = await http.get(_url + '?query=' + JSON.stringify({ short: 'short name 1' }), {
         responseType: 'json',
         passBody: true
       });
@@ -405,8 +405,8 @@ class DistributedStorageControllerSpec {
     let res: any = null;
     res = await http.get(
       _url + '?query=' +
-      JSON.stringify({date: {$gt: date}}),
-      {responseType: 'json', passBody: true});
+      JSON.stringify({ date: { $gt: date } }),
+      { responseType: 'json', passBody: true });
 
     expect(res).to.not.be.null;
     expect(res).to.not.be.null;
@@ -448,9 +448,9 @@ class DistributedStorageControllerSpec {
       API_CTRL_DISTRIBUTED_STORAGE_FIND_ENTITY
         .replace(':name', DistributedRandomData.name) + '?aggr=' +
       JSON.stringify([
-        {$match: {floatValue: {$gt: 2}}},
-        {$group: {_id: '$bool', sum: {$sum: '$floatValue'}}},
-      ]), {responseType: 'json'}
+        { $match: { floatValue: { $gt: 2 } } },
+        { $group: { _id: '$bool', sum: { $sum: '$floatValue' } } }
+      ]), { responseType: 'json' }
     ) as any;
 
     expect(res).to.not.be.null;
@@ -461,7 +461,7 @@ class DistributedStorageControllerSpec {
       'sum': 21.432000000000002,
       [__CLASS__]: 'DistributedRandomData',
       [__NODE_ID__]: 'fake_app_node',
-      [__REGISTRY__]: 'typeorm',
+      [__REGISTRY__]: 'typeorm'
 
 
     });
@@ -470,7 +470,7 @@ class DistributedStorageControllerSpec {
       'sum': 25.003999999999998,
       [__CLASS__]: 'DistributedRandomData',
       [__NODE_ID__]: 'fake_app_node',
-      [__REGISTRY__]: 'typeorm',
+      [__REGISTRY__]: 'typeorm'
     });
 
   }
@@ -488,7 +488,7 @@ class DistributedStorageControllerSpec {
     d2.boolNeg = true;
     d2.floatValue = 0.68;
     const dataSaved = (await controller
-      .save(d2, {targetIds: ['fake_app_node']})) as any;
+      .save(d2, { targetIds: ['fake_app_node'] })) as any;
 
     d2.long = 'this is an update';
 
@@ -499,7 +499,7 @@ class DistributedStorageControllerSpec {
       API_CTRL_DISTRIBUTED_STORAGE_UPDATE_ENTITY
         .replace(':nodeId', 'fake_app_node')
         .replace(':name', _.snakeCase(DistributedRandomData.name))
-        .replace(':id', id), {json: d2, responseType: 'json'}
+        .replace(':id', id), { json: d2, responseType: 'json' }
     ) as any;
 
     expect(res).to.not.be.null;
@@ -515,11 +515,11 @@ class DistributedStorageControllerSpec {
       floatValue: 0.68,
       date: d2.date.toISOString(),
       __distributedId__: 0,
-      __remoteIds__: {fake_app_node: {id: id}}
+      __remoteIds__: { fake_app_node: { id: id } }
     });
 
     const afterUpdate = await controller.find(DistributedRandomData,
-      {id: id});
+      { id: id });
     expect(afterUpdate).to.have.length(1);
     for (const entry of afterUpdate) {
       expect(entry).to.deep.include({
@@ -545,7 +545,7 @@ class DistributedStorageControllerSpec {
       randomData.long = 'test update';
       entries.push(randomData);
     }
-    const saved = await controller.save(entries, {targetIds: ['fake_app_node']});
+    const saved = await controller.save(entries, { targetIds: ['fake_app_node'] });
     expect(saved).to.have.length(10);
 
     // save multiple driver
@@ -555,7 +555,7 @@ class DistributedStorageControllerSpec {
         .replace(':nodeId', 'fake_app_node')
         .replace(':name', _.snakeCase(DistributedRandomData.name))
       +
-      '?query=' + JSON.stringify({$and: [{id: {$gte: 100}}, {id: {$lte: 110}}]}),
+      '?query=' + JSON.stringify({ $and: [{ id: { $gte: 100 } }, { id: { $lte: 110 } }] }),
       <any>{
         json: {
           $set: {
@@ -570,10 +570,10 @@ class DistributedStorageControllerSpec {
     res = res.body;
 
     // sqlite does not support node
-    expect(res).to.be.deep.eq({fake_app_node: -2});
+    expect(res).to.be.deep.eq({ fake_app_node: -2 });
 
     const afterUpdate = await controller.find(DistributedRandomData,
-      {$and: [{id: {$gte: 100}}, {id: {$lte: 110}}]});
+      { $and: [{ id: { $gte: 100 } }, { id: { $lte: 110 } }] });
     expect(afterUpdate).to.have.length(10);
     for (const entry of afterUpdate) {
       expect(entry).to.deep.include({
@@ -583,7 +583,7 @@ class DistributedStorageControllerSpec {
     }
 
     const notUpdated = await controller
-      .find(DistributedRandomData, {id: {$lte: 10}});
+      .find(DistributedRandomData, { id: { $lte: 10 } });
     expect(notUpdated).to.have.length(10);
     for (const entry of notUpdated) {
       expect(entry).to.not.deep.include({
@@ -618,12 +618,12 @@ class DistributedStorageControllerSpec {
       API_CTRL_DISTRIBUTED_STORAGE_DELETE_ENTITY
         .replace(':nodeId', 'fake_app_node')
         .replace(':name', _.snakeCase(DistributedRandomData.name))
-        .replace(':id', '101'), {responseType: 'json'}
+        .replace(':id', '101'), { responseType: 'json' }
     );
     expect(res).to.not.be.null;
     res = res.body;
-    expect(res).to.be.deep.eq({fake_app_node: 1});
-    let found = await controller.find(DistributedRandomData, {id: 101});
+    expect(res).to.be.deep.eq({ fake_app_node: 1 });
+    let found = await controller.find(DistributedRandomData, { id: 101 });
     expect(found).to.have.length(1);
 
     // delete by multiple id
@@ -632,16 +632,16 @@ class DistributedStorageControllerSpec {
       API_CTRL_DISTRIBUTED_STORAGE_DELETE_ENTITY
         .replace(':nodeId', 'fake_app_node')
         .replace(':name', _.snakeCase(DistributedRandomData.name))
-        .replace(':id', '102,103,104'), {responseType: 'json'}
+        .replace(':id', '102,103,104'), { responseType: 'json' }
     );
     expect(res).to.not.be.null;
     res = res.body;
     found = await controller.find(DistributedRandomData,
-      {id: {$in: [102, 103, 104]}});
+      { id: { $in: [102, 103, 104] } });
     expect(found).to.have.length(3);
 
     found = await controller.find(DistributedRandomData,
-      {id: {$in: [101, 102, 103, 104]}}, {targetIds: ['fake_app_node']});
+      { id: { $in: [101, 102, 103, 104] } }, { targetIds: ['fake_app_node'] });
     expect(found).to.have.length(0);
 
   }
@@ -672,26 +672,26 @@ class DistributedStorageControllerSpec {
         .replace(':nodeId', 'fake_app_node')
         .replace(':name', _.snakeCase(DistributedRandomData.name)) +
       '?query=' + JSON.stringify(
-      {$and: [{long: 'test delete'}, {id: {$gte: 105}}]}),
-    {responseType: 'json'}
+        { $and: [{ long: 'test delete' }, { id: { $gte: 105 } }] }),
+      { responseType: 'json' }
     );
     expect(res).to.not.be.null;
     res = res.body;
-    expect(res).to.be.deep.eq({fake_app_node: -2});
+    expect(res).to.be.deep.eq({ fake_app_node: -2 });
 
     const afterDelete = await controller
       .find(DistributedRandomData,
-        {$and: [{id: {$gte: 100}}, {id: {$lte: 110}}]});
+        { $and: [{ id: { $gte: 100 } }, { id: { $lte: 110 } }] });
     expect(afterDelete).to.have.length(14);
 
     const afterDeleteOnNode = await controller
       .find(DistributedRandomData,
-        {$and: [{id: {$gte: 100}}, {id: {$lte: 110}}]},
-        {targetIds: ['fake_app_node']});
+        { $and: [{ id: { $gte: 100 } }, { id: { $lte: 110 } }] },
+        { targetIds: ['fake_app_node'] });
     expect(afterDeleteOnNode).to.have.length(4);
 
     const notDeleted = await controller
-      .find(DistributedRandomData, {id: {$lte: 10}});
+      .find(DistributedRandomData, { id: { $lte: 10 } });
     expect(notDeleted).to.have.length(10);
   }
 

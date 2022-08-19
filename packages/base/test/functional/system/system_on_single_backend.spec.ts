@@ -1,20 +1,19 @@
 // process.env.SQL_LOG = '1';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {Bootstrap} from '../../../src/Bootstrap';
-import {TEST_PSQL_STORAGE_OPTIONS, TEST_STORAGE_OPTIONS} from '../config';
-import {IEventBusConfiguration} from '@allgemein/eventbus/browser';
-import {Container} from 'typedi';
-import {System} from '../../../src/libs/system/System';
-import {SystemApi} from '../../../src/api/System.api';
-import {ISystemApi} from '../../../src/api/ISystemApi';
-import {INodeInfo} from '../../../src/libs/system/INodeInfo';
-import {TestHelper} from '@typexs/testing';
-import {SpawnHandle} from '@typexs/testing';
-import {SystemNodeInfo} from '../../../src/entities/SystemNodeInfo';
-import {ITypexsOptions} from '../../../src/libs/ITypexsOptions';
-import {Invoker} from '../../../src/base/Invoker';
-import {getMetadataArgsStorage} from 'typeorm';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { Bootstrap } from '../../../src/Bootstrap';
+import { TEST_PSQL_STORAGE_OPTIONS, TEST_STORAGE_OPTIONS } from '../config';
+import { IEventBusConfiguration } from '@allgemein/eventbus/browser';
+import { System } from '../../../src/libs/system/System';
+import { SystemApi } from '../../../src/api/System.api';
+import { ISystemApi } from '../../../src/api/ISystemApi';
+import { INodeInfo } from '../../../src/libs/system/INodeInfo';
+import { TestHelper } from '@typexs/testing';
+import { SpawnHandle } from '@typexs/testing';
+import { SystemNodeInfo } from '../../../src/entities/SystemNodeInfo';
+import { ITypexsOptions } from '../../../src/libs/ITypexsOptions';
+import { Invoker } from '../../../src/base/Invoker';
+import { Injector } from '../../../src/libs/di/Injector';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -29,13 +28,13 @@ class SystemOnSingleBackendSpec {
     await TestHelper.clearCache();
 
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
-        app: {name: 'test', nodeId: 'system', path: __dirname + '/fake_app'},
-        logging: {enable: LOG_EVENT, level: 'debug', loggers: [{name: '*', level: 'debug'}]},
-        modules: {paths: TestHelper.includePaths()},
-        storage: {default: TEST_PSQL_STORAGE_OPTIONS},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}}
+        app: { name: 'test', nodeId: 'system', path: __dirname + '/fake_app' },
+        logging: { enable: LOG_EVENT, level: 'debug', loggers: [{ name: '*', level: 'debug' }] },
+        modules: { paths: TestHelper.includePaths() },
+        storage: { default: TEST_PSQL_STORAGE_OPTIONS },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -57,7 +56,7 @@ class SystemOnSingleBackendSpec {
 
   @test
   async 'same database'() {
-    const system: System = Container.get(System.NAME);
+    const system: System = Injector.get(System.NAME);
     expect(system.node.state).to.eq('idle');
 
     await bootstrap.shutdown();
@@ -85,10 +84,10 @@ class SystemOnSingleBackendSpec {
       }
     }
 
-    const invoker: Invoker = Container.get(Invoker.NAME);
+    const invoker: Invoker = Injector.get(Invoker.NAME);
     invoker.register(SystemApi, OnSystem);
 
-    const system: System = Container.get(System.NAME);
+    const system: System = Injector.get(System.NAME);
 
     const p = SpawnHandle.do(__dirname + '/fake_app/node.ts').start(LOG_EVENT);
     await p.started;
@@ -114,7 +113,7 @@ class SystemOnSingleBackendSpec {
     nodeInfos = await bootstrap.getStorage().get().getController().find(SystemNodeInfo);
     expect(nodeInfos).to.have.length(1);
     expect(nodeInfos.map((x: any) => {
-      return {isBackend: x.isBackend, nodeId: x.nodeId};
+      return { isBackend: x.isBackend, nodeId: x.nodeId };
     })).to.deep.eq(
       [{
         isBackend: true, nodeId: 'system'
@@ -126,7 +125,7 @@ class SystemOnSingleBackendSpec {
 
   @test
   async 'check system information'() {
-    const system: System = Container.get(System.NAME);
+    const system: System = Injector.get(System.NAME);
 
     expect(system.info).to.not.be.null;
     expect(system.info.networks).to.not.be.null;

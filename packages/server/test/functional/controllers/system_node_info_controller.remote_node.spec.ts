@@ -3,7 +3,7 @@ import {Bootstrap, Config, Injector} from '@typexs/base';
 import {API_CTRL_SYSTEM_RUNTIME_NODES, C_API, K_ROUTE_CONTROLLER} from '../../../src/libs/Constants';
 import {expect} from 'chai';
 import * as _ from 'lodash';
-import {SpawnHandle} from '../SpawnHandle';
+import {SpawnHandle} from '@typexs/testing';
 import {TestHelper} from '../TestHelper';
 import {TEST_STORAGE_OPTIONS} from '../config';
 import {IEventBusConfiguration} from '@allgemein/eventbus';

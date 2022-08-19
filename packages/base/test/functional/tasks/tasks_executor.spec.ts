@@ -24,7 +24,7 @@ let bootstrap: Bootstrap;
 const p: SpawnHandle[] = [];
 
 
-@suite('functional/tasks/task_executor')
+@suite('functional/tasks/executor')
 class TasksSpec {
 
   static async before() {

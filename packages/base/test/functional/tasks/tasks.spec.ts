@@ -33,7 +33,6 @@ import { Injector } from '../../../src/libs/di/Injector';
 import { Config } from '@allgemein/config';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { C_TASKS, TASK_STATE_STOPPED } from '../../../src/libs/tasks/Constants';
-import { TaskRef } from '../../../src/libs/tasks/TaskRef';
 import { LOG_EVENT_NAME } from '../../../src/libs/logging/Constants';
 
 

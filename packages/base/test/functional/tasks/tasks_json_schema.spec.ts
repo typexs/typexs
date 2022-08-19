@@ -19,8 +19,8 @@ import { TaskRef } from '../../../src/libs/tasks/TaskRef';
 const LOG_EVENT = TestHelper.logEnable(false);
 let tasks: Tasks;
 
-@suite('functional/tasks/tasks')
-class TasksSpec {
+@suite('functional/tasks/json_schema')
+class TasksJsonSchemaSpec {
 
   static async before() {
     await TestHelper.clearCache();
@@ -70,79 +70,6 @@ class TasksSpec {
     expect(out).to.be.deep.eq(
       {
         '$schema': 'http://json-schema.org/draft-07/schema#',
-        definitions: {
-          simple_task_ungrouped_01: {
-            'nodeInfos': [
-              {
-                'hasWorker': false,
-                'nodeId': 'testnode'
-              }
-            ],
-            title: 'SimpleTaskUngrouped01',
-            type: 'object',
-            $id: '#simple_task_ungrouped_01',
-            taskName: 'simple_task_ungrouped_01',
-            taskType: 1,
-            properties: {
-              // name: { type: 'string', default: 'simple_task_ungrouped_01' },
-              // content: { type: 'string', default: 'test' }
-            }
-          },
-          simple_task_ungrouped_02: {
-            'nodeInfos': [
-              {
-                'hasWorker': false,
-                'nodeId': 'testnode'
-              }
-            ],
-            title: 'SimpleTaskUngrouped02',
-            type: 'object',
-            taskName: 'simple_task_ungrouped_02',
-            $id: '#simple_task_ungrouped_02',
-            taskType: 1,
-            properties: {
-              // name: { type: 'string', default: 'simple_task_ungrouped_02' },
-              // content: { type: 'string', default: 'test' }
-            }
-          },
-          simple_task_with_args: {
-            'nodeInfos': [
-              {
-                'hasWorker': false,
-                'nodeId': 'testnode'
-              }
-            ],
-            title: 'SimpleTaskWithArgs',
-            type: 'object',
-            taskName: 'simple_task_with_args',
-            $id: '#simple_task_with_args',
-            taskType: 1,
-            properties: {
-              incoming: { type: 'string', optional: false, propertyType: 'incoming' },
-              list: {
-                type: 'array',
-                items: { type: 'object' },
-                propertyType: 'incoming'
-              },
-              outgoing: { type: 'string', propertyType: 'outgoing' }
-              // name: { type: 'string', default: 'simple_task_with_args' }
-            }
-          },
-          simple_task_with_runtime_log: {
-            'nodeInfos': [
-              {
-                'hasWorker': false,
-                'nodeId': 'testnode'
-              }
-            ],
-            title: 'SimpleTaskWithRuntimeLog',
-            type: 'object',
-            taskName: 'simple_task_with_runtime_log',
-            $id: '#simple_task_with_runtime_log',
-            taskType: 1,
-            properties: {}
-          }
-        },
         'anyOf': [
           {
             '$ref': '#/definitions/simple_task_ungrouped_01'
@@ -156,7 +83,94 @@ class TasksSpec {
           {
             '$ref': '#/definitions/simple_task_with_runtime_log'
           }
-        ]
+        ],
+        'definitions': {
+          'simple_task_ungrouped_01': {
+            '$id': '#simple_task_ungrouped_01',
+            'groups': [],
+            'nodeInfos': [
+              {
+                'hasWorker': false,
+                'nodeId': 'testnode'
+              }
+            ],
+            'permissions': [],
+            'properties': {},
+            'remote': false,
+            'taskName': 'simple_task_ungrouped_01',
+            'taskType': 1,
+            'title': 'SimpleTaskUngrouped01',
+            'type': 'object'
+          },
+          'simple_task_ungrouped_02': {
+            '$id': '#simple_task_ungrouped_02',
+            'groups': [],
+            'nodeInfos': [
+              {
+                'hasWorker': false,
+                'nodeId': 'testnode'
+              }
+            ],
+            'permissions': [],
+            'properties': {},
+            'remote': false,
+            'taskName': 'simple_task_ungrouped_02',
+            'taskType': 1,
+            'title': 'SimpleTaskUngrouped02',
+            'type': 'object'
+          },
+          'simple_task_with_args': {
+            '$id': '#simple_task_with_args',
+            'groups': [],
+            'nodeInfos': [
+              {
+                'hasWorker': false,
+                'nodeId': 'testnode'
+              }
+            ],
+            'permissions': [],
+            'properties': {
+              'incoming': {
+                'optional': false,
+                'propertyType': 'incoming',
+                'type': 'string'
+              },
+              'list': {
+                'items': {
+                  'type': 'object'
+                },
+                'propertyType': 'incoming',
+                'type': 'array'
+              },
+              'outgoing': {
+                'propertyType': 'outgoing',
+                'type': 'string'
+              }
+            },
+            'remote': false,
+            'taskName': 'simple_task_with_args',
+            'taskType': 1,
+            'title': 'SimpleTaskWithArgs',
+            'type': 'object'
+          },
+          'simple_task_with_runtime_log': {
+            '$id': '#simple_task_with_runtime_log',
+            'groups': [],
+            'nodeInfos': [
+              {
+                'hasWorker': false,
+                'nodeId': 'testnode'
+              }
+            ],
+            'permissions': [],
+            'properties': {},
+            'remote': false,
+            'taskName': 'simple_task_with_runtime_log',
+            'taskType': 1,
+            'title': 'SimpleTaskWithRuntimeLog',
+            'type': 'object'
+          }
+        }
       }
     );
 
