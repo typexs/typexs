@@ -42,9 +42,25 @@ export type TASK_PROPERTY_TYPE = 'runtime' | 'incoming' | 'outgoing';
 export const K_TASK_TYPE = 'taskType';
 export const K_TASK_NAME = 'taskName';
 
+export const K_TASK_PERMISSIONS = 'permissions';
+export const K_TASK_GROUPS = 'groups';
+export const K_TASK_NODE_INFOS = 'nodeInfos';
+export const K_TASK_DESCRIPTION = 'description';
+export const K_TASK_REMOTE = 'remote';
+export const C_NAMESPACE = 'namespace';
+export const C_NAME = 'name';
+
+
 /**
  * Use title for storing class name in json schema
  */
 export const K_TASK_CLASS_NAME = 'title';
 export const K_EXCHANGE_REF_TYPE = 'propertyType';
 
+export enum TaskRefType {
+  CALLBACK,
+  CLASS,
+  INSTANCE,
+  GROUP,
+  REMOTE
+}

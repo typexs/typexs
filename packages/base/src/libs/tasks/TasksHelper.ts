@@ -212,7 +212,7 @@ export class TasksHelper {
     const options: ITaskExectorOptions = this.extractOptions(argv);
     const taskNames = this.getTaskNames(taskSpec);
     const tasksReg: Tasks = Injector.get(Tasks.NAME);
-    const tasks = tasksReg.getTasks(taskNames);
+    const tasks = tasksReg.getTasksByNames(taskNames);
     const targetId = _.get(options, 'targetId', null);
     let isLocal = _.get(options, 'isLocal', true);
     const isRemote = _.get(options, 'remote', false);

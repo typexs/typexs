@@ -125,7 +125,7 @@ export class TaskExecutor extends EventEmitter {
     } else {
 
       const nodeId = Bootstrap.getNodeId();
-      const tasks = this.tasks.getTasks(this.taskNames);
+      const tasks = this.tasks.getTasksByNames(this.taskNames);
       if (_.isUndefined(this.passedOptions.isLocal)) {
         // when isLocal is not set manuell
         this.options.remote = false;
@@ -202,7 +202,7 @@ export class TaskExecutor extends EventEmitter {
    * Task will be executed locally
    */
   async executeLocally() {
-    const tasks = this.tasks.getTasks(this.taskNames);
+    const tasks = this.tasks.getTasksByNames(this.taskNames);
     const localPossible = _.uniq(this.taskNames).length === tasks.length;
 
     if (localPossible) {

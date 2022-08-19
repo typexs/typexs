@@ -4,7 +4,7 @@ import {
   PERMISSION_ALLOW_TASK_EXEC_PATTERN,
   PERMISSION_ALLOW_TASK_LOG,
   PERMISSION_ALLOW_TASK_STATUS,
-  PERMISSION_ALLOW_TASKS_LIST
+  PERMISSION_ALLOW_TASK_GET_METADATA
 } from '@typexs/server';
 import {AuthGuardService} from '@typexs/base-ng';
 import {TasksLogComponent} from './log/tasks-log.component';
@@ -16,7 +16,7 @@ export const TASK_ROUTES: Routes = [
   {
     path: 'tasks/list',
     component: TasksMetadataComponent,
-    data: {label: 'List', group: 'admin', permissions: [PERMISSION_ALLOW_TASKS_LIST]},
+    data: {label: 'List', group: 'admin', permissions: [PERMISSION_ALLOW_TASK_GET_METADATA]},
     canActivate: [AuthGuardService]
   },
   {

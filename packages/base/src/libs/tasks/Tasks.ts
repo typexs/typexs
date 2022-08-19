@@ -54,39 +54,40 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
   }
 
 
-  private getEntries(withRemote: boolean = false): TaskRef[] {
+  getTasks(withRemote: boolean = false): TaskRef[] {
     return this.filter(METATYPE_ENTITY, (x: TaskRef) => withRemote || !x.isRemote());
   }
 
 
-  getTasks(names: string | string[]) {
-    if (!isArray(names)) {
-      names = [names];
-    }
-    const _names: string[] = [];
-    for (let i = 0; i < names.length; i++) {
-      if (!this.contains(names[i])) {
-        throw new Error('task ' + names[i] + ' not exists');
+  getTasksByNames(names?: string | string[]) {
+    if (names) {
+      if (!isArray(names)) {
+        names = [names];
       }
-      _names.push(names[i]);
+      const _names: string[] = [];
+      for (let i = 0; i < names.length; i++) {
+        if (!this.contains(names[i])) {
+          throw new Error('task ' + names[i] + ' not exists');
+        }
+        _names.push(names[i]);
+      }
+      return this.getTasks(true).filter((x: TaskRef) => _names.indexOf(x.name) !== -1);
     }
-    return this.getEntries(true).filter((x: TaskRef) => _names.indexOf(x.name) !== -1);
+    return this.getTasks(true);
+  }
+
+  // getNames(withRemote: boolean = false): string[] {
+  //   return this.getTaskNames(withRemote);
+  // }
+
+  getTaskNames(withRemote: boolean = false): string[] {
+    return this.getTasks(withRemote).map(x => x.name);
   }
 
 
-  getNames(withRemote: boolean = false): string[] {
-    return this.names(withRemote);
-  }
-
-
-  names(withRemote: boolean = false): string[] {
-    return this.getEntries(withRemote).map(x => x.name);
-  }
-
-
-  infos(withRemote: boolean = false): ITaskInfo[] {
-    return this.getEntries(withRemote).map((x: TaskRef) => x.info());
-  }
+  // infos(withRemote: boolean = false): ITaskInfo[] {
+  //   return this.getEntries(withRemote).map((x: TaskRef) => x.info());
+  // }
 
 
   get(name: string): TaskRef {
@@ -142,7 +143,6 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
       ref = new TaskRef(options.taskName, target, assign(options, { namespace: this.namespace }));
     } else {
       // TODO
-      // this.addRemoteTask(options.taskName, classRef.getClass(true), options);
       ref = new TaskRef(options.taskName, null, assign(options, { remote: true, namespace: this.namespace }));
     }
     return ref;
@@ -200,20 +200,23 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
 
 
   addRemoteTask(nodeId: string,
-    info: ITaskInfo,
+    remoteRef: TaskRef,
     hasWorker: boolean = false,
     withProperties: boolean = true
   ): TaskRef {
-    // const task = new TaskRef(info, null, {remote: true, namespace: this.namespace});
     const opts: any = {
-      taskName: info.name as any,
+      taskName: remoteRef.name as any,
       target: null,
       remote: true,
       namespace: this.namespace
     };
-
-    const taskRef = this.createTaskRef(defaults(opts, info));
-    return this.addTaskRef(taskRef, nodeId, hasWorker, withProperties);
+    const taskRef = this.createTaskRef(defaults(opts, remoteRef.getOptions()));
+    const localRef = this.addTaskRef(taskRef, nodeId, hasWorker, withProperties);
+    remoteRef.getPropertyRefs().forEach(x => {
+      const opts = x.getOptions();
+      this.create(METATYPE_PROPERTY, opts);
+    });
+    return localRef;
   }
 
 
@@ -223,7 +226,7 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
       if (!exists) {
         task.addNodeId(nodeId, hasWorker);
         this.add(METATYPE_ENTITY, task);
-        if (task.canHaveProperties() && withProperties) {
+        if (task.canHaveProperties() && withProperties && !task.isRemote()) {
           const ref = task.getClassRef().getClass(false);
           if (ref) {
             const taskInstance = Reflect.construct(ref, []);
@@ -352,39 +355,6 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
   }
 
 
-  async toJsonSchema(options?: IJsonSchemaSerializeOptions) {
-    const entities = this.getEntries(true);
-    const serializer = JsonSchema.getSerializer(defaults(options || {}, <IJsonSchemaSerializeOptions>{
-      namespace: this.namespace,
-      allowKeyOverride: true,
-      ignoreUnknownType: true,
-      onlyDecorated: true,
-      allowedProperty: (entry: IPropertyRef | string, klass?: any) => {
-        if (entry instanceof TaskExchangeRef) {
-          const propertyType = entry.getPropertyType();
-          if (propertyType === 'runtime') {
-            return false;
-          }
-          return true;
-        }
-        return false;
-      }
-    }));
-    entities.map(x => serializer.serialize(x));
-    return serializer.getJsonSchema();
-  }
-
-
-  // reset() {
-  //   super.reset();
-  // }
-
-
-  fromJsonSchema(orgJson: any): Promise<TaskRef | TaskRef[]> {
-    return JsonSchema.unserialize(orgJson, { namespace: this.namespace, forceEntityRefCreation: true }) as Promise<TaskRef | TaskRef[]>;
-  }
-
-
   register(xsdef: AbstractRef | Binding): AbstractRef | Binding {
     if (xsdef instanceof TaskRef) {
       return this.add(METATYPE_ENTITY, xsdef);
@@ -425,38 +395,37 @@ export class Tasks extends AbstractRegistry implements IJsonSchema {
     return ClassRef.get(object as string | Function, this.namespace, type === METATYPE_PROPERTY);
   }
 
-  // getEntityRefFor(fn: string | object | Function, skipNsCheck?: boolean): TaskRef {
-  //   throw new NotYetImplementedError();
-  // }
-  //
-  // getPropertyRefsFor(fn: any): TaskExchangeRef[] {
-  //   throw new NotYetImplementedError();
+  async toJsonSchema(options?: IJsonSchemaSerializeOptions) {
+    const entities = this.getTasks(true);
+    const serializer = JsonSchema.getSerializer(defaults(options || {}, <IJsonSchemaSerializeOptions>{
+      namespace: this.namespace,
+      allowKeyOverride: true,
+      ignoreUnknownType: true,
+      onlyDecorated: true,
+      allowedProperty: (entry: IPropertyRef | string, klass?: any) => {
+        if (entry instanceof TaskExchangeRef) {
+          const propertyType = entry.getPropertyType();
+          if (propertyType === 'runtime') {
+            return false;
+          }
+          return true;
+        }
+        return false;
+      }
+    }));
+    entities.map(x => serializer.serialize(x));
+    return serializer.getJsonSchema();
+  }
+
+
+  // reset() {
+  //   super.reset();
   // }
 
-  // fromJson(orgJson: IEntityRefMetadata): TaskRef {
-  //   const json = cloneDeep(orgJson);
-  //
-  //   let entityRef: TaskRef = this.getEntries(true).find(x => x.name === json.name);
-  //   if (!entityRef) {
-  //     entityRef = TaskRef.fromJson(json);
-  //     this.register(entityRef);
-  //   }
-  //
-  //   if (entityRef) {
-  //     for (const prop of json.properties) {
-  //       const classRef = entityRef.getClassRef();
-  //       let propRef: TaskExchangeRef = this.registry.find(METATYPE_PROPERTY,
-  //         (x: TaskExchangeRef) => x.name === prop.name && x.getClassRef() === classRef);
-  //       if (!propRef) {
-  //         const desc: ITaskPropertyRefOptions = (<any>prop).descriptor;
-  //         desc.target = classRef.getClass();
-  //         propRef = new TaskExchangeRef(desc);
-  //         this.register(propRef);
-  //       }
-  //     }
-  //   }
-  //
-  //   return entityRef;
-  // }
+
+  fromJsonSchema(orgJson: any): Promise<TaskRef | TaskRef[]> {
+    return JsonSchema.unserialize(orgJson, { namespace: this.namespace, forceEntityRefCreation: true }) as Promise<TaskRef | TaskRef[]>;
+  }
+
 
 }

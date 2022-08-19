@@ -121,7 +121,7 @@ export {
   K_EXCHANGE_REF_TYPE,
   TN_TASKS_CLEANUP,
   XS_TYPE_BINDING_TASK_DEPENDS_ON,
-  C_TASKS
+  C_TASKS, TaskRefType, XS_TYPE_BINDING_SUBELEM, XS_TYPE_BINDING_TASK_GROUP
 } from './libs/tasks/Constants';
 
 export { Tasks } from './libs/tasks/Tasks';

@@ -59,7 +59,7 @@ export class TaskExecutionRequest extends EventEmitter {
 
 
       const possibleTargetIds: string[][] = [workerIds];
-      const tasks: TaskRef[] = this.tasks.getTasks(TasksHelper.getTaskNames(taskSpec));
+      const tasks: TaskRef[] = this.tasks.getTasksByNames(TasksHelper.getTaskNames(taskSpec));
       for (const taskRef of tasks) {
         possibleTargetIds.push(taskRef.nodeInfos.filter(x => x.hasWorker).map(x => x.nodeId));
       }

@@ -24,7 +24,6 @@ import {
   _API_CTRL_TASK_LOG,
   _API_CTRL_TASK_STATUS,
   _API_CTRL_TASKS,
-  _API_CTRL_TASKS_LIST,
   _API_CTRL_TASKS_METADATA,
   _API_CTRL_TASKS_RUNNERS_INFO,
   _API_CTRL_TASKS_RUNNING,
@@ -37,7 +36,6 @@ import {
   PERMISSION_ALLOW_TASK_LOG,
   PERMISSION_ALLOW_TASK_RUNNER_INFO_VIEW,
   PERMISSION_ALLOW_TASK_STATUS,
-  PERMISSION_ALLOW_TASKS_LIST,
   PERMISSION_ALLOW_TASKS_METADATA,
   PERMISSION_ALLOW_TASKS_RUNNING
 } from '../libs/Constants';
@@ -70,11 +68,11 @@ export class TasksAPIController {
     return TasksHelper.getTaskLogFile(runnerId, nodeId);
   }
 
-  @Access(PERMISSION_ALLOW_TASKS_LIST)
-  @Get(_API_CTRL_TASKS_LIST)
-  list() {
-    return this.tasks.infos(true);
-  }
+  // @Access(PERMISSION_ALLOW_TASKS_LIST)
+  // @Get(_API_CTRL_TASKS_LIST)
+  // list() {
+  //   return this.tasks.infos(true);
+  // }
 
   @Access(PERMISSION_ALLOW_TASKS_METADATA)
   @Get(_API_CTRL_TASKS_METADATA)

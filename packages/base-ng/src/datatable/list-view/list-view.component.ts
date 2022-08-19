@@ -1,12 +1,12 @@
-import {defaults, get, isEmpty, isNumber, set} from 'lodash';
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {AbstractGridComponent} from '../abstract-grid.component';
-import {PagerAction} from '../../pager/PagerAction';
-import {PagerService} from '../../pager/PagerService';
-import {Pager} from '../../pager/Pager';
-import {IGridColumn} from '../IGridColumn';
-import {Eq, ExprDesc, Like, Value, ValueDesc} from '@allgemein/expressions';
-import {IDatatableOptions} from '../IDatatableOptions';
+import { assign, defaults, get, isEmpty, isNumber, set } from 'lodash';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AbstractGridComponent } from '../abstract-grid.component';
+import { PagerAction } from '../../pager/PagerAction';
+import { PagerService } from '../../pager/PagerService';
+import { Pager } from '../../pager/Pager';
+import { IGridColumn } from '../IGridColumn';
+import { Eq, ExprDesc, Like, Value, ValueDesc } from '@allgemein/expressions';
+import { IDatatableOptions } from '../IDatatableOptions';
 import { IViewOptions } from '../../component/view/IViewOptions';
 import { IDTListGridOptions } from './IDTListGridOptions';
 
@@ -39,9 +39,9 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
 
   ngOnInit(): void {
     if (!this.options) {
-      this.options = {enablePager: true, limit: 25};
+      this.options = { enablePager: true, limit: 25 };
     }
-    defaults(this.options, <IDTListGridOptions>{enablePager: true});
+    defaults(this.options, <IDTListGridOptions>{ enablePager: true });
 
     if (this.options.enablePager) {
       this.pager = this.pagerService.get(this.options.pagerId);
@@ -49,8 +49,12 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
 
     if (isEmpty(this._params)) {
       // if params not set set default values
-      this._params.limit = this.options.limit;
-      this._params.offset = 0;
+      assign(this._params, {
+        limit: this.options.limit,
+        offset: 0
+      });
+      // this._params.limit = this.options.limit;
+      // this._params.offset = 0;
     }
 
     if (!this.maxRows && this.rows) {

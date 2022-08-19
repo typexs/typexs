@@ -159,9 +159,10 @@ export const XS_P_$LABEL = '$label';
  * TasksController constants
  */
 export const _API_CTRL_TASKS = '/tasks';
-export const _API_CTRL_TASKS_LIST = '/list';
-export const API_CTRL_TASKS_LIST = _API_CTRL_TASKS + _API_CTRL_TASKS_LIST;
-export const PERMISSION_ALLOW_TASKS_LIST = 'tasks list view';
+
+// export const _API_CTRL_TASKS_LIST = '/list';
+// export const API_CTRL_TASKS_LIST = _API_CTRL_TASKS + _API_CTRL_TASKS_LIST;
+// export const PERMISSION_ALLOW_TASKS_LIST = 'tasks list view';
 
 export const _API_CTRL_TASKS_METADATA = '/metadata';
 export const API_CTRL_TASKS_METADATA = _API_CTRL_TASKS + _API_CTRL_TASKS_METADATA;

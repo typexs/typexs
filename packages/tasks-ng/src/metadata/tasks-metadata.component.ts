@@ -37,7 +37,7 @@ export class TasksMetadataComponent implements OnInit, OnDestroy {
     this.sub = this.tasksService.getTaskList(true).subscribe(x => {
       this.registry = x;
       this.tasks = [];
-      x.names(true).forEach(y => {
+      x.getTaskNames(true).forEach(y => {
         const ref = x.get(y);
         this.tasks.push(ref);
       });

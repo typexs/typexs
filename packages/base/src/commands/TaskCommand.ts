@@ -100,7 +100,7 @@ export class TaskCommand implements ICommand {
       }
 
     } else {
-      const res = this.tasks.names();
+      const res = this.tasks.getTaskNames();
       Console.log('List of supported tasks:');
       Console.log('\t- ' + res.join('\n\t') + '\n');
     }

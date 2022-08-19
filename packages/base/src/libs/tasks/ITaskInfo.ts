@@ -1,5 +1,9 @@
-import {ITaskRefNodeInfo} from './ITaskRefNodeInfo';
+import { ITaskRefNodeInfo } from './ITaskRefNodeInfo';
 
+
+/**
+ * Base task information which should be in a tasks
+ */
 export interface ITaskInfo {
 
   name?: string;

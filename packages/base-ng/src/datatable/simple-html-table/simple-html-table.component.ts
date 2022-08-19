@@ -1,4 +1,4 @@
-import { defaults, get, isEmpty, isNumber, set } from 'lodash';
+import { assign, defaults, get, isEmpty, isNumber, set } from 'lodash';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractGridComponent } from '../abstract-grid.component';
 import { PagerAction } from '../../pager/PagerAction';
@@ -46,8 +46,10 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements O
 
     if (isEmpty(this._params)) {
       // if params not set set default values
-      this._params.limit = this.options.limit;
-      this._params.offset = 0;
+      assign(this._params, {
+        limit: this.options.limit,
+        offset: 0
+      });
     }
 
     if (!this.maxRows && this.rows) {
