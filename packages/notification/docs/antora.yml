@@ -1,0 +1,8 @@
+name: notification
+title: '@typexs/notification'
+version: ~
+start_page: ROOT:index.adoc
+nav:
+  - modules/ROOT/nav.adoc
+
+
