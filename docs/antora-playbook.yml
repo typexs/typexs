@@ -1,0 +1,26 @@
+site:
+  title: TypeXs
+  start_page: typeXs::index.adoc
+
+content:
+  branches:
+    - HEAD
+  sources:
+    - url: ./..
+      start_paths:
+        - docs
+        - packages/*/docs
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true
+
+output:
+  clean: true
+  dir: ./../build/docs
+
+asciidoc:
+  attributes:
+    plantuml-server-url: 'http://www.plantuml.com/plantuml'
+  extensions:
+    - asciidoctor-plantuml
