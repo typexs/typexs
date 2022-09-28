@@ -1,0 +1,16 @@
+image: node:lts
+
+stages:
+  - deployment
+
+pages:
+  variables:
+    GIT_STRATEGY: clone
+  stage: deployment
+  script:
+    - npm ci
+    - FORCE_SHOW_EDIT_PAGE_LINK=true CI=true npm run documentation
+    - mv build/docs public
+  artifacts:
+    paths:
+      - public

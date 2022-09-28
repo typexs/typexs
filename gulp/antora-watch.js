@@ -10,7 +10,7 @@ const livereload = true;
 const { series, src, watch } = require('gulp');
 const yaml = require('js-yaml');
 // const watch = require('gulp-watch');
-const playbookFilename = 'deployments/docs/antora-playbook.yml';
+const playbookFilename = 'docs/antora-playbook.yml';
 const playbook = yaml.load(fs.readFileSync(playbookFilename, 'utf8'));
 // const outputDir = (playbook.output || {}).dir || './build/public'
 const outputDir = './build/docs';
@@ -23,7 +23,12 @@ const antoraArgs = ['--playbook', playbookFilename];
 //   accum.push(`./docs/antora.yml`)
 //   return accum
 // }, [])
-const watchPatterns = [`./docs/**/*.adoc`, `./docs/antora.yml`];
+const watchPatterns = [
+  `./docs/**/*.adoc`,
+  `./docs/antora.yml`,
+  './packages/*/docs/**/*.adoc',
+  './packages/*/docs/antora.yml'
+];
 
 function generate(done) {
   generator(antoraArgs, process.env)
