@@ -31,7 +31,6 @@ build docker image:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push"'
       changes:
-        - .gitlab-ci.yml
         - services/**/*
 
 
@@ -72,7 +71,7 @@ test:
     - cat /etc/hosts
     - docker compose -f deployments/testing/docker-compose.yml ps
     - docker network list
-    - docker network connect testing_txs_base_net $CONTAINER_ID
+    - docker network connect testing_txs_base_net /
     - netstat -a
   script:
     - bash
