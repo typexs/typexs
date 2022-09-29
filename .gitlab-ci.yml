@@ -41,7 +41,7 @@ test:
     - npm install -g npm@latest
     - npm ci
     - set -x
-    - docker-compose -f deployments/testing/docker-compose.yml up -d
+    - docker compose -f deployments/testing/docker-compose.yml up -d
     - set -x
     - sleep 60
     - npm test
