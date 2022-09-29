@@ -23,6 +23,11 @@ build docker image:
       --context="${CI_PROJECT_DIR}"
       --dockerfile="${CI_PROJECT_DIR}/services/ubuntu-docker/Dockerfile"
       --destination "${CI_REGISTRY_IMAGE}/ubuntu-docker"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      changes:
+        - .gitlab-ci.yml
+        - services/**/*
 
 
 pages:
