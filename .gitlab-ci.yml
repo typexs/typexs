@@ -23,9 +23,6 @@ build docker image:
       --context="${CI_PROJECT_DIR}"
       --dockerfile="${CI_PROJECT_DIR}/services/ubuntu-docker/Dockerfile"
       --destination "${CI_REGISTRY_IMAGE}/ubuntu-docker"
-  rules:
-    - changes:
-      - services/ubuntu-docker/*
 
 
 pages:
