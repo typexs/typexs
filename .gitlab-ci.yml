@@ -69,7 +69,7 @@ test:
     - cat /etc/hosts
     - docker compose -f deployments/testing/docker-compose.yml ps
     - docker network list
-    - DOCKERINFO=$(curl -s --unix-socket /var/run/docker.sock http://docker/containers/$HOSTNAME/json)
+    - DOCKERINFO=$(curl -s --unix-socket /var/run/docker.sock http://docker/containers/json)
     - echo $DOCKERINFO
     - docker network connect testing_txs_base_net /
     - netstat -a
