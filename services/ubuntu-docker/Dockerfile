@@ -8,6 +8,7 @@ RUN apt update -yy && \
       ca-certificates \
       curl \
       gnupg \
+      sudo \
       lsb-release \
       netcat \
       net-tools \
@@ -21,10 +22,9 @@ RUN apt update -yy && \
       docker-ce-cli  \
       containerd.io  \
       docker-compose-plugin &&\
-    curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash &&\
-    \. "$NVM_DIR/nvm.sh" && \
-    \. "$NVM_DIR/bash_completion" &&\
-    nvm install 16 &&\
-    nvm use 16 &&\
-    nvm alias default 16 &&\
+    curl -sL https://deb.nodesource.com/setup_16.x | bash - &&\
+    apt update -yy &&\
+    apt -y install nodejs &&\
     npm install -g npm@latest
+
+USER root
