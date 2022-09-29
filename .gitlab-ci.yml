@@ -6,8 +6,27 @@ variables:
 
 
 stages:
+  - build
   - test
   - deployment
+
+
+build docker image:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [ "" ]
+  before_script:
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
+  script:
+    - /kaniko/executor
+      --context="${CI_PROJECT_DIR}"
+      --dockerfile="${CI_PROJECT_DIR}/services/ubuntu-docker/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/ubuntu-docker"
+  rules:
+    - changes:
+      - services/ubuntu-docker/*
+
 
 pages:
   variables:
@@ -21,13 +40,12 @@ pages:
     paths:
       - public
 
-
 test:
-  image: docker:latest
+  image: ${CI_REGISTRY_IMAGE}/ubuntu-docker
   stage: test
   tags:
     - testing
-#  variables:
+    #  variables:
     # Set the Docker host to be the one of the previously created service (This forwards the user of the docker command to this service instead of running it inside the container of this build job.)
     # DOCKER_HOST: unix:///var/run/docker.sock
     # By GitLab recommended storage driver when using Docker-in-Docker (see https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-the-overlayfs-driver)
@@ -40,11 +58,13 @@ test:
     - docker:dind
   before_script:
     - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
-    - apk add curl bash sh
+    - apk add curl bash
     - docker compose -f deployments/testing/docker-compose.yml up -d
     - curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-    - export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-    - nvm install 16 && nvm use 16 && nvm alias default 16
+    - export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && sh "$NVM_DIR/nvm.sh" && [ -s "$NVM_DIR/bash_completion" ] && sh "$NVM_DIR/bash_completion"
+    - nvm install 16
+    - nvm use 16
+    - nvm alias default 16
     - npm install -g npm@latest
     - cat /etc/hosts
     - docker compose -f deployments/testing/docker-compose.yml ps
