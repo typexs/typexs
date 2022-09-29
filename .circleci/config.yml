@@ -49,7 +49,7 @@ jobs:
           command: npm test
 
 # Orchestrate our job run sequence
-workflows:
-  test:
-    jobs:
-      - test
+#workflows:
+#  test:
+#    jobs:
+#      - test
