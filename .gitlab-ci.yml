@@ -65,13 +65,14 @@ test:
     - docker:dind
   before_script:
     - bash
-    - *get-container-id
+    - echo $HOSTNAME
+    - CONTAINER_ID=$HOSTNAME
     - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
     - docker compose -f deployments/testing/docker-compose.yml up -d
     - cat /etc/hosts
     - docker compose -f deployments/testing/docker-compose.yml ps
     - docker network list
-    - docker network connect testing_txs_base_net
+    - docker network connect testing_txs_base_net $CONTAINER_ID
     - netstat -a
   script:
     - bash
