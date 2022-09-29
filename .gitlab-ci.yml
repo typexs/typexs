@@ -26,6 +26,7 @@ test:
   stage: test
   script:
     - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
+    - apt update
     - apt install curl
     - curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
     - source ~/.profile
