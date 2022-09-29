@@ -24,10 +24,12 @@ pages:
 test:
   image: ubuntu:latest
   stage: test
+  tags:
+    - testing
   script:
     - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
-    - apt update
-    - apt install curl
+    - apt update -yy
+    - apt install -yy curl
     - curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
     - source ~/.profile
     - nvm install 16 && nvm use 16 && nvm alias default 16
