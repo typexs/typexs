@@ -28,15 +28,13 @@ test:
     - testing
   variables:
     # Set the Docker host to be the one of the previously created service (This forwards the user of the docker command to this service instead of running it inside the container of this build job.)
-    DOCKER_HOST: tcp://docker:2375
+    DOCKER_HOST: /var/run/docker.sock
     # By GitLab recommended storage driver when using Docker-in-Docker (see https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-the-overlayfs-driver)
     DOCKER_DRIVER: overlay2
     # Disable the need for certificates when this build job communicates with the Docker service
     # If you want to secure the communication between the container of this build job and the Docker service you have to slightly change the configuration of the GitLab runner. (see https://about.gitlab.com/blog/2019/07/31/docker-in-docker-with-docker-19-dot-03/)
     # Since in my case everything is running on the same server I can live with this communication not being encrypted.
     DOCKER_TLS_CERTDIR: ""
-    # Use this environmental variable when connecting to the database inside the Go code
-    DATABASE_HOST: docker
   services:
     - docker:dind
   script:
