@@ -45,3 +45,4 @@ test:
     - set -x
     - sleep 60
     - npm test
+
