@@ -43,7 +43,7 @@ pages:
       - public
 
 test:
-  image: ${CI_REGISTRY_IMAGE}/ubuntu-docker
+  image: ${CI_REGISTRY_IMAGE}/ubuntu-docker:latest
   stage: test
   tags:
     - testing
