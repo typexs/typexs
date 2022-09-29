@@ -59,12 +59,14 @@ test:
   services:
     - docker:dind
   before_script:
+    - bash
     - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
     - docker compose -f deployments/testing/docker-compose.yml up -d
     - cat /etc/hosts
     - docker compose -f deployments/testing/docker-compose.yml ps
     - netstat -a
   script:
+    - bash
     - pwd
     - nc -zvw3 127.0.0.1 6379 || true
     - nc -zvw3 172.17.0.2 6379 || true

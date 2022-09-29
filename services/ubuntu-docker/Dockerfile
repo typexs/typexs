@@ -20,9 +20,8 @@ RUN apt update -yy && \
       docker-ce  \
       docker-ce-cli  \
       containerd.io  \
-      docker-compose-plugin
-
-RUN curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash &&\
+      docker-compose-plugin &&\
+    curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash &&\
     \. "$NVM_DIR/nvm.sh" && \
     \. "$NVM_DIR/bash_completion" &&\
     nvm install 16 &&\
