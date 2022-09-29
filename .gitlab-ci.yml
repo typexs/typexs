@@ -31,7 +31,7 @@ test:
     - apt update -yy
     - apt install -yy curl
     - curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-    - source ~/.profile
+    - sh ~/.nvm/nvm.sh
     - nvm install 16 && nvm use 16 && nvm alias default 16
     - npm install -g npm@latest
     - npm ci
