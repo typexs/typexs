@@ -19,3 +19,21 @@ pages:
   artifacts:
     paths:
       - public
+
+
+test:
+  image: ubuntu:lts
+  stage: test
+  script:
+    - sudo sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
+    - sudo apt install curl
+    - curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+    - source ~/.profile
+    - nvm install 16 && nvm use 16 && nvm alias default 16
+    - npm install -g npm@latest
+    - npm ci
+    - set -x
+    - docker-compose -f deployments/testing/docker-compose.yml up -d
+    - set -x
+    - sleep 60
+    - npm test
