@@ -40,7 +40,7 @@ test:
   before_script:
     - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
     - apt update -yy
-    - apt install -yy curl netcat ca-certificates   sudo  gnupg     lsb-release
+    - apt install -yy curl netcat ca-certificates net-tools  sudo  gnupg     lsb-release
     - curl -L "https://github.com/docker/compose/releases/download/v2.3.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - chmod +x /usr/local/bin/docker-compose
     - docker-compose -f deployments/testing/docker-compose.yml up -d
