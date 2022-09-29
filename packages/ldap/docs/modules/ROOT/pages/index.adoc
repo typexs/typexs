@@ -1,0 +1,20 @@
+# LDAP Integration
+
+## Configuration
+
+```yml
+storage:
+  ldap_source:
+    framework: ldap
+    # optional host, port, protocol
+    host: ldap.local.com
+    port: 389
+    protocol: ldaps
+    # or by url
+    url: 'ldaps://ldap.local.com:389'
+    # user dn
+    userDn: uid=superadmin,ou=user,dc=local,dc=com
+    password: somepassword
+    # optional the base domain for operations
+    baseDn: dc=local,dc=com
+```

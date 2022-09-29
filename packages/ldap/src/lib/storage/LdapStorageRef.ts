@@ -1,8 +1,11 @@
-import { IStorageRef, StorageRef } from '@typexs/base';
+import { ICollection, IStorageRef, StorageRef } from '@typexs/base';
 import { defaults } from 'lodash';
 import { ILdapStorageRefOptions } from './ILdapStorageRefOptions';
 import { C_LDAP } from '../Constants';
 import { LdapEntityController } from './LdapEntityController';
+import { LdapConnection } from './LdapConnection';
+import { ClassType, RegistryFactory } from '@allgemein/schema-api';
+import { LdapEntityRegistry } from '../registry/LdapEntityRegistry';
 
 export class LdapStorageRef extends StorageRef implements IStorageRef {
 
@@ -16,12 +19,14 @@ export class LdapStorageRef extends StorageRef implements IStorageRef {
     }));
   }
 
-  addEntityClass(type: Function | | <any>, options?: any): void;
-  addEntityClass(type: Function | | <any>, options?: any): void;
-  addEntityClass(type: Function | | <any>, options?: any): void {
+  initialize?(): boolean | Promise<boolean> {
+    throw new Error('Method not implemented.');
   }
 
-  connect(): Promise<IConnection> {
+  addEntityClass(type: Function | ClassType<any>, options?: any): void {
+  }
+
+  connect(): Promise<LdapConnection> {
     return Promise.resolve(undefined);
   }
 
@@ -33,20 +38,16 @@ export class LdapStorageRef extends StorageRef implements IStorageRef {
     return [];
   }
 
-  getEntityRef(name: string | Function);
-  getEntityRef(name: string | Function): | [];
-  getEntityRef(name: string | Function): | [] {
+  getEntityRef(name: string | Function): any | [] {
     return undefined;
   }
 
-  getEntityRefs(): [];
-  getEntityRefs(): [];
   getEntityRefs(): [] {
     return [];
   }
 
   getFramework(): string {
-    return '';
+    return C_LDAP;
   }
 
   getRawCollection(name: string): ICollection | Promise<ICollection> {
@@ -61,19 +62,15 @@ export class LdapStorageRef extends StorageRef implements IStorageRef {
     return undefined;
   }
 
-  getRegistry();
-  getRegistry();
   getRegistry() {
-    return undefined;
+    return RegistryFactory.get(C_LDAP) as LdapEntityRegistry;
   }
 
   getType(): string {
-    return '';
+    return C_LDAP;
   }
 
-  hasEntityClass(cls: string | Function |): boolean;
-  hasEntityClass(cls: string | Function |): boolean;
-  hasEntityClass(cls: string | Function |): boolean {
+  hasEntityClass(cls: string | Function | ClassType<any>): boolean {
     return false;
   }
 

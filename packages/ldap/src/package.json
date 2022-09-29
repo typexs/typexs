@@ -25,7 +25,8 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs",
   "dependencies": {
-    "@typexs/roles-api": "0.0.0-PLACEHOLDER"
+    "@typexs/roles-api": "0.0.0-PLACEHOLDER",
+    "ldapjs": "2.3.3"
   },
   "peerDependencies": {
     "@typexs/base": "0.0.0-PLACEHOLDER",
