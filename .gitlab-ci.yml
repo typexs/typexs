@@ -70,10 +70,9 @@ test:
     - docker compose -f deployments/testing/docker-compose.yml ps
     - docker network list
     - DOCKERINFO=$(curl -s --unix-socket /var/run/docker.sock http://docker/containers/json)
-    - echo $DOCKERINFO
     - echo $DOCKERINFO > data.json
-    - node -e "const data = require('./data.json'); console.log(data)";
-    - docker network connect testing_txs_base_net /
+    - CONTAINER_ID=`node -e "const data = require('./data.json'); console.log(data.pop().Id);"`
+    - docker network connect testing_txs_base_net $CONTAINER_ID
     - netstat -a
   script:
     - bash
