@@ -55,14 +55,7 @@ test:
     - docker:dind
   before_script:
     - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
-    - apk add curl bash
     - docker compose -f deployments/testing/docker-compose.yml up -d
-    - curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-    - export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && sh "$NVM_DIR/nvm.sh" && [ -s "$NVM_DIR/bash_completion" ] && sh "$NVM_DIR/bash_completion"
-    - nvm install 16
-    - nvm use 16
-    - nvm alias default 16
-    - npm install -g npm@latest
     - cat /etc/hosts
     - docker compose -f deployments/testing/docker-compose.yml ps
     - netstat -a
