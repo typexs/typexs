@@ -3,32 +3,22 @@
   "version": "0.0.0-PLACEHOLDER",
   "description": "Auth module for typexs",
   "main": "index",
-  "browser": {
-    "./index.js": "./browser.js",
-    "./index.ts": "./browser.ts"
-  },
-  "directories": {
-    "doc": "docs/de"
-  },
+  "browser": "browser",
   "scripts": {
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
     "posttest": "nyc report --reporter=json"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/typexs/typexs.git"
+    "url": "git+https://gitlab.com/typexs/typexs.git"
   },
   "author": "Robert Kania",
   "license": "MIT",
   "keywords": [
-    "commons",
+    "typexs",
     "typescript",
     "auth"
   ],
-  "bugs": {
-    "url": "https://github.com/typexs/typexs/issues"
-  },
-  "homepage": "https://github.com/typexs/typexs#readme",
   "dependencies": {
     "@typexs/base": "0.0.0-PLACEHOLDER",
     "@typexs/entity": "0.0.0-PLACEHOLDER",
@@ -42,29 +32,6 @@
     "@typexs/server": "0.0.0-PLACEHOLDER"
   },
   "private": true,
-  "nyc": {
-    "extension": [
-      ".ts",
-      ".tsx"
-    ],
-    "exclude": [
-      "**/*.d.ts",
-      "tmp/",
-      "build/"
-    ],
-    "require": [
-      "ts-node/register"
-    ],
-    "reporter": [
-      "html",
-      "json",
-      "lcovonly"
-    ],
-    "sourceMap": true,
-    "instrument": true,
-    "cache": false,
-    "report-dir": "./coverage/backend"
-  },
   "typexs": {
     "name": "auth",
     "declareLibs": [

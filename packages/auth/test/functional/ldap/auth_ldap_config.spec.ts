@@ -28,36 +28,12 @@ class AuthLdapConfigSpec {
 
   @test
   async 'ldap integration'() {
-    // const authCfg: IAuthConfig = {
-    //   userClass: User, // ./User as string
-    //   methods: {
-    //     default: {
-    //       type: 'ldap',
-    //
-    //     }
-    //   }
-    // };
-    //
-    // const json = FileUtils.getJsonSync(__dirname + '/../../../package.json');
-    // const loader = new RuntimeLoader({
-    //   appdir: PlatformUtils.pathResolve('.'),
-    //   libs: json.typexs.declareLibs
-    // });
-    //
-    // await loader.prepare();
-    // Container.set('RuntimeLoader', loader);
-    // Config.set('auth', authCfg);
-    // const invoker = new Invoker();
-    // Bootstrap.prepareInvoker(invoker, loader);
-    //
-    // Container.set(Invoker.NAME, invoker);
 
     bootstrap = await TestHelper.bootstrap_basic(<ITypexsOptions & any>{
       // app: {name: 'test', nodeId: 'worker'},
       logging: LOGGING,
       // modules: {paths: [__dirname + '/../../..']},
       storage: { default: TEST_STORAGE_OPTIONS },
-      // workers: {access: [{name: 'TaskMonitorWorker', access: 'allow'}]},
       auth: {
         userClass: User, // ./User as string
         methods: {
@@ -73,14 +49,6 @@ class AuthLdapConfigSpec {
         ]
       }
     });
-
-
-    // const storage = await TestHelper.storage();
-
-    //
-    // const manager = Container.get(AuthManager);
-    // Container.set(AuthManager.NAME, manager);
-    // await manager.prepare();
 
 
     const auth = Injector.get(Auth);

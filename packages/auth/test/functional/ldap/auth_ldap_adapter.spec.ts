@@ -91,11 +91,7 @@ class AuthLdapAdapterSpec {
     container = new AuthDataContainer(login);
 
     success = await adapter.authenticate(container);
-    // Log.info(success, container);
     expect(success).to.be.false;
-
-
-    // await adapter.queue.await()
 
   }
 
