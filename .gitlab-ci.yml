@@ -50,6 +50,7 @@ test:
     - npm install -g npm@latest
     - cat /etc/hosts
     - docker-compose -f deployments/testing/docker-compose.yml ps
+    - netstat -a
   script:
     - nc -zvw3 127.0.0.1 6379 || true
     - nc -zvw3 172.17.0.2 6379 || true
