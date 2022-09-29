@@ -4,6 +4,11 @@ image: node:lts
 variables:
   TIMEZONE: "Europe/Berlin"
 
+.get-container-id: &get-container-id
+                     |
+                     # Getting Container ID
+                     CONTAINER_ID=$(basename $(cat /proc/1/cpuset))
+                     echo $CONTAINER_ID
 
 stages:
   - build
@@ -60,10 +65,13 @@ test:
 #    - docker:dind
   before_script:
     - bash
+    - *get-container-id
     - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
     - docker compose -f deployments/testing/docker-compose.yml up -d
     - cat /etc/hosts
     - docker compose -f deployments/testing/docker-compose.yml ps
+    - docker network list
+    - docker network connect ${COMPOSE_PROJECT_NAME}_default $CONTAINER_ID
     - netstat -a
   script:
     - bash
