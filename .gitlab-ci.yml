@@ -22,7 +22,7 @@ pages:
 
 
 test:
-  image: ubuntu:lts
+  image: ubuntu:latest
   stage: test
   script:
     - sudo sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
