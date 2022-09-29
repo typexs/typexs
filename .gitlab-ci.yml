@@ -61,8 +61,8 @@ test:
     # If you want to secure the communication between the container of this build job and the Docker service you have to slightly change the configuration of the GitLab runner. (see https://about.gitlab.com/blog/2019/07/31/docker-in-docker-with-docker-19-dot-03/)
     # Since in my case everything is running on the same server I can live with this communication not being encrypted.
     # DOCKER_TLS_CERTDIR: ""
-#  services:
-#    - docker:dind
+  services:
+    - docker:dind
   before_script:
     - bash
     - *get-container-id
@@ -71,7 +71,7 @@ test:
     - cat /etc/hosts
     - docker compose -f deployments/testing/docker-compose.yml ps
     - docker network list
-    - docker network connect ${COMPOSE_PROJECT_NAME}_default $CONTAINER_ID
+    - docker network connect testing_txs_base_net
     - netstat -a
   script:
     - bash
