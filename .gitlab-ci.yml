@@ -1,6 +1,11 @@
 image: node:lts
 
+variables:
+  TIMEZONE: "Europe/Berlin"
+
+
 stages:
+  - test
   - deployment
 
 pages:
