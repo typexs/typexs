@@ -9,6 +9,10 @@ RUN apt update -yy && \
       curl \
       gnupg \
       sudo \
+      gcc \
+      g++ \
+      make \
+      libpq-dev \
       lsb-release \
       netcat \
       net-tools \
