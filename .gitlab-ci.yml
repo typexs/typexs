@@ -69,6 +69,7 @@ test:
     - bash
     - pwd
     - nc -zvw3 127.0.0.1 6379 || true
+    - nc -zvw3 redis 6379 || true
     - nc -zvw3 172.17.0.2 6379 || true
     - nc -zvw3 docker 6379 || true
     - node -v

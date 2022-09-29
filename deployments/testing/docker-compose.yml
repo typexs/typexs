@@ -1,21 +1,30 @@
 version: '3'
 
+networks:
+  txs_base_net: { }
+
 services:
 
   redis:
     image: redis:5
     ports:
       - 127.0.0.1:6379:6379
+    networks:
+      - txs_base_net
 
   redis2:
     image: redis:5
     ports:
       - 127.0.0.1:6380:6379
+    networks:
+      - txs_base_net
 
   mongo:
     image: mongo:4
     ports:
       - 127.0.0.1:27017:27017
+    networks:
+      - txs_base_net
 
   elastic:
     image: elasticsearch:7.14.2
@@ -27,6 +36,8 @@ services:
     ports:
       - 127.0.0.1:9200:9200
       - 127.0.0.1:9300:9300
+    networks:
+      - txs_base_net
 
   psql:
     image: postgres:14
@@ -37,6 +48,8 @@ services:
       POSTGRES_USER: txsbase
       POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_PASSWORD:
+    networks:
+      - txs_base_net
 
   psql-auth:
     image: postgres:14
@@ -47,6 +60,8 @@ services:
       POSTGRES_USER: auth
       POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_PASSWORD:
+    networks:
+      - txs_base_net
 
   mysql:
     image: mysql:5
@@ -58,6 +73,8 @@ services:
       MYSQL_USER: txsbase
       MYSQL_ROOT_PASSWORD: txsbase
       MYSQL_PASSWORD: txsbase
+    networks:
+      - txs_base_net
 
 
   ldap:
@@ -70,3 +87,5 @@ services:
     volumes:
       - ./ldap/ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom
     command: --copy-service --loglevel debug
+    networks:
+      - txs_base_net
