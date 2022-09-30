@@ -25,7 +25,6 @@ build docker image:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push"'
       changes:
-        - .gitlab-ci.yml
         - services/ubuntu-docker/**/*
 
 build ldap image:
@@ -43,7 +42,6 @@ build ldap image:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push"'
       changes:
-        - .gitlab-ci.yml
         - services/ldap/**/*
 
 
@@ -88,7 +86,7 @@ test:
     - DOCKERINFO=$(curl -s --unix-socket /var/run/docker.sock http://docker/containers/json)
     - echo $DOCKERINFO > docker.json
     - node -e "const data = require('./docker.json'); console.log(data);"
-    - export CONTAINER_ID=`node -e "const data = require('./docker.json'); console.log(data.find(x => /ubuntu\-docker/.test(x.Image)).Id);"`
+    - export CONTAINER_ID=`node -e "const data = require('./docker.json'); console.log(data.find(x => x.Names.find(z => /^\/runner\-/.test(z))).Id);"`
     - docker network connect testing_txs_base_net $CONTAINER_ID
   script:
     - nc -zvw3 $REDIS_HOST $REDIS_PORT || true
