@@ -49,9 +49,6 @@ RUN apt update -yy &&\
     apt -y install nodejs &&\
     npm install -g npm@latest
 
-
-
-
 COPY ./docker-entrypoint.sh /
 # ENTRYPOINT ["/docker-entrypoint.sh"]
 
