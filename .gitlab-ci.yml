@@ -83,7 +83,9 @@ test:
   before_script:
     - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
     - docker compose -f deployments/testing/docker-compose.yml up -d
-    - sh /docker-entrypoint.sh
+    - cd /
+    - ./docker-entrypoint.sh
+    - cd /build/typexs/typexs
   script:
     - nc -zvw3 $REDIS_HOST $REDIS_PORT || true
     - node -v
