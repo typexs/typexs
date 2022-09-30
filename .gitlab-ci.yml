@@ -1,12 +1,53 @@
+# https://medium.com/devops-with-valentine/how-to-start-a-docker-container-inside-your-gitlab-ci-pipeline-bfeb610c3f4
 image: node:lts
 
+variables:
+  TIMEZONE: "Europe/Berlin"
+
 stages:
-  - deployment
+  - build
+  - test
+
+
+build docker image:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [ "" ]
+  before_script:
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
+  script:
+    - /kaniko/executor
+      --context="${CI_PROJECT_DIR}"/services/ubuntu-docker
+      --dockerfile="${CI_PROJECT_DIR}/services/ubuntu-docker/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/ubuntu-docker"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      changes:
+        - services/ubuntu-docker/**/*
+
+build ldap image:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [ "" ]
+  before_script:
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
+  script:
+    - /kaniko/executor
+      --context="${CI_PROJECT_DIR}"/services/ldap
+      --dockerfile="${CI_PROJECT_DIR}/services/ldap/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/ldap"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      changes:
+        - services/ldap/**/*
+
 
 pages:
   variables:
     GIT_STRATEGY: clone
-  stage: deployment
+  stage: build
   script:
     - npm ci
     - FORCE_SHOW_EDIT_PAGE_LINK=true CI=true npm run documentation
@@ -14,3 +55,60 @@ pages:
   artifacts:
     paths:
       - public
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      changes:
+        - docs/**
+        - packages/*/docs/**
+
+test:
+  image: ${CI_REGISTRY_IMAGE}/ubuntu-docker:latest
+  stage: test
+  tags:
+    - testing
+  variables:
+    REDIS_HOST: redis
+    REDIS_PORT: 6379
+    REDIS2_HOST: redis2
+    REDIS2_PORT: 6379
+    POSTGRES_HOST: psql
+    POSTGRES_PORT: 5432
+    POSTGRES_AUTH_HOST: psql-auth
+    POSTGRES_AUTH_PORT: 5432
+    MYSQL_HOST: mysql
+    MYSQL_PORT: 3306
+    MONGO_HOST: mongo
+    MONGO_PORT: 27017
+    ES_HOST: elastic
+    ES_PORT: 9200
+    LDAP_HOST: ldap
+    LDAP_PORT: 389
+    LDAPS_PORT: 689
+  before_script:
+    - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
+    - docker compose -f deployments/testing/docker-compose.yml up -d
+    - DOCKERINFO=$(curl -s --unix-socket /var/run/docker.sock http://docker/containers/json)
+    - echo $DOCKERINFO > docker.json
+    - export CONTAINER_ID=`node -e "const data = require('./docker.json'); console.log(data.find(x => x.Names.find(z => /^\/runner\-/.test(z))).Id);"`
+    - echo $CONTAINER_ID > containerid.txt
+    - docker network connect testing_txs_base_net $CONTAINER_ID
+  script:
+    - nc -zvw3 $REDIS_HOST $REDIS_PORT || true
+    - node -v
+    - npm -v
+    - npm ci
+    - npm test
+  after_script:
+    - export CONTAINER_ID=`cat containerid.txt`
+    - docker network disconnect testing_txs_base_net $CONTAINER_ID
+    - docker compose -f deployments/testing/docker-compose.yml down
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      changes:
+        - package.json
+        - package-lock.json
+        - src/**
+        - test/**
+        - packages/*/src/**
+        - packages/*/test/**
+

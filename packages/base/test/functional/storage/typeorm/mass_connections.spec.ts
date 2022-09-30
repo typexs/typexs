@@ -8,6 +8,7 @@ import {
   EVENT_STORAGE_REF_PREPARED,
   EVENT_STORAGE_REF_SHUTDOWN
 } from '../../../../src/libs/storage/framework/typeorm/Constants';
+import { postgres_host, postgres_port } from '../../config';
 
 
 let bootstrap: Bootstrap;
@@ -48,8 +49,9 @@ class StorageGeneralSpec {
           database: 'txsbase',
           username: 'txsbase',
           password: '',
-          host: '127.0.0.1',
-          port: 5436,
+          host: postgres_host,
+          port: postgres_port
+
         } as any
       }
     }).prepareRuntime();

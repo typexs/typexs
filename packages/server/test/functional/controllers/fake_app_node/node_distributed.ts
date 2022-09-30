@@ -23,7 +23,7 @@
 //         '**/fake_app_node**'
 //       ]
 //     },
-//     eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
+//     eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } },
 //     workers: { access: [{ name: 'DistributedQueryWorker', access: 'allow' }] }
 //   });
 //   // const LOG_EVENT = !!process.argv.find(x => x === '--enable_log');
@@ -51,7 +51,7 @@
 //   //       ],
 //   //     },
 //   //     storage: {default: TEST_STORAGE_OPTIONS},
-//   //     eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}},
+//   //     eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: redis_host, port: redis_port}}},
 //   //     workers: {access: [{name: 'DistributedQueryWorker', access: 'allow'}]}
 //   //   });
 //   bootstrap.activateLogger();

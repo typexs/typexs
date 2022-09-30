@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { SimpleTaskPromise } from './tasks/SimpleTaskPromise';
 import { SpawnHandle, TestHelper } from '@typexs/testing';
 import { TaskExecutor } from '../../../src/libs/tasks/TaskExecutor';
-import { TEST_STORAGE_OPTIONS } from '../config';
+import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
 import { EventBus, IEventBusConfiguration, RedisEventBusAdapter } from '@allgemein/eventbus';
 import { TaskRequestFactory } from '../../../src/libs/tasks/worker/TaskRequestFactory';
 import { ITaskRunnerResult } from '../../../src/libs/tasks/ITaskRunnerResult';
@@ -50,7 +50,7 @@ class TasksSpec {
         eventbus: {
           default: <IEventBusConfiguration>{
             adapter: 'redis', extra: {
-              host: '127.0.0.1', port: 6379,
+              host: redis_host, port: redis_port,
               unref: true
             }
           }

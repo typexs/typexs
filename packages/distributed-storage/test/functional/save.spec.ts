@@ -13,7 +13,7 @@ import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
 import { DataRow } from './fake_app/entities/DataRow';
 import { __REMOTE_IDS__, XS_P_$ERRORED, XS_P_$SAVED } from '../../src/lib/Constants';
 import { IDistributedQueryWorkerOptions } from '../../src/lib/IDistributedQueryWorkerOptions';
-import { MODUL_CONFIG } from './config';
+import { MODUL_CONFIG, redis_host, redis_port } from './config';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -38,7 +38,7 @@ class DistributedStorageSaveSpec {
         logging: { enable: LOG_EVENT, level: 'debug' },
         modules: MODUL_CONFIG,
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } },
         workers: { access: [{ name: 'DistributedQueryWorker', access: 'allow' }] }
       });
     bootstrap.activateLogger();
@@ -79,7 +79,7 @@ class DistributedStorageSaveSpec {
         logging: { enable: LOG_EVENT, level: 'debug' },
         modules: MODUL_CONFIG,
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } },
         workers: {
           access: [{ name: 'DistributedQueryWorker', access: 'allow' }],
           config: { distributed_query_worker: <IDistributedQueryWorkerOptions>{ onlyRemote: true } }
@@ -120,7 +120,7 @@ class DistributedStorageSaveSpec {
         logging: { enable: LOG_EVENT, level: 'debug' },
         modules: MODUL_CONFIG,
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
         // workers: {access: [{name: 'DistributedQueryWorker', access: 'allow'}]}
       });
     bootstrap.activateLogger();

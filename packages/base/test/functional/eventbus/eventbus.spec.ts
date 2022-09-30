@@ -3,7 +3,7 @@ import {expect} from 'chai';
 import * as _ from 'lodash';
 import {Bootstrap} from '../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
-import {TEST_STORAGE_OPTIONS} from '../config';
+import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
 import {EventBus, IEventBusConfiguration} from '@allgemein/eventbus';
 import {Container} from 'typedi';
 import {TestHelper} from '@typexs/testing';
@@ -40,7 +40,7 @@ class EventbusSpec {
 
   static async before() {
     EventBus.$().shutdown();
-    EventBus.$().addConfiguration({adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}, name: C_DEFAULT});
+    EventBus.$().addConfiguration({adapter: 'redis', extra: {host: redis_host, port: redis_port}, name: C_DEFAULT});
   }
 
   static async after() {

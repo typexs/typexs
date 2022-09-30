@@ -12,7 +12,7 @@ import { DistributedStorageEntityController } from '../../src/lib/DistributedSto
 import { DistributedQueryWorker } from '../../src/workers/DistributedQueryWorker';
 import { Workers } from '@typexs/base/libs/worker/Workers';
 import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
-import { MODUL_CONFIG } from './config';
+import { MODUL_CONFIG, redis_host, redis_port } from './config';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -34,7 +34,7 @@ class DistributedQuerySpec {
         logging: { enable: LOG_EVENT, level: 'debug' },
         modules: MODUL_CONFIG,
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } },
         // CONFIG ADDED
         workers: { access: [{ name: 'DistributedQueryWorker', access: 'allow' }] }
       });

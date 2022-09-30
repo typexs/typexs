@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import { Bootstrap } from '../../../src/Bootstrap';
 import { Config } from '@allgemein/config';
-import { TEST_STORAGE_OPTIONS } from '../config';
+import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
 import { Container } from 'typedi';
 import { Cache } from '../../../src/libs/cache/Cache';
 import { RedisCacheAdapter } from '../../../src/adapters/cache/RedisCacheAdapter';
@@ -37,7 +37,10 @@ class CacheRedisSpec {
           paths: TestHelper.includePaths()
         },
         storage: { default: TEST_STORAGE_OPTIONS },
-        cache: { bins: { default: 'redis1' }, adapter: { redis1: { type: 'redis', host: '127.0.0.1', port: 6379 } } }
+        cache: {
+          bins: { default: 'redis1' },
+          adapter: { redis1: { type: 'redis', host: redis_host, port: redis_port } }
+        }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -52,7 +55,7 @@ class CacheRedisSpec {
     expect(options).to.deep.eq({
       bins: { default: 'redis1' },
       adapter: {
-        redis1: { type: 'redis', host: '127.0.0.1', port: 6379 }
+        redis1: { type: 'redis', host: redis_host, port: redis_port }
       }
     });
 

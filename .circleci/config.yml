@@ -48,6 +48,10 @@ jobs:
           name: Test
           command: npm test
 
+      - run:
+          name: Coverage
+          command: npx codecov -f coverage/**/*.json
+
 # Orchestrate our job run sequence
 workflows:
   test:

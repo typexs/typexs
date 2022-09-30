@@ -15,7 +15,7 @@ import {C_STORAGE_DEFAULT} from '@typexs/base/libs/Constants';
 import {StorageRef} from '@typexs/base/libs/storage/StorageRef';
 import {SpawnHandle} from '@typexs/testing';
 import {generateSqlDataRows} from './helper';
-import { MODUL_CONFIG } from './config';
+import { MODUL_CONFIG, redis_host, redis_port } from './config';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -39,7 +39,7 @@ class DistributedStorageSaveSpec {
         logging: {enable: LOG_EVENT, level: 'debug'},
         modules: MODUL_CONFIG,
         storage: {default: DB_OPTIONS},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}},
+        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: redis_host, port: redis_port, unref: true}}},
         // workers: {access: [{name: 'DistributedQueryWorker', access: 'allow'}]}
       });
     bootstrap.activateLogger();

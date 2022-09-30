@@ -1,12 +1,14 @@
 import * as _ from 'lodash';
-import {DefaultUserLogin} from '../../../libs/models/DefaultUserLogin';
-import {AbstractAuthAdapter} from '../../../libs/adapter/AbstractAuthAdapter';
+import { DefaultUserLogin } from '../../../libs/models/DefaultUserLogin';
+import { AbstractAuthAdapter } from '../../../libs/adapter/AbstractAuthAdapter';
 
-import {ILdapAuthOptions} from './ILdapAuthOptions';
+import { ILdapAuthOptions } from './ILdapAuthOptions';
 
-import {AsyncWorkerQueue, IQueueProcessor, NestedException} from '@typexs/base';
-import {AuthDataContainer} from '../../../libs/auth/AuthDataContainer';
-import {UserNotFoundError} from '../../../libs/exceptions/UserNotFoundError';
+import { AsyncWorkerQueue, IQueueProcessor, NestedException } from '@typexs/base';
+import { AuthDataContainer } from '../../../libs/auth/AuthDataContainer';
+import { UserNotFoundError } from '../../../libs/exceptions/UserNotFoundError';
+import { constants } from 'os';
+
 
 export const K_AUTH_LDAP = 'ldap';
 
@@ -43,7 +45,7 @@ const DEFAULTS: ILdapAuthOptions = {
   /**
    * Ldap auth doesn't support creation of accounts in ldap
    */
-  allowSignup: false,
+  allowSignup: false
 
 
   // reconnect: false,
@@ -73,6 +75,7 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
 
   queue: AsyncWorkerQueue<AuthDataContainer<DefaultUserLogin>>;
 
+  abort: boolean = false;
 
   hasRequirements() {
     try {
@@ -88,7 +91,7 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
 
   async prepare(opts: ILdapAuthOptions) {
     _.defaults(opts, DEFAULTS);
-    this.queue = new AsyncWorkerQueue<AuthDataContainer<DefaultUserLogin>>(this, {name: 'ldap', concurrent: 5});
+    this.queue = new AsyncWorkerQueue<AuthDataContainer<DefaultUserLogin>>(this, { name: 'ldap', concurrent: 5 });
     super.prepare(opts);
   }
 
@@ -99,12 +102,15 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
     try {
       await queueJob.done(this.queue);
     } catch (e) {
+      if (this.abort) {
+        return false;
+      }
       // retry 3
       let r = _.get(container, 'retry', 3);
       if (r > 0) {
         _.set(container, 'retry', --r);
         return this.authenticate(container);
-      }else{
+      } else {
         return false;
       }
     }
@@ -124,7 +130,7 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
       login.addError({
         property: 'mail is not present',
         value: 'mail',
-        constraints: {no_mail_address: 'No mail address'}
+        constraints: { no_mail_address: 'No mail address' }
       });
       return false;
     }
@@ -174,6 +180,15 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
             }
           });
 
+        } else if((<any>err).errno && (<any>err).errno === -constants.errno.ECONNREFUSED) {
+          this.abort = true;
+          throw new NestedException(err, 'ECONNREFUSED');
+        } else if((<any>err).errno && (<any>err).errno === -constants.errno.ETIMEDOUT) {
+          this.abort = true;
+          throw new NestedException(err, 'ETIMEDOUT');
+        } else if((<any>err).errno && (<any>err).errno === -constants.errno.ECONNRESET) {
+          this.abort = true;
+          throw new NestedException(err, 'ECONNRESET');
         } else {
           throw new NestedException(err, 'UNKNOWN');
         }

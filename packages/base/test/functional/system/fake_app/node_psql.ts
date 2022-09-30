@@ -1,4 +1,4 @@
-import {SPAWN_TIMEOUT, TEST_PSQL_STORAGE_OPTIONS, TEST_STORAGE_OPTIONS} from '../../config';
+import { redis_host, redis_port, SPAWN_TIMEOUT, TEST_PSQL_STORAGE_OPTIONS, TEST_STORAGE_OPTIONS } from '../../config';
 import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {Config} from '@allgemein/config';
 import {Bootstrap} from '../../../../src/Bootstrap';
@@ -20,7 +20,8 @@ import { TestHelper } from '@typexs/testing';
       logging: {enable: LOG_EVENT, level: 'debug', loggers: [{name: '*', level: 'debug'}]},
       modules: {paths: TestHelper.includePaths()},
       storage: {default: TEST_PSQL_STORAGE_OPTIONS},
-      eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}}
+      eventbus: {default: <IEventBusConfiguration>{adapter: 'redis',
+          extra: {host: redis_host, port: redis_port, unref: true}}}
     });
   bootstrap.activateLogger();
   bootstrap.activateErrorHandling();

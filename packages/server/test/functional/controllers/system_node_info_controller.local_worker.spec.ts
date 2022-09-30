@@ -4,7 +4,7 @@ import {API_CTRL_SYSTEM_WORKERS, C_API, K_ROUTE_CONTROLLER} from '../../../src/l
 import {expect} from 'chai';
 import * as _ from 'lodash';
 import {TestHelper} from '../TestHelper';
-import {TEST_STORAGE_OPTIONS} from '../config';
+import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
 import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {HttpFactory, IHttp} from '@allgemein/http';
 import {WebServer} from '../../../src/libs/web/WebServer';
@@ -53,7 +53,7 @@ const settingsTemplate: any = {
       }]
     }
   },
-  eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}},
+  eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: redis_host, port: redis_port, unref: true}}},
   workers: {access: [{name: 'TaskQueueWorker', access: 'allow'}]}
 
 };

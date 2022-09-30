@@ -1,4 +1,4 @@
-import { SPAWN_TIMEOUT, TEST_MONGO_STORAGE_OPTIONS } from './../config';
+import { redis_host, redis_port, SPAWN_TIMEOUT, TEST_MONGO_STORAGE_OPTIONS } from './../config';
 import * as _ from 'lodash';
 import { IEventBusConfiguration } from '@allgemein/eventbus';
 import { Config } from '@allgemein/config';
@@ -39,7 +39,7 @@ import { TestHelper } from '@typexs/testing';
         disableCache: true
       },
       storage: { default: DB_OPTIONS },
-      eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
+      eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } },
       workers: { access: [{ name: 'DistributedQueryWorker', access: 'allow' }] }
     });
   bootstrap.activateLogger();

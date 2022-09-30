@@ -1,4 +1,4 @@
-import {TEST_STORAGE_OPTIONS} from '../../config';
+import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../../config';
 import {Config} from '@allgemein/config';
 import {ITypexsOptions} from '../../../../src/libs/ITypexsOptions';
 import {Bootstrap} from '../../../../src/Bootstrap';
@@ -34,7 +34,7 @@ import { TestHelper } from '@typexs/testing';
       storage: {default: TEST_STORAGE_OPTIONS},
       eventbus: {
         default: <IEventBusConfiguration>{
-          adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}
+          adapter: 'redis', extra: {host: redis_host, port: redis_port, unref: true}
         }
       },
       workers: {

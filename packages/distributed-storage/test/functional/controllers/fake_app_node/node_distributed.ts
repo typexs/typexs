@@ -4,6 +4,7 @@ import { Bootstrap, C_STORAGE_DEFAULT, Config, Injector, StorageRef } from '@typ
 import { DistributedRandomData } from './entities/DistributedRandomData';
 import { getBootstrapForSpawn } from '../spawn';
 import { TestHelper } from '@typexs/testing';
+import { redis_host, redis_port } from '../../config';
 
 (async function() {
 
@@ -24,7 +25,7 @@ import { TestHelper } from '@typexs/testing';
         '**/fake_app_node**'
       ]
     },
-    eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
+    eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } },
     workers: { access: [{ name: 'DistributedQueryWorker', access: 'allow' }] }
   });
   bootstrap.activateLogger();

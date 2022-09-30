@@ -1,0 +1,46 @@
+version: '3'
+services:
+
+  ldap:
+    image: registry.gitlab.com/typexs/typexs/ldap
+    build:
+      context: ldap
+    command: --copy-service --loglevel debug
+
+  ubuntu-docker:
+    image: registry.gitlab.com/typexs/typexs/ubuntu-docker
+    build:
+      context: ubuntu-docker
+    privileged: true
+    environment:
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS2_HOST: redis2
+      REDIS2_PORT: 6379
+      POSTGRES_HOST: psql
+      POSTGRES_PORT: 5432
+      POSTGRES_AUTH_HOST: psql-auth
+      POSTGRES_AUTH_PORT: 5432
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MONGO_HOST: mongo
+      MONGO_PORT: 27017
+      ES_HOST: elastic
+      ES_PORT: 9200
+      LDAP_HOST: ldap
+      LDAP_PORT: 389
+      LDAPS_PORT: 689
+#    security_opt:
+#      - seccomp=./ubuntu-docker/chrome.json
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /cache:/cache
+      - ./../packages:/builds/typexs/typexs/packages
+      - ./../gulpfile.ts:/builds/typexs/typexs/gulpfile.ts
+      - ./../.mocharc.js:/builds/typexs/typexs/.mocharc.js
+      - ./../package.json:/builds/typexs/typexs/package.json
+      - ./../package-lock.json:/builds/typexs/typexs/package-lock.json
+      - ./../deployments/testing:/builds/typexs/typexs/deployments/testing
+      - ./../tsconfig.json:/builds/typexs/typexs/tsconfig.json
+      - ./../tsconfig.lib.json:/builds/typexs/typexs/tsconfig.lib.json
+      - ./../tsconfig.prod.json:/builds/typexs/typexs/tsconfig.prod.json

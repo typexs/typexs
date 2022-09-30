@@ -19,7 +19,7 @@ import {Injector} from '@typexs/base/libs/di/Injector';
 import {StorageRef} from '@typexs/base/libs/storage/StorageRef';
 import {__NODE_ID__, __REGISTRY__, C_STORAGE_DEFAULT} from '@typexs/base/libs/Constants';
 import {__CLASS__} from '@allgemein/schema-api';
-import { MODUL_CONFIG } from './config';
+import { MODUL_CONFIG, redis_host, redis_port } from './config';
 
 // process.env.SQL_LOG = '1';
 
@@ -44,7 +44,7 @@ class DistributedStorageSaveSpec {
         logging: {enable: LOG_EVENT, level: 'debug'},
         modules: MODUL_CONFIG,
         storage: {default: TEST_STORAGE_OPTIONS},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}},
+        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: redis_host, port: redis_port, unref: true}}},
         workers: {access: [{name: 'DistributedQueryWorker', access: 'allow'}]}
       });
     bootstrap.activateLogger();

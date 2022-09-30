@@ -84,3 +84,6 @@ build-test/
 bazel-*
 archive/
 remote-profile/
+
+secrets.yml
+secrets--*.yml

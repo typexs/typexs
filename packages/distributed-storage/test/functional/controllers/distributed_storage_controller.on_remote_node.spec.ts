@@ -30,6 +30,7 @@ import { RandomData } from './fake_app_storage/entities/RandomData';
 import { WebServer } from '@typexs/server/libs/web/WebServer';
 import { K_ROUTE_CONTROLLER } from '@typexs/server';
 import { DistributedStorageEntityController } from '../../../src/lib/DistributedStorageEntityController';
+import { redis_host, redis_port } from '../config';
 
 const LOG_EVENT = TestHelper.logEnable(false);
 const carList = [
@@ -79,7 +80,7 @@ const settingsTemplate: any = {
     }
   },
   workers: { access: [{ name: 'DistributedQueryWorker', access: 'allow' }] },
-  eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
+  eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
 
 };
 

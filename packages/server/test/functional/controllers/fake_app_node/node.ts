@@ -2,6 +2,7 @@ import { IEventBusConfiguration } from '@allgemein/eventbus';
 import { Bootstrap, Config } from '@typexs/base';
 import { getBootstrapForSpawn } from '../spawn';
 import { TestHelper } from '../../TestHelper';
+import { redis_host, redis_port } from '../../config';
 
 (async function() {
   let bootstrap: Bootstrap = getBootstrapForSpawn('fake_app_node', {
@@ -21,7 +22,7 @@ import { TestHelper } from '../../TestHelper';
         '**/fake_app_node**'
       ]
     },
-    eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
+    eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } },
     // workers: { access: [{ name: 'DistributedQueryWorker', access: 'allow' }] }
   });
 

@@ -8,6 +8,7 @@ import { WithNumbers } from './scenarios/app_types/entities/WithNumbers';
 import { WithJson } from './scenarios/app_types/entities/WithJson';
 import { WithDate } from './scenarios/app_types/entities/WithDate';
 import { TestHelper } from '@typexs/testing';
+import { postgres_host, postgres_port } from '../../config';
 
 
 let bootstrap: Bootstrap = null;
@@ -39,8 +40,8 @@ class DataTypesSchemaApiPsqlSpec {
           database: 'txsbase',
           username: 'txsbase',
           password: '',
-          host: '127.0.0.1',
-          port: 5436
+          host: postgres_host,
+          port: postgres_port
           // logging: 'all',
           // logger: 'simple-console'
         }

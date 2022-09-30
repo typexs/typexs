@@ -22,5 +22,12 @@ output:
 asciidoc:
   attributes:
     plantuml-server-url: 'http://www.plantuml.com/plantuml'
+    icons: font
+    skip-front-matter: true
   extensions:
     - asciidoctor-plantuml
+
+antora:
+  extensions:
+    - require: '@antora/lunr-extension'
+      languages: [de, en]

@@ -205,8 +205,8 @@ class TypexsSearchRouterApi {
         'framework': 'search-index',
         'type': 'elastic',
         'connectOnStartup': true,
-        'host': 'localhost',
-        'port': 9200,
+        'host': ES_host,
+        'port': ES_port,
         'indexTypes': [
           {
             'index': 'core',

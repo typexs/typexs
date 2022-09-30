@@ -5,7 +5,6 @@ import { expect } from 'chai';
 import { DefaultUserLogin } from '../../../src/libs/models/DefaultUserLogin';
 import { MockResponse } from '../../helper/MockResponse';
 import { MockRequest } from '../../helper/MockRequest';
-
 import { AuthMethod } from '../../../src/entities/AuthMethod';
 import { AuthSession } from '../../../src/entities/AuthSession';
 import { User } from '../../../src/entities/User';
@@ -134,7 +133,7 @@ class AuthLdapLifecycleSpec {
     expect(sessionList).to.have.length(0);
 
 
-    // user exists and should be created if auth passed
+    // ldap user exists and should be passed
     login = auth.getInstanceForLogin('default');
     login.username = 'billy';
     login.password = 'password';
@@ -158,11 +157,67 @@ class AuthLdapLifecycleSpec {
     expect(_.map(userList, u => u.username)).to.be.deep.eq(['admin', 'billy']);
     methodList = await c.manager.find(AuthMethod);
 
-//    console.log(userList, methodList, sessionList);
     expect(userList).to.have.length(2);
     expect(methodList).to.have.length(2);
+  }
 
 
+  @test
+  async 'do login by database user cause ldap server not reachable'() {
+    const settings: any = _.clone(settingsTemplate);
+    settings.auth.methods.default.url = 'ldap://0.0.0.0:388';
+
+    bootstrap = await TestHelper.bootstrap_basic(settings);
+    const auth = <Auth>Injector.get(Auth.NAME);
+    await auth.prepare(settings.auth);
+
+    const ref: StorageRef = Injector.get('storage.default');
+    const c = await ref.connect() as TypeOrmConnectionWrapper;
+
+    let doingLogin = null;
+    let login: DefaultUserLogin = null;
+    const res = new MockResponse();
+    let req = new MockRequest();
+
+    let adapter = auth.getAdapterByIdentifier('default');
+    let options = adapter.getOptions();
+    expect(options.approval.auto).to.be.true;
+
+    adapter = auth.getAdapterByIdentifier('database');
+    options = adapter.getOptions();
+    expect(options.approval.auto).to.be.true;
+
+
+    // ldap user doesn't exists, but exists in database
+    login = auth.getInstanceForLogin('database');
+    login.username = 'admin';
+    login.password = 'admin123';
+
+    doingLogin = await auth.doLogin(login, req, res);
+    expect(doingLogin.success).to.be.true;
+    expect(doingLogin.isAuthenticated).to.be.true;
+    expect(doingLogin.hasErrors()).to.be.false;
+
+    let sessionList = await c.manager.find(AuthSession);
+    expect(sessionList).to.have.length(1);
+    expect(_.first(sessionList)).to.deep.include({ authId: 'database' });
+
+    req = res;
+    const doLogout = await auth.doLogout(doingLogin.user, req, res);
+
+    sessionList = await c.manager.find(AuthSession);
+    expect(sessionList).to.have.length(0);
+
+
+    // user does not exists in ldap and db
+    login = auth.getInstanceForLogin('default');
+    login.username = 'billy';
+    login.password = 'password';
+
+    doingLogin = await auth.doLogin(login, req, res);
+    expect(doingLogin.success).to.be.false;
+    expect(doingLogin.isAuthenticated).to.be.false;
+    expect(doingLogin.hasErrors()).to.be.true;
   }
 
 

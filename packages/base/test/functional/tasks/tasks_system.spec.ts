@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Bootstrap } from '../../../src/Bootstrap';
-import { TEST_STORAGE_OPTIONS } from '../config';
+import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
 import { EventBus, IEventBusConfiguration, RedisEventBusAdapter } from '@allgemein/eventbus';
 import { System } from '../../../src/libs/system/System';
 import { C_TASKS } from '../../../src/libs/tasks/Constants';
@@ -48,7 +48,7 @@ class TasksSystemSpec {
         },
         eventbus: {
           default: <IEventBusConfiguration>{
-            adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true }
+            adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true }
           }
         }
       });
@@ -115,7 +115,7 @@ class TasksSystemSpec {
         logging: { enable: LOG_EVENT, level: 'debug' },
         modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -233,8 +233,8 @@ class TasksSystemSpec {
           default: <IEventBusConfiguration>{
             adapter: 'redis',
             extra: {
-              host: '127.0.0.1',
-              port: 6379,
+              host: redis_host,
+              port: redis_port,
               unref: true
             }
           }

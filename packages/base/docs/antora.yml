@@ -1,0 +1,8 @@
+name: base
+title: '@typexs/base'
+version: ~
+start_page: ROOT:index.adoc
+nav:
+  - modules/ROOT/nav.adoc
+
+

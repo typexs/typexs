@@ -3,7 +3,7 @@ import {Bootstrap, Config,  Injector} from '@typexs/base';
 import {API_CTRL_FILESYSTEM_READ, K_ROUTE_CONTROLLER} from '../../../src/libs/Constants';
 import * as _ from 'lodash';
 import {TestHelper} from '../TestHelper';
-import {TEST_STORAGE_OPTIONS} from '../config';
+import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
 import {IEventBusConfiguration} from '@allgemein/eventbus';
 import {HttpFactory, IHttp} from '@allgemein/http';
 import {expect} from 'chai';
@@ -57,7 +57,7 @@ const settingsTemplate: any = {
   },
   eventbus: {
     default: <IEventBusConfiguration>{
-      adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}
+      adapter: 'redis', extra: {host: redis_host, port: redis_port, unref: true}
     }
   },
   workers: {

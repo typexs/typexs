@@ -19,7 +19,7 @@ import { __NODE_ID__, __REGISTRY__, C_STORAGE_DEFAULT, XS_P_$COUNT } from '@type
 import { StorageRef } from '@typexs/base/libs/storage/StorageRef';
 import { SystemNodeInfo } from '@typexs/base/entities/SystemNodeInfo';
 import { __CLASS__ } from '@allgemein/schema-api';
-import { MODUL_CONFIG } from './config';
+import { MODUL_CONFIG, redis_host, redis_port } from './config';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -46,7 +46,7 @@ class DistributedQuerySpec {
         eventbus: {
           default: <IEventBusConfiguration>{
             adapter: 'redis',
-            extra: { host: '127.0.0.1', port: 6379, unref: true }
+            extra: { host: redis_host, port: redis_port, unref: true }
           }
         },
         // CONFIG ADDED
