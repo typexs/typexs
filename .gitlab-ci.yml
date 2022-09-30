@@ -83,10 +83,7 @@ test:
   before_script:
     - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
     - docker compose -f deployments/testing/docker-compose.yml up -d
-    - DOCKERINFO=$(curl -s --unix-socket /var/run/docker.sock http://docker/containers/json)
-    - echo $DOCKERINFO > data.json
-    - CONTAINER_ID=`node -e "const data = require('./data.json'); console.log(data.pop().Id);"`
-    - docker network connect testing_txs_base_net $CONTAINER_ID
+    - sh /docker-entrypoint.sh
   script:
     - nc -zvw3 $REDIS_HOST $REDIS_PORT || true
     - node -v
