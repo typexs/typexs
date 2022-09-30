@@ -50,6 +50,5 @@ RUN apt update -yy &&\
     npm install -g npm@latest
 
 COPY ./docker-entrypoint.sh /
-# ENTRYPOINT ["/docker-entrypoint.sh"]
 
 USER root
