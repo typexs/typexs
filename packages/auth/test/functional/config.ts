@@ -10,6 +10,9 @@ export const LOGGING = {
 
 };
 
+export const postgres_auth_host = get(process.env, 'POSTGRES_AUTH_HOST', 'localhost');
+export const postgres_auth_port = get(process.env, 'POSTGRES_AUTH_PORT', 5437);
+
 
 
 export const ldap_host = get(process.env, 'LDAP_HOST', 'localhost');

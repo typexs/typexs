@@ -25,7 +25,24 @@ build docker image:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push"'
       changes:
-        - services/**/*
+        - services/ubuntu-docker/**/*
+
+build ldap image:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [ "" ]
+  before_script:
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
+  script:
+    - /kaniko/executor
+      --context="${CI_PROJECT_DIR}"
+      --dockerfile="${CI_PROJECT_DIR}/services/ldap/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}/ldap"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      changes:
+        - services/ldap/**/*
 
 
 pages:
@@ -64,19 +81,12 @@ test:
     LDAP_PORT: 389
     LDAPS_PORT: 689
   before_script:
-    - bash
-    - echo $HOSTNAME
-    - CONTAINER_ID=$HOSTNAME
     - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
     - docker compose -f deployments/testing/docker-compose.yml up -d
-    - cat /etc/hosts
-    - docker compose -f deployments/testing/docker-compose.yml ps
-    - docker network list
     - DOCKERINFO=$(curl -s --unix-socket /var/run/docker.sock http://docker/containers/json)
     - echo $DOCKERINFO > data.json
     - CONTAINER_ID=`node -e "const data = require('./data.json'); console.log(data.pop().Id);"`
     - docker network connect testing_txs_base_net $CONTAINER_ID
-    - netstat -a
   script:
     - nc -zvw3 $REDIS_HOST $REDIS_PORT || true
     - node -v

@@ -78,14 +78,14 @@ services:
 
 
   ldap:
-    image: osixia/openldap:1.2.2
+    image: registry.gitlab.com/typexs/typexs/ldap
     ports:
       - 127.0.0.1:389:389
       - 127.0.0.1:689:689
     environment:
       LDAP_NOFILE: 10000
-    volumes:
-      - ./ldap/ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom
+#    volumes:
+#      - ./ldap/ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom
     command: --copy-service --loglevel debug
     networks:
       - txs_base_net

@@ -12,8 +12,8 @@ export const redis_port = get(process.env, 'REDIS_PORT', 6379);
 export const redis2_host = get(process.env, 'REDIS2_HOST', 'localhost');
 export const redis2_port = get(process.env, 'REDIS2_PORT', 6380);
 
-export const mongodb_host = get(process.env, 'MONGODB_HOST', 'localhost');
-export const mongodb_port = get(process.env, 'MONGODB_PORT', 27017);
+export const mongodb_host = get(process.env, 'MONGO_HOST', 'localhost');
+export const mongodb_port = get(process.env, 'MONGO_PORT', 27017);
 
 export const postgres_host = get(process.env, 'POSTGRES_HOST', 'localhost');
 export const postgres_port = get(process.env, 'POSTGRES_PORT', 5436);

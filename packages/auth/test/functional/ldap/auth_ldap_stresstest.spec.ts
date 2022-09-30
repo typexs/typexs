@@ -9,7 +9,7 @@ import {MockRequest} from '../../helper/MockRequest';
 import {User} from '../../../src/entities/User';
 import {TestHelper} from '../TestHelper';
 import {LDAP_CONFIG} from './ldap_config';
-import {LOGGING} from '../config';
+import { LOGGING, postgres_auth_host, postgres_auth_port } from '../config';
 import {Role} from '@typexs/roles/entities/Role';
 import {Permission, RBelongsTo} from '@typexs/roles';
 import {AuthMethod, AuthSession} from '../../../src';
@@ -24,7 +24,8 @@ const settingsTemplate = {
       type: 'postgres',
       database: 'auth',
       username: 'auth',
-      port: 5437,
+      host: postgres_auth_host,
+      port: postgres_auth_port,
       // logger: 'simple-console',
       // logging: 'all',
 
