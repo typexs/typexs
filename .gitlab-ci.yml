@@ -7,7 +7,6 @@ variables:
 stages:
   - build
   - test
-  - deployment
 
 
 build docker image:
@@ -48,7 +47,7 @@ build ldap image:
 pages:
   variables:
     GIT_STRATEGY: clone
-  stage: deployment
+  stage: build
   script:
     - npm ci
     - FORCE_SHOW_EDIT_PAGE_LINK=true CI=true npm run documentation
