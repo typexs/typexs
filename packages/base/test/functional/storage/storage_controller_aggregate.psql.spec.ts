@@ -3,6 +3,7 @@
 import {suite} from '@testdeck/mocha';
 import {StorageAcontrollerAggregateSqlTemplate} from './storage_controller_aggregate.sql.template';
 import {TypeOrmStorageRef} from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
+import { postgres_host, postgres_port } from '../config';
 
 // let bootstrap: Bootstrap;
 // let storageRef: StorageRef;
@@ -27,8 +28,9 @@ class StorageControllerAggregatePostgresSpec extends StorageAcontrollerAggregate
               database: 'txsbase',
               username: 'txsbase',
               password: '',
-              host: '127.0.0.1',
-              port: 5436,
+              host: postgres_host,
+              port: postgres_port
+
             // logging: 'all',
             // logger: 'simple-logger'
             }

@@ -8,6 +8,8 @@ storage:
   default:
     synchronize: true
     type: mongodb
+    host: ${env.MONGO_HOST:-localhost}
+    port: ${env.MONGO_PORT:-27017}
     database: typexs
     useNewUrlParser: true
     useUnifiedTopology: true

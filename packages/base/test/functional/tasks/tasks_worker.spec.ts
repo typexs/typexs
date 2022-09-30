@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import { Bootstrap } from '../../../src/Bootstrap';
 import { Container } from 'typedi';
 import { Config } from '@allgemein/config';
-import { TEST_STORAGE_OPTIONS } from '../config';
+import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
 import { EventBus, IEventBusConfiguration, RedisEventBusAdapter, subscribe } from '@allgemein/eventbus';
 import { TaskQueueWorker } from '../../../src/workers/TaskQueueWorker';
 import { SimpleWorkerTask } from './tasks/SimpleWorkerTask';
@@ -56,7 +56,7 @@ class TasksWorkerSpec {
         logging: { enable: LOG_EVENT, level: 'debug' },
         modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
         // workers: {access: [{name: 'TaskMonitorWorker', access: 'allow'}]}
       });
     bootstrap.activateLogger();
@@ -156,7 +156,7 @@ class TasksWorkerSpec {
         logging: { enable: LOG_EVENT, level: 'debug' },
         modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } },
         workers: { access: [{ name: 'TaskQueueWorker', access: 'allow' }] }
       });
     bootstrap.activateLogger();
@@ -238,7 +238,7 @@ class TasksWorkerSpec {
         logging: { enable: LOG_EVENT, level: 'debug' },
         modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -315,7 +315,7 @@ class TasksWorkerSpec {
         logging: { enable: LOG_EVENT, level: 'debug' },
         modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -385,7 +385,7 @@ class TasksWorkerSpec {
         logging: { enable: LOG_EVENT, level: 'debug' },
         modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -492,8 +492,8 @@ class TasksWorkerSpec {
         logging: { enable: LOG_EVENT, level: 'debug', loggers: [{ name: '*', level: 'debug' }] },
         modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        // cache: {bins: {default: 'redis1'}, adapter: {redis1: {type: 'redis', host: '127.0.0.1', port: 6379}}},
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
+        // cache: {bins: {default: 'redis1'}, adapter: {redis1: {type: 'redis', host: redis_host, port: redis_port}}},
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -549,7 +549,7 @@ class TasksWorkerSpec {
         logging: { enable: LOG_EVENT, level: 'debug' },
         modules: { paths: TestHelper.includePaths(), disableCache: true },
         storage: { default: TEST_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } },
         workers: { access: [{ name: 'Task*Worker', access: 'allow' }] }
       });
     bootstrap.activateLogger();

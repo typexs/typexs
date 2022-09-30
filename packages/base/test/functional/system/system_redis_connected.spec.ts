@@ -2,7 +2,7 @@
 import {suite, test} from '@testdeck/mocha';
 import {expect} from 'chai';
 import {Bootstrap} from '../../../src/Bootstrap';
-import {TEST_STORAGE_OPTIONS} from '../config';
+import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
 import {IEventBusConfiguration} from '@allgemein/eventbus/browser';
 import {System} from '../../../src/libs/system/System';
 import {SystemApi} from '../../../src/api/System.api';
@@ -34,7 +34,8 @@ class SystemRedisConnectedSpec {
         logging: {enable: LOG_EVENT, level: 'debug', loggers: [{name: '*', level: 'debug'}]},
         modules: {paths:TestHelper.includePaths()},
         storage: {default: TEST_STORAGE_OPTIONS},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379, unref: true}}}
+        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {
+          host: redis_host, port: redis_port, unref: true}}}
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();

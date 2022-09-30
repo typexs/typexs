@@ -1,12 +1,13 @@
 import { IEventBusConfiguration } from '@allgemein/eventbus';
 import { Bootstrap, Config } from '@typexs/base';
 import { getBootstrapForSpawn } from '../spawn';
+import { redis_host, redis_port } from '../../config';
 
 (async function() {
 
   let bootstrap: Bootstrap = getBootstrapForSpawn('fake_app_node_tasks', {
     app: { path: __dirname },
-    eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } },
+    eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } },
     workers: {
       access: [
         { name: 'TaskQueueWorker', access: 'allow' },

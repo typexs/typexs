@@ -6,6 +6,7 @@ import { AsyncWorkerQueue } from '../../../src/libs/queue/AsyncWorkerQueue';
 import { Cache } from '../../../src/libs/cache/Cache';
 import { RedisCacheAdapter } from '../../../src';
 import { TestHelper } from '@typexs/testing';
+import { redis_host, redis_port } from '../config';
 
 class Workload implements IQueueWorkload {
 
@@ -39,7 +40,7 @@ class AsyncCacheRedisQueueTests {
     await cache.register(RedisCacheAdapter);
     await cache.configure('redis-cache', <any>{
       bins: { default: 'redis1' },
-      adapter: { redis1: { type: 'redis', host: '127.0.0.1', port: 6379 } }
+      adapter: { redis1: { type: 'redis', host: redis_host, port: redis_port } }
     });
   }
 

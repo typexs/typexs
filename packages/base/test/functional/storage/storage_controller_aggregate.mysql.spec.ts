@@ -3,6 +3,7 @@
 import { suite } from '@testdeck/mocha';
 import { StorageAcontrollerAggregateSqlTemplate } from './storage_controller_aggregate.sql.template';
 import { TypeOrmStorageRef } from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
+import { mysql_host, mysql_port } from '../config';
 
 // let bootstrap: Bootstrap;
 // let storageRef: StorageRef;
@@ -26,8 +27,8 @@ class StorageControllerAggregateMysqlSpec extends StorageAcontrollerAggregateSql
               database: 'txsbase',
               username: 'txsbase',
               password: 'txsbase',
-              host: '127.0.0.1',
-              port: 3306,
+              host: mysql_host,
+              port: mysql_port
               // logging: 'all',
               // logger: 'simple-console'
             }

@@ -5,7 +5,7 @@ import { Bootstrap, Injector, ITypexsOptions } from '@typexs/base';
 import { Auth } from '../../../src/middleware/Auth';
 import { User } from '../../../src/entities/User';
 import { TestHelper } from '../TestHelper';
-import { LOGGING, TEST_STORAGE_OPTIONS } from '../config';
+import { ldap_host, ldap_port, LOGGING, TEST_STORAGE_OPTIONS } from '../config';
 
 let bootstrap: Bootstrap;
 
@@ -38,8 +38,8 @@ class AuthLdapConfigSpec {
         userClass: User, // ./User as string
         methods: {
           default: {
-            type: 'ldap'
-
+            type: 'ldap',
+            url: 'ldap://' + ldap_host + ':' + ldap_port
           }
         }
       },

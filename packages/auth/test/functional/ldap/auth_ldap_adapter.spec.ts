@@ -7,7 +7,8 @@ import { expect } from 'chai';
 import { TESTDB_SETTING, TestHelper } from '../TestHelper';
 import { AuthDataContainer } from '../../../src/libs/auth/AuthDataContainer';
 import { LDAP_CONFIG } from './ldap_config';
-import { LOGGING } from '../config';
+import { ldap_host, ldap_port, LOGGING } from '../config';
+import { ILdapAuthOptions } from '../../../src/adapters/auth/ldap/ILdapAuthOptions';
 
 
 process.setMaxListeners(1000);
@@ -18,8 +19,9 @@ const settingsTemplate = {
   },
   auth: {
     methods: {
-      default: {
-        type: 'ldap'
+      default: <ILdapAuthOptions>{
+        type: 'ldap',
+        url: 'ldap://' + ldap_host + ':' + ldap_port
       }
     }
   },
@@ -61,6 +63,7 @@ class AuthLdapAdapterSpec {
     const adapter = Injector.get(LdapAdapter);
     await adapter.prepare(Config.get('auth.methods.default'));
 
+    expect(adapter.hasRequirements()).to.be.true;
     // Log.info('adapter ready');
 
     // success  login

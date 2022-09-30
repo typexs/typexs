@@ -1,4 +1,4 @@
-import { SPAWN_TIMEOUT, TEST_STORAGE_OPTIONS } from '../../config';
+import { redis_host, redis_port, SPAWN_TIMEOUT, TEST_STORAGE_OPTIONS } from '../../config';
 import { IEventBusConfiguration } from '@allgemein/eventbus';
 import { Config } from '@allgemein/config';
 import { Bootstrap } from '../../../../src/Bootstrap';
@@ -16,8 +16,8 @@ import { TestHelper } from '@typexs/testing';
         paths: TestHelper.includePaths(), disableCache: true
       },
       storage: { default: TEST_STORAGE_OPTIONS },
-      cache: { bins: { default: 'redis1' }, adapter: { redis1: { type: 'redis', host: '127.0.0.1', port: 6379, unref: true } } },
-      eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true } } }
+      cache: { bins: { default: 'redis1' }, adapter: { redis1: { type: 'redis', host: redis_host, port: redis_port, unref: true } } },
+      eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
     });
   bootstrap.activateLogger();
   bootstrap.activateErrorHandling();

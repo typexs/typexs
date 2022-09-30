@@ -6,6 +6,7 @@ import { RegistryFactory } from '@allgemein/schema-api';
 import { Bootstrap, REGISTRY_TYPEORM, StorageRef } from '../../../../src';
 import { TestHelper } from '@typexs/testing';
 import { WithDateAsOrm } from './scenarios/app_types/entities/WithDateAsOrm';
+import { postgres_host, postgres_port } from '../../config';
 
 
 let bootstrap: Bootstrap = null;
@@ -40,8 +41,9 @@ class DataTypesTypeormPsqlSpec {
           database: 'txsbase',
           username: 'txsbase',
           password: '',
-          host: '127.0.0.1',
-          port: 5436
+          host: postgres_host,
+          port: postgres_port
+
           // logging: 'all',
           // logger: 'simple-console'
         }

@@ -1,6 +1,7 @@
-name: typexs
-title: typeXs
+name: testing
+title: '@typexs/testing'
 version: ~
+# display_version: Deutsch
 start_page: ROOT:index.adoc
 nav:
   - modules/ROOT/nav.adoc

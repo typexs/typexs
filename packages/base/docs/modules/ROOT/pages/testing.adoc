@@ -1,0 +1,23 @@
+# Testing
+
+
+## Execution
+
+### Local on linux machine
+
+Startup docker container needed for testing
+```
+txs$ docker compose -f deployments/testing/docker-compose.yml up -d
+```
+
+Run tests
+```
+txs$ npx npm test
+```
+
+
+## CI/CD
+
+### Gitlab
+
+### CircleCi through github

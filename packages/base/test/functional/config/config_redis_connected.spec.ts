@@ -3,7 +3,7 @@ import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Bootstrap } from '../../../src/Bootstrap';
 import { Config } from '@allgemein/config';
-import { TEST_STORAGE_OPTIONS } from '../config';
+import { redis2_host, redis2_port, redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
 import { IEventBusConfiguration } from '@allgemein/eventbus';
 import { TestHelper } from '@typexs/testing';
 import { ITypexsOptions } from '../../../src/libs/ITypexsOptions';
@@ -52,8 +52,8 @@ class ConfigRedisSpec {
           , disableCache: true
         },
         storage: { default: TEST_STORAGE_OPTIONS },
-        cache: { bins: { default: 'redis1' }, adapter: { redis1: { type: 'redis', host: '127.0.0.1', port: 6380, unref: true } } },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: '127.0.0.1', port: 6379, unref: true} } }
+        cache: { bins: { default: 'redis1' }, adapter: { redis1: { type: 'redis', host: redis2_host, port: redis2_port, unref: true } } },
+        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true} } }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -122,8 +122,8 @@ class ConfigRedisSpec {
   //       logging: {enable: LOG_EVENT, level: 'debug', loggers: [{name: '*', level: 'debug', enable: true}]},
   //       modules: {paths: [__dirname + '/../../..']},
   //       storage: {default: TEST_STORAGE_OPTIONS},
-  //       cache: {bins: {default: 'redis1'}, adapter: {redis1: {type: 'redis', host: '127.0.0.1', port: 6379}}},
-  //       eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}}
+  //       cache: {bins: {default: 'redis1'}, adapter: {redis1: {type: 'redis', host: redis_host, port: redis_port}}},
+  //       eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: redis_host, port: redis_port}}}
   //     });
   //   bootstrap.activateLogger();
   //   bootstrap.activateErrorHandling();
@@ -150,8 +150,8 @@ class ConfigRedisSpec {
   //       logging: {enable: LOG_EVENT, level: 'debug'},
   //       modules: {paths: [__dirname + '/../../..']},
   //       storage: {default: TEST_STORAGE_OPTIONS},
-  //       cache: {bins: {default: 'redis1'}, adapter: {redis1: {type: 'redis', host: '127.0.0.1', port: 6379}}},
-  //       eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: '127.0.0.1', port: 6379}}}
+  //       cache: {bins: {default: 'redis1'}, adapter: {redis1: {type: 'redis', host: redis_host, port: redis_port}}},
+  //       eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: redis_host, port: redis_port}}}
   //     });
   //   bootstrap.activateLogger();
   //   bootstrap.activateErrorHandling();

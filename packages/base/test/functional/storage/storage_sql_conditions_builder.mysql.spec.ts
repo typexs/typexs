@@ -9,6 +9,7 @@ import {SelectQueryBuilder} from 'typeorm';
 import {Config} from '@allgemein/config';
 import {TypeOrmStorageRef} from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
 import { TestHelper } from '@typexs/testing';
+import { mysql_host, mysql_port } from '../config';
 
 let bootstrap: Bootstrap;
 let CarCond: any = null;
@@ -38,8 +39,8 @@ class StorageSqlConditionsBuilderSpec {
             database: 'txsbase',
             username: 'txsbase',
             password: 'txsbase',
-            host: '127.0.0.1',
-            port: 3306,
+            host: mysql_host,
+            port: mysql_port,
           } as any
         }
       })
