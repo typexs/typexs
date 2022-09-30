@@ -96,5 +96,6 @@ test:
     - npm ci
     - npm test
   after_script:
+    - docker network disconnect testing_txs_base_net $CONTAINER_ID
     - docker compose -f deployments/testing/docker-compose.yml down
 
