@@ -24,6 +24,7 @@ build docker image:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push"'
       changes:
+        - .gitlab-ci.yml
         - services/ubuntu-docker/**/*
 
 build ldap image:
@@ -41,6 +42,7 @@ build ldap image:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push"'
       changes:
+        - .gitlab-ci.yml
         - services/ldap/**/*
 
 
@@ -58,6 +60,7 @@ pages:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push"'
       changes:
+        - .gitlab-ci.yml
         - docs/**
         - packages/*/docs/**
 
@@ -105,6 +108,7 @@ test:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push"'
       changes:
+        - .gitlab-ci.yml
         - package.json
         - package-lock.json
         - src/**
