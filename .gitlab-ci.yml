@@ -85,8 +85,8 @@ test:
     - docker compose -f deployments/testing/docker-compose.yml up -d
     - DOCKERINFO=$(curl -s --unix-socket /var/run/docker.sock http://docker/containers/json)
     - echo $DOCKERINFO > docker.json
-    - node -e "const data = require('./docker.json'); console.log(data);"
     - export CONTAINER_ID=`node -e "const data = require('./docker.json'); console.log(data.find(x => x.Names.find(z => /^\/runner\-/.test(z))).Id);"`
+    - echo $CONTAINER_ID > containerid.txt
     - docker network connect testing_txs_base_net $CONTAINER_ID
   script:
     - nc -zvw3 $REDIS_HOST $REDIS_PORT || true
@@ -95,6 +95,7 @@ test:
     - npm ci
     - npm test
   after_script:
+    - export CONTAINER_ID=`cat containerid.txt`
     - docker network disconnect testing_txs_base_net $CONTAINER_ID
     - docker compose -f deployments/testing/docker-compose.yml down
 

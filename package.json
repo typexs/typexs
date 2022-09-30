@@ -10,7 +10,6 @@
   },
   "scripts": {
     "test": "npx gulp test",
-    "posttest": "npx codecov -f coverage/**/*.json",
     "ng": "npx ng",
     "start": "npx concurrently \"cd packages/app && npx ng serve\" \"npx typexs server --nodeId server\"",
     "build": "cd packages/app && npx ng build --prod",
