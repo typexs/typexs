@@ -102,4 +102,13 @@ test:
     - export CONTAINER_ID=`cat containerid.txt`
     - docker network disconnect testing_txs_base_net $CONTAINER_ID
     - docker compose -f deployments/testing/docker-compose.yml down
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      changes:
+        - package.json
+        - package-lock.json
+        - src/**
+        - test/**
+        - packages/*/src/**
+        - packages/*/test/**
 
