@@ -56,6 +56,11 @@ pages:
   artifacts:
     paths:
       - public
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      changes:
+        - docs/**
+        - packages/*/docs/**
 
 test:
   image: ${CI_REGISTRY_IMAGE}/ubuntu-docker:latest
