@@ -6,22 +6,10 @@ import { CONFIG_01 } from './instances/configuration_01';
 import { LdapStorageRef } from '../../src/lib/storage/LdapStorageRef';
 import { LDAP_CONFIG } from './config';
 import { NoSuchObjectError } from 'ldapjs';
+import { TestHelper } from '@typexs/testing';
 
 
 let bootstrap: Bootstrap = null;
-
-const beforeCall = async function(cfg: any) {
-  bootstrap = Bootstrap
-    .setConfigSources([{ type: 'system' }])
-    .configure(cfg);
-
-  bootstrap.activateErrorHandling();
-  bootstrap.activateLogger();
-  await bootstrap.prepareRuntime();
-  await bootstrap.activateStorage();
-  await bootstrap.startup();
-
-};
 
 @suite('functional/ldap/search')
 class TypexsLdapSearch {
@@ -29,7 +17,7 @@ class TypexsLdapSearch {
 
   static async before() {
     Bootstrap.reset();
-    await beforeCall(defaultsDeep(cloneDeep(CONFIG_01), {
+    bootstrap = await TestHelper.bootstrap(defaultsDeep(cloneDeep(CONFIG_01), {
       storage: {
         ldap: LDAP_CONFIG
       }
@@ -74,11 +62,7 @@ class TypexsLdapSearch {
    */
   @test
   async 'ldap connection read some user'() {
-    await beforeCall(defaultsDeep(cloneDeep(CONFIG_01), {
-      storage: {
-        ldap: LDAP_CONFIG
-      }
-    }));
+
     const ref = Injector.get<LdapStorageRef>('storage.ldap');
     const connection = await ref.connect();
     let entries: any[] = [];
@@ -104,11 +88,7 @@ class TypexsLdapSearch {
 
   @test
   async 'ldap connection size limit'() {
-    await beforeCall(defaultsDeep(cloneDeep(CONFIG_01), {
-      storage: {
-        ldap: LDAP_CONFIG
-      }
-    }));
+
     const ref = Injector.get<LdapStorageRef>('storage.ldap');
     const connection = await ref.connect();
     let entries: any[] = [];
