@@ -2,7 +2,7 @@ import {IStorage} from '../../../libs/storage/IStorage';
 import {useContainer} from 'typeorm';
 import {DefaultSchemaHandler} from './DefaultSchemaHandler';
 import {__DEFAULT__, K_CLS_STORAGE_SCHEMAHANDLER} from '../../../libs/Constants';
-import {IStorageOptions} from '../../../libs/storage/IStorageOptions';
+import {IStorageRefOptions} from '../../../libs/storage/IStorageRefOptions';
 import {AbstractSchemaHandler} from '../../../libs/storage/AbstractSchemaHandler';
 import * as _ from 'lodash';
 import {TypeOrmStorageRef} from '../../../libs/storage/framework/typeorm/TypeOrmStorageRef';
@@ -28,7 +28,7 @@ export class TypeOrmStorage implements IStorage {
   }
 
 
-  create(name: string, options: IStorageOptions & any) {
+  create(name: string, options: IStorageRefOptions & any) {
     const ref = new TypeOrmStorageRef(options);
     let type = __DEFAULT__;
     if (_.has(this.schemaHandler, options.type)) {

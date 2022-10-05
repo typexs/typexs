@@ -1,3 +1,3 @@
 export interface ILdapOptions {
-  _abc: any;
+  _abc?: any;
 }

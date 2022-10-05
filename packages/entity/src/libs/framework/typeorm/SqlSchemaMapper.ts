@@ -1,6 +1,6 @@
 import {
   IDBType,
-  IStorageOptions, K_ENTITY_BUILT,
+  IStorageRefOptions, K_ENTITY_BUILT,
   Log,
   NotSupportedError,
   NotYetImplementedError,
@@ -626,7 +626,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
 
 
   // fixme workaround
-  private getStorageOptions(): IStorageOptions {
+  private getStorageOptions(): IStorageRefOptions {
     return this.storageRef.getOptions();
   }
 

@@ -1,4 +1,7 @@
-# LDAP Integration
+# Home
+
+This module implements the integration of LDAP backends as configurable storage source in typexs.
+
 
 ## Configuration
 
@@ -18,3 +21,13 @@ storage:
     # optional the base domain for operations
     baseDn: dc=local,dc=com
 ```
+
+
+## Usage in development
+
+Can be used like any other storage type with the same method call's.
+
+## Implementation
+
+Integrated through storage file pattern `adapters/storage/*/*Storage` as
+`adapters/storage/ldap/LdapStorage`  

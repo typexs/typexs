@@ -1,6 +1,5 @@
-import * as _ from 'lodash';
 import { CLS_DEF, IAggregateOptions, IDeleteOptions, IEntityController, IUpdateOptions, NotYetImplementedError } from '@typexs/base';
-import { IClassRef, IEntityRef } from '@allgemein/schema-api';
+import { IEntityRef } from '@allgemein/schema-api';
 import { LdapStorageRef } from './LdapStorageRef';
 import { LdapConnection } from './LdapConnection';
 import { ILdapSaveOptions } from './ops/ILdapSaveOptions';
@@ -18,14 +17,6 @@ export class LdapEntityController implements IEntityController {
     this.storageRef = storageRef;
   }
 
-  // getInvoker() {
-  //   return this.storageRef.getInvoker();
-  // }
-
-  aggregate<T>(baseClass: CLS_DEF<T>, pipeline: any[], options?: IAggregateOptions): Promise<any[]> {
-    throw new NotYetImplementedError('aggregate for elastic controller is currently not implemented');
-  }
-
   find<T>(fn: CLS_DEF<T> | CLS_DEF<T>[], conditions?: any, options?: ILdapFindOptions): Promise<T[]> {
     return new FindOp<T>(this).run(fn as any, conditions, options);
   }
@@ -34,11 +25,11 @@ export class LdapEntityController implements IEntityController {
     return this.find<T>(fn, conditions, options).then(r => r.length > 0 ? r.shift() : null);
   }
 
-  // forClass(cls: CLS_DEF<any> | IClassRef): IndexEntityRef | IndexEntityRef[] {
+  aggregate<T>(baseClass: CLS_DEF<T>, pipeline: any[], options?: IAggregateOptions): Promise<any[]> {
+    throw new NotYetImplementedError('aggregate for ldap controller is currently not implemented');
+  }
+
   forClass(cls: CLS_DEF<any>): any {
-    if (_.isString(cls) && cls === '*') {
-      return this.storageRef.getEntityRefs();
-    }
     if (this.storageRef.hasEntityClass(cls)) {
       return this.storageRef.getEntityRef(cls as any);
     }
@@ -76,28 +67,28 @@ export class LdapEntityController implements IEntityController {
   }
 
 
-  // async connect() {
-  //   if (this.connection) {
-  //     if (!this.connection.isOpened()) {
-  //       await this.connection.close();
-  //       this.connection = await this.storageRef.connect();
-  //     } else {
-  //       this.connection.usageInc();
-  //     }
-  //   } else {
-  //     this.connection = await this.storageRef.connect();
-  //   }
-  //   return this.connection;
-  // }
-  //
-  // async close() {
-  //   if (this.connection) {
-  //     this.connection.usageDec();
-  //     if (this.connection.getUsage() <= 0) {
-  //       await this.connection.close();
-  //       this.connection = null;
-  //     }
-  //   }
-  // }
+  async connect() {
+    if (this.connection) {
+      if (!this.connection.isOpened()) {
+        await this.connection.close();
+        this.connection = await this.storageRef.connect();
+      } else {
+        this.connection.usageInc();
+      }
+    } else {
+      this.connection = await this.storageRef.connect();
+    }
+    return this.connection;
+  }
+
+  async close() {
+    if (this.connection) {
+      this.connection.usageDec();
+      if (this.connection.getUsage() <= 0) {
+        await this.connection.close();
+        this.connection = null;
+      }
+    }
+  }
 
 }

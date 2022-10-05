@@ -1,27 +1,31 @@
 import { IStorage } from '@typexs/base/libs/storage/IStorage';
 import { IStorageRef, RuntimeLoader } from '@typexs/base';
 import { RegistryFactory } from '@allgemein/schema-api';
-import { ILdapStorageOptions } from '../../../lib/storage/ILdapStorageOptions';
 import { C_LDAP } from '../../../lib/Constants';
 import { LdapEntityRegistry } from '../../../lib/registry/LdapEntityRegistry';
+import { LdapStorageRef } from '../../../lib/storage/LdapStorageRef';
+import { ILdapStorageRefOptions } from '../../../lib/storage/ILdapStorageRefOptions';
+import { keys } from 'lodash';
+import { C_SEARCH_INDEX } from '@typexs/search/lib/Constants';
 
 
 export class LdapStorage implements IStorage {
 
 
-  async create(name: string, options: ILdapStorageOptions): Promise<IStorageRef> {
-    // if (!options.type) {
-    //   throw new Error('not type is given');
-    // }
-    // const type = this.types.find(x => x.getType() === options.type);
-    // if (!options.type) {
-    //   throw new Error('not type is given');
-    // }
-    //
-    // const ref = Reflect.construct(type.getStorageRefClass(), [options]);
-    // await ref.prepare();
-    // return ref;
-    return null;
+  async create(name: string, options: ILdapStorageRefOptions): Promise<IStorageRef> {
+    if (!options.url) {
+      options.url =
+        options.protocol ? options.protocol : 'ldap' + '://' +
+        options.host ? options.host : 'localhost' + ':' +
+        options.port ? options.port + '' : 'localhost' + '';
+    }
+
+    if (!(options.bindDN || options.bindCredentials)) {
+      throw new Error('missing bind dn or credentials');
+    }
+    const ref = new LdapStorageRef(options);
+    ref.prepare();
+    return ref;
   }
 
   /**
@@ -34,18 +38,12 @@ export class LdapStorage implements IStorage {
   async prepare(loader: RuntimeLoader) {
     RegistryFactory.register(C_LDAP, LdapEntityRegistry);
     RegistryFactory.register(/^ldap\..*/, LdapEntityRegistry);
-
-    // const classes = await loader.getClasses(K_CLS_STORAGE_INDEX_TYPES);
-    // for (const cls of classes) {
-    //   const idxType = Reflect.construct(cls, []);
-    //   this.types.push(idxType);
-    // }
-
     return true;
   }
 
   shutdown() {
-    RegistryFactory.get(C_LDAP).reset();
+    const registryKeys = keys(RegistryFactory.$handles).filter(x => x.startsWith(C_LDAP));
+    registryKeys.map(x => RegistryFactory.get(x).reset());
   }
 
 }

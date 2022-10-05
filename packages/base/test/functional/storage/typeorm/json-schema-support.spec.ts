@@ -10,13 +10,13 @@ import { Invoker } from '../../../../src/base/Invoker';
 import { Injector } from '../../../../src/libs/di/Injector';
 import { TypeOrmStorageRef } from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
 import { TEST_STORAGE_OPTIONS } from '../../config';
-import { IStorageOptions } from '../../../../src/libs/storage/IStorageOptions';
+import { IStorageRefOptions } from '../../../../src/libs/storage/IStorageRefOptions';
 import { BaseConnectionOptions } from 'typeorm/connection/BaseConnectionOptions';
 import { TreeUtils } from '@allgemein/base';
 
 
 let registry: TypeOrmEntityRegistry = null;
-let storageOptions: IStorageOptions & BaseConnectionOptions = null;
+let storageOptions: IStorageRefOptions & BaseConnectionOptions = null;
 let EntityPassName: Function = null;
 
 
@@ -36,7 +36,7 @@ class JsonSchemaSupportSpec {
   }
 
   before() {
-    storageOptions = _.cloneDeep(TEST_STORAGE_OPTIONS) as IStorageOptions & BaseConnectionOptions;
+    storageOptions = _.cloneDeep(TEST_STORAGE_OPTIONS) as IStorageRefOptions & BaseConnectionOptions;
   }
 
 

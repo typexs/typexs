@@ -1,4 +1,4 @@
-import { IStorageOptions } from '../../IStorageOptions';
+import { IStorageRefOptions } from '../../IStorageRefOptions';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 import { assign, defaults, get, has, isArray, isEmpty, isFunction, isObjectLike, isString, remove, set, snakeCase } from 'lodash';
 import { C_DEFAULT, NotYetImplementedError, PlatformUtils, TodoException } from '@allgemein/base';
@@ -58,12 +58,12 @@ export class TypeOrmStorageRef extends StorageRef {
   private namespace = REGISTRY_TYPEORM;
 
 
-  constructor(options: IStorageOptions & BaseConnectionOptions) {
+  constructor(options: IStorageRefOptions & BaseConnectionOptions) {
     super(defaults(options, { entities: [] }));
 
     // Apply some unchangeable and fixed options
     if (options.type === 'sqlite') {
-      const opts = <SqliteConnectionOptions & IStorageOptions>options;
+      const opts = <SqliteConnectionOptions & IStorageRefOptions>options;
 
       if (opts.database !== ':memory:' &&
         !isEmpty(opts.database) &&
@@ -366,6 +366,7 @@ export class TypeOrmStorageRef extends StorageRef {
     return null;
   }
 
+  
   getRegistry() {
     return RegistryFactory.get(REGISTRY_TYPEORM) as TypeOrmEntityRegistry;
   }
@@ -443,8 +444,8 @@ export class TypeOrmStorageRef extends StorageRef {
   }
 
 
-  getOptions(): IStorageOptions & BaseConnectionOptions {
-    return super.getOptions() as IStorageOptions & BaseConnectionOptions;
+  getOptions(): IStorageRefOptions & BaseConnectionOptions {
+    return super.getOptions() as IStorageRefOptions & BaseConnectionOptions;
   }
 
 

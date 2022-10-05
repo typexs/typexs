@@ -2,7 +2,7 @@ import * as path from 'path';
 import * as _ from 'lodash';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-import { IStorageOptions } from '../../../../src/libs/storage/IStorageOptions';
+import { IStorageRefOptions } from '../../../../src/libs/storage/IStorageRefOptions';
 import { Bootstrap } from '../../../../src/Bootstrap';
 import { Config } from '@allgemein/config';
 import { TEST_STORAGE_OPTIONS } from '../../config';
@@ -12,7 +12,7 @@ import { TestHelper } from '@typexs/testing';
 
 
 let bootstrap: Bootstrap;
-let storageOptions: IStorageOptions & BaseConnectionOptions = null;
+let storageOptions: IStorageRefOptions & BaseConnectionOptions = null;
 
 @suite('functional/storage/typeorm/entity-schemas')
 class StorageGeneralSpec {
@@ -21,7 +21,7 @@ class StorageGeneralSpec {
   before() {
     Bootstrap.reset();
     Config.clear();
-    storageOptions = _.cloneDeep(TEST_STORAGE_OPTIONS) as IStorageOptions & BaseConnectionOptions;
+    storageOptions = _.cloneDeep(TEST_STORAGE_OPTIONS) as IStorageRefOptions & BaseConnectionOptions;
   }
 
 

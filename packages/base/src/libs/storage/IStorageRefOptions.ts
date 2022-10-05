@@ -1,7 +1,9 @@
 export const K_STORAGE = 'storage';
 
-
-export interface IStorageOptions {
+/**
+ * Generic object structure for storage ref options
+ */
+export interface IStorageRefOptions {
 
   /**
    * name of this storage
@@ -18,7 +20,7 @@ export interface IStorageOptions {
   /**
    * Connect on startup to check or create entities in tables
    */
-  connectOnStartup: boolean;
+  connectOnStartup?: boolean;
 
   /**
    * Name or names of storages hows entities will be added
@@ -29,6 +31,7 @@ export interface IStorageOptions {
    * Entities handled by this storage
    */
   entities?: ((Function | any | string))[];
+
 
   /**
    * Set store location for schema extensions, to reuse this on reload add location to entities option.

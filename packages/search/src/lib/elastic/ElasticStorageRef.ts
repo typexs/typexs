@@ -280,15 +280,6 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     return uniq(orderBy(this.types.map(x => x.getAliasName())));
   }
 
-  /**
-   * TODO
-   * @param type
-   * @param options
-   */
-  addEntityClass(type: Function | IClassRef | ClassType<any>, options?: any): void {
-    throw new NotYetImplementedError('reload');
-  }
-
 
   /**
    * Connect to server and return connection handle

@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import {suite, test} from '@testdeck/mocha';
 import {expect} from 'chai';
 import {Invoker} from '../../../../src/base/Invoker';
-import {IStorageOptions} from '../../../../src/libs/storage/IStorageOptions';
+import {IStorageRefOptions} from '../../../../src/libs/storage/IStorageRefOptions';
 import {Bootstrap} from '../../../../src/Bootstrap';
 import {BeforeInsert, Column, PrimaryColumn} from 'typeorm';
 import {X1} from './../entities/X1';
@@ -23,7 +23,7 @@ let registry: TypeOrmEntityRegistry = null;
 const bootstrap: Bootstrap = null;
 let EntityOfSchemaApi: Function = null;
 
-let storageOptions: IStorageOptions & BaseConnectionOptions = null;
+let storageOptions: IStorageRefOptions & BaseConnectionOptions = null;
 
 @suite('functional/storage/typeorm/schema-api-support')
 class SchemaApiSupportSpec {
@@ -42,7 +42,7 @@ class SchemaApiSupportSpec {
       EntityOfSchemaApi = x.EntityOfSchemaApi;
     });
     await registry.ready();
-    storageOptions = _.cloneDeep(TEST_STORAGE_OPTIONS) as IStorageOptions & BaseConnectionOptions;
+    storageOptions = _.cloneDeep(TEST_STORAGE_OPTIONS) as IStorageRefOptions & BaseConnectionOptions;
   }
 
 

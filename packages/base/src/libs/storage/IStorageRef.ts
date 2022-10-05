@@ -1,5 +1,5 @@
 import {IEntityController} from './IEntityController';
-import {IStorageOptions} from './IStorageOptions';
+import {IStorageRefOptions} from './IStorageRefOptions';
 import {ClassType, IClassRef, IEntityRef, ILookupRegistry, ISchemaRef} from '@allgemein/schema-api';
 import {IConnection} from './IConnection';
 import {ICollection} from './ICollection';
@@ -37,7 +37,7 @@ export interface IStorageRef {
   /**
    * return storage options
    */
-  getOptions(): IStorageOptions;
+  getOptions(): IStorageRefOptions;
 
 
   /**
@@ -64,7 +64,7 @@ export interface IStorageRef {
    *
    * @param type
    */
-  addEntityClass(type: Function | IClassRef | ClassType<any>, options?: any): void;
+  addEntityClass?(type: Function | IClassRef | ClassType<any>, options?: any): void;
 
 
   /**

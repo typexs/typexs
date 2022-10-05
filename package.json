@@ -49,6 +49,7 @@
     "@typexs/entity-ng": "file:./packages/entity-ng/src",
     "@typexs/forms": "file:./packages/forms/src",
     "@typexs/forms-ng": "file:./packages/forms-ng/src",
+    "@typexs/ldap": "file:./packages/ldap/src",
     "@typexs/ng": "file:./packages/ng/src",
     "@typexs/ng-admin-ui": "file:./packages/ng-admin-ui/src",
     "@typexs/ng-router-menu": "file:./packages/ng-router-menu/src",

@@ -1,6 +1,6 @@
 import {TableMetadataArgs} from 'typeorm/metadata-args/TableMetadataArgs';
 
-import {IModule, IStorageOptions} from '@typexs/base';
+import {IModule, IStorageRefOptions} from '@typexs/base';
 import {ISystemNodeInfo} from './ISystemNodeInfo';
 import {IRoute} from '../libs/server/IRoute';
 
@@ -48,7 +48,7 @@ export class SystemNodeInfoApi implements ISystemNodeInfo {
    * before there are delivered to the frontend
    * @param options
    */
-  prepareStorageInfo(options: IStorageOptions[]) {
+  prepareStorageInfo(options: IStorageRefOptions[]) {
   }
 
   /**

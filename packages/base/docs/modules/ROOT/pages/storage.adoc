@@ -1,0 +1,26 @@
+# Storage
+
+* Storage types can be registered or are registered before startup
+** K_CLS_STORAGE_TYPES
+* all ist handled by Storage class
+* after framework registration the declared storage instance are configured
+** entities consist of
+*** lookuped programatically declared entities
+*** locally declared by url, path, json ...
+
+
+
+## Storage types
+
+
+Properties:
+
+* dynamic entities which are not previously declared
+* load from backend
+* programmatically predefined entities
+
+Types:
+
+* typeorm - sql
+* ldap
+* index

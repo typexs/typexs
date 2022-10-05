@@ -1,4 +1,4 @@
-import {IStorageOptions} from './IStorageOptions';
+import {IStorageRefOptions} from './IStorageRefOptions';
 import {IStorageRef} from './IStorageRef';
 import {IEntityController} from './IEntityController';
 import {ClassType, IClassRef, IEntityRef, ILookupRegistry, ISchemaRef} from '@allgemein/schema-api';
@@ -6,17 +6,18 @@ import {IConnection} from './IConnection';
 import {ICollection} from './ICollection';
 import {EventEmitter} from 'events';
 import {isArray, uniqBy} from 'lodash';
+import { ILdapStorageRefOptions } from '@typexs/ldap/lib/storage/ILdapStorageRefOptions';
 
 export abstract class StorageRef extends EventEmitter implements IStorageRef {
 
 
-  private options: IStorageOptions = null;
+  private options: IStorageRefOptions = null;
 
   private _extending: IStorageRef[] = [];
 
   private _extends: IStorageRef[] = [];
 
-  constructor(options: IStorageOptions) {
+  constructor(options: IStorageRefOptions) {
     super();
     this.setMaxListeners(10000);
     this.options = options;
@@ -40,7 +41,7 @@ export abstract class StorageRef extends EventEmitter implements IStorageRef {
 
   abstract hasEntityClass(cls: string | Function | IClassRef): boolean;
 
-  abstract addEntityClass(type: Function | IClassRef | ClassType<any>, options?: any): void;
+  // abstract addEntityClass(type: Function | IClassRef | ClassType<any>, options?: any): void;
 
   abstract getRegistry(): ILookupRegistry;
 
@@ -91,20 +92,15 @@ export abstract class StorageRef extends EventEmitter implements IStorageRef {
   abstract getController(): IEntityController;
 
 
-  getOptions() {
+  getOptions(): IStorageRefOptions {
     return this.options;
   }
 
 
-  setOptions(options: IStorageOptions) {
+  setOptions(options: IStorageRefOptions) {
     this.options = options;
   }
 
-
-  /**
-   * implements initialisation for storage ref, called after constructor
-   */
-  abstract initialize?(): boolean | Promise<boolean>;
 
   abstract prepare(): boolean | Promise<boolean>;
 

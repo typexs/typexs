@@ -1,7 +1,7 @@
 /**
  * Abstract interface for storage declaration
  */
-import {IStorageOptions} from './IStorageOptions';
+import {IStorageRefOptions} from './IStorageRefOptions';
 import {IStorageRef} from './IStorageRef';
 import {IRuntimeLoader} from '../core/IRuntimeLoader';
 
@@ -22,7 +22,7 @@ export interface IStorage {
   /**
    * create new storage ref for connection to the backend
    */
-  create(name: string, options: IStorageOptions): IStorageRef | Promise<IStorageRef>;
+  create(name: string, options: IStorageRefOptions): IStorageRef | Promise<IStorageRef>;
 
 
   /**

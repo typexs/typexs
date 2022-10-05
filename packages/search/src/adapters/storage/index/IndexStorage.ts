@@ -5,6 +5,7 @@ import { IIndexStorageRefOptions } from '../../../lib/IIndexStorageRefOptions';
 import { IIndexType } from '../../../lib/IIndexType';
 import { IndexEntityRegistry } from '../../../lib/registry/IndexEntityRegistry';
 import { RegistryFactory } from '@allgemein/schema-api';
+import { keys } from 'lodash';
 
 
 export class IndexStorage implements IStorage {
@@ -46,7 +47,10 @@ export class IndexStorage implements IStorage {
   }
 
   shutdown() {
-    RegistryFactory.get(C_SEARCH_INDEX).reset();
+    // RegistryFactory.get(C_SEARCH_INDEX).reset();
+    // TODO create cleanup method in registry
+    const registryKeys = keys(RegistryFactory.$handles).filter(x => x.startsWith(C_SEARCH_INDEX));
+    registryKeys.map(x => RegistryFactory.get(x).reset());
   }
 
 }

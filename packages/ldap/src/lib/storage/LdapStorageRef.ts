@@ -1,86 +1,97 @@
-import { ICollection, IStorageRef, StorageRef } from '@typexs/base';
-import { defaults } from 'lodash';
+import { CLS_DEF, ICollection, IStorageRef, StorageRef } from '@typexs/base';
+import { defaults, isFunction, isString, snakeCase } from 'lodash';
 import { ILdapStorageRefOptions } from './ILdapStorageRefOptions';
 import { C_LDAP } from '../Constants';
 import { LdapEntityController } from './LdapEntityController';
 import { LdapConnection } from './LdapConnection';
-import { ClassType, RegistryFactory } from '@allgemein/schema-api';
+import { ClassType, RegistryFactory, METATYPE_ENTITY, IEntityRef, ClassRef } from '@allgemein/schema-api';
 import { LdapEntityRegistry } from '../registry/LdapEntityRegistry';
+import { LdapGenericObject } from '../registry/LdapGenericObject';
+import { NotYetImplementedError } from '@allgemein/base';
 
 export class LdapStorageRef extends StorageRef implements IStorageRef {
 
+  controller: LdapEntityController;
 
   constructor(options: ILdapStorageRefOptions) {
     super(defaults(options, <ILdapStorageRefOptions>{
-      framework: C_LDAP
-      // type: C_ELASTIC_SEARCH,
-      // host: '127.0.0.1',
-      // port: 9200
+      framework: C_LDAP,
+      protocol: 'ldap',
+      host: '127.0.0.1',
+      port: 389
     }));
+
+    // apply generic object
+    if (this.getOptions().entities.indexOf(LdapGenericObject) === -1) {
+      this.getOptions().entities.unshift(LdapGenericObject);
+    }
   }
 
-  initialize?(): boolean | Promise<boolean> {
-    throw new Error('Method not implemented.');
+  prepare(): boolean {
+    // register default object
+    this.controller = new LdapEntityController(this);
+    return true;
   }
 
-  addEntityClass(type: Function | ClassType<any>, options?: any): void {
-  }
+  // addEntityClass(type: Function | ClassType<any>, options?: any): void {
+  // }
 
   connect(): Promise<LdapConnection> {
-    return Promise.resolve(undefined);
+    const connection = new LdapConnection(this);
+    return connection.connect();
+  }
+
+  /**
+   * Get options for ldap storage settings
+   */
+  getOptions(): ILdapStorageRefOptions {
+    return super.getOptions() as ILdapStorageRefOptions;
   }
 
   getController(): LdapEntityController {
-    return undefined;
+    return this.controller;
   }
 
   getEntityNames(): string[] {
-    return [];
+    return this.getRegistry().getEntityRefs().map(x => x.name);
   }
 
-  getEntityRef(name: string | Function): any | [] {
-    return undefined;
+  getEntityRef(name: CLS_DEF<any>): IEntityRef {
+    const clazz = ClassRef.getClassName(name);
+    if (clazz) {
+      return this.getRegistry().getEntityRefs().find(x => snakeCase(x.name) === snakeCase(clazz));
+    }
+    return null;
   }
 
-  getEntityRefs(): [] {
-    return [];
+  getEntityRefs() {
+    return this.getRegistry().getEntityRefs();
   }
 
   getFramework(): string {
     return C_LDAP;
   }
 
-  getRawCollection(name: string): ICollection | Promise<ICollection> {
-    return undefined;
-  }
-
-  getRawCollectionNames(): string[] | Promise<string[]> {
-    return undefined;
-  }
-
-  getRawCollections(collectionNames: string[]): ICollection[] | Promise<ICollection[]> {
-    return undefined;
-  }
-
   getRegistry() {
-    return RegistryFactory.get(C_LDAP) as LdapEntityRegistry;
+    return RegistryFactory.get([C_LDAP, this.name].join('.')) as LdapEntityRegistry;
   }
 
+  /**
+   * Return the only type "ldap" which exists
+   */
   getType(): string {
     return C_LDAP;
   }
 
-  hasEntityClass(cls: string | Function | ClassType<any>): boolean {
-    return false;
+  hasEntityClass(cls: CLS_DEF<any>): boolean {
+    return !!this.getEntityRef(cls);
   }
+
 
   isActive(): boolean {
-    return false;
+    return true;
   }
 
-  prepare(): boolean | Promise<boolean> {
-    return undefined;
-  }
 
   reload(): Promise<boolean> | boolean {
     return undefined;
@@ -89,5 +100,17 @@ export class LdapStorageRef extends StorageRef implements IStorageRef {
   shutdown(full?: boolean): void {
   }
 
+
+  getRawCollection(name: string): ICollection | Promise<ICollection> {
+    throw new NotYetImplementedError('getRawCollection is no implemented.');
+  }
+
+  getRawCollectionNames(): string[] | Promise<string[]> {
+    throw new NotYetImplementedError('getRawCollectionNames is no implemented.');
+  }
+
+  getRawCollections(collectionNames: string[]): ICollection[] | Promise<ICollection[]> {
+    throw new NotYetImplementedError('getRawCollections is no implemented.');
+  }
 
 }
