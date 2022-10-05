@@ -1,5 +1,5 @@
 import {TableMetadataArgs} from 'typeorm/metadata-args/TableMetadataArgs';
-import {IModule, IStorageOptions} from '@typexs/base';
+import {IModule, IStorageRefOptions} from '@typexs/base';
 
 /**
  * Interface declaration
@@ -20,7 +20,7 @@ export interface ISystemNodeInfo {
    * before there are delivered to the frontend
    * @param options
    */
-  prepareStorageInfo?(options: IStorageOptions[]): void;
+  prepareStorageInfo?(options: IStorageRefOptions[]): void;
 
 
   /**

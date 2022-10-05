@@ -118,7 +118,8 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
               .map(r =>
                 r.filter<IEntityRef>(METATYPE_ENTITY,
                   (x: IEntityRef) =>
-                    snakeCase(x.getClassRef().name) === machineName || x.storingName === machineName
+                    (snakeCase(x.getClassRef().name) === machineName || x.storingName === machineName) &&
+                    !x.getNamespace().startsWith(C_SEARCH_INDEX)
                 )
               )
             );
@@ -280,15 +281,6 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     return uniq(orderBy(this.types.map(x => x.getAliasName())));
   }
 
-  /**
-   * TODO
-   * @param type
-   * @param options
-   */
-  addEntityClass(type: Function | IClassRef | ClassType<any>, options?: any): void {
-    throw new NotYetImplementedError('reload');
-  }
-
 
   /**
    * Connect to server and return connection handle
@@ -433,6 +425,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
   async shutdown(full: boolean = true): Promise<void> {
     try {
       await this.closeConnections();
+      this.getRegistry().reset();
     } catch (e) {
     }
   }

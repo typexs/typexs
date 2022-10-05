@@ -1,7 +1,7 @@
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 import { MongoConnectionOptions } from 'typeorm/driver/mongodb/MongoConnectionOptions';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-import { IStorageOptions } from '@typexs/base';
+import { IStorageRefOptions } from '@typexs/base';
 import { TestHelper } from '@typexs/testing';
 import { get } from 'lodash';
 
@@ -33,8 +33,8 @@ export const MODUL_CONFIG = {
   disableCache: true
 };
 
-export const TEST_STORAGE_OPTIONS: IStorageOptions = process.env.SQL_LOG ?
-  <SqliteConnectionOptions & IStorageOptions>{
+export const TEST_STORAGE_OPTIONS: IStorageRefOptions = process.env.SQL_LOG ?
+  <SqliteConnectionOptions & IStorageRefOptions>{
     name: 'default',
     type: 'sqlite',
     database: ':memory:',
@@ -43,7 +43,7 @@ export const TEST_STORAGE_OPTIONS: IStorageOptions = process.env.SQL_LOG ?
     logger: 'simple-console',
     logging: 'all'
   } :
-  <SqliteConnectionOptions & IStorageOptions>{
+  <SqliteConnectionOptions & IStorageRefOptions>{
     name: 'default',
     type: 'sqlite',
     database: ':memory:',
@@ -52,8 +52,8 @@ export const TEST_STORAGE_OPTIONS: IStorageOptions = process.env.SQL_LOG ?
   };
 
 
-export const TEST_MONGO_STORAGE_OPTIONS: IStorageOptions = process.env.SQL_LOG ?
-  <MongoConnectionOptions & IStorageOptions>{
+export const TEST_MONGO_STORAGE_OPTIONS: IStorageRefOptions = process.env.SQL_LOG ?
+  <MongoConnectionOptions & IStorageRefOptions>{
     name: 'default',
     type: 'mongodb',
     database: 'typexs',
@@ -64,7 +64,7 @@ export const TEST_MONGO_STORAGE_OPTIONS: IStorageOptions = process.env.SQL_LOG ?
     logger: 'simple-console',
     logging: 'all'
   } :
-  <MongoConnectionOptions & IStorageOptions>{
+  <MongoConnectionOptions & IStorageRefOptions>{
     name: 'default',
     type: 'mongodb',
     host: mongodb_host,
@@ -75,8 +75,8 @@ export const TEST_MONGO_STORAGE_OPTIONS: IStorageOptions = process.env.SQL_LOG ?
   };
 
 
-export const TEST_PSQL_STORAGE_OPTIONS: IStorageOptions = process.env.SQL_LOG ?
-  <PostgresConnectionOptions & IStorageOptions>{
+export const TEST_PSQL_STORAGE_OPTIONS: IStorageRefOptions = process.env.SQL_LOG ?
+  <PostgresConnectionOptions & IStorageRefOptions>{
     name: 'default',
     type: 'postgres',
     host: postgres_host,
@@ -88,7 +88,7 @@ export const TEST_PSQL_STORAGE_OPTIONS: IStorageOptions = process.env.SQL_LOG ?
     logger: 'simple-console',
     logging: 'all'
   } :
-  <PostgresConnectionOptions & IStorageOptions>{
+  <PostgresConnectionOptions & IStorageRefOptions>{
     name: 'default',
     type: 'postgres',
     host: postgres_host,

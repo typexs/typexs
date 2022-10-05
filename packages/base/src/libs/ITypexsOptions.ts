@@ -1,6 +1,6 @@
 import {IRuntimeLoaderOptions} from '../base/IRuntimeLoaderOptions';
 import {ILoggerOptions} from './logging/ILoggerOptions';
-import {IStorageOptions} from './storage/IStorageOptions';
+import {IStorageRefOptions} from './storage/IStorageRefOptions';
 import {ICacheConfig} from './cache/ICacheConfig';
 
 export interface ITypexsOptions {
@@ -13,7 +13,7 @@ export interface ITypexsOptions {
 
   logging?: ILoggerOptions;
 
-  storage?: { [name: string]: IStorageOptions };
+  storage?: { [name: string]: IStorageRefOptions };
 
   cache?: ICacheConfig;
 }

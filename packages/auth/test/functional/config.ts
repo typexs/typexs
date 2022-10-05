@@ -1,5 +1,5 @@
 import { get } from 'lodash';
-import {IStorageOptions} from '@typexs/base';
+import {IStorageRefOptions} from '@typexs/base';
 import {SqliteConnectionOptions} from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 
 let inc = 0;
@@ -20,7 +20,7 @@ export const ldap_port = get(process.env, 'LDAP_PORT', 389);
 export const ldaps_port = get(process.env, 'LDAPS_PORT', 689);
 
 
-export const TEST_STORAGE_OPTIONS: IStorageOptions = process.env.SQL_LOG ? <SqliteConnectionOptions & IStorageOptions>{
+export const TEST_STORAGE_OPTIONS: IStorageRefOptions = process.env.SQL_LOG ? <SqliteConnectionOptions & IStorageRefOptions>{
   name: 'default',
   type: 'sqlite',
   database: ':memory:',
@@ -30,7 +30,7 @@ export const TEST_STORAGE_OPTIONS: IStorageOptions = process.env.SQL_LOG ? <Sqli
   logging: 'all'
   // tablesPrefix: ""
 
-} : <SqliteConnectionOptions & IStorageOptions>{
+} : <SqliteConnectionOptions & IStorageRefOptions>{
   name: 'default',
   type: 'sqlite',
   database: ':memory:',

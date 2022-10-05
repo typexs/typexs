@@ -1,0 +1,8 @@
+name: ldap
+title: '@typexs/ldap'
+version: ~
+start_page: ROOT:index.adoc
+#nav:
+#  - modules/ROOT/nav.adoc
+
+

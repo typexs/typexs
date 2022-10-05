@@ -1,6 +1,6 @@
-import {IStorageOptions} from '@typexs/base';
+import {IStorageRefOptions} from '@typexs/base';
 
-export interface IIndexStorageRefOptions extends IStorageOptions {
+export interface IIndexStorageRefOptions extends IStorageRefOptions {
 
   /**
    * The framework will be Elastic

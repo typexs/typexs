@@ -1,14 +1,14 @@
-import {IStorageOptions} from './IStorageOptions';
-import {assign, has, isArray, isEmpty, isFunction, isObjectLike, isString, keys, values} from 'lodash';
-import {K_DEFAULT_FRAMEWORK, C_ENTITY, K_CLS_STORAGE_TYPES} from '../Constants';
-import {ClassType, IClassRef} from '@allgemein/schema-api';
-import {IStorage} from './IStorage';
-import {IStorageRef} from './IStorageRef';
-import {Log} from '../../libs/logging/Log';
-import {IRuntimeLoader} from '../core/IRuntimeLoader';
-import {StringUtils} from '../utils/StringUtils';
-import {FileUtils, NotSupportedError, NotYetImplementedError, PlatformUtils} from '@allgemein/base';
-import {REGISTRY_TYPEORM} from './framework/typeorm/Constants';
+import { IStorageRefOptions } from './IStorageRefOptions';
+import { assign, has, isArray, isEmpty, isFunction, isObjectLike, isString, keys, values } from 'lodash';
+import { K_DEFAULT_FRAMEWORK, C_ENTITY, K_CLS_STORAGE_TYPES } from '../Constants';
+import { ClassType, IClassRef } from '@allgemein/schema-api';
+import { IStorage } from './IStorage';
+import { IStorageRef } from './IStorageRef';
+import { Log } from '../../libs/logging/Log';
+import { IRuntimeLoader } from '../core/IRuntimeLoader';
+import { StringUtils } from '../utils/StringUtils';
+import { FileUtils, NotSupportedError, NotYetImplementedError, PlatformUtils } from '@allgemein/base';
+import { REGISTRY_TYPEORM } from './framework/typeorm/Constants';
 
 
 export class Storage {
@@ -31,8 +31,13 @@ export class Storage {
     return this.defaultFramework;
   }
 
-
-  async register(name: string, options: IStorageOptions): Promise<IStorageRef> {
+  /**
+   * Factorize a storage ref instance through default or passed framework and
+   * register the reference internally
+   * @param name
+   * @param options
+   */
+  async register(name: string, options: IStorageRefOptions): Promise<IStorageRef> {
     const useFramework = options.framework || this.getDefaultFramework();
     if (this.storageFramework[useFramework]) {
       const ref = await this.storageFramework[useFramework].create(name, options);
@@ -43,6 +48,11 @@ export class Storage {
     }
   }
 
+  /**
+   * Register or override framework for new storage type
+   * @param cls
+   * @param loader
+   */
   async registerFramework<T extends IStorage>(cls: ClassType<T> | Function, loader?: IRuntimeLoader): Promise<T> {
     const obj = <IStorage>Reflect.construct(cls, []);
     if (obj && await obj.prepare(loader)) {
@@ -53,7 +63,7 @@ export class Storage {
   }
 
 
-  async prepare(config: { [name: string]: IStorageOptions }, loader?: IRuntimeLoader) {
+  async prepare(config: { [name: string]: IStorageRefOptions }, loader?: IRuntimeLoader) {
     if (loader) {
       const classes = await loader.getClasses(K_CLS_STORAGE_TYPES);
       for (const cls of classes) {
@@ -71,8 +81,9 @@ export class Storage {
     // const storageRefs = [];
     // iterate over storage configurations
     for (const name of storageNames) {
-      const settings: IStorageOptions = config[name];
+      const settings: IStorageRefOptions = config[name];
 
+      // load programatically declared entities
       let entities: Function[] = [];
       if (loader) {
         // load entities handled by storage
@@ -94,11 +105,6 @@ export class Storage {
             }
           });
         }
-
-        // const x = loader.getRegistry().createSettingsLoader({
-        //   ref: ''
-        // });
-
       }
 
       const replace = {};
@@ -172,9 +178,13 @@ export class Storage {
         }
       });
 
-      const _settings: IStorageOptions = assign(settings, {entities: entities}, {name: name});
+      const _settings: IStorageRefOptions = assign(settings, { entities: entities }, { name: name });
       Log.debug('storage register ' + name + ' with ' + entities.length + ' entities');
       const storageRef = await this.register(name, _settings);
+
+      if (!storageRef) {
+        throw new Error('storage ref with "' + name + '" could not be created.');
+      }
 
       // if initialize method is present then run it
       if (storageRef.initialize) {
@@ -212,13 +222,13 @@ export class Storage {
         // json
         const content = (await PlatformUtils.readFile(path)).toString('utf-8');
         object = JSON.parse(content);
-        Object.defineProperty(object, '__SOURCE__', {value: path});
+        Object.defineProperty(object, '__SOURCE__', { value: path });
       } else if (/\.(t|j)s$/.test(path)) {
         const mod = await import(path.replace(/\.(t|j)s$/, ''));
         object = [];
         keys(mod).map(x => {
           const value = mod[x];
-          Object.defineProperty(value, '__SOURCE__', {value: path});
+          Object.defineProperty(value, '__SOURCE__', { value: path });
           if (isFunction(value)) {
             object.push(value);
           } else if (isObjectLike(value)) {

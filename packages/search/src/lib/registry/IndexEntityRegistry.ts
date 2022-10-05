@@ -49,7 +49,6 @@ export class IndexEntityRegistry extends AbstractRegistry {
     } else {
       throw new NotYetImplementedError();
     }
-
   }
 
 

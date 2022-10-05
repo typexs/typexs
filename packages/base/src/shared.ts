@@ -60,7 +60,7 @@ export { IStorageRef } from './libs/storage/IStorageRef';
 export { IEntityController } from './libs/storage/IEntityController';
 export { IConnection } from './libs/storage/IConnection';
 export { DataContainer } from '@allgemein/schema-api';
-export { IStorageOptions } from './libs/storage/IStorageOptions';
+export { IStorageRefOptions } from './libs/storage/IStorageRefOptions';
 export { ICollection } from './libs/storage/ICollection';
 export { ICollectionProperty } from './libs/storage/ICollectionProperty';
 export { IDBType } from './libs/storage/IDBType';

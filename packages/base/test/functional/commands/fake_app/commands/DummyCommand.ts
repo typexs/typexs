@@ -1,6 +1,6 @@
 import {Inject} from 'typedi';
 import {Storage} from '../../../../../src/libs/storage/Storage';
-import {IStorageOptions} from '../../../../../src/libs/storage/IStorageOptions';
+import {IStorageRefOptions} from '../../../../../src/libs/storage/IStorageRefOptions';
 
 export class DummyCommand {
 
@@ -15,7 +15,7 @@ export class DummyCommand {
     return yargs;
   }
 
-  async handler(argv: any): Promise<IStorageOptions> {
+  async handler(argv: any): Promise<IStorageRefOptions> {
     const defaultStore = this.storage.get();
     return defaultStore.getOptions();
   }

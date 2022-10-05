@@ -1,4 +1,4 @@
-import {IStorageOptions} from './IStorageOptions';
+import {IStorageRefOptions} from './IStorageRefOptions';
 
 
 export const C_FLEXIBLE = 'flexible';
@@ -10,6 +10,6 @@ export const K_GENERATED = 'generated';
 
 export const STATE_KEY = '$state';
 
-export const DEFAULT_STORAGEREF_OPTIONS: IStorageOptions = {
+export const DEFAULT_STORAGEREF_OPTIONS: IStorageRefOptions = {
   connectOnStartup: false
 };

@@ -2,12 +2,27 @@ import * as _ from 'lodash';
 import { getMetadataArgsStorage } from 'typeorm';
 import { PlatformUtils } from '@allgemein/base';
 import { join, resolve } from 'path';
+import { Bootstrap } from '@typexs/base';
 
 export class TestHelper {
 
   // static suiteName(filename: string) {
   //   return filename.split('/test/').pop();
   // }
+
+
+  static async bootstrap(cfg: any, sources: any = [{ type: 'system' }]) {
+    const bootstrap = Bootstrap
+      .setConfigSources(sources)
+      .configure(cfg);
+
+    bootstrap.activateErrorHandling();
+    bootstrap.activateLogger();
+    await bootstrap.prepareRuntime();
+    await bootstrap.activateStorage();
+    await bootstrap.startup();
+    return bootstrap;
+  };
 
   static root() {
     return resolve(__dirname + '/../../../..');

@@ -4,7 +4,7 @@ import { Config, IConfigOptions, IOptions } from '@allgemein/config';
 import { RuntimeLoader } from './base/RuntimeLoader';
 import { IActivator } from './api/IActivator';
 import { IModule } from './api/IModule';
-import { IStorageOptions, K_STORAGE } from './libs/storage/IStorageOptions';
+import { IStorageRefOptions, K_STORAGE } from './libs/storage/IStorageRefOptions';
 import { Storage } from './libs/storage/Storage';
 import { CryptUtils, LockFactory, MetaArgs, PlatformUtils } from '@allgemein/base';
 import { CONFIG_NAMESPACE, K_CLS_ACTIVATOR, K_CLS_API, K_CLS_BOOTSTRAP, K_CLS_COMMANDS, K_CLS_USE_API } from './libs/Constants';
@@ -188,7 +188,7 @@ export class Bootstrap {
 
 
     // get configurated storages
-    const o_storage: { [name: string]: IStorageOptions } = Config.get(K_STORAGE, CONFIG_NAMESPACE, {});
+    const o_storage: { [name: string]: IStorageRefOptions } = Config.get(K_STORAGE, CONFIG_NAMESPACE, {});
 
     await this.storage.prepare(o_storage, this.runtimeLoader);
 

@@ -11,7 +11,7 @@ import {
   API_CTRL_SYSTEM_STORAGES,
   API_CTRL_SYSTEM_WORKERS
 } from '@typexs/server/libs/Constants';
-import { IModule, IStorageOptions, ITypexsOptions } from '@typexs/base';
+import { IModule, IStorageRefOptions, ITypexsOptions } from '@typexs/base';
 import { SystemNodeInfo } from '@typexs/base/entities/SystemNodeInfo';
 import { IWorkerInfo } from '@typexs/base/libs/worker/IWorkerInfo';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
@@ -217,7 +217,7 @@ export class SystemInfoService {
     return this.backendClientService.callApi(API_CTRL_SYSTEM_MODULES, { handle: callback });
   }
 
-  loadStorages(callback?: (err: Error, storageOptions: IStorageOptions[]) => void) {
+  loadStorages(callback?: (err: Error, storageOptions: IStorageRefOptions[]) => void) {
     return this.backendClientService.callApi(API_CTRL_SYSTEM_STORAGES, { handle: callback });
   }
 

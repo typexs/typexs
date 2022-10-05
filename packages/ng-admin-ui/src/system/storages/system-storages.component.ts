@@ -1,7 +1,7 @@
-import {keys} from 'lodash';
-import {Component, OnInit} from '@angular/core';
-import {IStorageOptions} from '@typexs/base/libs/storage/IStorageOptions';
-import {SystemInfoService} from '@typexs/base-ng';
+import { keys } from 'lodash';
+import { Component, OnInit } from '@angular/core';
+import { SystemInfoService } from '@typexs/base-ng';
+import { IStorageRefOptions } from '@typexs/base';
 
 
 const API_CTRL_URL = '/api/storages';
@@ -12,7 +12,7 @@ const API_CTRL_URL = '/api/storages';
 })
 export class SystemStoragesComponent implements OnInit {
 
-  storages: IStorageOptions[] = [];
+  storages: IStorageRefOptions[] = [];
 
 
   constructor(private infoService: SystemInfoService) {
@@ -24,7 +24,7 @@ export class SystemStoragesComponent implements OnInit {
 
 
   ngOnInit() {
-    this.infoService.loadStorages((err: Error, x: IStorageOptions[]) => {
+    this.infoService.loadStorages((err: Error, x: IStorageRefOptions[]) => {
       if (x) {
         this.storages = x;
       }

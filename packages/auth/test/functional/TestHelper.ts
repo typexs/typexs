@@ -4,7 +4,7 @@ import {
   IConfigOptions,
   Injector,
   Invoker,
-  IStorageOptions,
+  IStorageRefOptions,
   SqliteSchemaHandler,
   Storage
 } from '@typexs/base';
@@ -15,7 +15,7 @@ import { TestHelper as TestHelperBase } from '@typexs/testing/lib/TestHelper';
 import { clone } from 'lodash';
 
 
-export const TESTDB_SETTING: IStorageOptions & any =
+export const TESTDB_SETTING: IStorageRefOptions & any =
   process.env.LOG ? {
     synchronize: true,
     type: 'sqlite',

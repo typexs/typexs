@@ -1,0 +1,33 @@
+# Home
+
+This module implements the integration of LDAP backends as configurable storage source in typexs.
+
+
+## Configuration
+
+```yml
+storage:
+  ldap_source:
+    framework: ldap
+    # optional host, port, protocol
+    host: ldap.local.com
+    port: 389
+    protocol: ldaps
+    # or by url
+    url: 'ldaps://ldap.local.com:389'
+    # user dn
+    userDn: uid=superadmin,ou=user,dc=local,dc=com
+    password: somepassword
+    # optional the base domain for operations
+    baseDn: dc=local,dc=com
+```
+
+
+## Usage in development
+
+Can be used like any other storage type with the same method call's.
+
+## Implementation
+
+Integrated through storage file pattern `adapters/storage/*/*Storage` as
+`adapters/storage/ldap/LdapStorage`  

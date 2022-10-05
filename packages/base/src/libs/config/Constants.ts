@@ -16,7 +16,7 @@ import {
 import { IRuntimeLoaderOptions } from '../../base/IRuntimeLoaderOptions';
 import { K_CLS_TASKS } from '../tasks/Constants';
 import { K_CLS_WORKERS } from '../worker/Constants';
-import { IStorageOptions } from '../storage/IStorageOptions';
+import { IStorageRefOptions } from '../storage/IStorageRefOptions';
 import { ITypexsOptions } from '../ITypexsOptions';
 
 /**
@@ -226,7 +226,7 @@ export const DEFAULT_RUNTIME_OPTIONS: IRuntimeLoaderOptions = {
 };
 
 
-export const DEFAULT_STORAGE_OPTIONS: IStorageOptions = <any & IStorageOptions>{
+export const DEFAULT_STORAGE_OPTIONS: IStorageRefOptions = <any & IStorageRefOptions>{
   name: 'default',
   type: 'sqlite',
   database: ':memory:',

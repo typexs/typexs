@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import {suite, test} from '@testdeck/mocha';
 import {expect} from 'chai';
 import {Invoker} from '../../../../src/base/Invoker';
-import {IStorageOptions} from '../../../../src/libs/storage/IStorageOptions';
+import {IStorageRefOptions} from '../../../../src/libs/storage/IStorageRefOptions';
 import {Bootstrap} from '../../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
 import {BeforeInsert, Column, PrimaryColumn} from 'typeorm';
@@ -20,7 +20,7 @@ import { TestHelper } from '@typexs/testing';
 
 
 let bootstrap: Bootstrap;
-let storageOptions: IStorageOptions & BaseConnectionOptions = null;
+let storageOptions: IStorageRefOptions & BaseConnectionOptions = null;
 
 @suite('functional/storage/typeorm/general')
 class StorageGeneralSpec {
@@ -29,7 +29,7 @@ class StorageGeneralSpec {
   before() {
     Bootstrap.reset();
     Config.clear();
-    storageOptions = _.cloneDeep(TEST_STORAGE_OPTIONS) as IStorageOptions & BaseConnectionOptions;
+    storageOptions = _.cloneDeep(TEST_STORAGE_OPTIONS) as IStorageRefOptions & BaseConnectionOptions;
   }
 
 
@@ -42,16 +42,16 @@ class StorageGeneralSpec {
 
   @test
   async 'storage options override'() {
-    const opt1: IStorageOptions & BaseConnectionOptions = {
+    const opt1: IStorageRefOptions & BaseConnectionOptions = {
       name: 'default',
       type: 'sqlite',
       entityPrefix: 'test',
       connectOnStartup: true
     };
-    const opt2: IStorageOptions & BaseConnectionOptions = {
+    const opt2: IStorageRefOptions & BaseConnectionOptions = {
       name: 'default2', type: 'postgres', connectOnStartup: true
     };
-    const options: IStorageOptions = _.merge(opt1, opt2);
+    const options: IStorageRefOptions = _.merge(opt1, opt2);
     expect(options).to.be.deep.eq({
       name: 'default2', type: 'postgres',
       entityPrefix: 'test', connectOnStartup: true
@@ -135,7 +135,7 @@ class StorageGeneralSpec {
     const invoker = new Invoker();
     Injector.set(Invoker.NAME, invoker);
 
-    const storage = new TypeOrmStorageRef(storageOptions as IStorageOptions & BaseConnectionOptions);
+    const storage = new TypeOrmStorageRef(storageOptions as IStorageRefOptions & BaseConnectionOptions);
     await storage.prepare();
 
     storage.addTableEntityClass(X, 'xtable');

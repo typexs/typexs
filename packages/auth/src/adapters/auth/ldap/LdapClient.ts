@@ -69,16 +69,11 @@ export class LdapClient {
         const items: any[] = [];
         res.on('searchEntry', (entry) => {
           items.push(entry.object);
-          /*
-          if (this.options.includeRaw === true) {
-            items[items.length - 1]._raw = entry.raw;
-          }
-          */
         });
 
         res.on('error', reject);
 
-        res.on('end', function(result) {
+        res.on('end', (result) => {
           if (result.status !== 0) {
             const err = 'non-zero status from LDAP search: ' + result.status;
             reject(err);
