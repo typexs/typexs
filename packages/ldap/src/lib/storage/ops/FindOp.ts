@@ -70,13 +70,13 @@ export class FindOp<T> implements IFindOp<T> {
 
       const connection = await this.controller.connect();
       if (connection.isOpened() && connection.isBound()) {
-        let baseDn = this.controller.getStorageRef().getOptions().baseDn;
+        let baseDN = this.controller.getStorageRef().getOptions().baseDN;
         if (this.options.rawQuery) {
-          if (!baseDn && findConditions && findConditions.searchDn) {
-            baseDn = findConditions.searchDn;
+          if (!baseDN && findConditions && findConditions.searchDn) {
+            baseDN = findConditions.searchDn;
           }
 
-          if (!baseDn) {
+          if (!baseDN) {
             throw new NotYetImplementedError('no base dn is present.');
           }
 
@@ -84,7 +84,7 @@ export class FindOp<T> implements IFindOp<T> {
             findConditions.sizeLimit = this.options.limit;
           }
 
-          results = await connection.search(baseDn, findConditions);
+          results = await connection.search(baseDN, findConditions);
           recordCount = results.length;
           results = results.map(x => this.ref.build(x, { createAndCopy: true, skipClassNamespaceInfo: true }));
 

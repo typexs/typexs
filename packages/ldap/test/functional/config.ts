@@ -13,7 +13,7 @@ export const LDAP_CONFIG: ILdapStorageRefOptions = <ILdapStorageRefOptions>{
   url: 'ldap://' + ldap_host + ':' + ldap_port,
   bindDN: 'cn=admin,dc=example,dc=org',
   bindCredentials: 'admin',
-  baseDn: 'dc=example,dc=org'
+  baseDN: 'dc=example,dc=org'
 };
 
 export const LDAP_FAIL_CONFIG: ILdapStorageRefOptions = <ILdapStorageRefOptions>{
@@ -21,7 +21,7 @@ export const LDAP_FAIL_CONFIG: ILdapStorageRefOptions = <ILdapStorageRefOptions>
   url: 'ldap://' + ldap_host + ':' + ldap_port,
   bindDN: 'cn=adminus,dc=example,dc=org',
   bindCredentials: 'admin',
-  baseDn: 'dc=example,dc=org'
+  baseDN: 'dc=example,dc=org'
 };
 
 export const LDAP_WRONG_CONFIG: ILdapStorageRefOptions = <ILdapStorageRefOptions>{
@@ -29,5 +29,5 @@ export const LDAP_WRONG_CONFIG: ILdapStorageRefOptions = <ILdapStorageRefOptions
   url: 'ldap://127.0.32.32:' + ldap_port,
   bindDN: 'cn=adminus,dc=example,dc=org',
   bindCredentials: 'admin',
-  baseDn: 'dc=example,dc=org'
+  baseDN: 'dc=example,dc=org'
 };

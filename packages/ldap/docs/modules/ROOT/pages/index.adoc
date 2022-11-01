@@ -16,10 +16,10 @@ storage:
     # or by url
     url: 'ldaps://ldap.local.com:389'
     # user dn
-    userDn: uid=superadmin,ou=user,dc=local,dc=com
-    password: somepassword
+    bindDN: uid=superadmin,ou=user,dc=local,dc=com
+    bindCredentials: somepassword
     # optional the base domain for operations
-    baseDn: dc=local,dc=com
+    baseDN: dc=local,dc=com
 ```
 
 
@@ -30,4 +30,4 @@ Can be used like any other storage type with the same method call's.
 ## Implementation
 
 Integrated through storage file pattern `adapters/storage/*/*Storage` as
-`adapters/storage/ldap/LdapStorage`  
+`adapters/storage/ldap/LdapStorage`
