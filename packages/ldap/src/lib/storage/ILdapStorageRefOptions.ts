@@ -20,7 +20,7 @@ export interface ILdapStorageRefOptions extends IStorageRefOptions, ClientOption
 
 
   /**
-   * Define baseDn for base entry
+   * Define baseDN for base entry
    */
-  baseDn?: string;
+  baseDN?: string;
 }
