@@ -52,7 +52,7 @@ import { MetadataArgsStorage } from 'typeorm/metadata-args/MetadataArgsStorage';
 import { EmbeddedMetadataArgs } from 'typeorm/metadata-args/EmbeddedMetadataArgs';
 import { TypeOrmUtils } from '../TypeOrmUtils';
 import { isClassRef } from '@allgemein/schema-api/api/IClassRef';
-import { C_COLUMN, C_EMBEDDED, C_RELATION, C_TYPEORM, REGISTRY_TYPEORM, T_TABLETYPE } from '../Constants';
+import { __TXS__, C_COLUMN, C_EMBEDDED, C_RELATION, C_TYPEORM, REGISTRY_TYPEORM, T_TABLETYPE } from '../Constants';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import { GeneratedMetadataArgs } from 'typeorm/metadata-args/GeneratedMetadataArgs';
 import { Log } from '../../../../logging/Log';
@@ -144,10 +144,10 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const self = this;
       for (const key of typeormMetadataKeys) {
-        if (this.metadatastore[key]['__txs']) {
+        if (this.metadatastore[key][__TXS__]) {
           continue;
         }
-        this.metadatastore[key]['__txs'] = true;
+        this.metadatastore[key][__TXS__] = true;
         this.metadatastore[key].push = function(...args: any[]) {
           const result = Array.prototype.push.bind(this)(...args);
           self.emitter.emit('metadata_push', key, ...args);
@@ -248,7 +248,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
   reset() {
     this.emitter.removeAllListeners();
     for (const key of typeormMetadataKeys) {
-      delete this.metadatastore[key]['__txs'];
+      delete this.metadatastore[key][__TXS__];
       this.metadatastore[key].push = Array.prototype.push.bind(this.metadatastore[key]);
       this.metadatastore[key].splice = Array.prototype.splice.bind(this.metadatastore[key]);
     }
@@ -376,7 +376,11 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         typeOrmOptions = this._findTableMetadataArgs(options.target);
         if (!typeOrmOptions) {
           // create an default entry
-          typeOrmOptions = get(options, C_TYPEORM, {});
+          const defaultTypeOrmOptions: any = {};
+          if (options.internalName) {
+            defaultTypeOrmOptions.name = options.internalName;
+          }
+          typeOrmOptions = get(options, C_TYPEORM, defaultTypeOrmOptions);
           defaults(typeOrmOptions, <TableMetadataArgs & { new: boolean }>{
             new: true,
             target: options.target,

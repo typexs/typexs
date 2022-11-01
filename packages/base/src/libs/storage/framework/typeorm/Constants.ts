@@ -1,4 +1,3 @@
-
 export const C_TYPEORM = 'typeorm';
 export const REGISTRY_TYPEORM = C_TYPEORM;
 
@@ -20,3 +19,8 @@ export const C_EMBEDDED = 'embedded';
 export type T_TABLETYPE = 'column' | 'relation' | 'embedded';
 
 export const JS_PRIMATIVE_PROPERTY_TYPES = ['string', 'number', 'boolean', 'date', 'float', 'array'];
+
+
+export const __TXS__ = '__txs';
+export const C_METADATA = 'metadata';
+export const C_INTERNAL_NAME = 'internalName';
