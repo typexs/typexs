@@ -119,4 +119,5 @@ test:
         - packages/*/src/**/*
         - packages/*/test/**
         - packages/*/test/**/*
+        - deployments/testing/**
 
