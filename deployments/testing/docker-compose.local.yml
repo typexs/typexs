@@ -7,16 +7,22 @@ services:
 
   redis:
     image: redis:5
+    ports:
+      - 127.0.0.1:6379:6379
     networks:
       - txs_base_net
 
   redis2:
     image: redis:5
+    ports:
+      - 127.0.0.1:6380:6379
     networks:
       - txs_base_net
 
   mongo:
     image: mongo:4
+    ports:
+      - 127.0.0.1:27017:27017
     networks:
       - txs_base_net
 
@@ -27,11 +33,16 @@ services:
       - discovery.type=single-node
       - node.name=es01
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ports:
+      - 127.0.0.1:9200:9200
+      - 127.0.0.1:9300:9300
     networks:
       - txs_base_net
 
   psql:
     image: postgres:14
+    ports:
+      - 127.0.0.1:5436:5432
     environment:
       POSTGRES_DATABASES: txsbase
       POSTGRES_USER: txsbase
@@ -42,6 +53,8 @@ services:
 
   psql-auth:
     image: postgres:14
+    ports:
+      - 127.0.0.1:5437:5432
     environment:
       POSTGRES_DATABASES: auth
       POSTGRES_USER: auth
@@ -52,6 +65,8 @@ services:
 
   mysql:
     image: mysql:5
+    ports:
+      - 127.0.0.1:3306:3306
     command: --sql_mode="ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
     environment:
       MYSQL_DATABASE: txsbase
@@ -64,6 +79,9 @@ services:
 
   ldap:
     image: registry.gitlab.com/typexs/typexs/ldap
+    ports:
+      - 127.0.0.1:389:389
+      - 127.0.0.1:689:689
     environment:
       LDAP_NOFILE: 10000
 #    volumes:

@@ -52,7 +52,17 @@ import { MetadataArgsStorage } from 'typeorm/metadata-args/MetadataArgsStorage';
 import { EmbeddedMetadataArgs } from 'typeorm/metadata-args/EmbeddedMetadataArgs';
 import { TypeOrmUtils } from '../TypeOrmUtils';
 import { isClassRef } from '@allgemein/schema-api/api/IClassRef';
-import { C_COLUMN, C_EMBEDDED, C_RELATION, C_TYPEORM, REGISTRY_TYPEORM, T_TABLETYPE } from '../Constants';
+import {
+  __TXS__,
+  C_TYPEORM_COLUMN,
+  C_TYPEORM_EMBEDDED,
+  C_TYPEORM_RELATION,
+  C_TYPEORM,
+  C_TYPEORM_REGULAR,
+  REGISTRY_TYPEORM,
+  T_TABLETYPE,
+  typeormMetadataKeys, TYPEORM_METADATA_KEYS
+} from '../Constants';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import { GeneratedMetadataArgs } from 'typeorm/metadata-args/GeneratedMetadataArgs';
 import { Log } from '../../../../logging/Log';
@@ -61,56 +71,9 @@ import { IJsonSchemaSerializeOptions } from '@allgemein/schema-api/lib/json-sche
 import { K_IDENTIFIER, K_NULLABLE } from '../../../Constants';
 import { EventEmitter } from 'events';
 import { ITypeOrmPropertyOptions } from './ITypeOrmPropertyOptions';
+import { createTableTypeOrmOptions } from '../Helper';
 
 
-export type TYPEORM_METADATA_KEYS =
-  'tables' |
-  'trees' |
-  'entityRepositories' |
-  'transactionEntityManagers' |
-  'transactionRepositories' |
-  'namingStrategies' |
-  'entitySubscribers' |
-  'indices' |
-  'uniques' |
-  'checks' |
-  'exclusions' |
-  'columns' |
-  'generations' |
-  'relations' |
-  'joinColumns' |
-  'joinTables' |
-  'entityListeners' |
-  'relationCounts' |
-  'relationIds' |
-  'embeddeds' |
-  'inheritances' |
-  'discriminatorValues';
-
-const typeormMetadataKeys: TYPEORM_METADATA_KEYS[] = [
-  'tables',
-  'trees',
-  'entityRepositories',
-  'transactionEntityManagers',
-  'transactionRepositories',
-  'namingStrategies',
-  'entitySubscribers',
-  'indices',
-  'uniques',
-  'checks',
-  'exclusions',
-  'columns',
-  'generations',
-  'relations',
-  'joinColumns',
-  'joinTables',
-  'entityListeners',
-  'relationCounts',
-  'relationIds',
-  'embeddeds',
-  'inheritances',
-  'discriminatorValues'
-];
 
 
 const MAP_PROP_KEYS = {
@@ -122,7 +85,11 @@ const MAP_PROP_KEYS = {
   'eager': 'eager'
 };
 
-
+/**
+ * Note:
+ *
+ * - each typeorm table has a direct class representation throw target
+ */
 export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements IJsonSchema {
 
 
@@ -144,10 +111,10 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const self = this;
       for (const key of typeormMetadataKeys) {
-        if (this.metadatastore[key]['__txs']) {
+        if (this.metadatastore[key][__TXS__]) {
           continue;
         }
-        this.metadatastore[key]['__txs'] = true;
+        this.metadatastore[key][__TXS__] = true;
         this.metadatastore[key].push = function(...args: any[]) {
           const result = Array.prototype.push.bind(this)(...args);
           self.emitter.emit('metadata_push', key, ...args);
@@ -190,10 +157,9 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
     }
 
     const target = options.target;
-    const tableExists = target ? this.metadatastore.tables.find(x => x.target === target) : null;
+    const tableExists = target ? this.findTable(x => x.target === target) : null;
     if (context === METATYPE_ENTITY) {
       // check if metadata exists for the entry
-
       if (!tableExists) {
         this.create(METATYPE_ENTITY, options as ITypeOrmEntityOptions);
         const properties = MetadataRegistry.$()
@@ -204,7 +170,6 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           this.onAdd(METATYPE_PROPERTY, property);
         }
       }
-
     } else if (context === METATYPE_PROPERTY) {
       // todo check if table is present, else skip processing
       if (tableExists) {
@@ -248,7 +213,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
   reset() {
     this.emitter.removeAllListeners();
     for (const key of typeormMetadataKeys) {
-      delete this.metadatastore[key]['__txs'];
+      delete this.metadatastore[key][__TXS__];
       this.metadatastore[key].push = Array.prototype.push.bind(this.metadatastore[key]);
       this.metadatastore[key].splice = Array.prototype.splice.bind(this.metadatastore[key]);
     }
@@ -275,9 +240,9 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         }
         if (foundEntity) {
           const exists = foundEntity.getPropertyRefs()
-            .find(x => x.storingName === columnMetadata.propertyName && x.getClassRef().getClass() === columnMetadata.target);
+            .find(x => x.name === columnMetadata.propertyName && x.getClassRef().getClass() === columnMetadata.target);
           if (!exists) {
-            this.createPropertyByArgs(C_COLUMN, columnMetadata, true);
+            this.createPropertyByArgs(C_TYPEORM_COLUMN, columnMetadata, true);
           }
         }
         break;
@@ -291,7 +256,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           const exists = foundEntity.getPropertyRefs()
             .find(x => x.storingName === embedded.propertyName && x.getClassRef().getClass() === embedded.target);
           if (!exists) {
-            this.createPropertyByArgs(C_EMBEDDED, embedded, true);
+            this.createPropertyByArgs(C_TYPEORM_EMBEDDED, embedded, true);
           }
         }
         break;
@@ -305,7 +270,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           const exists = foundEntity.getPropertyRefs()
             .find(x => x.storingName === relations.propertyName && x.getClassRef().getClass() === relations.target);
           if (!exists) {
-            this.createPropertyByArgs(C_RELATION, relations, true);
+            this.createPropertyByArgs(C_TYPEORM_RELATION, relations, true);
           }
         }
         break;
@@ -351,7 +316,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
   }
 
 
-  private _findTableMetadataArgs(fn: any) {
+  private findTableMetadataArgs(fn: any) {
     let cName: TableMetadataArgs = null;
     if (isString(fn)) {
       cName = this.findTable(table => isString(table.target) ? table.target === fn : table.target.name === fn);
@@ -369,26 +334,38 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
   create<T>(context: string, options: ITypeOrmPropertyOptions | ITypeOrmEntityOptions): T {
     let update = false;
+    let target = null;
     let typeOrmOptions: any = null;
     if (context === METATYPE_ENTITY) {
+      target = options.target;
+      if (!target && options.metadata?.target) {
+        target = options.metadata.target;
+      }
+      typeOrmOptions = this.findTableMetadataArgs(target);
       if (!options.metadata || !options.metadata.target) {
         // coming from unserialization
-        typeOrmOptions = this._findTableMetadataArgs(options.target);
         if (!typeOrmOptions) {
-          // create an default entry
-          typeOrmOptions = get(options, C_TYPEORM, {});
-          defaults(typeOrmOptions, <TableMetadataArgs & { new: boolean }>{
-            new: true,
-            target: options.target,
-            type: 'regular'
-          });
-
-          assign(typeOrmOptions, options.metadata ? options.metadata : {});
+          typeOrmOptions = createTableTypeOrmOptions(options as ITypeOrmEntityOptions, true);
           options.metadata = typeOrmOptions;
           this.metadatastore.tables.push(typeOrmOptions);
         }
+      } else {
+        const _keys = keys(options);
+        // entry was reset, metadata are passed but everything other from MetadataRegistry is missing (meaning the annotations)
+        if (_keys.length === 1 && _keys.includes('metadata') && target) {
+          const entry = MetadataRegistry.$().getByContextAndTarget(METATYPE_ENTITY, target).shift();
+          if (entry) {
+            // registered by schema-api
+            defaults(options, entry);
+          } else {
+            // registered by typeorm; write name to options if present
+            if (typeOrmOptions.name) {
+              options.internalName = typeOrmOptions.name;
+            }
+          }
+        }
       }
-      // const metaOptionsForEntity = MetadataRegistry.$().getByContextAndTarget(METATYPE_ENTITY, options.target);
+
       const res = new TypeOrmEntityRef(options as ITypeOrmEntityOptions);
       this.register(res);
       const metaSchemaOptionsForEntity = MetadataRegistry.$()
@@ -406,9 +383,9 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
       // remove cardinality is checked by property ref
 
       let generated: GeneratedMetadataArgs = null;
-      let tableType = C_COLUMN;
+      let tableType = C_TYPEORM_COLUMN;
       let isArray = !isUndefined(options.cardinality) && isNumber(options.cardinality) && options.cardinality !== 1;
-      let columnType = 'regular';
+      let columnType = C_TYPEORM_REGULAR;
       // correct type for typeorm
       let clsRef: IClassRef = null;
       const definedType = options.type;
@@ -418,7 +395,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         if (!clsType) {
           if (!TypeOrmUtils.isSupportedType(options.type)) {
             // is an local type, so it is a relation
-            tableType = C_RELATION;
+            tableType = C_TYPEORM_RELATION;
             clsRef = ClassRef.find(options.type);
             if (clsRef) {
               clsType = clsRef.getClass();
@@ -438,10 +415,10 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         }
       } else if (isClassRef(clsType) || isEntityRef(clsType)) {
         clsRef = isEntityRef(clsType) ? clsType.getClassRef() : clsType;
-        tableType = C_RELATION;
+        tableType = C_TYPEORM_RELATION;
         clsType = clsType.getClass();
       } else {
-        tableType = C_RELATION;
+        tableType = C_TYPEORM_RELATION;
         clsType = options.type;
       }
 
@@ -451,13 +428,13 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
       delete options['cardinality'];
 
       switch (tableType) {
-        case C_COLUMN:
+        case C_TYPEORM_COLUMN:
           typeOrmOptions = this.metadatastore.columns.find(x => x.target === options.target && x.propertyName === options.propertyName);
           break;
-        case C_EMBEDDED:
+        case C_TYPEORM_EMBEDDED:
           typeOrmOptions = this.metadatastore.embeddeds.find(x => x.target === options.target && x.propertyName === options.propertyName);
           break;
-        case C_RELATION:
+        case C_TYPEORM_RELATION:
           typeOrmOptions = this.metadatastore.relations.find(x => x.target === options.target && x.propertyName === options.propertyName);
           break;
       }
@@ -488,11 +465,9 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           clsType = definedType;
         } else {
           typeOrmOptions.options.type = clsType;
-
         }
 
         typeOrmOptions.options.name = snakeCase(typeOrmOptions.propertyName);
-
         defaults(typeOrmOptions, {
           propertyName: options.propertyName,
           target: options.target
@@ -500,7 +475,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
         let reversePropName = null;
         let refIdName = null;
-        if (tableType === C_RELATION && !typeOrmOptions.type) {
+        if (tableType === C_TYPEORM_RELATION && !typeOrmOptions.type) {
           typeOrmOptions.type = (type: any) => clsType;
           const ids = clsRef.getPropertyRefs().filter(x => x.isIdentifier());
           if (ids.length === 1) {
@@ -512,12 +487,12 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           } else {
             throw new NotYetImplementedError('TODO');
           }
-        } else if (tableType === C_COLUMN) {
+        } else if (tableType === C_TYPEORM_COLUMN) {
           typeOrmOptions.mode = columnType;
         }
 
         if (typeOrmOptions.new) {
-          if (tableType === C_COLUMN) {
+          if (tableType === C_TYPEORM_COLUMN) {
             const _defaults = <ColumnMetadataArgs>{
               options: {
                 type: clsType as any
@@ -536,7 +511,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
                 strategy: 'increment'
               };
             }
-          } else if (tableType === C_RELATION) {
+          } else if (tableType === C_TYPEORM_RELATION) {
             defaultsDeep(typeOrmOptions, <RelationMetadataArgs>{
               type: () => clsType,
               isLazy: false,
@@ -554,16 +529,16 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
         if (update) {
           switch (tableType) {
-            case C_COLUMN:
+            case C_TYPEORM_COLUMN:
               this.metadatastore.columns.push(typeOrmOptions);
               if (generated) {
                 this.metadatastore.generations.push(generated);
               }
               break;
-            case C_EMBEDDED:
+            case C_TYPEORM_EMBEDDED:
               this.metadatastore.embeddeds.push(typeOrmOptions);
               break;
-            case C_RELATION:
+            case C_TYPEORM_RELATION:
               this.metadatastore.relations.push(typeOrmOptions);
               if ((<RelationMetadataArgs>typeOrmOptions).relationType === 'one-to-one') {
                 this.metadatastore.joinColumns.push({
@@ -630,7 +605,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
     if (recursive && propRef.isReference()) {
       const classRef = propRef.getTargetRef();
       if (!classRef.getEntityRef()) {
-        const metadata = this._findTableMetadataArgs(classRef.getClass());
+        const metadata = this.findTableMetadataArgs(classRef.getClass());
         if (metadata) {
           this.createEntity(metadata);
         }
@@ -648,16 +623,16 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
     const entity = this.create<TypeOrmEntityRef>(METATYPE_ENTITY, entityOptions);
     const properties: TypeOrmPropertyRef[] = <TypeOrmPropertyRef[]>concat(
       map(this.metadatastore.columns.filter(c => c.target === fn.target),
-        c => this.createPropertyByArgs(C_COLUMN, c)),
+        c => this.createPropertyByArgs(C_TYPEORM_COLUMN, c)),
       map(this.metadatastore.filterRelations(fn.target),
-        c => this.createPropertyByArgs(C_RELATION, c))
+        c => this.createPropertyByArgs(C_TYPEORM_RELATION, c))
     );
 
     map(this.metadatastore.filterEmbeddeds(fn.target),
       c => {
         const exists = properties.find(x => x.storingName === c.propertyName && x.getClass() === c.target);
         if (!exists) {
-          const r = this.createPropertyByArgs(C_EMBEDDED, c);
+          const r = this.createPropertyByArgs(C_TYPEORM_EMBEDDED, c);
           properties.push(r);
         }
       });
@@ -665,7 +640,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
     properties.filter(p => p.isReference()).map(p => {
       const classRef = p.getTargetRef();
       if (!classRef.hasEntityRef()) {
-        const metadata = this._findTableMetadataArgs(classRef.getClass());
+        const metadata = this.findTableMetadataArgs(classRef.getClass());
         if (metadata) {
           this.createEntity(metadata);
         }
@@ -676,7 +651,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
 
   private _find(instance: any): TypeOrmEntityRef {
-    const cName = ClassUtils.getClassName(instance);
+    const cName = ClassRef.getClassName(instance);
     return this.getEntityRefByName(cName);
   }
 
@@ -702,7 +677,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
     }
 
     if (this.metadatastore) {
-      const metadata = this._findTableMetadataArgs(instance);
+      const metadata = this.findTableMetadataArgs(instance);
       if (metadata) {
         return this.createEntity(metadata);
       }

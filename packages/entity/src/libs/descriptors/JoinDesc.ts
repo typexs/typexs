@@ -1,11 +1,11 @@
-import {NotYetImplementedError} from '@typexs/base';
-import {PropertyRef} from '../registry/PropertyRef';
+import { NotYetImplementedError } from '@typexs/base';
+import { PropertyRef } from '../registry/PropertyRef';
 import * as _ from 'lodash';
-import {OrderDesc} from './OrderDesc';
-import {ConditionValidationError} from '../exceptions/ConditionValidationError';
-import {And, ExprDesc, IExpr} from '@allgemein/expressions';
-import {IClassRef, METATYPE_CLASS_REF, RegistryFactory} from '@allgemein/schema-api';
-import {NAMESPACE_BUILT_ENTITY} from '../Constants';
+import { OrderDesc } from './OrderDesc';
+import { ConditionValidationError } from '../exceptions/ConditionValidationError';
+import { And, ExprDesc, IExpr } from '@allgemein/expressions';
+import { IClassRef, METATYPE_CLASS_REF, RegistryFactory } from '@allgemein/schema-api';
+import { NAMESPACE_BUILT_ENTITY } from '../Constants';
 
 export type KeyMapType = 'from' | 'to';
 
@@ -58,12 +58,13 @@ export class JoinDesc implements IExpr {
 
   validate(sourceDef: IClassRef, propertyDef: PropertyRef, targetDef: IClassRef, throwing: boolean = true) {
     const registry = sourceDef.getRegistry();
+    const joinRef = this.getJoinRef();
     if (this.condition) {
-      this.condition.validate(registry, this.getJoinRef());
+      this.condition.validate(registry, joinRef);
     }
-    this.getFrom().cond.validate(registry, this.getJoinRef(), sourceDef);
-    this.getTo().cond.validate(registry, targetDef, this.getJoinRef());
-    const props = sourceDef.getRegistry().getPropertyRefsFor(this.getJoinRef()).map(p => p.name);
+    this.getFrom().cond.validate(registry, joinRef, sourceDef);
+    this.getTo().cond.validate(registry, targetDef, joinRef);
+    const props = sourceDef.getRegistry().getPropertyRefsFor(joinRef).map(p => p.name);
     this.order.forEach(o => {
       if (props.indexOf(o.key.key) === -1) {
         throw new ConditionValidationError('no property with order key ' + o.key.key + ' found.');

@@ -24,7 +24,8 @@ import {
   METATYPE_PROPERTY,
   METATYPE_SCHEMA,
   RegistryFactory,
-  XS_DEFAULT_SCHEMA
+  XS_DEFAULT_SCHEMA,
+  IPropertyRef
 } from '@allgemein/schema-api';
 import { NAMESPACE_BUILT_ENTITY } from './Constants';
 import { IObject } from './registry/IObject';
@@ -141,16 +142,6 @@ export class EntityRegistry extends DefaultNamespacedRegistry implements IJsonSc
   }
 
 
-  // onUpdate() {
-  //   super.onUpdate();
-  // }
-  //
-  //
-  // onRemove(context: METADATA_TYPE, entries: (IEntity | IProperty | ISchema | IObject)[]) {
-  //   super.onRemove(context, entries);
-  // }
-  //
-
   /**
    * Create default property reference
    *
@@ -159,6 +150,11 @@ export class EntityRegistry extends DefaultNamespacedRegistry implements IJsonSc
   createPropertyForOptions(options: IProperty): PropertyRef {
     if (keys(options).length === 0) {
       throw new Error('can\'t create property for empty options');
+    }
+    const propertyRef = this.find(options.metaType,
+      (x: IPropertyRef) => x.getClassRef().getClass() === options.target && x.name === options.propertyName);
+    if (propertyRef) {
+      return propertyRef as PropertyRef;
     }
     try {
       options.namespace = this.namespace;
@@ -180,6 +176,10 @@ export class EntityRegistry extends DefaultNamespacedRegistry implements IJsonSc
     options.namespace = this.namespace;
     if (!options.name) {
       options.name = ClassRef.getClassName(options.target);
+    }
+    const entityRef = this.find(options.metaType, (x: IEntityRef) => x.getClassRef().getClass() === options.target);
+    if (entityRef) {
+      return entityRef as EntityRef;
     }
     try {
       const entityRef = new EntityRef(options);

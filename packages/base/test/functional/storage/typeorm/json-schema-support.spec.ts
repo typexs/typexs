@@ -58,6 +58,7 @@ class JsonSchemaSupportSpec {
         'passing_other_name': {
           '$id': '#passing_other_name',
           'metadata': {
+            'name': 'passing_other_name',
             'type': 'regular'
           },
           'properties': {
@@ -114,7 +115,9 @@ class JsonSchemaSupportSpec {
           $id: '#Car',
           title: 'Car',
           type: 'object',
-          metadata: { type: 'regular' },
+          metadata: {
+            type: 'regular'
+          },
           'schema': [
             'default'
           ],
@@ -195,6 +198,7 @@ class JsonSchemaSupportSpec {
     data_x.definitions['Car2'] = _.cloneDeep(data_x.definitions['Car']);
     data_x.definitions['Car2'].title = 'Car2';
     data_x.definitions['Car2'].$id = '#Car2';
+    data_x.definitions['Car2'].metadata.name = 'Car2';
     data_x.$ref = '#/definitions/Car2';
 
     const entityDef2 = await registry.fromJsonSchema(_.cloneDeep(data_x)) as TypeOrmEntityRef;
@@ -262,7 +266,7 @@ class JsonSchemaSupportSpec {
 
     expect(q).has.length(1);
     expect(q[0].sql).to.be.eq(
-      'CREATE TABLE "person_schema" ("id" integer PRIMARY KEY NOT NULL, "first_name" varchar NOT NULL, "last_name" varchar NOT NULL)'
+      'CREATE TABLE "PersonSchema" ("id" integer PRIMARY KEY NOT NULL, "first_name" varchar NOT NULL, "last_name" varchar NOT NULL)'
     );
   }
 

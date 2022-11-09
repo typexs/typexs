@@ -1,4 +1,4 @@
-import { capitalize, defaults, get, has, isArray, isBoolean, isEmpty, isFunction, isNumber, isString } from 'lodash';
+import { assign, capitalize, defaults, get, has, isArray, isBoolean, isEmpty, isFunction, isNumber, isString } from 'lodash';
 
 import { ColumnMetadataArgs } from 'typeorm/metadata-args/ColumnMetadataArgs';
 import { RelationMetadataArgs } from 'typeorm/metadata-args/RelationMetadataArgs';
@@ -7,7 +7,7 @@ import { ClassUtils, NotSupportedError, NotYetImplementedError } from '@allgemei
 import { DefaultPropertyRef, IBuildOptions, IClassRef, METATYPE_PROPERTY } from '@allgemein/schema-api';
 import { TypeOrmEntityRef } from './TypeOrmEntityRef';
 import { TypeOrmUtils } from '../TypeOrmUtils';
-import { JS_PRIMATIVE_PROPERTY_TYPES, REGISTRY_TYPEORM } from '../Constants';
+import { C_TYPEORM_REGULAR, JS_PRIMATIVE_PROPERTY_TYPES, REGISTRY_TYPEORM } from '../Constants';
 import { C_CARDINALITY, C_IDENTIFIER } from '@allgemein/schema-api/lib/Constants';
 import { ITypeOrmPropertyOptions } from './ITypeOrmPropertyOptions';
 
@@ -26,12 +26,14 @@ export class TypeOrmPropertyRef extends DefaultPropertyRef {
 
   constructor(options: ITypeOrmPropertyOptions) {
     // super(METATYPE_PROPERTY, c.propertyName, c.target, REGISTRY_TYPEORM);
-    super(defaults(options, <ITypeOrmPropertyOptions>{
-      metaType: METATYPE_PROPERTY,
-      namespace: REGISTRY_TYPEORM,
-      target: options.metadata.target,
-      propertyName: options.metadata.propertyName
-    }));
+    super(
+      defaults(
+        assign(options, { namespace: REGISTRY_TYPEORM }), <ITypeOrmPropertyOptions>{
+          metaType: METATYPE_PROPERTY,
+          namespace: REGISTRY_TYPEORM,
+          target: options.metadata.target,
+          propertyName: options.metadata.propertyName
+        }));
     if (has(options, 'metadata.new')) {
       delete options.metadata['new'];
     }
@@ -208,7 +210,7 @@ export class TypeOrmPropertyRef extends DefaultPropertyRef {
 
   convert(data: any, options?: IBuildOptions): any {
     switch (this.column.mode) {
-      case 'regular':
+      case C_TYPEORM_REGULAR:
         return this.convertRegular(data, options);
       case 'createDate':
       case 'updateDate':

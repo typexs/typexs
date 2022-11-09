@@ -1,20 +1,19 @@
 import 'reflect-metadata';
-import {expect} from 'chai';
+import { expect } from 'chai';
 import * as path from 'path';
-import {suite, test} from '@testdeck/mocha';
-import {Bootstrap} from '../../../src/Bootstrap';
-import {Config} from '@allgemein/config';
-import {C_DEFAULT} from '@allgemein/base';
-import {SchemaUtils} from '@allgemein/schema-api';
-import {Column, Entity, getMetadataArgsStorage, PrimaryGeneratedColumn} from 'typeorm';
-import {TypeOrmConnectionWrapper} from '../../../src/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
-import {EVENT_STORAGE_REF_PREPARED} from '../../../src/libs/storage/framework/typeorm/Constants';
-import {TestHelper} from '@typexs/testing';
-import {TypeOrmStorageRef} from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
+import { suite, test } from '@testdeck/mocha';
+import { Bootstrap } from '../../../src/Bootstrap';
+import { Config } from '@allgemein/config';
+import { C_DEFAULT } from '@allgemein/base';
+import { SchemaUtils } from '@allgemein/schema-api';
+import { Column, Entity, getMetadataArgsStorage, PrimaryGeneratedColumn } from 'typeorm';
+import { TypeOrmConnectionWrapper } from '../../../src/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { EVENT_STORAGE_REF_PREPARED } from '../../../src/libs/storage/framework/typeorm/Constants';
+import { TestHelper } from '@typexs/testing';
+import { TypeOrmStorageRef } from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
 import { postgres_host, postgres_port } from '../config';
 
 let bootstrap: Bootstrap;
-
 
 
 @suite('functional/storage/add_entity_on_runtime (psql)')
@@ -27,7 +26,7 @@ class StorageAddEntityOnRuntimeSpec {
     Config.clear();
     const appdir = path.join(__dirname, 'fake_app');
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure({
         app: {
           path: appdir
@@ -84,9 +83,9 @@ class StorageAddEntityOnRuntimeSpec {
     let connection = await storageRef.connect() as TypeOrmConnectionWrapper;
     // open new connection
 
-    Entity({name: 'test_class'})(clazz);
-    PrimaryGeneratedColumn({type: 'int'})({constructor: clazz}, 'id');
-    Column({type: 'varchar', length: 16})({constructor: clazz}, 'name');
+    Entity({ name: 'test_class' })(clazz);
+    PrimaryGeneratedColumn({ type: 'int' })({ constructor: clazz }, 'id');
+    Column({ type: 'varchar', length: 16 })({ constructor: clazz }, 'name');
     storageRef.addEntityClass(clazz);
 
     // now add new entity
@@ -155,9 +154,9 @@ class StorageAddEntityOnRuntimeSpec {
     const connection = await storageRef.connect() as TypeOrmConnectionWrapper;
     // open new connection
 
-    Entity({name: 'test_class'})(clazz);
-    PrimaryGeneratedColumn({type: 'int'})({constructor: clazz}, 'id');
-    Column({type: 'varchar', length: 16})({constructor: clazz}, 'name');
+    Entity({ name: 'test_class' })(clazz);
+    PrimaryGeneratedColumn({ type: 'int' })({ constructor: clazz }, 'id');
+    Column({ type: 'varchar', length: 16 })({ constructor: clazz }, 'name');
     storageRef.addEntityClass(clazz);
 
     // now add new entity

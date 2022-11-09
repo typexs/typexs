@@ -68,7 +68,7 @@ test:
   image: ${CI_REGISTRY_IMAGE}/ubuntu-docker:latest
   stage: test
   tags:
-    - testing
+    - dind
   variables:
     REDIS_HOST: redis
     REDIS_PORT: 6379
@@ -119,4 +119,5 @@ test:
         - packages/*/src/**/*
         - packages/*/test/**
         - packages/*/test/**/*
+        - deployments/testing/**
 

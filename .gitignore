@@ -63,6 +63,10 @@ typings/
 # next.js build output
 .next
 
+# git meld data
+*.orig
+
+
 # IDE
 .idea
 build
@@ -87,3 +91,6 @@ remote-profile/
 
 secrets.yml
 secrets--*.yml
+
+
+

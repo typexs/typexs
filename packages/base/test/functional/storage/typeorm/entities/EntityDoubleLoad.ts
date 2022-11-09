@@ -9,8 +9,8 @@ import { REGISTRY_TYPEORM } from '../../../../../src/libs/storage/framework/type
  * DB Name: passing_other_name
  */
 @Namespace(REGISTRY_TYPEORM)
-@Entity({ name: 'passing_other_name' })
-export class EntityPassName {
+@Entity({ name: 'passing_double_load' })
+export class EntityDoubleLoad {
 
   @Property({ type: 'number', auto: true })
   id: number;
