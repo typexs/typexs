@@ -191,6 +191,8 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
               this.logger.debug('storage process ' + this.entityRef.name + '[' + inc + '/' + chunksAmount +
                 '] with id=' + inst.id + ' state=' + state + ' count=' + this.statistic.count);
             }
+            // set state back to the entity
+            set(inst.instance, XS_STATE_KEY, state);
             ret.push(inst.instance);
           }
           if (chunksAmount !== 1) {
