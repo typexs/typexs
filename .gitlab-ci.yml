@@ -112,7 +112,11 @@ test:
         - package.json
         - package-lock.json
         - src/**
+        - src/**/*
         - test/**
+        - test/**/*
         - packages/*/src/**
+        - packages/*/src/**/*
         - packages/*/test/**
+        - packages/*/test/**/*
 

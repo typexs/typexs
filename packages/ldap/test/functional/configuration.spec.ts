@@ -52,7 +52,7 @@ class TypexsLdapConnection {
     }));
     const storageRef = Injector.get<LdapStorageRef>('storage.ldap');
     expect(storageRef).to.not.be.null;
-    expect(storageRef.getOptions().url).to.be.eq('ldap://localhost:389');
+    expect(storageRef.getOptions().url).to.be.eq(LDAP_CONFIG.url);
   }
 
   // @test
