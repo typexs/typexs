@@ -89,6 +89,7 @@ test:
     LDAPS_PORT: 689
   before_script:
     - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
+    - docker compose -f deployments/testing/docker-compose.yml pull
     - docker compose -f deployments/testing/docker-compose.yml up -d
     - DOCKERINFO=$(curl -s --unix-socket /var/run/docker.sock http://docker/containers/json)
     - echo $DOCKERINFO > docker.json
