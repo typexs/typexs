@@ -50,7 +50,6 @@ export interface IStorageControllerProcessorOptions<T> extends IProcessorOptions
   arrayChunkParallel?: number;
 }
 
-export type xsStateKey = '_state_';
 export type xsState = 'new' | 'change' | 'no_change' | 'none';
 
 
