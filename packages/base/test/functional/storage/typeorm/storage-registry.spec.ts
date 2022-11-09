@@ -4,7 +4,7 @@ import { Bootstrap, StorageRef } from '../../../../src';
 import path from 'path';
 import { Config } from '@allgemein/config';
 import { TestHelper } from '@typexs/testing';
-import { WithName } from './scenarios/class_annotations/entities/WithName';
+import { WithName } from './scenarios/class_annotations_schema_api/entities/WithName';
 import { expect } from 'chai';
 
 let registry: TypeOrmEntityRegistry = null;
@@ -21,7 +21,7 @@ class StorageRegistrySpec {
     Bootstrap.reset();
     Config.clear();
 
-    const appdir = path.join(__dirname, 'scenarios', 'class_annotations');
+    const appdir = path.join(__dirname, 'scenarios', 'class_annotations_schema_api');
     bootstrap = await Bootstrap.configure({
       app: { path: appdir },
       modules: {

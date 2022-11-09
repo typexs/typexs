@@ -18,7 +18,7 @@ import { StorageRef } from '../../StorageRef';
 import { ICollection } from '../../ICollection';
 import { BaseConnectionOptions } from 'typeorm/connection/BaseConnectionOptions';
 import {
-  C_BACKUP_TYPE,
+  C_BACKUP_TYPE, C_TYPEORM_REGULAR,
   EVENT_STORAGE_ENTITY_ADDED,
   EVENT_STORAGE_REF_PREPARED,
   EVENT_STORAGE_REF_SHUTDOWN,
@@ -224,7 +224,7 @@ export class TypeOrmStorageRef extends StorageRef {
     // convert unknown types
 
     columns.forEach(x => {
-      if (x.mode === 'regular') {
+      if (x.mode === C_TYPEORM_REGULAR) {
         const type = x.options.type;
         if (this.getSchemaHandler()) {
           if (!has(x.options, C_BACKUP_TYPE)) {
@@ -292,7 +292,7 @@ export class TypeOrmStorageRef extends StorageRef {
     const args: TableMetadataArgs = {
       target: type,
       name: name.toLowerCase(),
-      type: 'regular',
+      type: C_TYPEORM_REGULAR,
       orderBy: options && options.orderBy ? options.orderBy : undefined,
       engine: options && options.engine ? options.engine : undefined,
       database: options && options.database ? options.database : undefined,

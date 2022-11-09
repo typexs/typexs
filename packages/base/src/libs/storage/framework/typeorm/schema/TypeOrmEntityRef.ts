@@ -1,15 +1,14 @@
-import {defaults, has} from 'lodash';
-import {ClassRef, DefaultEntityRef, IEntityOptions, JsonSchema, METATYPE_PROPERTY} from '@allgemein/schema-api';
-import {IJsonSchemaSerializeOptions} from '@allgemein/schema-api/lib/json-schema/IJsonSchemaSerializeOptions';
+import { assign, defaults, has } from 'lodash';
+import { ClassRef, DefaultEntityRef, IEntityOptions, JsonSchema, METATYPE_PROPERTY } from '@allgemein/schema-api';
+import { IJsonSchemaSerializeOptions } from '@allgemein/schema-api/lib/json-schema/IJsonSchemaSerializeOptions';
 import { C_INTERNAL_NAME, C_METADATA, REGISTRY_TYPEORM } from '../Constants';
 import { ITypeOrmEntityOptions } from './ITypeOrmEntityOptions';
-
 
 
 export class TypeOrmEntityRef extends DefaultEntityRef {
 
   constructor(_options: ITypeOrmEntityOptions) {
-    super(defaults(_options, <ITypeOrmEntityOptions>{
+    super(defaults(assign(_options, { namespace: REGISTRY_TYPEORM }), <ITypeOrmEntityOptions>{
       metaType: METATYPE_PROPERTY,
       namespace: REGISTRY_TYPEORM,
       target: _options.metadata.target,
@@ -30,8 +29,8 @@ export class TypeOrmEntityRef extends DefaultEntityRef {
     return this.getSourceRef().id().toLowerCase();
   }
 
-  getTableName(){
-    if(this.getOptions('metadata.name', null)){
+  getTableName() {
+    if (this.getOptions('metadata.name', null)) {
       return this.getOptions('metadata.name');
     }
     return this.storingName;

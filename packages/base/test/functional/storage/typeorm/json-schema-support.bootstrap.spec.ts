@@ -177,15 +177,15 @@ class JsonSchemaSupportSpec {
       {
         'name': 'Author',
         'rootpage': 20,
-        'sql': 'CREATE TABLE "author" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "first_name" varchar NOT NULL, "last_name" varchar NOT NULL)',
-        'tbl_name': 'author',
+        'sql': 'CREATE TABLE "Author" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "first_name" varchar NOT NULL, "last_name" varchar NOT NULL)',
+        'tbl_name': 'Author',
         'type': 'table'
       },
       {
-        'name': 'book',
+        'name': 'Book',
         'rootpage': 21,
-        'sql': 'CREATE TABLE "book" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "label" varchar NOT NULL, "autor_id" integer, CONSTRAINT "REL_0719a0dd93f5115499d07da224" UNIQUE ("autor_id"), CONSTRAINT "FK_0719a0dd93f5115499d07da224f" FOREIGN KEY ("autor_id") REFERENCES "author" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION)',
-        'tbl_name': 'book',
+        'sql': 'CREATE TABLE "Book" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "label" varchar NOT NULL, "autor_id" integer, CONSTRAINT "REL_592a174ffef66ceccb8fdc5d4c" UNIQUE ("autor_id"), CONSTRAINT "FK_592a174ffef66ceccb8fdc5d4c6" FOREIGN KEY ("autor_id") REFERENCES "Author" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION)',
+        'tbl_name': 'Book',
         'type': 'table'
       }
     ]);
@@ -351,30 +351,30 @@ class JsonSchemaSupportSpec {
     const q = await c.manager.query('SELECT * FROM sqlite_master WHERE type = \'table\' AND name NOT LIKE \'sqlite%\';');
     expect(q).to.have.length(5);
     expect(q.map((x: any) => x.name)).to.include.members([
-      'dealer',
-      'product',
+      'Dealer',
+      'Product',
       'product_dealers'
     ]);
-    expect(q.filter((x: any) => ['dealer', 'product', 'product_dealers'].includes(x.name))).to.deep.eq(
+    expect(q.filter((x: any) => ['Dealer', 'Product', 'product_dealers'].includes(x.name))).to.deep.eq(
       [
         {
-          'name': 'product',
+          'name': 'Product',
           'rootpage': 18,
-          'sql': 'CREATE TABLE "product" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL)',
-          'tbl_name': 'product',
+          'sql': 'CREATE TABLE "Product" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL)',
+          'tbl_name': 'Product',
           'type': 'table'
         },
         {
-          'name': 'dealer',
+          'name': 'Dealer',
           'rootpage': 19,
-          'sql': 'CREATE TABLE "dealer" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "label" varchar NOT NULL)',
-          'tbl_name': 'dealer',
+          'sql': 'CREATE TABLE "Dealer" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "label" varchar NOT NULL)',
+          'tbl_name': 'Dealer',
           'type': 'table'
         },
         {
           'name': 'product_dealers',
           'rootpage': 23,
-          'sql': 'CREATE TABLE "product_dealers" ("productId" integer NOT NULL, "dealerId" integer NOT NULL, CONSTRAINT "FK_386ad987e614cd494739e814ff9" FOREIGN KEY ("productId") REFERENCES "product" ("id") ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT "FK_994714d513d1082f4636b4b9205" FOREIGN KEY ("dealerId") REFERENCES "dealer" ("id") ON DELETE CASCADE ON UPDATE CASCADE, PRIMARY KEY ("productId", "dealerId"))',
+          'sql': 'CREATE TABLE "product_dealers" ("productId" integer NOT NULL, "dealerId" integer NOT NULL, CONSTRAINT "FK_386ad987e614cd494739e814ff9" FOREIGN KEY ("productId") REFERENCES "Product" ("id") ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT "FK_994714d513d1082f4636b4b9205" FOREIGN KEY ("dealerId") REFERENCES "Dealer" ("id") ON DELETE CASCADE ON UPDATE CASCADE, PRIMARY KEY ("productId", "dealerId"))',
           'tbl_name': 'product_dealers',
           'type': 'table'
         }

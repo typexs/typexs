@@ -4,7 +4,7 @@ import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateCol
  * Using schema api
  */
 @Entity()
-export class WithDateAsOrm {
+export class WithDateOrm {
 
   @PrimaryGeneratedColumn()
   id: number;

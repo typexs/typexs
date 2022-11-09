@@ -1,6 +1,6 @@
 import { IEntityRef, IPropertyRef } from '@allgemein/schema-api';
 import * as _ from 'lodash';
-import { C_TYPEORM, K_STRINGIFY_OPTION } from './Constants';
+import { C_TYPEORM, C_TYPEORM_REGULAR, K_STRINGIFY_OPTION } from './Constants';
 import { ITypeOrmEntityOptions } from './schema/ITypeOrmEntityOptions';
 import { TableMetadataArgs } from 'typeorm/metadata-args/TableMetadataArgs';
 import { assign, defaults, get } from 'lodash';
@@ -14,7 +14,7 @@ import { boolean } from 'yargs';
 export function createTableTypeOrmOptions(options: ITypeOrmEntityOptions, newEntry: boolean = false) {
   const defaultTypeOrmOptions: TableMetadataArgs = {
     target: options.target,
-    type: 'regular'
+    type: C_TYPEORM_REGULAR
   };
   // if name present pass through
   if (options.name) {

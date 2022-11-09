@@ -2,17 +2,18 @@ import * as path from 'path';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Config } from '@allgemein/config';
+import { RegistryFactory } from '@allgemein/schema-api';
 import { getMetadataArgsStorage } from 'typeorm';
 import { Bootstrap, StorageRef } from '../../../../src';
-import { WithNumbers } from './scenarios/class_annotations/entities/WithNumbers';
-import { WithJson } from './scenarios/class_annotations/entities/WithJson';
-import { WithDate } from './scenarios/class_annotations/entities/WithDate';
+import { WithNumbers } from './scenarios/class_annotations_schema_api/entities/WithNumbers';
+import { WithJson } from './scenarios/class_annotations_schema_api/entities/WithJson';
+import { WithDate } from './scenarios/class_annotations_schema_api/entities/WithDate';
 import { TestHelper } from '@typexs/testing';
 import { postgres_host, postgres_port } from '../../config';
-import { WithName } from './scenarios/class_annotations/entities/WithName';
-import { OnlyClass } from './scenarios/class_annotations/entities/OnlyClass';
-import { WithTableName } from './scenarios/class_annotations/entities/WithTableName';
-import { WithNameAndTableName } from './scenarios/class_annotations/entities/WithNameAndTableName';
+import { WithName } from './scenarios/class_annotations_schema_api/entities/WithName';
+import { OnlyClass } from './scenarios/class_annotations_schema_api/entities/OnlyClass';
+import { WithTableName } from './scenarios/class_annotations_schema_api/entities/WithTableName';
+import { WithNameAndTableName } from './scenarios/class_annotations_schema_api/entities/WithNameAndTableName';
 
 
 let bootstrap: Bootstrap = null;
@@ -28,13 +29,13 @@ let storage: StorageRef;
 class ClassAnnotationsSchemaApiPsqlSpec {
 
   /**
-   * Start typexs with app dir scenarios/class_annotations and psql database configuration
+   * Start typexs with app dir scenarios/class_annotations_schema_api and psql database configuration
    */
   static async before() {
     Bootstrap.reset();
     Config.clear();
 
-    const appdir = path.join(__dirname, 'scenarios', 'class_annotations');
+    const appdir = path.join(__dirname, 'scenarios', 'class_annotations_schema_api');
     bootstrap = await Bootstrap.configure({
       app: { path: appdir },
       modules: {
@@ -183,7 +184,6 @@ class ClassAnnotationsSchemaApiPsqlSpec {
     if (bootstrap) {
       await bootstrap.shutdown();
     }
-
   }
 
 

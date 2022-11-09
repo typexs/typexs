@@ -12,9 +12,10 @@ export const EVENT_STORAGE_REF_SHUTDOWN = 'storage_ref_shutdown';
 
 export const K_STRINGIFY_OPTION = 'metadata.options.stringify';
 
-export const C_COLUMN = 'column';
-export const C_RELATION = 'relation';
-export const C_EMBEDDED = 'embedded';
+export const C_TYPEORM_REGULAR = 'regular';
+export const C_TYPEORM_COLUMN = 'column';
+export const C_TYPEORM_RELATION = 'relation';
+export const C_TYPEORM_EMBEDDED = 'embedded';
 
 export type T_TABLETYPE = 'column' | 'relation' | 'embedded';
 
@@ -24,3 +25,53 @@ export const JS_PRIMATIVE_PROPERTY_TYPES = ['string', 'number', 'boolean', 'date
 export const __TXS__ = '__txs';
 export const C_METADATA = 'metadata';
 export const C_INTERNAL_NAME = 'internalName';
+
+
+export type TYPEORM_METADATA_KEYS =
+  'tables' |
+  'trees' |
+  'entityRepositories' |
+  'transactionEntityManagers' |
+  'transactionRepositories' |
+  'namingStrategies' |
+  'entitySubscribers' |
+  'indices' |
+  'uniques' |
+  'checks' |
+  'exclusions' |
+  'columns' |
+  'generations' |
+  'relations' |
+  'joinColumns' |
+  'joinTables' |
+  'entityListeners' |
+  'relationCounts' |
+  'relationIds' |
+  'embeddeds' |
+  'inheritances' |
+  'discriminatorValues';
+
+export const typeormMetadataKeys: TYPEORM_METADATA_KEYS[] = [
+  'tables',
+  'trees',
+  'entityRepositories',
+  'transactionEntityManagers',
+  'transactionRepositories',
+  'namingStrategies',
+  'entitySubscribers',
+  'indices',
+  'uniques',
+  'checks',
+  'exclusions',
+  'columns',
+  'generations',
+  'relations',
+  'joinColumns',
+  'joinTables',
+  'entityListeners',
+  'relationCounts',
+  'relationIds',
+  'embeddeds',
+  'inheritances',
+  'discriminatorValues'
+];
