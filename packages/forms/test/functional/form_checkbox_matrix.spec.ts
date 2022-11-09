@@ -7,6 +7,7 @@ import { RegistryFactory } from '@allgemein/schema-api';
 import { ComponentRegistry } from '@typexs/base';
 import { CheckboxMatrixRow } from './entities/CheckboxMatrixRow';
 import { CheckboxMatrix } from './entities/CheckboxMatrix';
+import { FormObject } from '../../src';
 FORM_ELEMENTS;
 
 
@@ -47,7 +48,7 @@ class FormParseSpec {
     expect(children).to.have.length(1);
     const gridChildren = formElements.getChildren()[0].getChildren();
     expect(gridChildren).to.have.length(2);
-    const checkbox = _.get(formElements, 'children.0.children.1');
+    const checkbox = _.get(formElements, 'children.0.children.1') as FormObject;
     expect(checkbox.isMultiple()).to.be.true;
     expect(checkbox.isReplicable()).to.be.true;
     // console.log(inspect(formElements,false,10))
