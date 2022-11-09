@@ -36,6 +36,7 @@ import { Processor } from '../../../lib/Processor';
 import { XS_ID_SEP, XS_STATE_KEY } from '../../../lib/Constants';
 import { IRevisionSupport } from '../../../lib/IRevisionSupport';
 import { IProcessorOptions } from '../../../lib/processor/IProcessorOptions';
+import { QueueJobRef } from '@typexs/base/libs/queue/QueueJobRef';
 
 
 export interface IStorageControllerProcessorOptions<T> extends IProcessorOptions, ISaveOptions {
@@ -47,6 +48,14 @@ export interface IStorageControllerProcessorOptions<T> extends IProcessorOptions
   // revisions?: boolean
   arrayChunkSize?: number;
   arrayChunkParallel?: number;
+}
+
+export type xsStateKey = '_state_';
+export type xsState = 'new' | 'change' | 'no_change' | 'none';
+
+
+export interface StateMixin {
+  _state_: xsState;
 }
 
 export interface IInstruction {
@@ -143,7 +152,7 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
     return this._doProcess(workLoad);
   }
 
-  doProcess(data: T | T[]) {
+  doProcess(data: T | T[]): Promise<T & StateMixin | Array<T & StateMixin>> | QueueJobRef<T & StateMixin> {
     if (this.queue) {
       return this.queue.push(data);
     } else {
