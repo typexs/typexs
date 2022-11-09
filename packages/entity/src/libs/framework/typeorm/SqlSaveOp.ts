@@ -236,7 +236,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
     // Two possible variants
 
 
-    const relationUpdateMode: string = get(this.options, 'relationUpdateMode', 'lookup_update');
+    const relationUpdateMode: any = get(this.options, 'relationUpdateMode', 'lookup_update');
     switch (relationUpdateMode) {
       case 'recreate':
         return this.recreateRelationsOverJoinReference(sourceDef, propertyDef, targetDef, sources, visitResult);
