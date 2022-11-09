@@ -61,6 +61,7 @@ import { IJsonSchemaSerializeOptions } from '@allgemein/schema-api/lib/json-sche
 import { K_IDENTIFIER, K_NULLABLE } from '../../../Constants';
 import { EventEmitter } from 'events';
 import { ITypeOrmPropertyOptions } from './ITypeOrmPropertyOptions';
+import { createTableTypeOrmOptions } from '../Helper';
 
 
 export type TYPEORM_METADATA_KEYS =
@@ -190,10 +191,9 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
     }
 
     const target = options.target;
-    const tableExists = target ? this.metadatastore.tables.find(x => x.target === target) : null;
+    const tableExists = target ? this.findTable(x => x.target === target) : null;
     if (context === METATYPE_ENTITY) {
       // check if metadata exists for the entry
-
       if (!tableExists) {
         this.create(METATYPE_ENTITY, options as ITypeOrmEntityOptions);
         const properties = MetadataRegistry.$()
@@ -204,7 +204,6 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           this.onAdd(METATYPE_PROPERTY, property);
         }
       }
-
     } else if (context === METATYPE_PROPERTY) {
       // todo check if table is present, else skip processing
       if (tableExists) {
@@ -369,28 +368,35 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
   create<T>(context: string, options: ITypeOrmPropertyOptions | ITypeOrmEntityOptions): T {
     let update = false;
+    let target = null;
     let typeOrmOptions: any = null;
     if (context === METATYPE_ENTITY) {
+      target = options.target;
+      if (!target && options.metadata?.target) {
+        target = options.metadata.target;
+      }
       if (!options.metadata || !options.metadata.target) {
         // coming from unserialization
-        typeOrmOptions = this._findTableMetadataArgs(options.target);
+        typeOrmOptions = this._findTableMetadataArgs(target);
         if (!typeOrmOptions) {
-          // create an default entry
-          const defaultTypeOrmOptions: any = {};
-          if (options.internalName) {
-            defaultTypeOrmOptions.name = options.internalName;
-          }
-          typeOrmOptions = get(options, C_TYPEORM, defaultTypeOrmOptions);
-          defaults(typeOrmOptions, <TableMetadataArgs & { new: boolean }>{
-            new: true,
-            target: options.target,
-            type: 'regular'
-          });
-
-          assign(typeOrmOptions, options.metadata ? options.metadata : {});
+          typeOrmOptions = createTableTypeOrmOptions(options as ITypeOrmEntityOptions, true);
           options.metadata = typeOrmOptions;
           this.metadatastore.tables.push(typeOrmOptions);
         }
+      } else {
+        // keys()
+        // entry was reseted, but metadata are still loaded
+        // update options data
+        // .filter(x => x.target === options.target);
+        // const x = entry;
+        if (target) {
+          const entry = MetadataRegistry.$().getByContextAndTarget(METATYPE_ENTITY, target).shift();
+          if (entry) {
+            defaults(options, entry);
+          }
+        }
+
+
       }
       // const metaOptionsForEntity = MetadataRegistry.$().getByContextAndTarget(METATYPE_ENTITY, options.target);
       const res = new TypeOrmEntityRef(options as ITypeOrmEntityOptions);
@@ -680,7 +686,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
 
   private _find(instance: any): TypeOrmEntityRef {
-    const cName = ClassUtils.getClassName(instance);
+    const cName = ClassRef.getClassName(instance);
     return this.getEntityRefByName(cName);
   }
 

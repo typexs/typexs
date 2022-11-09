@@ -1,11 +1,11 @@
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {join} from 'path';
-import {Bootstrap} from '../../../../src/Bootstrap';
-import {Config} from '@allgemein/config';
-import {PlatformUtils} from '@allgemein/base';
-import {REGISTRY_TYPEORM, TypeOrmConnectionWrapper} from '../../../../src';
-import {RegistryFactory} from '@allgemein/schema-api';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { join } from 'path';
+import { Bootstrap } from '../../../../src/Bootstrap';
+import { Config } from '@allgemein/config';
+import { PlatformUtils } from '@allgemein/base';
+import { REGISTRY_TYPEORM, TypeOrmConnectionWrapper } from '../../../../src';
+import { RegistryFactory } from '@allgemein/schema-api';
 import { TestHelper } from '@typexs/testing';
 
 
@@ -37,7 +37,7 @@ class JsonSchemaSupportSpec {
   async boot(appdir: string, entities: any[]) {
     PlatformUtils.workdir = appdir;
     bootstrap = await Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure({
         app: {
           path: appdir
@@ -86,24 +86,24 @@ class JsonSchemaSupportSpec {
     expect(q.map((x: any) => x.name)).to.deep.eq([
       'system_node_info',
       'task_log',
-      'osoba'
+      'Osoba'
     ]);
-    expect(q.find((x: any) => x.name === 'osoba')).to.deep.eq({
-      'name': 'osoba',
+    expect(q.find((x: any) => x.name === 'Osoba')).to.deep.eq({
+      'name': 'Osoba',
       'rootpage': 18,
-      'sql': 'CREATE TABLE "osoba" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "first_name" varchar NOT NULL, "last_name" varchar NOT NULL)',
-      'tbl_name': 'osoba',
+      'sql': 'CREATE TABLE "Osoba" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "first_name" varchar NOT NULL, "last_name" varchar NOT NULL)',
+      'tbl_name': 'Osoba',
       'type': 'table'
     });
 
     const entry = storage.getRegistry().getEntityRefFor('Osoba');
-    const instance = entry.build({firstName: 'hallo', lastName: 'welt'}, {skipClassNamespaceInfo: true});
+    const instance = entry.build({ firstName: 'hallo', lastName: 'welt' }, { skipClassNamespaceInfo: true });
     const savedInstance = await storage.getController().save(instance);
 
     expect(savedInstance).to.deep.eq({
       firstName: 'hallo',
       lastName: 'welt',
-      '$state': {isValidated: true, isSuccessValidated: true},
+      '$state': { isValidated: true, isSuccessValidated: true },
       id: 1
     });
 
@@ -122,21 +122,21 @@ class JsonSchemaSupportSpec {
     const c = await storage.connect() as TypeOrmConnectionWrapper;
 
     const instanceList = [
-      entry.build({firstName: 'ballo', lastName: 'dalo'}, {skipClassNamespaceInfo: true}),
-      entry.build({firstName: 'palo', lastName: 'karlo'}, {skipClassNamespaceInfo: true}),
+      entry.build({ firstName: 'ballo', lastName: 'dalo' }, { skipClassNamespaceInfo: true }),
+      entry.build({ firstName: 'palo', lastName: 'karlo' }, { skipClassNamespaceInfo: true })
     ];
     const savedInstances = await storage.getController().save(instanceList);
     expect(savedInstances).to.deep.eq([
       {
         firstName: 'ballo',
         lastName: 'dalo',
-        '$state': {isValidated: true, isSuccessValidated: true},
+        '$state': { isValidated: true, isSuccessValidated: true },
         id: 1
       },
       {
         firstName: 'palo',
         lastName: 'karlo',
-        '$state': {isValidated: true, isSuccessValidated: true},
+        '$state': { isValidated: true, isSuccessValidated: true },
         id: 2
       }]);
     const foundInstance = await storage.getController().find(entry.getClass());
@@ -170,12 +170,12 @@ class JsonSchemaSupportSpec {
     expect(q.map((x: any) => x.name)).to.deep.eq([
       'system_node_info',
       'task_log',
-      'author',
-      'book'
+      'Author',
+      'Book'
     ]);
-    expect(q.filter((x: any) => ['book', 'author'].includes(x.name))).to.deep.eq([
+    expect(q.filter((x: any) => ['Book', 'Author'].includes(x.name))).to.deep.eq([
       {
-        'name': 'author',
+        'name': 'Author',
         'rootpage': 20,
         'sql': 'CREATE TABLE "author" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "first_name" varchar NOT NULL, "last_name" varchar NOT NULL)',
         'tbl_name': 'author',
@@ -204,14 +204,14 @@ class JsonSchemaSupportSpec {
 
     const bookType = storage.getRegistry().getEntityRefFor('Book');
     const authorType = storage.getRegistry().getEntityRefFor('Author');
-    const author = authorType.build({firstName: 'Rob', lastName: 'Elt'}, {skipClassNamespaceInfo: true}) as any;
-    const book = bookType.build({label: 'Hallo'}, {skipClassNamespaceInfo: true}) as any;
+    const author = authorType.build({ firstName: 'Rob', lastName: 'Elt' }, { skipClassNamespaceInfo: true }) as any;
+    const book = bookType.build({ label: 'Hallo' }, { skipClassNamespaceInfo: true }) as any;
 
     const savedInstance = await storage.getController().save(author);
     expect(savedInstance).to.be.deep.eq({
       firstName: 'Rob',
       lastName: 'Elt',
-      '$state': {isValidated: true, isSuccessValidated: true},
+      '$state': { isValidated: true, isSuccessValidated: true },
       id: 1
     });
 
@@ -220,16 +220,16 @@ class JsonSchemaSupportSpec {
 
     const rawbooks = await c.manager.query('select * from book');
     const rawauthor = await c.manager.query('select * from author');
-    expect(rawbooks).to.be.deep.eq([{id: 1, label: 'Hallo', autor_id: 1}]);
-    expect(rawauthor).to.be.deep.eq([{id: 1, first_name: 'Rob', last_name: 'Elt'}]);
+    expect(rawbooks).to.be.deep.eq([{ id: 1, label: 'Hallo', autor_id: 1 }]);
+    expect(rawauthor).to.be.deep.eq([{ id: 1, first_name: 'Rob', last_name: 'Elt' }]);
 
-    const foundBooks = await storage.getController().find(bookType.getClass(), null, {eager: true});
+    const foundBooks = await storage.getController().find(bookType.getClass(), null, { eager: true });
     expect(foundBooks).to.be.deep.eq(
       [
         {
           id: 1,
           label: 'Hallo',
-          autor: {id: 1, firstName: 'Rob', lastName: 'Elt'}
+          autor: { id: 1, firstName: 'Rob', lastName: 'Elt' }
         }
       ]
     );
@@ -252,11 +252,11 @@ class JsonSchemaSupportSpec {
     const author1 = authorType.build({
       firstName: 'Fjodor',
       lastName: 'Dostojewski'
-    }, {skipClassNamespaceInfo: true}) as any;
-    const author2 = authorType.build({firstName: 'Lew', lastName: 'Tolstoi'}, {skipClassNamespaceInfo: true}) as any;
+    }, { skipClassNamespaceInfo: true }) as any;
+    const author2 = authorType.build({ firstName: 'Lew', lastName: 'Tolstoi' }, { skipClassNamespaceInfo: true }) as any;
     const books = [
-      bookType.build({label: 'Krieg und Frieden'}, {skipClassNamespaceInfo: true}) as any,
-      bookType.build({label: 'Schuld und Sühne'}, {skipClassNamespaceInfo: true}) as any,
+      bookType.build({ label: 'Krieg und Frieden' }, { skipClassNamespaceInfo: true }) as any,
+      bookType.build({ label: 'Schuld und Sühne' }, { skipClassNamespaceInfo: true }) as any
     ];
 
     const savedInstance = await storage.getController().save([author1, author2]);
@@ -312,7 +312,7 @@ class JsonSchemaSupportSpec {
       }
     ]);
 
-    const foundBooks = await storage.getController().find(bookType.getClass(), null, {eager: true});
+    const foundBooks = await storage.getController().find(bookType.getClass(), null, { eager: true });
     expect(foundBooks).to.be.deep.eq([
       {
         'autor': {
@@ -392,13 +392,13 @@ class JsonSchemaSupportSpec {
     const productType = storage.getRegistry().getEntityRefFor('Product');
 
     // Empty reference
-    const productEmpty = productType.build({name: 'Webcam'}, {skipClassNamespaceInfo: true}) as any;
-    const savedProductEmpty = await storage.getController().save(productEmpty, {validate: false});
+    const productEmpty = productType.build({ name: 'Webcam' }, { skipClassNamespaceInfo: true }) as any;
+    const savedProductEmpty = await storage.getController().save(productEmpty, { validate: false });
     expect(savedProductEmpty).to.be.deep.eq({
       'id': 1,
       'name': 'Webcam'
     });
-    const foundBooks = await storage.getController().find(productType.getClass(), {id: savedProductEmpty.id}, {eager: true});
+    const foundBooks = await storage.getController().find(productType.getClass(), { id: savedProductEmpty.id }, { eager: true });
     expect(foundBooks).to.be.deep.eq([
       {
         'dealers': [],
@@ -420,14 +420,14 @@ class JsonSchemaSupportSpec {
     const dealerType = storage.getRegistry().getEntityRefFor('Dealer');
 
 
-    const productSingle = productType.build({name: 'Car'}, {skipClassNamespaceInfo: true}) as any;
-    const dealerOne = dealerType.build({label: 'MediaShop'}, {skipClassNamespaceInfo: true}) as any;
+    const productSingle = productType.build({ name: 'Car' }, { skipClassNamespaceInfo: true }) as any;
+    const dealerOne = dealerType.build({ label: 'MediaShop' }, { skipClassNamespaceInfo: true }) as any;
     productSingle.dealers = [dealerOne];
     const savedProductSingle = await storage.getController().save(productSingle);
     expect(savedProductSingle).to.be.deep.eq({
       '$state': {
         'isSuccessValidated': true,
-        'isValidated': true,
+        'isValidated': true
       },
       'dealers': [
         {
@@ -439,7 +439,7 @@ class JsonSchemaSupportSpec {
       'name': 'Car'
     });
 
-    const foundBooks = await storage.getController().find(productType.getClass(), {id: savedProductSingle.id}, {eager: true});
+    const foundBooks = await storage.getController().find(productType.getClass(), { id: savedProductSingle.id }, { eager: true });
     expect(foundBooks).to.be.deep.eq([
       {
         'id': 1,
@@ -449,7 +449,7 @@ class JsonSchemaSupportSpec {
             'id': 1,
             'label': 'MediaShop'
           }
-        ],
+        ]
       }
     ]);
 
@@ -466,16 +466,16 @@ class JsonSchemaSupportSpec {
     const dealerType = storage.getRegistry().getEntityRefFor('Dealer');
 
 
-    const productMulti = productType.build({name: 'Event'}, {skipClassNamespaceInfo: true}) as any;
+    const productMulti = productType.build({ name: 'Event' }, { skipClassNamespaceInfo: true }) as any;
     productMulti.dealers = [
-      dealerType.build({label: 'TicketPower'}, {skipClassNamespaceInfo: true}) as any,
-      dealerType.build({label: 'TicketShop'}, {skipClassNamespaceInfo: true}) as any
+      dealerType.build({ label: 'TicketPower' }, { skipClassNamespaceInfo: true }) as any,
+      dealerType.build({ label: 'TicketShop' }, { skipClassNamespaceInfo: true }) as any
     ];
     const savedProductMulti = await storage.getController().save(productMulti);
     expect(savedProductMulti).to.be.deep.eq({
       '$state': {
         'isSuccessValidated': true,
-        'isValidated': true,
+        'isValidated': true
       },
       'dealers': [
         {
@@ -491,7 +491,7 @@ class JsonSchemaSupportSpec {
       'name': 'Event'
     });
 
-    const foundBooks = await storage.getController().find(productType.getClass(), {id: savedProductMulti.id}, {eager: true});
+    const foundBooks = await storage.getController().find(productType.getClass(), { id: savedProductMulti.id }, { eager: true });
     expect(foundBooks).to.be.deep.eq([
       {
         'dealers': [
@@ -522,21 +522,21 @@ class JsonSchemaSupportSpec {
 
     // Empty reference
     const productArray = [
-      productType.build({name: 'Webcam'}, {skipClassNamespaceInfo: true}) as any,
-      productType.build({name: 'Handy'}, {skipClassNamespaceInfo: true}) as any
+      productType.build({ name: 'Webcam' }, { skipClassNamespaceInfo: true }) as any,
+      productType.build({ name: 'Handy' }, { skipClassNamespaceInfo: true }) as any
     ];
-    const savedProductArray = await storage.getController().save(productArray, {validate: false});
+    const savedProductArray = await storage.getController().save(productArray, { validate: false });
     expect(savedProductArray).to.be.deep.eq([
       {
         'id': 1,
-        'name': 'Webcam',
+        'name': 'Webcam'
       },
       {
         'id': 2,
-        'name': 'Handy',
+        'name': 'Handy'
       }
     ]);
-    const foundProducts = await storage.getController().find(productType.getClass(), null, {eager: true});
+    const foundProducts = await storage.getController().find(productType.getClass(), null, { eager: true });
     expect(foundProducts).to.be.deep.eq([
       {
         'id': 1,
@@ -562,18 +562,18 @@ class JsonSchemaSupportSpec {
     const productType = storage.getRegistry().getEntityRefFor('Product');
     const dealerType = storage.getRegistry().getEntityRefFor('Dealer');
 
-    const dealer = dealerType.build({label: 'WalShop'}, {skipClassNamespaceInfo: true});
+    const dealer = dealerType.build({ label: 'WalShop' }, { skipClassNamespaceInfo: true });
     // Empty reference
     const productArray = [
-      productType.build({name: 'Webcam'}, {skipClassNamespaceInfo: true}) as any,
-      productType.build({name: 'Handy'}, {skipClassNamespaceInfo: true}) as any
+      productType.build({ name: 'Webcam' }, { skipClassNamespaceInfo: true }) as any,
+      productType.build({ name: 'Handy' }, { skipClassNamespaceInfo: true }) as any
     ];
-    const savedDealer = await storage.getController().save(dealer, {validate: false});
+    const savedDealer = await storage.getController().save(dealer, { validate: false });
     productArray[0].dealers = [savedDealer];
     productArray[1].dealers = [savedDealer];
 
 
-    const savedProductArray = await storage.getController().save(productArray, {validate: false});
+    const savedProductArray = await storage.getController().save(productArray, { validate: false });
     expect(savedProductArray).to.be.deep.eq([
       {
         'dealers': [
@@ -599,7 +599,7 @@ class JsonSchemaSupportSpec {
 
     const c = await storage.connect() as TypeOrmConnectionWrapper;
 
-    const foundProducts = await storage.getController().find(productType.getClass(), null, {eager: true});
+    const foundProducts = await storage.getController().find(productType.getClass(), null, { eager: true });
     expect(foundProducts).to.be.deep.eq([
       {
         'id': 1,
@@ -609,7 +609,7 @@ class JsonSchemaSupportSpec {
             'id': 1,
             'label': 'WalShop'
           }
-        ],
+        ]
       },
       {
         'id': 2,
@@ -619,7 +619,7 @@ class JsonSchemaSupportSpec {
             'id': 1,
             'label': 'WalShop'
           }
-        ],
+        ]
       }
     ]);
   }
@@ -635,21 +635,21 @@ class JsonSchemaSupportSpec {
     const productType = storage.getRegistry().getEntityRefFor('Product');
     const dealerType = storage.getRegistry().getEntityRefFor('Dealer');
 
-    const dealer1 = dealerType.build({label: 'WalShop'}, {skipClassNamespaceInfo: true});
-    const dealer2 = dealerType.build({label: 'Thehop'}, {skipClassNamespaceInfo: true});
+    const dealer1 = dealerType.build({ label: 'WalShop' }, { skipClassNamespaceInfo: true });
+    const dealer2 = dealerType.build({ label: 'Thehop' }, { skipClassNamespaceInfo: true });
     // Empty reference
     const productArray = [
-      productType.build({name: 'Webcam'}, {skipClassNamespaceInfo: true}) as any,
-      productType.build({name: 'Handy'}, {skipClassNamespaceInfo: true}) as any,
-      productType.build({name: 'Bike'}, {skipClassNamespaceInfo: true}) as any
+      productType.build({ name: 'Webcam' }, { skipClassNamespaceInfo: true }) as any,
+      productType.build({ name: 'Handy' }, { skipClassNamespaceInfo: true }) as any,
+      productType.build({ name: 'Bike' }, { skipClassNamespaceInfo: true }) as any
     ];
-    const savedDealer = await storage.getController().save([dealer1, dealer2], {validate: false});
+    const savedDealer = await storage.getController().save([dealer1, dealer2], { validate: false });
     productArray[0].dealers = [];
     productArray[1].dealers = [savedDealer[0]];
     productArray[2].dealers = savedDealer;
 
 
-    const savedProductArray = await storage.getController().save(productArray, {validate: false});
+    const savedProductArray = await storage.getController().save(productArray, { validate: false });
     const res =
       [
         {
@@ -685,7 +685,7 @@ class JsonSchemaSupportSpec {
     expect(savedProductArray).to.be.deep.eq(res);
     const c = await storage.connect() as TypeOrmConnectionWrapper;
 
-    const foundProducts = await storage.getController().find(productType.getClass(), null, {eager: true});
+    const foundProducts = await storage.getController().find(productType.getClass(), null, { eager: true });
     expect(foundProducts).to.be.deep.eq(res);
 
   }

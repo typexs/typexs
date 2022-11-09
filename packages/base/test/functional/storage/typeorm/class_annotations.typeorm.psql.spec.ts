@@ -5,7 +5,7 @@ import { Config } from '@allgemein/config';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { Bootstrap, REGISTRY_TYPEORM, StorageRef } from '../../../../src';
 import { TestHelper } from '@typexs/testing';
-import { WithDateAsOrm } from './scenarios/app_types/entities/WithDateAsOrm';
+import { WithDateAsOrm } from './scenarios/class_annotations/entities/WithDateAsOrm';
 import { postgres_host, postgres_port } from '../../config';
 
 
@@ -15,15 +15,15 @@ let storage: StorageRef;
  * Annotations by typeorm to @allgemein/schema-api
  */
 
-@suite('functional/storage/typeorm/data_types - typeorm - psql')
-class DataTypesTypeormPsqlSpec {
+@suite('functional/storage/typeorm/class_annotations - typeorm - psql')
+class ClassAnnotationsTypeormPsqlSpec {
 
 
   static async before() {
     Bootstrap.reset();
     Config.clear();
 
-    const appdir = path.join(__dirname, 'scenarios', 'app_types');
+    const appdir = path.join(__dirname, 'scenarios', 'class_annotations');
     bootstrap = await Bootstrap.configure({
       app: { path: appdir },
       modules: {

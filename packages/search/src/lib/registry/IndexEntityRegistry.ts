@@ -62,8 +62,7 @@ export class IndexEntityRegistry extends AbstractRegistry {
     return this.getLookupRegistry().find(METATYPE_ENTITY,
       (e: IndexEntityRef) =>
         snakeCase(e.getEntityRef().name) === snakeCase(name) ||
-        e.storingName === snakeCase(name) ||
-        e.machineName === snakeCase(name)
+        e.storingName === snakeCase(name)
     );
   }
 

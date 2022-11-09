@@ -8,6 +8,7 @@ import { Column, Entity, getMetadataArgsStorage } from 'typeorm';
 import { RegistryFactory, SchemaUtils } from '@allgemein/schema-api';
 import { REGISTRY_TYPEORM } from '../../../../src/libs/storage/framework/typeorm/Constants';
 import { EntityPassInternalName } from './entities/EntityPassInternalName';
+import { EntityDoubleLoad } from './entities/EntityDoubleLoad';
 
 let registry: TypeOrmEntityRegistry = null;
 
@@ -110,6 +111,7 @@ class StorageTypeormRegistrySpec {
 
     expect(entityRef).to.not.be.null;
     expect(target).to.deep.eq({
+      name: 'passing_other_name',
       schema: 'test',
       target: EntityWithDbSchema,
       type: 'regular'
@@ -138,6 +140,23 @@ class StorageTypeormRegistrySpec {
     expect(entityRef.getTableName()).to.be.eq('passing_other_internal_name');
     expect(entityRef.name).to.be.eq('EntityPassInternalName');
     expect(entityRef.getClassRef().name).to.be.eq('EntityPassInternalName');
+
+  }
+
+
+  /**
+   * Check that multiple creation of entity refs is prevented
+   */
+  @test
+  async 'check that double loading is prevented'() {
+    const entityRef1 = registry.getEntityRefFor(EntityDoubleLoad);
+    const entityRef2 = registry.getEntityRefFor(EntityDoubleLoad);
+    const entityRef3 = registry.getEntityRefByName('EntityDoubleLoad');
+    const entityRef4 = registry.getEntityRefByName('passing_double_load');
+
+    expect(entityRef1).to.be.eq(entityRef2);
+    expect(entityRef1).to.be.eq(entityRef3);
+    expect(entityRef1).to.be.eq(entityRef4);
 
   }
 

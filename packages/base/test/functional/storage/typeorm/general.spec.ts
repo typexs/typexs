@@ -105,7 +105,6 @@ class StorageGeneralSpec {
     const classRef3 = storageRef.getClassRef('test_entity');
     expect(classRef2.getClass()).to.be.eq(TestEntity);
     expect(classRef2).to.be.eq(classRef3);
-    expect(classRef2.machineName).to.be.eq('test_entity');
     expect(classRef2.storingName).to.be.eq('test_entity');
     expect(classRef2.name).to.be.eq('TestEntity');
 

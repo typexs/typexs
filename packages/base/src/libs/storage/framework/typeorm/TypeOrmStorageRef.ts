@@ -366,7 +366,7 @@ export class TypeOrmStorageRef extends StorageRef {
     return null;
   }
 
-  
+
   getRegistry() {
     return RegistryFactory.get(REGISTRY_TYPEORM) as TypeOrmEntityRegistry;
   }

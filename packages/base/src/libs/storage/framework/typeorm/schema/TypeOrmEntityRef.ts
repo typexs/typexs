@@ -31,14 +31,12 @@ export class TypeOrmEntityRef extends DefaultEntityRef {
   }
 
   getTableName(){
-    if(this.getOptions(C_INTERNAL_NAME, null)){
-      return this.getOptions(C_INTERNAL_NAME);
+    if(this.getOptions('metadata.name', null)){
+      return this.getOptions('metadata.name');
     }
-    if(this.getOptions('name', null)){
-      return this.getOptions('name');
-    }
-    return this.name;
+    return this.storingName;
   }
+
 
   toJsonSchema(options: IJsonSchemaSerializeOptions = {}) {
     options = options || {};
