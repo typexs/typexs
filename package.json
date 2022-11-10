@@ -2,7 +2,6 @@
   "name": "@typexs/typexs",
   "version": "2.0.38",
   "tag": "v2-lts",
-  "description": "Angular for typexs",
   "main": "index.js",
   "browser": "browser.js",
   "directories": {
@@ -23,7 +22,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/typexs/typexs.git"
+    "url": "git+https://gitlab.com/typexs/typexs.git"
   },
   "author": "Robert Kania",
   "license": "MIT",
@@ -34,10 +33,6 @@
     "typescript",
     "typexs"
   ],
-  "bugs": {
-    "url": "https://github.com/typexs/typexs/issues"
-  },
-  "homepage": "https://github.com/typexs/typexs#readme",
   "dependencies": {
     "@typexs/auth": "file:./packages/auth/src",
     "@typexs/auth-ng": "file:./packages/auth-ng/src",
