@@ -25,10 +25,6 @@ jobs:
       - checkout
 
       - run:
-          name: Update npm
-          command: npm install -g npm@8
-
-      - run:
           name: Install npm wee
           command: npm ci
 
@@ -36,7 +32,7 @@ jobs:
           name: Start container
           command: |
             set -x
-            docker-compose -f deployments/testing/docker-compose.yml up -d
+            docker-compose -f deployments/testing/docker-compose.local.yml up -d
 
       - run:
           name: Wait for containers to start
