@@ -129,7 +129,6 @@
     "@typescript-eslint/parser": "^5.30.7",
     "ag-grid-angular": "25.3.0",
     "ag-grid-community": "25.3.0",
-    "ajv": "8.2.0",
     "animate.css": "4.1.1",
     "asciidoctor-plantuml": "^1.5.0",
     "body-parser": "1.19.0",
