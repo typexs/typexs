@@ -2,7 +2,6 @@ import * as path from 'path';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Config } from '@allgemein/config';
-import { RegistryFactory } from '@allgemein/schema-api';
 import { getMetadataArgsStorage } from 'typeorm';
 import { Bootstrap, StorageRef } from '../../../../src';
 import { WithNumbers } from './scenarios/class_annotations_schema_api/entities/WithNumbers';
@@ -14,6 +13,7 @@ import { WithName } from './scenarios/class_annotations_schema_api/entities/With
 import { OnlyClass } from './scenarios/class_annotations_schema_api/entities/OnlyClass';
 import { WithTableName } from './scenarios/class_annotations_schema_api/entities/WithTableName';
 import { WithNameAndTableName } from './scenarios/class_annotations_schema_api/entities/WithNameAndTableName';
+import { WithTableNameSame } from './scenarios/class_annotations_schema_api/entities/WithTableNameSame';
 
 
 let bootstrap: Bootstrap = null;
@@ -152,6 +152,36 @@ class ClassAnnotationsSchemaApiPsqlSpec {
     expect(t).to.contain('with_extra_special_table_name');
   }
 
+  /**
+   * Table name should be overwritten by internal name and name should be passed
+   */
+  @test
+  async 'check multiple classes for same table'() {
+    const cls1 = WithTableName;
+    const cls2 = WithTableNameSame;
+    const metaStore = getMetadataArgsStorage();
+    const ref1 = storage.getRegistry().getEntityRefFor(cls1);
+    const ref2 = storage.getRegistry().getEntityRefFor(cls2);
+    const table1 = metaStore.filterTables(cls1).shift();
+    const table2 = metaStore.filterTables(cls2).shift();
+    expect(table1.name).to.be.eq('with_special_table_name');
+    expect(table1.target).to.be.eq(cls1);
+    expect(table2.name).to.be.eq('with_special_table_name');
+    expect(table2.target).to.be.eq(cls2);
+    expect(ref1.name).to.be.eq('WithTableName');
+    expect(ref2.name).to.be.eq('WithTableNameSame');
+    expect(ref1.machineName).to.be.eq('with_table_name');
+    expect(ref2.machineName).to.be.eq('with_table_name_same');
+    expect(ref1.storingName).to.be.eq('with_special_table_name');
+    expect(ref2.storingName).to.be.eq('with_special_table_name');
+    expect(ref1.getClass()).to.be.eq(cls1);
+    expect(ref2.getClass()).to.be.eq(cls2);
+    expect(ref1.getClassRef().name).to.be.eq('WithTableName');
+    expect(ref2.getClassRef().name).to.be.eq('WithTableNameSame');
+
+    const t = await storage.getRawCollectionNames();
+    expect(t).to.contain('with_special_table_name');
+  }
 
   @test
   async 'field of type bigint'() {
