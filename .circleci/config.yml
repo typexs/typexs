@@ -25,6 +25,10 @@ jobs:
       - checkout
 
       - run:
+          name: Update npm
+          command: npm install -g npm@8
+
+      - run:
           name: Install npm wee
           command: npm ci
 
