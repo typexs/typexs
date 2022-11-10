@@ -46,8 +46,7 @@ RUN apt update -yy &&\
       google-chrome-stable &&\
     curl -sL https://deb.nodesource.com/setup_16.x | bash - &&\
     apt update -yy &&\
-    apt -y install nodejs &&\
-    npm install -g npm@latest
+    apt -y install nodejs
 
 COPY ./docker-entrypoint.sh /
 
