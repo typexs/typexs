@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-import { isBoolean, isFunction, isNumber, isString, keys } from 'lodash';
 import {
   C_RAW,
   IEntityController,
@@ -14,11 +12,12 @@ import {
 import { ClassType, IEntityRef } from '@allgemein/schema-api';
 import { Reader } from '../../../lib/reader/Reader';
 import { IStorageControllerReaderOptions } from '../../../lib/reader/IStorageControllerReaderOptions';
+import { get, isUndefined } from 'lodash';
 
 
 export class StorageControllerReader<T> extends Reader {
 
-  private entityType: ClassType<T>;
+  private readonly entityType: ClassType<T>;
 
   private count: number;
 
@@ -30,7 +29,7 @@ export class StorageControllerReader<T> extends Reader {
 
   // private schemaName: string;
 
-  private storageName: string;
+  private readonly storageName: string;
 
   private entityRef: IEntityRef;
 
@@ -47,7 +46,7 @@ export class StorageControllerReader<T> extends Reader {
     // this.schemaName = (<ClassRef>this.entityRef.getClassRef()).getSchema();
     this.storageName = options.storageName;
     const storage = (<Storage>Injector.get(Storage.NAME));
-    let ref: StorageRef = null;
+    let ref: StorageRef;
     if (this.storageName) {
       ref = storage.get(this.storageName);
     } else {
@@ -61,9 +60,9 @@ export class StorageControllerReader<T> extends Reader {
   }
 
 
-  get chunkSize() {
-    return this.getOptions().size;
-  }
+  // get chunkSize() {
+  //   return this.getOptions().size;
+  // }
 
   async hasNext(): Promise<boolean> {
     await this.find();
@@ -84,7 +83,7 @@ export class StorageControllerReader<T> extends Reader {
   }
 
   getRaw() {
-    return _.get(this.getOptions(), C_RAW, false);
+    return get(this.getOptions(), C_RAW, false);
   }
 
   async find() {
@@ -103,13 +102,11 @@ export class StorageControllerReader<T> extends Reader {
       }
     }
 
-    this._hasNext = _.isUndefined(this.count) ? true : this.size < this.count;
+    this._hasNext = isUndefined(this.count) ? true : this.size < this.count;
 
     if (limit > 0 && this._hasNext) {
       const conditions = await this.getConditions();
-      const opts = this.getOptions();
-      const selectedValues: any = {};
-      keys(opts).filter(k => isNumber(opts[k]) || isString(opts[k]) || isBoolean(opts[k])).map(k => selectedValues[k] = opts[k]);
+      const selectedValues = this.getFilteredOptions();
       const findOptions: IFindOptions = {
         ...selectedValues,
         offset: this.offset,
@@ -133,8 +130,5 @@ export class StorageControllerReader<T> extends Reader {
       this.offset = this.offset + this.getOptions().size;
       this.count = this.chunk[XS_P_$COUNT];
     }
-
-
   }
-
 }
