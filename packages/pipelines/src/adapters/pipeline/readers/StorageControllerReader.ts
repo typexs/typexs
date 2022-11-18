@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import { isBoolean, isFunction, isNumber, isString, keys } from 'lodash';
 import {
   C_RAW,
   IEntityController,
@@ -13,9 +14,6 @@ import {
 import { ClassType, IEntityRef } from '@allgemein/schema-api';
 import { Reader } from '../../../lib/reader/Reader';
 import { IStorageControllerReaderOptions } from '../../../lib/reader/IStorageControllerReaderOptions';
-import { isBoolean, isFunction, isNumber, isObjectLike, isString, keys, values } from 'lodash';
-import { isPrimitive } from 'util';
-import { isBoxedPrimitive } from 'util/types';
 
 
 export class StorageControllerReader<T> extends Reader {
@@ -25,10 +23,6 @@ export class StorageControllerReader<T> extends Reader {
   private count: number;
 
   private offset = 0;
-
-  // private _start: number;
-
-  // private _stop: number;
 
   private size = 0;
 
@@ -80,9 +74,6 @@ export class StorageControllerReader<T> extends Reader {
     return <IStorageControllerReaderOptions<T>>super.getOptions();
   }
 
-  get conditions() {
-    return this.getOptions().conditions ? this.getOptions().conditions : null;
-  }
 
   hasMaxLimit() {
     return this.getOptions().maxLimit && this.getOptions().maxLimit > 0;
@@ -115,10 +106,10 @@ export class StorageControllerReader<T> extends Reader {
     this._hasNext = _.isUndefined(this.count) ? true : this.size < this.count;
 
     if (limit > 0 && this._hasNext) {
+      const conditions = await this.getConditions();
       const opts = this.getOptions();
       const selectedValues: any = {};
       keys(opts).filter(k => isNumber(opts[k]) || isString(opts[k]) || isBoolean(opts[k])).map(k => selectedValues[k] = opts[k]);
-
       const findOptions: IFindOptions = {
         ...selectedValues,
         offset: this.offset,
@@ -126,15 +117,15 @@ export class StorageControllerReader<T> extends Reader {
         raw: this.getRaw()
       };
 
-
       if (this.getOptions().sort) {
         findOptions.sort = this.getOptions().sort;
       }
 
+
       if (this.getOptions().mode === 'aggregate') {
-        this.chunk = await this.storageController.aggregate(this.entityType, this.conditions, findOptions);
+        this.chunk = await this.storageController.aggregate(this.entityType, conditions, findOptions);
       } else {
-        this.chunk = await this.storageController.find(this.entityType, this.conditions, findOptions);
+        this.chunk = await this.storageController.find(this.entityType, conditions, findOptions);
       }
       this.offset = this.chunk[XS_P_$OFFSET];
       this.size = this.size + this.chunk.length;

@@ -59,7 +59,7 @@ export class PostgresSchemaHandler extends AbstractSchemaHandler {
 
   async getCollectionNames(): Promise<string[]> {
     const c = await this.storageRef.connect();
-    const q = await c.manager.query('SELECT table_name as name FROM information_schema.tables WHERE table_type=\'BASE TABLE\';');
+    const q = await c.query('SELECT table_name as name FROM information_schema.tables WHERE table_type=\'BASE TABLE\';');
     return _.map(q, x => x.name);
   }
 

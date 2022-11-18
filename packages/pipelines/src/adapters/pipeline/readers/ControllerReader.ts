@@ -53,10 +53,6 @@ export class ControllerReader<T> extends Reader {
     return <IControllerReaderOptions<T>>super.getOptions();
   }
 
-  get conditions() {
-    return this.getOptions().conditions ? this.getOptions().conditions : null;
-  }
-
   hasMaxLimit() {
     return this.getOptions().maxLimit && this.getOptions().maxLimit > 0;
   }
@@ -88,6 +84,7 @@ export class ControllerReader<T> extends Reader {
     this._hasNext = _.isUndefined(this.count) ? true : this.size < this.count;
 
     if (limit > 0 && this._hasNext) {
+      const conditions = await this.getConditions();
       const opts = this.getOptions();
       const selectedValues: any = {};
       keys(opts).filter(k => isNumber(opts[k]) || isString(opts[k]) || isBoolean(opts[k])).map(k => selectedValues[k] = opts[k]);
@@ -103,8 +100,7 @@ export class ControllerReader<T> extends Reader {
         findOptions.sort = this.getOptions().sort;
       }
 
-      this.chunk = await this.controller.find(
-        this.entityType, this.conditions, findOptions);
+      this.chunk = await this.controller.find(this.entityType, conditions, findOptions);
       this.offset = this.chunk[XS_P_$OFFSET];
       this.size = this.size + this.chunk.length;
       // calc next offset

@@ -1,6 +1,6 @@
-import {AbstractSchemaHandler} from '../../../libs/storage/AbstractSchemaHandler';
+import { AbstractSchemaHandler } from '../../../libs/storage/AbstractSchemaHandler';
 import * as _ from 'lodash';
-import {NotYetImplementedError} from '@allgemein/base';
+import { NotYetImplementedError } from '@allgemein/base';
 
 
 export class SqliteSchemaHandler extends AbstractSchemaHandler {
@@ -40,7 +40,7 @@ export class SqliteSchemaHandler extends AbstractSchemaHandler {
 
   async getCollectionNames(): Promise<string[]> {
     const c = await this.storageRef.connect();
-    const q = await c.manager.query('SELECT name FROM sqlite_master WHERE type=\'table\';');
+    const q = await c.query('SELECT name FROM sqlite_master WHERE type=\'table\';');
     return _.map(q, x => x.name);
   }
 

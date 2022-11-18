@@ -22,9 +22,11 @@ export class PipelineTask implements ITask {
   @Inject(PipelineRegistry.NAME)
   registry: PipelineRegistry;
 
-
   @TaskRuntime()
   runtime: ITaskRuntimeContainer;
+
+  @Incoming({ optional: true })
+  readerOptions: any;
 
 
   async exec() {
@@ -65,6 +67,7 @@ export class PipelineTask implements ITask {
     for (const ref of refs) {
       let inc = 1;
       logger.debug('execute pipeline: ' + ref.name);
+// TODO implement reader options for each pipeline
       const reader = ref.create().addOptions({ logger: logger }).build();
       if (traceing) {
         reader.pipe((data: any) => {

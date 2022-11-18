@@ -10,8 +10,6 @@ export interface IStorageControllerReaderOptions<T> extends IReaderOptions, IFin
 
   entityType: ClassType<T>;
 
-  conditions?: any;
-
   maxLimit?: number;
 
 }

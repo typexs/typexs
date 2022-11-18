@@ -1,9 +1,7 @@
-import {AbstractSchemaHandler} from '../../../libs/storage/AbstractSchemaHandler';
+import { AbstractSchemaHandler } from '../../../libs/storage/AbstractSchemaHandler';
 import * as _ from 'lodash';
-import {MysqlConnectionOptions} from 'typeorm/driver/mysql/MysqlConnectionOptions';
-import {IDBType} from '../../../libs/storage/IDBType';
-import {JS_DATA_TYPES} from '@allgemein/schema-api';
-import {NotYetImplementedError} from '@allgemein/base';
+import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
+import { NotYetImplementedError } from '@allgemein/base';
 
 
 export class MysqlSchemaHandler extends AbstractSchemaHandler {
@@ -40,7 +38,7 @@ export class MysqlSchemaHandler extends AbstractSchemaHandler {
   async getCollectionNames(): Promise<string[]> {
     const c = await this.storageRef.connect();
     const database = (<MysqlConnectionOptions>this.storageRef.getOptions()).database;
-    const q = await c.manager.query('SELECT table_name FROM information_schema.tables WHERE table_schema=\'' + database + '\';');
+    const q = await c.query('SELECT table_name FROM information_schema.tables WHERE table_schema=\'' + database + '\';');
     return _.map(q, x => x.table_name);
   }
 

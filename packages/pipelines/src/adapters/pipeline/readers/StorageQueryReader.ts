@@ -1,14 +1,21 @@
-import {IFindOptions, Injector, IStorageRef, Storage, TypeOrmConnectionWrapper} from '@typexs/base';
-import {isNumber} from 'lodash';
+import { IFindOptions, Injector, IStorageRef, Storage } from '@typexs/base';
+import { isFunction, isNumber } from 'lodash';
 import { IReaderOptions } from '../../../lib/reader/IReaderOptions';
 import { Reader } from '../../../lib/reader/Reader';
+import { NotSupportedError } from '@allgemein/base';
 
 
 export interface IStorageQueryReaderOptions<T> extends IReaderOptions, IFindOptions {
 
+  /**
+   * Name of the storage backend
+   */
   storageName: string;
 
-  rawQuery: string;
+  /**
+   * Raw DB query for the storage backend
+   */
+  rawQuery?: string | object | Function;
 
 }
 
@@ -51,23 +58,40 @@ export class StorageQueryReader<T> extends Reader {
     // TODO check if ratinal DB
   }
 
+  getQuery(): Promise<string> {
+    const rawQuery = this.getOptions().rawQuery;
+    if (rawQuery) {
+      if (isFunction(rawQuery)) {
+        if (rawQuery.length === 1) {
+          return rawQuery(this);
+        } else {
+          return rawQuery();
+        }
+      } else {
+        return Promise.resolve(rawQuery as string);
+      }
+    } else {
+      return this.getConditions();
+    }
+  }
+
   async doFetch() {
+    let query = await this.getQuery();
     const limit = this.getOptions().size;
     const offset = (limit * this.fetchInc);
     let results = [];
     // TODO let this be handled in future by adapter in typexs/base
-    let query = this.getOptions().rawQuery;
     if (this.storageRef.getType() === 'postgres') {
       query = query + ' OFFSET ' + offset + ' LIMIT ' + limit;
     } else if (this.storageRef.getType() === 'aios') {
       query = query.replace(/(select)/i, '$1 skip ' + offset + ' first ' + limit);
     } else {
-      throw new Error('not defined');
+      throw new NotSupportedError('Storage type ' + this.storageRef.getType() + ' currently not supported ');
     }
     let error = null;
-    const c = await this.storageRef.connect() as TypeOrmConnectionWrapper;
+    const c = await this.storageRef.connect();
     try {
-      results = await c.manager.query(query);
+      results = await c.query(query);
       if (results.length === 0) {
         this._hasNext = false;
       } else {
@@ -111,10 +135,11 @@ export class StorageQueryReader<T> extends Reader {
     return <IStorageQueryReaderOptions<T>>super.getOptions();
   }
 
+
   async executeCount() {
-    const c = await this.storageRef.connect() as TypeOrmConnectionWrapper;
+    const c = await this.storageRef.connect();
     try {
-      const count = await c.manager.query('SELECT COUNT(*) cnt FROM (' + this.getOptions().rawQuery + ')');
+      const count = await c.query('SELECT COUNT(*) cnt FROM (' + this.getOptions().rawQuery + ')');
       if (count.length === 1) {
         this.count = count.shift().cnt;
       } else {
