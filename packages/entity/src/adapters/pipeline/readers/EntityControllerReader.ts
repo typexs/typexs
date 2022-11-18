@@ -8,12 +8,19 @@ import { IReaderOptions, Reader } from '@typexs/pipelines';
 
 export interface IEntityControllerReaderOptions<T> extends IReaderOptions, IFindOptions {
 
+  /**
+   * Optional name for the storage
+   */
   storageName?: string;
 
+  /**
+   * Entity class type which will be read
+   */
   entityType: ClassType<T>;
 
-  conditions?: any;
-
+  /**
+   * Maximal limit for the reading entities
+   */
   maxLimit?: number;
 
 }
@@ -28,10 +35,6 @@ export class EntityControllerReader<T> extends Reader {
 
   private offset = 0;
 
-  private _start: number;
-
-  private _stop: number;
-
   private size = 0;
 
   private _hasNext = true;
@@ -43,8 +46,6 @@ export class EntityControllerReader<T> extends Reader {
   private entityController: EntityController;
 
   private chunk: T[];
-
-  private findOptions: IFindOptions = {};
 
 
   constructor(options: IEntityControllerReaderOptions<T>) {
@@ -66,12 +67,12 @@ export class EntityControllerReader<T> extends Reader {
 
     this.entityController = Injector.get('EntityController.' + this.schemaName);
 
-    keys(options).forEach(k => {
-      if (!['entityType', 'storageName', 'conditions', 'maxLimit',
-        'pipe_handler', 'logger', 'size', 'finishCallback', 'finishCallback'].includes(k)) {
-        this.findOptions[k] = options[k];
-      }
-    });
+    // keys(options).forEach(k => {
+    //   if (!['entityType', 'storageName', 'conditions', 'maxLimit',
+    //     'pipe_handler', 'logger', 'size', 'finishCallback', 'finishCallback'].includes(k)) {
+    //     this.findOptions[k] = options[k];
+    //   }
+    // });
 
   }
 
@@ -93,9 +94,6 @@ export class EntityControllerReader<T> extends Reader {
     return <IEntityControllerReaderOptions<T>>super.getOptions();
   }
 
-  get conditions() {
-    return this.getOptions().conditions ? this.getOptions().conditions : null;
-  }
 
   hasMaxLimit() {
     return this.getOptions().maxLimit && this.getOptions().maxLimit > 0;
@@ -125,13 +123,15 @@ export class EntityControllerReader<T> extends Reader {
     this._hasNext = isUndefined(this.count) ? true : this.size < this.count;
 
     if (limit > 0 && this._hasNext) {
+      const conditions = await this.getConditions();
       const start = Date.now();
-      const options = merge(this.findOptions, <IFindOptions>{
+      const selectedValues: any = this.getFilteredOptions();
+      const options = merge(selectedValues, <IFindOptions>{
         offset: this.offset,
         limit: limit,
         subLimit: 0 // 100 * this.chunkSize
       });
-      this.chunk = await this.entityController.find(this.entityType, this.conditions, options);
+      this.chunk = await this.entityController.find(this.entityType, conditions, options);
       this.offset = this.chunk[XS_P_$OFFSET];
       this.size = this.size + this.chunk.length;
       // calc next offset

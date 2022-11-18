@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import {
   C_RAW,
   IEntityController,
@@ -13,22 +12,16 @@ import {
 import { ClassType, IEntityRef } from '@allgemein/schema-api';
 import { Reader } from '../../../lib/reader/Reader';
 import { IStorageControllerReaderOptions } from '../../../lib/reader/IStorageControllerReaderOptions';
-import { isBoolean, isFunction, isNumber, isObjectLike, isString, keys, values } from 'lodash';
-import { isPrimitive } from 'util';
-import { isBoxedPrimitive } from 'util/types';
+import { get, isUndefined } from 'lodash';
 
 
 export class StorageControllerReader<T> extends Reader {
 
-  private entityType: ClassType<T>;
+  private readonly entityType: ClassType<T>;
 
   private count: number;
 
   private offset = 0;
-
-  // private _start: number;
-
-  // private _stop: number;
 
   private size = 0;
 
@@ -36,7 +29,7 @@ export class StorageControllerReader<T> extends Reader {
 
   // private schemaName: string;
 
-  private storageName: string;
+  private readonly storageName: string;
 
   private entityRef: IEntityRef;
 
@@ -53,7 +46,7 @@ export class StorageControllerReader<T> extends Reader {
     // this.schemaName = (<ClassRef>this.entityRef.getClassRef()).getSchema();
     this.storageName = options.storageName;
     const storage = (<Storage>Injector.get(Storage.NAME));
-    let ref: StorageRef = null;
+    let ref: StorageRef;
     if (this.storageName) {
       ref = storage.get(this.storageName);
     } else {
@@ -67,9 +60,9 @@ export class StorageControllerReader<T> extends Reader {
   }
 
 
-  get chunkSize() {
-    return this.getOptions().size;
-  }
+  // get chunkSize() {
+  //   return this.getOptions().size;
+  // }
 
   async hasNext(): Promise<boolean> {
     await this.find();
@@ -80,9 +73,6 @@ export class StorageControllerReader<T> extends Reader {
     return <IStorageControllerReaderOptions<T>>super.getOptions();
   }
 
-  get conditions() {
-    return this.getOptions().conditions ? this.getOptions().conditions : null;
-  }
 
   hasMaxLimit() {
     return this.getOptions().maxLimit && this.getOptions().maxLimit > 0;
@@ -93,7 +83,7 @@ export class StorageControllerReader<T> extends Reader {
   }
 
   getRaw() {
-    return _.get(this.getOptions(), C_RAW, false);
+    return get(this.getOptions(), C_RAW, false);
   }
 
   async find() {
@@ -112,13 +102,11 @@ export class StorageControllerReader<T> extends Reader {
       }
     }
 
-    this._hasNext = _.isUndefined(this.count) ? true : this.size < this.count;
+    this._hasNext = isUndefined(this.count) ? true : this.size < this.count;
 
     if (limit > 0 && this._hasNext) {
-      const opts = this.getOptions();
-      const selectedValues: any = {};
-      keys(opts).filter(k => isNumber(opts[k]) || isString(opts[k]) || isBoolean(opts[k])).map(k => selectedValues[k] = opts[k]);
-
+      const conditions = await this.getConditions();
+      const selectedValues = this.getFilteredOptions();
       const findOptions: IFindOptions = {
         ...selectedValues,
         offset: this.offset,
@@ -126,15 +114,15 @@ export class StorageControllerReader<T> extends Reader {
         raw: this.getRaw()
       };
 
-
       if (this.getOptions().sort) {
         findOptions.sort = this.getOptions().sort;
       }
 
+
       if (this.getOptions().mode === 'aggregate') {
-        this.chunk = await this.storageController.aggregate(this.entityType, this.conditions, findOptions);
+        this.chunk = await this.storageController.aggregate(this.entityType, conditions, findOptions);
       } else {
-        this.chunk = await this.storageController.find(this.entityType, this.conditions, findOptions);
+        this.chunk = await this.storageController.find(this.entityType, conditions, findOptions);
       }
       this.offset = this.chunk[XS_P_$OFFSET];
       this.size = this.size + this.chunk.length;
@@ -142,8 +130,5 @@ export class StorageControllerReader<T> extends Reader {
       this.offset = this.offset + this.getOptions().size;
       this.count = this.chunk[XS_P_$COUNT];
     }
-
-
   }
-
 }

@@ -7,13 +7,11 @@ import { ICollectionProperty } from './ICollectionProperty';
 import { ClassUtils, NotSupportedError } from '@allgemein/base';
 import { TypeOrmStorageRef } from './framework/typeorm/TypeOrmStorageRef';
 import { Config } from '@allgemein/config';
+import { IStorageRef } from './IStorageRef';
+import { TypeOrmConnectionWrapper } from './framework/typeorm/TypeOrmConnectionWrapper';
 
 
 export abstract class AbstractSchemaHandler {
-
-  constructor(ref?: TypeOrmStorageRef) {
-    this.storageRef = ref;
-  }
 
   static types: string[] = [];
 
@@ -27,7 +25,11 @@ export abstract class AbstractSchemaHandler {
 
   readonly type: string;
 
-  readonly storageRef: TypeOrmStorageRef;
+  readonly storageRef: IStorageRef;
+
+  constructor(ref?: IStorageRef) {
+    this.storageRef = ref;
+  }
 
 
   /**
@@ -123,8 +125,12 @@ export abstract class AbstractSchemaHandler {
   abstract getCollectionNames(): Promise<string[]>;
 
 
+  getConnection(): Promise<TypeOrmConnectionWrapper> {
+    return this.storageRef.connect() as Promise<TypeOrmConnectionWrapper>;
+  }
+
   async getCollection(name: string): Promise<any> {
-    const c = await this.storageRef.connect();
+    const c = await this.getConnection();
     return await c.manager.connection.createQueryRunner().getTable(name);
   }
 
@@ -143,7 +149,7 @@ export abstract class AbstractSchemaHandler {
 
 
   async getCollections(names: string[]): Promise<ICollection[]> {
-    const c = await this.storageRef.connect();
+    const c = await this.getConnection();
     const collections = await c.manager.connection.createQueryRunner().getTables(names);
     const colls: ICollection[] = [];
     _.map(collections, c => {

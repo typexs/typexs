@@ -26,7 +26,7 @@ export class MongoDbSchemaHandler extends AbstractSchemaHandler {
   }
 
   async getCollectionNames(): Promise<string[]> {
-    const c = await this.storageRef.connect();
+    const c = await this.getConnection();
     const cursor = this.getDB(c).listCollections(null);
     let v;
     const names: string[] = [];
@@ -39,7 +39,7 @@ export class MongoDbSchemaHandler extends AbstractSchemaHandler {
 
 
   async getCollection(name: string): Promise<any> {
-    const c = await this.storageRef.connect();
+    const c = await this.getConnection();
     const collection = this.getDB(c).listCollections({ name: name });
     const res = await collection.next();
     await c.close();
@@ -47,7 +47,7 @@ export class MongoDbSchemaHandler extends AbstractSchemaHandler {
   }
 
   async getCollections(names: string[]): Promise<ICollection[]> {
-    const c = await this.storageRef.connect();
+    const c = await this.getConnection();
     const collections = this.getDB(c).listCollections({ name: { $in: names } });
 
     const colls: ICollection[] = [];

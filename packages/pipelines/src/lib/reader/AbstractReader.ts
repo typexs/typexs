@@ -1,11 +1,11 @@
-import {IReader} from './IReader';
-import {IReaderOptions} from './IReaderOptions';
-import {Pipeline} from '../Pipeline';
-import {ILoggerApi, Log} from '@typexs/base';
-import * as _ from 'lodash';
-import {createEmbeddedPromise, PIPE_HANDLER} from './Constants';
-import {Processor} from '../Processor';
+import { IReader } from './IReader';
+import { IReaderOptions } from './IReaderOptions';
+import { Pipeline } from '../Pipeline';
+import { ILoggerApi, Log } from '@typexs/base';
+import { createEmbeddedPromise, PIPE_HANDLER } from './Constants';
+import { Processor } from '../Processor';
 import { ERROR_FUNCTION } from '../Constants';
+import { clone, defaults, get, isBoolean, isFunction, isNumber, isString, keys } from 'lodash';
 
 export abstract class AbstractReader implements IReader {
 
@@ -24,8 +24,8 @@ export abstract class AbstractReader implements IReader {
 
   constructor(type: string, options: IReaderOptions) {
     this.$readerType = type;
-    this.$options = _.defaults(options || {}, {size: 100});
-    this.logger = _.get(options, 'logger', Log.getLogger());
+    this.$options = defaults(options || {}, { size: 100 });
+    this.logger = get(options, 'logger', Log.getLogger());
     this.$timestamp = new Date();
     if (options[PIPE_HANDLER]) {
       if (options[PIPE_HANDLER] instanceof Pipeline) {
@@ -49,11 +49,18 @@ export abstract class AbstractReader implements IReader {
     return this.$options;
   }
 
+  getFilteredOptions() {
+    const opts = this.getOptions();
+    const selectedValues: any = {};
+    keys(opts).filter(k => isNumber(opts[k]) || isString(opts[k]) || isBoolean(opts[k])).map(k => selectedValues[k] = clone(opts[k]));
+    return selectedValues;
+  }
+
   /**
    * Collect output data
    */
   async collect() {
-    return {stats: this.$stats, pipes: await this.$pipe.collect()};
+    return { stats: this.$stats, pipes: await this.$pipe.collect() };
   }
 
 
@@ -75,7 +82,7 @@ export abstract class AbstractReader implements IReader {
 
 
   pipe(pipe: any): IReader {
-    if (_.isFunction(pipe)) {
+    if (isFunction(pipe)) {
       this.$pipe.use(pipe);
     } else if (pipe instanceof Processor) {
       this.$pipe.use(pipe);
@@ -135,34 +142,34 @@ export abstract class AbstractReader implements IReader {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     return this.init()
-      .then(function (res) {
+      .then(function(res) {
         if (self.$pipe) {
           return self.$pipe.prepare();
         } else {
           throw new Error('no pipe or pipeline defined to push data [3]');
         }
       })
-      .then(function () {
+      .then(function() {
         const $p = (<Promise<any>>self.onFinish())
-          .then(function (res) {
+          .then(function(res) {
             if (self.$pipe) {
               return self.$pipe.close();
             } else {
               throw new Error('no pipe or pipeline defined to push data [2]');
             }
           })
-          .then(function (res) {
+          .then(function(res) {
             if (finish) {
-              finish(null, {pipes: res, stats: self.$stats});
+              finish(null, { pipes: res, stats: self.$stats });
               return {};
             } else {
-              return {pipes: res, stats: self.$stats};
+              return { pipes: res, stats: self.$stats };
             }
           })
-          .catch(function (err) {
+          .catch(function(err) {
             Log.error(err);
             if (finish) {
-              finish(err, {pipes: [], stats: self.$stats});
+              finish(err, { pipes: [], stats: self.$stats });
             } else {
               throw err;
             }

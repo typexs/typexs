@@ -66,6 +66,9 @@ export class TypeOrmConnectionWrapper implements IConnection {
     return this.connection.manager;
   }
 
+  query(query: any, parameters?: any[]): Promise<any[]> {
+    return this.manager.query(query, parameters);
+  }
 
   get connection() {
     if (!this._connection) {
