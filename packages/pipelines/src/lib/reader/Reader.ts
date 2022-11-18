@@ -37,22 +37,6 @@ export abstract class Reader extends AbstractReader implements IPullable, IReade
     this.$queue.run();
   }
 
-  /**
-   * Return the conditions if passed as mango query or call function if exists
-   *
-   * @param options
-   */
-  async getConditions() {
-    const conditions: any = this.getOptions().conditions ? this.getOptions().conditions : null;
-    if (isFunction(conditions)) {
-      if (conditions.length === 1) {
-        return await conditions(this);
-      } else {
-        return await conditions();
-      }
-    }
-    return conditions;
-  }
 
 
 

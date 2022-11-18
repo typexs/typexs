@@ -5,7 +5,8 @@ import { ILoggerApi, Log } from '@typexs/base';
 import { createEmbeddedPromise, PIPE_HANDLER } from './Constants';
 import { Processor } from '../Processor';
 import { ERROR_FUNCTION } from '../Constants';
-import { clone, defaults, get, isBoolean, isFunction, isNumber, isString, keys } from 'lodash';
+import { clone, defaults, get, isBoolean, isFunction, isNumber, isObjectLike, isString, keys } from 'lodash';
+import { ConditionsProvider } from './ConditionsProvider';
 
 export abstract class AbstractReader implements IReader {
 
@@ -20,6 +21,8 @@ export abstract class AbstractReader implements IReader {
   $stats: any;
 
   logger: ILoggerApi;
+
+  conditionsProvider: ConditionsProvider;
 
 
   constructor(type: string, options: IReaderOptions) {
@@ -49,6 +52,32 @@ export abstract class AbstractReader implements IReader {
     return this.$options;
   }
 
+  /**
+   * Return the conditions if passed as mango query or call function if exists
+   *
+   * @param options
+   */
+  async getConditions() {
+    const conditions: any = this.getOptions().conditions ? this.getOptions().conditions : null;
+    if (isFunction(conditions)) {
+      if (conditions.length === 1) {
+        return await conditions(this);
+      } else {
+        return await conditions();
+      }
+    } else if (isObjectLike(conditions) && conditions instanceof ConditionsProvider) {
+      if (!this.conditionsProvider) {
+        this.conditionsProvider = conditions;
+        this.conditionsProvider.setReader(this);
+      }
+      return this.conditionsProvider.provide();
+    }
+    return conditions;
+  }
+
+  /**
+   * Filter options entries out where values are not of primitive type (pass number, string, boolean)
+   */
   getFilteredOptions() {
     const opts = this.getOptions();
     const selectedValues: any = {};
