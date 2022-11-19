@@ -62,7 +62,9 @@ pages:
       changes:
         - .gitlab-ci.yml
         - docs/**
+        - docs/**/*
         - packages/*/docs/**
+        - packages/*/docs/**/*
 
 test:
   image: ${CI_REGISTRY_IMAGE}/ubuntu-docker:latest
