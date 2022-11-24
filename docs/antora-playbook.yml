@@ -1,6 +1,6 @@
 site:
   title: TypeXs
-  start_page: typeXs::index.adoc
+  start_page: typexs::index.adoc
 
 content:
   branches:
