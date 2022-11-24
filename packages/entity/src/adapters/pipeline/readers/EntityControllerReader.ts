@@ -120,10 +120,10 @@ export class EntityControllerReader<T> extends Reader {
       }
     }
 
+    const conditions = await this.getConditions();
     this._hasNext = isUndefined(this.count) ? true : this.size < this.count;
 
     if (limit > 0 && this._hasNext) {
-      const conditions = await this.getConditions();
       const start = Date.now();
       const selectedValues: any = this.getFilteredOptions();
       const options = merge(selectedValues, <IFindOptions>{

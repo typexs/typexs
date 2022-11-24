@@ -86,6 +86,7 @@ export class StorageControllerReader<T> extends Reader {
     return get(this.getOptions(), C_RAW, false);
   }
 
+
   async find() {
     // let offset = this.offset;
     let limit = this.getOptions().size;
@@ -102,10 +103,9 @@ export class StorageControllerReader<T> extends Reader {
       }
     }
 
+    const conditions = await this.getConditions();
     this._hasNext = isUndefined(this.count) ? true : this.size < this.count;
-
     if (limit > 0 && this._hasNext) {
-      const conditions = await this.getConditions();
       const selectedValues = this.getFilteredOptions();
       const findOptions: IFindOptions = {
         ...selectedValues,

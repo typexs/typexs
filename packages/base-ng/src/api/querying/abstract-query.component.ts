@@ -124,14 +124,19 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     this.applyInitialOptions();
 
     this.queringService.isLoaded().subscribe(x => {
-      this.findEntityDef();
-      this.initialiseColumns();
-      this._isLoaded = true;
-      // api maybe not loaded
-      if (get(this.options, 'queryOnInit', true)) {
-        setTimeout(() => {
-          this.doQuery(this.datatable.api());
-        });
+      const success = this.findEntityRef();
+      // TODO handle if entity ref not found or loaded
+      if (success) {
+        this.initialiseColumns();
+        this._isLoaded = true;
+        // api maybe not loaded
+        if (get(this.options, 'queryOnInit', true)) {
+          setTimeout(() => {
+            this.doQuery(this.datatable.api());
+          });
+        }
+      } else {
+        throw new Error(this.error);
       }
     });
   }
@@ -157,11 +162,13 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
   }
 
 
-  findEntityDef() {
+  findEntityRef() {
     this.entityRef = this.getQueryService().getEntityRefForName(this.name);
     if (!this.entityRef) {
       this.error = `Can't find entity type for ${this.name}.`;
+      return false;
     }
+    return true;
   }
 
 
