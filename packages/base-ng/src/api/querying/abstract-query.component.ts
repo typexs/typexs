@@ -258,21 +258,21 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     }
 
     const _d: any = {};
-    if (api.params.offset) {
+    if (api?.params?.offset) {
       _d['offset'] = api.params.offset;
     } else if (this.params.offset) {
       _d['offset'] = this.params.offset;
     } else {
       _d['offset'] = 0;
     }
-    if (api.params.limit) {
+    if (api?.params?.limit) {
       _d['limit'] = api.params.limit;
     } else if (this.params.limit) {
       _d['limit'] = this.params.limit;
     } else {
       _d['limit'] = 25;
     }
-    if (!isEmpty(api.params.sorting)) {
+    if (!isEmpty(api?.params?.sorting)) {
       _d['sort'] = api.params.sorting;
     } else if (this.params.sorting) {
       _d['sort'] = this.params.sorting;
@@ -280,7 +280,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     assign(queryOptions, _d);
 
 
-    if (api.params && !isEmpty(api.params.filters)) {
+    if (!isEmpty(api?.params?.filters)) {
       keys(api.params.filters).map(k => {
         try {
           const d = {};
