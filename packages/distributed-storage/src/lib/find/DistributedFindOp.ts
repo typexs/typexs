@@ -1,27 +1,27 @@
 import { assign, concat, defaults, get, intersection, isUndefined, keys, orderBy, remove } from 'lodash';
 import { DistributedStorageEntityController } from '../DistributedStorageEntityController';
-import { IFindOp } from '@typexs/base/libs/storage/framework/IFindOp';
-import { System } from '@typexs/base/libs/system/System';
-import { ClassRef, ClassType } from '@allgemein/schema-api';
-import { IWorkerInfo } from '@typexs/base/libs/worker/IWorkerInfo';
-import { DistributedQueryWorker } from '../../workers/DistributedQueryWorker';
-import { C_WORKERS } from '@typexs/base/libs/worker/Constants';
 import {
   __CLASS__,
   __NODE_ID__,
   __REGISTRY__,
-  C_KEY_SEPARATOR,
+  AbstractMessage,
+  C_KEY_SEPARATOR, C_RAW,
+  C_WORKERS,
+  IFindOp,
+  IWorkerInfo,
+  Log,
+  System,
   XS_P_$COUNT,
   XS_P_$LIMIT,
   XS_P_$OFFSET
-} from '@typexs/base/libs/Constants';
+} from '@typexs/base';
+import { ClassRef, ClassType } from '@allgemein/schema-api';
+import { DistributedQueryWorker } from '../../workers/DistributedQueryWorker';
 import { DistributedFindResponse } from './DistributedFindResponse';
 import { DistributedFindRequest } from './DistributedFindRequest';
 import { IDistributedFindOptions } from './IDistributedFindOptions';
-import { AbstractMessage } from '@typexs/base/libs/messaging/AbstractMessage';
 import { EntityControllerRegistry } from '@typexs/base/libs/storage/EntityControllerRegistry';
 import { ClassUtils } from '@allgemein/base';
-import { Log } from '@typexs/base';
 
 
 export class DistributedFindOp<T>
@@ -103,8 +103,6 @@ export class DistributedFindOp<T>
       throw new Error('no distributed worker found to execute the query.');
     }
 
-
-    // this.queryEvent.targetIds = this.targetIds;
     if (this.targetIds.length !== 0) {
       await this.send(req);
     }
@@ -141,7 +139,7 @@ export class DistributedFindOp<T>
       }
     });
 
-    if (get(this.options, 'raw', false)) {
+    if (get(this.options, C_RAW, false)) {
       results = concat([], ...responses.map(x => x.results)).map(x => {
         const classRefName = x[__CLASS__];
         const registry = x[__REGISTRY__];

@@ -24,6 +24,7 @@ import { IFindOptions } from './IFindOptions';
 import { LabelHelper, XS_P_$COUNT } from '@typexs/base';
 import { IQueryOptions } from './IQueryOptions';
 import { Log } from '../../lib/log/Log';
+import { IGridEvent } from '../../datatable/IGridEvent';
 
 
 /**
@@ -123,6 +124,10 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
     this.applyInitialOptions();
 
+    this.datatable.api().gridReady.subscribe(
+      this.onGridEvent.bind(this)
+    );
+
     this.queringService.isLoaded().subscribe(x => {
       const success = this.findEntityRef();
       // TODO handle if entity ref not found or loaded
@@ -139,6 +144,18 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
         throw new Error(this.error);
       }
     });
+
+  }
+
+  /**
+   * Callback for grid events
+   *
+   * @param x: IGridEvent
+   */
+  onGridEvent(x: IGridEvent) {
+    if (['refresh', 'rebuild'].includes(x.event)) {
+      this.requery();
+    }
   }
 
   /**
@@ -150,7 +167,9 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     if (this._isLoaded) {
       if (changes['componentClass']) {
         this.datatable.gridReady.pipe(first()).subscribe(x => {
-          this.requery();
+          if (x.event === 'rebuild') {
+            this.requery();
+          }
         });
       } else if (changes['options']) {
         this.requery();
@@ -239,6 +258,12 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     this.doQuery(this.datatable.api());
   }
 
+
+  onGridReady(gridEvent: IGridEvent) {
+    if (gridEvent.event === 'refresh') {
+      this.doQuery(this.datatable.api());
+    }
+  }
 
   doQuery(api: IGridApi): void {
     const filterQuery: object[] = [];

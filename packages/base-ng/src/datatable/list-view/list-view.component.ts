@@ -14,7 +14,7 @@ import { IDTListGridOptions } from './IDTListGridOptions';
   templateUrl: 'list-view.component.html',
   styleUrls: ['./list-view.component.scss']
 })
-export class ListViewComponent extends AbstractGridComponent implements OnInit, OnDestroy {
+export class ListViewComponent<T> extends AbstractGridComponent implements OnInit, OnDestroy {
 
   pager: Pager;
 
@@ -55,9 +55,9 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
       // this._params.offset = 0;
     }
 
-    if (!this.maxRows && this.rows) {
+    if (!this.maxRows && this._dataNodes) {
       // if maxRows is empty and rows already given then derive maxlines
-      this.maxRows = this.rows.length;
+      this.maxRows = this._dataNodes.length;
       if (this.options.enablePager) {
         this.calcPager();
       }
@@ -178,7 +178,7 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
 
   rebuild() {
     this.calcPager();
-    this.gridReady.emit();
+    super.rebuild();
   }
 
   reset() {

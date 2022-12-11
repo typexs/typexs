@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NotificationsService} from 'packages/ng-theme-base/src';
+import {NotificationsService} from '@typexs/ng-theme-base';
 
 
 @Component({

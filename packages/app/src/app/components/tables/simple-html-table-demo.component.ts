@@ -1,18 +1,31 @@
-import {
-  defaults, find, isArray, isEmpty, isFunction, isNumber, intersection,
-  get, clone, upperFirst, isNull, keys, values, isString, filter, merge, isPlainObject,
-  concat, kebabCase, has, snakeCase, isRegExp, orderBy, remove, first, set, assign,
-  capitalize, isUndefined, isDate, range
-} from 'lodash';
+import { keys, range } from 'lodash';
 import { Component } from '@angular/core';
-import { IGridColumn } from 'packages/base-ng/src';
-import { SimpleHtmlTableComponent } from 'packages/base-ng/src';
-import { IDatatableOptions } from 'packages/base-ng/src';
-import { IGridApi } from 'packages/base-ng/src';
+import { IDatatableOptions, IGridApi, IGridColumn, SimpleHtmlTableComponent } from '@typexs/base-ng';
 import { And, ExprDesc } from '@allgemein/expressions';
 import { K_PAGED } from '@typexs/base-ng/datatable/Constants';
+import { IGridEvent } from '@typexs/base-ng/datatable/IGridEvent';
 
 
+function generateData(offset: number, limit: number) {
+  return range(offset, offset + limit).map(x => ({
+    id: x,
+    name: 'Entry ' + x
+  }));
+}
+
+/**
+ * Test of simple-html-table layout
+ *
+ * - test pager
+ *
+ * - modification
+ *   - create
+ *   - read
+ *   - update
+ *   - delete
+ *
+ *
+ */
 @Component({
   selector: 'simple-html-table-demo',
   templateUrl: 'simple-html-table-demo.component.html'
@@ -21,9 +34,11 @@ export class SimpleHtmlTableDemoComponent {
 
   simpleTableComp = SimpleHtmlTableComponent;
 
+  api: IGridApi;
 
-  maxRows: number;
+  maxRows: number = 20;
 
+  capturedEvent: IGridEvent = null;
 
   options: IDatatableOptions = {
     mode: K_PAGED,
@@ -47,16 +62,7 @@ export class SimpleHtmlTableDemoComponent {
   ];
 
 
-  rows = [
-    {
-      id: 1,
-      name: 'First'
-    },
-    {
-      id: 2,
-      name: 'Second'
-    }
-  ];
+  rows = generateData(0, 10);
 
 
   update(key: string, v: any): void {
@@ -69,17 +75,9 @@ export class SimpleHtmlTableDemoComponent {
     }
   }
 
-  generateData(offset: number, limit: number) {
-    return range(offset, offset + limit).map(x => {
-      return {
-        id: x,
-        name: 'Entry ' + x
-      };
-    });
-  }
 
   doQuery(api: IGridApi): void {
-    let generated = this.generateData(api.params.offset, api.params.limit);
+    let generated = generateData(api.params.offset, api.params.limit);
 
     if (api.params.filters) {
       const _keys = keys(api.params.filters);
@@ -94,5 +92,20 @@ export class SimpleHtmlTableDemoComponent {
     }
 
     api.setRows(generated);
+  }
+
+  /**
+   *  Capture send event
+   *
+   * @param event
+   */
+  onGridReady(event: IGridEvent) {
+    console.log('grid event! ' + event.event);
+    this.capturedEvent = {
+      event: event.event,
+      api: null,
+      data: event.data
+    };
+    this.api = event.api;
   }
 }

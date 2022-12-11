@@ -1,0 +1,25 @@
+# Datatable
+
+
+Die Datatable Komponente dient als Wrapper/Proxy der die Darstellung gleicher strukturierter Daten auf unterschiedliche
+Art un Weise ermöglicht.
+
+Standardmäßig wird als Layout die SimpleTableComponent verwendet.
+
+Alles erbt von AbstractGridComponent
+
+Andere Layouts sind beispielsweise
+<any>
+* ListView
+* AgGrid (in der Demo)
+* TODO D3View (in der Demo)
+
+
+Die Komponente wird zumeinst innerhalb Komponenten
+
+* StorageEmbeddedComponent
+* DistributedStorageEmbeddedComponent
+
+Kommunikation nach innern und nach außen mittels gridReady
+
+

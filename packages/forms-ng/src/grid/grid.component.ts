@@ -115,8 +115,8 @@ export class GridComponent extends AbstractFormComponent<GridHandle> implements 
         set(this.dataContainer.instance, path, object);
       }
     }
-
     cGridRow.instance.build(this.getInstance());
+    cGridRow.changeDetectorRef.detectChanges();
     return cGridRow.instance;
   }
 

@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { C_DEFAULT } from '../constants';
 import { ObjectToComponentResolver } from './ObjectToComponentResolver';
 import { ComponentRegistry, IComponentBinding, IExtraBindingInfo } from '@typexs/base';
+import { ClassType } from '../datatable/Constants';
 
 @Injectable()
 export class ComponentRegistryService {

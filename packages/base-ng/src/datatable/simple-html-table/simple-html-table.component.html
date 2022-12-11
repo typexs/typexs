@@ -1,22 +1,26 @@
 <div class="simple-html-table-container">
 
+  <div *ngIf="options.insertable">
+    <button type="button" class="btn btn-primary"
+            (click)="addNewRow()">
+      <i class="fa fa-plus-circle"></i> New row
+    </button>
+  </div>
+
   <txs-pager *ngIf="options.enablePager"
              [name]="options.pagerId"
              [pager]="pager"
              (pageChange)="updateRows($event)">
   </txs-pager>
 
-
   <div class="table-container">
     <table class="table">
       <thead>
       <tr>
         <th class="col-md-auto" *ngFor="let column of columns">
-          <div
-            [ngClass]="{'field-sortable' : column.sorting, 'field-filterable' : column.filter}"
-          >
-            {{ column.label }}
-            <div class="float-right">
+          <div class="col-head" [ngClass]="{'field-sortable' : column.sorting, 'field-filterable' : column.filter}">
+            <div class="col-label">{{ column.label }}</div>
+            <div class="col-ops">
               <div class="sort-control" *ngIf="column.sorting" (click)="doSort(column)">
                 <i class="icon"
                    [ngClass]="{'icon-sort-asc': isSorted(column,'asc'),'icon-sort-desc': isSorted(column,'desc'),'icon-sort': isSorted(column,'none')}"></i>
@@ -42,9 +46,13 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let row of rows">
+      <tr *ngFor="let row of dataNodes">
         <td class="col-md-auto" *ngFor="let column of columns">
-          <txs-simple-html-cell [column]="column" [row]="row"></txs-simple-html-cell>
+          <txs-simple-html-cell
+            [parent]="getSelf()"
+            [column]="column"
+            [row]="row">
+          </txs-simple-html-cell>
         </td>
       </tr>
       </tbody>
@@ -60,3 +68,5 @@
   </txs-pager>
 
 </div>
+
+

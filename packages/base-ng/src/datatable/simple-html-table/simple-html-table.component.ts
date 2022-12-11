@@ -1,5 +1,5 @@
-import { assign, defaults, get, isEmpty, isNumber, set } from 'lodash';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { assign, defaults, get, has, isEmpty, isNumber, set } from 'lodash';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
 import { AbstractGridComponent } from '../abstract-grid.component';
 import { PagerAction } from '../../pager/PagerAction';
 import { PagerService } from '../../pager/PagerService';
@@ -8,6 +8,9 @@ import { IGridColumn } from '../IGridColumn';
 import { Eq, ExprDesc, Like, Value, ValueDesc } from '@allgemein/expressions';
 import { IDatatableOptions } from '../IDatatableOptions';
 import { K_PAGED } from '../Constants';
+import { ISimpleTableEvent } from './ISimpleTableEvent';
+import { ISimpleTable } from './ISimpleTable';
+import { DOCUMENT } from '@angular/common';
 
 
 @Component({
@@ -15,17 +18,30 @@ import { K_PAGED } from '../Constants';
   templateUrl: 'simple-html-table.component.html',
   styleUrls: ['./simple-html-table.component.scss']
 })
-export class SimpleHtmlTableComponent extends AbstractGridComponent implements OnInit, OnDestroy {
+export class SimpleHtmlTableComponent extends AbstractGridComponent
+  implements OnInit, OnDestroy, ISimpleTable {
 
+  /**
+   * Pager object for handling page navigation
+   */
   pager: Pager;
 
   filterOpened: string = null;
 
   filterValue: any = null;
 
+  editing: { insert: boolean } = { insert: false };
 
-  constructor(private pagerService: PagerService) {
+  newRows: any[] = [];
+
+  constructor(
+    private pagerService: PagerService,
+    @Inject(DOCUMENT) private document: Document) {
     super();
+  }
+
+  getSelf(): ISimpleTable {
+    return this;
   }
 
   ngOnInit(): void {
@@ -52,13 +68,62 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements O
       });
     }
 
-    if (!this.maxRows && this.rows) {
-      // if maxRows is empty and rows already given then derive maxlines
-      this.maxRows = this.rows.length;
-      if (this.options.enablePager) {
-        this.calcPager();
-      }
+    if (!this.maxRows && this._dataNodes) {
+      // if maxRows is empty and rows already set then derive maxlines
+      this.maxRows = this._dataNodes.length;
     }
+
+    if (this.options.enablePager) {
+      this.calcPager();
+    }
+  }
+
+
+  addNewRow() {
+    // TODO
+  }
+
+  /**
+   * Is insertable
+   */
+  isInsertable() {
+    return this.options.insertable;
+  }
+
+  /**
+   * Is editable
+   */
+  isEditable() {
+    return this.options.editable;
+  }
+
+  /**
+   * Is deletable
+   */
+  isDeletable() {
+    return this.options.deletable;
+  }
+
+  /**
+   * Save will call an event on
+   *
+   * @param type
+   */
+  doCreate() {
+    // if (has(this.options, 'crudCallbacks.doCreate')) {
+    //   this.options.crudCallbacks
+    //     .doCreate()
+    //     .subscribe();
+    // } else {
+    //
+    // }
+
+    // we need a two way binding
+    this.gridReady.emit({
+      event: 'create',
+      api: this,
+      data: {}
+    });
   }
 
 
@@ -66,7 +131,6 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements O
     if (!column.sorting) {
       return false;
     }
-
     const _sort = get(this.params.sorting, column.field);
     if (!_sort && sort === 'none') {
       return true;
@@ -175,7 +239,7 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements O
 
   rebuild() {
     this.calcPager();
-    this.gridReady.emit();
+    super.rebuild();
   }
 
   reset() {

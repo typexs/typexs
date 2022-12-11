@@ -13,6 +13,22 @@ $fa-var-sort-up: \f0de;
 $fa-var-filter: \f0b0;
 $fa-var-times: \f00d;
 
+.col-head {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .col-label {
+    //display: inline;
+  }
+
+  .col-ops {
+    //margin-left: .3em;
+    //display: inline;
+    //text-align: right;
+  }
+}
+
 .field-sortable {
 
   .sort-control {
@@ -32,6 +48,8 @@ $fa-var-times: \f00d;
 }
 
 .icon {
+  font-size: 0.8em;
+  color: #888;
   &.icon-sort {
     &:before {
       content: fa-content($fa-var-sort);

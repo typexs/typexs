@@ -186,6 +186,7 @@ export class AbstractFormComponent<T extends FormObject> extends AbstractInstanc
             instance.setDataContainer(this.getDataContainer());
             instance.setData(formObject, this.context);
             instance.build(formObject);
+            ref.changeDetectorRef.detectChanges();
             comp.push(instance);
           } else {
             // console.error('No view content setted');
