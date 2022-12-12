@@ -5,7 +5,7 @@ import { IQueryParams } from './IQueryParams';
 import { IGridApi } from './IGridApi';
 import { Helper } from '../api/querying/Helper';
 import { GRID_MODE } from './Constants';
-import { IGridEvent } from './IGridEvent';
+import { GRID_EVENT_TYPE, IGridEvent } from './IGridEvent';
 import { DataNode } from './DataNode';
 import { isEmpty } from 'lodash';
 
@@ -117,7 +117,6 @@ export class AbstractGridComponent implements IGridApi {
   }
 
 
-
   getMaxRows(): number {
     return this.maxRows;
   }
@@ -143,7 +142,19 @@ export class AbstractGridComponent implements IGridApi {
     this.columns = columns;
   }
 
+  api(): AbstractGridComponent {
+    return this;
+  }
 
 
-
+  emitEvent(e: GRID_EVENT_TYPE, data?: any) {
+    const event: IGridEvent = {
+      event: e,
+      api: this.api()
+    };
+    if (data) {
+      event.data = data;
+    }
+    this.gridReady.emit(event);
+  }
 }

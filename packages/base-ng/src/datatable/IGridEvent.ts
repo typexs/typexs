@@ -1,8 +1,10 @@
 import { IGridApi } from './IGridApi';
 
 
+export type GRID_EVENT_TYPE = 'ready' | 'refresh' | 'rebuild' | 'update' | 'create' | 'remove';
+
 export interface IGridEvent {
-  event: 'ready' | 'refresh' | 'rebuild' | 'update' | 'create' | 'remove';
+  event: GRID_EVENT_TYPE;
 
   api: IGridApi;
 
