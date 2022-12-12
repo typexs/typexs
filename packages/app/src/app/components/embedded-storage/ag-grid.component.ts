@@ -1,9 +1,9 @@
 import { isEmpty, set } from 'lodash';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Like, Value } from '@allgemein/expressions';
-import { StorageQueryEmbeddedComponent, StorageService } from 'packages/storage-ng/src';
+import { StorageQueryEmbeddedComponent, StorageService } from '@typexs/storage-ng';
 import { IEntityRef } from '@allgemein/schema-api';
-import { IDatatableOptions, IQueryParams } from 'packages/base-ng/src';
+import { IDatatableOptions, IQueryParams } from '@typexs/base-ng';
 import { AgGridWrapperComponent } from '../../addons/ag-grid/ag-grid-wrapper.component';
 
 

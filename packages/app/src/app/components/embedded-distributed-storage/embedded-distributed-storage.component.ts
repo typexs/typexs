@@ -1,8 +1,8 @@
 import {isEmpty, set} from 'lodash';
 import {AfterViewInit, ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
-import {IQueryParams} from 'packages/base-ng/src';
+import {IQueryParams} from '@typexs/base-ng';
 import {Like, Value} from '@allgemein/expressions';
-import {DistributedStorageQueryEmbeddedComponent, DistributedStorageService, IDSOptions} from 'packages/distributed-storage-ng/src';
+import {DistributedStorageQueryEmbeddedComponent, DistributedStorageService, IDSOptions} from '@typexs/distributed-storage-ng';
 
 
 export class C {

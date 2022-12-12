@@ -5,7 +5,6 @@ import { JS_DATA_TYPES } from '@allgemein/schema-api';
 import { ICollection } from './ICollection';
 import { ICollectionProperty } from './ICollectionProperty';
 import { ClassUtils, NotSupportedError } from '@allgemein/base';
-import { TypeOrmStorageRef } from './framework/typeorm/TypeOrmStorageRef';
 import { Config } from '@allgemein/config';
 import { IStorageRef } from './IStorageRef';
 import { TypeOrmConnectionWrapper } from './framework/typeorm/TypeOrmConnectionWrapper';
@@ -15,17 +14,16 @@ export abstract class AbstractSchemaHandler {
 
   static types: string[] = [];
 
-
   static operations: { [type: string]: { [op: string]: (...args: any[]) => string } } = {};
 
   static values: { [type: string]: { [op: string]: (...args: any[]) => string } } = {};
 
   static typeMap: { [type: string]: { [type: string]: string } } = {};
 
-
   readonly type: string;
 
   readonly storageRef: IStorageRef;
+
 
   constructor(ref?: IStorageRef) {
     this.storageRef = ref;

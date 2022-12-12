@@ -18,7 +18,7 @@ import { AbstractGridComponent } from './abstract-grid.component';
 import { ComponentRegistryService } from '../component/component-registry.service';
 import { Log } from '../lib/log/Log';
 import { IDatatableOptions } from './IDatatableOptions';
-import { inputKeys, K_PAGED, methodKeys, outputKeys } from './Constants';
+import { ClassType, inputKeys, K_PAGED, methodKeys, outputKeys } from './Constants';
 
 /**
  * Wrapper component for different grid implementiations
@@ -32,17 +32,17 @@ import { inputKeys, K_PAGED, methodKeys, outputKeys } from './Constants';
 })
 export class DatatableComponent extends AbstractGridComponent implements OnInit, OnChanges, OnDestroy {
 
+  /**
+   * The wrapped grid component which is used for the display
+   */
   @Input()
-  component: any;
+  component: ClassType<AbstractGridComponent>;
 
-  // Used in abstract grid
-  // @Input()
-  // options: IDatatableOptions;
 
   @ViewChild('content', { read: ViewContainerRef, static: true })
   vc: ViewContainerRef;
 
-  componentRef: ComponentRef<any>;
+  componentRef: ComponentRef<AbstractGridComponent>;
 
 
   constructor(
@@ -79,14 +79,18 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
         throw new Error('can\'t find default grid component');
       }
       Log.debug('Select default grid component ' + binding.key);
-      this.component = binding.component;
+      this.component = binding.component as ClassType<AbstractGridComponent>;
     }
     this.applyLayout(this.component);
   }
 
 
   api() {
-    return this.componentRef.instance;
+    return this.ref().instance;
+  }
+
+  ref() {
+    return this.componentRef;
   }
 
   /**
@@ -101,11 +105,12 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
         this.rebuild();
       }
     } else {
-      if (this.componentRef && this.componentRef.instance) {
+      if (this.ref() && this.api()) {
+        const instance = this.api();
         for (const key of keys(changes)) {
-          this.componentRef.instance[key] = changes[key].currentValue;
-          if (this.componentRef.instance[key + 'Change']) {
-            this.componentRef.instance[key + 'Change'].emit(changes[key].currentValue);
+          instance[key] = changes[key].currentValue;
+          if (instance[key + 'Change']) {
+            instance[key + 'Change'].emit(changes[key].currentValue);
           }
         }
         this.rebuild();
@@ -113,12 +118,11 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     }
   }
 
-  applyLayout(component: any) {
+  applyLayout(component: ClassType<AbstractGridComponent>) {
     this.vc.clear();
     this.component = component;
-    const factory = this.r.resolveComponentFactory(<any>this.component);
+    const factory = this.r.resolveComponentFactory(this.component);
     this.componentRef = this.vc.createComponent(factory);
-
 
     // passing through input parameters
     for (const prop of this.options.passInputs) {
@@ -130,9 +134,9 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
           Object.defineProperty(this.api(), prop, propDesc);
         }
       } catch (e) {
-
       }
     }
+
     // passing through output eventemitter
     for (const prop of this.options.passOutputs) {
       (<EventEmitter<any>>this.api()[prop]).subscribe(
@@ -147,6 +151,10 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
         this[method] = this.api()[method].bind(this.api());
       }
     }
+
+    // run ngOnInit if present
+    this.ref().changeDetectorRef.detectChanges();
+    this.emitEvent('ready');
   }
 
   ngOnDestroy(): void {

@@ -1,6 +1,7 @@
 import { IGridColumn } from './IGridColumn';
 import { IQueryComponentApi } from '../api/querying/IQueryComponentApi';
 import { GRID_MODE } from './Constants';
+import { Observable } from 'rxjs';
 
 export interface IDatatableOptions {
 
@@ -104,4 +105,30 @@ export interface IDatatableOptions {
    */
   beforeQuery?: (query: any, options: any) => void;
 
+
+  /**
+   * Insertable
+   */
+  insertable?: boolean;
+
+
+  /**
+   * Editable
+   */
+  editable?: boolean;
+
+
+  /**
+   * Deletable
+   */
+  deletable?: boolean;
+
+  /**
+   * Callback for modifications
+   */
+  crudCallbacks?: {
+    doCreate?: (entries: any[]) => Observable<boolean>;
+    doUpdate?: (entries: any[]) => Observable<boolean>;
+    doDelete?: (entries: any[]) => Observable<boolean>;
+  };
 }

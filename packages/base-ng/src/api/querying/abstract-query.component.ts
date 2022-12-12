@@ -24,6 +24,7 @@ import { IFindOptions } from './IFindOptions';
 import { LabelHelper, XS_P_$COUNT } from '@typexs/base';
 import { IQueryOptions } from './IQueryOptions';
 import { Log } from '../../lib/log/Log';
+import { IGridEvent } from '../../datatable/IGridEvent';
 
 
 /**
@@ -123,6 +124,10 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
     this.applyInitialOptions();
 
+    this.datatable.gridReady.subscribe(
+      this.onGridEvent.bind(this)
+    );
+
     this.queringService.isLoaded().subscribe(x => {
       const success = this.findEntityRef();
       // TODO handle if entity ref not found or loaded
@@ -139,6 +144,18 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
         throw new Error(this.error);
       }
     });
+
+  }
+
+  /**
+   * Callback for grid events
+   *
+   * @param x: IGridEvent
+   */
+  onGridEvent(x: IGridEvent) {
+    if (['refresh', 'rebuild'].includes(x.event)) {
+      this.requery();
+    }
   }
 
   /**
@@ -150,7 +167,9 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     if (this._isLoaded) {
       if (changes['componentClass']) {
         this.datatable.gridReady.pipe(first()).subscribe(x => {
-          this.requery();
+          if (x.event === 'rebuild') {
+            this.requery();
+          }
         });
       } else if (changes['options']) {
         this.requery();
@@ -240,6 +259,12 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
   }
 
 
+  onGridReady(gridEvent: IGridEvent) {
+    if (gridEvent.event === 'refresh') {
+      this.doQuery(this.datatable.api());
+    }
+  }
+
   doQuery(api: IGridApi): void {
     const filterQuery: object[] = [];
     let executeQuery: any = null;
@@ -258,21 +283,21 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     }
 
     const _d: any = {};
-    if (api.params.offset) {
+    if (api?.params?.offset) {
       _d['offset'] = api.params.offset;
     } else if (this.params.offset) {
       _d['offset'] = this.params.offset;
     } else {
       _d['offset'] = 0;
     }
-    if (api.params.limit) {
+    if (api?.params?.limit) {
       _d['limit'] = api.params.limit;
     } else if (this.params.limit) {
       _d['limit'] = this.params.limit;
     } else {
       _d['limit'] = 25;
     }
-    if (!isEmpty(api.params.sorting)) {
+    if (!isEmpty(api?.params?.sorting)) {
       _d['sort'] = api.params.sorting;
     } else if (this.params.sorting) {
       _d['sort'] = this.params.sorting;
@@ -280,7 +305,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     assign(queryOptions, _d);
 
 
-    if (api.params && !isEmpty(api.params.filters)) {
+    if (!isEmpty(api?.params?.filters)) {
       keys(api.params.filters).map(k => {
         try {
           const d = {};

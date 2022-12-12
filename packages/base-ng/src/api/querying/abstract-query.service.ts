@@ -228,7 +228,8 @@ export abstract class AbstractQueryService implements IQueringService {
     }
   }
 
-  private loadJsonSchema(value: any) {
+  private async loadJsonSchema(value: any) {
+    let result = null;
     if (isObjectLike(value) && value['$schema']) {
       const namespaces = resolveNamespaces(value);
       let namespace = C_DEFAULT;
@@ -239,14 +240,18 @@ export abstract class AbstractQueryService implements IQueringService {
       if (!this.namespaces.includes(namespace)) {
         this.namespaces.push(namespace);
       }
-      const reg = RegistryFactory.get(namespace);
-      if (supportsJsonSchemaImport(reg)) {
-        return reg.fromJsonSchema(value);
-      } else {
-        return this.unserialize(value, reg);
+      try {
+        const reg = RegistryFactory.get(namespace);
+        if (supportsJsonSchemaImport(reg)) {
+          result = await reg.fromJsonSchema(value);
+        } else {
+          result = await this.unserialize(value, reg);
+        }
+      } catch (e) {
+        Log.error(e);
       }
     }
-    return null;
+    return result;
   }
 
 

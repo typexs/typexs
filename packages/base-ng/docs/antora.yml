@@ -1,0 +1,8 @@
+name: base-ng
+title: '@typexs/base-ng'
+version: ~
+start_page: ROOT:index.adoc
+nav:
+  - modules/ROOT/nav.adoc
+
+

@@ -51,12 +51,15 @@ export { Console } from './libs/logging/Console';
 export { LogEvent } from './libs/logging/LogEvent';
 export { WinstonLoggerJar } from './libs/logging/WinstonLoggerJar';
 
-export { AbstractEvent } from './libs/messaging/AbstractEvent';
-export { AbstractExchange } from './libs/messaging/AbstractExchange';
-export { ExchangeMessageRegistry } from './libs/messaging/ExchangeMessageRegistry';
-export { Message } from './libs/messaging/Message';
+/**
+ * Export messaging libs
+ */
 export { IMessageOptions } from './libs/messaging/IMessageOptions';
-
+export { AbstractEvent } from './libs/messaging/AbstractEvent';
+export { AbstractMessage } from './libs/messaging/AbstractMessage';
+export { AbstractExchange } from './libs/messaging/AbstractExchange';
+export { Message } from './libs/messaging/Message';
+export { ExchangeMessageRegistry } from './libs/messaging/ExchangeMessageRegistry';
 
 export { AsyncWorkerQueue } from './libs/queue/AsyncWorkerQueue';
 export { IAsyncQueueOptions } from './libs/queue/IAsyncQueueOptions';
@@ -84,7 +87,6 @@ export { StorageError } from './libs/storage/exceptions/StorageError';
 export { StorageRef } from './libs/storage/StorageRef';
 export { AbstractSchemaHandler } from './libs/storage/AbstractSchemaHandler';
 export { EntityControllerRegistry } from './libs/storage/EntityControllerRegistry';
-
 
 
 export { NullTaskRef } from './libs/tasks/NullTaskRef';

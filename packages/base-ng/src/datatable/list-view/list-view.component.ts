@@ -6,8 +6,6 @@ import { PagerService } from '../../pager/PagerService';
 import { Pager } from '../../pager/Pager';
 import { IGridColumn } from '../IGridColumn';
 import { Eq, ExprDesc, Like, Value, ValueDesc } from '@allgemein/expressions';
-import { IDatatableOptions } from '../IDatatableOptions';
-import { IViewOptions } from '../../component/view/IViewOptions';
 import { IDTListGridOptions } from './IDTListGridOptions';
 
 
@@ -57,9 +55,9 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
       // this._params.offset = 0;
     }
 
-    if (!this.maxRows && this.rows) {
+    if (!this.maxRows && this._dataNodes) {
       // if maxRows is empty and rows already given then derive maxlines
-      this.maxRows = this.rows.length;
+      this.maxRows = this._dataNodes.length;
       if (this.options.enablePager) {
         this.calcPager();
       }
@@ -180,7 +178,7 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
 
   rebuild() {
     this.calcPager();
-    this.gridReady.emit();
+    super.rebuild();
   }
 
   reset() {

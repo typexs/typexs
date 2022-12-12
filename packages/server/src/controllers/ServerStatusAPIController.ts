@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {CurrentUser, ForbiddenError, Get, JsonController, Param} from 'routing-controllers';
+import { CurrentUser, ForbiddenError, Get, JsonController, Param } from 'routing-controllers';
 import {
   _API_CTRL_SERVER_CONFIG,
   _API_CTRL_SERVER_CONFIG_KEY,
@@ -10,15 +10,16 @@ import {
   K_CONFIG_ANONYMOUS_ALLOW,
   K_CONFIG_PERMISSIONS
 } from '../libs/Constants';
-import {ContextGroup} from '../decorators/ContextGroup';
-import {C_CONFIG_FILTER_KEYS, Config, Inject, Invoker, System} from '@typexs/base';
-import {IRolesHolder, PermissionHelper} from '@typexs/roles-api';
-import {ClassLoader} from '@allgemein/base';
-import {ServerStatusApi} from '../api/ServerStatus.api';
-import {ServerRegistry} from '../libs/server/ServerRegistry';
-import {Helper, WalkValues} from '../libs/Helper';
-import {IRoute} from '../libs/server/IRoute';
-import {ServerUtils} from '../libs/server/ServerUtils';
+import { ContextGroup } from '../decorators/ContextGroup';
+import { C_CONFIG_FILTER_KEYS, Config, Inject, Invoker, System } from '@typexs/base';
+import { IRolesHolder, PermissionHelper } from '@typexs/roles-api';
+import { ClassLoader } from '@allgemein/base';
+import { ServerStatusApi } from '../api/ServerStatus.api';
+import { ServerRegistry } from '../libs/server/ServerRegistry';
+import { Helper, WalkValues } from '../libs/Helper';
+import { IRoute } from '../libs/server/IRoute';
+import { ServerUtils } from '../libs/server/ServerUtils';
+import { cloneDeepWith, concat, get, isArray, isEmpty, isFunction, isString, uniq } from 'lodash';
 
 
 @ContextGroup(C_API)
@@ -40,23 +41,17 @@ export class ServerStatusAPIController {
    */
   @Get(_API_CTRL_SERVER_PING)
   ping(): any {
-    return {time: new Date()};
+    return { time: new Date() };
   }
 
 
   @Get(_API_CTRL_SERVER_STATUS)
   async status(@CurrentUser() user: IRolesHolder) {
-    const nodeId = _.get(this.system, 'node.nodeId', null);
+    const nodeId = get(this.system, 'node.nodeId', null);
     const status: any = {
       time: new Date(),
-      nodeId: nodeId,
+      nodeId: nodeId
     };
-
-    // if (ServerUtils.hasPermissionCheck(user) && user) {
-    //   const perms = PermissionHelper.getPermissionFromRoles(user.getRoles());
-    //   // if()
-    // }
-
     await this.invoker.use(ServerStatusApi).prepareServerStatus(status, user);
     return status;
   }
@@ -71,6 +66,7 @@ export class ServerStatusAPIController {
   getFullConfig(@CurrentUser() user?: any) {
     return this.getConfig(null, user);
   }
+
 
   /**
    * Listen for route defined in _API_CTRL_SERVER_CONFIG with additional key parameter and
@@ -98,26 +94,26 @@ export class ServerStatusAPIController {
     // check if key allowed
     const filterKeys = this.getFilterKeys();
     const _orgCfg = key ? Config.get(key) : Config.get();
-    const cfg = _.cloneDeepWith(_orgCfg);
+    const cfg = cloneDeepWith(_orgCfg);
 
     await Helper.walk(cfg, async (x: WalkValues) => {
       // TODO make this list configurable! system.info.hide.keys!
-      if (_.isString(x.key)) {
+      if (isString(x.key)) {
         const path = key ? [key, ...x.location].join('.') : x.location.join('.');
         if (filterKeys.indexOf(x.key) !== -1 || filterKeys.indexOf(path) !== -1) {
           delete x.parent[x.key];
           return;
         } else {
           const cfgPermission = configPermissions[path];
-          const hasPermissions = !!cfgPermission && !_.isEmpty(cfgPermission);
+          const hasPermissions = !!cfgPermission && !isEmpty(cfgPermission);
           if (hasPermissions) {
-            if (!_.isEmpty(userPermissions)) {
-              if (_.isArray(cfgPermission)) {
+            if (!isEmpty(userPermissions)) {
+              if (isArray(cfgPermission)) {
                 if (!await PermissionHelper.checkOnePermission(userPermissions, cfgPermission)) {
                   delete x.parent[x.key];
                   return;
                 }
-              } else if (_.isString(cfgPermission)) {
+              } else if (isString(cfgPermission)) {
                 if (!await PermissionHelper.checkPermission(userPermissions, cfgPermission)) {
                   delete x.parent[x.key];
                   return;
@@ -130,8 +126,8 @@ export class ServerStatusAPIController {
           }
         }
       }
-      if (_.isFunction(x.value)) {
-        if (_.isArray(x.parent)) {
+      if (isFunction(x.value)) {
+        if (isArray(x.parent)) {
           x.parent[x.index] = ClassLoader.getClassName(x.value);
         } else {
           x.parent[x.key] = ClassLoader.getClassName(x.value);
@@ -154,12 +150,12 @@ export class ServerStatusAPIController {
       const instance = this.serverRegistry.get(instanceName);
       const instanceRoutes = instance.getRoutes();
       for (const _route of instanceRoutes) {
-        const hasPermissions = _route.permissions && !_.isEmpty(_route.permissions);
+        const hasPermissions = _route.permissions && !isEmpty(_route.permissions);
         if (permissionsCheck && hasPermissions) {
 
-          if (!_.isEmpty(userPermissions)) {
+          if (!isEmpty(userPermissions)) {
             // use reverse check up
-            let routePermissions = !_.isArray(_route.permissions) ? [_route.permissions] : _route.permissions;
+            let routePermissions = !isArray(_route.permissions) ? [_route.permissions] : _route.permissions;
             routePermissions = routePermissions.map(x => x.replace(/:[^\s]+/g, ' * ').replace(/\s{2,}/g, ' ').trim());
             if (await PermissionHelper.checkOnePermission(userPermissions, routePermissions)) {
               routes.push(_route);
@@ -179,8 +175,8 @@ export class ServerStatusAPIController {
     // TODO cache this!
     let filterKeys = C_CONFIG_FILTER_KEYS; // get them from base/ConfigUtils
     const res: string[][] = <string[][]><any>this.invoker.use(ServerStatusApi).filterConfigKeys();
-    if (res && _.isArray(res)) {
-      filterKeys = _.uniq(_.concat(filterKeys, ...res.filter(x => _.isArray(x))).filter(x => !_.isEmpty(x)));
+    if (res && isArray(res)) {
+      filterKeys = uniq(concat(filterKeys, ...res.filter(x => isArray(x))).filter(x => !isEmpty(x)));
     }
     return filterKeys;
   }

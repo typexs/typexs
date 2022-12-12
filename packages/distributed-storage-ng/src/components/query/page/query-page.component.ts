@@ -18,8 +18,7 @@ import { IDSOptions } from '../../../lib/IDSOptions';
   templateUrl: './query-page.component.html',
   styleUrls: ['./query-page.component.scss']
 })
-export class DistributedStorageQueryPageComponent
-  implements OnInit {
+export class DistributedStorageQueryPageComponent implements OnInit {
 
   options: IDSOptions = {
     entityTypeSelection: true
@@ -40,14 +39,16 @@ export class DistributedStorageQueryPageComponent
     this.viewTypes = this.componentRegistry.registry.filter(x => get(x, 'extra.datatable', false));
     const defaultComponent = this.viewTypes.find(x => get(x, 'extra.default', false));
     if (defaultComponent) {
-      this.gridComponentClass = defaultComponent.component as ClassType<AbstractGridComponent>;
+      this.gridComponentClass =
+        defaultComponent.component as ClassType<AbstractGridComponent>;
     }
     this.options.columnsPostProcess = this.columnsPostProcess.bind(this);
   }
 
   switchLayout(viewType: IComponentBinding) {
     if (viewType) {
-      this.gridComponentClass = viewType.component as ClassType<AbstractGridComponent>;
+      this.gridComponentClass =
+        viewType.component as ClassType<AbstractGridComponent>;
     }
 
   }

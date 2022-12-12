@@ -17,8 +17,6 @@ export { ConditionValidationError } from './libs/exceptions/ConditionValidationE
 export { EntityController } from './libs/EntityController';
 export { EntityControllerFactory } from './libs/EntityControllerFactory';
 
-export { EntityControllerReader, IEntityControllerReaderOptions } from './adapters/pipeline/readers/EntityControllerReader';
-
 
 export { EntityDefTreeWorker } from './libs/framework/EntityDefTreeWorker';
 export { FrameworkFactory } from './libs/framework/FrameworkFactory';

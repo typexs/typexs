@@ -8,7 +8,7 @@ export class MessageChannel<T extends IMessage> {
   private subject: BehaviorSubject<T> = new BehaviorSubject<T>(null);
 
 
-  constructor(name: string) {
+  constructor(name?: string) {
     this.name = name;
   }
 

@@ -162,6 +162,8 @@ export class AbstractInstancableComponent<T> extends AbstractComponent implement
           }
         }
       }
+      // call oninit if exists
+      compRef.changeDetectorRef.detectChanges();
       return instance;
     } else {
       Log.error(t('No view content setted'));

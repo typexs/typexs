@@ -5,6 +5,9 @@ import { IQueryParams } from './IQueryParams';
 import { IGridApi } from './IGridApi';
 import { Helper } from '../api/querying/Helper';
 import { GRID_MODE } from './Constants';
+import { GRID_EVENT_TYPE, IGridEvent } from './IGridEvent';
+import { DataNode } from './DataNode';
+import { isEmpty } from 'lodash';
 
 
 @Component({
@@ -12,10 +15,13 @@ import { GRID_MODE } from './Constants';
 })
 export class AbstractGridComponent implements IGridApi {
 
+
   @Output()
   paramsChange: EventEmitter<IQueryParams> = new EventEmitter<IQueryParams>();
 
   _params: IQueryParams = {};
+
+  _dataNodes: DataNode<any>[] = [];
 
   @Input()
   get params() {
@@ -31,7 +37,13 @@ export class AbstractGridComponent implements IGridApi {
   columns: IGridColumn[];
 
   @Input()
-  rows: any[];
+  get rows() {
+    return this.getRows();
+  }
+
+  set rows(entries: any) {
+    this.setRows(entries);
+  }
 
   @Input()
   maxRows: number;
@@ -43,17 +55,23 @@ export class AbstractGridComponent implements IGridApi {
   doQuery: EventEmitter<IGridApi> = new EventEmitter<IGridApi>();
 
   @Output()
-  gridReady: EventEmitter<any> = new EventEmitter<any>();
+  gridReady: EventEmitter<IGridEvent> = new EventEmitter<IGridEvent>();
+
 
   constructor() {
     this.construct();
   }
 
   construct() {
+
+  }
+
+  getOptions() {
+    return this.options;
   }
 
   rebuild() {
-    this.gridReady.emit();
+    this.gridReady.emit({ event: 'rebuild', api: this });
   }
 
   /**
@@ -65,21 +83,49 @@ export class AbstractGridComponent implements IGridApi {
   }
 
   getGridMode() {
-    return this.options.mode;
+    return this.options?.mode;
+  }
+
+  getRows(): any[] {
+    return this._dataNodes.map(x => x.data);
   }
 
   setRows(rows: any[]) {
     if (!this.columns) {
       this.setColumns(Helper.rebuildColumns(rows));
     }
-    this.rows = rows;
+
+    let idx = this.getLastRowIdx();
+    const dataNodes = rows.map(x => new DataNode(x, idx++));
+    this._dataNodes = dataNodes;
   }
 
 
-  setColumns(columns: IGridColumn[]) {
-    this.columns = columns;
+  /**
+   * Get the first row index
+   */
+  getFirstRowIdx() {
+    return isEmpty(this._dataNodes) ? 0 : this._dataNodes[0].idx;
   }
 
+
+  /**
+   * Get the last row index
+   */
+  getLastRowIdx() {
+    return isEmpty(this._dataNodes) ? 0 : this._dataNodes[this._dataNodes.length - 1].idx;
+  }
+
+
+  getMaxRows(): number {
+    return this.maxRows;
+  }
+
+  /**
+   * Set max rows entry
+   *
+   * @param maxRows
+   */
   setMaxRows(maxRows: number) {
     this.maxRows = maxRows;
   }
@@ -92,13 +138,23 @@ export class AbstractGridComponent implements IGridApi {
     return this.columns;
   }
 
-  getMaxRows(): number {
-    return this.maxRows;
+  setColumns(columns: IGridColumn[]) {
+    this.columns = columns;
   }
 
-  getRows(): any[] {
-    return this.rows;
+  api(): AbstractGridComponent {
+    return this;
   }
 
 
+  emitEvent(e: GRID_EVENT_TYPE, data?: any) {
+    const event: IGridEvent = {
+      event: e,
+      api: this.api()
+    };
+    if (data) {
+      event.data = data;
+    }
+    this.gridReady.emit(event);
+  }
 }

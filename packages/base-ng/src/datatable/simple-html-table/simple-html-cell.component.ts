@@ -1,7 +1,7 @@
 import {
   Component,
   ComponentFactoryResolver,
-  ComponentRef,
+  ComponentRef, HostListener,
   Inject,
   Injector,
   Input,
@@ -10,9 +10,10 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import {IGridColumn} from '../IGridColumn';
-import {CC_GRID_CELL_VALUE, SIMPLE_TABLE} from '../../constants';
-import {ComponentRegistryService} from '../../component/component-registry.service';
+import { IGridColumn } from '../IGridColumn';
+import { CC_GRID_CELL_VALUE, SIMPLE_TABLE } from '../../constants';
+import { ComponentRegistryService } from '../../component/component-registry.service';
+import { ISimpleTable } from './ISimpleTable';
 
 
 @Component({
@@ -21,20 +22,25 @@ import {ComponentRegistryService} from '../../component/component-registry.servi
 })
 export class SimpleHtmlCellComponent implements OnInit, OnDestroy {
 
+
   @Input()
   column: IGridColumn;
 
   @Input()
   row: any;
 
-  @ViewChild('cell', {read: ViewContainerRef, static: true})
+  @Input()
+  parent: ISimpleTable;
+
+
+  @ViewChild('cell', { read: ViewContainerRef, static: true })
   vc: ViewContainerRef;
 
   ref: ComponentRef<any>;
 
   constructor(@Inject(Injector) public injector: Injector,
-              @Inject(ComponentRegistryService) public config: ComponentRegistryService,
-              @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver) {
+    @Inject(ComponentRegistryService) public config: ComponentRegistryService,
+    @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver) {
   }
 
 
@@ -49,10 +55,11 @@ export class SimpleHtmlCellComponent implements OnInit, OnDestroy {
     if (!cClass) {
       cClass = this.config.getComponentClass(SIMPLE_TABLE, CC_GRID_CELL_VALUE);
     }
-    const factory = this.r.resolveComponentFactory(<any>cClass);
+    const factory = this.r.resolveComponentFactory(cClass);
     this.ref = this.vc.createComponent(factory);
     this.ref.instance.column = this.column;
     this.ref.instance.row = this.row;
+    this.ref.changeDetectorRef.detectChanges();
   }
 
 

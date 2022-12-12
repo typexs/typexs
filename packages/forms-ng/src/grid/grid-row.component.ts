@@ -60,10 +60,14 @@ export class GridRowComponent extends AbstractFormComponent<any> {
             }
             instance.setData(formObject, this.context);
             instance.build(formObject);
+            // oninit call
+            ref.changeDetectorRef.detectChanges();
             comp.push(instance);
           } else {
             Log.error('No view content present or bound.');
           }
+          // oninit call
+          cGridCell.changeDetectorRef.detectChanges();
         } else {
           throw new NoFormTypeDefinedError(formObject.type);
         }

@@ -39,7 +39,8 @@ export class StorageQueryComponent implements OnInit {
     this.viewTypes = this.componentRegistry.registry.filter(x => get(x, 'extra.datatable', false));
     const defaultComponent = this.viewTypes.find(x => get(x, 'extra.default', false));
     if (defaultComponent) {
-      this.gridComponentClass = defaultComponent.component as ClassType<AbstractGridComponent>;
+      this.gridComponentClass =
+        defaultComponent.component as ClassType<AbstractGridComponent>;
     }
     this.name = this.route.snapshot.paramMap.get('name');
     this.options.columnsPostProcess = this.columnsPostProcess.bind(this);
@@ -47,7 +48,8 @@ export class StorageQueryComponent implements OnInit {
 
   switchLayout(viewType: IComponentBinding) {
     if (viewType) {
-      this.gridComponentClass = viewType.component as ClassType<AbstractGridComponent>;
+      this.gridComponentClass =
+        viewType.component as ClassType<AbstractGridComponent>;
     }
 
   }

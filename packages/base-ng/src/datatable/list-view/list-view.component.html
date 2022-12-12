@@ -8,15 +8,15 @@
 
 
   <div class="list-container">
-    <div class="row" *ngFor="let row of rows">
+    <div class="row" *ngFor="let row of _dataNodes">
       <div class="col-md-12">
 
-        <txs-view [instance]="row"
+        <txs-view [instance]="row.data"
                   [allowViewModeSwitch]="allowViewModeSwitch"
                   [mode]="viewMode"
                   [options]="options.viewOptions">
           <div txsViewFallback>
-            <txs-simple-json [instance]="row"
+            <txs-simple-json [instance]="row.data"
                              [options]="options.viewOptions">
             </txs-simple-json>
           </div>
