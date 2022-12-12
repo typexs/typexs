@@ -1,8 +1,8 @@
 {
   "name": "@typexs/notification",
   "version": "0.0.0-PLACEHOLDER",
-  "main": "index.js",
-  "browser": "browser.js",
+  "main": "index",
+  "browser": "browser",
   "private": true,
   "typexs": {
     "name": "pipeline"

@@ -2,8 +2,8 @@
   "name": "@typexs/ng",
   "version": "0.0.0-PLACEHOLDER",
   "description": "Angular for typexs",
-  "main": "index.ts",
-  "browser": "browser.ts",
+  "main": "index",
+  "browser": "browser",
   "scripts": {
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
     "posttest": "nyc report --reporter=json"

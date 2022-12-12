@@ -2,7 +2,7 @@
   "name": "@typexs/roles-api",
   "version": "0.0.0-PLACEHOLDER",
   "description": "",
-  "main": "./index.ts",
+  "main": "./index",
   "repository": {
     "type": "git",
     "url": "git+https://gitlab.com/typexs/typexs.git"
