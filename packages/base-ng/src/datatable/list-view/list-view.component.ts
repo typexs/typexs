@@ -14,7 +14,7 @@ import { IDTListGridOptions } from './IDTListGridOptions';
   templateUrl: 'list-view.component.html',
   styleUrls: ['./list-view.component.scss']
 })
-export class ListViewComponent<T> extends AbstractGridComponent implements OnInit, OnDestroy {
+export class ListViewComponent extends AbstractGridComponent implements OnInit, OnDestroy {
 
   pager: Pager;
 

@@ -46,12 +46,12 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let row of dataNodes">
+      <tr *ngFor="let row of _dataNodes">
         <td class="col-md-auto" *ngFor="let column of columns">
           <txs-simple-html-cell
             [parent]="getSelf()"
             [column]="column"
-            [row]="row">
+            [row]="row.data">
           </txs-simple-html-cell>
         </td>
       </tr>

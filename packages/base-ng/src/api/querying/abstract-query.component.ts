@@ -124,7 +124,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
     this.applyInitialOptions();
 
-    this.datatable.api().gridReady.subscribe(
+    this.datatable.gridReady.subscribe(
       this.onGridEvent.bind(this)
     );
 

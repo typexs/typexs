@@ -6,6 +6,7 @@ import { IQueringService } from '../../api/querying/IQueringService';
 import { IEntityViewOptions } from './IEntityViewOptions';
 import { ComponentRegistry } from '@typexs/base';
 import { IEntityResolveOptions } from '../../services/IEntityResolveOptions';
+import { Log } from '../../lib/log/Log';
 
 @Component({
   template: ''
@@ -27,7 +28,9 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
   loading: boolean = false;
 
   get resolverOptions(): IEntityResolveOptions {
-    return get(this.options, 'resolver', { idKeys: [{ key: '_id', optional: true }] });
+    return get(this.options, 'resolver', {
+      idKeys: [{ key: '_id', optional: true }]
+    });
   }
 
   constructor(@Inject(EntityResolverService) public resolverService: EntityResolverService) {
@@ -84,14 +87,22 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
 
   url() {
     if (isUndefined(this._url)) {
-      this._url = this.resolverService.getRouteFor(this.getInstance(), this.resolverOptions);
+      try {
+        this._url = this.resolverService.getRouteFor(this.getInstance(), this.resolverOptions);
+      } catch (e) {
+        Log.error(e);
+      }
     }
     return this._url;
   }
 
   label() {
     if (isUndefined(this._label)) {
-      this._label = this.resolverService.getLabelFor(this.getInstance(), this.resolverOptions);
+      try {
+        this._label = this.resolverService.getLabelFor(this.getInstance(), this.resolverOptions);
+      } catch (e) {
+        Log.error(e);
+      }
     }
     return this._label;
   }
