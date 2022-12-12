@@ -1,6 +1,6 @@
 {
   "name": "@typexs/typexs",
-  "version": "2.0.41",
+  "version": "2.0.40",
   "tag": "v2-lts",
   "main": "index.js",
   "browser": "browser.js",
@@ -146,7 +146,6 @@
     "eslint-plugin-prettier": "^4.2.1",
     "express": "4.17.3",
     "fs-extra": "8.1.0",
-    "glob": "7.1.7",
     "got": "11.8.2",
     "gulp": "4.0.2",
     "gulp-bump": "3.2.0",
