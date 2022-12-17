@@ -153,7 +153,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
    * @param x: IGridEvent
    */
   onGridEvent(x: IGridEvent) {
-    if (['refresh'].includes(x.event)) {
+    if (['requery'].includes(x.event)) {
       this.requery();
     }
   }
