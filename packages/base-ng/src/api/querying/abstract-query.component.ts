@@ -153,7 +153,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
    * @param x: IGridEvent
    */
   onGridEvent(x: IGridEvent) {
-    if (['refresh', 'rebuild'].includes(x.event)) {
+    if (['refresh'].includes(x.event)) {
       this.requery();
     }
   }
@@ -258,12 +258,6 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     this.doQuery(this.datatable.api());
   }
 
-
-  onGridReady(gridEvent: IGridEvent) {
-    if (gridEvent.event === 'refresh') {
-      this.doQuery(this.datatable.api());
-    }
-  }
 
   doQuery(api: IGridApi): void {
     const filterQuery: object[] = [];
