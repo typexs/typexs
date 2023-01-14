@@ -71,7 +71,7 @@ export class AbstractGridComponent implements IGridApi {
   }
 
   rebuild() {
-    this.gridReady.emit({ event: 'rebuild', api: this });
+    this.emitEvent('rebuild');
   }
 
   /**
@@ -86,10 +86,18 @@ export class AbstractGridComponent implements IGridApi {
     return this.options?.mode;
   }
 
+  /**
+   * Return all rows
+   */
   getRows(): any[] {
     return this._dataNodes.map(x => x.data);
   }
 
+  /**
+   * Set rows by passing array with data; there will be enveloped in DateNode objects
+   *
+   * @param rows: any[]
+   */
   setRows(rows: any[]) {
     if (!this.columns) {
       this.setColumns(Helper.rebuildColumns(rows));

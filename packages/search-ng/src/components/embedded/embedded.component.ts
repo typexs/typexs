@@ -7,7 +7,7 @@ import { And, ExprDesc, Expressions, In, Key, Like, Value } from '@allgemein/exp
 import { QueryAction } from '../query-form/QueryAction';
 import { StorageService } from '@typexs/storage-ng';
 import { __CLASS__, __NS__ } from '@allgemein/schema-api';
-import { IDTListGridOptions } from '@typexs/base-ng/datatable/list-view/IDTListGridOptions';
+import { IDTListGridOptions } from 'packages/base-ng/src/datatable/list-view/IDatatableListGridOptions';
 import { C_SEARCH_INDEX } from '../../Constants';
 import { IEntityViewOptions } from '@typexs/base-ng/component/entities/IEntityViewOptions';
 

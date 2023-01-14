@@ -6,7 +6,7 @@ import { PagerService } from '../../pager/PagerService';
 import { Pager } from '../../pager/Pager';
 import { IGridColumn } from '../IGridColumn';
 import { Eq, ExprDesc, Like, Value, ValueDesc } from '@allgemein/expressions';
-import { IDTListGridOptions } from './IDTListGridOptions';
+import { IDatatableListGridOptions } from './IDatatableListGridOptions';
 
 
 @Component({
@@ -29,7 +29,7 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
   viewMode: string = 'teaser';
 
   @Input()
-  options: IDTListGridOptions;
+  options: IDatatableListGridOptions;
 
   constructor(private pagerService: PagerService) {
     super();
@@ -39,7 +39,7 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
     if (!this.options) {
       this.options = { enablePager: true, limit: 25 };
     }
-    defaults(this.options, <IDTListGridOptions>{ enablePager: true });
+    defaults(this.options, <IDatatableListGridOptions>{ enablePager: true });
 
     if (this.options.enablePager) {
       this.pager = this.pagerService.get(this.options.pagerId);
@@ -58,9 +58,7 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
     if (!this.maxRows && this._dataNodes) {
       // if maxRows is empty and rows already given then derive maxlines
       this.maxRows = this._dataNodes.length;
-      if (this.options.enablePager) {
-        this.calcPager();
-      }
+      this.calcPager();
     }
   }
 
@@ -161,16 +159,18 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
 
 
   calcPager() {
-    if (this.params && isNumber(this.maxRows) && isNumber(this.params.limit)) {
-      if (!this.params.offset) {
-        this.params.offset = 0;
-        this.paramsChange.emit(this._params);
-      }
-      this.pager.totalPages = Math.ceil(this.maxRows * 1.0 / this.params.limit * 1.0);
+    if (this.options.enablePager) {
+      if (this.params && isNumber(this.maxRows) && isNumber(this.params.limit)) {
+        if (!this.params.offset) {
+          this.params.offset = 0;
+          this.paramsChange.emit(this._params);
+        }
+        this.pager.totalPages = Math.ceil(this.maxRows * 1.0 / this.params.limit * 1.0);
 
-      if (!this.pager.checkQueryParam()) {
-        this.pager.currentPage = (this.params.offset / this.options.limit) + 1;
-        this.pager.calculatePages();
+        if (!this.pager.checkQueryParam()) {
+          this.pager.currentPage = (this.params.offset / this.options.limit) + 1;
+          this.pager.calculatePages();
+        }
       }
     }
   }
