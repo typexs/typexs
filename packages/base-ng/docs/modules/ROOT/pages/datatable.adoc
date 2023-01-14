@@ -20,6 +20,29 @@ Die Komponente wird zumeinst innerhalb Komponenten
 * StorageEmbeddedComponent
 * DistributedStorageEmbeddedComponent
 
-Kommunikation nach innern und nach außen mittels gridReady
+
+## TODO: Filtern
+
+## TODO: Sorting
+
+## Kommunikation
+
+Kommunikation findet über den Observer "gridReady" statt, es kann die Methode
+
+```
+emitEvent(name, daten)
+```
+
+benutzt werden.
+
+```
+StorageEmbeddedComponent
+- txs-datatable
+-- useView: SomeListView
+--- Inline Component with possiblity to change data and refresh view
+--- Use this.emitEvent('requery') to requery
+
+```
+
 
 
