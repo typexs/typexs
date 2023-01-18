@@ -1,9 +1,9 @@
-import {IAuthConfiguration} from "../../../libs/adapter/IAuthConfiguration";
-import {IOAuth2Options} from "./IOAuth2Options";
-import * as _ from "lodash";
-import {OAuth2Adapter} from "./OAuth2Adapter";
-import {IAuthMethod} from "../../../libs/models/IAuthMethod";
-import {IAuthAdapter} from "../../../libs/adapter/IAuthAdapter";
+import {IAuthConfiguration} from '../../../libs/adapter/IAuthConfiguration';
+import {IOAuth2Options} from './IOAuth2Options';
+import * as _ from 'lodash';
+import {OAuth2Adapter} from './OAuth2Adapter';
+import {IAuthMethod} from '../../../libs/models/IAuthMethod';
+import {IAuthAdapter} from '../../../libs/adapter/IAuthAdapter';
 
 
 const AUTH_URL = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
@@ -24,9 +24,9 @@ export class MicrosoftConfiguration implements IAuthConfiguration {
 
     if (_.has(options, 'scope')) {
       if(_.isArray(options['scope'])){
-        _.set(options, 'scope', options.scope.join(','))
+        _.set(options, 'scope', options.scope.join(','));
       }else{
-        _.set(options, 'scope', options.scope)
+        _.set(options, 'scope', options.scope);
       }
 
     } else {
@@ -35,21 +35,21 @@ export class MicrosoftConfiguration implements IAuthConfiguration {
   }
 
 
-  onAuthentication(adapter: IAuthAdapter, accessToken: string, refreshToken: string, profile: any) : Promise<any> {
-    let self = this;
+  onAuthentication(adapter: IAuthAdapter, accessToken: string, refreshToken: string, profile: any): Promise<any> {
+    const self = this;
     return new Promise((resolve, reject) => {
       (<any>adapter).strategy._oauth2.get(
         'https://graph.microsoft.com/v1.0/me',
-        //'https://api.onedrive.com/v1.0/drive',
+        // 'https://api.onedrive.com/v1.0/drive',
         accessToken,
         function (err: Error, body: any, res: any) {
           if (err) {
-            return reject(new OAuth2Adapter.OAuth2Strategy.InternalOAuthError('failed to fetch user profile', err))
+            return reject(new OAuth2Adapter.OAuth2Strategy.InternalOAuthError('failed to fetch user profile', err));
           }
           try {
-            let json = JSON.parse(body);
+            const json = JSON.parse(body);
 
-            let _profile: IAuthMethod = {
+            const _profile: IAuthMethod = {
               authId: self.id,
               type: adapter.type,
               identifier: json.userPrincipalName,
@@ -57,12 +57,11 @@ export class MicrosoftConfiguration implements IAuthConfiguration {
               data: json
             };
             resolve(_profile);
-          }
-          catch (e) {
+          } catch (e) {
             reject(e);
           }
         }
-      )
+      );
     });
   }
 }

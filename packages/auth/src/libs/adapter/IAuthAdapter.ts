@@ -10,6 +10,9 @@ import { AuthDataContainer } from '../auth/AuthDataContainer';
 
 export type T_AUTH_ADAPTER_STAGE = 'before' | 'after';
 
+/**
+ * IAuthAdapter is an interface for handling authentication against other backend systems
+ */
 export interface IAuthAdapter {
 
   type: string;
