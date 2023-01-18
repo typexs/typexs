@@ -19,3 +19,9 @@ export const methodKeys = ['rebuild', 'setMaxRows', 'setColumns', 'setRows', 'ge
  */
 export declare type ClassType<T> = new (...args: any[]) => T;
 
+/**
+ * Event types names
+ */
+export const Q_EVENT_TYPE_REBUILD = 'rebuild';
+export const Q_EVENT_TYPE_REFRESH = 'refresh';
+export const Q_EVENT_TYPE_REQUERY = 'requery';

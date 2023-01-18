@@ -25,6 +25,7 @@ import { LabelHelper, XS_P_$COUNT } from '@typexs/base';
 import { IQueryOptions } from './IQueryOptions';
 import { Log } from '../../lib/log/Log';
 import { IGridEvent } from '../../datatable/IGridEvent';
+import { Q_EVENT_TYPE_REBUILD, Q_EVENT_TYPE_REFRESH, Q_EVENT_TYPE_REQUERY } from '../../datatable/Constants';
 
 
 /**
@@ -148,17 +149,29 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
   }
 
   /**
-   * Callback for grid events
+   * Processing grid events passed through gridReady event emitter.
+   * If "options.eventHandle" exists then it will handle passed events.
+   * When returns false then further processing is aborted.
+   *
+   * Current handled event types are
+   * - 'requery' - run re-query
+   * - 'refresh' - run re-query
    *
    * @param x: IGridEvent
    */
   onGridEvent(x: IGridEvent) {
-    if (x.event === 'requery') {
-      this.requery();
-    } else if (x.event === 'refresh') {
-      this.doQuery(this.datatable.api());
+    let res = true;
+    if (this.options.eventHandle) {
+      res = this.options.eventHandle(x, this);
     }
 
+    if (res) {
+      if (x.event === Q_EVENT_TYPE_REQUERY) {
+        this.requery();
+      } else if (x.event === Q_EVENT_TYPE_REFRESH) {
+        this.doQuery(this.datatable.api());
+      }
+    }
   }
 
   /**
@@ -170,7 +183,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     if (this._isLoaded) {
       if (changes['componentClass']) {
         this.datatable.gridReady.pipe(first()).subscribe(x => {
-          if (x.event === 'rebuild') {
+          if (x.event === Q_EVENT_TYPE_REBUILD) {
             this.requery();
           }
         });

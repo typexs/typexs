@@ -1,4 +1,6 @@
 import { IDatatableOptions } from '../../datatable/IDatatableOptions';
+import { IGridEvent } from '../../datatable/IGridEvent';
+import { IQueryComponentApi } from './IQueryComponentApi';
 
 export interface IQueryOptions extends IDatatableOptions {
 
@@ -17,6 +19,11 @@ export interface IQueryOptions extends IDatatableOptions {
    * Sort for queried entities
    */
   sorting?: any;
+
+  /**
+   * Sort for queried entities
+   * (same as sorting)
+   */
   sort?: any;
 
   /**
@@ -28,4 +35,11 @@ export interface IQueryOptions extends IDatatableOptions {
    * TODO Description
    */
   columnsOverride?: boolean;
+
+  /**
+   * Callback for handle additional events, if return false then further processing is aborted
+   *
+   * @param event
+   */
+  eventHandle?: (event: IGridEvent, api: IQueryComponentApi) => boolean;
 }
