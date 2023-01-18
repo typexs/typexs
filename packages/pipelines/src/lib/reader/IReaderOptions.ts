@@ -23,4 +23,10 @@ export interface IReaderOptions extends IPullableQueueOptions {
    */
   passArray?: boolean;
 
+
+  /**
+   * Define options keys to pass by filtered options
+   */
+  passOptions?: string[];
+
 }

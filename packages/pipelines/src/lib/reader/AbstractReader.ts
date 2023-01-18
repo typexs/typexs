@@ -5,7 +5,7 @@ import { ILoggerApi, Log } from '@typexs/base';
 import { createEmbeddedPromise, PIPE_HANDLER } from './Constants';
 import { Processor } from '../Processor';
 import { ERROR_FUNCTION } from '../Constants';
-import { clone, defaults, get, isBoolean, isFunction, isNumber, isObjectLike, isString, keys } from 'lodash';
+import { clone, defaults, get, isArray, isBoolean, isFunction, isNumber, isObjectLike, isString, isUndefined, keys } from 'lodash';
 import { ConditionsProvider } from './ConditionsProvider';
 
 export abstract class AbstractReader implements IReader {
@@ -82,6 +82,13 @@ export abstract class AbstractReader implements IReader {
     const opts = this.getOptions();
     const selectedValues: any = {};
     keys(opts).filter(k => isNumber(opts[k]) || isString(opts[k]) || isBoolean(opts[k])).map(k => selectedValues[k] = clone(opts[k]));
+    if (opts?.passOptions && isArray(opts.passOptions)) {
+      opts.passOptions.filter(x => isString(x)).map(k => {
+        if (!isUndefined(opts[k])) {
+          selectedValues[k] = clone(opts[k]);
+        }
+      });
+    }
     return selectedValues;
   }
 
