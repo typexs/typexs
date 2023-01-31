@@ -8,7 +8,6 @@
     "doc": "packages/testing/docs/de"
   },
   "scripts": {
-    "test": "npx gulp test",
     "ng": "npx ng",
     "start": "npx concurrently \"cd packages/app && npx ng serve\" \"npx typexs server --nodeId server\"",
     "build": "cd packages/app && npx ng build --prod",
@@ -18,7 +17,8 @@
     "cleanup": "npx gulp cleanup && npm i",
     "publish": "npx gulp packages && npx gulp packages_publish && npx gulp dist-tag",
     "documentation": "npx gulp docs-generate",
-    "documentation:watch": "npx gulp watch-doc"
+    "documentation:watch": "npx gulp watch-doc",
+    "test": "npx gulp test"
   },
   "repository": {
     "type": "git",
