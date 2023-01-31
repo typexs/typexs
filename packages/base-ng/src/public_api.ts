@@ -1,4 +1,5 @@
 // base module
+
 export { BaseModule } from './module';
 export {
   C_DEFAULT,
@@ -80,6 +81,7 @@ export * from './datatable/IQueryParams';
 export * from './datatable/IGridColumn';
 export * from './datatable/IDatatableOptions';
 
+
 export { AbstractComponent } from './component/abstract.component';
 export { AbstractInstancableComponent } from './component/abstract-instancable.component';
 export { ComponentRegistryService } from './component/component-registry.service';
@@ -100,6 +102,7 @@ export * from './datatable/simple-html-table/simple-html-cell-entity-operations-
 export * from './datatable/simple-html-table/simple-html-cell-entity-reference-renderer.component';
 export * from './datatable/simple-html-table/simple-html-cell-router-link-renderer.component';
 export * from './datatable/list-view/list-view.component';
+export { IDatatableListGridOptions } from './datatable/list-view/IDatatableListGridOptions';
 
 export { AbstractQueryService } from './api/querying/abstract-query.service';
 export { AbstractQueryComponent } from './api/querying/abstract-query.component';

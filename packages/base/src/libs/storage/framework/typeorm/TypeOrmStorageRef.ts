@@ -195,6 +195,14 @@ export class TypeOrmStorageRef extends StorageRef {
           x.options.type = String;
           (<any>x.options).stringify = true;
         }
+      } else if(isString(x.options.type)){
+        if (x.options.type.toLowerCase() === Object.name.toLowerCase()) {
+          x.options.type = String;
+          (<any>x.options).stringify = true;
+        } else if (x.options.type.toLowerCase() === Array.name.toLowerCase()) {
+          x.options.type = String;
+          (<any>x.options).stringify = true;
+        }
       }
     });
   }

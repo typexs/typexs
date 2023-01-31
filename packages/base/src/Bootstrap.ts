@@ -238,6 +238,7 @@ export class Bootstrap {
 
   /**
    * Initialise the runtime modul loader through current configuration.
+   * - Also instance activators
    */
   async prepareRuntime(): Promise<Bootstrap> {
     const options = this.getConfiguration();
@@ -325,8 +326,12 @@ export class Bootstrap {
     return this.bootstraps;
   }
 
-
-  async startup(command: ICommand = null): Promise<Bootstrap> {
+  /**
+   * Run activation lifecycle with command.beforeStartup if exists
+   *
+   * @param command
+   */
+  async activate(command: ICommand = null) {
     Log.debug('startup ...');
     if (command && command.beforeStartup) {
       await command.beforeStartup();
@@ -340,6 +345,12 @@ export class Bootstrap {
       Log.debug('activate ' + ClassesLoader.getModulName(activator.constructor));
       await activator.startup();
     }
+  }
+
+  async startup(command: ICommand = null): Promise<Bootstrap> {
+    Log.debug('startup ...');
+
+    await this.activate(command);
 
     // TODO how to handle dependencies?
     let bootstraps = this.getModulBootstraps();

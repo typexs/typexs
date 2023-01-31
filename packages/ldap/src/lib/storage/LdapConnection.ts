@@ -96,7 +96,7 @@ export class LdapConnection implements IConnection {
         reject(new Error('ldap not bound'));
       }
 
-      let controls: Control[] = [];
+      const controls: Control[] = [];
       // if (options.paged) {
       //   controls.push(new PagedResultsControl({ value: { size: this., cookie: '' } }));
       // }
@@ -108,7 +108,7 @@ export class LdapConnection implements IConnection {
             return reject(err);
           }
 
-          let items: any[] = [];
+          const items: any[] = [];
           res.on('searchEntry', (entry: SearchEntry) => {
             items.push(entry.object);
           });

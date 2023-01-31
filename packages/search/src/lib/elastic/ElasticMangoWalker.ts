@@ -1,5 +1,4 @@
-import * as _ from 'lodash';
-import { get } from 'lodash';
+import { concat, first, get, isArray, isEmpty, isNumber, isString, uniq, values } from 'lodash';
 import { AbstractCompare, And, IMangoWalker, MangoExpression, MultiArgs, Not, Or, PAst, PValue } from '@allgemein/mango-expressions';
 import { IMangoWalkerControl } from '@allgemein/mango-expressions/IMangoWalker';
 import { NotYetImplementedError } from '@typexs/base';
@@ -93,11 +92,11 @@ export class ElasticMangoWalker implements IMangoWalker {
     const fields: string[] = type ? this.fields
       .filter(x => x.type === type || x.esType === type)
       .map(x => x.name) : this.fields.map(x => x.name);
-    return _.uniq(_.concat(additional, fields));
+    return uniq(concat(additional, fields));
   }
 
   build(condition: any, k: string = null): IElasticQuery {
-    if (_.isEmpty(condition)) {
+    if (isEmpty(condition)) {
       return null;
     }
 
@@ -107,7 +106,7 @@ export class ElasticMangoWalker implements IMangoWalker {
 
     let brackets = condition.visit(this);
 
-    if (_.isArray(brackets)) {
+    if (isArray(brackets)) {
       if (brackets.length > 1) {
         this.must = brackets;
         brackets = null;
@@ -117,7 +116,7 @@ export class ElasticMangoWalker implements IMangoWalker {
     }
 
 
-    if (_.isEmpty(brackets)) {
+    if (isEmpty(brackets)) {
       if (this.must.length > 0 || this.should.length > 0 || this.must_not.length > 0 || this.filter.length > 0) {
         brackets = { bool: {} };
         if (this.must.length > 0) {
@@ -164,11 +163,11 @@ export class ElasticMangoWalker implements IMangoWalker {
    */
   leaveArray(res: any[], ast: PAst): any {
     // remove empty entries
-    res = _.isArray(res) ? res.filter(x => !!x) : res;
-    if (!_.isEmpty(res)) {
-      if (_.isArray(res[0])) {
+    res = isArray(res) ? res.filter(x => !!x) : res;
+    if (!isEmpty(res)) {
+      if (isArray(res[0])) {
         // flatten
-        return _.concat([], ...res);
+        return concat([], ...res);
       }
     }
     return res;
@@ -191,7 +190,7 @@ export class ElasticMangoWalker implements IMangoWalker {
    * @param ast
    */
   leaveObject(res: any, ast: PAst): any {
-    return _.values(res);
+    return values(res);
   }
 
   /**
@@ -249,9 +248,9 @@ export class ElasticMangoWalker implements IMangoWalker {
       return termQuery;
     } else if (key === ES_IDFIELD) {
       const termQuery = { ids: {} };
-      termQuery.ids = { values: _.isArray(value) ? value : [value] };
+      termQuery.ids = { values: isArray(value) ? value : [value] };
       return termQuery;
-    } else if (_.isNumber(value)) {
+    } else if (isNumber(value)) {
       const termQuery = { range: {} };
       termQuery.range[key] = { gte: value, lte: value };
       return termQuery;
@@ -283,7 +282,7 @@ export class ElasticMangoWalker implements IMangoWalker {
 
   private $regex(op: string, key: string = null, value: MultiArgs = null, ast: PAst = null) {
     const termQuery = { regexp: {} };
-    termQuery.regexp[key] = { value: _.first(value.args), flags: 'ALL', 'case_insensitive': true };
+    termQuery.regexp[key] = { value: first(value.args), flags: 'ALL', 'case_insensitive': true };
     return termQuery;
   }
 
@@ -292,7 +291,7 @@ export class ElasticMangoWalker implements IMangoWalker {
   }
 
   private $le(op: string, key: string = null, value: any = null, ast: PAst = null) {
-    if (_.isNumber(value)) {
+    if (isNumber(value)) {
       const termQuery = { range: {} };
       termQuery.range[key] = { lte: value };
       return termQuery;
@@ -301,7 +300,7 @@ export class ElasticMangoWalker implements IMangoWalker {
   }
 
   private $lt(op: string, key: string = null, value: any = null, ast: PAst = null) {
-    if (_.isNumber(value)) {
+    if (isNumber(value)) {
       const termQuery = { range: {} };
       termQuery.range[key] = { lt: value };
       return termQuery;
@@ -314,7 +313,7 @@ export class ElasticMangoWalker implements IMangoWalker {
   }
 
   private $ge(op: string, key: string = null, value: any = null, ast: PAst = null) {
-    if (_.isNumber(value)) {
+    if (isNumber(value)) {
       const termQuery = { range: {} };
       termQuery.range[key] = { gte: value };
       return termQuery;
@@ -323,7 +322,7 @@ export class ElasticMangoWalker implements IMangoWalker {
   }
 
   private $gt(op: string, key: string = null, value: any = null, ast: PAst = null) {
-    if (_.isNumber(value)) {
+    if (isNumber(value)) {
       const termQuery = { range: {} };
       termQuery.range[key] = { gt: value };
       return termQuery;
@@ -332,12 +331,12 @@ export class ElasticMangoWalker implements IMangoWalker {
   }
 
   private $in(op: string, key: string = null, value: any = null, ast: PAst = null) {
-    if (_.isArray(value)) {
+    if (isArray(value)) {
       if (key === ES_IDFIELD) {
         const termQuery = { ids: {} };
         termQuery.ids = { values: value };
         return termQuery;
-      } else if (value.length > 0 && (_.isString(value[0]) || _.isNumber(value[0]))) {
+      } else if (value.length > 0 && (isString(value[0]) || isNumber(value[0]))) {
         const termQuery = { terms: {} };
         termQuery.terms[key] = value;
         return termQuery;

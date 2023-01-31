@@ -1,4 +1,4 @@
-import { ClassType, IEntityRef } from '@allgemein/schema-api';
+import { IEntityRef } from '@allgemein/schema-api';
 import { CLS_DEF, IFindOp, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
 import { LdapEntityController } from '../LdapEntityController';
 import { ILdapFindOptions } from './ILdapFindOptions';
@@ -6,7 +6,6 @@ import { C_LDAP } from '../../Constants';
 import { defaults } from 'lodash';
 import { NotYetImplementedError } from '@allgemein/base';
 import { ILdapSearchQuery } from '../ILdapSearchQuery';
-import { XS_P_$MAX_SCORE } from '@typexs/search';
 
 
 export class FindOp<T> implements IFindOp<T> {
