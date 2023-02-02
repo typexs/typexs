@@ -6,7 +6,12 @@ export interface IActivator {
   configSchema?(): any;
 
   /**
-   * Initialisation
+   * Execute preparation running after runtimeloader is active
+   */
+  prepare?(): void;
+
+  /**
+   * Activate module run after storage
    */
   startup(): void;
 

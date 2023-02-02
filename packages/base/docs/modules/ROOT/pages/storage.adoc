@@ -10,6 +10,10 @@
 
 
 
+* Storage Entities
+** dynamic loaded from fs, create, defined
+** static passed by registry
+
 ## Storage types
 
 
@@ -24,3 +28,6 @@ Types:
 * typeorm - sql
 * ldap
 * index
+
+
+

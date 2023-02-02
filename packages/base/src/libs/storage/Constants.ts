@@ -1,6 +1,8 @@
 import {IStorageRefOptions} from './IStorageRefOptions';
 
 
+export const __SOURCE__ = '__SOURCE__';
+
 export const C_FLEXIBLE = 'flexible';
 
 export const K_NULLABLE = 'nullable';

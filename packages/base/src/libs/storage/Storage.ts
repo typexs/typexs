@@ -7,8 +7,10 @@ import { IStorageRef } from './IStorageRef';
 import { Log } from '../../libs/logging/Log';
 import { IRuntimeLoader } from '../core/IRuntimeLoader';
 import { StringUtils } from '../utils/StringUtils';
-import { FileUtils, NotSupportedError, NotYetImplementedError, PlatformUtils } from '@allgemein/base';
+import { C_DEFAULT, FileUtils, NotSupportedError, NotYetImplementedError, PlatformUtils } from '@allgemein/base';
 import { REGISTRY_TYPEORM } from './framework/typeorm/Constants';
+import { callMethod } from '../functions';
+import { __SOURCE__ } from './Constants';
 
 
 export class Storage {
@@ -82,121 +84,13 @@ export class Storage {
     // iterate over storage configurations
     for (const name of storageNames) {
       const settings: IStorageRefOptions = config[name];
-
-      // load programatically declared entities
-      let entities: Function[] = [];
-      if (loader) {
-        // load entities handled by storage
-        entities = loader.getClasses([C_ENTITY, name].join('.'));
-        // check if classes are realy for typeorm
-        if (has(settings, 'extends')) {
-          // if extends property is set
-          let _extends = [];
-          if (isString(settings.extends)) {
-            _extends.push(settings.extends);
-          } else {
-            _extends = settings.extends;
-          }
-          _extends.forEach((x: string) => {
-            const classEntitiesAdditional = loader
-              .getClasses([C_ENTITY, x].join('.'));
-            if (classEntitiesAdditional.length > 0) {
-              entities.push(...classEntitiesAdditional);
-            }
-          });
-        }
-      }
-
-      const replace = {};
-      const declaredEntities = settings.entities || [];
-      for (let i = 0; i < declaredEntities.length; i++) {
-        // check if is file path
-        // check if is http
-        // check if is glob -> remove -> add matched files
-        // if function add
-        let entry = declaredEntities[i];
-
-        if (isString(entry)) {
-          let object = null;
-          if (/^\s*{/.test(entry) && /}\s*$/.test(entry)) {
-            try {
-              object = JSON.parse(entry);
-            } catch (e) {
-              Log.error(e);
-            }
-          } else {
-            const type = StringUtils.checkIfPathLocation(entry);
-            let path;
-            switch (type) {
-              case 'url':
-              case 'unknown':
-                throw new NotYetImplementedError('TODO');
-              case 'glob':
-                try {
-                  const appdir = loader.getOptions().appdir;
-                  if (!PlatformUtils.isAbsolute(entry)) {
-                    entry = PlatformUtils.join(appdir, entry);
-                  }
-                  const paths = await FileUtils.glob(entry);
-                  const entries = [];
-                  for (const path of paths) {
-                    object = await this.fromPath(path);
-                    if (isArray(object)) {
-                      entries.push(...object);
-                    } else {
-                      entries.push(object);
-                    }
-                  }
-                  object = entries;
-                } catch (e) {
-                  Log.error(e);
-                }
-                break;
-              case 'relative':
-              case 'absolute':
-                path = type === 'relative' ? PlatformUtils.pathResolveAndNormalize(entry) : entry;
-                object = await this.fromPath(path);
-                break;
-            }
-          }
-          if (object) {
-            replace[entry] = object;
-          }
-        } else if (isFunction(entry)) {
-          entities.push(entry);
-        }
-      }
-
-
-      keys(replace).map(k => {
-        const index = declaredEntities.findIndex(v => v === k);
-        declaredEntities.splice(index, 1);
-        if (isArray(replace[k])) {
-          entities.push(...replace[k]);
-        } else {
-          entities.push(replace[k]);
-        }
-      });
-
-      const _settings: IStorageRefOptions = assign(settings, { entities: entities }, { name: name });
-      Log.debug('storage register ' + name + ' with ' + entities.length + ' entities');
-      const storageRef = await this.register(name, _settings);
-
-      if (!storageRef) {
-        throw new Error('storage ref with "' + name + '" could not be created.');
-      }
-
-      // if initialize method is present then run it
-      if (storageRef.initialize) {
-        await storageRef.initialize();
-      }
-
-      if (storageRef.getOptions().connectOnStartup) {
-        await storageRef.prepare();
-      }
+      await this.registerStorageRef(name, settings, loader);
     }
 
-    for (const ref of this.getRefs()) {
+    /**
+     * Check storage refs which extend others
+     */
+    for (const ref of this.getStorageRefs()) {
       let _extended = [];
       const extended = ref.getOptions().extends;
       if (isString(extended)) {
@@ -213,7 +107,137 @@ export class Storage {
         }
       }
     }
+
+
+    /**
+     * TODO load from backend if exist
+     */
   }
+
+
+  /**
+   * Register a storage ref by settings
+   *
+   * @param name
+   * @param settings
+   * @param loader
+   */
+  async registerStorageRef(name: string, settings: IStorageRefOptions, loader?: IRuntimeLoader) {
+    // load programatically declared entities
+    let entities: Function[] = [];
+    if (loader) {
+      // load entities handled by storage
+      entities = loader.getClasses([C_ENTITY, name].join('.'));
+      // check if classes are realy for typeorm
+      if (has(settings, 'extends')) {
+        // if extends property is set
+        let _extends = [];
+        if (isString(settings.extends)) {
+          _extends.push(settings.extends);
+        } else {
+          _extends = settings.extends;
+        }
+        _extends.forEach((x: string) => {
+          const classEntitiesAdditional = loader
+            .getClasses([C_ENTITY, x].join('.'));
+          if (classEntitiesAdditional.length > 0) {
+            entities.push(...classEntitiesAdditional);
+          }
+        });
+      }
+    }
+
+    const replace = {};
+    const declaredEntities = settings.entities || [];
+    for (let i = 0; i < declaredEntities.length; i++) {
+      // check if is file path
+      // check if is http
+      // check if is glob -> remove -> add matched files
+      // if function add
+      let entry = declaredEntities[i];
+
+      if (isString(entry)) {
+        let object = null;
+        if (/^\s*{/.test(entry) && /}\s*$/.test(entry)) {
+          try {
+            object = JSON.parse(entry);
+          } catch (e) {
+            Log.error(e);
+          }
+        } else {
+          const type = StringUtils.checkIfPathLocation(entry);
+          let path;
+          switch (type) {
+            case 'url':
+            case 'unknown':
+              throw new NotYetImplementedError('TODO');
+            case 'glob':
+              try {
+                const appdir = loader.getOptions().appdir;
+                if (!PlatformUtils.isAbsolute(entry)) {
+                  entry = PlatformUtils.join(appdir, entry);
+                }
+                const paths = await FileUtils.glob(entry);
+                const entries = [];
+                for (const path of paths) {
+                  object = await this.fromPath(path);
+                  if (isArray(object)) {
+                    entries.push(...object);
+                  } else {
+                    entries.push(object);
+                  }
+                }
+                object = entries;
+              } catch (e) {
+                Log.error(e);
+              }
+              break;
+            case 'relative':
+            case 'absolute':
+              path = type === 'relative' ? PlatformUtils.pathResolveAndNormalize(entry) : entry;
+              object = await this.fromPath(path);
+              break;
+          }
+        }
+        if (object) {
+          replace[entry] = object;
+        }
+      } else if (isFunction(entry)) {
+        entities.push(entry);
+      }
+    }
+
+
+    keys(replace).map(k => {
+      const index = declaredEntities.findIndex(v => v === k);
+      declaredEntities.splice(index, 1);
+      if (isArray(replace[k])) {
+        entities.push(...replace[k]);
+      } else {
+        entities.push(replace[k]);
+      }
+    });
+
+    const _settings: IStorageRefOptions = assign(settings, { entities: entities }, { name: name });
+    Log.debug('storage register ' + name + ' with ' + entities.length + ' entities');
+    const storageRef = await this.register(name, _settings);
+
+    if (!storageRef) {
+      throw new Error('storage ref with "' + name + '" could not be created.');
+    }
+
+    // if initialize method is present then run it
+    if (storageRef.initialize) {
+      await storageRef.initialize();
+    }
+
+    if (storageRef.getOptions().connectOnStartup) {
+      await storageRef.prepare();
+    }
+
+    return storageRef;
+  }
+
 
   async fromPath(path: string) {
     let object = null;
@@ -222,13 +246,13 @@ export class Storage {
         // json
         const content = (await PlatformUtils.readFile(path)).toString('utf-8');
         object = JSON.parse(content);
-        Object.defineProperty(object, '__SOURCE__', { value: path });
+        Object.defineProperty(object, __SOURCE__, { value: path });
       } else if (/\.(t|j)s$/.test(path)) {
         const mod = await import(path.replace(/\.(t|j)s$/, ''));
         object = [];
         keys(mod).map(x => {
           const value = mod[x];
-          Object.defineProperty(value, '__SOURCE__', { value: path });
+          Object.defineProperty(value, __SOURCE__, { value: path });
           if (isFunction(value)) {
             object.push(value);
           } else if (isObjectLike(value)) {
@@ -260,12 +284,24 @@ export class Storage {
   }
 
 
-  get<X extends IStorageRef>(name: string = 'default'): X {
+  get<X extends IStorageRef>(name: string = C_DEFAULT): X {
     return this.storageRefs[name] as X;
   }
 
-  getRefs(): IStorageRef[] {
+
+
+  /**
+   * Return registered storage references
+   */
+  getStorageRefs(): IStorageRef[] {
     return values(this.storageRefs);
+  }
+
+  /**
+   * Return registered storage frameworks
+   */
+  getStorageFrameworks(): IStorage[] {
+    return values(this.storageFramework);
   }
 
 
@@ -275,11 +311,11 @@ export class Storage {
 
 
   getAllOptions() {
-    return values(this.storageRefs).map(ref => ref.getOptions());
+    return this.getStorageRefs().map(ref => ref.getOptions());
   }
 
   async shutdown() {
-    const ps = values(this.storageRefs).map(async x => {
+    const ps = this.getStorageRefs().map(async x => {
       try {
         await x.shutdown();
       } catch (e) {
@@ -287,18 +323,7 @@ export class Storage {
       }
     });
     const res = await Promise.all(ps);
-
-    for (const f of values(this.storageFramework)) {
-      try {
-        if (f.shutdown) {
-          await f.shutdown();
-        }
-
-      } catch (e) {
-        Log.error(e);
-      }
-
-    }
+    await callMethod(this.getStorageFrameworks(), 'shutdown',{throwMode: 'log'});
     return res;
   }
 

@@ -1,0 +1,18 @@
+
+
+```
+let bootstrap = Bootstrap
+  .setConfigSources(this.configSource)
+  .configure(this.config);
+bootstrap.activateLogger();
+bootstrap.activateErrorHandling();
+await bootstrap.prepareRuntime(); -> boot activators + config schema
+await bootstrap.activateStorage();
+await bootstrap.startup(); # active + startup
+
+
+...
+
+
+shutdown
+```
