@@ -113,8 +113,10 @@ class ServerStatusControllerSpec {
     const compare = _.clone(settingsTemplate);
 
     compare.storage.default.name = 'default';
+
     delete compare.storage.default.entities;
     delete baseConfig.storage.default.entities;
+    delete baseConfig.storage.default.supportSchemaApi;
     expect(baseConfig.storage).to.deep.include(compare.storage);
 
     expect(baseConfig.server).to.have.deep.eq({
@@ -136,7 +138,6 @@ class ServerStatusControllerSpec {
               'FileSystemAPIController',
               'RegistryAPIController',
               'ServerStatusAPIController',
-              'StorageAPIController',
               'SystemNodeInfoAPIController',
               'TasksAPIController'
             ],
@@ -200,7 +201,6 @@ class ServerStatusControllerSpec {
             'FileSystemAPIController',
             'RegistryAPIController',
             'ServerStatusAPIController',
-            'StorageAPIController',
             'SystemNodeInfoAPIController',
             'TasksAPIController'
           ],

@@ -202,6 +202,8 @@ export class Storage {
         if (object) {
           replace[entry] = object;
         }
+      } else if (isObjectLike(entry)) {
+        entities.push(entry);
       } else if (isFunction(entry)) {
         entities.push(entry);
       }
@@ -221,7 +223,6 @@ export class Storage {
     const _settings: IStorageRefOptions = assign(settings, { entities: entities }, { name: name });
     Log.debug('storage register ' + name + ' with ' + entities.length + ' entities');
     const storageRef = await this.register(name, _settings);
-
     if (!storageRef) {
       throw new Error('storage ref with "' + name + '" could not be created.');
     }

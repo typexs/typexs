@@ -1,4 +1,4 @@
-import {suite, test, timeout} from '@testdeck/mocha';
+import { suite, test, timeout } from '@testdeck/mocha';
 import {
   __CLASS__,
   __REGISTRY__,
@@ -26,22 +26,22 @@ import {
   DEFAULT_ANONYMOUS,
   K_ROUTE_CONTROLLER,
   PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY_PATTERN
-} from '../../../src/libs/Constants';
-import {expect} from 'chai';
+} from '../../../../server/src/libs/Constants';
+import { expect } from 'chai';
 import * as _ from 'lodash';
-import {Driver} from './fake_app_storage/entities/Driver';
-import {TEST_STORAGE_OPTIONS} from '../config';
-import {HttpFactory, IHttp} from '@allgemein/http';
-import {Car} from './fake_app_storage/entities/Car';
-import {RandomData} from './fake_app_storage/entities/RandomData';
-import {Server} from '../../../src/libs/server/Server';
-import {Action} from 'routing-controllers';
-import {SecuredObject} from './fake_app_storage/entities/SecuredObject';
-import {IRole, IRolesHolder} from '@typexs/roles-api/index';
-import {BasicPermission} from '@typexs/roles-api';
-import {IStorageRefMetadata} from '../../../src';
-import {IJsonSchema7} from '@allgemein/schema-api';
-import { TestHelper } from '../TestHelper';
+import { Driver } from './fake_app_storage/entities/Driver';
+import { TEST_STORAGE_OPTIONS } from '../../../../server/test/functional/config';
+import { HttpFactory, IHttp } from '@allgemein/http';
+import { Car } from './fake_app_storage/entities/Car';
+import { RandomData } from './fake_app_storage/entities/RandomData';
+import { Server } from '../../../../server/src/libs/server/Server';
+import { Action } from 'routing-controllers';
+import { SecuredObject } from './fake_app_storage/entities/SecuredObject';
+import { IRole, IRolesHolder } from '@typexs/roles-api';
+import { BasicPermission } from '@typexs/roles-api';
+import { IStorageRefMetadata } from '../../../../server/src';
+import { IJsonSchema7 } from '@allgemein/schema-api';
+import { TestHelper } from '../../../../server/test/functional/TestHelper';
 
 
 let permissionsCheck = false;
@@ -65,15 +65,16 @@ const settingsTemplate: ITypexsOptions & any = {
     include: [
       '**/@allgemein{,/eventbus}*',
       '**/@typexs{,/base}*',
-      '**/@typexs{,/server}*'
-    ],
+      '**/@typexs{,/server}*',
+      '**/@typexs{,/storage}*',
+    ]
 
   },
 
   logging: {
     enable: false,
     level: 'debug',
-    transports: [{console: {}}],
+    transports: [{ console: {} }]
   },
 
   server: {
@@ -106,7 +107,7 @@ const settingsTemplate: ITypexsOptions & any = {
                 <IRole>{
                   permissions: [
                     new BasicPermission(PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY_PATTERN.replace(':name', _.snakeCase(RandomData.name)))
-                  ],
+                  ]
                 }
               ];
             }
@@ -140,7 +141,7 @@ class Storage_api_controllerSpec {
     http = HttpFactory.create();
 
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(settings)
       .activateErrorHandling()
       .activateLogger();
@@ -172,24 +173,25 @@ class Storage_api_controllerSpec {
       randomData.long = 'long long long very long '.repeat(i * 5);
       entries.push(randomData);
 
+      let driver, driver2, driver3: Driver;
       const carName = carList[i];
       const car = new Car();
       car.name = carName;
       cars.push(car);
       switch (i % 3) {
         case 0:
-          const driver = new Driver();
+          driver = new Driver();
           driver.firstName = carList[i] + ' firstname driver 1 ' + (i % 3);
           driver.lastName = carList[i] + ' lastname driver 1 ' + (i % 3);
           driver.car = car;
           entries.push(driver);
           break;
         case 1:
-          const driver2 = new Driver();
+          driver2 = new Driver();
           driver2.firstName = carList[i] + ' firstname driver 1 ' + (i % 3);
           driver2.lastName = carList[i] + ' lastname driver 1 ' + (i % 3);
           driver2.car = car;
-          const driver3 = new Driver();
+          driver3 = new Driver();
           driver3.firstName = carList[i] + ' firstname driver 2 ' + (i % 3);
           driver3.lastName = carList[i] + ' lastname driver 2 ' + (i % 3);
           driver3.car = car;
@@ -216,13 +218,13 @@ class Storage_api_controllerSpec {
 
   async before() {
     // delete + create dummy data
-    await defaultStorageRef.getController().remove(RandomData, {id: {$gt: 10}});
+    await defaultStorageRef.getController().remove(RandomData, { id: { $gt: 10 } });
   }
 
   @test
   async 'list storages'() {
     const url = server.url();
-    let res: any = await http.get(url + '/api' + API_CTRL_STORAGE_METADATA_ALL_STORES, {responseType: 'json'});
+    let res: any = await http.get(url + '/api' + API_CTRL_STORAGE_METADATA_ALL_STORES, { responseType: 'json' });
     expect(res).to.not.be.null;
     res = res.body as IStorageRefMetadata[];
     expect(res).to.have.length(1);
@@ -240,7 +242,7 @@ class Storage_api_controllerSpec {
   async 'list storage default'() {
     const url = server.url();
     let res: any = await http.get(url + '/api' +
-      API_CTRL_STORAGE_METADATA_GET_STORE.replace(':name', 'default'), {responseType: 'json'});
+      API_CTRL_STORAGE_METADATA_GET_STORE.replace(':name', 'default'), { responseType: 'json' });
     // console.log(inspect(res, false, 10));
     expect(res).to.not.be.null;
     res = res.body as IStorageRefMetadata;
@@ -258,7 +260,7 @@ class Storage_api_controllerSpec {
   async 'list all entities'() {
     const url = server.url();
     let res: any = await http.get(url + '/api' +
-      API_CTRL_STORAGE_METADATA_ALL_ENTITIES, {responseType: 'json'});
+      API_CTRL_STORAGE_METADATA_ALL_ENTITIES, { responseType: 'json' });
     expect(res).to.not.be.null;
     res = res.body as IJsonSchema7[];
     expect(res).to.have.length(1);
@@ -276,7 +278,7 @@ class Storage_api_controllerSpec {
   async 'list entity'() {
     const url = server.url();
     let res: any = await http.get(url + '/api' +
-      API_CTRL_STORAGE_METADATA_GET_ENTITY.replace(':name', 'driver'), {responseType: 'json'});
+      API_CTRL_STORAGE_METADATA_GET_ENTITY.replace(':name', 'driver'), { responseType: 'json' });
     expect(res).to.not.be.null;
     res = res.body as IJsonSchema7;
     expect(res).to.exist;
@@ -337,9 +339,9 @@ class Storage_api_controllerSpec {
     // correct string date
     res.date = new Date(res.date);
     expect(res).to.be.deep.include(d);
-    expect(res.$state).to.be.deep.include({isValidated: true, isSuccessValidated: true});
+    expect(res.$state).to.be.deep.include({ isValidated: true, isSuccessValidated: true });
 
-    const found = await defaultStorageRef.getController().findOne(RandomData, {id: res.id});
+    const found = await defaultStorageRef.getController().findOne(RandomData, { id: res.id });
     expect(found).to.be.deep.include(d);
 
   }
@@ -385,11 +387,11 @@ class Storage_api_controllerSpec {
     res.map((x: any) => x.date = new Date(x.date));
     expect(res[0]).to.be.deep.include(d1);
     expect(res[1]).to.be.deep.include(d2);
-    expect(res[0].$state).to.be.deep.include({isValidated: true, isSuccessValidated: true});
-    expect(res[1].$state).to.be.deep.include({isValidated: true, isSuccessValidated: true});
+    expect(res[0].$state).to.be.deep.include({ isValidated: true, isSuccessValidated: true });
+    expect(res[1].$state).to.be.deep.include({ isValidated: true, isSuccessValidated: true });
 
     const found = await defaultStorageRef.getController().find(RandomData,
-      {id: {$in: res.map((x: any) => x.id)}});
+      { id: { $in: res.map((x: any) => x.id) } });
     expect(found).to.have.length(2);
     expect(found[0]).to.be.deep.include(d1);
     expect(found[1]).to.be.deep.include(d2);
@@ -400,7 +402,7 @@ class Storage_api_controllerSpec {
   async 'get single entity (by numeric id)'() {
     let res = await http.get(URL + '/api' +
 
-      API_CTRL_STORAGE_GET_ENTITY.replace(':name', RandomData.name).replace(':id', '1'), {responseType: 'json'}
+      API_CTRL_STORAGE_GET_ENTITY.replace(':name', RandomData.name).replace(':id', '1'), { responseType: 'json' }
     );
 
     expect(res).to.not.be.null;
@@ -416,7 +418,8 @@ class Storage_api_controllerSpec {
       'date': '2020-02-01T23:00:00.000Z',
       'floatValue': 0.893,
       'id': 1,
-      'long': 'long long long very long long long long very long long long long very long long long long very long long long long very long ',
+      'long': 'long long long very long long long long very long long ' +
+        'long long very long long long long very long long long long very long ',
       'numValue': 100,
       'short': 'short name 1'
     });
@@ -430,7 +433,7 @@ class Storage_api_controllerSpec {
 
       API_CTRL_STORAGE_GET_ENTITY
         .replace(':name', RandomData.name)
-        .replace(':id', '1,2'), {responseType: 'json'}
+        .replace(':id', '1,2'), { responseType: 'json' }
     );
 
     expect(res).to.not.be.null;
@@ -448,7 +451,8 @@ class Storage_api_controllerSpec {
       'date': '2020-02-01T23:00:00.000Z',
       'floatValue': 0.893,
       'id': 1,
-      'long': 'long long long very long long long long very long long long long very long long long long very long long long long very long ',
+      'long': 'long long long very long long long long very long long ' +
+        'long long very long long long long very long long long long very long ',
       'numValue': 100,
       'short': 'short name 1'
     });
@@ -462,7 +466,9 @@ class Storage_api_controllerSpec {
       'date': '2020-03-03T23:00:00.000Z',
       'floatValue': 1.786,
       'id': 2,
-      'long': 'long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long ',
+      'long': 'long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long very long long long long very long ',
       'numValue': 200,
       'short': 'short name 2'
     });
@@ -480,7 +486,7 @@ class Storage_api_controllerSpec {
     let res = await http.get(URL + '/api' +
 
       API_CTRL_STORAGE_FIND_ENTITY.replace(':name', RandomData.name) + '?query=' +
-      JSON.stringify({short: 'short name 5'}), {responseType: 'json'}
+      JSON.stringify({ short: 'short name 5' }), { responseType: 'json' }
     ) as any;
 
     expect(res).to.not.be.null;
@@ -497,9 +503,17 @@ class Storage_api_controllerSpec {
       'date': '2020-06-09T22:00:00.000Z',
       'floatValue': 4.465,
       'id': 5,
-      'long': 'long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long ',
+      'long': 'long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long ',
       'numValue': 500,
-      'short': 'short name 5',
+      'short': 'short name 5'
     });
 
   }
@@ -511,7 +525,7 @@ class Storage_api_controllerSpec {
     let res = await http.get(URL + '/api' +
 
       API_CTRL_STORAGE_FIND_ENTITY.replace(':name', RandomData.name) + '?query=' +
-      JSON.stringify({date: {$gt: date}}), {responseType: 'json'}
+      JSON.stringify({ date: { $gt: date } }), { responseType: 'json' }
     ) as any;
 
     expect(res).to.not.be.null;
@@ -529,7 +543,17 @@ class Storage_api_controllerSpec {
       'date': '2020-07-11T22:00:00.000Z',
       'floatValue': 5.3580000000000005,
       'id': 6,
-      'long': 'long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long long long long very long ',
+      'long': 'long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long long long long very long long long long very long long long long ' +
+        'very long ',
       'numValue': 600,
       'short': 'short name 6'
     });
@@ -545,7 +569,7 @@ class Storage_api_controllerSpec {
     try {
       res = await http.get(URL + '/api' +
         API_CTRL_STORAGE_FIND_ENTITY.replace(':name', SecuredObject.name) + '?limit=5',
-      {responseType: 'json', passBody: true, retry: 1}
+      { responseType: 'json', passBody: true, retry: 1 }
       ) as any;
       expect(true).to.be.false;
     } catch (err) {
@@ -553,7 +577,7 @@ class Storage_api_controllerSpec {
     }
     res = await http.get(URL + '/api' +
       API_CTRL_STORAGE_FIND_ENTITY.replace(':name', RandomData.name) + '?limit=5',
-    {responseType: 'json', passBody: true, retry: 1}
+    { responseType: 'json', passBody: true, retry: 1 }
     ) as any;
     expect(res).to.not.be.null;
     expect(res.entities).to.have.length(5);
@@ -568,9 +592,9 @@ class Storage_api_controllerSpec {
 
       API_CTRL_STORAGE_AGGREGATE_ENTITY.replace(':name', RandomData.name) + '?aggr=' +
       JSON.stringify([
-        {$match: {floatValue: {$gt: 2}}},
-        {$group: {_id: '$bool', sum: {$sum: '$floatValue'}}},
-      ]), {responseType: 'json'}
+        { $match: { floatValue: { $gt: 2 } } },
+        { $group: { _id: '$bool', sum: { $sum: '$floatValue' } } }
+      ]), { responseType: 'json' }
     ) as any;
 
     expect(res).to.not.be.null;
@@ -605,7 +629,7 @@ class Storage_api_controllerSpec {
 
       API_CTRL_STORAGE_UPDATE_ENTITY
         .replace(':name', RandomData.name)
-        .replace(':id', dataSaved.id), {json: dataSaved, responseType: 'json'}
+        .replace(':id', dataSaved.id), { json: dataSaved, responseType: 'json' }
     ) as any;
 
     expect(res).to.not.be.null;
@@ -648,7 +672,7 @@ class Storage_api_controllerSpec {
     let res: any = await http.put(URL + '/api' +
 
       API_CTRL_STORAGE_UPDATE_ENTITIES_BY_CONDITION.replace(':name', _.snakeCase(RandomData.name)) +
-      '?query=' + JSON.stringify({$and: [{id: {$gte: 100}}, {id: {$lte: 110}}]}),
+      '?query=' + JSON.stringify({ $and: [{ id: { $gte: 100 } }, { id: { $lte: 110 } }] }),
       <any>{
         json: {
           $set: {
@@ -665,7 +689,7 @@ class Storage_api_controllerSpec {
     // sqlite does not support node
     expect(res).to.be.eq(-2);
 
-    const afterUpdate = await defaultStorageRef.getController().find(RandomData, {$and: [{id: {$gte: 100}}, {id: {$lte: 110}}]});
+    const afterUpdate = await defaultStorageRef.getController().find(RandomData, { $and: [{ id: { $gte: 100 } }, { id: { $lte: 110 } }] });
     expect(afterUpdate).to.have.length(10);
     for (const entry of afterUpdate) {
       expect(entry).to.deep.include({
@@ -675,7 +699,7 @@ class Storage_api_controllerSpec {
     }
 
     const notUpdated = await defaultStorageRef.getController()
-      .find(RandomData, {id: {$lte: 10}});
+      .find(RandomData, { id: { $lte: 10 } });
     expect(notUpdated).to.have.length(10);
     for (const entry of notUpdated) {
       expect(entry).to.not.deep.include({
@@ -707,23 +731,23 @@ class Storage_api_controllerSpec {
     let res = await http.delete(URL + '/api' +
 
       API_CTRL_STORAGE_DELETE_ENTITY.replace(':name', RandomData.name)
-        .replace(':id', '101'), {responseType: 'json'}
+        .replace(':id', '101'), { responseType: 'json' }
     );
     expect(res).to.not.be.null;
     res = res.body;
-    let found = await defaultStorageRef.getController().find(RandomData, {id: 101});
+    let found = await defaultStorageRef.getController().find(RandomData, { id: 101 });
     expect(found).to.have.length(0);
 
     // delete by multiple id
     res = await http.delete(URL + '/api' +
 
       API_CTRL_STORAGE_DELETE_ENTITY.replace(':name', RandomData.name)
-        .replace(':id', '102,103,104'), {responseType: 'json'}
+        .replace(':id', '102,103,104'), { responseType: 'json' }
     );
     expect(res).to.not.be.null;
     res = res.body;
     found = await defaultStorageRef.getController().find(RandomData,
-      {id: {$in: [102, 103, 104]}});
+      { id: { $in: [102, 103, 104] } });
     expect(found).to.have.length(0);
 
   }
@@ -750,18 +774,18 @@ class Storage_api_controllerSpec {
     let res = await http.delete(URL + '/api' +
 
       API_CTRL_STORAGE_DELETE_ENTITIES_BY_CONDITION.replace(':name', RandomData.name) +
-      '?query=' + JSON.stringify({$and: [{long: 'test delete'}, {id: {$gte: 105}}]}),
-    {responseType: 'json'}
+      '?query=' + JSON.stringify({ $and: [{ long: 'test delete' }, { id: { $gte: 105 } }] }),
+    { responseType: 'json' }
     );
     expect(res).to.not.be.null;
     res = res.body;
     expect(res).to.be.eq(-2);
 
     const afterDelete = await defaultStorageRef.getController().find(RandomData,
-      {$and: [{id: {$gte: 100}}, {id: {$lte: 110}}]});
+      { $and: [{ id: { $gte: 100 } }, { id: { $lte: 110 } }] });
     expect(afterDelete).to.have.length(4);
 
-    const notDeleted = await defaultStorageRef.getController().find(RandomData, {id: {$lte: 10}});
+    const notDeleted = await defaultStorageRef.getController().find(RandomData, { id: { $lte: 10 } });
     expect(notDeleted).to.have.length(10);
 
   }

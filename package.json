@@ -56,6 +56,7 @@
     "@typexs/search": "file:./packages/search/src",
     "@typexs/search-ng": "file:./packages/search-ng/src",
     "@typexs/server": "file:./packages/server/src",
+    "@typexs/storage": "file:./packages/storage/src",
     "@typexs/storage-ng": "file:./packages/storage-ng/src",
     "@typexs/tasks-ng": "file:./packages/tasks-ng/src",
     "@typexs/testing": "file:./packages/testing/src",

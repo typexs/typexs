@@ -199,7 +199,6 @@ class ServerStatusControllerSpec {
               'FileSystemAPIController',
               'RegistryAPIController',
               'ServerStatusAPIController',
-              'StorageAPIController',
               'SystemNodeInfoAPIController',
               'TasksAPIController'
             ],
@@ -259,7 +258,6 @@ class ServerStatusControllerSpec {
             'FileSystemAPIController',
             'RegistryAPIController',
             'ServerStatusAPIController',
-            'StorageAPIController',
             'SystemNodeInfoAPIController',
             'TasksAPIController'
           ],

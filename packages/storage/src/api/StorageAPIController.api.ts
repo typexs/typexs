@@ -1,7 +1,6 @@
 import { IStorageAPIController, STORAGE_API_CONTROLLER_STATE } from './IStorageAPIController';
-import { IEntityRef } from '@allgemein/schema-api';
-import { IJsonSchemaSerializer } from '@allgemein/schema-api/lib/json-schema/IJsonSchemaSerializer';
-import { IStorageRefMetadata } from '../libs/storage_api/IStorageRefMetadata';
+import { IEntityRef, IJsonSchemaSerializer } from '@allgemein/schema-api';
+import { IStorageRefMetadata } from '../lib/storage_api/IStorageRefMetadata';
 
 
 /**

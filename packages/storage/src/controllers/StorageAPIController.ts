@@ -49,18 +49,18 @@ import {
   PERMISSION_ALLOW_UPDATE_STORAGE_ENTITY_PATTERN,
   XS_P_$LABEL,
   XS_P_$URL
-} from '../libs/Constants';
-import { HttpResponseError } from '../libs/exceptions/HttpResponseError';
+} from '../../../server/src/libs/Constants';
+import { HttpResponseError } from '../../../server/src/libs/exceptions/HttpResponseError';
 import { IBuildOptions, IEntityRef, IJsonSchema7, IPropertyRef, JsonSchema, METATYPE_PROPERTY, T_STRING } from '@allgemein/schema-api';
 import { Expressions } from '@allgemein/expressions';
-import { IStorageRefMetadata } from '../libs/storage_api/IStorageRefMetadata';
-import { SystemNodeInfoApi } from '../api/SystemNodeInfo.api';
+import { IStorageRefMetadata } from '../lib/storage_api/IStorageRefMetadata';
+import { SystemNodeInfoApi } from '../../../server/src/api/SystemNodeInfo.api';
 import { StorageAPIControllerApi } from '../api/StorageAPIController.api';
 import { JsonUtils, TreeUtils } from '@allgemein/base';
-import { ContextGroup } from '../decorators/ContextGroup';
-import { Access } from '../decorators/Access';
+import { ContextGroup } from '../../../server/src/decorators/ContextGroup';
+import { Access } from '../../../server/src/decorators/Access';
 import { IRolesHolder, PermissionHelper } from '@typexs/roles-api';
-import { WalkValues } from '../libs/Helper';
+import { WalkValues } from '../../../server/src/libs/Helper';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import {
   assign,
