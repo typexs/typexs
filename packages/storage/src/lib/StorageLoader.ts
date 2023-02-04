@@ -1,7 +1,10 @@
-import { C_DEFAULT } from '@allgemein/base';
 import { Inject, IStorageRef, IStorageRefOptions, Log, RuntimeLoader, Storage } from '@typexs/base';
 import { StorageSetting } from '../entities/storage/StorageSetting';
-import { clone, set } from 'lodash';
+import { clone, defaults, set } from 'lodash';
+
+export interface IStorageLoaderOptions {
+  autoload: boolean;
+}
 
 export class StorageLoader {
 
@@ -17,38 +20,67 @@ export class StorageLoader {
 
   active: boolean = false;
 
-  async initialize() {
+  options: IStorageLoaderOptions;
+
+  async initialize(options?: IStorageLoaderOptions) {
+    this.options = defaults(options || {}, { autoload: false });
     this.storageRef = this.storage.forClass(StorageSetting);
     if (!this.storageRef) {
       Log.debug('Storage ref for backend settings not found.');
       return;
     }
     this.active = true;
-    await this.loadStorageRefs();
+    await this.loadActiveStorageRefs();
   }
 
   getStorageRef() {
     return this.storageRef;
   }
 
-  async loadStorageRefs() {
+
+  getOptions() {
+    return this.options;
+  }
+
+  /**
+   * Load dynamic configured storage references
+   */
+  async loadActiveStorageRefs() {
     if (!this.isActive()) {
       return [];
     }
     const settings = await this.storageRef.getController().find(StorageSetting, { active: true }, { limit: 0 });
+    return this.loadByStorageSettings(settings);
+  }
 
+  /**
+   * Check if is active, so when StorageSetting are handled by some repo
+   */
+  isActive() {
+    return this.active;
+  }
+
+
+  /**
+   * Load a list of StorageSettings
+   *
+   * @param settings
+   */
+  async loadByStorageSettings(settings: StorageSetting[]): Promise<IStorageRef[]> {
     const refs = [];
     for (const setting of settings) {
       const ref = await this.loadByStorageSetting(setting);
       refs.push(ref);
     }
     return refs;
+
   }
 
-  isActive() {
-    return this.active;
-  }
-
+  /**
+   * Load a single StorageSetting
+   *
+   * @param settings
+   */
   async loadByStorageSetting(setting: StorageSetting): Promise<IStorageRef> {
     const storageName = setting.name + '_' + setting.id;
     const options: IStorageRefOptions = clone(setting.options);
@@ -60,6 +92,11 @@ export class StorageLoader {
   }
 
 
+  /**
+   * Load by storageName and passed options
+   *
+   * @param settings
+   */
   async load(storageName: string, setting: IStorageRefOptions): Promise<IStorageRef> {
     const ref = this.storage.get(storageName);
     if (ref) {

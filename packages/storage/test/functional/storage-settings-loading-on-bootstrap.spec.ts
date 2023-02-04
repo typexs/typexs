@@ -18,6 +18,7 @@ const LOG_EVENT = TestHelper.logEnable(false);
 
 const settingsTemplate: any = {
   storage: {
+    _autoload: true,
     default: TEST_STORAGE_OPTIONS
   },
 

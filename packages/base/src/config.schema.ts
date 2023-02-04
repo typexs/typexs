@@ -111,6 +111,11 @@ export const CONFIG_SCHEMA = {
         _defaultFramework: {
           type: 'string',
           default: 'typeorm'
+        },
+        _autoload: {
+          type: 'boolean',
+          default: true,
+          description: 'Load storage ref dynamically when StorageSetting are saved and are active'
         }
       },
       patternProperties: {

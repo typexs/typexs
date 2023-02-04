@@ -1,6 +1,5 @@
-import { IActivator, Injector } from '@typexs/base';
-import { Inject } from '@angular/core';
-import { StorageLoader } from './lib/StorageLoader';
+import { IActivator, Injector, Config } from '@typexs/base';
+import { IStorageLoaderOptions, StorageLoader } from './lib/StorageLoader';
 
 /**
  * Default storage at @typexs/base should already be loaded, so now we can attached
@@ -13,7 +12,10 @@ export class Activator implements IActivator {
   async startup() {
     const loader = Injector.get(StorageLoader);
     if (loader) {
-      await loader.initialize();
+      const opts: IStorageLoaderOptions = {
+        autoload: Config.get('storage._autoload', false)
+      };
+      await loader.initialize(opts);
     }
   }
 
