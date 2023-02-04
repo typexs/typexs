@@ -10,8 +10,17 @@ import { AbstractSchemaHandler } from '../../AbstractSchemaHandler';
 import { EntitySchema } from 'typeorm/entity-schema/EntitySchema';
 import { Connection, ConnectionOptions, EntityOptions, getConnectionManager, getMetadataArgsStorage } from 'typeorm';
 import { TableMetadataArgs } from 'typeorm/metadata-args/TableMetadataArgs';
-import { ClassRef, ClassType, IClassRef, IEntityRef, IJsonSchema, RegistryFactory } from '@allgemein/schema-api';
-import { DEFAULT_STORAGEREF_OPTIONS } from '../../Constants';
+import {
+  ClassRef,
+  ClassType,
+  IClassRef,
+  IEntityRef,
+  IJsonSchema,
+  RegistryFactory,
+  MetadataRegistry,
+  METATYPE_ENTITY, METATYPE_NAMESPACE, IAbstractOptions
+} from '@allgemein/schema-api';
+import { __SOURCE__, DEFAULT_STORAGEREF_OPTIONS } from '../../Constants';
 import { TypeOrmEntityController } from './TypeOrmEntityController';
 import { TypeOrmConnectionWrapper } from './TypeOrmConnectionWrapper';
 import { StorageRef } from '../../StorageRef';
@@ -27,6 +36,8 @@ import {
 import { ColumnMetadataArgs } from 'typeorm/metadata-args/ColumnMetadataArgs';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
+import { TypeOrmEntityRef } from './schema/TypeOrmEntityRef';
+import { ITypeOrmStorageRefOptions } from './ITypeOrmStorageRefOptions';
 
 
 export class TypeOrmStorageRef extends StorageRef {
@@ -58,8 +69,8 @@ export class TypeOrmStorageRef extends StorageRef {
   private namespace = REGISTRY_TYPEORM;
 
 
-  constructor(options: IStorageRefOptions & BaseConnectionOptions) {
-    super(defaults(options, { entities: [] }));
+  constructor(options: ITypeOrmStorageRefOptions) {
+    super(defaults(options, <ITypeOrmStorageRefOptions>{ entities: [], supportSchemaApi: false }));
 
     // Apply some unchangeable and fixed options
     if (options.type === 'sqlite') {
@@ -133,13 +144,15 @@ export class TypeOrmStorageRef extends StorageRef {
         const type = this.getDeclaredEntities()[i];
         if (isObjectLike(type)) {
           if (has(type, '$schema')) {
-            const SOURCE = type['__SOURCE__'];
-            let cwd = process.cwd();
+            const SOURCE = type[__SOURCE__];
+            let cwd = null;
             if (SOURCE) {
               try {
                 cwd = PlatformUtils.dirname(SOURCE);
               } catch (e) {
               }
+            } else {
+              cwd = process.cwd();
             }
             // parse as json schema
             const entities = await (<IJsonSchema>this.getRegistry()).fromJsonSchema(type, {
@@ -164,10 +177,15 @@ export class TypeOrmStorageRef extends StorageRef {
             throw new NotYetImplementedError('');
           }
         } else {
-          // check if correctly annotated
+          // check if typeorm annotations exists
           const entryExists = getMetadataArgsStorage().tables.find(x => x.target === type);
           if (entryExists) {
             this.registerEntityRef(type);
+          } else {
+            // check if schema-api annotations are used
+            if (this.getOptions().supportSchemaApi) {
+              this.registerEntityIfAnnotated(type);
+            }
           }
         }
       }
@@ -175,6 +193,23 @@ export class TypeOrmStorageRef extends StorageRef {
     return true;
   }
 
+
+  /**
+   * Register an entity to this storage ref also when entity is schema-api annotated
+   *
+   * @param type
+   */
+  registerEntityIfAnnotated(type: Function) {
+    const entryExists = MetadataRegistry.$().getMetadata().find(x => x.target === type && x.metaType === METATYPE_ENTITY);
+    if (entryExists) {
+      const ref = this.getRegistry().getEntityRefFor(type);
+      if (!ref) {
+        const entityRef = this.getRegistry().create<TypeOrmEntityRef>(METATYPE_ENTITY, <any>{ ...entryExists, target: type });
+        const props = this.getRegistry().createPropertiesForRef(entityRef.getClassRef());
+        this.registerEntityRef(entityRef);
+      }
+    }
+  }
 
   getFramework(): string {
     return 'typeorm';
@@ -195,7 +230,7 @@ export class TypeOrmStorageRef extends StorageRef {
           x.options.type = String;
           (<any>x.options).stringify = true;
         }
-      } else if(isString(x.options.type)){
+      } else if (isString(x.options.type)) {
         if (x.options.type.toLowerCase() === Object.name.toLowerCase()) {
           x.options.type = String;
           (<any>x.options).stringify = true;
@@ -227,8 +262,9 @@ export class TypeOrmStorageRef extends StorageRef {
       });
     }
 
+    const metadata = getMetadataArgsStorage();
     const cls = entityRef.getClassRef().getClass();
-    const columns = getMetadataArgsStorage().filterColumns(cls);
+    const columns = metadata.filterColumns(cls);
     // convert unknown types
 
     columns.forEach(x => {
@@ -452,8 +488,8 @@ export class TypeOrmStorageRef extends StorageRef {
   }
 
 
-  getOptions(): IStorageRefOptions & BaseConnectionOptions {
-    return super.getOptions() as IStorageRefOptions & BaseConnectionOptions;
+  getOptions(): ITypeOrmStorageRefOptions {
+    return super.getOptions() as ITypeOrmStorageRefOptions;
   }
 
 

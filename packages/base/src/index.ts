@@ -76,10 +76,9 @@ export { TypeOrmConnectionWrapper } from './libs/storage/framework/typeorm/TypeO
 export { TypeOrmEntityController } from './libs/storage/framework/typeorm/TypeOrmEntityController';
 export { TypeOrmStorageRef } from './libs/storage/framework/typeorm/TypeOrmStorageRef';
 export { TypeOrmSqlConditionsBuilder } from './libs/storage/framework/typeorm/TypeOrmSqlConditionsBuilder';
+export { ITypeOrmStorageRefOptions } from './libs/storage/framework/typeorm/ITypeOrmStorageRefOptions';
 
 
-// export {EntitySchemaColumnOptions} from './libs/storage/EntitySchemaColumnOptions';
-// export {EntitySchemaRelationOptions} from './libs/storage/EntitySchemaRelationOptions';
 export { IStorageRefOptions } from './libs/storage/IStorageRefOptions';
 export { IDBType } from './libs/storage/IDBType';
 export { Storage } from './libs/storage/Storage';

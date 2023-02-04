@@ -153,7 +153,7 @@ export class UpdateOp<T> implements IUpdateOp<T> {
         });
       }
 
-      const r = await repo.updateMany(this.condition, this.update, this.options);
+      const r = await repo.updateMany(this.condition, this.update, this.options as any);
       affected = r.modifiedCount;
     } catch (e) {
       this.error = e;

@@ -1,6 +1,6 @@
 import { suite, test, timeout } from '@testdeck/mocha';
 import { expect } from 'chai';
-import { Bootstrap, Config, Injector } from 'packages/base/src';
+import { Bootstrap, Config, Injector } from '@typexs/base';
 import * as path from 'path';
 import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
 import { ElasticConnection } from '../../src/lib/elastic/ElasticConnection';

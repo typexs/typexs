@@ -23,6 +23,7 @@ import { DEFAULT_LOGGER_OPTIONS } from './libs/logging/Constants';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { DEFAULT_TYPEXS_OPTIONS } from './libs/config/Constants';
 import { ConfigLoader } from './libs/config/ConfigLoader';
+import { callMethod } from './libs/functions';
 
 /**
  * Bootstrap controls the stages of application startup. From configuration to full startup for passed command.
@@ -197,12 +198,10 @@ export class Bootstrap {
     Injector.set(EntityControllerRegistry.NAME, entityControllerRegistry);
     Injector.set(EntityControllerRegistry, entityControllerRegistry);
 
-    this.storage.getRefs().forEach(x => {
+    this.storage.getStorageRefs().forEach(x => {
       Injector.set([K_STORAGE, x.getName()].join('.'), x);
       entityControllerRegistry.add(x.getController());
     });
-
-
     return this;
   }
 
@@ -251,6 +250,7 @@ export class Bootstrap {
       PlatformUtils.mkdir(cachePath);
     }
     options.modules.cachePath = cachePath;
+
     this.runtimeLoader = new RuntimeLoader(options.modules);
     Injector.set(RuntimeLoader, this.runtimeLoader);
     Injector.set(RuntimeLoader.NAME, this.runtimeLoader);
@@ -272,6 +272,12 @@ export class Bootstrap {
      */
     await this.configLoader.loadSchemaByActivators(activators);
     Injector.set(ConfigLoader.NAME, this.configLoader);
+
+    /**
+     * Run preparations in modules
+     */
+    await callMethod(activators, 'prepare');
+
     return this;
   }
 
@@ -339,13 +345,10 @@ export class Bootstrap {
 
     await this.createSystemInfo();
 
-    let activators = this.getActivators();
-    activators = filter(activators, a => isFunction(a['startup']));
-    for (const activator of activators) {
-      Log.debug('activate ' + ClassesLoader.getModulName(activator.constructor));
-      await activator.startup();
-    }
+    const activators = this.getActivators();
+    await callMethod(activators, 'startup');
   }
+
 
   async startup(command: ICommand = null): Promise<Bootstrap> {
     Log.debug('startup ...');
@@ -353,12 +356,8 @@ export class Bootstrap {
     await this.activate(command);
 
     // TODO how to handle dependencies?
-    let bootstraps = this.getModulBootstraps();
-    bootstraps = filter(bootstraps, a => isFunction(a['bootstrap']));
-    for (const bootstrap of bootstraps) {
-      Log.debug('bootstrap ' + ClassesLoader.getModulName(bootstrap.constructor));
-      await bootstrap.bootstrap();
-    }
+    const bootstraps = this.getModulBootstraps();
+    await callMethod(bootstraps, 'bootstrap');
 
     if (command && command.afterStartup) {
       await command.afterStartup();
@@ -367,11 +366,7 @@ export class Bootstrap {
     this.running = true;
 
     // system ready
-    for (const bootstrap of bootstraps) {
-      if (bootstrap['ready']) {
-        await bootstrap['ready']();
-      }
-    }
+    await callMethod(bootstraps, 'ready');
 
     Log.debug('startup finished.');
     return this;

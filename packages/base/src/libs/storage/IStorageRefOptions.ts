@@ -15,6 +15,11 @@ export interface IStorageRefOptions {
    */
   framework?: string;
 
+  /**
+   * Type if framework supports multiple types
+   */
+  readonly type?: string;
+
   // baseClass?: StringOrFunction;
 
   /**

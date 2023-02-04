@@ -68,8 +68,8 @@ export { ServerStatusApi } from './api/ServerStatus.api';
 /**
  * Used for results modifications returned by the controller
  */
-export { IStorageAPIController } from './api/IStorageAPIController';
-export { StorageAPIControllerApi } from './api/StorageAPIController.api';
+export { IStorageAPIController } from '../../storage/src/api/IStorageAPIController';
+export { StorageAPIControllerApi } from '../../storage/src/api/StorageAPIController.api';
 
 export { ServerCommand } from './commands/ServerCommand';
 

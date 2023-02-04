@@ -1,0 +1,69 @@
+# Home
+
+
+## Allgemeine Konfiguration
+
+Über den `storage` Bereich in der Konfiguration. Dort werden die einzelnen
+Storages eingetragen. `default` steht für den Standardmäßigen App internen
+Storage. Aktuelles default framework ist `typeorm`
+
+```
+storage:
+  default:
+    framework: typeorm
+    type: sqlite
+    database: ':memory'
+
+```
+
+
+Options:
+
+* extends - extend namespaces
+
+
+## Dynamische Konfiguration
+
+Mittels der Entity können StorageSettings verwaltet werden.
+Einbindung:
+
+* Beim Start der Applikation automatisch geladen
+* Beim Anlegen / Editieren Verbindung während der Laufzeit die Verbindung aufbauen (falls nötig)
+* Beim Löschen beenden der Verbindung
+
+
+
+## Notes
+
+
+* Storage types can be registered or are registered before startup
+** K_CLS_STORAGE_TYPES
+* all ist handled by Storage class
+* after framework registration the declared storage instance are configured
+** entities consist of
+*** lookuped programatically declared entities
+*** locally declared by url, path, json ...
+
+
+
+* Storage Entities
+** dynamic loaded from fs, create, defined
+** static passed by registry
+
+## Storage types
+
+
+Properties:
+
+* dynamic entities which are not previously declared
+* load from backend
+* programmatically predefined entities
+
+Types:
+
+* typeorm - sql
+* ldap
+* index
+
+
+

@@ -76,6 +76,8 @@ export { ISaveOp } from './libs/storage/framework/ISaveOp';
 export { IFindOp } from './libs/storage/framework/IFindOp';
 export { IAggregateOp } from './libs/storage/framework/IAggregateOp';
 
+
+export { IRequestOptions } from './libs/storage/framework/IRequestOptions';
 export { IFindOptions } from './libs/storage/framework/IFindOptions';
 export { IUpdateOptions } from './libs/storage/framework/IUpdateOptions';
 export { IDeleteOptions } from './libs/storage/framework/IDeleteOptions';

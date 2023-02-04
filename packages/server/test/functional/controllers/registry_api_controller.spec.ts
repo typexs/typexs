@@ -12,7 +12,7 @@ import {expect} from 'chai';
 import * as _ from 'lodash';
 import {TEST_STORAGE_OPTIONS} from '../config';
 import {HttpFactory, IHttp} from '@allgemein/http';
-import {RandomData} from './fake_app_storage/entities/RandomData';
+import {RandomData} from '../../../../storage/test/functional/controllers/fake_app_storage/entities/RandomData';
 import {Server} from '../../../src/libs/server/Server';
 import {Action} from 'routing-controllers';
 import {IRole, IRolesHolder} from '@typexs/roles-api/index';

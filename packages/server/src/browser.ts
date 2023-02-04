@@ -3,7 +3,7 @@
 
 export * from './libs/Constants';
 
-export { IStorageRefMetadata } from './libs/storage_api/IStorageRefMetadata';
+export { IStorageRefMetadata } from '../../storage/src/lib/storage_api/IStorageRefMetadata';
 export { Exceptions } from './libs/server/Exceptions';
 export { IByteRange } from './libs/server/IByteRange';
 export { IMediaType } from './libs/server/IMediaType';

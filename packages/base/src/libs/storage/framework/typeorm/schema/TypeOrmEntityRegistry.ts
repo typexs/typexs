@@ -1,5 +1,4 @@
 import {
-  assign,
   camelCase,
   concat,
   defaults,
@@ -28,6 +27,7 @@ import {
   IEntityOptions,
   IEntityRef,
   IJsonSchema,
+  IJsonSchemaSerializeOptions,
   IJsonSchemaUnserializeOptions,
   IObjectOptions,
   IParseOptions,
@@ -38,6 +38,7 @@ import {
   LookupRegistry,
   METADATA_TYPE,
   MetadataRegistry,
+  METATYPE_CLASS_REF,
   METATYPE_EMBEDDABLE,
   METATYPE_ENTITY,
   METATYPE_PROPERTY,
@@ -53,31 +54,30 @@ import { EmbeddedMetadataArgs } from 'typeorm/metadata-args/EmbeddedMetadataArgs
 import { TypeOrmUtils } from '../TypeOrmUtils';
 import { isClassRef } from '@allgemein/schema-api/api/IClassRef';
 import {
-  __TXS__,
+  __TXS__, C_METADATA,
   C_TYPEORM_COLUMN,
   C_TYPEORM_EMBEDDED,
-  C_TYPEORM_RELATION,
-  C_TYPEORM,
   C_TYPEORM_REGULAR,
+  C_TYPEORM_RELATION,
   REGISTRY_TYPEORM,
   T_TABLETYPE,
-  typeormMetadataKeys, TYPEORM_METADATA_KEYS
+  TYPEORM_METADATA_KEYS,
+  typeormMetadataKeys
 } from '../Constants';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import { GeneratedMetadataArgs } from 'typeorm/metadata-args/GeneratedMetadataArgs';
 import { Log } from '../../../../logging/Log';
 import { getMetadataArgsStorage } from 'typeorm';
-import { IJsonSchemaSerializeOptions } from '@allgemein/schema-api/lib/json-schema/IJsonSchemaSerializeOptions';
 import { K_IDENTIFIER, K_NULLABLE } from '../../../Constants';
 import { EventEmitter } from 'events';
 import { ITypeOrmPropertyOptions } from './ITypeOrmPropertyOptions';
 import { createTableTypeOrmOptions } from '../Helper';
 
 
-
-
 const MAP_PROP_KEYS = {
   [K_IDENTIFIER]: 'primary',
+  // 'auto': 'generated',
+  // 'id': 'primary',
   // 'generated': 'generated',
   'unique': 'unique',
   [K_NULLABLE]: K_NULLABLE,
@@ -352,7 +352,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
       } else {
         const _keys = keys(options);
         // entry was reset, metadata are passed but everything other from MetadataRegistry is missing (meaning the annotations)
-        if (_keys.length === 1 && _keys.includes('metadata') && target) {
+        if (_keys.length === 1 && _keys.includes(C_METADATA) && target) {
           const entry = MetadataRegistry.$().getByContextAndTarget(METATYPE_ENTITY, target).shift();
           if (entry) {
             // registered by schema-api
@@ -411,15 +411,25 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
             columnType = 'updateDate';
           }
         } else if (clsType === Array) {
+          // will be stringified if not supported in storage ref
           isArray = true;
+        } else if (clsType === Object) {
+          // will be stringified if not supported in storage ref
         }
       } else if (isClassRef(clsType) || isEntityRef(clsType)) {
         clsRef = isEntityRef(clsType) ? clsType.getClassRef() : clsType;
         tableType = C_TYPEORM_RELATION;
         clsType = clsType.getClass();
+      } else if (clsType === Array) {
+        isArray = true;
+        // will be stringified if not supported in storage ref
+      } else if (clsType === Object) {
+        // will be stringified if not supported in storage ref
       } else {
         tableType = C_TYPEORM_RELATION;
         clsType = options.type;
+        // clsRef = this.getClassRefFor(clsType, METATYPE_CLASS_REF);
+
       }
 
 
@@ -476,6 +486,9 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
         let reversePropName = null;
         let refIdName = null;
         if (tableType === C_TYPEORM_RELATION && !typeOrmOptions.type) {
+          if (!clsRef) {
+            throw new Error('class ref for relation target not found');
+          }
           typeOrmOptions.type = (type: any) => clsType;
           const ids = clsRef.getPropertyRefs().filter(x => x.isIdentifier());
           if (ids.length === 1) {
@@ -493,18 +506,20 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
 
         if (typeOrmOptions.new) {
           if (tableType === C_TYPEORM_COLUMN) {
-            const _defaults = <ColumnMetadataArgs>{
+            const columnMetadataArgs = <ColumnMetadataArgs>{
               options: {
                 type: clsType as any
               }
             };
+
+            // translate keys over MAP_PROP_KEYS to column args
             for (const x of keys(MAP_PROP_KEYS)) {
               if (has(options, x)) {
-                _defaults.options[MAP_PROP_KEYS[x]] = options[x];
+                columnMetadataArgs.options[MAP_PROP_KEYS[x]] = options[x];
               }
             }
-            defaultsDeep(typeOrmOptions, _defaults);
-            if (options.generated) {
+            defaultsDeep(typeOrmOptions, columnMetadataArgs);
+            if (columnMetadataArgs.options.generated || options.generated) {
               generated = {
                 target: options.target,
                 propertyName: options.propertyName,
