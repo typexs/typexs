@@ -1,6 +1,8 @@
 // TODO
 
-export interface IDeleteOptions {
+import { IRequestOptions } from './IRequestOptions';
+
+export interface IDeleteOptions extends IRequestOptions {
   limit?: number;
   offset?: number;
 

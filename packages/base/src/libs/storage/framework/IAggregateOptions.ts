@@ -1,4 +1,6 @@
-export interface IAggregateOptions {
+import { IRequestOptions } from './IRequestOptions';
+
+export interface IAggregateOptions extends IRequestOptions  {
 
   /**
    * result limit

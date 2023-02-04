@@ -6,7 +6,7 @@ import { IStorageRefOptions } from '@typexs/base';
 export class StorageSetting {
 
   @Hidden()
-  @Property({ id: true, auto: true })
+  @Property({ identifier: true, generated: true })
   id: number;
 
   @Text()
@@ -15,13 +15,19 @@ export class StorageSetting {
 
   @Text()
   @Property()
+  type: string;
+
+  @Text()
+  @Property()
   name: string;
+
+
+  @Property()
+  active: boolean;
 
   @Text()
   @Property({ type: Object })
   options: IStorageRefOptions = {};
-
-
 
 
   @Hidden()

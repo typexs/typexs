@@ -11,7 +11,7 @@ import {
   IFindOptions, IMessage,
   Inject,
   Invoker,
-  ISaveOptions,
+  ISaveOptions, IRequestOptions,
   IStorageRef,
   IUpdateOptions,
   Log,
@@ -84,9 +84,6 @@ export class StorageAPIController {
 
   @Inject(Storage.NAME)
   storage: Storage;
-
-  // @Inject(EntityControllerRegistry.NAME)
-  // entityControllerRegistry: EntityControllerRegistry;
 
   @Inject(Invoker.NAME)
   invoker: Invoker;
@@ -212,8 +209,8 @@ export class StorageAPIController {
    */
   @Access(PERMISSION_ALLOW_ACCESS_STORAGE_METADATA)
   @Get(_API_CTRL_STORAGE_METADATA_GET_ENTITY)
-  async getMetadataEntity(@Param('name') entityName: string, @CurrentUser() user: any) {
-    const ref = this.getStorageRef(entityName);
+  async getMetadataEntity(@Param('name') entityName: string, @QueryParam('opts') opts: IRequestOptions = {}, @CurrentUser() user: any) {
+    const ref = this.getStorageRef(entityName, opts?.storage);
     const entityRef = this.getEntityRef(ref, entityName) as IEntityRef;
     if (isArray(entityRef)) {
       throw new Error('multiple entity refs found');
@@ -280,7 +277,7 @@ export class StorageAPIController {
     opts: IFindOptions = {},
     user: IRolesHolder
   ) {
-    const { ref, controller } = this.getControllerForEntityName(name, user);
+    const { ref, controller } = this.getControllerForEntityName(name, opts?.storage, user);
 
     if (!isNumber(limit)) {
       limit = 50;
@@ -391,7 +388,7 @@ export class StorageAPIController {
       throw new HttpError(400, 'entity name or id not set');
     }
 
-    const { ref, controller } = this.getControllerForEntityName(name);
+    const { ref, controller } = this.getControllerForEntityName(name, opts?.storage);
     if (isArray(ref)) {
       throw new Error('multiple entity ref are not supported for "get"');
     }
@@ -453,7 +450,7 @@ export class StorageAPIController {
     @Body() data: any,
     @QueryParam('opts') opts: ISaveOptions | IUpdateOptions = {},
     @CurrentUser() user: any): Promise<any> {
-    const { ref, controller } = this.getControllerForEntityName(name);
+    const { ref, controller } = this.getControllerForEntityName(name, opts?.storage);
     if (isArray(ref)) {
       throw new Error('multiple entity ref are not supported for "save"');
     }
@@ -486,7 +483,7 @@ export class StorageAPIController {
     @Body() data: any,
     @CurrentUser() user: any) {
 
-    const { ref, controller } = this.getControllerForEntityName(name);
+    const { ref, controller } = this.getControllerForEntityName(name, opts?.storage);
     if (isArray(ref)) {
       throw new Error('multiple entity ref are not supported for "update"');
     }
@@ -531,7 +528,7 @@ export class StorageAPIController {
       query = {};
     }
 
-    const { ref, controller } = this.getControllerForEntityName(name);
+    const { ref, controller } = this.getControllerForEntityName(name, opts?.storage);
     if (isArray(ref)) {
       throw new Error('multiple entity ref are not supported for "update"');
     }
@@ -573,7 +570,7 @@ export class StorageAPIController {
     @Param('id') id: string,
     @QueryParam('opts') opts: IDeleteOptions = {},
     @CurrentUser() user: any) {
-    const { ref, controller } = this.getControllerForEntityName(name);
+    const { ref, controller } = this.getControllerForEntityName(name, opts?.storage);
     if (isArray(ref)) {
       throw new Error('multiple entity ref are not supported for "delete"');
     }
@@ -631,7 +628,7 @@ export class StorageAPIController {
       // multiple ids should be bound by 'or', else it would be 'and'
       throw new HttpResponseError(['storage', 'delete'], 'query for selection is empty');
     }
-    const { ref, controller } = this.getControllerForEntityName(name);
+    const { ref, controller } = this.getControllerForEntityName(name, opts?.storage);
     if (isArray(ref)) {
       throw new Error('multiple entity ref are not supported for "update"');
     }
@@ -658,8 +655,9 @@ export class StorageAPIController {
   }
 
 
-  private getControllerForEntityName(name: string, user?: IRolesHolder): { ref: IEntityRef | IEntityRef[]; controller: IEntityController } {
-    const storageRef = this.getStorageRef(name);
+  private getControllerForEntityName(
+    name: string, storage: string, user?: IRolesHolder): { ref: IEntityRef | IEntityRef[]; controller: IEntityController } {
+    const storageRef = this.getStorageRef(name, storage);
     const controller = storageRef.getController();
     const entityRef = this.getEntityRef(storageRef, name, user);
     return {
@@ -701,8 +699,13 @@ export class StorageAPIController {
     return entityRef;
   }
 
-  private getStorageRef(entityName: string): IStorageRef {
-    const storageRef = this.storage.forClass(entityName);
+  private getStorageRef(entityName: string, storage: string): IStorageRef {
+    let storageRef = null;
+    if (storage) {
+      storageRef = this.storage.get(storage);
+    } else {
+      storageRef = this.storage.forClass(entityName);
+    }
     if (!storageRef) {
       throw new HttpResponseError(['storage', 'reference_not_found'], 'Storage containing entity ' + entityName + ' not found');
     }

@@ -102,8 +102,10 @@ export class Storage {
       if (!isEmpty(_extended)) {
         for (const ext of _extended) {
           const extRef = this.get(ext);
-          extRef.addExtendedStorageRef(ref);
-          ref.addExtendingStorageRef(extRef);
+          if (extRef) {
+            extRef.addExtendedStorageRef(ref);
+            ref.addExtendingStorageRef(extRef);
+          }
         }
       }
     }
@@ -290,7 +292,6 @@ export class Storage {
   }
 
 
-
   /**
    * Return registered storage references
    */
@@ -324,7 +325,7 @@ export class Storage {
       }
     });
     const res = await Promise.all(ps);
-    await callMethod(this.getStorageFrameworks(), 'shutdown',{throwMode: 'log'});
+    await callMethod(this.getStorageFrameworks(), 'shutdown', { throwMode: 'log' });
     return res;
   }
 

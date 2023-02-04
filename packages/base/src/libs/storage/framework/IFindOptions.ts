@@ -1,4 +1,6 @@
-export interface IFindOptions {
+import { IRequestOptions } from './IRequestOptions';
+
+export interface IFindOptions  extends IRequestOptions {
 
   eager?: boolean;
 

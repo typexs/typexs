@@ -8,6 +8,7 @@ import { clone } from 'lodash';
 import { StorageLoader } from '../../src/lib/StorageLoader';
 import { SchemaApiSimpleEntity } from './data/dynamic-loading/entities/SchemaApiSimpleEntity';
 import { JsonSchema } from '@angular-devkit/core/src/json/schema';
+import { StorageSetting } from '../../src/entities/storage/StorageSetting';
 
 const LOG_EVENT = TestHelper.logEnable(false);
 
@@ -50,6 +51,9 @@ class StorageSettingsLoadingSpec {
 
     const settings = clone(settingsTemplate);
 
+    settings.storage.default.supportSchemaApi = true;
+    settings.storage.default.extends = ['storage'];
+
     bootstrap = Bootstrap
       .setConfigSources([{ type: 'system' }])
       .configure(settings)
@@ -70,13 +74,13 @@ class StorageSettingsLoadingSpec {
 
 
   @test
-  async 'loader loaded'() {
+  async 'loaded'() {
     const loader = Injector.get(StorageLoader);
     expect(loader).to.be.not.null;
   }
 
   @test
-  async 'loader - create new storage ref'() {
+  async 'create new storage ref'() {
     const loader = Injector.get(StorageLoader);
     expect(loader).to.be.not.null;
     const refOptions: IStorageRefOptions & any = {
@@ -90,7 +94,7 @@ class StorageSettingsLoadingSpec {
   }
 
   @test
-  async 'loader - create new storage ref with entities'() {
+  async 'create new storage ref with entities'() {
     const loader = Injector.get(StorageLoader);
     expect(loader).to.be.not.null;
     const refOptions: ITypeOrmStorageRefOptions & any = {
@@ -137,9 +141,8 @@ class StorageSettingsLoadingSpec {
 
 
   @test
-  async 'loader - create new storage ref with dynamic entities'() {
+  async 'create new storage ref with dynamic entities'() {
     const loader = Injector.get(StorageLoader);
-    expect(loader).to.be.not.null;
     const refOptions: ITypeOrmStorageRefOptions & any = {
       name: 'new_store_with_dyna_entities',
       framework: 'typeorm',
@@ -205,5 +208,75 @@ class StorageSettingsLoadingSpec {
     });
   }
 
-}
 
+  @test
+  async 'create storage settings and load refs'() {
+    const refOptions: ITypeOrmStorageRefOptions & any = {
+      name: 'new_dyna',
+      framework: 'typeorm',
+      type: 'sqlite',
+      database: ':memory:',
+      supportSchemaApi: true,
+      synchronize: true,
+      entities: [
+        {
+          $schema: 'http://json-schema.org/draft-07/schema#',
+          definitions: {
+            'DynaEntity': {
+              'title': 'DynaEntity',
+              'type': 'object',
+              'metadata': {
+                'type': 'regular'
+              },
+              'properties': {
+                'id': {
+                  'type': 'Number',
+                  identifier: true,
+                  generated: true
+                },
+                'someName': {
+                  'type': 'String'
+                },
+                'someBool': {
+                  'type': 'boolean'
+                },
+                'someNr': {
+                  'type': 'number'
+                }
+              }
+            }
+          },
+          $ref: '#/definitions/DynaEntity'
+        }
+      ]
+    };
+
+    const loader = Injector.get(StorageLoader);
+    const ref = bootstrap.getStorage().get();
+
+    let settings = new StorageSetting();
+    settings.type = refOptions.type;
+    settings.framework = refOptions.framework;
+    settings.name = refOptions.name;
+    settings.active = true;
+    settings.options = refOptions;
+    await ref.getController().save(settings);
+    settings = await ref.getController().findOne(StorageSetting);
+    const newRef = await loader.loadByStorageSetting(settings);
+    expect(newRef.getOptions()).to.deep.include({
+      name: 'new_dyna_1',
+      framework: 'typeorm',
+      type: 'sqlite',
+      database: ':memory:'
+    });
+    const entityRefs = newRef.getEntityRefs();
+    expect(entityRefs).to.have.length(1);
+    const entityRef = entityRefs[0];
+    let dynaInstance = entityRef.create<any>(false);
+    dynaInstance.someName = 'TheName';
+    dynaInstance.someBool = true;
+    dynaInstance.someNr = 123;
+    dynaInstance = await newRef.getController().save(dynaInstance);
+    expect(dynaInstance).to.be.deep.include({ id: 1, someName: 'TheName', someBool: true, someNr: 123 });
+  }
+}
