@@ -10,10 +10,10 @@ export class StorageLoader {
 
   static NAME = 'StorageLoader';
 
-  @Inject(Storage.NAME)
+  @Inject(() => Storage)
   storage: Storage;
 
-  @Inject(RuntimeLoader.NAME)
+  @Inject(() => RuntimeLoader)
   runtimeLoader: RuntimeLoader;
 
   storageRef: IStorageRef;

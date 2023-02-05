@@ -3,7 +3,6 @@
 
 export * from './libs/Constants';
 
-export { IStorageRefMetadata } from '../../storage/src/lib/storage_api/IStorageRefMetadata';
 export { Exceptions } from './libs/server/Exceptions';
 export { IByteRange } from './libs/server/IByteRange';
 export { IMediaType } from './libs/server/IMediaType';
@@ -20,6 +19,7 @@ export { IServerInstanceOptions } from './libs/server/IServerInstanceOptions';
 export { IServerOptions } from './libs/server/IServerOptions';
 
 export { IRouteType } from './libs/web/IRouteType';
+
 // export * from "./libs/web/IRoutingController";
 // export * from "./libs/web/IStaticFiles";
 // export * from "./libs/web/IWebServerInstanceOptions";

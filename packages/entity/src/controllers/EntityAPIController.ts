@@ -11,7 +11,6 @@ import {
   Param,
   Post,
   QueryParam,
-  StorageAPIControllerApi,
   XS_P_$LABEL,
   XS_P_$URL
 } from '@typexs/server';
@@ -57,6 +56,7 @@ import { IEntityRef, IJsonSchemaUnserializeOptions, JsonSchema, METATYPE_PROPERT
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import { EntityRegistry } from '../libs/EntityRegistry';
 import { assign, first, get, isArray, isNumber, isPlainObject, keys } from 'lodash';
+import { StorageAPIControllerApi } from '@typexs/storage';
 
 
 @ContextGroup(C_API)

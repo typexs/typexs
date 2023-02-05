@@ -1,21 +1,22 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Config, Injector} from '@typexs/base';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { Bootstrap, Config, Injector } from '@typexs/base';
 import {
   API_CTRL_SERVER_CONFIG,
   API_CTRL_SERVER_CONFIG_KEY,
   API_CTRL_SERVER_ROUTES,
+  API_CTRL_SYSTEM_RUNTIME_REMOTE_INFOS,
   C_API,
   K_CONFIG_ANONYMOUS_ALLOW,
   K_ROUTE_CONTROLLER,
-  PERMISSION_ALLOW_STORAGE_ENTITY_VIEW
+  PERMISSION_ALLOW_RUNTIME_REMOTE_INFOS_VIEW
 } from '../../../src/libs/Constants';
 import * as _ from 'lodash';
-import {TestHelper} from '../TestHelper';
-import {TEST_STORAGE_OPTIONS} from '../config';
-import {HttpFactory, IHttp} from '@allgemein/http';
+import { TestHelper } from '../TestHelper';
+import { TEST_STORAGE_OPTIONS } from '../config';
+import { HttpFactory, IHttp } from '@allgemein/http';
 
-import {expect} from 'chai';
-import {WebServer} from '../../../src/libs/web/WebServer';
+import { expect } from 'chai';
+import { WebServer } from '../../../src/libs/web/WebServer';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -25,12 +26,12 @@ const settingsTemplate: any = {
     default: TEST_STORAGE_OPTIONS
   },
 
-  app: {name: 'demo', path: __dirname + '/../../..', nodeId: 'server'},
+  app: { name: 'demo', path: __dirname + '/../../..', nodeId: 'server' },
 
   logging: {
     enable: LOG_EVENT,
     level: 'debug',
-    transports: [{console: {}}],
+    transports: [{ console: {} }]
   },
 
   modules: {
@@ -41,7 +42,7 @@ const settingsTemplate: any = {
     include: [
       '**/packages/base**',
       '**/packages/server**'
-    ],
+    ]
 
   },
 
@@ -78,7 +79,7 @@ class ServerStatusControllerSpec {
     http = HttpFactory.create();
 
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(settings)
       .activateErrorHandling()
       .activateLogger();
@@ -109,7 +110,7 @@ class ServerStatusControllerSpec {
 
     expect(Config.get(K_CONFIG_ANONYMOUS_ALLOW)).to.be.true;
 
-    const baseConfig = await http.get(url + API_CTRL_SERVER_CONFIG, {responseType: 'json', passBody: true}) as any;
+    const baseConfig = await http.get(url + API_CTRL_SERVER_CONFIG, { responseType: 'json', passBody: true }) as any;
     const compare = _.clone(settingsTemplate);
 
     compare.storage.default.name = 'default';
@@ -145,12 +146,12 @@ class ServerStatusControllerSpec {
             'limit': '10mb',
             'middlewares': [],
             'routePrefix': 'api',
-            'type': 'routing_controller',
+            'type': 'routing_controller'
           }
         ],
         'stall': 0,
         'timeout': 60000,
-        'type': 'web',
+        'type': 'web'
       }
     });
   }
@@ -161,7 +162,7 @@ class ServerStatusControllerSpec {
     Config.set(K_CONFIG_ANONYMOUS_ALLOW, false);
     expect(Config.get(K_CONFIG_ANONYMOUS_ALLOW)).to.be.false;
     try {
-      const results = await http.get(url + API_CTRL_SERVER_CONFIG, {responseType: 'json', passBody: true});
+      const results = await http.get(url + API_CTRL_SERVER_CONFIG, { responseType: 'json', passBody: true });
       expect(true).to.be.false;
     } catch (err) {
       expect(err.response.statusCode).to.be.eq(403);
@@ -208,23 +209,23 @@ class ServerStatusControllerSpec {
           'limit': '10mb',
           'middlewares': [],
           'routePrefix': 'api',
-          'type': 'routing_controller',
+          'type': 'routing_controller'
         }
       ],
       'stall': 0,
       'timeout': 60000,
-      'type': 'web',
+      'type': 'web'
     });
   }
 
 
   @test
   async 'list routes (in anonymous mode)'() {
-    const response = await http.get(url + API_CTRL_SERVER_ROUTES, {responseType: 'json', passBody: true});
+    const response = await http.get(url + API_CTRL_SERVER_ROUTES, { responseType: 'json', passBody: true });
     expect(response).to.not.be.null;
 
     expect(response).to.have.length.greaterThan(4);
-    expect(_.find(response, {controllerMethod: 'listRoutes'})).to.deep.eq({
+    expect(_.find(response, { controllerMethod: 'listRoutes' })).to.deep.eq({
       context: 'api',
       route: '/' + C_API + API_CTRL_SERVER_ROUTES,
       method: 'get',
@@ -237,21 +238,22 @@ class ServerStatusControllerSpec {
       permissions: null,
       authorized: false
     });
-    expect(_.find(response, {controllerMethod: 'getStorageEntities'})).to.deep.eq({
+
+    expect(_.find(response, { controllerMethod: 'nodesInfo' })).to.deep.eq({
       context: 'api',
-      route: '/api/system/storage/:name/entities',
+      route: '/' + C_API + API_CTRL_SYSTEM_RUNTIME_REMOTE_INFOS,
       method: 'get',
       params: [
         {
           'index': 0,
-          'name': 'name',
-          'parse': false,
-          'required': true
+          'name': 'nodeIds',
+          'parse': false
+          // 'required': true
         }
       ],
       controller: 'SystemNodeInfoAPIController',
-      controllerMethod: 'getStorageEntities',
-      permissions: [PERMISSION_ALLOW_STORAGE_ENTITY_VIEW],
+      controllerMethod: 'nodesInfo',
+      permissions: [PERMISSION_ALLOW_RUNTIME_REMOTE_INFOS_VIEW],
       authorized: true
     });
   }

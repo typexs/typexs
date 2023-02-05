@@ -1,7 +1,7 @@
 import { getTestBed, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { API_CTRL_STORAGE_METADATA_ALL_ENTITIES } from '@typexs/server';
+import { API_CTRL_STORAGE_METADATA_ALL_ENTITIES } from '@typexs/storage';
 import { StorageService } from './storage.service';
 import {
   AuthService,
@@ -85,8 +85,9 @@ describe('StorageService', () => {
     const entitiesMetadata: IJsonSchema7[] = [];
     const backendClientService: HttpBackendService = injector.get(BackendService) as HttpBackendService;
     backendClientService.getState().next('online');
+    const route = API_CTRL_STORAGE_METADATA_ALL_ENTITIES;
     backendClientService.addRoute({
-      route: backendClientService.apiUrl(API_CTRL_STORAGE_METADATA_ALL_ENTITIES),
+      route: backendClientService.apiUrl(route),
       method: 'get',
       context: 'api',
       authorized: false

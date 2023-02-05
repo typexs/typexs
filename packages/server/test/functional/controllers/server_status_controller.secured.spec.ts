@@ -1,25 +1,24 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Config, Injector} from '@typexs/base';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { Bootstrap, Config, Injector } from '@typexs/base';
 import {
   API_CTRL_SERVER_CONFIG,
   API_CTRL_SERVER_CONFIG_KEY,
   API_CTRL_SERVER_PING,
-  API_CTRL_SERVER_ROUTES,
+  API_CTRL_SERVER_ROUTES, API_CTRL_SYSTEM_RUNTIME_REMOTE_INFOS,
   C_API,
   DEFAULT_ANONYMOUS,
   K_CONFIG_ANONYMOUS_ALLOW,
   K_CONFIG_PERMISSIONS,
-  K_ROUTE_CONTROLLER,
-  PERMISSION_ALLOW_STORAGE_ENTITY_VIEW
+  K_ROUTE_CONTROLLER, PERMISSION_ALLOW_RUNTIME_REMOTE_INFOS_VIEW
 } from '../../../src/libs/Constants';
-import {WebServer} from '../../../src/libs/web/WebServer';
+import { WebServer } from '../../../src/libs/web/WebServer';
 import * as _ from 'lodash';
-import {TestHelper} from '../TestHelper';
-import {TEST_STORAGE_OPTIONS} from '../config';
-import {HttpFactory, IHttp} from '@allgemein/http';
-import {expect} from 'chai';
-import {Action} from 'routing-controllers/types/Action';
-import {IRole, IRolesHolder} from '@typexs/roles-api/index';
+import { TestHelper } from '../TestHelper';
+import { TEST_STORAGE_OPTIONS } from '../config';
+import { HttpFactory, IHttp } from '@allgemein/http';
+import { expect } from 'chai';
+import { Action } from 'routing-controllers/types/Action';
+import { IRole, IRolesHolder } from '@typexs/roles-api/index';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -33,12 +32,12 @@ const settingsTemplate: any = {
     default: TEST_STORAGE_OPTIONS
   },
 
-  app: {name: 'demo', path: __dirname + '/../../..', nodeId: 'server'},
+  app: { name: 'demo', path: __dirname + '/../../..', nodeId: 'server' },
 
   logging: {
     enable: LOG_EVENT,
     level: 'debug',
-    transports: [{console: {}}],
+    transports: [{ console: {} }]
   },
 
 
@@ -51,7 +50,7 @@ const settingsTemplate: any = {
       '**/@allgemein{,/eventbus}*',
       '**/@typexs{,/base}*',
       '**/@typexs{,/server}*'
-    ],
+    ]
 
   },
 
@@ -67,9 +66,7 @@ const settingsTemplate: any = {
         type: K_ROUTE_CONTROLLER,
         context: 'api',
         routePrefix: 'api',
-        currentUserChecker: (action: Action) => {
-          return callback['fn'](action);
-        }
+        currentUserChecker: (action: Action) => callback['fn'](action)
       }]
     }
   }
@@ -90,7 +87,7 @@ class ServerStatusControllerSpec {
     http = HttpFactory.create();
 
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(settings)
       .activateErrorHandling()
       .activateLogger();
@@ -122,26 +119,24 @@ class ServerStatusControllerSpec {
       'server.default.routes': ['allow view config server routes']
     });
 
-    callback['fn'] = () => {
-      return <IRolesHolder>{
-        getRoles(): IRole[] {
-          return [{
-            role: 'test', permissions: [{
-              type: 'single',
-              permission: 'allow view other configurations'
-            }
-            ]
-          }];
-        },
-        getIdentifier(): string | number {
-          return 'TEST';
-        }
-      };
+    callback['fn'] = () => <IRolesHolder>{
+      getRoles(): IRole[] {
+        return [{
+          role: 'test', permissions: [{
+            type: 'single',
+            permission: 'allow view other configurations'
+          }
+          ]
+        }];
+      },
+      getIdentifier(): string | number {
+        return 'TEST';
+      }
     };
 
     expect(Config.get(K_CONFIG_ANONYMOUS_ALLOW)).to.be.false;
 
-    const baseConfig = await http.get(url + API_CTRL_SERVER_CONFIG, {responseType: 'json', passBody: true}) as any;
+    const baseConfig = await http.get(url + API_CTRL_SERVER_CONFIG, { responseType: 'json', passBody: true }) as any;
     expect(baseConfig.server).to.have.deep.eq({
       'default': {
         '_debug': false,
@@ -153,7 +148,7 @@ class ServerStatusControllerSpec {
         'protocol': 'http',
         'stall': 0,
         'timeout': 60000,
-        'type': 'web',
+        'type': 'web'
       }
     });
   }
@@ -166,20 +161,18 @@ class ServerStatusControllerSpec {
       'server.default.routes': ['allow view config server routes']
     });
 
-    callback['fn'] = () => {
-      return <IRolesHolder>{
-        getRoles(): IRole[] {
-          return [{role: 'test', permissions: [{permission: 'allow view config server routes'}]}];
-        },
-        getIdentifier(): string | number {
-          return 'TEST';
-        }
-      };
+    callback['fn'] = () => <IRolesHolder>{
+      getRoles(): IRole[] {
+        return [{ role: 'test', permissions: [{ permission: 'allow view config server routes' }] }];
+      },
+      getIdentifier(): string | number {
+        return 'TEST';
+      }
     };
 
     expect(Config.get(K_CONFIG_ANONYMOUS_ALLOW)).to.be.false;
 
-    const baseConfig = await http.get(url + API_CTRL_SERVER_CONFIG, {responseType: 'json', passBody: true}) as any;
+    const baseConfig = await http.get(url + API_CTRL_SERVER_CONFIG, { responseType: 'json', passBody: true }) as any;
     expect(baseConfig.server).to.have.deep.eq({
       'default': {
         '_debug': false,
@@ -206,12 +199,12 @@ class ServerStatusControllerSpec {
             'limit': '10mb',
             'middlewares': [],
             'routePrefix': 'api',
-            'type': 'routing_controller',
+            'type': 'routing_controller'
           }
         ],
         'stall': 0,
         'timeout': 60000,
-        'type': 'web',
+        'type': 'web'
       }
     });
   }
@@ -225,21 +218,19 @@ class ServerStatusControllerSpec {
       'server.default.routes': ['allow view config server routes']
     });
 
-    callback['fn'] = () => {
-      return <IRolesHolder>{
-        getRoles(): IRole[] {
-          return [{role: 'test', permissions: [{permission: 'allow view config server routes'}]}];
-        },
-        getIdentifier(): string | number {
-          return 'TEST';
-        }
-      };
+    callback['fn'] = () => <IRolesHolder>{
+      getRoles(): IRole[] {
+        return [{ role: 'test', permissions: [{ permission: 'allow view config server routes' }] }];
+      },
+      getIdentifier(): string | number {
+        return 'TEST';
+      }
     };
 
     expect(Config.get(K_CONFIG_ANONYMOUS_ALLOW)).to.be.false;
 
     const baseConfig = await http.get(url + API_CTRL_SERVER_CONFIG_KEY
-      .replace(':key', 'server.default'), {responseType: 'json', passBody: true}) as any;
+      .replace(':key', 'server.default'), { responseType: 'json', passBody: true }) as any;
     expect(baseConfig).to.have.deep.eq({
       '_debug': false,
       'fn': 'root',
@@ -265,12 +256,12 @@ class ServerStatusControllerSpec {
           'limit': '10mb',
           'middlewares': [],
           'routePrefix': 'api',
-          'type': 'routing_controller',
+          'type': 'routing_controller'
         }
       ],
       'stall': 0,
       'timeout': 60000,
-      'type': 'web',
+      'type': 'web'
     });
   }
 
@@ -283,21 +274,19 @@ class ServerStatusControllerSpec {
       'server.default.routes': ['allow view config server routes']
     });
 
-    callback['fn'] = () => {
-      return <IRolesHolder>{
-        getRoles(): IRole[] {
-          return [{role: 'test', permissions: [{permission: 'allow view some others configurations'}]}];
-        },
-        getIdentifier(): string | number {
-          return 'TEST';
-        }
-      };
+    callback['fn'] = () => <IRolesHolder>{
+      getRoles(): IRole[] {
+        return [{ role: 'test', permissions: [{ permission: 'allow view some others configurations' }] }];
+      },
+      getIdentifier(): string | number {
+        return 'TEST';
+      }
     };
 
     expect(Config.get(K_CONFIG_ANONYMOUS_ALLOW)).to.be.false;
 
     const baseConfig = await http.get(url + API_CTRL_SERVER_CONFIG_KEY
-      .replace(':key', 'server.default'), {responseType: 'json', passBody: true}) as any;
+      .replace(':key', 'server.default'), { responseType: 'json', passBody: true }) as any;
     expect(baseConfig).to.have.deep.eq({
       '_debug': false,
       'fn': 'root',
@@ -308,29 +297,27 @@ class ServerStatusControllerSpec {
       'protocol': 'http',
       'stall': 0,
       'timeout': 60000,
-      'type': 'web',
+      'type': 'web'
     });
   }
 
 
   @test
   async 'list routes (in secured mode without permission)'() {
-    callback['fn'] = () => {
-      return <IRolesHolder>{
-        getRoles(): IRole[] {
-          return [{role: 'test', permissions: [{permission: 'allow access some stuff'}]}];
-        },
-        getIdentifier(): string | number {
-          return 'TEST';
-        }
-      };
+    callback['fn'] = () => <IRolesHolder>{
+      getRoles(): IRole[] {
+        return [{ role: 'test', permissions: [{ permission: 'allow access some stuff' }] }];
+      },
+      getIdentifier(): string | number {
+        return 'TEST';
+      }
     };
 
-    const res = await http.get(url + API_CTRL_SERVER_ROUTES, {responseType: 'json', passBody: true});
+    const res = await http.get(url + API_CTRL_SERVER_ROUTES, { responseType: 'json', passBody: true });
     expect(res).to.not.be.null;
     expect(res).to.have.length(5);
-    expect(_.filter(res, {authorized: false})).to.have.length(5);
-    expect(_.find(res, {route: '/api/ping'})).to.deep.eq({
+    expect(_.filter(res, { authorized: false })).to.have.length(5);
+    expect(_.find(res, { route: '/api/ping' })).to.deep.eq({
       context: 'api',
       route: '/' + C_API + API_CTRL_SERVER_PING,
       method: 'get',
@@ -340,28 +327,26 @@ class ServerStatusControllerSpec {
       permissions: null,
       authorized: false
     });
-    expect(_.find(res, {controllerMethod: 'getStorageEntities'})).to.be.undefined;
+    expect(_.find(res, { controllerMethod: 'getStorageEntities' })).to.be.undefined;
 
   }
 
   @test
   async 'list routes (in secured mode with permission)'() {
-    callback['fn'] = () => {
-      return <IRolesHolder>{
-        getRoles(): IRole[] {
-          return [{role: 'test', permissions: [{permission: PERMISSION_ALLOW_STORAGE_ENTITY_VIEW}]}];
-        },
-        getIdentifier(): string | number {
-          return 'TEST';
-        }
-      };
+    callback['fn'] = () => <IRolesHolder>{
+      getRoles(): IRole[] {
+        return [{ role: 'test', permissions: [{ permission: PERMISSION_ALLOW_RUNTIME_REMOTE_INFOS_VIEW }] }];
+      },
+      getIdentifier(): string | number {
+        return 'TEST';
+      }
     };
 
-    const res = await http.get(url + API_CTRL_SERVER_ROUTES, {responseType: 'json', passBody: true});
+    const res = await http.get(url + API_CTRL_SERVER_ROUTES, { responseType: 'json', passBody: true });
     expect(res).to.not.be.null;
     expect(res).to.have.length(6);
-    expect(_.filter(res, {authorized: false})).to.have.length(5);
-    expect(_.find(res, {route: '/api/ping'})).to.deep.eq({
+    expect(_.filter(res, { authorized: false })).to.have.length(5);
+    expect(_.find(res, { route: '/api/ping' })).to.deep.eq({
       context: 'api',
       route: '/' + C_API + API_CTRL_SERVER_PING,
       method: 'get',
@@ -371,21 +356,21 @@ class ServerStatusControllerSpec {
       permissions: null,
       authorized: false
     });
-    expect(_.find(res, {controllerMethod: 'getStorageEntities'})).to.be.deep.eq({
+    expect(_.find(res, { controllerMethod: 'nodesInfo' })).to.be.deep.eq({
       context: 'api',
-      route: '/api/system/storage/:name/entities',
+      route: '/' + C_API + API_CTRL_SYSTEM_RUNTIME_REMOTE_INFOS,
       method: 'get',
       params: [
         {
           'index': 0,
-          'name': 'name',
-          'parse': false,
-          'required': true
+          'name': 'nodeIds',
+          'parse': false
+          // 'required': true
         }
       ],
       controller: 'SystemNodeInfoAPIController',
-      controllerMethod: 'getStorageEntities',
-      permissions: [PERMISSION_ALLOW_STORAGE_ENTITY_VIEW],
+      controllerMethod: 'nodesInfo',
+      permissions: [PERMISSION_ALLOW_RUNTIME_REMOTE_INFOS_VIEW],
       authorized: true
     });
   }

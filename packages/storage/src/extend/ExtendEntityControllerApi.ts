@@ -14,6 +14,8 @@ export class ExtendEntityControllerApi implements IEntityControllerApi {
   loader: StorageLoader;
 
 
+
+
   isActive() {
     if (this.loader && this.loader.isActive()) {
       return this.loader.getOptions().autoload;

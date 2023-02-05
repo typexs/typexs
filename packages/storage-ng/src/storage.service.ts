@@ -14,7 +14,8 @@ import {
   API_CTRL_STORAGE_UPDATE_ENTITIES_BY_CONDITION,
   API_CTRL_STORAGE_UPDATE_ENTITY,
   IStorageRefMetadata
-} from '@typexs/server';
+} from '@typexs/storage';
+
 import { IBuildOptions, IEntityRef } from '@allgemein/schema-api';
 import {
   AbstractQueryService,
@@ -52,7 +53,7 @@ export class StorageService extends AbstractQueryService implements IQueringServ
           update_by_condition: API_CTRL_STORAGE_UPDATE_ENTITIES_BY_CONDITION
         },
         // registry: RegistryFactory.get(REGISTRY_TYPEORM),
-        ngRoutePrefix: API_CTRL_STORAGE_PREFIX,
+        ngRoutePrefix: API_CTRL_STORAGE_PREFIX
         // registryName: REGISTRY_TYPEORM
       });
   }

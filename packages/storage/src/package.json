@@ -31,6 +31,7 @@
   },
   "peerDependencies": {
     "@typexs/base": "0.0.0-PLACEHOLDER",
+    "@typexs/server": "0.0.0-PLACEHOLDER",
     "@typexs/forms": "0.0.0-PLACEHOLDER"
   },
   "private": true,

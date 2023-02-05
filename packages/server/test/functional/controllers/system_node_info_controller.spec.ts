@@ -5,7 +5,6 @@ import {
   API_CTRL_SYSTEM_RUNTIME_INFO,
   API_CTRL_SYSTEM_RUNTIME_NODE,
   API_CTRL_SYSTEM_RUNTIME_NODES,
-  API_CTRL_SYSTEM_STORAGES,
   API_CTRL_SYSTEM_WORKERS,
   C_API,
   K_ROUTE_CONTROLLER
@@ -158,19 +157,6 @@ class RuntimeInfoControllerSpec {
   }
 
 
-  @test @timeout(300000)
-  async 'list storages'() {
-    const url = server.url() + '/' + C_API;
-    let res: any = await http.get(url + API_CTRL_SYSTEM_STORAGES, {responseType: 'json'});
-    expect(res.body).to.not.be.null;
-    res = res.body;
-    expect(res).to.have.length(1);
-    res = res.shift();
-    const compare = _.clone(settingsTemplate);
-    compare.storage.default.name = 'default';
-    // compare.storage.default.entities = [];
-    expect(res).to.have.deep.include(compare.storage.default);
-  }
 
 
 }

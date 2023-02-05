@@ -8,7 +8,7 @@ import {
   API_CTRL_SYSTEM_RUNTIME_NODE,
   API_CTRL_SYSTEM_RUNTIME_NODES,
   API_CTRL_SYSTEM_RUNTIME_REMOTE_INFOS,
-  API_CTRL_SYSTEM_STORAGES,
+  // API_CTRL_SYSTEM_STORAGES,
   API_CTRL_SYSTEM_WORKERS
 } from '@typexs/server/libs/Constants';
 import { IModule, IStorageRefOptions, ITypexsOptions } from '@typexs/base';
@@ -217,9 +217,9 @@ export class SystemInfoService {
     return this.backendClientService.callApi(API_CTRL_SYSTEM_MODULES, { handle: callback });
   }
 
-  loadStorages(callback?: (err: Error, storageOptions: IStorageRefOptions[]) => void) {
-    return this.backendClientService.callApi(API_CTRL_SYSTEM_STORAGES, { handle: callback });
-  }
+  // loadStorages(callback?: (err: Error, storageOptions: IStorageRefOptions[]) => void) {
+  //   return this.backendClientService.callApi(API_CTRL_SYSTEM_STORAGES, { handle: callback });
+  // }
 
   loadConfig(callback?: (err: Error, config: ITypexsOptions[]) => void) {
     return this.backendClientService.callApi(API_CTRL_SERVER_CONFIG, { handle: callback });

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { StorageService } from '../storage.service';
-import { IStorageRefMetadata } from '@typexs/server';
+import { IStorageRefMetadata } from '@typexs/storage';
 import { keys } from 'lodash';
 
 

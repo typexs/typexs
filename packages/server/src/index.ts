@@ -65,11 +65,6 @@ export { SystemNodeInfoApi } from './api/SystemNodeInfo.api';
 export { IServerStatus } from './api/IServerStatus';
 export { ServerStatusApi } from './api/ServerStatus.api';
 
-/**
- * Used for results modifications returned by the controller
- */
-export { IStorageAPIController } from '../../storage/src/api/IStorageAPIController';
-export { StorageAPIControllerApi } from '../../storage/src/api/StorageAPIController.api';
 
 export { ServerCommand } from './commands/ServerCommand';
 
@@ -79,7 +74,7 @@ export { Access } from './decorators/Access';
 export { ServerTypeIsNotSetError } from './libs/exceptions/ServerTypeIsNotSetError';
 export { HttpResponseError } from './libs/exceptions/HttpResponseError';
 
-export { Helper } from './libs/Helper';
+export { Helper, WalkValues } from './libs/Helper';
 
 export { Exceptions } from './libs/server/Exceptions';
 export { IByteRange } from './libs/server/IByteRange';
@@ -114,3 +109,4 @@ export { WebServerUtils } from './libs/web/WebServerUtils';
 
 
 export { RoutePermissionsHelper } from './libs/RoutePermissionsHelper';
+

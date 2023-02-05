@@ -1,15 +1,5 @@
 import { suite, test, timeout } from '@testdeck/mocha';
-import {
-  __CLASS__,
-  __REGISTRY__,
-  Bootstrap,
-  C_STORAGE_DEFAULT,
-  Config,
-  Injector,
-  IRuntimeLoaderOptions,
-  ITypexsOptions,
-  StorageRef
-} from '@typexs/base';
+import { __CLASS__, __REGISTRY__, Bootstrap, C_STORAGE_DEFAULT, Config, Injector, ITypexsOptions, StorageRef } from '@typexs/base';
 import {
   API_CTRL_STORAGE_AGGREGATE_ENTITY,
   API_CTRL_STORAGE_DELETE_ENTITIES_BY_CONDITION,
@@ -23,25 +13,22 @@ import {
   API_CTRL_STORAGE_SAVE_ENTITY,
   API_CTRL_STORAGE_UPDATE_ENTITIES_BY_CONDITION,
   API_CTRL_STORAGE_UPDATE_ENTITY,
-  DEFAULT_ANONYMOUS,
-  K_ROUTE_CONTROLLER,
   PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY_PATTERN
-} from '../../../../server/src/libs/Constants';
+} from '@typexs/storage';
+import { DEFAULT_ANONYMOUS, K_ROUTE_CONTROLLER, Server } from '@typexs/server';
 import { expect } from 'chai';
 import * as _ from 'lodash';
 import { Driver } from './fake_app_storage/entities/Driver';
-import { TEST_STORAGE_OPTIONS } from '../../../../server/test/functional/config';
+import { TEST_STORAGE_OPTIONS } from '../config';
 import { HttpFactory, IHttp } from '@allgemein/http';
 import { Car } from './fake_app_storage/entities/Car';
 import { RandomData } from './fake_app_storage/entities/RandomData';
-import { Server } from '../../../../server/src/libs/server/Server';
 import { Action } from 'routing-controllers';
 import { SecuredObject } from './fake_app_storage/entities/SecuredObject';
-import { IRole, IRolesHolder } from '@typexs/roles-api';
-import { BasicPermission } from '@typexs/roles-api';
-import { IStorageRefMetadata } from '../../../../server/src';
+import { BasicPermission, IRole, IRolesHolder } from '@typexs/roles-api';
+import { IStorageRefMetadata } from '../../../src/lib/storage_api/IStorageRefMetadata';
 import { IJsonSchema7 } from '@allgemein/schema-api';
-import { TestHelper } from '../../../../server/test/functional/TestHelper';
+import { TestHelper } from '@typexs/testing';
 
 
 let permissionsCheck = false;
@@ -66,7 +53,7 @@ const settingsTemplate: ITypexsOptions & any = {
       '**/@allgemein{,/eventbus}*',
       '**/@typexs{,/base}*',
       '**/@typexs{,/server}*',
-      '**/@typexs{,/storage}*',
+      '**/@typexs{,/storage}*'
     ]
 
   },

@@ -51,6 +51,12 @@
       "@typexs/roles-api/*": [
         "./packages/roles-api/src/*",
       ],
+      "@typexs/storage": [
+        "./packages/storage/src/browser",
+      ],
+      "@typexs/storage/*": [
+        "./packages/storage/src/*",
+      ],
       "@typexs/base-ng/*": [
         "./packages/base-ng/src/*"
       ],

@@ -11,7 +11,7 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {SystemNodesComponent} from './system/nodes/system-nodes.component';
 import {SettingsComponent} from './components/settings/settings.component';
 import {PERMISSION_ACCESS_ADMIN_UI} from '@typexs/ng';
-import {PERMISSION_ALLOW_STORAGES_VIEW} from '@typexs/server/libs/Constants';
+import {PERMISSION_ALLOW_STORAGES_VIEW} from '@typexs/storage/lib/Constants';
 
 
 export const ADMIN_ROUTES: Routes = [

@@ -103,6 +103,14 @@ class StorageSettingsLoadingSpec {
     settings.storage.default.extends = ['storage'];
     settings.storage.default.database = join(os.tmpdir(), 'schema-loading.sqlite');
 
+    try {
+      if (fs.existsSync(settings.storage.default.database)) {
+        fs.unlinkSync(settings.storage.default.database);
+      }
+    } catch (e) {
+
+    }
+
     bootstrap = Bootstrap
       .setConfigSources([{ type: 'system' }])
       .configure(settings)

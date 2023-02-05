@@ -27,7 +27,7 @@
   "peerDependencies": {
     "@typexs/base": "0.0.0-PLACEHOLDER",
     "@typexs/ng": "0.0.0-PLACEHOLDER",
-    "@typexs/server": "0.0.0-PLACEHOLDER",
+    "@typexs/storage": "0.0.0-PLACEHOLDER",
     "@typexs/base-ng": "0.0.0-PLACEHOLDER",
     "@typexs/forms": "0.0.0-PLACEHOLDER",
     "@typexs/forms-ng": "0.0.0-PLACEHOLDER"
