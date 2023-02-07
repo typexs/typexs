@@ -59,13 +59,30 @@ export const PERMISSION_ALLOW_DELETE_STORAGE_ENTITY = 'allow delete storage enti
 export const PERMISSION_ALLOW_DELETE_STORAGE_ENTITY_PATTERN = 'allow delete storage entity :name';
 
 
-export const PERMISSION_ALLOW_STORAGES_VIEW = 'allow storages view';
+export const PERMISSION_ALLOW_STORAGES_VIEW = 'allow storages admin view';
 export const _API_CTRL_SYSTEM_STORAGES = '/storages';
 // export const API_CTRL_SYSTEM_STORAGES = _API_CTRL_SYSTEM + _API_CTRL_SYSTEM_STORAGES;
 export const API_CTRL_SYSTEM_STORAGES = _API_CTRL_SYSTEM + _API_CTRL_SYSTEM_STORAGES;
 
-export const PERMISSION_ALLOW_STORAGE_ENTITY_VIEW = 'allow storages entity view';
+export const PERMISSION_ALLOW_STORAGE_ENTITIES = 'allow storages admin entities';
+// export const PERMISSION_ALLOW_STORAGE_VIEW_ENTITY = 'allow view storage entity';
 
-export const _API_CTRL_STORAGE_ENTITY_VIEW = '/storage/:name/entities';
+export const _API_CTRL_SYSTEM_STORAGE_ENTITIES = '/storage/:name/entities';
 
-export const API_CTRL_STORAGE_ENTITY_VIEW = _API_CTRL_SYSTEM + _API_CTRL_STORAGE_ENTITY_VIEW;
+export const API_CTRL_SYSTEM_STORAGE_ENTITIES = _API_CTRL_SYSTEM + _API_CTRL_SYSTEM_STORAGE_ENTITIES;
+
+
+
+export const PERMISSION_ALLOW_STORAGE_TEST = 'allow storage admin test';
+
+export const _API_CTRL_SYSTEM_STORAGE_TEST = '/storage/:idOrName/test';
+
+export const API_CTRL_SYSTEM_STORAGE_TEST = _API_CTRL_SYSTEM + _API_CTRL_SYSTEM_STORAGE_TEST;
+
+
+export const PERMISSION_ALLOW_STORAGE_ACTIVE = 'allow storage admin activate';
+export const _API_CTRL_SYSTEM_STORAGE_ACTIVE = '/storage/:idOrName/activate';
+
+export const API_CTRL_SYSTEM_STORAGE_ACTIVE = _API_CTRL_SYSTEM + _API_CTRL_SYSTEM_STORAGE_ACTIVE;
+
+

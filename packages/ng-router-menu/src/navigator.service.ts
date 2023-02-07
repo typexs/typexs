@@ -1,9 +1,10 @@
-import {filter, find, get, has, isEmpty, isNull, map, orderBy} from 'lodash';
-import {Inject, Injectable} from '@angular/core';
-import {NavEntry} from './NavEntry';
-import {RouteConfigLoadEnd, Router, Routes, RoutesRecognized} from '@angular/router';
-import {INavTreeEntry} from './INavTreeEntry';
-import {hasComponent, isRedirect} from './lib/Helper';
+import { filter, find, get, has, isEmpty, isNull, map, orderBy } from 'lodash';
+import { Inject, Injectable } from '@angular/core';
+import { NavEntry } from './NavEntry';
+import { RouteConfigLoadEnd, Router, Routes, RoutesRecognized } from '@angular/router';
+import { INavTreeEntry } from './INavTreeEntry';
+import { hasComponent, isRedirect } from './lib/Helper';
+import { C_GT_PATTERN } from './Constants';
 
 
 /**
@@ -76,7 +77,7 @@ export class NavigatorService {
         if (!(_isRedirect || _hasComponent)) {
           // check if path is already present but no component is given
           const routePath = [parent ? parent.getFullPath() : null, route.path].filter(x => !isEmpty(x)).join('/');
-          const entryWithPath = find(this.entries, e => !e.isGroup('pattern') && e.getFullPath() === routePath);
+          const entryWithPath = find(this.entries, e => !e.isGroup(C_GT_PATTERN) && e.getFullPath() === routePath);
           if (!entryWithPath) {
             entry = new NavEntry();
             this.entries.push(entry);
@@ -128,7 +129,7 @@ export class NavigatorService {
     }
 
     // apply groups
-    filter(this.entries, entry => entry.isGroup('pattern')).map(groupEntry => {
+    filter(this.entries, entry => entry.isGroup(C_GT_PATTERN)).map(groupEntry => {
       this.regroup(groupEntry);
     });
   }
@@ -141,7 +142,7 @@ export class NavigatorService {
       const navEntry = navEntries.shift();
       const r = navEntry.route;
       // if route exists
-      if (r && !navEntry.isGroup('pattern')) {
+      if (r && !navEntry.isGroup(C_GT_PATTERN)) {
         r.path = navEntry.path;
         if (!navEntry.isRedirect() && !navEntry.isLazyLoading()) {
           r.children = this.rebuildRoutes(navEntry);
@@ -203,7 +204,7 @@ export class NavigatorService {
         return false;
       }
       const fullPath = e.getFullPath();
-      const res = !e.isGroup('pattern') && regex.test(fullPath);
+      const res = !e.isGroup(C_GT_PATTERN) && regex.test(fullPath);
       if (res) {
         selected.push(e.id);
       }
@@ -212,7 +213,10 @@ export class NavigatorService {
   }
 
 
-  getTree(from: string | NavEntry = null, filterFn?: (entry: NavEntry) => boolean): INavTreeEntry[] {
+  getTree(
+    from: string | NavEntry = null,
+    filterFn?: (entry: NavEntry) => boolean
+  ): INavTreeEntry[] {
     const fromEntry = !isNull(from) ? (from instanceof NavEntry ? from : this.getEntry(from)) : null;
     const _routes: NavEntry[] =
       filter(this.entries,
@@ -252,7 +256,7 @@ export class NavigatorService {
       split.pop();
       const lookup = split.join('/');
       base = find(this.entries, e =>
-        !e.isGroup('pattern') &&
+        !e.isGroup(C_GT_PATTERN) &&
         e.getFullPath() === lookup &&
         !e.isRedirect() &&
         !e.toIgnore()

@@ -1,3 +1,6 @@
+/**
+ * Interface for relevant connection methods
+ */
 export interface IConnection {
 
   /**
@@ -14,4 +17,9 @@ export interface IConnection {
    * Close connection
    */
   close(): Promise<IConnection>;
+
+  /**
+   * Test the current connection configuration
+   */
+  ping?(): Promise<boolean>;
 }

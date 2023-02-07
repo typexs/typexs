@@ -1,6 +1,7 @@
-import {assign, capitalize, get, has, isArray, isEmpty, last} from 'lodash';
-import {Route} from '@angular/router';
-import {hasComponent, isLazyLoading, isRedirect} from './lib/Helper';
+import { assign, capitalize, get, has, isArray, isEmpty, last } from 'lodash';
+import { Route } from '@angular/router';
+import { hasComponent, isLazyLoading, isRedirect } from './lib/Helper';
+import { C_GT_PATTERN, C_GT_ROUTE, T_GROUP_TYPE } from './Constants';
 
 export class NavEntry {
 
@@ -29,7 +30,7 @@ export class NavEntry {
 
   params?: any = {};
 
-  groupType?: 'pattern' | 'route';
+  groupType?: T_GROUP_TYPE;
 
   groups?: string[];
 
@@ -74,7 +75,7 @@ export class NavEntry {
 
     if (!hasComponent(route) && !isRedirect(route)) {
       // is group
-      this.groupType = 'route';
+      this.groupType = C_GT_ROUTE;
       this.groupRegex = this.path.replace('/', '\\/');
     }
 
@@ -121,7 +122,7 @@ export class NavEntry {
     this.route = {
       data: data ? data : {}
     };
-    this.groupType = 'pattern';
+    this.groupType = C_GT_PATTERN;
     this.parseData(data);
     this.groupRegex = pattern;
     if (has(data, 'canActivate')) {
@@ -136,7 +137,7 @@ export class NavEntry {
     return null;
   }
 
-  isGroup(type?: 'route' | 'pattern') {
+  isGroup(type?: T_GROUP_TYPE) {
     if (type) {
       return !!this.groupType && type === this.groupType;
     }

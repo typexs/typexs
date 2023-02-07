@@ -1,12 +1,12 @@
-import {StorageTypesComponent} from './types/storage-types.component';
-import {AuthGuardService} from '@typexs/base-ng';
-import {StorageStructComponent} from './struct/storage-struct.component';
-import {StorageModifyComponent} from './modify/storage-modify.component';
-import {StorageViewComponent} from './view/storage-view.component';
-import {StorageDeleteComponent} from './delete/storage-delete.component';
-import {StorageQueryComponent} from './query/page/storage-query.component';
-import {StorageAggregateComponent} from './aggregate/page/storage-aggregate.component';
-import {Routes} from '@angular/router';
+import { StorageTypesComponent } from './types/storage-types.component';
+import { AuthGuardService } from '@typexs/base-ng';
+import { StorageStructComponent } from './struct/storage-struct.component';
+import { StorageModifyComponent } from './modify/storage-modify.component';
+import { StorageViewComponent } from './view/storage-view.component';
+import { StorageDeleteComponent } from './delete/storage-delete.component';
+import { StorageQueryComponent } from './query/page/storage-query.component';
+import { StorageAggregateComponent } from './aggregate/page/storage-aggregate.component';
+import { Routes } from '@angular/router';
 import {
   PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY,
   PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY_PATTERN,
@@ -15,8 +15,10 @@ import {
   PERMISSION_ALLOW_DELETE_STORAGE_ENTITY_PATTERN,
   PERMISSION_ALLOW_SAVE_STORAGE_ENTITY,
   PERMISSION_ALLOW_SAVE_STORAGE_ENTITY_PATTERN,
-  PERMISSION_ALLOW_STORAGE_ENTITY_VIEW
+  PERMISSION_ALLOW_STORAGES_VIEW
 } from '@typexs/storage';
+import { StorageBackendsComponent } from './backends/storage-backends.component';
+// import { SystemStoragesComponent } from './storages/system-storages.component';
 
 export const STORAGE_ROUTES: Routes = [
   {
@@ -39,7 +41,6 @@ export const STORAGE_ROUTES: Routes = [
       permissions: [
         PERMISSION_ALLOW_ACCESS_STORAGE_METADATA
       ]
-
     },
     canActivate: [AuthGuardService]
   },
@@ -63,7 +64,8 @@ export const STORAGE_ROUTES: Routes = [
       label: 'View entity',
       skip: true,
       permissions: [
-        PERMISSION_ALLOW_STORAGE_ENTITY_VIEW
+        PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY,
+        PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY_PATTERN
       ]
     },
     canActivate: [AuthGuardService]
@@ -116,5 +118,23 @@ export const STORAGE_ROUTES: Routes = [
     },
     canActivate: [AuthGuardService]
   },
+  // {
+  //   path: 'system/storages',
+  //   component: SystemStoragesComponent,
+  //   data: {
+  //     label: 'Storages', group: ['admin', 'system'],
+  //     permissions: [PERMISSION_ALLOW_STORAGES_VIEW]
+  //   }
+  // },
+  {
+    path: 'storage/backends',
+    component: StorageBackendsComponent,
+    data: {
+      label: 'Backend', group: 'admin',
+      permissions: [PERMISSION_ALLOW_STORAGES_VIEW]
+    },
+    canActivate: [AuthGuardService]
+  }
+
 
 ];

@@ -1,7 +1,8 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
-import { AppService, BaseModule } from '@typexs/base-ng';
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule as NgFormsModule } from '@angular/forms';
+import { AppService, BaseModule } from '@typexs/base-ng';
 import { FormsModule } from '@typexs/forms-ng';
 import { StorageService } from './storage.service';
 import { StorageTypesComponent } from './types/storage-types.component';
@@ -11,15 +12,11 @@ import { StorageViewComponent } from './view/storage-view.component';
 import { StorageQueryComponent } from './query/page/storage-query.component';
 import { StorageDeleteComponent } from './delete/storage-delete.component';
 import { StorageBackendsComponent } from './backends/storage-backends.component';
-import { CommonModule } from '@angular/common';
 import { StorageQueryEmbeddedComponent } from './query/embedded/storage-query-embedded.component';
 import { STORAGE_ROUTES } from './routes';
 import { StorageAggregateComponent } from './aggregate/page/storage-aggregate.component';
 import { StorageAggregateEmbeddedComponent } from './aggregate/embedded/storage-aggregate-embedded.component';
-// import { RegistryFactory } from '@allgemein/schema-api';
-// import { REGISTRY_TYPEORM, TypeOrmEntityRegistry } from '@typexs/base';
-// import {StorageRoutingModule} from './module.routing';
-// import {LAZY_STORAGE_ROUTES} from './routes.lazy';
+// import { SystemStoragesComponent } from './storages/system-storages.component';
 
 const PROVIDERS = [
   StorageService
@@ -35,7 +32,8 @@ const COMPONENTS = [
   StorageDeleteComponent,
   StorageBackendsComponent,
   StorageAggregateComponent,
-  StorageAggregateEmbeddedComponent
+  StorageAggregateEmbeddedComponent,
+  // SystemStoragesComponent
 ];
 
 @NgModule({

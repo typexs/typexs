@@ -1,12 +1,12 @@
-import {StorageTypesComponent} from './types/storage-types.component';
-import {AuthGuardService} from '@typexs/base-ng';
-import {StorageStructComponent} from './struct/storage-struct.component';
-import {StorageModifyComponent} from './modify/storage-modify.component';
-import {StorageViewComponent} from './view/storage-view.component';
-import {StorageDeleteComponent} from './delete/storage-delete.component';
-import {StorageQueryComponent} from './query/page/storage-query.component';
-import {StorageAggregateComponent} from './aggregate/page/storage-aggregate.component';
-import {Routes} from '@angular/router';
+import { StorageTypesComponent } from './types/storage-types.component';
+import { AuthGuardService } from '@typexs/base-ng';
+import { StorageStructComponent } from './struct/storage-struct.component';
+import { StorageModifyComponent } from './modify/storage-modify.component';
+import { StorageViewComponent } from './view/storage-view.component';
+import { StorageDeleteComponent } from './delete/storage-delete.component';
+import { StorageQueryComponent } from './query/page/storage-query.component';
+import { StorageAggregateComponent } from './aggregate/page/storage-aggregate.component';
+import { Routes } from '@angular/router';
 import {
   PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY,
   PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY_PATTERN,
@@ -15,7 +15,7 @@ import {
   PERMISSION_ALLOW_DELETE_STORAGE_ENTITY_PATTERN,
   PERMISSION_ALLOW_SAVE_STORAGE_ENTITY,
   PERMISSION_ALLOW_SAVE_STORAGE_ENTITY_PATTERN,
-  PERMISSION_ALLOW_STORAGE_ENTITY_VIEW
+  PERMISSION_ALLOW_STORAGE_ENTITIES
 } from '@typexs/storage';
 
 export const LAZY_STORAGE_ROUTES: Routes = [
@@ -63,7 +63,8 @@ export const LAZY_STORAGE_ROUTES: Routes = [
       label: 'View entity',
       skip: true,
       permissions: [
-        PERMISSION_ALLOW_STORAGE_ENTITY_VIEW
+        PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY,
+        PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY_PATTERN
       ]
     },
     canActivate: [AuthGuardService]

@@ -1,6 +1,6 @@
 import { Inject, IStorageRef, IStorageRefOptions, Log, RuntimeLoader, Storage } from '@typexs/base';
 import { StorageSetting } from '../entities/storage/StorageSetting';
-import { clone, defaults, set } from 'lodash';
+import { clone, defaults, isString, set } from 'lodash';
 
 export interface IStorageLoaderOptions {
   autoload: boolean;
@@ -54,6 +54,31 @@ export class StorageLoader {
   }
 
   /**
+   * Return all storage settings
+   *
+   * @param id
+   */
+  getStorageSettings() {
+    return this.storageRef.getController().find(StorageSetting, null, { limit: 0 });
+  }
+
+  /**
+   * Return a single storage setting by id
+   *
+   * @param id
+   */
+  getStorageSetting(idOrName: number | string) {
+    let id = null;
+    if (isString(idOrName)) {
+      const resolve = StorageSetting.resolveId(idOrName);
+      id = resolve.id;
+    } else {
+      id = idOrName;
+    }
+    return this.storageRef.getController().findOne(StorageSetting, { id: id });
+  }
+
+  /**
    * Check if is active, so when StorageSetting are handled by some repo
    */
   isActive() {
@@ -82,7 +107,7 @@ export class StorageLoader {
    * @param settings
    */
   async loadByStorageSetting(setting: StorageSetting): Promise<IStorageRef> {
-    const storageName = setting.name + '_' + setting.id;
+    const storageName = setting.getId();
     const options: IStorageRefOptions = clone(setting.options);
     // TODO load classes / entities if present
     options.framework = setting.framework;
@@ -98,12 +123,30 @@ export class StorageLoader {
    * @param settings
    */
   async load(storageName: string, setting: IStorageRefOptions): Promise<IStorageRef> {
-    const ref = this.storage.get(storageName);
-    if (ref) {
+    if (this.isLoaded(storageName)) {
       throw new Error(`Storage reference with this name ${storageName} already exists.`);
     }
     return this.storage.registerStorageRef(storageName, setting, this.runtimeLoader);
   }
 
 
+  /**
+   * Check if storage is already loaded
+   *
+   * @param storageName
+   */
+  isLoaded(storageName: string) {
+    const ref = this.storage.get(storageName);
+    return !!ref;
+  }
+
+
+  /**
+   *  Pass unregister to storage
+   *
+   * @param ref
+   */
+  async unregister(ref: IStorageRef | string) {
+    return this.storage.unregister(ref);
+  }
 }

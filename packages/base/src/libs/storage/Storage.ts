@@ -316,6 +316,18 @@ export class Storage {
     return this.getStorageRefs().map(ref => ref.getOptions());
   }
 
+  /**
+   * Unregister a storage reference
+   */
+  async unregister(refOrName: string | IStorageRef) {
+    const name = isString(refOrName) ? refOrName : refOrName.getName();
+    const ref = this.get(name);
+    if (ref) {
+      delete this.storageRefs[name];
+      await ref.shutdown(false);
+    }
+  }
+
   async shutdown() {
     const ps = this.getStorageRefs().map(async x => {
       try {
