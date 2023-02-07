@@ -202,6 +202,15 @@ export class TypeOrmStorageRef extends StorageRef {
   registerEntityIfAnnotated(type: Function) {
     const entryExists = MetadataRegistry.$().getMetadata().find(x => x.target === type && x.metaType === METATYPE_ENTITY);
     if (entryExists) {
+      const refNamespace = this.getRegistry().getLookupRegistry().getNamespace();
+      if (!isEmpty(entryExists.namespace) && entryExists.namespace !== refNamespace) {
+        return;
+      }
+
+      const namespace = MetadataRegistry.$().getMetadata().find(x => x.target === type && x.metaType === METATYPE_NAMESPACE);
+      if (namespace && namespace.attributes?.namespace !== refNamespace) {
+        return;
+      }
       const ref = this.getRegistry().getEntityRefFor(type);
       if (!ref) {
         const entityRef = this.getRegistry().create<TypeOrmEntityRef>(METATYPE_ENTITY, <any>{ ...entryExists, target: type });
