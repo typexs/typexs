@@ -206,7 +206,6 @@ export class TypeOrmStorageRef extends StorageRef {
       if (!isEmpty(entryExists.namespace) && entryExists.namespace !== refNamespace) {
         return;
       }
-
       const namespace = MetadataRegistry.$().getMetadata().find(x => x.target === type && x.metaType === METATYPE_NAMESPACE);
       if (namespace && namespace.attributes?.namespace !== refNamespace) {
         return;
