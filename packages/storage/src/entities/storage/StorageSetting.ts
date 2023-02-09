@@ -10,6 +10,9 @@ export class StorageSetting {
   @Property({ identifier: true, generated: true })
   id: number;
 
+  /**
+   * Name of the framework used
+   */
   @Text()
   @Property()
   framework: string;
@@ -17,9 +20,9 @@ export class StorageSetting {
   @Text()
   @Property()
   type: string;
-
+  
   @Text()
-  @Property()
+  @Property({ unique: true })
   name: string;
 
 

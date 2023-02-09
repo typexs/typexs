@@ -39,8 +39,7 @@ export class ComponentRegistryService {
         return found;
       }
     }
-    const className = ComponentRegistry.getClassName(obj);
-    const list = this.registry.forHandle(className);
+    const list = this.registry.forInstance(obj);
     if (list.length === 0) {
       return null;
     }

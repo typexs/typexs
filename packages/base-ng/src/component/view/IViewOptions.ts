@@ -8,4 +8,8 @@ export interface IViewOptions {
   elem?: {
     reload?: boolean;
   };
+
+  allowViewModeSwitch?: boolean;
+
+  allowEditModeSwitch?: boolean;
 }

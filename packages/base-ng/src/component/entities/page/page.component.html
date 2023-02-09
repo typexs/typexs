@@ -9,12 +9,10 @@
     </div>
 
     <div *ngIf="ready">
-      <txs-view #content
-                [instance]="instance"
+      <txs-view [instance]="instance"
                 allowViewModeSwitch="true"
                 mode="full"
-                [options]="viewOptions"
-                [resolverOptions]="">
+                [options]="viewOptions">
         <div txsViewFallback>
           <txs-simple-json [instance]="instance" [options]="{elem: {reload: true}}"></txs-simple-json>
         </div>

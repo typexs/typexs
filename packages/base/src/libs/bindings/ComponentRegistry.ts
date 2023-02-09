@@ -131,21 +131,33 @@ export class ComponentRegistry implements IBindingRegistry {
     return this.handler.find(f);
   }
 
+  forInstance(obj: object) {
+    const className = ComponentRegistry.getClassName(obj);
+    let list = this.forHandle(className);
+    if (list.length > 0) {
+      list = list.filter(x => {
+        if (x.extra?.condition) {
+          return x.extra.condition(obj);
+        }
+        return true;
+      });
+    }
+    return list;
+  }
 
   forHandle(handle: Function | string) {
     const lookup = isString(handle) ? handle : handle.name;
-    return this.handler.filter(x =>
-      x.handle && (
-        (
-          isFunction(x.handle) && x.handle.name === lookup
-        )
-          || (
-            isString(x.handle) && (new RegExp(x.handle)).test(lookup)
-          ) ||
-          (
-            isRegExp(x.handle) && x.handle.test(lookup)
-          )
+    return this.handler.filter(x => (x.handle && (
+      (
+        isFunction(x.handle) && x.handle.name === lookup
       )
+        || (
+          isString(x.handle) && (new RegExp(x.handle)).test(lookup)
+        ) ||
+        (
+          isRegExp(x.handle) && x.handle.test(lookup)
+        )
+    ))
     );
   }
 

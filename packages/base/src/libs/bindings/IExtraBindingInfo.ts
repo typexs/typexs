@@ -10,14 +10,32 @@ export interface IExtraBindingInfo {
   label?: string;
 
   /**
-   * Tags describing/classifing the binding
+   * Do not show as view mode
    */
-  tags?: string[];
+  hide?: boolean;
+
+  /**
+   * Component allows creation or editing of instance data
+   */
+  editable?: boolean;
+  // /**
+  //  * Tags describing/classifing the binding
+  //  */
+  // tags?: string[];
 
   /**
    * Weight if multiple entries for same context use weight for overriding
    */
   weight?: number;
+
+
+  /**
+   * Conditions for component selection
+   *
+   * @param object
+   */
+  condition?: (object: any) => boolean;
+
 
   /**
    * Freestyle key: value use

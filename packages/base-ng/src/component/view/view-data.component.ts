@@ -1,4 +1,4 @@
-import { clone, get, isEmpty, isFunction, isNull, upperFirst } from 'lodash';
+import { clone, get, isEmpty, isFunction, isNull, isString, upperFirst } from 'lodash';
 import { Component, ComponentFactoryResolver, Inject, Injector, Input, OnInit } from '@angular/core';
 import { AbstractInstancableComponent } from '../abstract-instancable.component';
 import { C_DEFAULT, MTHD_getViewContext } from '../../constants';
@@ -52,6 +52,7 @@ export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implem
     return this.getInstance();
   }
 
+
   constructor(
     @Inject(Injector) public injector: Injector,
     @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver,
@@ -78,15 +79,22 @@ export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implem
     this.__build();
   }
 
+  isAllowViewModeSwitch() {
+    return get(this.options, 'allowViewModeSwitch', this.allowViewModeSwitch);
+  }
+
   private __build() {
     if (!this._build && this.instance) {
       // TODO check permissions for this!
-      if (this.allowViewModeSwitch) {
-        const className = ComponentRegistry.getClassName(this.instance);
-        this.viewModes = this.componentRegistry.registry
-          .forHandle(className)
-          .filter(x => get(x, 'extra.context', false)
-          );
+      if (this.isAllowViewModeSwitch()) {
+        this.viewModes = this.componentRegistry.registry.forInstance(this.instance)
+          .filter(x => {
+            if (x.extra) {
+              const context = isString(x.extra.context) && !isEmpty(x.extra.context);
+              return context && !x.extra.hide;
+            }
+            return false;
+          });
       }
       this.reset();
       this.buildSelf(this.instance);
@@ -117,6 +125,7 @@ export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implem
     const obj = this.getComponentRegistry().getComponentForObject(content, context);
     if (obj && obj.component) {
       if (!isNull(this.viewModes) && isFunction(obj.component['supportedViewModes'])) {
+        // check if static method supportedViewModes is present
         const viewModes: string[] = obj.component['supportedViewModes'].call(null);
         if (!isEmpty(viewModes)) {
           viewModes.forEach(x => {

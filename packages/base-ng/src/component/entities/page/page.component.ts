@@ -26,7 +26,7 @@ export class EntityViewPageComponent implements OnInit {
 
   error: any = null;
 
-  viewOptions: IViewOptions = {elem: {reload: true}};
+  viewOptions: IViewOptions = {elem: {reload: true}, allowViewModeSwitch: true};
 
   resolverOptions: IEntityResolveOptions = {};
 
