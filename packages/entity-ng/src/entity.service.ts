@@ -19,7 +19,7 @@ import {
   API_ENTITY_PREFIX
 } from '@typexs/entity/libs/Constants';
 import { IBuildOptions, IEntityRef } from '@allgemein/schema-api';
-import { C_RAW } from '@typexs/ng';
+import { C_RAW, C_SKIP_BUILDS } from '@typexs/ng';
 
 
 @Injectable()
@@ -67,9 +67,7 @@ export class EntityService extends AbstractQueryService implements IQueringServi
   }
 
   buildOptions(method: STORAGE_REQUEST_MODE, options: any, buildOptions: any) {
-    if (get(options, C_RAW, false)) {
-      set(buildOptions, C_RAW, options.raw);
-    }
+    super.buildOptions(method, options, buildOptions);
   }
 
 }

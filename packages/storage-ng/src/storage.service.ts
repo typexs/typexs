@@ -76,10 +76,9 @@ export class StorageService extends AbstractQueryService implements IQueringServ
 
 
   buildOptions(method: STORAGE_REQUEST_MODE, options: any, buildOptions: any) {
-    if (get(options, C_RAW, false)) {
-      set(buildOptions, C_RAW, options.raw);
-    }
+    super.buildOptions(method, options, buildOptions);
   }
+
 
 
   getStorages(): Observable<IStorageRefMetadata[]> {

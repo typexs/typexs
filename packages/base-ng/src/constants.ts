@@ -1,4 +1,3 @@
-
 export const C_ID = 'ID';
 
 export const C_DEFAULT = 'default';
@@ -8,6 +7,11 @@ export const C_URL_PREFIX = 'urlPrefix';
 export const C_URL_HANDLER = 'urlHandler';
 export const C_URL_TITLE = 'urlTitle';
 export const C_ADMIN = 'admin';
+export const C_RAW = 'raw';
+export const C_SKIP_BUILDS = 'skipBuilds';
+export const C_CREATE_AND_COPY = 'createAndCopy';
+export const C_SKIP_CLASS_NAMESPACE_INFO = 'skipClassNamespaceInfo';
+
 
 /**
  * Topic

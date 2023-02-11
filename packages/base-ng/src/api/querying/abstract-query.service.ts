@@ -1,5 +1,8 @@
 import {
   clone,
+  concat,
+  defaults,
+  get, has,
   isArray,
   isBoolean,
   isEmpty,
@@ -8,10 +11,9 @@ import {
   isPlainObject,
   isString,
   keys,
+  set,
   snakeCase,
-  uniq,
-  values,
-  concat
+  values
 } from 'lodash';
 import { IQueringService } from './IQueringService';
 import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
@@ -22,7 +24,6 @@ import {
   ILookupRegistry,
   IParseOptions,
   JsonSchema,
-  METATYPE_ENTITY,
   METATYPE_PROPERTY,
   RegistryFactory,
   supportsJsonSchemaImport
@@ -42,7 +43,7 @@ import { IUpdateOptions } from './IUpdateOptions';
 import { IBackendClientService } from '../backend/IBackendClientService';
 import { IAuthServiceProvider } from '../auth/IAuthServiceProvider';
 import { resolveNamespaces } from '../../lib/functions';
-import { C_DEFAULT } from '../../constants';
+import { C_CREATE_AND_COPY, C_DEFAULT, C_RAW, C_SKIP_BUILDS, C_SKIP_CLASS_NAMESPACE_INFO } from '../../constants';
 
 
 export abstract class AbstractQueryService implements IQueringService {
@@ -69,7 +70,10 @@ export abstract class AbstractQueryService implements IQueringService {
     this._authService = authService;
     this._entityResolverService = entityResolverService;
     this._entityResolverService.registerService(this);
-    this.options = options;
+    this.options = defaults(options || {},
+      <IQueryServiceOptions>{
+        allowedBuildKeys: [C_RAW, C_SKIP_BUILDS, C_CREATE_AND_COPY, C_SKIP_CLASS_NAMESPACE_INFO]
+      });
     this.initialize();
 
   }
@@ -301,10 +305,13 @@ export abstract class AbstractQueryService implements IQueringService {
     return null;
   }
 
-
-  buildOptions?(
-    method: STORAGE_REQUEST_MODE,
-    options: any /* IFindOptions*/, buildOptions: IBuildOptions = {}) {
+  buildOptions(method: STORAGE_REQUEST_MODE, options: any, buildOptions: IBuildOptions) {
+    const keys = get(this.options, 'allowedBuildKeys', [C_RAW, C_SKIP_BUILDS, C_CREATE_AND_COPY, C_SKIP_CLASS_NAMESPACE_INFO]);
+    for (const key of keys) {
+      if (has(options, key)) {
+        set(buildOptions, key, get(options, key));
+      }
+    }
   }
 
   buildEntity?(

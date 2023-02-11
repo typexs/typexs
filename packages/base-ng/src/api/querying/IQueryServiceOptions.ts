@@ -1,5 +1,5 @@
-import {STORAGE_REQUEST_MODE} from './Constants';
-import {IRoutePointer} from '../backend/IRoutePointer';
+import { STORAGE_REQUEST_MODE } from './Constants';
+import { IRoutePointer } from '../backend/IRoutePointer';
 
 /**
  * Options for query service
@@ -12,6 +12,11 @@ export interface IQueryServiceOptions {
    * define default route in ng
    */
   ngRoutePrefix: string;
+
+  /**
+   * Keys allowed in build info
+   */
+  allowedBuildKeys?: string[];
 
   /**
    * Name of the registry
