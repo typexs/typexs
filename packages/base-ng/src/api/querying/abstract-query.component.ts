@@ -45,6 +45,9 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
   name: string;
 
   @Input()
+  entityName: string;
+
+  @Input()
   options: IQueryOptions = {};
 
   _params: IQueryParams;
@@ -85,6 +88,16 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
   queringService: IQueringService;
 
+  getEntityName() {
+    if (this.name) {
+      return this.name;
+    }
+    if (this.entityName) {
+      return this.entityName;
+    }
+    throw new Error('entity name is not present');
+  }
+
 
   setQueryService(storageService: IQueringService) {
     this.queringService = storageService;
@@ -97,6 +110,10 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
   getQueryService() {
     return this.queringService;
+  }
+
+  hasQueryService() {
+    return !!this.queringService;
   }
 
   applyInitialOptions() {
@@ -129,7 +146,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
       this.onGridEvent.bind(this)
     );
 
-    this.queringService.isLoaded().subscribe(x => {
+    this.getQueryService().isLoaded().subscribe(x => {
       const success = this.findEntityRef();
       // TODO handle if entity ref not found or loaded
       if (success) {
@@ -198,9 +215,9 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
 
   findEntityRef() {
-    this.entityRef = this.getQueryService().getEntityRefForName(this.name);
+    this.entityRef = this.getQueryService().getEntityRefForName(this.getEntityName());
     if (!this.entityRef) {
-      this.error = `Can't find entity type for ${this.name}.`;
+      this.error = `Can't find entity type for ${this.getEntityName()}.`;
       return false;
     }
     return true;
@@ -220,7 +237,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
         // add property reference to column definition
         set(column, C_PROPERTY, x);
-        set(column, C_URL_PREFIX, this.queringService.getNgUrlPrefix());
+        set(column, C_URL_PREFIX, this.getQueryService().getNgUrlPrefix());
 
         let cellRenderer: string = CC_GRID_CELL_VALUE;
         if (x.isReference()) {
@@ -362,7 +379,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
       if (this.options.beforeQuery) {
         this.options.beforeQuery(executeQuery, queryOptions);
       }
-      this.queringService.query(this.name, executeQuery, queryOptions)
+      this.getQueryService().query(this.getEntityName(), executeQuery, queryOptions)
         .subscribe(
           (results: any) => {
             if (results) {
@@ -401,7 +418,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
         executeQuery.push({ $match: mangoQuery });
       }
 
-      this.queringService.aggregate(this.name, executeQuery, queryOptions)
+      this.getQueryService().aggregate(this.getEntityName(), executeQuery, queryOptions)
         .subscribe(
           (results: any) => {
             if (results) {
