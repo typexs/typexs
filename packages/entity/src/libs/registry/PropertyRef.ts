@@ -10,7 +10,7 @@ import {
   METATYPE_PROPERTY,
   XS_ID_SEPARATOR
 } from '@allgemein/schema-api';
-import { DateUtils, NotSupportedError, NotYetImplementedError } from '@typexs/base';
+import { DateUtils, K_GENERATED, K_IDENTIFIER, NotSupportedError, NotYetImplementedError } from '@typexs/base';
 import { ExprDesc } from '@allgemein/expressions';
 import { OrderDesc } from '../../libs/descriptors/OrderDesc';
 import { K_NULLABLE, K_STORABLE } from '../Constants';
@@ -69,9 +69,9 @@ export class PropertyRef extends DefaultPropertyRef {
     if ((isBoolean(options.id) && options.id) ||
       (isBoolean(options.pk) && options.pk) ||
       (isBoolean(options.auto) && options.auto)) {
-      this.setOption('identifier', true);
+      this.setOption(K_IDENTIFIER, true);
       if ((isBoolean(options.auto))) {
-        this.setOption('generated', true);
+        this.setOption(K_GENERATED, true);
       }
     }
   }
@@ -207,7 +207,7 @@ export class PropertyRef extends DefaultPropertyRef {
         if (isString(data)) {
           return data;
         } else if (data) {
-          throw new NotYetImplementedError('value ' + data);
+          throw new NotYetImplementedError('value string ' + JSON.stringify(data));
         } else {
           return null;
         }
@@ -231,12 +231,12 @@ export class PropertyRef extends DefaultPropertyRef {
           } else if (/^\d+$/.test(data)) {
             return parseInt(data, 10);
           } else {
-            throw new NotYetImplementedError('value ' + data);
+            throw new NotYetImplementedError('value double ' + JSON.stringify(data));
           }
         } else if (isNumber(data)) {
           return data;
         } else if (data) {
-          throw new NotYetImplementedError('value ' + data);
+          throw new NotYetImplementedError('value double2 ' + JSON.stringify(data));
         } else {
           return null;
         }
@@ -248,8 +248,13 @@ export class PropertyRef extends DefaultPropertyRef {
         } else {
           return DateUtils.fromISO(data);
         }
+      case 'json':
+      case 'object':
+      case 'array':
+        return data;
+
       default:
-        throw new NotYetImplementedError('value ' + data);
+        throw new NotYetImplementedError('value default ' + JSON.stringify(data));
     }
   }
 

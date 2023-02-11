@@ -61,6 +61,10 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
     return get(this.options, path, fallback);
   }
 
+  getOptions(): IEntityViewOptions {
+    return this.options;
+  }
+
   isLoaded() {
     return !!this.instance;
   }

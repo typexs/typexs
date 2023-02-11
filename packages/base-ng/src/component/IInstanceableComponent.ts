@@ -1,7 +1,7 @@
 export interface IInstanceableComponent<T> {
 
 
-  getOptions?(): string;
+  getOptions?(): any;
 
   setOptions?(opts: any): void;
 

@@ -375,23 +375,18 @@ export class StorageAPIController {
       throw new Error('multiple entity ref are not supported for "get"');
     }
 
-
     const options: IFindOptions = {
       limit: 0
     };
 
     StorageAPIController.checkOptions(opts, options);
-
-
     let conditions = controller.entityIdQuery ? controller.entityIdQuery(ref, id) : Expressions.parseLookupConditions(ref, id);
-
     let result = null;
     if (isArray(conditions)) {
       if (conditions.length > 1) {
         // multiple ids should be bound by 'or', else it would be 'and'
         conditions = { $or: conditions };
       }
-
       result = await controller.find(ref.getClassRef().getClass(), conditions, options);
       StorageAPIController._afterEntity(ref, result);
       const results = {
