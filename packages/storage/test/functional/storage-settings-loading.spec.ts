@@ -266,7 +266,7 @@ class StorageSettingsLoadingSpec {
     settings = await ref.getController().findOne(StorageSetting);
     const newRef = await loader.loadByStorageSetting(settings);
     expect(newRef.getOptions()).to.deep.include({
-      name: 'new_dyna_1',
+      name: 'new_dyna',
       framework: 'typeorm',
       type: 'sqlite',
       database: ':memory:'

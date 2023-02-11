@@ -172,7 +172,7 @@ class StorageSettingsLoadingSpec {
       active: true
     });
 
-    const storageName = refOptions.name + '_1';
+    const storageName = refOptions.name;
     const names = bootstrap.getStorage().getStorageRefs().map(x => x.getName());
     expect(names).to.deep.eq(['default', storageName]);
 
