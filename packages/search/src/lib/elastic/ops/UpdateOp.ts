@@ -54,6 +54,10 @@ export class UpdateOp<T> implements IUpdateOp<T> {
     return this.options;
   }
 
+  getController(): ElasticEntityController {
+    return this.controller;
+  }
+
   async run(entityType: Function | string | ClassType<T> | (Function | string | ClassType<T>)[],
     condition: any,
     update: any,

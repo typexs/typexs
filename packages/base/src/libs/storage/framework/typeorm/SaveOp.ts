@@ -55,6 +55,10 @@ export class SaveOp<T> implements ISaveOp<T> {
     return RegistryFactory.get(this.getNamespace());
   }
 
+  getController(): TypeOrmEntityController {
+    return this.controller;
+  }
+
 
   async run(object: T[] | T, options?: ISaveOptions): Promise<T[] | T> {
     defaults(options, { validate: false, raw: false });
@@ -87,7 +91,7 @@ export class SaveOp<T> implements ISaveOp<T> {
         refs[entityName] = this.controller.getStorageRef().getRegistry().getEntityRefFor(entityName);
         // await this.controller.invoker.use(EntityControllerApi).prepareEntities(this.objects, this);
         if (!jsonPropertySupport) {
-          convertPropertyValueJsonToString(refs[entityName], resolveByEntityRef[entityName]);
+          convertPropertyValueJsonToString(refs[entityName], resolveByEntityRef[entityName], true);
         }
       }
 

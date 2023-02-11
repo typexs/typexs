@@ -25,6 +25,8 @@ export class DistributedAggregateOp
 
   protected entityControllerRegistry: EntityControllerRegistry;
 
+  controller: DistributedStorageEntityController;
+
   constructor(system: System, entityControllerRegistry: EntityControllerRegistry) {
     super(system, DistributedAggregateRequest, DistributedAggregateResponse);
     this.entityControllerRegistry = entityControllerRegistry;
@@ -36,7 +38,12 @@ export class DistributedAggregateOp
     return this.options;
   }
 
+  getController(): DistributedStorageEntityController {
+    return this.controller;
+  }
+
   prepare(controller: DistributedStorageEntityController) {
+    this.controller = controller;
     return this;
   }
 

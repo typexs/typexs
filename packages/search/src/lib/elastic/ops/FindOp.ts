@@ -3,7 +3,7 @@ import { C_DEFAULT, JsonUtils } from '@allgemein/base';
 import { ClassType } from '@allgemein/schema-api';
 import { ElasticEntityController } from '../ElasticEntityController';
 import { IFindOp } from '@typexs/base/libs/storage/framework/IFindOp';
-import { Config, NotYetImplementedError, StorageError, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
+import { Config, IEntityController, NotYetImplementedError, StorageError, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
 import { IndexElasticApi } from '../../../api/IndexElastic.api';
 import { ElasticMangoWalker, ES_DEFAULT_TERM_QUERY, ES_DEFAULT_TERM_QUERY_LIKE, IElasticQueryConfig } from '../ElasticMangoWalker';
 import { IndexEntityRef } from '../../registry/IndexEntityRef';
@@ -49,6 +49,10 @@ export class FindOp<T> implements IFindOp<T> {
 
   getEntityType() {
     return this.entityTypes as any;
+  }
+
+  getController(): ElasticEntityController {
+    return this.controller;
   }
 
   getEntityTypes() {

@@ -1,15 +1,15 @@
 import * as _ from 'lodash';
 
-import {IDeleteOp} from '../IDeleteOp';
-import {TypeOrmUtils} from './TypeOrmUtils';
+import { IDeleteOp } from '../IDeleteOp';
+import { TypeOrmUtils } from './TypeOrmUtils';
 import { ClassType, RegistryFactory } from '@allgemein/schema-api';
-import {TypeOrmSqlConditionsBuilder} from './TypeOrmSqlConditionsBuilder';
-import {TypeOrmEntityRegistry} from './schema/TypeOrmEntityRegistry';
-import {IDeleteOptions} from '../IDeleteOptions';
-import {DeleteQueryBuilder} from 'typeorm';
-import {EntityControllerApi} from '../../../../api/EntityController.api';
-import {TypeOrmEntityController} from './TypeOrmEntityController';
-import {TypeOrmConnectionWrapper} from './TypeOrmConnectionWrapper';
+import { TypeOrmSqlConditionsBuilder } from './TypeOrmSqlConditionsBuilder';
+import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
+import { IDeleteOptions } from '../IDeleteOptions';
+import { DeleteQueryBuilder } from 'typeorm';
+import { EntityControllerApi } from '../../../../api/EntityController.api';
+import { TypeOrmEntityController } from './TypeOrmEntityController';
+import { TypeOrmConnectionWrapper } from './TypeOrmConnectionWrapper';
 import { REGISTRY_TYPEORM } from './Constants';
 
 
@@ -55,6 +55,11 @@ export class DeleteOp<T> implements IDeleteOp<T> {
 
   getRegistry() {
     return RegistryFactory.get(this.getNamespace());
+  }
+
+
+  getController(): TypeOrmEntityController {
+    return this.controller;
   }
 
   async run(object: T[] | T | ClassType<T>, conditions: any = null, options: IDeleteOptions = {}): Promise<number> {

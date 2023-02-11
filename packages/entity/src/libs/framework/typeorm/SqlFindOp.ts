@@ -72,6 +72,10 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
     return NAMESPACE_BUILT_ENTITY;
   }
 
+  getController(): EntityController {
+    return this.controller;
+  }
+
 
   visitDataProperty(propertyRef: PropertyRef,
     sourceRef: PropertyRef | EntityRef | ClassRef,
@@ -944,7 +948,6 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
     this.hookAbortCondition = get(options, 'hooks.abortCondition', this.hookAbortCondition);
     this.hookAfterEntity = get(options, 'hooks.afterEntity', this.hookAfterEntity);
     const entityRef = EntityRegistry.$().getClassRefFor(entityType, METATYPE_ENTITY).getEntityRef() as EntityRef;
-    await this.controller.invoker.use(EntityControllerApi).doBeforeFind(this);
 
     let result, error;
     try {

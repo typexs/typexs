@@ -44,6 +44,11 @@ export class SaveOp<T> implements ISaveOp<T> {
     return this.isArray;
   }
 
+  getController(): ElasticEntityController {
+    return this.controller;
+  }
+
+
   async run(object: T[] | T, options?: IElasticSaveOptions): Promise<T | T[]> {
     options = options || {};
     defaults(options, { validate: false, raw: false, passResults: false });

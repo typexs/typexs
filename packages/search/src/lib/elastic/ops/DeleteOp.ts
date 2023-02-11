@@ -48,6 +48,9 @@ export class DeleteOp<T> implements IDeleteOp<T> {
     return this.conditions;
   }
 
+  getController(): ElasticEntityController {
+    return this.controller;
+  }
 
   async run(object: T[] | T | ClassType<T>,
     conditions: any = null,

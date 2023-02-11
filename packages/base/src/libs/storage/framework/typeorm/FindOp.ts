@@ -56,6 +56,9 @@ export class FindOp<T> implements IFindOp<T> {
   getRegistry() {
     return RegistryFactory.get(this.getNamespace());
   }
+  getController(): TypeOrmEntityController {
+    return this.controller;
+  }
 
 
   async run(entityType: Function | string | ClassType<T>, findConditions?: any, options?: IFindOptions): Promise<T[]> {

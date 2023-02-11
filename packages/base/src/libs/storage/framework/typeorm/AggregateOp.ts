@@ -31,6 +31,7 @@ import { GROUP_ID } from '@allgemein/mango-expressions/operators/stage/Group';
 import { EntityControllerApi } from '../../../../api/EntityController.api';
 import { REGISTRY_TYPEORM } from './Constants';
 import { clone } from 'lodash';
+import { IEntityController } from '../../IEntityController';
 
 
 export interface ISqlAggregateParam {
@@ -94,6 +95,9 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
     return RegistryFactory.get(this.getNamespace());
   }
 
+  getController(): TypeOrmEntityController {
+    return this.controller;
+  }
 
   async run(cls: Function | string | ClassType<any>, pipeline: any[], options: IAggregateOptions = {}): Promise<any[]> {
     if (_.isEmpty(pipeline) || !_.isArray(pipeline)) {

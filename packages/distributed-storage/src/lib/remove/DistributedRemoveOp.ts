@@ -33,6 +33,8 @@ export class DistributedRemoveOp<T>
 
   protected entityControllerRegistry: EntityControllerRegistry;
 
+  controller: DistributedStorageEntityController;
+
   constructor(system: System, entityControllerRegistry: EntityControllerRegistry) {
     super(system, DistributedRemoveRequest, DistributedRemoveResponse);
     this.entityControllerRegistry = entityControllerRegistry;
@@ -51,7 +53,12 @@ export class DistributedRemoveOp<T>
     return this.options;
   }
 
+  getController(): DistributedStorageEntityController {
+    return this.controller;
+  }
+
   prepare(controller: DistributedStorageEntityController) {
+    this.controller = controller;
     return this;
   }
 

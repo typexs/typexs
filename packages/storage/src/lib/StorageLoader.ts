@@ -70,8 +70,13 @@ export class StorageLoader {
   getStorageSetting(idOrName: number | string) {
     let id = null;
     if (isString(idOrName)) {
-      const resolve = StorageSetting.resolveId(idOrName);
-      id = resolve.id;
+      if (/\d+/.test(idOrName)) {
+        id = parseInt(idOrName, 10);
+      } else {
+        const resolve = StorageSetting.resolveId(idOrName);
+        id = resolve.id;
+      }
+
     } else {
       id = idOrName;
     }

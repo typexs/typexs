@@ -6,7 +6,14 @@ import { IDataExchange } from '../IDataExchange';
 import { EntityController } from '../../EntityController';
 import { NAMESPACE_BUILT_ENTITY, XS_P_PREV_ID } from '../../Constants';
 import { ClassRef } from '@allgemein/schema-api';
-import { EntityControllerApi, IDeleteOp, IDeleteOptions, NotSupportedError, TypeOrmConnectionWrapper } from '@typexs/base';
+import {
+  EntityControllerApi,
+  IDeleteOp,
+  IDeleteOptions,
+  NotSupportedError,
+  TypeOrmConnectionWrapper,
+  TypeOrmEntityController
+} from '@typexs/base';
 
 
 export type IDeleteData = IDataExchange<any[]>;
@@ -30,6 +37,11 @@ export class SqlDeleteOp<T> extends EntityDefTreeWorker implements IDeleteOp<T> 
   getNamespace(): string {
     return NAMESPACE_BUILT_ENTITY;
   }
+
+  getController(): EntityController {
+    return this.em;
+  }
+
 
 
   visitDataProperty(propertyDef: PropertyRef, sourceDef: EntityRef | ClassRef, sources: IDeleteData, targets: IDeleteData): void {

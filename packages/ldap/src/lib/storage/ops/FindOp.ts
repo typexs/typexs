@@ -38,6 +38,11 @@ export class FindOp<T> implements IFindOp<T> {
     return this.options;
   }
 
+  getController(): LdapEntityController {
+    return this.controller;
+  }
+
+
   /**
    * Allow wildcard for search over all
    *

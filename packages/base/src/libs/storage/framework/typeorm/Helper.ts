@@ -1,10 +1,8 @@
 import { IEntityRef, IPropertyRef } from '@allgemein/schema-api';
-import * as _ from 'lodash';
 import { C_TYPEORM, C_TYPEORM_REGULAR, K_STRINGIFY_OPTION } from './Constants';
 import { ITypeOrmEntityOptions } from './schema/ITypeOrmEntityOptions';
 import { TableMetadataArgs } from 'typeorm/metadata-args/TableMetadataArgs';
-import { assign, defaults, get } from 'lodash';
-import { boolean } from 'yargs';
+import { assign, defaults, get, has, isArray, isString } from 'lodash';
 
 /**
  * Helper to convert ITypeormEntityOptions to TableMetadataArgs
@@ -34,8 +32,17 @@ export function createTableTypeOrmOptions(options: ITypeOrmEntityOptions, newEnt
 
 }
 
-export function convertPropertyValueJsonToString(entityRef: IEntityRef, entities: any[]) {
-  const check = _.isArray(entities) ? entities : [entities];
+/**
+ * Support for storages which not support json as data type.
+ * This function converts the as "stringify" defined IPropertyRef's for given entities from json to string.
+ * Use on loading of data.
+ *
+ * @param entityRef
+ * @param entities
+ * @param strict
+ */
+export function convertPropertyValueJsonToString(entityRef: IEntityRef, entities: any[], strict: boolean = false) {
+  const check = isArray(entities) ? entities : [entities];
   const structuredProps = entityRef.getPropertyRefs()
     .filter(
       (x: IPropertyRef) =>
@@ -43,8 +50,11 @@ export function convertPropertyValueJsonToString(entityRef: IEntityRef, entities
     );
   for (const structuredProp of structuredProps) {
     for (const entity of check) {
+      if (strict && !has(entity, structuredProp.name)) {
+        continue;
+      }
       const value = entity[structuredProp.name];
-      if (!_.isString(value)) {
+      if (!isString(value)) {
         try {
           entity[structuredProp.name] = JSON.stringify(value);
         } catch (e) {
@@ -54,16 +64,28 @@ export function convertPropertyValueJsonToString(entityRef: IEntityRef, entities
   }
 }
 
-export function convertPropertyValueStringToJson(entityRef: IEntityRef, entities: any[]) {
-  const check = _.isArray(entities) ? entities : [entities];
+/**
+ * Support for storages which not support json as data type.
+ * This function converts the as "stringify" defined IPropertyRef's for given entities from string to json.
+ * Use on loading of data.
+ *
+ * @param entityRef
+ * @param entities
+ * @param strict
+ */
+export function convertPropertyValueStringToJson(entityRef: IEntityRef, entities: any[], strict: boolean = false) {
+  const check = isArray(entities) ? entities : [entities];
   const structuredProps = entityRef.getPropertyRefs().filter(
     (x: IPropertyRef) =>
       x.getOptions(K_STRINGIFY_OPTION, false)
   );
   for (const structuredProp of structuredProps) {
     for (const entity of check) {
+      if (strict && !has(entity, structuredProp.name)) {
+        continue;
+      }
       const value = entity[structuredProp.name];
-      if (_.isString(value)) {
+      if (isString(value)) {
         try {
           entity[structuredProp.name] = JSON.parse(value);
         } catch (e) {

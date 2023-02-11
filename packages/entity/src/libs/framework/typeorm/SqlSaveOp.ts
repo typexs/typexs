@@ -39,6 +39,10 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
     return NAMESPACE_BUILT_ENTITY;
   }
 
+  getController(): EntityController {
+    return this.entityController;
+  }
+
 
   visitDataProperty(propertyDef: PropertyRef,
     sourceDef: PropertyRef | EntityRef | IClassRef,

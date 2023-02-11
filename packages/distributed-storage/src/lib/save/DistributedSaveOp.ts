@@ -19,7 +19,7 @@ import { __CLASS__, __REGISTRY__ } from '@typexs/base/libs/Constants';
 
 export class DistributedSaveOp<T>
   extends AbstractMessage<DistributedSaveRequest,
-  DistributedSaveResponse> implements ISaveOp<T> {
+    DistributedSaveResponse> implements ISaveOp<T> {
 
   constructor(system: System, entityControllerRegistry: EntityControllerRegistry) {
     super(system, DistributedSaveRequest, DistributedSaveResponse);
@@ -36,6 +36,7 @@ export class DistributedSaveOp<T>
 
   protected entityControllerRegistry: EntityControllerRegistry;
 
+  controller: DistributedStorageEntityController;
 
   getOptions(): IDistributedSaveOptions & IMessageOptions {
     return this.options;
@@ -49,7 +50,12 @@ export class DistributedSaveOp<T>
     return this.isArray;
   }
 
+  getController(): DistributedStorageEntityController {
+    return this.controller;
+  }
+
   prepare(controller: DistributedStorageEntityController) {
+    this.controller = controller;
     return this;
   }
 

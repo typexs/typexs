@@ -1,17 +1,17 @@
-import {DistributedStorageEntityController} from '../DistributedStorageEntityController';
-import {System} from '@typexs/base/libs/system/System';
-import {ClassType} from '@allgemein/schema-api';
-import {AbstractMessage} from '@typexs/base/libs/messaging/AbstractMessage';
-import {EntityControllerRegistry} from '@typexs/base/libs/storage/EntityControllerRegistry';
-import {DistributedUpdateRequest} from './DistributedUpdateRequest';
-import {DistributedUpdateResponse} from './DistributedUpdateResponse';
-import {IDistributedUpdateOptions} from './IDistributedUpdateOptions';
-import {IUpdateOp} from '@typexs/base/libs/storage/framework/IUpdateOp';
-import {IWorkerInfo} from '@typexs/base/libs/worker/IWorkerInfo';
-import {DistributedQueryWorker} from '../../workers/DistributedQueryWorker';
+import { DistributedStorageEntityController } from '../DistributedStorageEntityController';
+import { System } from '@typexs/base/libs/system/System';
+import { ClassType } from '@allgemein/schema-api';
+import { AbstractMessage } from '@typexs/base/libs/messaging/AbstractMessage';
+import { EntityControllerRegistry } from '@typexs/base/libs/storage/EntityControllerRegistry';
+import { DistributedUpdateRequest } from './DistributedUpdateRequest';
+import { DistributedUpdateResponse } from './DistributedUpdateResponse';
+import { IDistributedUpdateOptions } from './IDistributedUpdateOptions';
+import { IUpdateOp } from '@typexs/base/libs/storage/framework/IUpdateOp';
+import { IWorkerInfo } from '@typexs/base/libs/worker/IWorkerInfo';
+import { DistributedQueryWorker } from '../../workers/DistributedQueryWorker';
 import * as _ from 'lodash';
-import {ClassUtils} from '@allgemein/base';
-import {C_WORKERS} from '@typexs/base/libs/worker/Constants';
+import { ClassUtils } from '@allgemein/base';
+import { C_WORKERS } from '@typexs/base/libs/worker/Constants';
 
 
 export class DistributedUpdateOp<T>
@@ -33,12 +33,14 @@ export class DistributedUpdateOp<T>
 
   entityType: ClassType<T>;
 
+  controller: DistributedStorageEntityController;
 
   getOptions(): IDistributedUpdateOptions {
     return this.options;
   }
 
   prepare(controller: DistributedStorageEntityController) {
+    this.controller = controller;
     return this;
   }
 
@@ -53,6 +55,11 @@ export class DistributedUpdateOp<T>
   getEntityType(): ClassType<T> {
     return this.entityType;
   }
+
+  getController(): DistributedStorageEntityController {
+    return this.controller;
+  }
+
 
   async run(cls: ClassType<T>, condition: any, update: any, options?: IDistributedUpdateOptions): Promise<number> {
     this.entityType = cls;

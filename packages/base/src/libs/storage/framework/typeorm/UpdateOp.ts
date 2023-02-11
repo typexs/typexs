@@ -57,6 +57,10 @@ export class UpdateOp<T> implements IUpdateOp<T> {
     return RegistryFactory.get(this.getNamespace());
   }
 
+  getController(): TypeOrmEntityController {
+    return this.controller;
+  }
+
 
   async run(cls: ClassType<T>, condition: any, update: any, options?: IUpdateOptions): Promise<number> {
     this.entityType = cls;
@@ -117,7 +121,7 @@ export class UpdateOp<T> implements IUpdateOp<T> {
       if (hasUpdate) {
 
         if (!jsonPropertySupport) {
-          convertPropertyValueJsonToString(this.entityRef, updateData);
+          convertPropertyValueJsonToString(this.entityRef, updateData, true);
         }
         qb.set(updateData);
 
