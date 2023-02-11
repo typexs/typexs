@@ -1,6 +1,7 @@
 <div class="card-embedded">
 
-  <txs-free-query-input *ngIf="options.freeQueryBuilder"
+  <txs-free-query-input
+    *ngIf="options.freeQueryBuilder"
     (queryState)="onQueryAction($event)"
   >
   </txs-free-query-input>
@@ -12,6 +13,7 @@
     [options]="options"
     [(params)]="params"
     (doQuery)="doQuery($event)"
+    (gridReady)="onGridReady($event)"
   ></txs-datatable>
 
 </div>
