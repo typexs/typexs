@@ -172,7 +172,7 @@ class SystemStorageInfoControllerSpec {
 
   @test
   async 'test storage settings'() {
-    const url = server.url() + '/' + C_API + API_CTRL_SYSTEM_STORAGE_TEST.replace(':idOrName', storageSetting.getId());
+    const url = server.url() + '/' + C_API + API_CTRL_SYSTEM_STORAGE_TEST.replace(':idOrName', storageSetting.name);
     const res = await http.get(url, { responseType: 'json', passBody: true });
     expect(res).to.be.true;
   }
@@ -184,7 +184,7 @@ class SystemStorageInfoControllerSpec {
     storageSetting = await ctrl.findOne(StorageSetting, { id: storageSetting.id });
     expect(storageSetting.active).to.be.false;
 
-    const url = server.url() + '/' + C_API + API_CTRL_SYSTEM_STORAGE_ACTIVE.replace(':idOrName', storageSetting.getId());
+    const url = server.url() + '/' + C_API + API_CTRL_SYSTEM_STORAGE_ACTIVE.replace(':idOrName', storageSetting.name);
     const res = await http.get(url, { responseType: 'json', passBody: true });
     expect(res).to.be.true;
 

@@ -68,19 +68,17 @@ export class StorageLoader {
    * @param id
    */
   getStorageSetting(idOrName: number | string) {
-    let id = null;
+    const query: { id?: number; name?: string } = {};
     if (isString(idOrName)) {
       if (/\d+/.test(idOrName)) {
-        id = parseInt(idOrName, 10);
+        query.id = parseInt(idOrName, 10);
       } else {
-        const resolve = StorageSetting.resolveId(idOrName);
-        id = resolve.id;
+        query.name = idOrName;
       }
-
     } else {
-      id = idOrName;
+      query.id = idOrName;
     }
-    return this.storageRef.getController().findOne(StorageSetting, { id: id });
+    return this.storageRef.getController().findOne(StorageSetting, query);
   }
 
   /**
@@ -112,13 +110,13 @@ export class StorageLoader {
    * @param settings
    */
   async loadByStorageSetting(setting: StorageSetting): Promise<IStorageRef> {
-    const storageName = setting.getId();
     const options: IStorageRefOptions = clone(setting.options);
     // TODO load classes / entities if present
     options.framework = setting.framework;
+    set(options, 'storageId', setting.id);
     set(options, 'name', setting.name);
     set(options, 'type', setting.type);
-    return this.load(storageName, options);
+    return this.load(setting.name, options);
   }
 
 

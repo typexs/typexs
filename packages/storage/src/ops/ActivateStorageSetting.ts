@@ -27,8 +27,8 @@ export class ActivateStorageSetting {
     try {
       this.settings.active = true;
       await this.loader.getStorageRef().getController().save(this.settings);
-      if (this.loader.isLoaded(this.settings.getId())) {
-        await this.loader.unregister(this.settings.getId());
+      if (this.loader.isLoaded(this.settings.name)) {
+        await this.loader.unregister(this.settings.name);
       }
       await this.loader.loadByStorageSetting(this.settings);
       this.success = true;

@@ -23,7 +23,7 @@ export class TestStorageSettings {
     this.success = false;
     try {
       // TODO check if loaded
-      if(!this.loader.isLoaded(this.settings.getId())){
+      if(!this.loader.isLoaded(this.settings.name)){
         const ref = await this.loader.loadByStorageSetting(this.settings);
         const c = await ref.connect();
         if (c['ping']) {
