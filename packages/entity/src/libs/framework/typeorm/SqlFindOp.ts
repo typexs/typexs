@@ -17,7 +17,7 @@ import {
 } from 'lodash';
 import { EntityDefTreeWorker } from '../EntityDefTreeWorker';
 import { EntityController } from '../../EntityController';
-import { EntityControllerApi, IFindOp, NotYetImplementedError, TypeOrmConnectionWrapper } from '@typexs/base';
+import { EntityControllerApi, IFindOp, NotYetImplementedError, TypeOrmConnectionWrapper, TypeOrmStorageRef } from '@typexs/base';
 import { PropertyRef } from '../../registry/PropertyRef';
 import { EntityRef } from '../../registry/EntityRef';
 import { NAMESPACE_BUILT_ENTITY, XS_P_ABORTED, XS_P_PROPERTY, XS_P_PROPERTY_ID, XS_P_SEQ_NR, XS_P_TYPE } from '../../Constants';
@@ -49,10 +49,13 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
 
   entityType: any;
 
+  private supportsJson: boolean = false;
+
 
   constructor(controller: EntityController) {
     super();
     this.controller = controller;
+    this.supportsJson = (this.controller.getStorageRef() as TypeOrmStorageRef).getSchemaHandler().supportsJson();
   }
 
 
@@ -80,6 +83,18 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
   visitDataProperty(propertyRef: PropertyRef,
     sourceRef: PropertyRef | EntityRef | ClassRef,
     sources: IFindData, targets: IFindData): void {
+    if (!this.supportsJson) {
+      const type = propertyRef.getType();
+      if (['json', 'object', 'array'].includes(type)) {
+        targets.next.map(x => {
+          try {
+            x[propertyRef.name] = JSON.parse(x[propertyRef.name]);
+          } catch (e) {
+          }
+        });
+      }
+    }
+
   }
 
   /**

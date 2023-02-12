@@ -4,9 +4,6 @@
   "tag": "v2-dev",
   "main": "index.js",
   "browser": "browser.js",
-  "directories": {
-    "doc": "packages/testing/docs/de"
-  },
   "scripts": {
     "ng": "npx ng",
     "start": "npx concurrently \"cd packages/app && npx ng serve\" \"npx typexs server --nodeId server\"",

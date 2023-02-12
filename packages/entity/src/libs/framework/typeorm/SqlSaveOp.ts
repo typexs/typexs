@@ -1,4 +1,12 @@
-import { DataContainer, EntityControllerApi, ISaveOp, ISaveOptions, NotYetImplementedError, TypeOrmConnectionWrapper } from '@typexs/base';
+import {
+  DataContainer,
+  EntityControllerApi,
+  ISaveOp,
+  ISaveOptions,
+  NotYetImplementedError,
+  TypeOrmConnectionWrapper,
+  TypeOrmStorageRef
+} from '@typexs/base';
 import { EntityDefTreeWorker } from '../EntityDefTreeWorker';
 import { EntityController } from '../../EntityController';
 import { PropertyRef } from '../../registry/PropertyRef';
@@ -20,9 +28,12 @@ import { C_CLASS_WRAPPED, PROP_KEY_TARGET } from './Constants';
 export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
 
 
+  private supportsJson: boolean = false;
+
   constructor(em: EntityController) {
     super();
     this.entityController = em;
+    this.supportsJson = (this.entityController.getStorageRef() as TypeOrmStorageRef).getSchemaHandler().supportsJson();
   }
 
   readonly entityController: EntityController;
@@ -48,6 +59,19 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
     sourceDef: PropertyRef | EntityRef | IClassRef,
     sources: ISaveData,
     targets: ISaveData): void {
+
+    if (!this.supportsJson) {
+      const type = propertyDef.getType();
+      if (['json', 'object', 'array'].includes(type)) {
+        targets.next.map(x => {
+          try {
+            x[propertyDef.name] = JSON.stringify(x[propertyDef.name]);
+          } catch (e) {
+          }
+        });
+      }
+    }
+
   }
 
 
@@ -849,6 +873,8 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
         });
       }
 
+    } else {
+      sources.next = await this.c.manager.save(classRef.getClass(), sources.next);
     }
     return sources;
   }
