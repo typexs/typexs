@@ -33,8 +33,6 @@ class SqlScenarioFeaturesSpec {
 
   @test
   async 'entity lifecycle for scenario'() {
-
-
     const PathFeatureCollection = require('./schemas/features/PathFeatureCollection').PathFeatureCollection;
     const PathFeature = require('./schemas/features/PathFeature').PathFeature;
     const PointFeature = require('./schemas/features/PointFeature').PointFeature;

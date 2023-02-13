@@ -872,13 +872,17 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
           delete target[targetId];
         });
       }
-
-    } else {
-      sources.next = await this.c.manager.save(classRef.getClass(), sources.next);
+    } else if (!propertyDef.isReference()) {
+      // extra save if is not a reference, possible stringify of array, object, json
+      sources.next = await this.save(classRef.getClass(), sources.next);
     }
     return sources;
   }
 
+
+  private async save(clazz: Function, data: any) {
+    return this.c.manager.save(clazz, data);
+  }
 
   private async saveByEntityDef<T>(entityName: string | EntityRef, objects: T[]): Promise<T[]> {
     const entityDef = _.isString(entityName) ? this.entityController.schema().getEntityRefFor(entityName) : entityName;
