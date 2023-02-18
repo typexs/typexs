@@ -9,24 +9,6 @@ stages:
   - test
 
 
-#build docker image:
-#  stage: build
-#  image:
-#    name: gcr.io/kaniko-project/executor:debug
-#    entrypoint: [ "" ]
-#  before_script:
-#    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
-#  script:
-#    - /kaniko/executor
-#      --context="${CI_PROJECT_DIR}"/services/ubuntu-docker
-#      --dockerfile="${CI_PROJECT_DIR}/services/ubuntu-docker/Dockerfile"
-#      --destination "${CI_REGISTRY_IMAGE}/ubuntu-docker"
-#  rules:
-#    - if: '$CI_PIPELINE_SOURCE == "push"'
-#      changes:
-#        - .gitlab-ci.yml
-#        - services/ubuntu-docker/**/*
-
 build ldap image:
   stage: build
   image:
