@@ -53,6 +53,7 @@ test:
   stage: test
   tags:
     - dind
+    - testing
   variables:
     REDIS_HOST: redis
     REDIS_PORT: 6379
