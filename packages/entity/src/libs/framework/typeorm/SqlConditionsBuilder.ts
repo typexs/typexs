@@ -1,16 +1,9 @@
-import * as _ from 'lodash';
-import {NameResolver} from '../../../libs/framework/typeorm/NameResolver';
-import {NotYetImplementedError, TypeOrmSqlConditionsBuilder} from '@typexs/base';
-import {ClassRef, IClassRef} from '@allgemein/schema-api';
-import {PropertyRef} from '../../registry/PropertyRef';
-import {SelectQueryBuilder} from 'typeorm';
-//
-// export interface IConditionJoin {
-//   alias: string;
-//   table: string;
-//   condition: string;
-// }
-
+import { NameResolver } from '../../../libs/framework/typeorm/NameResolver';
+import { NotYetImplementedError, TypeOrmSqlConditionsBuilder } from '@typexs/base';
+import { ClassRef, IClassRef } from '@allgemein/schema-api';
+import { PropertyRef } from '../../registry/PropertyRef';
+import { SelectQueryBuilder } from 'typeorm';
+import { keys } from 'lodash';
 
 export interface ISqlBuilderOptions {
   skipNull?: boolean;
@@ -65,7 +58,7 @@ export class SqlConditionsBuilder<T> extends TypeOrmSqlConditionsBuilder<T> {
           const conditions: string[] = [];
 
           const map = _condition.getMap();
-          _.keys(map).forEach(targetKey => {
+          keys(map).forEach(targetKey => {
             // let c =
             const sourceKey = /\'/.test(map[targetKey]) ? map[targetKey] : rootAlias + '.' + map[targetKey];
             // this.baseQueryBuilder.escape()
