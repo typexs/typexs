@@ -19,7 +19,7 @@ import {
   __REGISTRY__,
   EntityControllerRegistry,
   Inject,
-  Invoker,
+  Invoker, Log,
   NotYetImplementedError,
   XS_P_$COUNT,
   XS_P_$LIMIT,
@@ -54,9 +54,23 @@ import { ObjectsNotValidError } from './../libs/exceptions/ObjectsNotValidError'
 import { EntityControllerApi } from '../api/entity.controller.api';
 import { IEntityRef, IJsonSchemaUnserializeOptions, JsonSchema, METATYPE_PROPERTY, RegistryFactory, T_STRING } from '@allgemein/schema-api';
 import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
+import { JsonUtils } from '@allgemein/base';
 import { EntityRegistry } from '../libs/EntityRegistry';
-import { assign, first, get, isArray, isNumber, isPlainObject, keys } from 'lodash';
+import { assign, first, get, isArray, isNumber, isPlainObject, isString, keys } from 'lodash';
 import { StorageAPIControllerApi } from '@typexs/storage';
+
+export function jsonParse(value: any) {
+  if (isString(value)) {
+    try {
+      return JsonUtils.parse(value);
+    } catch (e) {
+      Log.warn(e.message);
+      return value;
+    }
+  } else {
+    return value;
+  }
+}
 
 
 @ContextGroup(C_API)
@@ -195,14 +209,14 @@ export class EntityAPIController {
 
     let conditions = null;
     if (query) {
-      conditions = JSON.parse(query);
+      conditions = jsonParse(query);
       if (!isPlainObject(conditions)) {
         throw new Error('conditions are wrong ' + query);
       }
     }
     let sortBy = null;
     if (sort) {
-      sortBy = JSON.parse(sort);
+      sortBy = jsonParse(sort);
       if (!isPlainObject(sortBy)) {
         throw new Error('sort by is wrong ' + sort);
       }
