@@ -129,8 +129,8 @@ export class Express implements IFrameworkSupport {
 
         if (options.type === K_ROUTE_CONTROLLER) {
           const actions = this.resolveMetadata();
-
-          for (const entry of app._router.stack) {
+          const routeLayers = app._router ? app._router.stack : [];
+          for (const entry of routeLayers) {
             if (entry.route) {
               const r = entry.route;
               let method = 'unknown';
