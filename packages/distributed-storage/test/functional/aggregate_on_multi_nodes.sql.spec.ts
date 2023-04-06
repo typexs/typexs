@@ -84,7 +84,7 @@ class DistributedStorageSaveSpec {
     const controller = Container.get(DistributedStorageEntityController);
     let results = await controller.aggregate(DataRow, [{ $match: { someBool: true } }]);
     expect(results).to.have.length(30);
-    results = _.orderBy(results, [__NODE_ID__]);
+    results = _.orderBy(results, [__NODE_ID__]) as any;
     // console.log(results);
     const evenIds = results.map(x => x.id);
 

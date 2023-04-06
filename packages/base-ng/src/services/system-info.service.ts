@@ -132,7 +132,7 @@ export class SystemInfoService {
           info['_active_'] = true;
           remove(this.allNodes, x => x.key === info.key);
           this.allNodes.push(info);
-          this.allNodes = orderBy(this.allNodes, ['_active_', 'key'], ['asc', 'asc']);
+          this.allNodes = orderBy(this.allNodes, ['_active_', 'key'], ['asc', 'asc']) as any;
           this.nodesCount = this.allNodes.length;
         }
       }, error => {
@@ -156,7 +156,7 @@ export class SystemInfoService {
           this.nodes$.next(info);
           remove(this.allNodes, x => !x['_active_']);
           this.allNodes.push(...info);
-          this.allNodes = orderBy(this.allNodes, ['_active_', 'key'], ['asc', 'asc']);
+          this.allNodes = orderBy(this.allNodes, ['_active_', 'key'], ['asc', 'asc']) as any;
           this.nodesCount = this.allNodes.length;
         }
       }, error => {

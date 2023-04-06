@@ -1,2 +1,2 @@
 // fixes source-map bug
-declare module 'source-map';
+// declare module 'source-map';

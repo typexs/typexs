@@ -14,7 +14,7 @@ export class DefaultFormat {
   }
 
 
-  transform(info: TransformableInfo, opts: any = {}): any {
+  transform(info: TransformableInfo & any, opts: any = {}): any {
     // Return string will be passed to logger.
     const prefix = [Log.prefix ? Log.prefix : ''];
     if (info['event'] && info['event'] instanceof LogEvent) {

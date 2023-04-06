@@ -133,7 +133,7 @@ export class TaskRunner extends EventEmitter {
     this.doneNrs = [];
 
     this.resolveDeps(names);
-    this.$tasks = orderBy(this.$tasks, ['$weight', 1]);
+    this.$tasks = orderBy(this.$tasks, ['$weight', 1]) as any;
 
     this.$finished = false;
 
