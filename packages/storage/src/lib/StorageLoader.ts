@@ -70,7 +70,7 @@ export class StorageLoader {
   getStorageSetting(idOrName: number | string) {
     const query: { id?: number; name?: string } = {};
     if (isString(idOrName)) {
-      if (/\d+/.test(idOrName)) {
+      if (/^\d+$/.test(idOrName)) {
         query.id = parseInt(idOrName, 10);
       } else {
         query.name = idOrName;
