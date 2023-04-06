@@ -36,7 +36,7 @@ import { RouterModule } from '@angular/router';
 import { FreeQueryInputComponent } from './api/querying/free-query/free-query-input.component';
 import { SimpleHtmlCellRouterLinkRendererComponent } from './datatable/simple-html-table/simple-html-cell-router-link-renderer.component';
 import { Log } from './lib/log/Log';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { ComponentRegistryService } from './component/component-registry.service';
 import { ObjectToComponentResolver } from './component/ObjectToComponentResolver';
 import { ViewDataComponent } from './component/view/view-data.component';
@@ -69,7 +69,8 @@ const PROVIDERS = [
   InvokerService,
   ComponentRegistryService,
   ObjectToComponentResolver,
-  EntityResolverService
+  EntityResolverService,
+  DatePipe
 ];
 
 const COMPONENTS = [

@@ -222,16 +222,18 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent
 
 
   calcPager() {
-    if (this.params && isNumber(this.maxRows) && isNumber(this.params.limit)) {
-      if (!this.params.offset) {
-        this.params.offset = 0;
-        this.paramsChange.emit(this._params);
-      }
+    if (this.options.enablePager) {
+      if (this.params && isNumber(this.maxRows) && isNumber(this.params.limit)) {
+        if (!this.params.offset) {
+          this.params.offset = 0;
+          this.paramsChange.emit(this._params);
+        }
 
-      this.pager.totalPages = Math.ceil(this.maxRows * 1.0 / this.params.limit * 1.0);
-      if (!this.pager.checkQueryParam()) {
-        this.pager.currentPage = (this.params.offset / this.options.limit) + 1;
-        this.pager.calculatePages();
+        this.pager.totalPages = Math.ceil(this.maxRows * 1.0 / this.params.limit * 1.0);
+        if (!this.pager.checkQueryParam()) {
+          this.pager.currentPage = (this.params.offset / this.options.limit) + 1;
+          this.pager.calculatePages();
+        }
       }
     }
   }
