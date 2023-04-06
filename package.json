@@ -15,7 +15,7 @@
     "publish": "npx gulp packages && npx gulp packages_publish && npx gulp dist-tag",
     "documentation": "npx gulp docs-generate",
     "documentation:watch": "npx gulp watch-doc",
-    "test": "export NODE_OPTIONS=--openssl-legacy-provider && npx gulp test"
+    "test": "npx gulp test"
   },
   "repository": {
     "type": "git",
