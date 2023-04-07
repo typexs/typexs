@@ -31,32 +31,6 @@
     "typexs"
   ],
   "dependencies": {
-    "@typexs/auth": "file:./packages/auth/src",
-    "@typexs/auth-ng": "file:./packages/auth-ng/src",
-    "@typexs/base": "file:./packages/base/src",
-    "@typexs/base-ng": "file:./packages/base-ng/src",
-    "@typexs/distributed-storage": "file:./packages/distributed-storage/src",
-    "@typexs/distributed-storage-ng": "file:./packages/distributed-storage-ng/src",
-    "@typexs/entity": "file:./packages/entity/src",
-    "@typexs/entity-ng": "file:./packages/entity-ng/src",
-    "@typexs/forms": "file:./packages/forms/src",
-    "@typexs/forms-ng": "file:./packages/forms-ng/src",
-    "@typexs/ldap": "file:./packages/ldap/src",
-    "@typexs/ng": "file:./packages/ng/src",
-    "@typexs/ng-admin-ui": "file:./packages/ng-admin-ui/src",
-    "@typexs/ng-router-menu": "file:./packages/ng-router-menu/src",
-    "@typexs/ng-theme-base": "file:./packages/ng-theme-base/src",
-    "@typexs/notification": "file:./packages/notification/src",
-    "@typexs/pipelines": "file:./packages/pipelines/src",
-    "@typexs/roles": "file:./packages/roles/src",
-    "@typexs/roles-api": "file:./packages/roles-api/src",
-    "@typexs/search": "file:./packages/search/src",
-    "@typexs/search-ng": "file:./packages/search-ng/src",
-    "@typexs/server": "file:./packages/server/src",
-    "@typexs/storage": "file:./packages/storage/src",
-    "@typexs/storage-ng": "file:./packages/storage-ng/src",
-    "@typexs/tasks-ng": "file:./packages/tasks-ng/src",
-    "@typexs/testing": "file:./packages/testing/src",
     "testtask": "file:./demo/testtask"
   },
   "devDependencies": {
@@ -163,6 +137,7 @@
     "karma-jasmine": "4.0.1",
     "karma-jasmine-html-reporter": "1.6.0",
     "ldapjs": "^2.3.3",
+    "lerna": "^6.6.1",
     "light-server": "2.9.1",
     "lodash": "4.17.21",
     "merge-stream": "2.0.0",
@@ -195,5 +170,8 @@
   "private": true,
   "typexs": {
     "name": "typexs"
-  }
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }
