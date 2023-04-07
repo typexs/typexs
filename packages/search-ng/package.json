@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/search-ng",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.0",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
   "directories": {
@@ -17,10 +17,10 @@
     "typexs"
   ],
   "peerDependencies": {
-    "@typexs/search": "0.0.0-PLACEHOLDER",
-    "@typexs/base-ng": "0.0.0-PLACEHOLDER",
-    "@typexs/storage-ng": "0.0.0-PLACEHOLDER",
-    "@typexs/forms-ng": "0.0.0-PLACEHOLDER"
+    "@typexs/search": "*",
+    "@typexs/base-ng": "*",
+    "@typexs/storage-ng": "*",
+    "@typexs/forms-ng": "*"
   },
   "devDependencies": {
     "@angular/common": "v12-lts",

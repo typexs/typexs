@@ -1,1 +1,39 @@
-src/package.json
+{
+  "name": "@typexs/ldap",
+  "version": "2.2.0",
+  "description": "LDAP storage for typexs",
+  "main": "index",
+  "browser": "browser",
+  "scripts": {
+    "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
+    "posttest": "nyc report --reporter=json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/typexs/typexs.git"
+  },
+  "author": "Robert Kania",
+  "license": "MIT",
+  "keywords": [
+    "typexs",
+    "typescript",
+    "ldap",
+    "storage"
+  ],
+  "bugs": {
+    "url": "https://gitlab.com/typexs/typexs/-/issues"
+  },
+  "homepage": "https://gitlab.com/typexs/typexs",
+  "dependencies": {
+    "@typexs/roles-api": "*",
+    "ldapjs": "2.3.3"
+  },
+  "peerDependencies": {
+    "@typexs/base": "*",
+    "@typexs/pipelines": "*"
+  },
+  "private": true,
+  "typexs": {
+    "name": "typexs-ldap"
+  }
+}

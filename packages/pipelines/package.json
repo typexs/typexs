@@ -1,6 +1,6 @@
 {
   "name": "@typexs/pipelines",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.0",
   "main": "./index",
   "browser": "./browser",
   "dependencies": {
@@ -8,7 +8,7 @@
   },
   "private": true,
   "peerDependencies": {
-    "@typexs/base": "0.0.0-PLACEHOLDER"
+    "@typexs/base": "*"
   },
   "typexs": {
     "name": "pipelines",

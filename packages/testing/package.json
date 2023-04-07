@@ -1,6 +1,6 @@
 {
   "name": "@typexs/testing",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.0",
   "description": "Testing for typexs",
   "main": "./index",
   "browser": "./browser",

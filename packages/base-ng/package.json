@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/base-ng",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.0",
   "description": "Angular for typexs",
   "main": "public_api.ts",
   "directories": {
@@ -25,9 +25,9 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs#readme",
   "peerDependencies": {
-    "@typexs/base": "0.0.0-PLACEHOLDER",
-    "@typexs/ng": "0.0.0-PLACEHOLDER",
-    "@typexs/server": "0.0.0-PLACEHOLDER"
+    "@typexs/base": "*",
+    "@typexs/ng": "*",
+    "@typexs/server": "*"
   },
   "devDependencies": {
     "@angular/common": "v12-lts",

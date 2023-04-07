@@ -1,6 +1,6 @@
 {
   "name": "@typexs/ng",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.0",
   "description": "Angular for typexs",
   "main": "index",
   "browser": "browser",
@@ -29,10 +29,10 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "dependencies": {
-    "@typexs/roles-api": "0.0.0-PLACEHOLDER"
+    "@typexs/roles-api": "*"
   },
   "peerDependencies": {
-    "@typexs/base": "0.0.0-PLACEHOLDER",
-    "@typexs/entity": "0.0.0-PLACEHOLDER"
+    "@typexs/base": "*",
+    "@typexs/entity": "*"
   }
 }

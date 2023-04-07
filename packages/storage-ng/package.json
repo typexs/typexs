@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/storage-ng",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.0",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
   "directories": {
@@ -25,12 +25,12 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@typexs/base": "0.0.0-PLACEHOLDER",
-    "@typexs/ng": "0.0.0-PLACEHOLDER",
-    "@typexs/storage": "0.0.0-PLACEHOLDER",
-    "@typexs/base-ng": "0.0.0-PLACEHOLDER",
-    "@typexs/forms": "0.0.0-PLACEHOLDER",
-    "@typexs/forms-ng": "0.0.0-PLACEHOLDER"
+    "@typexs/base": "*",
+    "@typexs/ng": "*",
+    "@typexs/storage": "*",
+    "@typexs/base-ng": "*",
+    "@typexs/forms": "*",
+    "@typexs/forms-ng": "*"
   },
   "devDependencies": {
     "@angular/common": "v12-lts",

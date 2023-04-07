@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/forms-ng",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.0",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
   "directories": {
@@ -25,8 +25,8 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@typexs/base-ng": "0.0.0-PLACEHOLDER",
-    "@typexs/forms": "0.0.0-PLACEHOLDER"
+    "@typexs/base-ng": "*",
+    "@typexs/forms": "*"
   },
   "devDependencies": {
     "@angular/core": "v12-lts",

@@ -1,1 +1,50 @@
-src/package.json
+{
+  "name": "@typexs/storage",
+  "version": "2.2.0",
+  "description": "Storage for typexs",
+  "main": "./index",
+  "browser": "./browser",
+  "directories": {
+    "doc": "docs/de"
+  },
+  "scripts": {
+    "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
+    "posttest": "nyc report --reporter=json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/typexs/typexs.git"
+  },
+  "author": "Robert Kania",
+  "license": "MIT",
+  "keywords": [
+    "commons",
+    "typescript",
+    "typexs"
+  ],
+  "bugs": {
+    "url": "https://gitlab.com/typexs/typexs/-/issues"
+  },
+  "homepage": "https://gitlab.com/typexs/typexs#readme",
+  "dependencies": {
+    "@typexs/roles-api": "*"
+  },
+  "peerDependencies": {
+    "@typexs/base": "*",
+    "@typexs/server": "*",
+    "@typexs/forms": "*"
+  },
+  "private": true,
+  "typexs": {
+    "name": "storage",
+    "declareLibs": [
+      {
+        "topic": "entity.storage",
+        "refs": [
+          "entities/storage",
+          "src/entities/storage"
+        ]
+      }
+    ]
+  }
+}

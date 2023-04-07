@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-theme-base",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.0",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
   "directories": {
@@ -25,9 +25,9 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@typexs/base-ng": "0.0.0-PLACEHOLDER",
-    "@typexs/forms-ng": "0.0.0-PLACEHOLDER",
-    "@typexs/ng-router-menu": "0.0.0-PLACEHOLDER",
+    "@typexs/base-ng": "*",
+    "@typexs/forms-ng": "*",
+    "@typexs/ng-router-menu": "*",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.0.1",
     "perfect-scrollbar": "^1.5.1"

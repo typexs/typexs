@@ -1,6 +1,6 @@
 {
   "name": "@typexs/search",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.0",
   "description": "",
   "main": "index",
   "browser": "browser",
@@ -11,10 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@typexs/base": "0.0.0-PLACEHOLDER",
-    "@typexs/entity": "0.0.0-PLACEHOLDER",
-    "@typexs/pipelines": "0.0.0-PLACEHOLDER",
-    "@typexs/roles-api": "0.0.0-PLACEHOLDER"
+    "@typexs/base": "*",
+    "@typexs/entity": "*",
+    "@typexs/pipelines": "*",
+    "@typexs/roles-api": "*"
   },
   "peerDependencies": {
     "@elastic/elasticsearch": "^7.15.0"
