@@ -22,7 +22,7 @@ export class TestHelper {
     await bootstrap.activateStorage();
     await bootstrap.startup();
     return bootstrap;
-  };
+  }
 
   static root() {
     return resolve(__dirname + '/../../../..');

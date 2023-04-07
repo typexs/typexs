@@ -24,6 +24,9 @@
     "server",
     "controllers"
   ],
+  "dependencies": {
+    "@typexs/base": "*"
+  },
   "bugs": {
     "url": "https://gitlab.com/typexs/typexs/-/issues"
   },

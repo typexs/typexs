@@ -28,6 +28,11 @@
     "@typexs/roles-api": "*",
     "ldapjs": "2.3.3"
   },
+  "devDependencies": {
+    "@typexs/base": "*",
+    "@typexs/pipelines": "*",
+    "@typexs/testing": "*"
+  },
   "peerDependencies": {
     "@typexs/base": "*",
     "@typexs/pipelines": "*"

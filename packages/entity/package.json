@@ -30,13 +30,21 @@
   "dependencies": {
     "@typexs/roles-api": "*"
   },
+  "devDependencies": {
+    "@typexs/base": "*",
+    "@typexs/pipelines": "*",
+    "@typexs/server": "*",
+    "@typexs/storage": "*",
+    "@typexs/testing": "*",
+    "@typexs/forms": "*"
+  },
   "peerDependencies": {
+    "@typexs/forms": "*",
     "@typexs/base": "*",
     "@typexs/pipelines": "*",
     "@typexs/server": "*",
     "@typexs/storage": "*"
   },
-  "private": true,
   "typexs": {
     "name": "typexs-entity"
   }

@@ -1,0 +1,11 @@
+{
+  "name": "app-auth",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@typexs/base-ng": "*",
+    "@typexs/storage-ng": "*",
+    "@typexs/entity-ng": "*",
+    "@typexs/auth-ng": "*",
+    "@typexs/tasks-ng": "*"
+  }
+}

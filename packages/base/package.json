@@ -39,6 +39,13 @@
     "node-machine-id": "1.1.12",
     "typedi": "0.8.0"
   },
+  "devDependencies": {
+    "typeorm": "0.2.34",
+    "winston": "3.3.3",
+    "yargonaut": "1.1.4",
+    "yargs": "17.2.1",
+    "@typexs/testing": "*"
+  },
   "peerDependencies": {
     "typeorm": "0.2.34",
     "winston": "3.3.3",

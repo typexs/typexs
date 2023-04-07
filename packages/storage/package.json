@@ -29,6 +29,12 @@
   "dependencies": {
     "@typexs/roles-api": "*"
   },
+  "devDependencies": {
+    "@typexs/base": "*",
+    "@typexs/server": "*",
+    "@typexs/forms": "*",
+    "@typexs/testing": "*"
+  },
   "peerDependencies": {
     "@typexs/base": "*",
     "@typexs/server": "*",

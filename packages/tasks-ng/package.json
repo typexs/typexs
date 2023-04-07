@@ -7,10 +7,6 @@
   "directories": {
     "doc": "docs/de"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://gitlab.com/typexs/ng.git"
-  },
   "author": "Robert Kania",
   "license": "MIT",
   "keywords": [
@@ -20,12 +16,9 @@
     "typescript",
     "typexs"
   ],
-  "bugs": {
-    "url": "https://gitlab.com/typexs/ng/issues"
-  },
-  "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
     "@typexs/base": "*",
+    "@typexs/server": "*",
     "@typexs/base-ng": "*",
     "@typexs/forms-ng": "*",
     "@typexs/storage-ng": "*"
@@ -35,6 +28,11 @@
     "@angular/forms": "v12-lts",
     "@angular/common": "v12-lts",
     "@angular/router": "v12-lts",
+    "@typexs/base": "*",
+    "@typexs/server": "*",
+    "@typexs/base-ng": "*",
+    "@typexs/forms-ng": "*",
+    "@typexs/storage-ng": "*",
     "rxjs": "6.6.7"
   }
 }

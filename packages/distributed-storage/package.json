@@ -21,6 +21,12 @@
   "dependencies": {
     "@typexs/roles-api": "*"
   },
+  "devDependencies": {
+    "@typexs/base": "*",
+    "@typexs/pipelines": "*",
+    "@typexs/server": "*",
+    "@typexs/testing": "*"
+  },
   "peerDependencies": {
     "@typexs/base": "*",
     "@typexs/pipelines": "*",

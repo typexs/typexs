@@ -27,7 +27,11 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs",
   "dependencies": {
-    "@typexs/base": "*"
+    "@typexs/base": "*",
+    "@typexs/entity": "*"
+  },
+  "devDependencies": {
+    "@typexs/testing": "*"
   },
   "peerDependencies": {
   },

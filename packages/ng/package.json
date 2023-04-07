@@ -31,6 +31,10 @@
   "dependencies": {
     "@typexs/roles-api": "*"
   },
+  "devDependencies": {
+    "@typexs/base": "*",
+    "@typexs/entity": "*"
+  },
   "peerDependencies": {
     "@typexs/base": "*",
     "@typexs/entity": "*"

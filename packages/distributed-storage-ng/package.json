@@ -27,13 +27,19 @@
   "peerDependencies": {
     "@typexs/base-ng": "*",
     "@typexs/ng": "*",
-    "@typexs/forms-ng": "*"
+    "@typexs/forms-ng": "*",
+    "@typexs/distributed-storage": "*"
   },
   "devDependencies": {
+    "@typexs/distributed-storage": "*",
     "@angular/core": "v12-lts",
     "@angular/forms": "v12-lts",
     "@angular/common": "v12-lts",
     "@angular/router": "v12-lts",
+    "@typexs/base": "*",
+    "@typexs/base-ng": "*",
+    "@typexs/ng": "*",
+    "@typexs/forms-ng": "*",
     "rxjs": "6.6.7"
   }
 }

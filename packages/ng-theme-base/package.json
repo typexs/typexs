@@ -25,6 +25,16 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
+    "@typexs/base": "*",
+    "@typexs/base-ng": "*",
+    "@typexs/forms-ng": "*",
+    "@typexs/ng-router-menu": "*",
+    "animate.css": "^4.1.1",
+    "bootstrap": "^5.0.1",
+    "perfect-scrollbar": "^1.5.1"
+  },
+  "devDependencies": {
+    "@typexs/base": "*",
     "@typexs/base-ng": "*",
     "@typexs/forms-ng": "*",
     "@typexs/ng-router-menu": "*",

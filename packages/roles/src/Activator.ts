@@ -1,7 +1,7 @@
-import {ClassesLoader,  IActivator, Injector} from '@typexs/base';
-import {PermissionsRegistry} from './libs/PermissionsRegistry';
-import {PermissionsRegistryLoader} from './libs/PermissionsRegistryLoader';
-import {BasicPermission, IPermissionDef, IPermissions} from '@typexs/roles-api';
+import { IActivator, Injector } from '@typexs/base';
+import { PermissionsRegistry } from './libs/PermissionsRegistry';
+import { PermissionsRegistryLoader } from './libs/PermissionsRegistryLoader';
+import { BasicPermission, IPermissionDef, IPermissions } from '@typexs/roles-api';
 
 export class Activator implements IActivator, IPermissions {
 

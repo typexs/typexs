@@ -19,6 +19,11 @@
     "@typexs/roles-api": "*",
     "lodash": "^4.17.21"
   },
+  "devDependencies": {
+    "@typexs/base": "*",
+    "@typexs/entity": "*",
+    "@typexs/testing": "*"
+  },
   "peerDependencies": {
     "@typexs/base": "*",
     "@typexs/entity": "*"

@@ -12,6 +12,9 @@
   "peerDependencies": {
     "@cezaryrk/minimatch": "3.0.4"
   },
+  "devDependencies": {
+    "@cezaryrk/minimatch": "3.0.4"
+  },
   "private": true,
   "typexs": {
     "name": "roles-api"

@@ -5,17 +5,10 @@
   "main": "index.js",
   "browser": "browser.js",
   "scripts": {
-    "ng": "npx ng",
     "start": "npx concurrently \"cd packages/app && npx ng serve\" \"npx typexs server --nodeId server\"",
-    "build": "cd packages/app && npx ng build --prod",
-    "lint": "npx ng lint",
-    "mocha": "npx mocha test/{**,**/**}/*.spec.ts",
-    "karma": "npx ng test typexs --code-coverage=true --watch=false",
-    "cleanup": "npx gulp cleanup && npm i",
-    "publish": "npx gulp packages && npx gulp packages_publish && npx gulp dist-tag",
+    "postinstall": "npx lerna link",
     "documentation": "npx gulp docs-generate",
-    "documentation:watch": "npx gulp watch-doc",
-    "test": "npx gulp test"
+    "documentation:watch": "npx gulp watch-doc"
   },
   "repository": {
     "type": "git",
@@ -146,10 +139,7 @@
     "supertest": "6.2.2",
     "through": "2.3.8",
     "ts-node": "10.9.1",
-    "typeorm": "0.2.34",
     "typescript": "4.3.5",
-    "winston": "3.3.3",
-    "yargonaut": "1.1.4",
     "zone.js": "0.11.5"
   },
   "private": true,

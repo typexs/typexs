@@ -25,6 +25,7 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
+    "@typexs/base": "*",
     "@typexs/base-ng": "*",
     "@typexs/forms": "*"
   },
@@ -33,6 +34,10 @@
     "@angular/forms": "v12-lts",
     "@angular/common": "v12-lts",
     "@angular/router": "v12-lts",
+    "@typexs/base": "*",
+    "@typexs/base-ng": "*",
+    "@typexs/forms": "*",
+    "@typexs/entity": "*",
     "rxjs": "6.6.7"
   }
 }

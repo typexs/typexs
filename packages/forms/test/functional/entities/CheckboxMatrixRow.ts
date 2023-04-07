@@ -1,7 +1,10 @@
-import { Checkbox, ISelectOption, Label } from '@typexs/forms';
 import { Entity } from '@typexs/entity/libs/decorators/Entity';
 import { Property } from '@typexs/entity/libs/decorators/Property';
 import { K_STORABLE } from '@typexs/entity/libs/Constants';
+import { Label } from '../../../src/decorators/Label';
+import { Checkbox } from '../../../src/decorators/Checkbox';
+import { ISelectOption } from '../../../src/elements/ISelectOption';
+
 
 @Entity({ [K_STORABLE]: false })
 export class CheckboxMatrixRow {

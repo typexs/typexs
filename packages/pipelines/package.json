@@ -10,6 +10,9 @@
   "peerDependencies": {
     "@typexs/base": "*"
   },
+  "devDependencies": {
+    "@typexs/base": "*"
+  },
   "typexs": {
     "name": "pipelines",
     "declareLibs": [

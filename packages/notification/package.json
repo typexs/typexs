@@ -7,6 +7,10 @@
   "typexs": {
     "name": "pipeline"
   },
+  "devDependencies": {
+    "@typexs/base": "*",
+    "winston-transport": "^4.4.0"
+  },
   "peerDependencies": {
     "@typexs/base": "*",
     "winston-transport": "^4.4.0"

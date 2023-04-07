@@ -16,6 +16,11 @@
     "@typexs/pipelines": "*",
     "@typexs/roles-api": "*"
   },
+  "devDependencies": {
+    "@elastic/elasticsearch": "^7.15.0",
+    "@typexs/server": "*",
+    "@typexs/storage": "*"
+  },
   "peerDependencies": {
     "@elastic/elasticsearch": "^7.15.0"
   },

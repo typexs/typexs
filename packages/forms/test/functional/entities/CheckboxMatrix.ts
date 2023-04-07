@@ -1,6 +1,6 @@
 import { Entity, K_STORABLE, Property } from '@typexs/entity';
 import { CheckboxMatrixRow } from './CheckboxMatrixRow';
-import { Grid } from '@typexs/forms';
+import { Grid } from '../../../src/decorators/Grid';
 
 
 @Entity({ [K_STORABLE]: false })

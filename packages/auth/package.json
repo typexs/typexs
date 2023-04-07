@@ -23,10 +23,15 @@
     "@typexs/base": "*",
     "@typexs/entity": "*",
     "@typexs/roles": "*",
+    "@typexs/forms": "*",
     "@typexs/ng": "*",
     "@typexs/roles-api": "*",
     "bcrypt": "^5.0.0",
     "jsonwebtoken": "^8.5.1"
+  },
+  "devDependencies": {
+    "@typexs/server": "*",
+    "@typexs/testing": "*"
   },
   "peerDependencies": {
     "@typexs/server": "*"

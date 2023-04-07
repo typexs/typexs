@@ -1,12 +1,11 @@
-import {IStorageRefOptions} from './IStorageRefOptions';
-import {IStorageRef} from './IStorageRef';
-import {IEntityController} from './IEntityController';
-import {ClassType, IClassRef, IEntityRef, ILookupRegistry, ISchemaRef} from '@allgemein/schema-api';
-import {IConnection} from './IConnection';
-import {ICollection} from './ICollection';
-import {EventEmitter} from 'events';
-import {isArray, uniqBy} from 'lodash';
-import { ILdapStorageRefOptions } from '@typexs/ldap/lib/storage/ILdapStorageRefOptions';
+import { IStorageRefOptions } from './IStorageRefOptions';
+import { IStorageRef } from './IStorageRef';
+import { IEntityController } from './IEntityController';
+import { IClassRef, IEntityRef, ILookupRegistry, ISchemaRef } from '@allgemein/schema-api';
+import { IConnection } from './IConnection';
+import { ICollection } from './ICollection';
+import { EventEmitter } from 'events';
+import { isArray, uniqBy } from 'lodash';
 
 export abstract class StorageRef extends EventEmitter implements IStorageRef {
 
