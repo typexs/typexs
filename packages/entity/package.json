@@ -1,6 +1,6 @@
 {
   "name": "@typexs/entity",
-  "version": "2.2.1-dev.7",
+  "version": "2.2.1-dev.8",
   "description": "Schema for typexs",
   "main": "index",
   "browser": "browser",
@@ -32,15 +32,15 @@
   },
   "devDependencies": {
     "@typexs/base": "*",
+    "@typexs/forms": "*",
     "@typexs/pipelines": "*",
     "@typexs/server": "*",
     "@typexs/storage": "*",
-    "@typexs/testing": "*",
-    "@typexs/forms": "*"
+    "@typexs/testing": "*"
   },
   "peerDependencies": {
-    "@typexs/forms": "*",
     "@typexs/base": "*",
+    "@typexs/forms": "*",
     "@typexs/pipelines": "*",
     "@typexs/server": "*",
     "@typexs/storage": "*"

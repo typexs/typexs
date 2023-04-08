@@ -1,14 +1,13 @@
 {
   "name": "@typexs/testing",
-  "version": "2.2.1-dev.7",
+  "version": "2.2.1-dev.8",
   "description": "Testing for typexs",
   "main": "./index",
   "browser": "./browser",
   "directories": {
     "doc": "docs/de"
   },
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://gitlab.com/typexs/typexs.git"
@@ -30,4 +29,3 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs#readme"
 }
-

@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-router-menu",
-  "version": "2.2.1-dev.7",
+  "version": "2.2.1-dev.8",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
   "scripts": {
@@ -28,14 +28,12 @@
     "url": "https://gitlab.com/typexs/ng/issues"
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
-  "peerDependencies": {
-  },
   "devDependencies": {
+    "@angular/common": "v12-lts",
     "@angular/core": "v12-lts",
     "@angular/platform-browser": "v12-lts",
-    "lodash": "4.17.21",
-    "@angular/common": "v12-lts",
     "@angular/router": "v12-lts",
+    "lodash": "4.17.21",
     "rxjs": "6.6.7"
   }
 }

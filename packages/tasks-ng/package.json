@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/tasks-ng",
-  "version": "2.2.1-dev.7",
+  "version": "2.2.1-dev.8",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
   "scripts": {
@@ -22,20 +22,20 @@
   ],
   "peerDependencies": {
     "@typexs/base": "*",
-    "@typexs/server": "*",
     "@typexs/base-ng": "*",
     "@typexs/forms-ng": "*",
+    "@typexs/server": "*",
     "@typexs/storage-ng": "*"
   },
   "devDependencies": {
+    "@angular/common": "v12-lts",
     "@angular/core": "v12-lts",
     "@angular/forms": "v12-lts",
-    "@angular/common": "v12-lts",
     "@angular/router": "v12-lts",
     "@typexs/base": "*",
-    "@typexs/server": "*",
     "@typexs/base-ng": "*",
     "@typexs/forms-ng": "*",
+    "@typexs/server": "*",
     "@typexs/storage-ng": "*",
     "rxjs": "6.6.7"
   }
