@@ -1,6 +1,6 @@
 {
   "name": "@typexs/typexs",
-  "version": "2.2.0-dev.7",
+  "version": "2.2.0-dev.8",
   "tag": "v2-dev",
   "main": "index.js",
   "browser": "browser.js",
