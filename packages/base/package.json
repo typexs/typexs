@@ -7,7 +7,8 @@
   "scripts": {
     "build": "node ../../scripts/build.js",
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
-    "posttest": "nyc report --reporter=json"
+    "posttest": "nyc report --reporter=json",
+    "publish": "cd build/package && npm publish"
   },
   "publishConfig": {
     "directory": "./build/package"
