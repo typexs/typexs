@@ -1,12 +1,12 @@
 {
   "name": "app-auth",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "devDependencies": {
-    "@typexs/base-ng": "*",
-    "@typexs/storage-ng": "*",
-    "@typexs/entity-ng": "*",
-    "@typexs/auth-ng": "*",
-    "@typexs/tasks-ng": "*"
+    "@typexs/auth-ng": "^2.2.1-alpha.0",
+    "@typexs/base-ng": "^2.2.1-alpha.0",
+    "@typexs/entity-ng": "^2.2.1-alpha.0",
+    "@typexs/storage-ng": "^2.2.1-alpha.0",
+    "@typexs/tasks-ng": "^2.2.1-alpha.0"
   },
   "private": true
 }

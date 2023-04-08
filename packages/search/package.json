@@ -1,6 +1,6 @@
 {
   "name": "@typexs/search",
-  "version": "2.2.0",
+  "version": "2.2.1-alpha.0",
   "description": "",
   "main": "index",
   "browser": "browser",
@@ -11,15 +11,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@typexs/base": "*",
-    "@typexs/entity": "*",
-    "@typexs/pipelines": "*",
-    "@typexs/roles-api": "*"
+    "@typexs/base": "^2.2.1-alpha.0",
+    "@typexs/entity": "^2.2.1-alpha.0",
+    "@typexs/pipelines": "^2.2.1-alpha.0",
+    "@typexs/roles-api": "^2.2.1-alpha.0"
   },
   "devDependencies": {
     "@elastic/elasticsearch": "^7.15.0",
-    "@typexs/server": "*",
-    "@typexs/storage": "*"
+    "@typexs/server": "^2.2.1-alpha.0",
+    "@typexs/storage": "^2.2.1-alpha.0"
   },
   "peerDependencies": {
     "@elastic/elasticsearch": "^7.15.0"

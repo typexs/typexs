@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-admin-ui",
-  "version": "2.2.0",
+  "version": "2.2.1-alpha.0",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
   "scripts": {
@@ -29,29 +29,29 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
+    "@typexs/base": "*",
     "@typexs/base-ng": "*",
     "@typexs/forms-ng": "*",
+    "@typexs/ng": "*",
     "@typexs/ng-router-menu": "*",
     "@typexs/ng-theme-base": "*",
+    "@typexs/server": "*",
     "@typexs/storage-ng": "*",
-    "@typexs/tasks-ng": "*",
-    "@typexs/ng": "*",
-    "@typexs/base": "*",
-    "@typexs/server": "*"
+    "@typexs/tasks-ng": "*"
   },
   "devDependencies": {
-    "@angular/core": "v12-lts",
     "@angular/common": "v12-lts",
+    "@angular/core": "v12-lts",
     "@angular/router": "v12-lts",
-    "@typexs/base-ng": "*",
-    "@typexs/forms-ng": "*",
-    "@typexs/ng-router-menu": "*",
-    "@typexs/ng-theme-base": "*",
-    "@typexs/storage-ng": "*",
-    "@typexs/tasks-ng": "*",
-    "@typexs/ng": "*",
-    "@typexs/base": "*",
-    "@typexs/server": "*",
+    "@typexs/base": "^2.2.1-alpha.0",
+    "@typexs/base-ng": "^2.2.1-alpha.0",
+    "@typexs/forms-ng": "^2.2.1-alpha.0",
+    "@typexs/ng": "^2.2.1-alpha.0",
+    "@typexs/ng-router-menu": "^2.2.1-alpha.0",
+    "@typexs/ng-theme-base": "^2.2.1-alpha.0",
+    "@typexs/server": "^2.2.1-alpha.0",
+    "@typexs/storage-ng": "^2.2.1-alpha.0",
+    "@typexs/tasks-ng": "^2.2.1-alpha.0",
     "rxjs": "6.6.7"
   }
 }

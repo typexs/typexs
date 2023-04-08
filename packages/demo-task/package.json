@@ -1,11 +1,11 @@
 {
   "name": "testtask",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "dependencies": {
-    "@typexs/base": "*",
-    "@typexs/entity": "*",
-    "@typexs/forms": "*",
-    "@typexs/search": "*"
+    "@typexs/base": "^2.2.1-alpha.0",
+    "@typexs/entity": "^2.2.1-alpha.0",
+    "@typexs/forms": "^2.2.1-alpha.0",
+    "@typexs/search": "^2.2.1-alpha.0"
   },
   "private": true,
   "typexs": {

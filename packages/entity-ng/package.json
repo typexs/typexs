@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/entity-ng",
-  "version": "2.2.0",
+  "version": "2.2.1-alpha.0",
   "description": "Angular for typexs",
   "main": "public_api.ts",
   "scripts": {
@@ -31,23 +31,23 @@
   "peerDependencies": {
     "@typexs/base": "*",
     "@typexs/base-ng": "*",
+    "@typexs/entity": "*",
     "@typexs/forms": "*",
     "@typexs/forms-ng": "*",
-    "@typexs/ng": "*",
-    "@typexs/entity": "*"
+    "@typexs/ng": "*"
   },
   "devDependencies": {
-    "chai": "4.3.4",
+    "@angular/common": "v12-lts",
     "@angular/core": "v12-lts",
     "@angular/forms": "v12-lts",
-    "@angular/common": "v12-lts",
     "@angular/router": "v12-lts",
-    "@typexs/base": "*",
-    "@typexs/base-ng": "*",
-    "@typexs/forms": "*",
-    "@typexs/forms-ng": "*",
-    "@typexs/ng": "*",
-    "@typexs/entity": "*",
+    "@typexs/base": "^2.2.1-alpha.0",
+    "@typexs/base-ng": "^2.2.1-alpha.0",
+    "@typexs/entity": "^2.2.1-alpha.0",
+    "@typexs/forms": "^2.2.1-alpha.0",
+    "@typexs/forms-ng": "^2.2.1-alpha.0",
+    "@typexs/ng": "^2.2.1-alpha.0",
+    "chai": "4.3.4",
     "rxjs": "6.6.7"
   }
 }
