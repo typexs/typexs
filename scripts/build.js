@@ -14,15 +14,13 @@ async function build() {
   delete packageJson.publishConfig;
   fs.writeFileSync(cwd + '/build/package/package.json', JSON.stringify(packageJson, null, 2));
   // copy json files
-  let files = glob.sync(cwd + '/src/**/*.json', { follow: false }).filter(x => !/package\.json/.test(x));
+  const files = [].concat(
+    glob.sync(cwd + '/LICENSE', { follow: false }),
+    glob.sync(cwd + '/README*', { follow: false }),
+    glob.sync(cwd + '/src/**/*.json', { follow: false }).filter(x => !/package\.json/.test(x))
+  );
   files.forEach(x => {
-    const y = x.replace(cwd + '/src', cwd + '/build/package');
-    fs.writeFileSync(y, fs.readFileSync(x));
-  });
-
-  files = glob.sync(cwd + '/README.md', { follow: false });
-  files.forEach(x => {
-    const y = x.replace(cwd + '/src', cwd + '/build/package');
+    const y = x.replace('/src', '').replace(cwd, cwd + '/build/package');
     fs.writeFileSync(y, fs.readFileSync(x));
   });
 }

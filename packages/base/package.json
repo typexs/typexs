@@ -9,6 +9,9 @@
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
     "posttest": "nyc report --reporter=json"
   },
+  "publishConfig": {
+    "directory": "./build/package"
+  },
   "bin": {
     "typexs": "./bin/typexs",
     "txs": "./bin/typexs"
