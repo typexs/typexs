@@ -9,6 +9,9 @@
     "postinstall": "npx lerna link",
     "test": "npx lerna run test --concurrency=1",
     "build": "npx lerna run build",
+    "version": "npx lerna version",
+    "postversion": "npx lerna run build",
+    "publish": "npx lerna run build && npx lerna publish --contents build/package --no-private",
     "documentation": "npx gulp docs-generate",
     "documentation:watch": "npx gulp watch-doc"
   },
