@@ -15,7 +15,8 @@
     },
     "publish": {
       "noPush": true,
-      "private": false
+      "private": false,
+      "contents": "build/package"
     }
   }
 }
