@@ -5,8 +5,9 @@
   "description": "Angular for typexs",
   "main": "public_api.ts",
   "scripts": {
-    "test": "ng test auth-ng --code-coverage=true --watch=false",
-    "build": "ng build auth-ng"
+    "clean": "rm -rf build node_modules/.cache",
+    "test": "ng test --code-coverage=true --watch=false",
+    "build": "ng build"
   },
   "directories": {
     "doc": "docs/de"
@@ -56,5 +57,6 @@
     "@typexs/roles-api": "*",
     "@typexs/server": "*",
     "rxjs": "6.6.7"
-  }
+  },
+  "gitHead": "a28a29fc7cf7096dabac0f22796c17fcba9dd097"
 }

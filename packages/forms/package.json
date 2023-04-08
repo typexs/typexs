@@ -9,7 +9,8 @@
   },
   "scripts": {
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
-    "posttest": "nyc report --reporter=json"
+    "posttest": "nyc report --reporter=json",
+    "build": "node ../../scripts/build.js"
   },
   "repository": {
     "type": "git",
@@ -34,5 +35,6 @@
   },
   "typexs": {
     "name": "forms"
-  }
+  },
+  "gitHead": "a28a29fc7cf7096dabac0f22796c17fcba9dd097"
 }

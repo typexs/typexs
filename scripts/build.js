@@ -28,6 +28,7 @@ async function build() {
 build().then(x => {
 
 }).catch(err => {
+  console.error(err);
   process.exit(1);
 });
 // exec()
