@@ -2,10 +2,10 @@
   "name": "testtask",
   "version": "1.0.1",
   "dependencies": {
-    "@typexs/base": "^2.2.1-alpha.0",
-    "@typexs/entity": "^2.2.1-alpha.0",
-    "@typexs/forms": "^2.2.1-alpha.0",
-    "@typexs/search": "^2.2.1-alpha.0"
+    "@typexs/base": "^2.2.1-dev.7",
+    "@typexs/entity": "^2.2.1-dev.7",
+    "@typexs/forms": "^2.2.1-dev.7",
+    "@typexs/search": "^2.2.1-dev.7"
   },
   "private": true,
   "typexs": {

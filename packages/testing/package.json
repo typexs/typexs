@@ -1,13 +1,14 @@
 {
   "name": "@typexs/testing",
-  "version": "2.2.1-dev.0",
+  "version": "2.2.1-dev.7",
   "description": "Testing for typexs",
   "main": "./index",
   "browser": "./browser",
   "directories": {
     "doc": "docs/de"
   },
-  "scripts": {},
+  "scripts": {
+  },
   "repository": {
     "type": "git",
     "url": "git+https://gitlab.com/typexs/typexs.git"
@@ -22,10 +23,11 @@
     "controllers"
   ],
   "dependencies": {
-    "@typexs/base": "^2.2.1-dev.0"
+    "@typexs/base": "*"
   },
   "bugs": {
     "url": "https://gitlab.com/typexs/typexs/-/issues"
   },
   "homepage": "https://gitlab.com/typexs/typexs#readme"
 }
+

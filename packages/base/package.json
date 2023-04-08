@@ -1,6 +1,6 @@
 {
   "name": "@typexs/base",
-  "version": "2.2.1-dev.0",
+  "version": "2.2.1-dev.7",
   "description": "",
   "main": "index",
   "browser": "browser",
@@ -8,9 +8,6 @@
     "build": "node ../../scripts/build.js",
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
     "posttest": "nyc report --reporter=json"
-  },
-  "publishConfig": {
-    "directory": "./build/package"
   },
   "bin": {
     "typexs": "./bin/typexs",
@@ -44,11 +41,11 @@
     "typedi": "0.8.0"
   },
   "devDependencies": {
-    "@typexs/testing": "^2.2.1-dev.0",
     "typeorm": "0.2.34",
     "winston": "3.3.3",
     "yargonaut": "1.1.4",
-    "yargs": "17.2.1"
+    "yargs": "17.2.1",
+    "@typexs/testing": "*"
   },
   "peerDependencies": {
     "typeorm": "0.2.34",
