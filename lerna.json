@@ -17,6 +17,7 @@
     "publish": {
       "noPush": true,
       "private": false,
+      "distTag": "v2-dev",
       "contents": "build/package"
     }
   }
