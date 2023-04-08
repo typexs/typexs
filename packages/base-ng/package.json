@@ -45,5 +45,6 @@
     "@typexs/ng": "*",
     "@typexs/server": "*",
     "rxjs": "6.6.7"
-  }
+  },
+  "gitHead": "cf12cabeb2a3aa01de4e0bc5d74686955b24ca74"
 }

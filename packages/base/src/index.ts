@@ -8,7 +8,6 @@ export { Config, IConfigOptions, IConfigData, IFileConfigOptions } from '@allgem
 export { ClassesLoader, ModuleRegistry } from '@allgemein/moduls';
 export { PlatformUtils, FileUtils, ClassLoader } from '@allgemein/base';
 
-
 export { TasksApi } from './api/Tasks.api';
 export { ITasksApi } from './api/ITasksApi';
 
