@@ -7,5 +7,6 @@
     "@typexs/entity-ng": "*",
     "@typexs/auth-ng": "*",
     "@typexs/tasks-ng": "*"
-  }
+  },
+  "private": true
 }

@@ -4,6 +4,10 @@
   "version": "2.2.0",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
+  "scripts": {
+    "test": "ng test --code-coverage=true --watch=false",
+    "build": "ng build"
+  },
   "directories": {
     "doc": "docs/de"
   },

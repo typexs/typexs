@@ -8,8 +8,6 @@
     "doc": "docs/de"
   },
   "scripts": {
-    "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
-    "posttest": "nyc report --reporter=json"
   },
   "repository": {
     "type": "git",

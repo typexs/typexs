@@ -5,6 +5,8 @@
   "main": "index",
   "browser": "browser",
   "scripts": {
+    "clean": "rm -r build",
+    "build": "node ../../scripts/build.js",
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
     "posttest": "nyc report --reporter=json"
   },

@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/typexs/ng.git"
+    "url": "git+https://gitlab.com/typexs/typexs.git"
   },
   "author": "Robert Kania",
   "license": "MIT",
@@ -25,18 +25,16 @@
     "typexs"
   ],
   "bugs": {
-    "url": "https://gitlab.com/typexs/ng/issues"
+    "url": "https://gitlab.com/typexs/typexs/issues"
   },
-  "homepage": "https://gitlab.com/typexs/ng#readme",
+  "homepage": "https://gitlab.com/typexs/typexs#readme",
   "dependencies": {
     "@typexs/roles-api": "*"
   },
   "devDependencies": {
-    "@typexs/base": "*",
-    "@typexs/entity": "*"
+    "@typexs/base": "*"
   },
   "peerDependencies": {
-    "@typexs/base": "*",
-    "@typexs/entity": "*"
+    "@typexs/base": "*"
   }
 }

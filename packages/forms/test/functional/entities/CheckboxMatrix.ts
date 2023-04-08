@@ -1,9 +1,8 @@
-import { Entity, K_STORABLE, Property } from '@typexs/entity';
 import { CheckboxMatrixRow } from './CheckboxMatrixRow';
 import { Grid } from '../../../src/decorators/Grid';
+import { Entity, Property } from '@allgemein/schema-api';
 
-
-@Entity({ [K_STORABLE]: false })
+@Entity({ storable: false })
 export class CheckboxMatrix {
 
   @Grid({ fixed: true, nr: false })
