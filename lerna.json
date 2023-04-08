@@ -6,6 +6,7 @@
   "distTag": "v2-dev",
   "verbose": true,
   "independent": true,
+  "noGitTagVersion": true,
   "command": {
     "version": {
       "ignore": "app|app-auth|testtask",
