@@ -8,9 +8,15 @@
   "independent": true,
   "command": {
     "version": {
-      "ignore": "app|app-auth",
+      "ignore": "app|app-auth|testtask",
       "preid": "dev",
-      "noPush": true
+      "noPush": true,
+      "private": false
+    },
+    "publish": {
+      "ignore": "app|app-auth|testtask",
+      "noPush": true,
+      "private": false
     }
   }
 }
