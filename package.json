@@ -9,7 +9,7 @@
     "postinstall": "npx lerna link",
     "test": "npx lerna run test --concurrency=1",
     "build": "npx lerna run build --concurrency=1",
-    "publish": "npx lerna run publish",
+    "publish": "npx lerna publish from-package",
     "documentation": "npx gulp docs-generate",
     "documentation:watch": "npx gulp watch-doc"
   },
