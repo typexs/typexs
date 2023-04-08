@@ -3,5 +3,12 @@
   "useWorkspaces": true,
   "version": "independent",
   "contents": "src",
-  "independent": true
+  "independent": true,
+  "command": {
+    "version": {
+      "ignore": "app|app-auth",
+      "preid": "dev",
+      "noPush": true
+    }
+  }
 }
