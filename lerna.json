@@ -14,7 +14,6 @@
       "private": false
     },
     "publish": {
-      "ignore": "app|app-auth|testtask",
       "noPush": true,
       "private": false
     }
