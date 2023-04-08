@@ -5,19 +5,26 @@ const exec = util.promisify(require('node:child_process').exec);
 
 async function build() {
   const cwd = process.cwd();
-  console.log(cwd);
-  await exec('npx tsc');
+  await exec('npx tsc --build');
   const packageJson = require(cwd + '/package.json');
   packageJson.main = 'index.js';
   packageJson.browser = 'browser.js';
   delete packageJson.private;
-  fs.writeFileSync(cwd+'/build/package/package.json', JSON.stringify(packageJson, null, 2));
+  delete packageJson.scripts;
+  delete packageJson.publishConfig;
+  fs.writeFileSync(cwd + '/build/package/package.json', JSON.stringify(packageJson, null, 2));
   // copy json files
-  const files = glob.sync('./src/**/*.json', { follow: false }).filter(x => !/package\.json/.test(x));
-  // files.forEach(x => {
-  //   const y = x.replace('./src', './build/package');
-  //   fs.writeFileSync(y, fs.readFileSync(x));
-  // });
+  let files = glob.sync(cwd + '/src/**/*.json', { follow: false }).filter(x => !/package\.json/.test(x));
+  files.forEach(x => {
+    const y = x.replace(cwd + '/src', cwd + '/build/package');
+    fs.writeFileSync(y, fs.readFileSync(x));
+  });
+
+  files = glob.sync(cwd + '/README.md', { follow: false });
+  files.forEach(x => {
+    const y = x.replace(cwd + '/src', cwd + '/build/package');
+    fs.writeFileSync(y, fs.readFileSync(x));
+  });
 }
 
 build().then(x => {

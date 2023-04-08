@@ -5,9 +5,12 @@
   "main": "index",
   "browser": "browser",
   "scripts": {
-    "build": "npx rollup -c",
+    "build": "node ../../scripts/build.js",
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
     "posttest": "nyc report --reporter=json"
+  },
+  "publishConfig": {
+    "directory": "./build/package"
   },
   "bin": {
     "typexs": "./bin/typexs",
