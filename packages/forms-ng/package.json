@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/forms-ng",
-  "version": "2.2.1-dev.9",
+  "version": "2.2.1-dev.10",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
   "scripts": {

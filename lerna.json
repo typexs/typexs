@@ -16,8 +16,7 @@
       "noPush": true,
       "gitTagVersion": false,
       "push": false,
-      "private": false,
-      "yes": true
+      "private": false
     },
     "publish": {
       "noPush": true,
