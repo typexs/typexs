@@ -23,7 +23,7 @@
   "peerDependencies": {
     "@typexs/base-ng": "*",
     "@typexs/forms-ng": "*",
-    "@typexs/search": "*",
+    "@typexs/search": "2.2.1-dev.12",
     "@typexs/storage-ng": "*"
   },
   "devDependencies": {
@@ -33,7 +33,7 @@
     "@angular/router": "v12-lts",
     "@typexs/base-ng": "*",
     "@typexs/forms-ng": "*",
-    "@typexs/search": "*",
+    "@typexs/search": "2.2.1-dev.12",
     "@typexs/storage-ng": "*",
     "lodash": "4.17.21",
     "rxjs": "6.6.7"
