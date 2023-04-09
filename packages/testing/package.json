@@ -23,7 +23,10 @@
     "server",
     "controllers"
   ],
-  "dependencies": {
+  "peerDependencies": {
+    "@typexs/base": "*"
+  },
+  "devDependencies": {
     "@typexs/base": "*"
   },
   "bugs": {
