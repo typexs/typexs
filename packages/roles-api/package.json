@@ -4,6 +4,7 @@
   "description": "",
   "main": "./index",
   "scripts": {
+    "clean": "rm -rf build node_modules/.cache",
     "build": "node ../../scripts/build.js"
   },
   "repository": {
