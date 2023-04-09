@@ -14,7 +14,9 @@
       "ignore": "app|app-auth|testtask",
       "preid": "dev",
       "noPush": true,
-      "gitTagVersion": false,
+      "gitTagVersion": true,
+      "exact": true,
+      "message": "Update versions",
       "push": false,
       "private": false
     },
