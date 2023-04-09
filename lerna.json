@@ -14,7 +14,10 @@
       "ignore": "app|app-auth|testtask",
       "preid": "dev",
       "noPush": true,
-      "private": false
+      "gitTagVersion": false,
+      "push": false,
+      "private": false,
+      "yes": true
     },
     "publish": {
       "noPush": true,
