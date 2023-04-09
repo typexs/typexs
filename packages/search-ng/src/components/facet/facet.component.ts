@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ISearchFacet } from '@typexs/search';
 
+
 /**
  * Component that contains a search input and a list of search results
  */
