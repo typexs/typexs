@@ -1,6 +1,6 @@
 {
   "name": "@typexs/storage",
-  "version": "2.2.1-dev.11",
+  "version": "2.2.1-dev.12",
   "description": "Storage for typexs",
   "main": "./index",
   "browser": "./browser",

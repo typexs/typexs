@@ -1,6 +1,6 @@
 {
   "name": "@typexs/forms",
-  "version": "2.2.1-dev.11",
+  "version": "2.2.1-dev.12",
   "description": "Forms for typexs",
   "main": "index",
   "browser": "browser",
