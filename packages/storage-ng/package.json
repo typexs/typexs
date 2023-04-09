@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/storage-ng",
-  "version": "2.2.1-dev.12",
+  "version": "2.2.1-dev.13",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
   "scripts": {
