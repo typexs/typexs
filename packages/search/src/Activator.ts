@@ -4,7 +4,6 @@ import { PERMISSION_ACCESS_SEARCH_VIEW } from './lib/Constants';
 import { IndexRuntimeStatus } from './lib/IndexRuntimeStatus';
 import { IndexProcessingQueue } from './lib/IndexProcessingQueue';
 
-
 export class Activator implements IActivator, IPermissions {
 
   startup() {
