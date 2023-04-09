@@ -8,6 +8,9 @@
   "independent": true,
   "noGitTagVersion": true,
   "command": {
+    "link": {
+      "forceLocal": true
+    },
     "version": {
       "ignore": "app|app-auth|testtask",
       "preid": "dev",
