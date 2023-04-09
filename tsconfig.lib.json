@@ -57,8 +57,20 @@
       "@typexs/storage/*": [
         "./packages/storage/src/*",
       ],
+      "@typexs/distributed-storage": [
+        "./packages/distributed-storage/src/browser",
+      ],
+      "@typexs/distributed-storage/*": [
+        "./packages/distributed-storage/src/*",
+      ],
       "@typexs/base-ng/*": [
         "./packages/base-ng/src/*"
+      ],
+      "@typexs/search": [
+        "./packages/search/src/browser",
+      ],
+      "@typexs/search/*": [
+        "./packages/search/src/*",
       ],
       "@typexs/base-ng": [
         "./packages/base-ng/src/public_api"

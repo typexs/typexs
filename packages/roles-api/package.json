@@ -4,8 +4,6 @@
   "description": "",
   "main": "./index",
   "scripts": {
-    "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
-    "posttest": "nyc report --reporter=json",
     "build": "node ../../scripts/build.js"
   },
   "repository": {

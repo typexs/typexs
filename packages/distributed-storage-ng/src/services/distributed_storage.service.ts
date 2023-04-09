@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { IBuildOptions, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
 import { AbstractQueryService, AuthService, BackendService, EntityResolverService, IQueringService } from '@typexs/base-ng';
 import {
   API_CTRL_DISTRIBUTED_STORAGE,

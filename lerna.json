@@ -4,7 +4,6 @@
   "version": "independent",
   "contents": "src",
   "distTag": "v2-dev",
-  "verbose": true,
   "independent": true,
   "noGitTagVersion": true,
   "command": {
