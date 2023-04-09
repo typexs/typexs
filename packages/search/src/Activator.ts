@@ -8,7 +8,6 @@ import { IndexProcessingQueue } from './lib/IndexProcessingQueue';
 export class Activator implements IActivator, IPermissions {
 
   startup() {
-
     const status = Injector.get(IndexRuntimeStatus);
     Injector.set(IndexRuntimeStatus.NAME, status);
     const queue = Injector.get(IndexProcessingQueue);
