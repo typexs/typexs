@@ -1,11 +1,15 @@
 import { async, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
+import { BackendService, SystemInfoService } from '@typexs/base-ng';
 
 describe('CardComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
         DashboardComponent
+      ],
+      providers: [
+        SystemInfoService, BackendService
       ]
     }).compileComponents();
   }));
