@@ -27,8 +27,6 @@ export class SearchFacetComponent {
     }
     this.change.emit({ name: this.facet.name, entry: entry });
   }
-
-
   label() {
     return _.upperFirst(this.facet.name);
   }
