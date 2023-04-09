@@ -5,7 +5,7 @@
   "description": "Angular for typexs",
   "main": "./public_api.ts",
   "scripts": {
-    "_test": "ng test --code-coverage=true --watch=false",
+    "test": "ng test --code-coverage=true --watch=false",
     "build": "ng build"
   },
   "directories": {
