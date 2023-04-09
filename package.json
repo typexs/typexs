@@ -10,8 +10,8 @@
     "test": "npx lerna run test --concurrency=1",
     "build": "npx lerna run build --concurrency=1",
     "publish": "npx lerna publish from-package",
-    "documentation": "npx gulp docs-generate",
-    "documentation:watch": "npx gulp watch-doc"
+    "documentation": "npx antora --stacktrace generate --clean --fetch --log-level all --to-dir docs/build/site",
+    "documentation:watch": "npx nodemon --watch docs -e adoc --exec npm run documentation -- docs/antora-playbook.yml"
   },
   "repository": {
     "type": "git",
@@ -126,6 +126,7 @@
     "mongodb": "3.6.9",
     "mysql": "2.18.1",
     "ng-packagr": "12.2.7",
+    "nodemon": "^2.0.22",
     "nyc": "^15.1.0",
     "perfect-scrollbar": "1.5.1",
     "pg": "8.6.0",
