@@ -22,21 +22,21 @@
     "auth"
   ],
   "dependencies": {
-    "@typexs/base": "2.2.1-dev.22",
-    "@typexs/entity": "2.2.1-dev.13",
-    "@typexs/forms": "2.2.1-dev.13",
-    "@typexs/ng": "2.2.1-dev.13",
-    "@typexs/roles": "2.2.1-dev.13",
-    "@typexs/roles-api": "2.2.1-dev.13",
+    "@typexs/base": "^2.2.1-dev.22",
+    "@typexs/entity": "^2.2.1-dev.13",
+    "@typexs/forms": "^2.2.1-dev.13",
+    "@typexs/ng": "^2.2.1-dev.13",
+    "@typexs/roles": "^2.2.1-dev.13",
+    "@typexs/roles-api": "^2.2.1-dev.13",
     "bcrypt": "^5.0.0",
     "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
-    "@typexs/server": "2.2.1-dev.13",
-    "@typexs/testing": "2.2.1-dev.13"
+    "@typexs/server": "^2.2.1-dev.13",
+    "@typexs/testing": "^2.2.1-dev.13"
   },
   "peerDependencies": {
-    "@typexs/server": "2.2.1-dev.13"
+    "@typexs/server": "^2.2.1-dev.13"
   },
   "typexs": {
     "name": "auth",

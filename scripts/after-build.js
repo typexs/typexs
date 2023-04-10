@@ -12,7 +12,7 @@ const { resolve } = require('path');
     const packageJson = JSON.parse(fs.readFileSync(packageJsonFile).toString());
     const name = packageJson.name;
     const version = packageJson.version;
-    map[name] = version;
+    map[name] = '^' + version;
   }
   console.log(map);
   for (const packageJsonFile of files) {

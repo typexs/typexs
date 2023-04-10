@@ -29,10 +29,10 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs",
   "dependencies": {
-    "@typexs/base": "2.2.1-dev.22"
+    "@typexs/base": "^2.2.1-dev.22"
   },
   "devDependencies": {
-    "@typexs/testing": "2.2.1-dev.13"
+    "@typexs/testing": "^2.2.1-dev.13"
   },
   "typexs": {
     "name": "forms"
