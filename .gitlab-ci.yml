@@ -37,7 +37,7 @@ pages:
   stage: deployment
   script:
     - npm ci
-    - FORCE_SHOW_EDIT_PAGE_LINK=true npm run documentation -- antora-playbook.yml
+    - FORCE_SHOW_EDIT_PAGE_LINK=true npm run documentation -- docs/antora-playbook.yml
     - mv docs/build/site public
   artifacts:
     paths:
