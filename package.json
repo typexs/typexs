@@ -1,7 +1,6 @@
 {
   "name": "@typexs/typexs",
   "version": "2.2.0-dev.8",
-  "tag": "v2-dev",
   "main": "index.js",
   "browser": "browser.js",
   "scripts": {
@@ -9,7 +8,8 @@
     "clean": "npx lerna run clean && npx lerna clean -y ",
     "postinstall": "npx lerna link",
     "test": "npx lerna run test --concurrency=1",
-    "build": "npx lerna run build",
+    "build": "npx lerna run build && npm run postbuild",
+    "postbuild": "node scripts/after-build.js",
     "publish": "npx lerna publish from-package",
     "documentation": "npx antora --stacktrace generate --clean --fetch --log-level all --to-dir docs/build/site",
     "documentation:watch": "npx nodemon --watch docs -e adoc --exec npm run documentation -- docs/antora-playbook.yml"
