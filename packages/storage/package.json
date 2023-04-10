@@ -1,6 +1,6 @@
 {
   "name": "@typexs/storage",
-  "version": "2.2.1-dev.14",
+  "version": "2.2.1-dev.15",
   "description": "Storage for typexs",
   "main": "./index",
   "browser": "./browser",
@@ -29,13 +29,13 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs#readme",
   "dependencies": {
-    "@typexs/roles-api": "2.2.1-dev.14"
+    "@typexs/roles-api": "2.2.1-dev.15"
   },
   "devDependencies": {
-    "@typexs/base": "2.2.1-dev.23",
-    "@typexs/forms": "2.2.1-dev.14",
-    "@typexs/server": "2.2.1-dev.14",
-    "@typexs/testing": "2.2.1-dev.14"
+    "@typexs/base": "2.2.1-dev.24",
+    "@typexs/forms": "2.2.1-dev.15",
+    "@typexs/server": "2.2.1-dev.15",
+    "@typexs/testing": "2.2.1-dev.15"
   },
   "peerDependencies": {
     "@typexs/base": "^2.2.1-dev.22",
