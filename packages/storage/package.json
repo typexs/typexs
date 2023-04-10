@@ -29,18 +29,18 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs#readme",
   "dependencies": {
-    "@typexs/roles-api": "*"
+    "@typexs/roles-api": "2.2.1-dev.13"
   },
   "devDependencies": {
-    "@typexs/base": "*",
-    "@typexs/forms": "*",
-    "@typexs/server": "*",
-    "@typexs/testing": "*"
+    "@typexs/base": "2.2.1-dev.22",
+    "@typexs/forms": "2.2.1-dev.13",
+    "@typexs/server": "2.2.1-dev.13",
+    "@typexs/testing": "2.2.1-dev.13"
   },
   "peerDependencies": {
-    "@typexs/base": "*",
-    "@typexs/forms": "*",
-    "@typexs/server": "*"
+    "@typexs/base": "2.2.1-dev.22",
+    "@typexs/forms": "2.2.1-dev.13",
+    "@typexs/server": "2.2.1-dev.13"
   },
   "typexs": {
     "name": "storage",

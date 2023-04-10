@@ -13,10 +13,10 @@
     "sha1": "^1.1.1"
   },
   "peerDependencies": {
-    "@typexs/base": "*"
+    "@typexs/base": "2.2.1-dev.22"
   },
   "devDependencies": {
-    "@typexs/base": "*"
+    "@typexs/base": "2.2.1-dev.22"
   },
   "typexs": {
     "name": "pipelines",

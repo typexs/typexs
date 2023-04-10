@@ -18,17 +18,17 @@
   "license": "MIT",
   "dependencies": {
     "@cezaryrk/minimatch": "^3.0.4",
-    "@typexs/roles-api": "*",
+    "@typexs/roles-api": "2.2.1-dev.13",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@typexs/base": "*",
-    "@typexs/entity": "*",
-    "@typexs/testing": "*"
+    "@typexs/base": "2.2.1-dev.22",
+    "@typexs/entity": "2.2.1-dev.13",
+    "@typexs/testing": "2.2.1-dev.13"
   },
   "peerDependencies": {
-    "@typexs/base": "*",
-    "@typexs/entity": "*"
+    "@typexs/base": "2.2.1-dev.22",
+    "@typexs/entity": "2.2.1-dev.13"
   },
   "typexs": {
     "name": "roles"

@@ -13,15 +13,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@typexs/base": "*",
-    "@typexs/entity": "*",
-    "@typexs/pipelines": "*",
-    "@typexs/roles-api": "*"
+    "@typexs/base": "2.2.1-dev.22",
+    "@typexs/entity": "2.2.1-dev.13",
+    "@typexs/pipelines": "2.2.1-dev.13",
+    "@typexs/roles-api": "2.2.1-dev.13"
   },
   "devDependencies": {
     "@elastic/elasticsearch": "^7.15.0",
-    "@typexs/server": "*",
-    "@typexs/storage": "*"
+    "@typexs/server": "2.2.1-dev.13",
+    "@typexs/storage": "2.2.1-dev.13"
   },
   "peerDependencies": {
     "@elastic/elasticsearch": "^7.15.0"

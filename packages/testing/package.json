@@ -25,10 +25,10 @@
     "controllers"
   ],
   "peerDependencies": {
-    "@typexs/base": "*"
+    "@typexs/base": "2.2.1-dev.22"
   },
   "devDependencies": {
-    "@typexs/base": "*"
+    "@typexs/base": "2.2.1-dev.22"
   },
   "bugs": {
     "url": "https://gitlab.com/typexs/typexs/-/issues"

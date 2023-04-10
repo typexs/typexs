@@ -22,20 +22,20 @@
     "typexs"
   ],
   "peerDependencies": {
-    "@typexs/base-ng": "*",
-    "@typexs/forms-ng": "*",
-    "@typexs/search": "2.2.1-dev.12",
-    "@typexs/storage-ng": "*"
+    "@typexs/base-ng": "2.2.1-dev.16",
+    "@typexs/forms-ng": "2.2.1-dev.13",
+    "@typexs/search": "2.2.1-dev.14",
+    "@typexs/storage-ng": "2.2.1-dev.13"
   },
   "devDependencies": {
     "@angular/common": "v12-lts",
     "@angular/core": "v12-lts",
     "@angular/forms": "v12-lts",
     "@angular/router": "v12-lts",
-    "@typexs/base-ng": "*",
-    "@typexs/forms-ng": "*",
+    "@typexs/base-ng": "2.2.1-dev.16",
+    "@typexs/forms-ng": "2.2.1-dev.13",
     "@typexs/search": "2.2.1-dev.14",
-    "@typexs/storage-ng": "*",
+    "@typexs/storage-ng": "2.2.1-dev.13",
     "lodash": "4.17.21",
     "rxjs": "6.6.7"
   },

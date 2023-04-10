@@ -14,14 +14,20 @@ const { resolve } = require('path');
     const version = packageJson.version;
     map[name] = version;
   }
+  console.log(map);
   for (const packageJsonFile of files) {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonFile).toString());
-    Object.keys(packageJson.dependencies).map(name => {
-      if(map[name] && map[name] !== packageJson.dependencies[name]){
-        packageJson.dependencies[name] = map[name];
+    ['dependencies', 'peerDependencies', 'devDependencies'].forEach(x => {
+      const deps = packageJson[x];
+      if (deps) {
+        Object.keys(deps).map(name => {
+          if (map[name] && map[name] !== deps[name]) {
+            deps[name] = map[name];
+          }
+        });
       }
     });
+    fs.writeFileSync(packageJsonFile, JSON.stringify(packageJson, null, 2));
   }
-  console.log(files);
 })().then(x => {
 });
