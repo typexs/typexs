@@ -1,9 +1,14 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/entity-ng",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.1-dev.14",
   "description": "Angular for typexs",
   "main": "public_api.ts",
+  "scripts": {
+    "clean": "rm -rf build node_modules/.cache",
+    "test": "ng test --code-coverage=true --watch=false",
+    "build": "ng build"
+  },
   "directories": {
     "doc": "docs/de"
   },
@@ -25,17 +30,26 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@typexs/base-ng": "0.0.0-PLACEHOLDER",
-    "@typexs/forms-ng": "0.0.0-PLACEHOLDER",
-    "@typexs/ng": "0.0.0-PLACEHOLDER",
-    "@typexs/entity": "0.0.0-PLACEHOLDER"
+    "@typexs/base": "^2.2.1-dev.22",
+    "@typexs/base-ng": "^2.2.1-dev.16",
+    "@typexs/entity": "^2.2.1-dev.13",
+    "@typexs/forms": "^2.2.1-dev.13",
+    "@typexs/forms-ng": "^2.2.1-dev.13",
+    "@typexs/ng": "^2.2.1-dev.13"
   },
   "devDependencies": {
-    "chai": "4.3.4",
+    "@angular/common": "v12-lts",
     "@angular/core": "v12-lts",
     "@angular/forms": "v12-lts",
-    "@angular/common": "v12-lts",
     "@angular/router": "v12-lts",
+    "@typexs/base": "2.2.1-dev.23",
+    "@typexs/base-ng": "2.2.1-dev.17",
+    "@typexs/entity": "2.2.1-dev.14",
+    "@typexs/forms": "2.2.1-dev.14",
+    "@typexs/forms-ng": "2.2.1-dev.14",
+    "@typexs/ng": "2.2.1-dev.14",
+    "chai": "4.3.4",
     "rxjs": "6.6.7"
-  }
+  },
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

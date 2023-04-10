@@ -1,20 +1,27 @@
 {
   "name": "@typexs/search",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.1-dev.15",
   "description": "",
   "main": "index",
   "browser": "browser",
   "scripts": {
+    "clean": "rm -rf build node_modules/.cache",
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
-    "posttest": "nyc report --reporter=json"
+    "posttest": "nyc report --reporter=json",
+    "build": "node ../../scripts/build.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@typexs/base": "0.0.0-PLACEHOLDER",
-    "@typexs/entity": "0.0.0-PLACEHOLDER",
-    "@typexs/pipelines": "0.0.0-PLACEHOLDER",
-    "@typexs/roles-api": "0.0.0-PLACEHOLDER"
+    "@typexs/base": "2.2.1-dev.23",
+    "@typexs/entity": "2.2.1-dev.14",
+    "@typexs/pipelines": "2.2.1-dev.14",
+    "@typexs/roles-api": "2.2.1-dev.14"
+  },
+  "devDependencies": {
+    "@elastic/elasticsearch": "^7.15.0",
+    "@typexs/server": "2.2.1-dev.14",
+    "@typexs/storage": "2.2.1-dev.14"
   },
   "peerDependencies": {
     "@elastic/elasticsearch": "^7.15.0"
@@ -30,5 +37,6 @@
         ]
       }
     ]
-  }
+  },
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

@@ -1,9 +1,9 @@
-export {StorageModule} from './module';
-export {StorageService} from './storage.service';
-export {STORAGE_ROUTES} from './routes';
-export {StorageQueryEmbeddedComponent} from './query/embedded/storage-query-embedded.component';
-export {StorageQueryComponent} from './query/page/storage-query.component';
-export {StorageBackendsComponent} from './backends/storage-backends.component';
+export { StorageModule } from './module';
+export { StorageService } from './storage.service';
+export { STORAGE_ROUTES } from './routes';
+export { StorageQueryEmbeddedComponent } from './query/embedded/storage-query-embedded.component';
+export { StorageQueryComponent } from './query/page/storage-query.component';
+export { StorageBackendsComponent } from './backends/storage-backends.component';
 export * from './delete/storage-delete.component';
 export * from './modify/storage-modify.component';
 export * from './backends/storage-backends.component';

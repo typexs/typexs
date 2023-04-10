@@ -45,7 +45,7 @@ import { Book } from './entities/Book';
 import { AppService, AuthService, ComponentRegistryService } from '@typexs/base-ng';
 import { FormSelectionsComponent } from './components/forms/selection/form-selections.component';
 import { BuildSimpleItemComponent } from './components/entities/build-simple-item/build-simple-item.component';
-import { BuildSimpleItem } from '../../../../demo/testtask/entities/BuildSimpleItem';
+import { BuildSimpleItem } from '../../../demo-task/src/entities/BuildSimpleItem';
 import { TablesOverviewComponent } from './components/tables/overview/tables-overview.component';
 
 

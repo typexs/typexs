@@ -1,7 +1,6 @@
 import { Entity, Property } from '@allgemein/schema-api';
 import { Hidden, Text } from '@typexs/forms';
 import { IStorageRefOptions } from '@typexs/base';
-import { isEmpty, isNumber, isString } from 'lodash';
 
 @Entity()
 export class StorageSetting {

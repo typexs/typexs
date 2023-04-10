@@ -1,6 +1,6 @@
 {
   "name": "@typexs/forms",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.1-dev.14",
   "description": "Forms for typexs",
   "main": "index",
   "browser": "browser",
@@ -8,8 +8,10 @@
     "doc": "docs/de"
   },
   "scripts": {
+    "clean": "rm -rf build node_modules/.cache",
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
-    "posttest": "nyc report --reporter=json"
+    "posttest": "nyc report --reporter=json",
+    "build": "node ../../scripts/build.js"
   },
   "repository": {
     "type": "git",
@@ -27,12 +29,13 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs",
   "dependencies": {
-    "@typexs/base": "0.0.0-PLACEHOLDER"
+    "@typexs/base": "2.2.1-dev.23"
   },
-  "peerDependencies": {
+  "devDependencies": {
+    "@typexs/testing": "2.2.1-dev.14"
   },
-  "private": true,
   "typexs": {
     "name": "forms"
-  }
+  },
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

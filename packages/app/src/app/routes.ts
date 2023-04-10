@@ -11,7 +11,6 @@ import { LogoutComponent } from './dummy/logout/logout.component';
 import { ProfileComponent } from './dummy/profile/profile.component';
 import { NotificationDemoComponent } from './components/notification/notification-demo.component';
 import { InputDemoComponent } from './components/forms/input/input-demo.component';
-import { TablesDemoComponent } from './components/tables/tables-demo.component';
 import { SimpleHtmlTableDemoComponent } from './components/tables/simple-html-table-demo.component';
 import { StorageModule } from '@typexs/storage-ng';
 import { EntityModule } from '@typexs/entity-ng';
@@ -27,8 +26,7 @@ import { TreeContentDynamicChangeComponent } from './components/content-view/tre
 import { TreeContentComponent } from './components/content-view/tree-content.component';
 import { SimpleViewVariantsComponent } from './components/content-view/simple-view-variants.component';
 import { CTXT_ROUTE_USER_LOGOUT, CTXT_ROUTE_USER_PROFILE, EntityViewPageComponent } from '@typexs/base-ng';
-import { SearchModule, SearchPageComponent } from '@typexs/search-ng';
-import { PERMISSION_ACCESS_SEARCH_VIEW } from '@typexs/search';
+import { SearchPageComponent } from '@typexs/search-ng';
 import { TablesOverviewComponent } from './components/tables/overview/tables-overview.component';
 
 

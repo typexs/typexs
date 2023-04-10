@@ -6,7 +6,6 @@ import { LdapEntityRegistry } from '../../../lib/registry/LdapEntityRegistry';
 import { LdapStorageRef } from '../../../lib/storage/LdapStorageRef';
 import { ILdapStorageRefOptions } from '../../../lib/storage/ILdapStorageRefOptions';
 import { keys } from 'lodash';
-import { C_SEARCH_INDEX } from '@typexs/search/lib/Constants';
 
 
 export class LdapStorage implements IStorage {

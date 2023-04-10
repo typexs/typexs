@@ -1,9 +1,10 @@
 import { Injector, XS_P_$COUNT, XS_P_$OFFSET } from '@typexs/base';
-import { EntityController, EntityRegistry, IFindOptions } from '@typexs/entity';
-
 import { ClassType, IEntityRef } from '@allgemein/schema-api';
-import { first, isArray, isEmpty, isUndefined, keys, merge } from 'lodash';
+import { first, isArray, isEmpty, isUndefined, merge } from 'lodash';
 import { IReaderOptions, Reader } from '@typexs/pipelines';
+import { IFindOptions } from '../../../libs/framework/IFindOptions';
+import { EntityController } from '../../../libs/EntityController';
+import { EntityRegistry } from '../../../libs/EntityRegistry';
 
 
 export interface IEntityControllerReaderOptions<T> extends IReaderOptions, IFindOptions {

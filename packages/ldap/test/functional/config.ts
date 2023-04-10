@@ -1,5 +1,4 @@
 import { get } from 'lodash';
-import { ILdapAuthOptions } from '@typexs/auth/adapters/auth/ldap/ILdapAuthOptions';
 import { ILdapStorageRefOptions } from '../../src/lib/storage/ILdapStorageRefOptions';
 import { C_LDAP } from '../../src/lib/Constants';
 

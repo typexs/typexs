@@ -1,14 +1,22 @@
 {
   "name": "@typexs/pipelines",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.1-dev.14",
   "main": "./index",
   "browser": "./browser",
+  "scripts": {
+    "clean": "rm -rf build node_modules/.cache",
+    "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
+    "posttest": "nyc report --reporter=json",
+    "build": "node ../../scripts/build.js"
+  },
   "dependencies": {
     "sha1": "^1.1.1"
   },
-  "private": true,
   "peerDependencies": {
-    "@typexs/base": "0.0.0-PLACEHOLDER"
+    "@typexs/base": "^2.2.1-dev.22"
+  },
+  "devDependencies": {
+    "@typexs/base": "2.2.1-dev.23"
   },
   "typexs": {
     "name": "pipelines",
@@ -28,5 +36,6 @@
         ]
       }
     ]
-  }
+  },
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

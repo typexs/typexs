@@ -1,0 +1,31 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "useWorkspaces": true,
+  "version": "independent",
+  "contents": "src",
+  "distTag": "v2-dev",
+  "independent": true,
+  "noGitTagVersion": true,
+  "command": {
+    "link": {
+      "forceLocal": true
+    },
+    "version": {
+      "ignore": "app|app-auth|testtask",
+      "preid": "dev",
+      "noPush": true,
+      "gitTagVersion": true,
+      "exact": true,
+      "message": "Update versions",
+      "push": false,
+      "private": false
+    },
+    "publish": {
+      "noPush": true,
+      "private": false,
+      "gitReset": true,
+      "distTag": "v2-dev",
+      "contents": "build/package"
+    }
+  }
+}

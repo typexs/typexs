@@ -14,7 +14,7 @@ import {
   API_CTRL_STORAGE_UPDATE_ENTITIES_BY_CONDITION,
   API_CTRL_STORAGE_UPDATE_ENTITY,
   PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY_PATTERN
-} from '@typexs/storage';
+} from '../../../src/lib/Constants';
 import { DEFAULT_ANONYMOUS, K_ROUTE_CONTROLLER, Server } from '@typexs/server';
 import { expect } from 'chai';
 import * as _ from 'lodash';

@@ -1,5 +1,3 @@
-import * as _ from 'lodash';
-import {getMetadataArgsStorage} from 'typeorm';
 import {
   EntityControllerApi,
   Injector,
@@ -9,11 +7,11 @@ import {
   TypeOrmEntityRegistry,
   TypeOrmStorageRef
 } from '@typexs/base';
-import {EntityController} from '../../src/libs/EntityController';
-import {EntityRegistry} from '../../src/libs/EntityRegistry';
-import {FrameworkFactory} from '../../src/libs/framework/FrameworkFactory';
-import {RegistryFactory} from '@allgemein/schema-api';
-import {TestHelper as _TestHelper} from '@typexs/testing';
+import { EntityController } from '../../src/libs/EntityController';
+import { EntityRegistry } from '../../src/libs/EntityRegistry';
+import { FrameworkFactory } from '../../src/libs/framework/FrameworkFactory';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { TestHelper as _TestHelper } from '@typexs/testing';
 
 export class TestHelper extends _TestHelper {
 

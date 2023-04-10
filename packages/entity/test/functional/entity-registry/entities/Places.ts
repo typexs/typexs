@@ -1,5 +1,5 @@
 import { Select, Text } from '@typexs/forms';
-import { Property } from '@typexs/entity/libs/decorators/Property';
+import { Property } from '../../../../src/libs/decorators/Property';
 
 
 export class Places {

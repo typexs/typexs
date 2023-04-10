@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Route, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Route } from '@angular/router';
 import {
   AbstractUserLogin,
   AbstractUserLogout,
@@ -421,7 +421,7 @@ export class UserAuthService implements IAuthServiceProvider {
       this.getUser().subscribe(x => {
         // TODO cache
         if (x && x.roles) {
-          const permissions = _.concat([], ...x.roles.map(y => y.permissions));
+          const permissions = _.concat([], ...x.roles.map((y: any) => y.permissions));
           this.permissions = permissions.map(p => _.isString(p) ? p : p.permission);
         } else {
           this.permissions = [];
