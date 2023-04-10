@@ -7,6 +7,7 @@ variables:
 stages:
   - build
   - test
+  - deployment
 
 
 build ldap image:
@@ -22,25 +23,28 @@ build ldap image:
       --dockerfile="${CI_PROJECT_DIR}/services/ldap/Dockerfile"
       --destination "${CI_REGISTRY_IMAGE}/ldap"
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $JOB_NAME == "update image"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG'
       changes:
         - .gitlab-ci.yml
         - services/ldap/**/*
 
-
 pages:
   variables:
+    FF_NETWORK_PER_BUILD: 1
     GIT_STRATEGY: clone
-  stage: build
+  image: node:lts
+  stage: deployment
   script:
     - npm ci
-    - FORCE_SHOW_EDIT_PAGE_LINK=true CI=true npm run documentation
-    - mv build/docs public
+    - FORCE_SHOW_EDIT_PAGE_LINK=true npm run documentation -- docs/antora-playbook.yml
+    - mv docs/build/site public
   artifacts:
     paths:
       - public
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $JOB_NAME == "update docs"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == "master" && $CI_COMMIT_TAG == null'
       changes:
         - .gitlab-ci.yml
         - docs/**
@@ -92,7 +96,7 @@ test:
     - docker network disconnect testing_txs_base_net $CONTAINER_ID
     - docker compose -f deployments/testing/docker-compose.yml down
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG == null'
       changes:
         - .gitlab-ci.yml
         - package.json

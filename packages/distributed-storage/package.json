@@ -1,12 +1,14 @@
 {
   "name": "@typexs/distributed-storage",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.1-dev.14",
   "description": "",
   "main": "index",
   "browser": "browser",
   "scripts": {
+    "clean": "rm -rf build node_modules/.cache",
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
-    "posttest": "nyc report --reporter=json"
+    "posttest": "nyc report --reporter=json",
+    "build": "node ../../scripts/build.js"
   },
   "repository": {
     "type": "git",
@@ -19,15 +21,21 @@
   "author": "Robert Kania",
   "license": "MIT",
   "dependencies": {
-    "@typexs/roles-api": "0.0.0-PLACEHOLDER"
+    "@typexs/roles-api": "2.2.1-dev.14"
+  },
+  "devDependencies": {
+    "@typexs/base": "2.2.1-dev.23",
+    "@typexs/pipelines": "2.2.1-dev.14",
+    "@typexs/server": "2.2.1-dev.14",
+    "@typexs/testing": "2.2.1-dev.14"
   },
   "peerDependencies": {
-    "@typexs/base": "0.0.0-PLACEHOLDER",
-    "@typexs/pipelines": "0.0.0-PLACEHOLDER",
-    "@typexs/server": "0.0.0-PLACEHOLDER"
+    "@typexs/base": "^2.2.1-dev.22",
+    "@typexs/pipelines": "^2.2.1-dev.13",
+    "@typexs/server": "^2.2.1-dev.13"
   },
-  "private": true,
   "typexs": {
     "name": "distributed-storage"
-  }
+  },
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

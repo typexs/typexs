@@ -8,7 +8,6 @@ export { Config, IConfigOptions, IConfigData, IFileConfigOptions } from '@allgem
 export { ClassesLoader, ModuleRegistry } from '@allgemein/moduls';
 export { PlatformUtils, FileUtils, ClassLoader } from '@allgemein/base';
 
-
 export { TasksApi } from './api/Tasks.api';
 export { ITasksApi } from './api/ITasksApi';
 
@@ -121,7 +120,6 @@ export { TasksHelper } from './libs/tasks/TasksHelper';
 export * from './libs/worker/Constants';
 export { Workers } from './libs/worker/Workers';
 export { WorkerRef } from './libs/worker/WorkerRef';
-
 
 export { BaseUtils } from './libs/utils/BaseUtils';
 export { DomainUtils } from './libs/utils/DomainUtils';

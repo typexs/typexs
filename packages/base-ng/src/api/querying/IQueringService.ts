@@ -1,6 +1,5 @@
 import { Observable } from 'rxjs';
-import { ILookupRegistry, IEntityRef } from '@allgemein/schema-api';
-import { IEntity } from '@typexs/entity';
+import { IEntityRef, ILookupRegistry } from '@allgemein/schema-api';
 
 
 export interface IQueringService {

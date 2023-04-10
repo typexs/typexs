@@ -1,12 +1,14 @@
 {
   "name": "@typexs/auth",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.1-dev.13",
   "description": "Auth module for typexs",
   "main": "index",
   "browser": "browser",
   "scripts": {
+    "clean": "rm -rf build node_modules/.cache",
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
-    "posttest": "nyc report --reporter=json"
+    "posttest": "nyc report --reporter=json",
+    "build": "node ../../scripts/build.js"
   },
   "repository": {
     "type": "git",
@@ -20,18 +22,22 @@
     "auth"
   ],
   "dependencies": {
-    "@typexs/base": "0.0.0-PLACEHOLDER",
-    "@typexs/entity": "0.0.0-PLACEHOLDER",
-    "@typexs/roles": "0.0.0-PLACEHOLDER",
-    "@typexs/ng": "0.0.0-PLACEHOLDER",
-    "@typexs/roles-api": "0.0.0-PLACEHOLDER",
+    "@typexs/base": "2.2.1-dev.23",
+    "@typexs/entity": "2.2.1-dev.14",
+    "@typexs/forms": "2.2.1-dev.14",
+    "@typexs/ng": "2.2.1-dev.14",
+    "@typexs/roles": "2.2.1-dev.14",
+    "@typexs/roles-api": "2.2.1-dev.14",
     "bcrypt": "^5.0.0",
     "jsonwebtoken": "^8.5.1"
   },
-  "peerDependencies": {
-    "@typexs/server": "0.0.0-PLACEHOLDER"
+  "devDependencies": {
+    "@typexs/server": "2.2.1-dev.14",
+    "@typexs/testing": "2.2.1-dev.14"
   },
-  "private": true,
+  "peerDependencies": {
+    "@typexs/server": "^2.2.1-dev.13"
+  },
   "typexs": {
     "name": "auth",
     "declareLibs": [
@@ -50,5 +56,6 @@
         ]
       }
     ]
-  }
+  },
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

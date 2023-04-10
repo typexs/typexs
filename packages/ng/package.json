@@ -1,19 +1,21 @@
 {
   "name": "@typexs/ng",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.1-dev.14",
   "description": "Angular for typexs",
   "main": "index",
   "browser": "browser",
   "scripts": {
+    "clean": "rm -rf build node_modules/.cache",
     "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
-    "posttest": "nyc report --reporter=json"
+    "posttest": "nyc report --reporter=json",
+    "build": "node ../../scripts/build.js"
   },
   "directories": {
     "doc": "docs/de"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/typexs/ng.git"
+    "url": "git+https://gitlab.com/typexs/typexs.git"
   },
   "author": "Robert Kania",
   "license": "MIT",
@@ -25,14 +27,17 @@
     "typexs"
   ],
   "bugs": {
-    "url": "https://gitlab.com/typexs/ng/issues"
+    "url": "https://gitlab.com/typexs/typexs/issues"
   },
-  "homepage": "https://gitlab.com/typexs/ng#readme",
+  "homepage": "https://gitlab.com/typexs/typexs#readme",
   "dependencies": {
-    "@typexs/roles-api": "0.0.0-PLACEHOLDER"
+    "@typexs/roles-api": "2.2.1-dev.14"
+  },
+  "devDependencies": {
+    "@typexs/base": "2.2.1-dev.23"
   },
   "peerDependencies": {
-    "@typexs/base": "0.0.0-PLACEHOLDER",
-    "@typexs/entity": "0.0.0-PLACEHOLDER"
-  }
+    "@typexs/base": "^2.2.1-dev.22"
+  },
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

@@ -1,9 +1,14 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-theme-base",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.1-dev.14",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
+  "scripts": {
+    "clean": "rm -rf build node_modules/.cache",
+    "test": "ng test --code-coverage=true --watch=false",
+    "build": "ng build"
+  },
   "directories": {
     "doc": "docs/de"
   },
@@ -25,11 +30,22 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@typexs/base-ng": "0.0.0-PLACEHOLDER",
-    "@typexs/forms-ng": "0.0.0-PLACEHOLDER",
-    "@typexs/ng-router-menu": "0.0.0-PLACEHOLDER",
+    "@typexs/base": "^2.2.1-dev.22",
+    "@typexs/base-ng": "^2.2.1-dev.16",
+    "@typexs/forms-ng": "^2.2.1-dev.13",
+    "@typexs/ng-router-menu": "^2.2.1-dev.13",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.0.1",
     "perfect-scrollbar": "^1.5.1"
-  }
+  },
+  "devDependencies": {
+    "@typexs/base": "2.2.1-dev.23",
+    "@typexs/base-ng": "2.2.1-dev.17",
+    "@typexs/forms-ng": "2.2.1-dev.14",
+    "@typexs/ng-router-menu": "2.2.1-dev.14",
+    "animate.css": "^4.1.1",
+    "bootstrap": "^5.0.1",
+    "perfect-scrollbar": "^1.5.1"
+  },
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

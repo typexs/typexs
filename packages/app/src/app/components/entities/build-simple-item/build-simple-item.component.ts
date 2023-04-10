@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {IInstanceableComponent} from '@typexs/base-ng';
-import { BuildSimpleItem } from '../../../../../../../demo/testtask/entities/BuildSimpleItem';
+import { BuildSimpleItem } from '../../../../../../demo-task/src/entities/BuildSimpleItem';
 
 
 @Component({

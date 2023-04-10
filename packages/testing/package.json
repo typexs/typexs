@@ -1,6 +1,6 @@
 {
   "name": "@typexs/testing",
-  "version": "0.0.0-PLACEHOLDER",
+  "version": "2.2.1-dev.14",
   "description": "Testing for typexs",
   "main": "./index",
   "browser": "./browser",
@@ -8,8 +8,8 @@
     "doc": "docs/de"
   },
   "scripts": {
-    "test": "nyc mocha test/{**,**/**,**/**/**}/*.spec.ts",
-    "posttest": "nyc report --reporter=json"
+    "clean": "rm -rf build node_modules/.cache",
+    "build": "node ../../scripts/build.js"
   },
   "repository": {
     "type": "git",
@@ -24,9 +24,15 @@
     "server",
     "controllers"
   ],
+  "peerDependencies": {
+    "@typexs/base": "^2.2.1-dev.22"
+  },
+  "devDependencies": {
+    "@typexs/base": "2.2.1-dev.23"
+  },
   "bugs": {
     "url": "https://gitlab.com/typexs/typexs/-/issues"
   },
   "homepage": "https://gitlab.com/typexs/typexs#readme",
-  "private": true
- }
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
+}

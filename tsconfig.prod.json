@@ -30,69 +30,77 @@
     ],
     "baseUrl": "./",
     "paths": {
+      "@typexs/base": [
+        "./packages/base/build/package/*",
+        "./packages/base/build/package"
+      ],
+      "@typexs/base/*": [
+        "./packages/base/build/package/*",
+        "./packages/base/build/package"
+      ],
       "@typexs/base-ng": [
-        "./build/packages/base-ng/out/*",
-        "./build/packages/base-ng/out"
+        "./packages/base-ng/build/package/*",
+        "./packages/base-ng/build/package"
       ],
       "@typexs/base-ng/*": [
-        "./build/packages/base-ng/out/*",
-        "./build/packages/base-ng/out"
+        "./packages/base-ng/build/package/*",
+        "./packages/base-ng/build/package"
       ],
       "@typexs/entity-ng": [
-        "./build/packages/entity-ng/out/*",
-        "./build/packages/entity-ng/out"
+        "./packages/entity-ng/build/package/*",
+        "./packages/entity-ng/build/package"
       ],
       "@typexs/entity-ng/*": [
-        "./build/packages/entity-ng/out/*",
-        "./build/packages/entity-ng/out"
+        "./packages/entity-ng/build/package/*",
+        "./packages/entity-ng/build/package"
       ],
       "@typexs/auth-ng": [
-        "./build/packages/auth-ng/out/*",
-        "./build/packages/auth-ng/out"
+        "./packages/auth-ng/build/package/*",
+        "./packages/auth-ng/build/package"
       ],
       "@typexs/auth-ng/*": [
-        "./build/packages/auth-ng/out/*",
-        "./build/packages/auth-ng/out"
+        "./packages/auth-ng/build/package/*",
+        "./packages/auth-ng/build/package"
       ],
       "@typexs/forms-ng/*": [
-        "./build/packages/forms-ng/out/*",
-        "./build/packages/forms-ng/out"
+        "./packages/forms-ng/build/package/*",
+        "./packages/forms-ng/build/package"
       ],
       "@typexs/forms-ng": [
-        "./build/packages/forms-ng/out/*",
-        "./build/packages/forms-ng/out"
+        "./packages/forms-ng/build/package/*",
+        "./packages/forms-ng/build/package"
       ],
       "@typexs/storage-ng/*": [
-        "./build/packages/storage-ng/out/*",
-        "./build/packages/storage-ng/out"
+        "./packages/storage-ng/build/package/*",
+        "./packages/storage-ng/build/package"
       ],
       "@typexs/storage-ng": [
-        "./build/packages/storage-ng/out/*",
-        "./build/packages/storage-ng/out"
+        "./packages/storage-ng/build/package/*",
+        "./packages/storage-ng/build/package"
       ],
       "@typexs/ng-router-menu/*": [
-        "./build/packages/ng-router-menu/out/*",
-        "./build/packages/ng-router-menu/out"
+        "./packages/ng-router-menu/build/package/*",
+        "./packages/ng-router-menu/build/package"
       ],
       "@typexs/ng-router-menu": [
-        "./build/packages/ng-router-menu/out/*",
-        "./build/packages/ng-router-menu/out"
+        "./packages/ng-router-menu/build/package/*",
+        "./packages/ng-router-menu/build/package"
       ],
       "@typexs/ng-theme-base": [
-        "./build/packages/ng-theme-base/out/*",
-        "./build/packages/ng-theme-base/out"
+        "./packages/ng-theme-base/build/package/*",
+        "./packages/ng-theme-base/build/package"
       ],
       "@typexs/ng-theme-base/*": [
-        "./build/packages/ng-theme-base/out/*",
-        "./build/packages/ng-theme-base/out"
+        "./packages/ng-theme-base/build/package/*",
+        "./packages/ng-theme-base/build/package"
       ],
       "@typexs/tasks-ng": [
-        "./build/packages/tasks-ng/out/*",
-        "./build/packages/tasks-ng/out"
+        "./packages/tasks-ng/build/package/*",
+        "./packages/tasks-ng/build/package"
       ],
       "@typexs/tasks-ng/*": [
-        "./build/packages/tasks-ng/out/*",
-        "./build/packages/tasks-ng/out"
+        "./packages/tasks-ng/build/package/*",
+        "./packages/tasks-ng/build/package"
       ]
     }
   },

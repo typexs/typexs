@@ -53,7 +53,7 @@ export class EmbeddedStorageAgGridComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.storageService.isLoaded().subscribe(x => {
+    this.storageService.isLoaded().subscribe((x: any) => {
       this.entityRef = this.storageService.getEntityRefForName(this.simpleItemName);
     });
   }
