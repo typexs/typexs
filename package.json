@@ -8,7 +8,7 @@
     "clean": "npx lerna run clean && npx lerna clean -y ",
     "postinstall": "npx lerna link",
     "test": "npx lerna run test --concurrency=1",
-    "build": "npx lerna run build",
+    "build": "npx lerna run build  --concurrency=1",
     "fix-versions": "node scripts/fix-versions.js",
     "publish:packages": "npx lerna publish from-package",
     "documentation": "npx antora --stacktrace generate --clean --fetch --log-level all --to-dir docs/build/site",
