@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-admin-ui",
-  "version": "2.2.1-dev.15",
+  "version": "2.2.1-dev.16",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
   "scripts": {
@@ -52,7 +52,7 @@
     "@typexs/ng-theme-base": "2.2.1-dev.15",
     "@typexs/server": "2.2.1-dev.15",
     "@typexs/storage-ng": "2.2.1-dev.15",
-    "@typexs/tasks-ng": "2.2.1-dev.15",
+    "@typexs/tasks-ng": "2.2.1-dev.16",
     "rxjs": "6.6.7"
   },
   "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
