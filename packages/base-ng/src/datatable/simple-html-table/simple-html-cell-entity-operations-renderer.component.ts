@@ -32,7 +32,7 @@ export class SimpleHtmlCellEntityOperationsRendererComponent {
   }
 
   getRouterLink(type: string) {
-    const handle = get(this.column, C_URL_HANDLER);
+    const handle = get(this.column, C_URL_HANDLER) as Function;
     if (handle) {
       return handle(type, this.column, this.row);
     }
