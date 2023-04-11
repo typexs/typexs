@@ -4,9 +4,10 @@ jobs:
 #    docker:
 #      - image: circleci/node:14
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2204:current
     environment:
       TZ: Europe/Berlin
+      NODE_OPTIONS: --openssl-legacy-provider
 
     working_directory: ~/app
 
@@ -18,7 +19,7 @@ jobs:
       - run:
           name: NVM
           command: |
-            nvm install 16 && nvm use 16 && nvm alias default 16
+            nvm install 18 && nvm use 18 && nvm alias default 18
             node -v
             npm -v
 
@@ -44,9 +45,6 @@ jobs:
           name: Test
           command: npm test
 
-      - run:
-          name: Coverage
-          command: npx codecov -f coverage/**/*.json
 
 # Orchestrate our job run sequence
 workflows:

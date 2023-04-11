@@ -2,6 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "module": "es2020",
+    "lib": [
+      "dom",
+      "es2020"
+    ],
     "paths": {
       "@typexs/base": [
         "./packages/base/src/browser"
@@ -22,55 +26,55 @@
         "./packages/auth-ng/src/*"
       ],
       "@typexs/server": [
-        "./packages/server/src/browser",
+        "./packages/server/src/browser"
       ],
       "@typexs/server/*": [
         "./packages/server/src/*"
       ],
       "@typexs/entity": [
-        "./packages/entity/src/browser",
+        "./packages/entity/src/browser"
       ],
       "@typexs/entity/*": [
-        "./packages/entity/src/*",
+        "./packages/entity/src/*"
       ],
       "@typexs/ng": [
-        "./packages/ng/src/browser",
+        "./packages/ng/src/browser"
       ],
       "@typexs/ng/*": [
-        "./packages/ng/src/*",
+        "./packages/ng/src/*"
       ],
       "@typexs/roles": [
-        "./packages/roles/src/browser",
+        "./packages/roles/src/browser"
       ],
       "@typexs/roles/*": [
-        "./packages/roles/src/*",
+        "./packages/roles/src/*"
       ],
       "@typexs/roles-api": [
-        "./packages/roles-api/src/browser",
+        "./packages/roles-api/src/browser"
       ],
       "@typexs/roles-api/*": [
-        "./packages/roles-api/src/*",
+        "./packages/roles-api/src/*"
       ],
       "@typexs/storage": [
-        "./packages/storage/src/browser",
+        "./packages/storage/src/browser"
       ],
       "@typexs/storage/*": [
-        "./packages/storage/src/*",
+        "./packages/storage/src/*"
       ],
       "@typexs/distributed-storage": [
-        "./packages/distributed-storage/src/browser",
+        "./packages/distributed-storage/src/browser"
       ],
       "@typexs/distributed-storage/*": [
-        "./packages/distributed-storage/src/*",
+        "./packages/distributed-storage/src/*"
       ],
       "@typexs/base-ng/*": [
         "./packages/base-ng/src/*"
       ],
       "@typexs/search": [
-        "./packages/search/src/browser",
+        "./packages/search/src/browser"
       ],
       "@typexs/search/*": [
-        "./packages/search/src/*",
+        "./packages/search/src/*"
       ],
       "@typexs/base-ng": [
         "./packages/base-ng/src/public_api"
@@ -83,9 +87,7 @@
       ],
       "@typexs/ng-router-menu/*": [
         "./packages/ng-router-menu/src/*"
-      ],
-
+      ]
     }
   }
-
 }
