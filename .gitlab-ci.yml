@@ -76,6 +76,7 @@ test:
     LDAP_HOST: ldap
     LDAP_PORT: 389
     LDAPS_PORT: 689
+    NODE_OPTIONS: --openssl-legacy-provider
   before_script:
     - sh -c 'echo "127.0.0.11 proxy.local\n" >> /etc/hosts'
     - docker compose -f deployments/testing/docker-compose.yml pull
