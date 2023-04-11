@@ -1,5 +1,5 @@
-import { assign, defaults, get, has, isEmpty, isNumber, set } from 'lodash';
-import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { assign, defaults, get, isEmpty, isNumber, set } from 'lodash';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AbstractGridComponent } from '../abstract-grid.component';
 import { PagerAction } from '../../pager/PagerAction';
 import { PagerService } from '../../pager/PagerService';
@@ -8,7 +8,6 @@ import { IGridColumn } from '../IGridColumn';
 import { Eq, ExprDesc, Like, Value, ValueDesc } from '@allgemein/expressions';
 import { IDatatableOptions } from '../IDatatableOptions';
 import { K_PAGED } from '../Constants';
-import { ISimpleTableEvent } from './ISimpleTableEvent';
 import { ISimpleTable } from './ISimpleTable';
 import { DOCUMENT } from '@angular/common';
 

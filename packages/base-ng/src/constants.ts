@@ -3,8 +3,26 @@ export const C_ID = 'ID';
 export const C_DEFAULT = 'default';
 export const C_PROPERTY = 'property';
 export const C_ENTITY_REF = 'entityRef';
+
+/**
+ * Url prefix for url
+ */
 export const C_URL_PREFIX = 'urlPrefix';
+
+/**
+ * Key for handling url for routerlink
+ */
 export const C_URL_HANDLER = 'urlHandler';
+
+/**
+ * Key for passing array of supported operations
+ */
+export const C_URL_OPS = 'urlOps';
+
+export const C_URL_OP_VIEW = 'view';
+export const C_URL_OP_EDIT = 'edit';
+export const C_URL_OP_DELETE = 'delete';
+
 export const C_URL_TITLE = 'urlTitle';
 export const C_ADMIN = 'admin';
 export const C_RAW = 'raw';

@@ -1,14 +1,5 @@
 <div class="btn-group-ops">
-  <a
-    [routerLink]="[getUrlPrefix(), getEntityRef().name,'view', buildLookupConditions(row) ]">
-    <i class="icon icon-data-view"></i>
-  </a>
-  <a
-    [routerLink]="[getUrlPrefix(), getEntityRef().name,'edit', buildLookupConditions(row) ]">
-    <i class="icon icon-data-edit"></i>
-  </a>
-  <a
-    [routerLink]="[getUrlPrefix(), getEntityRef().name,'delete', buildLookupConditions(row) ]">
-    <i class="icon icon-data-delete"></i>
+  <a [routerLink]="getRouterLink(op)" *ngFor="let op of getOps()">
+    <i class="icon icon-data-{{op}}"></i>
   </a>
 </div>
