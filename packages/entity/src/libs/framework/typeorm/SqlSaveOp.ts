@@ -872,7 +872,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
           delete target[targetId];
         });
       }
-    } else if (!propertyDef.isReference()) {
+    } else if (!propertyDef.isReference() || propertyDef.hasConditions()) {
       // extra save if is not a reference, possible stringify of array, object, json
       sources.next = await this.save(classRef.getClass(), sources.next);
     }
