@@ -1,6 +1,6 @@
 {
   "name": "@typexs/roles",
-  "version": "2.2.1-dev.16",
+  "version": "2.2.1-dev.17",
   "description": "",
   "main": "./index",
   "browser": "./browser",
@@ -22,9 +22,9 @@
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@typexs/base": "2.2.1-dev.24",
-    "@typexs/entity": "2.2.1-dev.16",
-    "@typexs/testing": "2.2.1-dev.15"
+    "@typexs/base": "2.2.1-dev.25",
+    "@typexs/entity": "2.2.1-dev.17",
+    "@typexs/testing": "2.2.1-dev.16"
   },
   "peerDependencies": {
     "@typexs/base": "^2.2.1-dev.22",
