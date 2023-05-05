@@ -4,7 +4,7 @@ import { StorageSetting } from '../entities/storage/StorageSetting';
 /**
  * Interface declaration
  */
-export interface IStorageLoader {
+export interface IStorageLoaderApi {
 
   /**
    * Called after a storage ref is registered

@@ -25,7 +25,20 @@ export {
   C_PROPERTY,
   C_ENTITY_REF,
   C_ADMIN,
-  CC_GRID_CELL_ENTITY_OPERATIONS
+  CC_GRID_CELL_ENTITY_OPERATIONS,
+  C_CREATE_AND_COPY,
+  C_ID,
+  C_RAW,
+  C_SKIP_BUILDS,
+  C_SKIP_CLASS_NAMESPACE_INFO,
+  C_URL_OP_DELETE,
+  C_URL_OP_EDIT,
+  C_URL_OP_VIEW,
+  C_URL_OPS,
+  MTHD_getViewContext,
+  MTHD_setViewContext,
+  PROP_METADATA,
+  STATIC_VAR_supportedViewModes
 } from './constants';
 export { HttpBackendService } from './services/http-backend.service';
 export { EntityResolverService } from './services/entity-resolver.service';
