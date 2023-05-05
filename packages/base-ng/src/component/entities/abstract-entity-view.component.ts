@@ -24,12 +24,13 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
   @Input()
   options: IEntityViewOptions;
 
+  @Input()
+  entityRef: IEntityRef;
+
   viewContext: string;
 
   loading: boolean = false;
 
-  @Inject()
-  entityRef: IEntityRef;
 
   get resolverOptions(): IEntityResolveOptions {
     return get(this.options, 'resolver', {

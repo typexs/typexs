@@ -26,7 +26,7 @@ export class EntityViewPageComponent implements OnInit {
 
   error: any = null;
 
-  viewOptions: IViewOptions = {elem: {reload: true}, allowViewModeSwitch: true};
+  viewOptions: IViewOptions = { elem: { reload: true }, allowViewModeSwitch: true };
 
   resolverOptions: IEntityResolveOptions = {};
 
@@ -78,7 +78,7 @@ export class EntityViewPageComponent implements OnInit {
 
     const opts = {};
     this.entityRef = this.resolver.getEntityRef(this.name, this.resolverOptions);
-    if(!this.entityRef){
+    if (!this.entityRef) {
       throw new Error('Entity reference not found.');
     }
     const dynamic = this.entityRef.getOptions(C_FLEXIBLE);
@@ -93,7 +93,7 @@ export class EntityViewPageComponent implements OnInit {
     }
 
     const service = this.resolver.getServiceForEntity(this.entityRef);
-    service.get(this.name, this.id, opts).subscribe(x => {
+    service.get(this.name, this.id, opts).subscribe((x: any) => {
       this.instance = x;
       this.ready = true;
     }, () => {
