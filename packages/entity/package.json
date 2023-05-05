@@ -1,6 +1,6 @@
 {
   "name": "@typexs/entity",
-  "version": "2.2.1-dev.15",
+  "version": "2.2.1-dev.16",
   "description": "Schema for typexs",
   "main": "index",
   "browser": "browser",
@@ -35,9 +35,9 @@
   "devDependencies": {
     "@typexs/base": "2.2.1-dev.24",
     "@typexs/forms": "2.2.1-dev.15",
-    "@typexs/pipelines": "2.2.1-dev.15",
+    "@typexs/pipelines": "2.2.1-dev.16",
     "@typexs/server": "2.2.1-dev.15",
-    "@typexs/storage": "2.2.1-dev.15",
+    "@typexs/storage": "2.2.1-dev.16",
     "@typexs/testing": "2.2.1-dev.15"
   },
   "peerDependencies": {
