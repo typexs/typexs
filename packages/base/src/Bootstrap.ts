@@ -257,6 +257,7 @@ export class Bootstrap {
     await this.runtimeLoader.prepare();
 
     const invoker = new Invoker();
+    Injector.set(Invoker, invoker);
     Injector.set(Invoker.NAME, invoker);
     Bootstrap.prepareInvoker(invoker, this.runtimeLoader);
 

@@ -1,6 +1,8 @@
-import { Inject, IStorageRef, IStorageRefOptions, Log, RuntimeLoader, Storage } from '@typexs/base';
+import { Inject, Invoker, IStorageRef, IStorageRefOptions, Log, RuntimeLoader, Storage } from '@typexs/base';
 import { StorageSetting } from '../entities/storage/StorageSetting';
 import { clone, defaults, isString, set } from 'lodash';
+import { SystemStorageInfoApi } from '../api/SystemStorageInfo.api';
+import { StorageLoaderApi } from '../api/StorageLoader.api';
 
 export interface IStorageLoaderOptions {
   autoload: boolean;
@@ -13,6 +15,10 @@ export class StorageLoader {
 
   @Inject(() => RuntimeLoader)
   runtimeLoader: RuntimeLoader;
+
+  @Inject(() => Invoker)
+  invoker: Invoker;
+
 
   storageRef: IStorageRef;
 
@@ -114,7 +120,7 @@ export class StorageLoader {
     set(options, 'storageId', setting.id);
     set(options, 'name', setting.name);
     set(options, 'type', setting.type);
-    return this.load(setting.name, options);
+    return this.load(setting.name, options, setting);
   }
 
 
@@ -123,11 +129,13 @@ export class StorageLoader {
    *
    * @param settings
    */
-  async load(storageName: string, setting: IStorageRefOptions): Promise<IStorageRef> {
+  async load(storageName: string, setting: IStorageRefOptions, settings?: StorageSetting): Promise<IStorageRef> {
     if (this.isLoaded(storageName)) {
       throw new Error(`Storage reference with this name ${storageName} already exists.`);
     }
-    return this.storage.registerStorageRef(storageName, setting, this.runtimeLoader);
+    const ref = await this.storage.registerStorageRef(storageName, setting, this.runtimeLoader);
+    await this.invoker.use(StorageLoaderApi).afterRegister(ref, settings);
+    return ref;
   }
 
 
@@ -147,7 +155,12 @@ export class StorageLoader {
    *
    * @param ref
    */
-  async unregister(ref: IStorageRef | string) {
+  async unregister(ref: IStorageRef | string, settings?: StorageSetting) {
+    let _ref: IStorageRef = null;
+    if(isString(ref)){
+      _ref = this.storage.get(ref);
+    }
+    await this.invoker.use(StorageLoaderApi).beforeUnregister(_ref, settings);
     return this.storage.unregister(ref);
   }
 }

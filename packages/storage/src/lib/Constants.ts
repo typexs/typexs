@@ -83,6 +83,7 @@ export const API_CTRL_SYSTEM_STORAGE_TEST = _API_CTRL_SYSTEM + _API_CTRL_SYSTEM_
 export const PERMISSION_ALLOW_STORAGE_ACTIVE = 'allow storage admin activate';
 export const _API_CTRL_SYSTEM_STORAGE_ACTIVE = '/storage/:idOrName/activate';
 
+
 export const API_CTRL_SYSTEM_STORAGE_ACTIVE = _API_CTRL_SYSTEM + _API_CTRL_SYSTEM_STORAGE_ACTIVE;
 
 

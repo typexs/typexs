@@ -1,7 +1,17 @@
-import { C_CONFIG_FILTER_KEYS, ClassLoader, Inject, Invoker, IStorageRefOptions, RuntimeLoader, Storage, System, Injector } from '@typexs/base';
-import { Get, HttpError, JsonController, Param } from 'routing-controllers';
+import {
+  C_CONFIG_FILTER_KEYS,
+  ClassLoader,
+  Inject,
+  Injector,
+  Invoker,
+  IStorageRefOptions,
+  RuntimeLoader,
+  Storage,
+  System
+} from '@typexs/base';
+import { Get, HttpError, JsonController, Param, QueryParam } from 'routing-controllers';
 import { getMetadataArgsStorage as ormMetadataArgsStorage } from 'typeorm';
-import { _API_CTRL_SYSTEM, Access, C_API, ContextGroup, ServerStatusApi, SystemNodeInfoApi, WalkValues } from '@typexs/server';
+import { _API_CTRL_SYSTEM, Access, C_API, ContextGroup, SystemNodeInfoApi, WalkValues } from '@typexs/server';
 import { TreeUtils } from '@allgemein/base';
 import {
   _API_CTRL_SYSTEM_STORAGE_ACTIVE,
@@ -35,7 +45,7 @@ export class SystemStorageAPIController {
   @Inject(() => StorageLoader)
   storageLoader: StorageLoader;
 
-  @Inject(Invoker.NAME)
+  @Inject(() => Invoker)
   invoker: Invoker;
 
 
@@ -101,10 +111,12 @@ export class SystemStorageAPIController {
    */
   @Access(PERMISSION_ALLOW_STORAGE_ACTIVE)
   @Get(_API_CTRL_SYSTEM_STORAGE_ACTIVE)
-  async activeStorageReference(@Param('idOrName') idOrName: string) {
+  async activeOrDeactivateStorageReference(
+    @Param('idOrName') idOrName: string,
+    @QueryParam('activate') activate: boolean = true) {
     const setting = await this.storageLoader.getStorageSetting(idOrName);
     const op = Injector.create(ActivateStorageSetting);
-    const res = await op.doCall(setting);
+    const res = await op.doCall(setting, activate);
     if (res.error) {
       throw new HttpError(500, res.error.message);
     }

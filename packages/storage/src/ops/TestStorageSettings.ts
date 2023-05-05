@@ -32,7 +32,7 @@ export class TestStorageSettings {
           this.success = true;
         }
         await c.close();
-        await this.loader.unregister(ref);
+        await this.loader.unregister(ref, this.settings);
       }
     } catch (e) {
       this.error = e;

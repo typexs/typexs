@@ -1,13 +1,11 @@
 import { suite, test } from '@testdeck/mocha';
-import { Bootstrap, Config, Injector, IStorageRefOptions, RuntimeLoader, ITypeOrmStorageRefOptions } from '@typexs/base';
+import { Bootstrap, Injector, IStorageRefOptions, ITypeOrmStorageRefOptions } from '@typexs/base';
 import { expect } from 'chai';
-import { ClassRef, IJsonSchema7 } from '@allgemein/schema-api';
 import { TestHelper } from '@typexs/testing';
 import { TEST_STORAGE_OPTIONS } from './config';
 import { clone } from 'lodash';
 import { StorageLoader } from '../../src/lib/StorageLoader';
 import { SchemaApiSimpleEntity } from './data/dynamic-loading/entities/SchemaApiSimpleEntity';
-import { JsonSchema } from '@angular-devkit/core/src/json/schema';
 import { StorageSetting } from '../../src/entities/storage/StorageSetting';
 import { TestStorageSettings } from '../../src/ops/TestStorageSettings';
 import { ActivateStorageSetting } from '../../src/ops/ActivateStorageSetting';
@@ -393,6 +391,72 @@ class StorageSettingsLoadingSpec {
     const op = Injector.create(ActivateStorageSetting);
     const res = await op.doCall(settings);
     expect(res.success).to.be.true;
+    const loader = Injector.get(StorageLoader);
+    expect(loader.isLoaded(settings.name)).to.be.true;
+  }
+
+
+  @test
+  async 'deactivate a storage connection'() {
+    const refOptions: ITypeOrmStorageRefOptions & any = {
+      name: 'testconn_dec',
+      framework: 'typeorm',
+      type: 'sqlite',
+      database: ':memory:',
+      supportSchemaApi: true,
+      synchronize: true,
+      entities: [
+        {
+          $schema: 'http://json-schema.org/draft-07/schema#',
+          definitions: {
+            'DynaEntity': {
+              'title': 'DynaEntity',
+              'type': 'object',
+              'metadata': {
+                'type': 'regular'
+              },
+              'properties': {
+                'id': {
+                  'type': 'Number',
+                  identifier: true,
+                  generated: true
+                },
+                'someName': {
+                  'type': 'String'
+                },
+                'someBool': {
+                  'type': 'boolean'
+                },
+                'someNr': {
+                  'type': 'number'
+                }
+              }
+            }
+          },
+          $ref: '#/definitions/DynaEntity'
+        }
+      ]
+    };
+
+
+    const settings = new StorageSetting();
+    settings.type = refOptions.type;
+    settings.framework = refOptions.framework;
+    settings.name = refOptions.name;
+    settings.active = false;
+    settings.options = refOptions;
+    // await ref.getController().save(settings);
+
+    const op = Injector.create(ActivateStorageSetting);
+    let res = await op.doCall(settings);
+    expect(res.success).to.be.true;
+
+    const loader = Injector.get(StorageLoader);
+    expect(loader.isLoaded(settings.name)).to.be.true;
+
+    res = await op.doCall(settings, false);
+    expect(res.success).to.be.true;
+    expect(loader.isLoaded(settings.name)).to.be.false;
 
   }
 
