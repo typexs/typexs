@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/distributed-storage-ng",
-  "version": "2.2.1-dev.17",
+  "version": "2.2.1-dev.18",
   "description": "Angular for typexs",
   "main": "public_api.ts",
   "scripts": {
@@ -41,9 +41,9 @@
     "@angular/forms": "v12-lts",
     "@angular/router": "v12-lts",
     "@typexs/base": "2.2.1-dev.24",
-    "@typexs/base-ng": "2.2.1-dev.20",
+    "@typexs/base-ng": "2.2.1-dev.21",
     "@typexs/distributed-storage": "2.2.1-dev.16",
-    "@typexs/forms-ng": "2.2.1-dev.17",
+    "@typexs/forms-ng": "2.2.1-dev.18",
     "@typexs/ng": "2.2.1-dev.15",
     "rxjs": "6.6.7"
   },
