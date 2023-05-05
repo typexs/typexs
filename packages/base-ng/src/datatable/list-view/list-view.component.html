@@ -14,7 +14,9 @@
         <txs-view [instance]="row.data"
                   [allowViewModeSwitch]="allowViewModeSwitch"
                   [mode]="viewMode"
-                  [options]="options.viewOptions">
+                  [options]="options.viewOptions"
+                  [passThrough]="passThrough"
+        >
           <div txsViewFallback>
             <txs-simple-json [instance]="row.data"
                              [options]="options.viewOptions">

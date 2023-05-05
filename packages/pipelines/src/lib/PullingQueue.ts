@@ -1,10 +1,10 @@
 /* eslint-disable */
 import * as _ from 'lodash';
-import {get} from 'lodash';
-import {EventEmitter} from 'events';
-import {Log} from '@typexs/base';
-import {FINISHED, WAITING} from './queue/Constants';
-import {IPullableQueueOptions} from './queue/IPullableQueueOptions';
+import { get } from 'lodash';
+import { EventEmitter } from 'events';
+import { Log } from '@typexs/base';
+import { FINISHED, WAITING } from './queue/Constants';
+import { IPullableQueueOptions } from './queue/IPullableQueueOptions';
 import { ERROR_FUNCTION } from './Constants';
 
 
@@ -66,8 +66,8 @@ export class PullingQueue extends EventEmitter {
 
 
   static createEmitPromise(eventname: string, self: any, ...args: any[]) {
-    return new Promise(function (resolve, reject) {
-      args.push(function (err: Error, res: any) {
+    return new Promise(function(resolve, reject) {
+      args.push(function(err: Error, res: any) {
         if (err) {
           return reject(err);
         }
@@ -146,19 +146,20 @@ export class PullingQueue extends EventEmitter {
     const self = this;
 
     if (!self.$__fn) {
-      self.$__fn = function (_data: any) {
+      self.$__fn = function(_data: any) {
         self.$iterations++;
         const size = _.isArray(_data) ? _data.length : 1;
-        let $p: Promise<any> = new Promise(function (resolve, reject) {
+        let $p: Promise<any> = new Promise(function(resolve, reject) {
           resolve(_data);
         });
 
-        self.$callbacks.forEach(function (handle: any) {
+        self.$callbacks.forEach(function(handle: any) {
+          // TODO onCatch for a step
           $p = $p.then(handle.bind(self));
         });
-
+        // TODO onCatch for global data process
         $p = $p.catch(self.$onCatch.bind(self, data));
-        $p = $p.then(function () {
+        $p = $p.then(function() {
           self.$processed += size;
           self.$iterations--;
           self._next();
@@ -197,7 +198,7 @@ export class PullingQueue extends EventEmitter {
     }
 
     const self = this;
-    const waitFor = function (_done: any) {
+    const waitFor = function(_done: any) {
       self.state(WAITING, true);
       if (self.$queue.length <= self.$fetch_limit) {
         self.state(WAITING, false);
@@ -326,29 +327,29 @@ export class PullingQueue extends EventEmitter {
       if (this.$queue.length === 0 || this.$min_flush_queue > this.$queue.length) {
 
         self.hasNext()
-          .then(function (has_next) {
+          .then(function(has_next) {
 
             if (has_next) {
               self.$fetching++;
               return self
                 .fetch()
-                .then(function (res) {
+                .then(function(res) {
                   if (res) {
                     return self.enqueue(res);
                   }
                   return null;
                 })
-                .then(function () {
+                .then(function() {
                   self.$fetching--;
                   self.$reties = 5;
                   self._next();
                 })
-                .catch(function (err) {
+                .catch(function(err) {
                   self.$fetching--;
                   self.$reties--;
                   Log.error('retries=' + self.$reties);
                   Log.error(err);
-                  setTimeout(function () {
+                  setTimeout(function() {
                     self._next();
                   }, self.$error_timeout);
                 });

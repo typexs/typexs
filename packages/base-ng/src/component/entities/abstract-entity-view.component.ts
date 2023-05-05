@@ -7,6 +7,7 @@ import { IEntityViewOptions } from './IEntityViewOptions';
 import { ComponentRegistry } from '@typexs/base';
 import { IEntityResolveOptions } from '../../services/IEntityResolveOptions';
 import { Log } from '../../lib/log/Log';
+import { IEntityRef } from '@allgemein/schema-api';
 
 @Component({
   template: ''
@@ -26,6 +27,9 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
   viewContext: string;
 
   loading: boolean = false;
+
+  @Inject()
+  entityRef: IEntityRef;
 
   get resolverOptions(): IEntityResolveOptions {
     return get(this.options, 'resolver', {
@@ -52,6 +56,16 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
     this.viewContext = context;
   }
 
+  /**
+   * Return the reference of entity type
+   */
+  getEntityRef(){
+    if(!this.entityRef){
+      this.entityRef = this.resolverService.getEntityRef(this.getInstance(), this.resolverOptions);
+    }
+    return this.entityRef;
+  }
+
 
   hasOption(path: string) {
     return has(this.options, path);
@@ -71,7 +85,7 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
 
   reload() {
     this.loading = true;
-    const entityRef = this.resolverService.getEntityRef(this.getInstance(), this.resolverOptions);
+    const entityRef = this.getEntityRef();
     const id = this.resolverService.getIdKeysFor(this.getInstance(), this.resolverOptions);
     this.getService().get(entityRef.name, id, get(this.options, 'req', {})).subscribe(x => {
       this.instance = x;
@@ -82,7 +96,7 @@ export class AbstractEntityViewComponent<T> implements IInstanceableComponent<T>
   }
 
   type() {
-    const obj = this.resolverService.getEntityRef(this.getInstance(), this.resolverOptions);
+    const obj = this.getEntityRef();
     if (obj) {
       return obj.name;
     }

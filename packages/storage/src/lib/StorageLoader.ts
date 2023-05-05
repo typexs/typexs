@@ -8,8 +8,6 @@ export interface IStorageLoaderOptions {
 
 export class StorageLoader {
 
-  static NAME = 'StorageLoader';
-
   @Inject(() => Storage)
   storage: Storage;
 

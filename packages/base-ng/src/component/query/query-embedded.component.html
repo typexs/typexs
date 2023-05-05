@@ -8,6 +8,7 @@
 
   <txs-datatable
     #datatable
+    [passThrough]="{'entityRef': entityRef}"
     [component]="componentClass"
     [columns]="columns"
     [options]="options"

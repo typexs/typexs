@@ -39,6 +39,10 @@ export class AbstractInstancableComponent<T> extends AbstractComponent implement
     return this._created;
   }
 
+  getPassthrough() {
+    return {};
+  }
+
   /**
    * Build component for passed object by given context mostly "default",
    * when implementing class has method "getViewContext" the given context will be
@@ -121,6 +125,12 @@ export class AbstractInstancableComponent<T> extends AbstractComponent implement
         if (this[MTHD_getViewContext]) {
           instance.setViewContext(this[MTHD_getViewContext]());
         }
+      }
+
+
+      const passthrough = this.getPassthrough();
+      for (const prop of keys(passthrough)) {
+        Object.defineProperty(instance, prop, { value: passthrough[prop] });
       }
 
       // passing through input parameters

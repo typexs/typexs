@@ -39,6 +39,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
   component: ClassType<AbstractGridComponent>;
 
 
+
   @ViewChild('content', { read: ViewContainerRef, static: true })
   vc: ViewContainerRef;
 
@@ -123,6 +124,8 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     this.component = component;
     const factory = this.r.resolveComponentFactory(this.component);
     this.componentRef = this.vc.createComponent(factory);
+    // refer to parent
+    this.componentRef.instance.parent = this;
 
     // passing through input parameters
     for (const prop of this.options.passInputs) {

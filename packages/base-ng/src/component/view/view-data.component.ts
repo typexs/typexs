@@ -1,7 +1,7 @@
 import { clone, get, isEmpty, isFunction, isNull, isString, upperFirst } from 'lodash';
 import { Component, ComponentFactoryResolver, Inject, Injector, Input, OnInit } from '@angular/core';
 import { AbstractInstancableComponent } from '../abstract-instancable.component';
-import { C_DEFAULT, MTHD_getViewContext } from '../../constants';
+import { C_DEFAULT, MTHD_getViewContext, STATIC_VAR_supportedViewModes } from '../../constants';
 import { ComponentRegistryService } from '../component-registry.service';
 import { ComponentRegistry, IComponentBinding } from '@typexs/base';
 import { IViewOptions } from './IViewOptions';
@@ -29,6 +29,12 @@ export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implem
   @Input()
   options: IViewOptions = {};
 
+  /**
+   * Passthrough input parameter to build componentn instance
+   */
+  @Input()
+  passThrough: { [propName: string]: any } = {};
+
   @Input()
   set mode(mode: string) {
     this.setViewContext(mode);
@@ -36,6 +42,13 @@ export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implem
 
   get mode() {
     return this.getViewContext();
+  }
+
+  /**
+   * Override method getPassthrough
+   */
+  getPassthrough(): {} {
+    return this.passThrough;
   }
 
 
@@ -124,9 +137,9 @@ export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implem
     const context = this[MTHD_getViewContext] ? this[MTHD_getViewContext]() : C_DEFAULT;
     const obj = this.getComponentRegistry().getComponentForObject(content, context);
     if (obj && obj.component) {
-      if (!isNull(this.viewModes) && isFunction(obj.component['supportedViewModes'])) {
+      if (!isNull(this.viewModes) && isFunction(obj.component[STATIC_VAR_supportedViewModes])) {
         // check if static method supportedViewModes is present
-        const viewModes: string[] = obj.component['supportedViewModes'].call(null);
+        const viewModes: string[] = obj.component[STATIC_VAR_supportedViewModes].call(null);
         if (!isEmpty(viewModes)) {
           viewModes.forEach(x => {
             this.addViewMode(obj, x);

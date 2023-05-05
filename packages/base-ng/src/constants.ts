@@ -61,6 +61,7 @@ export const MESSAGE_TYPE_LOG_SERVICE = 'LogService';
 export const SIMPLE_TABLE = 'simple-table';
 export const LIST_VIEW = 'list-view';
 
+export const STATIC_VAR_supportedViewModes = 'supportedViewModes';
 export const MTHD_getViewContext = 'getViewContext';
 export const MTHD_setViewContext = 'setViewContext';
 

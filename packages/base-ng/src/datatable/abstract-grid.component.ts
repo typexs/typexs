@@ -4,7 +4,7 @@ import { IDatatableOptions } from './IDatatableOptions';
 import { IQueryParams } from './IQueryParams';
 import { IGridApi } from './IGridApi';
 import { Helper } from '../api/querying/Helper';
-import { GRID_MODE } from './Constants';
+import { ClassType, GRID_MODE } from './Constants';
 import { GRID_EVENT_TYPE, IGridEvent } from './IGridEvent';
 import { DataNode } from './DataNode';
 import { isEmpty } from 'lodash';
@@ -57,6 +57,16 @@ export class AbstractGridComponent implements IGridApi {
   @Output()
   gridReady: EventEmitter<IGridEvent> = new EventEmitter<IGridEvent>();
 
+  /**
+   * Parameter which should be passed through
+   */
+  @Input()
+  passThrough: { [propName: string]: any } = {};
+
+  /**
+   * Reference to parent / called component
+   */
+  parent: AbstractGridComponent;
 
   constructor() {
     this.construct();

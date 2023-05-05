@@ -1,6 +1,7 @@
 import { clone, first, get, has, isEmpty, isFunction, isNull, keys, last, snakeCase, values } from 'lodash';
 import { Injectable } from '@angular/core';
 import { ClassRef, IEntityRef, LookupRegistry, METATYPE_ENTITY } from '@allgemein/schema-api';
+import { isEntityRef } from '@allgemein/schema-api/api/IEntityRef';
 import { IQueringService } from './../api/querying/IQueringService';
 import { forkJoin } from 'rxjs';
 import { C_LABEL, K_ENTITY_BUILT, LabelHelper } from '@typexs/base';
@@ -12,7 +13,9 @@ export class EntityResolverService {
 
   ngEntityPrefix = 'entity';
 
-  cache: { [k: string]: any } = {};
+  cacheKey: Map<string, any> = new Map<string, any>();
+
+  cacheService: Map<IEntityRef, any> = new Map<IEntityRef, any>();
 
   queryServices: IQueringService[] = [];
 
@@ -58,19 +61,22 @@ export class EntityResolverService {
     if (['Object', 'Array'].includes(className)) {
       return returnRef;
     }
-    // const key = 'class.' + snakeCase(className);
-    // if (this.cache[key]) {
-    //   return this.cache[key];
-    // }
-    // const lookupNames = LookupRegistry.getRegistryNamespaces();
     const namespace = get(opts, 'namespace', null);
-    const refs = LookupRegistry.filter(METATYPE_ENTITY,
-      (x: IEntityRef) =>
-        (snakeCase(x.getClassRef().name) === snakeCase(className)) || (snakeCase(x.name) === snakeCase(className))
-        &&
-        !x.getOptions(K_ENTITY_BUILT, false)
-        && (isNull(namespace) || x.getNamespace() === namespace)
-    ) as IEntityRef[];
+    const key = (namespace ? namespace + '.' : '') + 'class.' + snakeCase(className);
+    let refs: IEntityRef[] = [];
+    if (!this.cacheKey.has(key)) {
+      refs = LookupRegistry.filter(METATYPE_ENTITY,
+        (x: IEntityRef) =>
+          (snakeCase(x.getClassRef().name) === snakeCase(className)) || (snakeCase(x.name) === snakeCase(className))
+          &&
+          !x.getOptions(K_ENTITY_BUILT, false)
+          && (isNull(namespace) || x.getNamespace() === namespace)
+      ) as IEntityRef[];
+      this.cacheKey.set(key, refs);
+    } else {
+      refs = this.cacheKey.get(key);
+    }
+
 
     if (refs.length === 1) {
       returnRef = first(refs);
@@ -94,7 +100,6 @@ export class EntityResolverService {
         returnRef = last(refs);
       }
     }
-    // this.cache[key]< = returnRef;
     return returnRef;
   }
 
@@ -102,10 +107,20 @@ export class EntityResolverService {
     if (!entityRef) {
       return null;
     }
-    return this.queryServices.find(x => !isEmpty(x.getEntityRefs().find(x => x === entityRef)));
+    let service = null;
+    if (!this.cacheService.has(entityRef)) {
+      service = this.queryServices.find(x => !isEmpty(x.getEntityRefs().find(x => x === entityRef)));
+      this.cacheService.set(entityRef, service);
+    } else {
+      service = this.cacheService.get(entityRef);
+    }
+    return service;
   }
 
-  getServiceFor(obj: any, opts?: IEntityResolveOptions) {
+  getServiceFor(obj: any | IEntityRef, opts?: IEntityResolveOptions) {
+    if (isEntityRef(obj)) {
+
+    }
     const entityRef = this.getEntityRef(obj, opts);
     return this.getServiceForEntity(entityRef);
   }
@@ -138,19 +153,20 @@ export class EntityResolverService {
     }
 
     const key = 'id.' + snakeCase(entityRef.name);
-    if (this.cache[key]) {
-      return this.cache[key](obj);
+    if (this.cacheKey.has(key)) {
+      return this.cacheKey.get(key)(obj);
     }
 
     const idProps = entityRef.getPropertyRefs().filter(x => x.isIdentifier());
-    this.cache[key] = (obj: any) => {
+    const fn = (obj: any) => {
       const ret = {};
       idProps.forEach(x => {
         ret[x.name] = x.get(obj);
       });
       return ret;
     };
-    return this.cache[key](obj);
+    this.cacheKey.set(key, fn);
+    return fn;
   }
 
 

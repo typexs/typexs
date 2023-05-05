@@ -10,7 +10,7 @@ export const K_VIEW = 'view';
  */
 export type GRID_MODE = 'paged' | 'infinite' | 'view';
 
-export const inputKeys = ['columns', 'rows', 'maxRows', 'options', 'params'];
+export const inputKeys = ['columns', 'rows', 'maxRows', 'options', 'params', 'passThrough'];
 export const outputKeys = ['doQuery', 'gridReady', 'paramsChange'];
 export const methodKeys = ['rebuild', 'setMaxRows', 'setColumns', 'setRows', 'getMaxRows', 'getColumns', 'getRows'];
 
