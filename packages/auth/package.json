@@ -1,6 +1,6 @@
 {
   "name": "@typexs/auth",
-  "version": "2.2.1-dev.16",
+  "version": "2.2.1-dev.17",
   "description": "Auth module for typexs",
   "main": "index",
   "browser": "browser",
@@ -22,18 +22,18 @@
     "auth"
   ],
   "dependencies": {
-    "@typexs/base": "2.2.1-dev.25",
-    "@typexs/entity": "2.2.1-dev.17",
-    "@typexs/forms": "2.2.1-dev.16",
-    "@typexs/ng": "2.2.1-dev.16",
-    "@typexs/roles": "2.2.1-dev.17",
+    "@typexs/base": "2.2.1-dev.26",
+    "@typexs/entity": "2.2.1-dev.18",
+    "@typexs/forms": "2.2.1-dev.17",
+    "@typexs/ng": "2.2.1-dev.17",
+    "@typexs/roles": "2.2.1-dev.18",
     "@typexs/roles-api": "2.2.1-dev.15",
     "bcrypt": "^5.0.0",
     "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
-    "@typexs/server": "2.2.1-dev.16",
-    "@typexs/testing": "2.2.1-dev.16"
+    "@typexs/server": "2.2.1-dev.17",
+    "@typexs/testing": "2.2.1-dev.17"
   },
   "peerDependencies": {
     "@typexs/server": "^2.2.1-dev.13"
