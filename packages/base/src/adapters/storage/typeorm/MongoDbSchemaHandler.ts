@@ -11,8 +11,8 @@ export class MongoDbSchemaHandler extends AbstractSchemaHandler {
   type = 'mongodb';
 
   private getDB(c: TypeOrmConnectionWrapper) {
-    const runner = <MongoQueryRunner>c.manager.connection.createQueryRunner();
-    const database = c.manager.connection.driver.database;
+    const runner = <MongoQueryRunner>c.connection.createQueryRunner();
+    const database = c.connection.driver.database;
     return runner.databaseConnection.db(database);
 
   }

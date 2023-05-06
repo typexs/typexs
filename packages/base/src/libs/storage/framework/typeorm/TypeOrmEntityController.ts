@@ -112,7 +112,7 @@ export class TypeOrmEntityController implements IEntityController {
     let res = null;
     let error = null;
     try {
-      res = await connection.manager.query(query, options);
+      res = await connection.query(query, options);
     } catch (e) {
       error = e;
     } finally {

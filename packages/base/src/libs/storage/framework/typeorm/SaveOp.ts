@@ -9,6 +9,7 @@ import { TypeOrmEntityController } from './TypeOrmEntityController';
 import { DataContainer, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
 import { convertPropertyValueJsonToString, convertPropertyValueStringToJson } from './Helper';
 import { REGISTRY_TYPEORM } from './Constants';
+import { RepositoryWrapper } from './RepositoryWrapper';
 
 
 const saveOptionsKeys = ['data', 'listeners', 'transaction', 'chunk', 'reload'];
@@ -100,7 +101,7 @@ export class SaveOp<T> implements ISaveOp<T> {
         if (this.isMongoDB()) {
 
           for (const entityName of entityNames) {
-            const repo = connection.manager.getMongoRepository(entityName);
+
             const entityDef = refs[entityName];
             const idPropertyRefs = entityDef.getPropertyRefs().filter(p => p.isIdentifier());
             if (idPropertyRefs.length === 0) {
@@ -121,8 +122,9 @@ export class SaveOp<T> implements ISaveOp<T> {
               keys(entity).filter(x => /^$/.test(x)).map(x => delete entity[x]);
             });
 
+            const repo = connection.for(entityName);
             if (options.raw) {
-              const bulk = repo.initializeOrderedBulkOp();
+              const bulk = (repo as RepositoryWrapper<any>).getMongoRepository().initializeOrderedBulkOp();
               resolveByEntityRef[entityName].forEach((entity: any) => {
                 // filter command values
                 bulk.find({ _id: entity._id }).upsert().replaceOne(entity);
@@ -149,12 +151,11 @@ export class SaveOp<T> implements ISaveOp<T> {
 
           if (options.noTransaction) {
             for (const entityName of entityNames) {
-              const p = connection.manager.getRepository(entityName).save(resolveByEntityRef[entityName], saveOptions);
-              promises.push(p);
+              await connection.for(entityName).save(resolveByEntityRef[entityName], saveOptions);
             }
           } else {
 
-            const promise = connection.manager.transaction(async em => {
+            const promise = connection.getEntityManager().transaction(async em => {
               const _promises = [];
               for (const entityName of entityNames) {
                 // convert sub-objects to string

@@ -72,12 +72,21 @@ export class UpdateOp<T> implements IUpdateOp<T> {
     let results: number = -1;
 
     await this.controller.invoker.use(EntityControllerApi).doBeforeUpdate(this);
-
-    if (this.controller.storageRef.dbType === 'mongodb') {
-      results = await this.updateMongo();
-    } else {
-      results = await this.updateSql();
+    const connection = await this.controller.connect();
+    try {
+      results = await connection.for(this.entityType).updateByCondition(condition, update, options);
+    } catch (e) {
+      this.error = e;
+    } finally {
+      await connection.close();
     }
+
+
+    // if (this.controller.storageRef.dbType === 'mongodb') {
+    //   results = await this.updateMongo();
+    // } else {
+    //   results = await this.updateSql();
+    // }
 
     await this.controller.invoker.use(EntityControllerApi).doAfterUpdate(results, this.error, this);
     if (this.error) {
@@ -89,84 +98,85 @@ export class UpdateOp<T> implements IUpdateOp<T> {
   /**
    * when returns -2 then affected is not supported, so update worked but how many records ware changes is not given back
    */
-  private async updateSql(): Promise<number> {
-    const jsonPropertySupport = this.controller.storageRef.getSchemaHandler().supportsJson();
-    let affected = -1;
-    const connection = await this.controller.connect();
-    try {
-      let qb: UpdateQueryBuilder<T> = null;
-      if (this.condition) {
-        const builder = new TypeOrmSqlConditionsBuilder<T>(connection.manager, this.entityRef, this.controller.getStorageRef(), 'update');
-        builder.build(this.condition);
-        qb = builder.getQueryBuilder() as UpdateQueryBuilder<T>;
-        // qb.where(where);
-      } else {
-        qb = connection.manager
-          .getRepository(this.entityRef.getClassRef().getClass())
-          .createQueryBuilder().update() as UpdateQueryBuilder<T>;
-      }
-
-      // TODO make this better currently Hacki hacki
-      let hasUpdate = false;
-      let updateData = null;
-      if (_.has(this.update, '$set')) {
-        updateData = this.update['$set'];
-        hasUpdate = true;
-      } else if (!_.isEmpty(this.update)) {
-        updateData = this.update;
-        hasUpdate = true;
-      }
-      affected = 0;
-
-      if (hasUpdate) {
-
-        if (!jsonPropertySupport) {
-          convertPropertyValueJsonToString(this.entityRef, updateData, true);
-        }
-        qb.set(updateData);
-
-        if (_.has(this.options, 'limit')) {
-          qb.limit(this.options['limit']);
-        }
-        const r = await qb.execute();
-        affected = _.get(r, 'affected', -2);
-      }
-    } catch (e) {
-      this.error = e;
-    } finally {
-      await connection.close();
-
-    }
-    return affected;
-  }
-
-
-  private async updateMongo(): Promise<number> {
-    let affected = -1;
-    const connection = await this.controller.connect();
-    try {
-      const repo = connection.manager.getMongoRepository(this.entityRef.getClassRef().getClass());
-
-      if (this.condition) {
-        TreeUtils.walk(this.condition, x => {
-          if (x.key && _.isString(x.key)) {
-            if (x.key === '$like') {
-              x.parent['$regex'] = x.parent[x.key].replace('%%', '#$#').replace('%', '.*').replace('#$#', '%%');
-            }
-          }
-        });
-      }
-
-      const r = await repo.updateMany(this.condition, this.update, this.options as any);
-      affected = r.modifiedCount;
-    } catch (e) {
-      this.error = e;
-    } finally {
-      await connection.close();
-
-    }
-    return affected;
-  }
+  // private async updateSql(): Promise<number> {
+  //   const jsonPropertySupport = this.controller.storageRef.getSchemaHandler().supportsJson();
+  //   let affected = -1;
+  //   const connection = await this.controller.connect();
+  //   try {
+  //     let qb: UpdateQueryBuilder<T> = null;
+  //     if (this.condition) {
+  //       const builder = new TypeOrmSqlConditionsBuilder<T>(
+  //         connection.getEntityManager(), this.entityRef, this.controller.getStorageRef(), 'update');
+  //       builder.build(this.condition);
+  //       qb = builder.getQueryBuilder() as UpdateQueryBuilder<T>;
+  //       // qb.where(where);
+  //     } else {
+  //       qb = connection.getEntityManager()
+  //         .getRepository(this.entityRef.getClassRef().getClass())
+  //         .createQueryBuilder().update() as UpdateQueryBuilder<T>;
+  //     }
+  //
+  //     // TODO make this better currently Hacki hacki
+  //     let hasUpdate = false;
+  //     let updateData = null;
+  //     if (_.has(this.update, '$set')) {
+  //       updateData = this.update['$set'];
+  //       hasUpdate = true;
+  //     } else if (!_.isEmpty(this.update)) {
+  //       updateData = this.update;
+  //       hasUpdate = true;
+  //     }
+  //     affected = 0;
+  //
+  //     if (hasUpdate) {
+  //
+  //       if (!jsonPropertySupport) {
+  //         convertPropertyValueJsonToString(this.entityRef, updateData, true);
+  //       }
+  //       qb.set(updateData);
+  //
+  //       if (_.has(this.options, 'limit')) {
+  //         qb.limit(this.options['limit']);
+  //       }
+  //       const r = await qb.execute();
+  //       affected = _.get(r, 'affected', -2);
+  //     }
+  //   } catch (e) {
+  //     this.error = e;
+  //   } finally {
+  //     await connection.close();
+  //
+  //   }
+  //   return affected;
+  // }
+  //
+  //
+  // private async updateMongo(): Promise<number> {
+  //   let affected = -1;
+  //   const connection = await this.controller.connect();
+  //   try {
+  //
+  //     if (this.condition) {
+  //       TreeUtils.walk(this.condition, x => {
+  //         if (x.key && _.isString(x.key)) {
+  //           if (x.key === '$like') {
+  //             x.parent['$regex'] = x.parent[x.key].replace('%%', '#$#').replace('%', '.*').replace('#$#', '%%');
+  //           }
+  //         }
+  //       });
+  //     }
+  //
+  //     const repo = connection.for(this.entityRef.getClassRef().getClass());
+  //     affected = await repo.updateByCondition(this.condition, this.update, this.options as any);
+  //     // affected = r.modifiedCount;
+  //   } catch (e) {
+  //     this.error = e;
+  //   } finally {
+  //     await connection.close();
+  //
+  //   }
+  //   return affected;
+  // }
 
 }
 

@@ -5,6 +5,10 @@ import { TypeOrmStorageRef } from './TypeOrmStorageRef';
 import { Log } from '../../../logging/Log';
 import { EVENT_STORAGE_REF_PREPARED } from './Constants';
 import { LockFactory, Semaphore } from '@allgemein/base';
+import { ClassType } from '@allgemein/schema-api';
+import { IObjectHandle } from '../IObjectHandle';
+import { RepositoryWrapper } from './RepositoryWrapper';
+import { EntityType } from '../Constants';
 
 
 export class TypeOrmConnectionWrapper implements IConnection {
@@ -27,9 +31,15 @@ export class TypeOrmConnectionWrapper implements IConnection {
 
   locking: boolean = false;
 
+  // readSemaphore: Semaphore;
+  //
+  // writeSemaphore: Semaphore;
 
   constructor(s: TypeOrmStorageRef, conn?: Connection) {
     this.locking = s.isSingleConnection();
+    // if (this.locking) {
+    //   this.writeSemaphore = new Semaphore(1);
+    // }
     this.storageRef = s;
     this._connection = conn;
     this.name = this.storageRef.name;
@@ -62,12 +72,14 @@ export class TypeOrmConnectionWrapper implements IConnection {
   }
 
 
-  get manager(): EntityManager {
-    return this.connection.manager;
-  }
-
+  /**
+   * Method for generic queries
+   *
+   * @param query
+   * @param parameters
+   */
   query(query: any, parameters?: any[]): Promise<any[]> {
-    return this.manager.query(query, parameters);
+    return this.getEntityManager().query(query, parameters);
   }
 
   get connection() {
@@ -121,7 +133,9 @@ export class TypeOrmConnectionWrapper implements IConnection {
     return this._connection && this._connection.isConnected;
   }
 
-
+  /**
+   * Check if underlying datasource supports multiple connection
+   */
   isSingleConnection(): boolean {
     return this.storageRef.isSingleConnection();
   }
@@ -177,4 +191,21 @@ export class TypeOrmConnectionWrapper implements IConnection {
     return this;
   }
 
+
+  /**
+   * Return typeorm entity manager
+   */
+  getEntityManager() {
+    return this.connection.manager;
+  }
+
+
+  /**
+   * Method wrapping object type specific operations
+   *
+   * @param entityType
+   */
+  for<T>(entityType: EntityType<T>): IObjectHandle<T> {
+    return new RepositoryWrapper(this, entityType);
+  }
 }

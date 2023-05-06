@@ -1,12 +1,12 @@
 import * as _ from 'lodash';
+import { assign } from 'lodash';
 import { IFindOp } from '../IFindOp';
 import { IFindOptions } from '../IFindOptions';
 import { XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '../../../Constants';
 import { TypeOrmSqlConditionsBuilder } from './TypeOrmSqlConditionsBuilder';
-import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
 import { ClassUtils, TreeUtils } from '@allgemein/base';
-import { getMetadataArgsStorage, SelectQueryBuilder } from 'typeorm';
-import { ClassType, RegistryFactory, IEntityRef } from '@allgemein/schema-api';
+import { getMetadataArgsStorage, MongoRepository, SelectQueryBuilder } from 'typeorm';
+import { ClassType, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
 import { EntityControllerApi } from '../../../../api/EntityController.api';
 import { TypeOrmEntityController } from './TypeOrmEntityController';
 import { Injector } from '../../../di/Injector';
@@ -15,7 +15,7 @@ import { TypeOrmConnectionWrapper } from './TypeOrmConnectionWrapper';
 import { convertPropertyValueStringToJson } from './Helper';
 import { TypeOrmUtils } from './TypeOrmUtils';
 import { REGISTRY_TYPEORM } from './Constants';
-import { assign } from 'lodash';
+import { RepositoryWrapper } from './RepositoryWrapper';
 
 
 export class FindOp<T> implements IFindOp<T> {
@@ -56,6 +56,7 @@ export class FindOp<T> implements IFindOp<T> {
   getRegistry() {
     return RegistryFactory.get(this.getNamespace());
   }
+
   getController(): TypeOrmEntityController {
     return this.controller;
   }
@@ -131,11 +132,12 @@ export class FindOp<T> implements IFindOp<T> {
       // connect only when type is already loaded
       connection = await this.controller.connect();
       if (findConditions && !_.isEmpty(findConditions)) {
-        const builder = new TypeOrmSqlConditionsBuilder<T>(connection.manager, this.entityRef, this.controller.getStorageRef(), 'select');
+        const builder = new TypeOrmSqlConditionsBuilder<T>(
+          connection.getEntityManager(), this.entityRef, this.controller.getStorageRef(), 'select');
         builder.build(findConditions);
         qb = builder.getQueryBuilder() as SelectQueryBuilder<T>;
       } else {
-        qb = connection.manager.getRepository(entityType).createQueryBuilder() as SelectQueryBuilder<T>;
+        qb = connection.getEntityManager().getRepository(entityType).createQueryBuilder() as SelectQueryBuilder<T>;
       }
 
       if (this.options.eager) {
@@ -210,7 +212,6 @@ export class FindOp<T> implements IFindOp<T> {
     const results: T[] = [];
     const connection = await this.controller.connect();
     try {
-      const repo = connection.manager.getMongoRepository(entityType);
 
       if (findConditions) {
         TreeUtils.walk(findConditions, x => {
@@ -222,8 +223,10 @@ export class FindOp<T> implements IFindOp<T> {
         });
       }
 
+      const repo = connection.for(entityType) as RepositoryWrapper<any>;
       const recordCount = await repo.count(findConditions);
-      const qb = this.options.raw ? repo.createCursor(findConditions) : repo.createEntityCursor(findConditions);
+      const mongoRepo = repo.getRepository() as MongoRepository<any>;
+      const qb = this.options.raw ? mongoRepo.createCursor(findConditions) : mongoRepo.createEntityCursor(findConditions);
 
       if (!_.isNull(this.options.limit) && _.isNumber(this.options.limit)) {
         qb.limit(this.options.limit);

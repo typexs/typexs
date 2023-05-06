@@ -129,7 +129,7 @@ export abstract class AbstractSchemaHandler {
 
   async getCollection(name: string): Promise<any> {
     const c = await this.getConnection();
-    return await c.manager.connection.createQueryRunner().getTable(name);
+    return await c.connection.createQueryRunner().getTable(name);
   }
 
 
@@ -148,7 +148,7 @@ export abstract class AbstractSchemaHandler {
 
   async getCollections(names: string[]): Promise<ICollection[]> {
     const c = await this.getConnection();
-    const collections = await c.manager.connection.createQueryRunner().getTables(names);
+    const collections = await c.connection.createQueryRunner().getTables(names);
     const colls: ICollection[] = [];
     _.map(collections, c => {
       const props: ICollectionProperty[] = [];

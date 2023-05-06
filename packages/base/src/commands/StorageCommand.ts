@@ -67,7 +67,7 @@ export class StorageCommand implements ICommand {
     }
 
     const c = await storageRef.connect();
-    const data = await c.manager.connection.createQueryRunner().getTables(parts);
+    const data = await c.connection.createQueryRunner().getTables(parts);
     await c.close();
     console.log(JSON.stringify(data, null, 2));
   }

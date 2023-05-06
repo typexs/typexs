@@ -92,8 +92,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
       const entityName = TypeOrmUtils.resolveName(object);
       if (this.isMongoDB()) {
         connection = await this.controller.connect();
-        const p = await connection.manager.getMongoRepository(entityName).deleteMany(condition);
-        return p.deletedCount;
+        return connection.for(entityName).deleteByCondition(condition);
       } else {
         const entityRef = TypeOrmEntityRegistry.$().getEntityRefByName(entityName);
         connection = await this.controller.connect();
@@ -102,13 +101,14 @@ export class DeleteOp<T> implements IDeleteOp<T> {
         }
 
         if (options.noTransaction) {
-          const x = new TypeOrmSqlConditionsBuilder(connection.manager, entityRef, this.controller.getStorageRef(), 'delete');
+          const x = new TypeOrmSqlConditionsBuilder(
+            connection.getEntityManager(), entityRef, this.controller.getStorageRef(), 'delete');
           const qb = x.getQueryBuilder() as DeleteQueryBuilder<any>;
           x.build(condition);
           const result = await qb/* .where(x.build(condition)) */.execute();
           count = result.affected ? result.affected : -2;
         } else {
-          await connection.manager.transaction(async em => {
+          await connection.getEntityManager().transaction(async em => {
             const x = new TypeOrmSqlConditionsBuilder(em, entityRef, this.controller.getStorageRef(), 'delete');
             const qb = x.getQueryBuilder() as DeleteQueryBuilder<any>;
             x.build(condition);
@@ -145,7 +145,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
       if (this.isMongoDB()) {
         const promises = [];
         for (const entityName of entityNames) {
-          const p = connection.manager.getMongoRepository(entityName).remove(resolveByEntityDef[entityName]);
+          const p = connection.for(entityName).remove(resolveByEntityDef[entityName]);
           promises.push(p);
         }
         promiseResults = await Promise.all(promises);
@@ -158,12 +158,12 @@ export class DeleteOp<T> implements IDeleteOp<T> {
         if (options.noTransaction) {
           const promises = [];
           for (const entityName of entityNames) {
-            const p = connection.manager.getRepository(entityName).remove(resolveByEntityDef[entityName]);
+            const p = connection.for(entityName).remove(resolveByEntityDef[entityName]);
             promises.push(p);
           }
           promiseResults = await Promise.all(promises);
         } else {
-          promiseResults = await connection.manager.transaction(async em => {
+          promiseResults = await connection.getEntityManager().transaction(async em => {
             const promises = [];
             for (const entityName of entityNames) {
               const p = em.getRepository(entityName).remove(resolveByEntityDef[entityName]);

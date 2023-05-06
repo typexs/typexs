@@ -3,7 +3,7 @@ import { NotSupportedError, TreeUtils } from '@allgemein/base';
 import * as _ from 'lodash';
 import { IAggregateOp } from '../IAggregateOp';
 import { IAggregateOptions } from '../IAggregateOptions';
-import { SelectQueryBuilder } from 'typeorm';
+import { MongoRepository, SelectQueryBuilder } from 'typeorm';
 import { XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '../../../Constants';
 import { ISqlParam, TypeOrmSqlConditionsBuilder } from './TypeOrmSqlConditionsBuilder';
 import {
@@ -32,6 +32,7 @@ import { EntityControllerApi } from '../../../../api/EntityController.api';
 import { REGISTRY_TYPEORM } from './Constants';
 import { clone } from 'lodash';
 import { IEntityController } from '../../IEntityController';
+import { RepositoryWrapper } from './RepositoryWrapper';
 
 
 export interface ISqlAggregateParam {
@@ -153,7 +154,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
 
     const connection = await this.controller.connect();
     try {
-      const repo = connection.manager.getRepository(entityDef.getClassRef().getClass());
+      const repo = connection.getEntityManager().getRepository(entityDef.getClassRef().getClass());
 
       if (pipeline) {
         TreeUtils.walk(pipeline, x => {
@@ -268,7 +269,6 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
 
     const connection = await this.controller.connect();
     try {
-      const repo = connection.manager.getMongoRepository(entityDef.getClassRef().getClass());
       const clonePipeline = clone(pipeline);
       if (clonePipeline) {
         TreeUtils.walk(clonePipeline, x => {
@@ -287,6 +287,9 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
         });
         clonePipeline.push({ $sort: sort });
       }
+
+      const _repo = connection.for(entityDef.getClassRef().getClass()) as unknown as RepositoryWrapper<unknown>;
+      const repo = _repo.getRepository() as MongoRepository<any>;
 
       const countPipeline = _.clone(clonePipeline);
       countPipeline.push({ $count: 'count' });
