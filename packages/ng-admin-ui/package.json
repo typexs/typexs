@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-admin-ui",
-  "version": "2.2.1-dev.22",
+  "version": "2.2.1-dev.23",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
   "scripts": {
@@ -44,15 +44,15 @@
     "@angular/common": "v12-lts",
     "@angular/core": "v12-lts",
     "@angular/router": "v12-lts",
-    "@typexs/base": "2.2.1-dev.26",
-    "@typexs/base-ng": "2.2.1-dev.24",
-    "@typexs/forms-ng": "2.2.1-dev.21",
-    "@typexs/ng": "2.2.1-dev.17",
+    "@typexs/base": "2.2.1-dev.27",
+    "@typexs/base-ng": "2.2.1-dev.25",
+    "@typexs/forms-ng": "2.2.1-dev.22",
+    "@typexs/ng": "2.2.1-dev.18",
     "@typexs/ng-router-menu": "2.2.1-dev.15",
-    "@typexs/ng-theme-base": "2.2.1-dev.21",
-    "@typexs/server": "2.2.1-dev.17",
-    "@typexs/storage-ng": "2.2.1-dev.21",
-    "@typexs/tasks-ng": "2.2.1-dev.22",
+    "@typexs/ng-theme-base": "2.2.1-dev.22",
+    "@typexs/server": "2.2.1-dev.18",
+    "@typexs/storage-ng": "2.2.1-dev.22",
+    "@typexs/tasks-ng": "2.2.1-dev.23",
     "rxjs": "6.6.7"
   },
   "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"

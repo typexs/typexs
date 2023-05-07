@@ -1,6 +1,6 @@
 {
   "name": "@typexs/pipelines",
-  "version": "2.2.1-dev.18",
+  "version": "2.2.1-dev.19",
   "main": "./index",
   "browser": "./browser",
   "scripts": {
@@ -16,7 +16,7 @@
     "@typexs/base": "^2.2.1-dev.22"
   },
   "devDependencies": {
-    "@typexs/base": "2.2.1-dev.26"
+    "@typexs/base": "2.2.1-dev.27"
   },
   "typexs": {
     "name": "pipelines",
