@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/storage-ng",
-  "version": "2.2.1-dev.23",
+  "version": "2.2.1-dev.24",
   "description": "Angular for typexs",
   "main": "./public_api.ts",
   "scripts": {
@@ -42,12 +42,12 @@
     "@angular/core": "v12-lts",
     "@angular/forms": "v12-lts",
     "@angular/router": "v12-lts",
-    "@typexs/base": "2.2.1-dev.28",
-    "@typexs/base-ng": "2.2.1-dev.26",
-    "@typexs/forms": "2.2.1-dev.19",
-    "@typexs/forms-ng": "2.2.1-dev.23",
-    "@typexs/ng": "2.2.1-dev.19",
-    "@typexs/storage": "2.2.1-dev.21",
+    "@typexs/base": "2.2.1-dev.29",
+    "@typexs/base-ng": "2.2.1-dev.27",
+    "@typexs/forms": "2.2.1-dev.20",
+    "@typexs/forms-ng": "2.2.1-dev.24",
+    "@typexs/ng": "2.2.1-dev.20",
+    "@typexs/storage": "2.2.1-dev.22",
     "lodash": "4.17.21",
     "rxjs": "6.6.7"
   },

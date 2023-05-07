@@ -1,6 +1,6 @@
 {
   "name": "@typexs/base",
-  "version": "2.2.1-dev.28",
+  "version": "2.2.1-dev.29",
   "description": "",
   "main": "index",
   "browser": "browser",
@@ -46,7 +46,7 @@
     "typedi": "0.8.0"
   },
   "devDependencies": {
-    "@typexs/testing": "2.2.1-dev.19",
+    "@typexs/testing": "2.2.1-dev.20",
     "typeorm": "0.2.34",
     "winston": "3.3.3",
     "yargonaut": "1.1.4",
