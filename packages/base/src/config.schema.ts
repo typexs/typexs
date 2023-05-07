@@ -137,6 +137,17 @@ export const CONFIG_SCHEMA = {
             synchronize: {
               type: 'boolean'
             },
+            connection: {
+              type: 'object',
+              properties: {
+                read: {
+                  type: 'number'
+                },
+                write: {
+                  type: 'number'
+                }
+              }
+            }
           }
         }
       }
