@@ -9,9 +9,6 @@
     "test": "ng test --code-coverage=true --watch=false",
     "build": "ng build"
   },
-  "publishConfig": {
-    "directory": "./build/package"
-  },
   "directories": {
     "doc": "docs/de"
   },
