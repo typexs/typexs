@@ -58,4 +58,20 @@ export interface IStorageRefOptions {
    * Only for output reason - mode of setting
    */
   mode?: 'db' | 'config';
+
+  /**
+   * Connection setting
+   */
+  connection?: {
+    /**
+     * Parallel operations for write
+     */
+    write?: number;
+
+    /**
+     * Parallel operations for read
+     */
+    read?: number;
+  };
+
 }

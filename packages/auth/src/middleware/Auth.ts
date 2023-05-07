@@ -538,7 +538,7 @@ export class Auth implements IMiddleware {
       if (!_.isEmpty(session) && session.userId === user.id) {
         // const repo = this.getStorageEntityController().remove()
         // entityController.remove();
-        // connection.manager.getRepository(AuthSession);
+        // connection.for(AuthSession);
         // const q = repo.createQueryBuilder('s').delete();
         // q.where('token = :token', {token: token});
         // await q.execute();

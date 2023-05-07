@@ -46,9 +46,9 @@ class StorageControllerAggregatePostgresSpec extends StorageAcontrollerAggregate
 
   static async cleanup(ref: TypeOrmStorageRef) {
     const c = await ref.connect();
-    await c.manager.query('TRUNCATE car_param RESTART IDENTITY CASCADE;');
-    await c.manager.query('TRUNCATE driver_sql  RESTART IDENTITY CASCADE;');
-    await c.manager.query('TRUNCATE car_sql  RESTART IDENTITY CASCADE;');
+    await c.query('TRUNCATE car_param RESTART IDENTITY CASCADE;');
+    await c.query('TRUNCATE driver_sql  RESTART IDENTITY CASCADE;');
+    await c.query('TRUNCATE car_sql  RESTART IDENTITY CASCADE;');
     await c.close();
   }
 

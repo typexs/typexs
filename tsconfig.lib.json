@@ -37,6 +37,12 @@
       "@typexs/entity/*": [
         "./packages/entity/src/*"
       ],
+      "@typexs/forms": [
+        "./packages/forms/src/browser"
+      ],
+      "@typexs/forms/*": [
+        "./packages/forms/src/*"
+      ],
       "@typexs/ng": [
         "./packages/ng/src/browser"
       ],

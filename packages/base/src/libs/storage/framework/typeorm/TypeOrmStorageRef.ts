@@ -1,6 +1,20 @@
 import { IStorageRefOptions } from '../../IStorageRefOptions';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
-import { assign, defaults, get, has, isArray, isEmpty, isFunction, isObjectLike, isString, remove, set, snakeCase } from 'lodash';
+import {
+  assign,
+  defaults,
+  defaultsDeep,
+  get,
+  has,
+  isArray,
+  isEmpty,
+  isFunction,
+  isObjectLike,
+  isString,
+  remove,
+  set,
+  snakeCase
+} from 'lodash';
 import { C_DEFAULT, NotYetImplementedError, PlatformUtils, TodoException } from '@allgemein/base';
 import { Config } from '@allgemein/config';
 import { K_WORKDIR } from '../../../Constants';
@@ -16,18 +30,19 @@ import {
   IClassRef,
   IEntityRef,
   IJsonSchema,
-  RegistryFactory,
   MetadataRegistry,
-  METATYPE_ENTITY, METATYPE_NAMESPACE, IAbstractOptions
+  METATYPE_ENTITY,
+  METATYPE_NAMESPACE,
+  RegistryFactory
 } from '@allgemein/schema-api';
 import { __SOURCE__, DEFAULT_STORAGEREF_OPTIONS } from '../../Constants';
 import { TypeOrmEntityController } from './TypeOrmEntityController';
 import { TypeOrmConnectionWrapper } from './TypeOrmConnectionWrapper';
 import { StorageRef } from '../../StorageRef';
 import { ICollection } from '../../ICollection';
-import { BaseConnectionOptions } from 'typeorm/connection/BaseConnectionOptions';
 import {
-  C_BACKUP_TYPE, C_TYPEORM_REGULAR,
+  C_BACKUP_TYPE,
+  C_TYPEORM_REGULAR,
   EVENT_STORAGE_ENTITY_ADDED,
   EVENT_STORAGE_REF_PREPARED,
   EVENT_STORAGE_REF_SHUTDOWN,
@@ -75,7 +90,8 @@ export class TypeOrmStorageRef extends StorageRef {
     // Apply some unchangeable and fixed options
     if (options.type === 'sqlite') {
       const opts = <SqliteConnectionOptions & IStorageRefOptions>options;
-
+      // define semaphore values
+      this.setOptions(defaultsDeep(this.getOptions(), { connection: { read: 0, write: 1 } }));
       if (opts.database !== ':memory:' &&
         !isEmpty(opts.database) &&
         !PlatformUtils.isAbsolute(opts.database)) {

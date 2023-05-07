@@ -81,7 +81,7 @@ class JsonSchemaSupportSpec {
     expect(storage.getEntityRefs()).to.be.length(3);
 
     const c = await storage.connect() as TypeOrmConnectionWrapper;
-    const q = await c.manager.query('SELECT * FROM sqlite_master WHERE type = \'table\' AND name NOT LIKE \'sqlite%\';');
+    const q = await c.query('SELECT * FROM sqlite_master WHERE type = \'table\' AND name NOT LIKE \'sqlite%\';');
     expect(q).to.have.length(3);
     expect(q.map((x: any) => x.name)).to.deep.eq([
       'system_node_info',
@@ -165,7 +165,7 @@ class JsonSchemaSupportSpec {
     expect(storage.getEntityRefs()).to.be.length(4);
 
     const c = await storage.connect() as TypeOrmConnectionWrapper;
-    const q = await c.manager.query('SELECT * FROM sqlite_master WHERE type = \'table\' AND name NOT LIKE \'sqlite%\';');
+    const q = await c.query('SELECT * FROM sqlite_master WHERE type = \'table\' AND name NOT LIKE \'sqlite%\';');
     expect(q).to.have.length(4);
     expect(q.map((x: any) => x.name)).to.deep.eq([
       'system_node_info',
@@ -218,8 +218,8 @@ class JsonSchemaSupportSpec {
     book.autor = author;
     const savedBookInstance = await storage.getController().save(book);
 
-    const rawbooks = await c.manager.query('select * from book');
-    const rawauthor = await c.manager.query('select * from author');
+    const rawbooks = await c.query('select * from book');
+    const rawauthor = await c.query('select * from author');
     expect(rawbooks).to.be.deep.eq([{ id: 1, label: 'Hallo', autor_id: 1 }]);
     expect(rawauthor).to.be.deep.eq([{ id: 1, first_name: 'Rob', last_name: 'Elt' }]);
 
@@ -285,8 +285,8 @@ class JsonSchemaSupportSpec {
     books[1].autor = author1;
     const savedBookInstance = await storage.getController().save(books);
 
-    const rawbooks = await c.manager.query('select * from book');
-    const rawauthor = await c.manager.query('select * from author');
+    const rawbooks = await c.query('select * from book');
+    const rawauthor = await c.query('select * from author');
     expect(rawbooks).to.be.deep.eq([
       {
         'autor_id': 2,
@@ -348,7 +348,7 @@ class JsonSchemaSupportSpec {
     expect(storage.getEntityRefs()).to.be.length(4);
 
     const c = await storage.connect() as TypeOrmConnectionWrapper;
-    const q = await c.manager.query('SELECT * FROM sqlite_master WHERE type = \'table\' AND name NOT LIKE \'sqlite%\';');
+    const q = await c.query('SELECT * FROM sqlite_master WHERE type = \'table\' AND name NOT LIKE \'sqlite%\';');
     expect(q).to.have.length(5);
     expect(q.map((x: any) => x.name)).to.include.members([
       'Dealer',

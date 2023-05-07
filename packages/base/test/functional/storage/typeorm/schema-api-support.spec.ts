@@ -126,7 +126,7 @@ class SchemaApiSupportSpec {
     expect(storage.getDeclaredEntities()).has.length(1);
 
     const c = await storage.connect();
-    const q = await c.manager.query('SELECT * FROM sqlite_master WHERE type = \'table\' ;');
+    const q = await c.query('SELECT * FROM sqlite_master WHERE type = \'table\' ;');
     await storage.shutdown(true);
 
     expect(q).has.length(1);
@@ -166,12 +166,13 @@ class SchemaApiSupportSpec {
     expect(storage.getDeclaredEntities().map(x => x.name)).to.include.members(['EntityOfSchemaApi2']);
 
     const c = await storage.connect();
-    const q = await c.manager.query('SELECT * FROM sqlite_master WHERE type = \'table\' and name NOT LIKE \'sqlite%\';');
+    const q = await c.query('SELECT * FROM sqlite_master WHERE type = \'table\' and name NOT LIKE \'sqlite%\';');
     await storage.shutdown(true);
 
     expect(q).has.length(2);
     expect(q.map((x: any) => x.sql)).to.be.deep.eq(
       [
+        // eslint-disable-next-line max-len
         'CREATE TABLE "entity_of_schema_api2" ("id_nr" integer PRIMARY KEY NOT NULL, "str_value" varchar NOT NULL, "nr_value" integer NOT NULL)',
         'CREATE TABLE "schema_api_table" ("id_nr" integer PRIMARY KEY NOT NULL, "str_value" varchar NOT NULL, "nr_value" integer NOT NULL)'
       ]
@@ -195,7 +196,7 @@ class SchemaApiSupportSpec {
     expect(storage.getDeclaredEntities().map(x => x.name)).to.include.members(['EntityOfSchemaApi']);
 
     const c = await storage.connect();
-    const q = await c.manager.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
+    const q = await c.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
 
     if (fs.existsSync(dbfile)) {
       fs.unlinkSync(dbfile);
@@ -246,14 +247,14 @@ class SchemaApiSupportSpec {
     await storage.reload();
 
     const c = await storage.connect();
-    let repo = c.manager.getRepository('xtable');
+    let repo = c.for<any>('xtable');
     let x = new X();
     x.id = 1;
     x.txt = 'txt';
     x = await repo.save(x);
     expect(x.test).to.be.true;
 
-    repo = c.manager.getRepository('ytable');
+    repo = c.for<any>('ytable');
     let y = new Y();
     y.id = 1;
     y.txt = 'txt';
@@ -275,14 +276,14 @@ class SchemaApiSupportSpec {
     await storage.prepare();
 
     const c = await storage.connect();
-    const repo = c.manager.getRepository(X1);
+    const repo = c.for(X1);
     let x = new X1();
     x.id = 1;
     x.txt = 'txt';
     x = await repo.save(x);
     expect(x.test).to.be.true;
 
-    const repo2 = c.manager.getRepository(Y1);
+    const repo2 = c.for(Y1);
     let y = new Y1();
     y.id = 1;
     y.txt = 'txt';

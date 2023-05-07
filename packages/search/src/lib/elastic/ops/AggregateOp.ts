@@ -143,7 +143,7 @@
 //
 //     const connection = await this.controller.connect();
 //     try {
-//       const repo = connection.manager.getRepository(entityDef.getClassRef().getClass());
+//       const repo = connection.for(entityDef.getClassRef().getClass());
 //
 //       if (pipeline) {
 //         TreeUtils.walk(pipeline, x => {

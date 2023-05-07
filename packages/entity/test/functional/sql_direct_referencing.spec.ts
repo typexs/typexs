@@ -3,14 +3,13 @@ import '../../src/libs/decorators/register';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import * as _ from 'lodash';
-import { StorageRef, TypeOrmConnectionWrapper, TypeOrmEntityRegistry } from '@typexs/base';
+import { StorageRef, TypeOrmEntityRegistry } from '@typexs/base';
 import { EntityController } from '../../src/libs/EntityController';
 import { TestHelper } from './TestHelper';
 import { TEST_STORAGE_OPTIONS } from './config';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
 import { EntityRegistry } from '../../src';
-import { inspect } from 'util';
 
 
 const FINDOPT = {
@@ -59,7 +58,7 @@ class SqlDirectReferencingSpec {
     const connect = await this.connect(options);
     const xsem = connect.controller;
     const ref = connect.ref;
-    const c = await ref.connect() as TypeOrmConnectionWrapper;
+    const c = await ref.connect();
 
     const a = new Author();
     a.firstName = 'Robert';
@@ -75,15 +74,15 @@ class SqlDirectReferencingSpec {
     expect(book.author.id).to.be.eq(1);
 
 
-    let data = await c.connection.query('select * from author');
+    let data = await c.query('select * from author');
     expect(data).to.have.length(1);
     expect(data[0].id).to.eq(1);
 
-    data = await c.connection.query('select * from book');
+    data = await c.query('select * from book');
     expect(data).to.have.length(1);
     expect(data[0].id).to.eq(1);
 
-    data = await c.connection.query('select * from p_book_author');
+    data = await c.query('select * from p_book_author');
     expect(data).to.have.length(1);
     expect(data[0].source_id).to.eq(1);
     expect(data[0].target_id).to.eq(1);
@@ -232,8 +231,8 @@ class SqlDirectReferencingSpec {
     expect(_.find(book_save_1.authors, { lastName: 'Bania', id: 2 })).to.deep.include({ lastName: 'Bania', id: 2 });
     expect(_.find(book_save_1.authors, { lastName: 'Kania', id: 1 })).to.deep.include({ lastName: 'Kania', id: 1 });
 
-    const connection = await storageRef.connect() as TypeOrmConnectionWrapper; // getController().find(Author, {$and: [{id: 1}, {id: 2}]});
-    const authorsFound = await connection.manager.find(Author, [{ id: 1 }, { id: 2 }]);
+    const connection = await storageRef.connect(); // getController().find(Author, {$and: [{id: 1}, {id: 2}]});
+    const authorsFound = await connection.for(Author).find([{ id: 1 }, { id: 2 }]);
     expect(authorsFound).to.have.length(2);
     await connection.close();
 
@@ -335,9 +334,9 @@ class SqlDirectReferencingSpec {
     const connect = await this.connect(options);
     const xsem = connect.controller;
     const ref = connect.ref;
-    const c = await ref.connect() as TypeOrmConnectionWrapper;
+    const c = await ref.connect();
 
-    const tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
+    const tables: any[] = await c.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
     expect(tables).to.have.length(5);
     expect(_.map(tables, table => table.name)).to.have.include.members(['car', 'skil', 'p_car_driver', 'p_car_drivers']);
 

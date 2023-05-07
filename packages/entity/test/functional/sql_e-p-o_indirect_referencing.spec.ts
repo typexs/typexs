@@ -132,17 +132,17 @@ class SqlIndirectReferencingSpec {
   @test
   async 'find entity with object (one-to-one) - with element'() {
     // create scenario
-    await connection.manager.query('insert into entity_with_object (`nr`) values (1);');
-    let raw = await connection.manager.query('select max(id) as maxId from entity_with_object;');
+    await connection.query('insert into entity_with_object (`nr`) values (1);');
+    let raw = await connection.query('select max(id) as maxId from entity_with_object;');
     const entityId = raw.shift().maxId;
-    await connection.manager.query('insert into o_dynamic_object (`value`) values ("test");');
-    raw = await connection.manager.query('select max(id) as maxId from o_dynamic_object;');
+    await connection.query('insert into o_dynamic_object (`value`) values ("test");');
+    raw = await connection.query('select max(id) as maxId from o_dynamic_object;');
     const objectId = raw.shift().maxId;
-    await connection.manager.query(
+    await connection.query(
       'insert into p_entity_with_object_object ' +
       '(`source_type`,`source_id`,`source_seq_nr`,`target_id`) values ' +
       '("entity_with_object",' + entityId + ',0,' + objectId + ');');
-    raw = await connection.manager.query('select max(id) as maxId from p_entity_with_object_object;');
+    raw = await connection.query('select max(id) as maxId from p_entity_with_object_object;');
     const relationId = raw.shift().maxId;
 
     const entry = await entityController.find('EntityWithObject', { id: entityId });
@@ -156,13 +156,13 @@ class SqlIndirectReferencingSpec {
 
   @test
   async 'find entity with object array (one-to-many) - empty'() {
-    await connection.manager.query('insert into entity_with_object_array (`nr`) values (3);');
-    const raw = await connection.manager.query('select max(id) as maxId from entity_with_object_array;');
+    await connection.query('insert into entity_with_object_array (`nr`) values (3);');
+    const raw = await connection.query('select max(id) as maxId from entity_with_object_array;');
     const entityId = raw.shift().maxId;
-    // await connection.manager.query('insert into o_dynamic_object (`value`) values ("test1");');
-    // raw = await connection.manager.query('select max(id) as maxId from o_dynamic_object;');
+    // await connection.query('insert into o_dynamic_object (`value`) values ("test1");');
+    // raw = await connection.query('select max(id) as maxId from o_dynamic_object;');
     // const objectId = raw.shift().maxId;
-    // await connection.manager.query(
+    // await connection.query(
     //   'insert into p_entity_with_object_array_object ' +
     //   '(`source_type`,`source_id`,`source_seq_nr`,`target_id`) values ' +
     //   '("entity_with_object_array",' + entityId + ',0,' + objectId + ');');
@@ -178,13 +178,13 @@ class SqlIndirectReferencingSpec {
 
   @test
   async 'find entity with object array (one-to-many) - one entry'() {
-    await connection.manager.query('insert into entity_with_object_array (`nr`) values (2);');
-    let raw = await connection.manager.query('select max(id) as maxId from entity_with_object_array;');
+    await connection.query('insert into entity_with_object_array (`nr`) values (2);');
+    let raw = await connection.query('select max(id) as maxId from entity_with_object_array;');
     const entityId = raw.shift().maxId;
-    await connection.manager.query('insert into o_dynamic_object (`value`) values ("test1");');
-    raw = await connection.manager.query('select max(id) as maxId from o_dynamic_object;');
+    await connection.query('insert into o_dynamic_object (`value`) values ("test1");');
+    raw = await connection.query('select max(id) as maxId from o_dynamic_object;');
     const objectId = raw.shift().maxId;
-    await connection.manager.query(
+    await connection.query(
       'insert into p_entity_with_object_array_object ' +
       '(`source_type`,`source_id`,`source_seq_nr`,`target_id`) values ' +
       '("entity_with_object_array",' + entityId + ',0,' + objectId + ');');
@@ -202,24 +202,24 @@ class SqlIndirectReferencingSpec {
 
   @test
   async 'find entity with object array (one-to-many) - multi entry'() {
-    await connection.manager.query('insert into entity_with_object_array (`nr`) values (2);');
-    let raw = await connection.manager.query('select max(id) as maxId from entity_with_object_array;');
+    await connection.query('insert into entity_with_object_array (`nr`) values (2);');
+    let raw = await connection.query('select max(id) as maxId from entity_with_object_array;');
     const entityId = raw.shift().maxId;
 
-    await connection.manager.query('insert into o_dynamic_object (`value`) values ("test1");');
-    raw = await connection.manager.query('select max(id) as maxId from o_dynamic_object;');
+    await connection.query('insert into o_dynamic_object (`value`) values ("test1");');
+    raw = await connection.query('select max(id) as maxId from o_dynamic_object;');
     const objectId1 = raw.shift().maxId;
 
-    await connection.manager.query('insert into o_dynamic_object (`value`) values ("test2");');
-    raw = await connection.manager.query('select max(id) as maxId from o_dynamic_object;');
+    await connection.query('insert into o_dynamic_object (`value`) values ("test2");');
+    raw = await connection.query('select max(id) as maxId from o_dynamic_object;');
     const objectId2 = raw.shift().maxId;
 
-    await connection.manager.query(
+    await connection.query(
       'insert into p_entity_with_object_array_object ' +
       '(`source_type`,`source_id`,`source_seq_nr`,`target_id`) values ' +
       '("entity_with_object_array",' + entityId + ',0,' + objectId1 + ');');
 
-    await connection.manager.query(
+    await connection.query(
       'insert into p_entity_with_object_array_object ' +
       '(`source_type`,`source_id`,`source_seq_nr`,`target_id`) values ' +
       '("entity_with_object_array",' + entityId + ',1,' + objectId2 + ');');
@@ -240,24 +240,24 @@ class SqlIndirectReferencingSpec {
 
   @test
   async 'find entity with object array (one-to-many) - multi entry - wrong seqNr'() {
-    await connection.manager.query('insert into entity_with_object_array (`nr`) values (2);');
-    let raw = await connection.manager.query('select max(id) as maxId from entity_with_object_array;');
+    await connection.query('insert into entity_with_object_array (`nr`) values (2);');
+    let raw = await connection.query('select max(id) as maxId from entity_with_object_array;');
     const entityId = raw.shift().maxId;
 
-    await connection.manager.query('insert into o_dynamic_object (`value`) values ("test1");');
-    raw = await connection.manager.query('select max(id) as maxId from o_dynamic_object;');
+    await connection.query('insert into o_dynamic_object (`value`) values ("test1");');
+    raw = await connection.query('select max(id) as maxId from o_dynamic_object;');
     const objectId1 = raw.shift().maxId;
 
-    await connection.manager.query('insert into o_dynamic_object (`value`) values ("test2");');
-    raw = await connection.manager.query('select max(id) as maxId from o_dynamic_object;');
+    await connection.query('insert into o_dynamic_object (`value`) values ("test2");');
+    raw = await connection.query('select max(id) as maxId from o_dynamic_object;');
     const objectId2 = raw.shift().maxId;
 
-    await connection.manager.query(
+    await connection.query(
       'insert into p_entity_with_object_array_object ' +
       '(`source_type`,`source_id`,`source_seq_nr`,`target_id`) values ' +
       '("entity_with_object_array",' + entityId + ',1,' + objectId1 + ');');
 
-    await connection.manager.query(
+    await connection.query(
       'insert into p_entity_with_object_array_object ' +
       '(`source_type`,`source_id`,`source_seq_nr`,`target_id`) values ' +
       '("entity_with_object_array",' + entityId + ',2,' + objectId2 + ');');
@@ -298,11 +298,11 @@ class SqlIndirectReferencingSpec {
     const entry = await entityController.save(entity);
     // console.log(entry);
 
-    const entityObject = (await connection.manager.query(
+    const entityObject = (await connection.query(
       'select * from entity_with_object where id = (select max(id) as maxId from entity_with_object);')).shift();
-    const object = (await connection.manager.query(
+    const object = (await connection.query(
       'select * from o_dynamic_object where id = (select max(id) as maxId from o_dynamic_object);')).shift();
-    const relation = (await connection.manager.query(
+    const relation = (await connection.query(
       'select * from p_entity_with_object_object where id = (select max(id) as maxId from p_entity_with_object_object);')).shift();
     expect(entityObject).to.deep.eq({ id: entityObject.id, nr: 4 });
     expect(object).to.deep.eq({ id: object.id, value: 'save-test' });
@@ -344,11 +344,11 @@ class SqlIndirectReferencingSpec {
 
     const entry = await entityController.save(entity);
 
-    const entityObject = (await connection.manager.query(
+    const entityObject = (await connection.query(
       'select * from entity_with_object_array where id = (select max(id) as maxId from entity_with_object_array);')).shift();
-    const object = (await connection.manager.query(
+    const object = (await connection.query(
       'select * from o_dynamic_object where id >= (select max(id) as maxId from o_dynamic_object) - 1;'));
-    const relation = (await connection.manager.query(
+    const relation = (await connection.query(
       'select * from p_entity_with_object_array_object where id >= (select max(id) as maxId from p_entity_with_object_array_object) - 1;'));
 
     // console.log(entry, entityObject, object, relation);
@@ -425,11 +425,11 @@ class SqlIndirectReferencingSpec {
       ]
     });
 
-    const entityObject = (await connection.manager.query(
+    const entityObject = (await connection.query(
       'select * from entity_with_object_array where id = (select max(id) as maxId from entity_with_object_array);')).shift();
-    const object = (await connection.manager.query(
+    const object = (await connection.query(
       'select * from o_dynamic_object where id >= (select max(id) as maxId from o_dynamic_object) - 1;'));
-    const relation = (await connection.manager.query(
+    const relation = (await connection.query(
       'select * from p_entity_with_object_array_object where id >= (select max(id) as maxId from p_entity_with_object_array_object) - 1;'));
 
     // console.log(entry, entityObject, object, relation);
@@ -499,7 +499,7 @@ class SqlIndirectReferencingSpec {
       }
     );
 
-    const relation = (await connection.manager.query(
+    const relation = (await connection.query(
       'select * from p_entity_with_object_array_object where id >= (select max(id) as maxId from p_entity_with_object_array_object) - 1;'));
 
     expect(relation).to.deep.eq([{
@@ -549,11 +549,11 @@ class SqlIndirectReferencingSpec {
     });
 
 
-    const beforeRelation = (await connection.manager.query(
+    const beforeRelation = (await connection.query(
       // eslint-disable-next-line max-len
       'select * from p_entity_with_object_array_object where source_id = ' + entry.id + ';'));
 
-    // const beforeObject = (await connection.manager.query(
+    // const beforeObject = (await connection.query(
     //   'select * from o_dynamic_object where id >= (select max(id) as maxId from o_dynamic_object) - 1;'));
 
 
@@ -562,9 +562,9 @@ class SqlIndirectReferencingSpec {
     entry = await entityController.save(entry) as any;
     entry = await entityController.findOne(clazz.getClass(), { id: entry.id });
 
-    const afterObject = (await connection.manager.query(
+    const afterObject = (await connection.query(
       'select * from o_dynamic_object where id >= (select max(id) as maxId from o_dynamic_object) - 1;'));
-    const afterRelation = (await connection.manager.query(
+    const afterRelation = (await connection.query(
       // eslint-disable-next-line max-len
       'select * from p_entity_with_object_array_object where source_id = ' + entry.id + ';'));
     // console.log(cloneChange, entry, beforeObject, beforeRelation, afterObject, afterRelation);
@@ -609,7 +609,7 @@ class SqlIndirectReferencingSpec {
     });
 
 
-    const beforeRelation = (await connection.manager.query(
+    const beforeRelation = (await connection.query(
       // eslint-disable-next-line max-len
       'select * from p_entity_with_object_array_object where source_id = ' + entry.id + ';'));
 
@@ -618,9 +618,9 @@ class SqlIndirectReferencingSpec {
     entry = await entityController.save(entry) as any;
     entry = await entityController.findOne(clazz.getClass(), { id: entry.id });
 
-    // const afterObject = (await connection.manager.query(
+    // const afterObject = (await connection.query(
     //   'select * from o_dynamic_object where id >= (select max(id) as maxId from o_dynamic_object) - 1;'));
-    const afterRelation = (await connection.manager.query(
+    const afterRelation = (await connection.query(
       // eslint-disable-next-line max-len
       'select * from p_entity_with_object_array_object where source_id = ' + entry.id + ';'));
 

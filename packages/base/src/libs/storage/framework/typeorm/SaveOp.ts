@@ -151,7 +151,7 @@ export class SaveOp<T> implements ISaveOp<T> {
 
           if (options.noTransaction) {
             for (const entityName of entityNames) {
-              await connection.for(entityName).save(resolveByEntityRef[entityName], saveOptions);
+              promises.push(connection.for(entityName).save(resolveByEntityRef[entityName], saveOptions));
             }
           } else {
 

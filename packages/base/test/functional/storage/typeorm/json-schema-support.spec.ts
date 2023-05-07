@@ -261,7 +261,7 @@ class JsonSchemaSupportSpec {
     expect(storage['options'].entities).has.length(1);
 
     const c = await storage.connect();
-    const q = await c.manager.query('SELECT * FROM sqlite_master WHERE type = \'table\' ;');
+    const q = await c.query('SELECT * FROM sqlite_master WHERE type = \'table\' ;');
     await storage.shutdown(true);
 
     expect(q).has.length(1);

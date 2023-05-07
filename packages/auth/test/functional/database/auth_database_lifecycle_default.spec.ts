@@ -168,8 +168,8 @@ class AuthDatabaseLifecycleDefaultSpec {
 
     const storageRef: StorageRef = Injector.get('storage.default');
     const c = await storageRef.connect() as TypeOrmConnectionWrapper;
-    const users = await c.manager.getRepository(User).find();
-    const methods = await c.manager.getRepository(AuthMethod).find();
+    const users = await c.for(User).find();
+    const methods = await c.for(AuthMethod).find();
 
 
     // data correctly added
@@ -307,8 +307,7 @@ class AuthDatabaseLifecycleDefaultSpec {
     expect(sessions).to.have.length.gte(1);
 
     const c = await storageRef.connect() as TypeOrmConnectionWrapper;
-    const _session = await c.manager.getRepository(AuthSession)
-      .findOne({ where: { token: doingLogin.token } });
+    const _session = await c.for(AuthSession).findOne({ where: { token: doingLogin.token } });
 
 
     const session = await storageRef.getController().findOne(AuthSession, { token: { $eq: doingLogin.token } }, {
@@ -345,7 +344,7 @@ class AuthDatabaseLifecycleDefaultSpec {
 
     const storageRef: StorageRef = Injector.get('storage.default');
     // const c = await storageRef.connect() as TypeOrmConnectionWrapper;
-    // const session = await c.manager.getRepository(AuthSession)
+    // const session = await c.for(AuthSession)
     //   .findOne({where: {token: doingLogin.token}});
     const sessions = await storageRef.getController().find(AuthSession);
     // expect(session.token).to.be.eq(auth.getToken(res));

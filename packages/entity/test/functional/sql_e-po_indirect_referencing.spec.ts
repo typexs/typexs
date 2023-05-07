@@ -134,14 +134,14 @@ class SqlE_PoIndirectReferencingSpec {
   async 'find entity with object (one-to-one) - with element'() {
     // create scenario
     const nr = inc++;
-    await connection.manager.query('insert into entity_with_integrated (`nr`) values (' + nr + ');');
-    const raw = await connection.manager.query('select max(id) as maxId from entity_with_integrated;');
+    await connection.query('insert into entity_with_integrated (`nr`) values (' + nr + ');');
+    const raw = await connection.query('select max(id) as maxId from entity_with_integrated;');
     const entityId = raw.shift().maxId;
-    await connection.manager.query(
+    await connection.query(
       'insert into p_entity_with_integrated_object ' +
       '(`source_type`,`source_id`,`source_seq_nr`,`value`) values ' +
       '("entity_with_integrated",' + entityId + ',0,"test");');
-    // raw = await connection.manager.query('select max(id) as maxId from p_entity_with_object_object;');
+    // raw = await connection.query('select max(id) as maxId from p_entity_with_object_object;');
 
     const entry = await entityController.find('EntityWithIntegrated', { id: entityId });
     // console.log(inspect(entry, false, 10));
@@ -158,14 +158,14 @@ class SqlE_PoIndirectReferencingSpec {
   async 'find entity with object array (one-to-many) - empty'() {
     // create scenario
     const nr = inc++;
-    await connection.manager.query('insert into entity_with_integrated_array (`nr`) values (' + nr + ');');
-    const raw = await connection.manager.query('select max(id) as maxId from entity_with_integrated_array;');
+    await connection.query('insert into entity_with_integrated_array (`nr`) values (' + nr + ');');
+    const raw = await connection.query('select max(id) as maxId from entity_with_integrated_array;');
     const entityId = raw.shift().maxId;
-    // await connection.manager.query(
+    // await connection.query(
     //   'insert into p_entity_with_integrated_array_object ' +
     //   '(`source_type`,`source_id`,`source_seq_nr`,`value`) values ' +
     //   '("entity_with_integrated",' + entityId + ',0,"test");');
-    // raw = await connection.manager.query('select max(id) as maxId from p_entity_with_object_object;');
+    // raw = await connection.query('select max(id) as maxId from p_entity_with_object_object;');
 
 
     const entry = await entityController.find('EntityWithIntegratedArray', { id: entityId });
@@ -182,15 +182,15 @@ class SqlE_PoIndirectReferencingSpec {
   async 'find entity with object array (one-to-many) - one entry'() {
     // create scenario
     const nr = inc++;
-    await connection.manager.query('insert into entity_with_integrated_array (`nr`) values (' + nr + ');');
-    // await connection.manager.query('insert into integrated_object (`value`) values ( \'test-' + nr + '\');');
-    const raw = await connection.manager.query('select max(id) as maxId from entity_with_integrated_array;');
+    await connection.query('insert into entity_with_integrated_array (`nr`) values (' + nr + ');');
+    // await connection.query('insert into integrated_object (`value`) values ( \'test-' + nr + '\');');
+    const raw = await connection.query('select max(id) as maxId from entity_with_integrated_array;');
     const entityId = raw.shift().maxId;
-    await connection.manager.query(
+    await connection.query(
       'insert into p_entity_with_integrated_array_object ' +
       '(`source_type`,`source_id`,`source_seq_nr`,`value`) values ' +
       '("entity_with_integrated_array",' + entityId + ',0,"test");');
-    // raw = await connection.manager.query('select max(id) as maxId from p_entity_with_integrated_array_object;');
+    // raw = await connection.query('select max(id) as maxId from p_entity_with_integrated_array_object;');
 
 
     const entry = await entityController.find('EntityWithIntegratedArray', { id: entityId });
@@ -223,9 +223,9 @@ class SqlE_PoIndirectReferencingSpec {
 
     const entry = await entityController.save(entity);
 
-    const entityObject = (await connection.manager.query(
+    const entityObject = (await connection.query(
       'select * from entity_with_integrated where id = (select max(id) as maxId from entity_with_integrated);')).shift();
-    const object = (await connection.manager.query(
+    const object = (await connection.query(
       'select * from p_entity_with_integrated_object where id >= (select max(id) as maxId from p_entity_with_integrated_object) - 1;'));
 
     expect(entityObject).to.be.deep.eq({

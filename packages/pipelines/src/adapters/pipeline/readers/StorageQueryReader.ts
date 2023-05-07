@@ -156,7 +156,7 @@ export class StorageQueryReader<T> extends Reader {
   // async find() {
   //   // if (isUndefined(this.records)) {
   //   //   const c = await this.storageRef.connect() as TypeOrmConnectionWrapper;
-  //   //   this.records = await c.manager.query(this.getOptions().rawQuery);
+  //   //   this.records = await c.query(this.getOptions().rawQuery);
   //   //   this.count = this.records.length;
   //   //   await c.close();
   //   // }

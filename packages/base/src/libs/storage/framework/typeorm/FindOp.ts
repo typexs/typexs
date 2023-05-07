@@ -126,7 +126,7 @@ export class FindOp<T> implements IFindOp<T> {
     let connection: TypeOrmConnectionWrapper = null;
     let results: T[] = [];
     try {
-      // const repo = connection.manager.getRepository(entityType);
+      // const repo = connection.for(entityType);
       // const qb = repo.createQueryBuilder() as SelectQueryBuilder<T>;
       let qb: SelectQueryBuilder<T> = null;
       // connect only when type is already loaded

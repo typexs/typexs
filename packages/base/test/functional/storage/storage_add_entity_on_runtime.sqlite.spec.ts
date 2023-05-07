@@ -100,12 +100,12 @@ class StorageAddEntityOnRuntimeSpec {
     expect(enttityMetadata).to.have.length(4);
 
     // check if it can be queried
-    let results = await connection.manager.getRepository('SystemNodeInfo').find();
+    let results = await connection.for('SystemNodeInfo').find();
 
     // check if old data is present (no in inmemory db)
     let error = null;
     try {
-      results = await connection.manager.getRepository('TestClass').find();
+      results = await connection.for('TestClass').find();
     } catch (e) {
       error = e;
     }
@@ -120,10 +120,10 @@ class StorageAddEntityOnRuntimeSpec {
     expect(enttityMetadata.map(x => x.name)).to.contain('TestClass');
 
     // check if it can be queried
-    results = await connection.manager.getRepository('SystemNodeInfo').find();
+    results = await connection.for('SystemNodeInfo').find();
 
     // check if old data is present (no in inmemory db)
-    results = await connection.manager.getRepository('TestClass').find();
+    results = await connection.for('TestClass').find();
 
 
     await connection.close();
@@ -171,12 +171,12 @@ class StorageAddEntityOnRuntimeSpec {
     expect(enttityMetadata).to.have.length(4);
 
     // check if it can be queried
-    let results = await connection.manager.getRepository('SystemNodeInfo').find();
+    let results = await connection.for('SystemNodeInfo').find();
 
     // check if old data is present (no in inmemory db)
     let error = null;
     try {
-      results = await connection.manager.getRepository('TestClass').find();
+      results = await connection.for('TestClass').find();
     } catch (e) {
       error = e;
     }
@@ -190,10 +190,10 @@ class StorageAddEntityOnRuntimeSpec {
     expect(enttityMetadata.map(x => x.name)).to.contain('TestClass');
 
     // check if it can be queried
-    results = await connection2.manager.getRepository('SystemNodeInfo').find();
+    results = await connection2.for('SystemNodeInfo').find();
 
     // check if old data is present (no in inmemory db)
-    results = await connection2.manager.getRepository('TestClass').find();
+    results = await connection2.for('TestClass').find();
 
 
     await Promise.all([connection.close(), connection2.close()]);

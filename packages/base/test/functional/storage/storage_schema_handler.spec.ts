@@ -44,8 +44,8 @@ class GeneralSpec {
 
 
     const c = await storageRef.connect();
-    let q = await c.manager.query('CREATE TABLE "hiddentable" ("id" integer PRIMARY KEY NOT NULL, "name" varchar NOT NULL)');
-    q = await c.manager.query('SELECT name FROM sqlite_master WHERE type=\'table\';');
+    let q = await c.query('CREATE TABLE "hiddentable" ("id" integer PRIMARY KEY NOT NULL, "name" varchar NOT NULL)');
+    q = await c.query('SELECT name FROM sqlite_master WHERE type=\'table\';');
 
     const schemaHandler = storageRef.getSchemaHandler();
     const tableNames = await schemaHandler.getCollectionNames();

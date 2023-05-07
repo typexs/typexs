@@ -312,7 +312,7 @@ class StorageSqlConditionsBuilderSpec {
   async 'build conditions for having mode'() {
     const ref: TypeOrmStorageRef = bootstrap.getStorage().get();
     const connection = await ref.connect();
-    const sql = new TypeOrmSqlConditionsBuilder(connection.manager, TypeOrmEntityRegistry.$().getEntityRefFor(DriverCond), ref, 'select', 'driver');
+    const sql = new TypeOrmSqlConditionsBuilder(connection.getEntityManager(), TypeOrmEntityRegistry.$().getEntityRefFor(DriverCond), ref, 'select', 'driver');
     sql.setMode('having');
     (sql.getQueryBuilder() as SelectQueryBuilder<any>).select('SUM(id)', 'soneHavingField');
     (sql.getQueryBuilder() as SelectQueryBuilder<any>).addSelect('firstName');
@@ -355,7 +355,7 @@ class StorageSqlConditionsBuilderSpec {
 async function getQuery(condition: any, type: Function, alias: string) {
   const ref: TypeOrmStorageRef = bootstrap.getStorage().get();
   const connection = await ref.connect();
-  const sql = new TypeOrmSqlConditionsBuilder(connection.manager, TypeOrmEntityRegistry.$().getEntityRefFor(type), ref, 'select', alias);
+  const sql = new TypeOrmSqlConditionsBuilder(connection.getEntityManager(), TypeOrmEntityRegistry.$().getEntityRefFor(type), ref, 'select', alias);
   const where = sql.build(condition);
   // (sql.getQueryBuilder() as SelectQueryBuilder<any>).where(where);
   const query2 = sql.baseQueryBuilder.getQueryAndParameters();

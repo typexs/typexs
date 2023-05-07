@@ -81,14 +81,14 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
     if (!_.isEmpty(embed)) {
       const notNullProps = this.getNotNullablePropertyNames(entityDef.getClass());
       for (const source of sources.next) {
-        notNullProps.forEach(notNullProp => {
+        notNullProps.forEach((notNullProp: any) => {
           if (!_.has(source, notNullProp)) {
             source[notNullProp] = '0';
           }
         });
       }
     }
-    const saved: any[] = await this.c.manager.save(entityDef.getClass(), sources.next);
+    const saved: any[] = await this.save(entityDef.getClass(), sources.next);
     return { next: saved, map: map };
   }
 
@@ -97,7 +97,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
     const embedded = entityDef.getPropertyRefs().filter(p => p.isEmbedded() && !p.isNullable());
     if (!_.isEmpty(embedded)) {
       // save again now with setted values
-      await this.c.manager.save(entityDef.object.getClass(), sources.next);
+      await this.save(entityDef.object.getClass(), sources.next);
 
       // cleanup references in object
       let targetName, targetId;
@@ -300,8 +300,6 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
     //   }
     // }
 
-    const em = this.c.manager;
-
     const promises: Promise<any>[] = [
       this.fetchPreviousEntities(clazz, removeConditions, 'delete')
     ];
@@ -321,7 +319,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
         joinDef.getTo().cond.applyReverseOn(joinObj, target);
         delete joinObj[PROP_KEY_TARGET];
       }
-      promises.push(em.save(clazz, visitResult.join));
+      promises.push(this.save(clazz, visitResult.join));
     }
 
     await Promise.all(promises);
@@ -349,7 +347,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
     const clazz = joinDef.getJoinRef().getClass();
     const lookupConditions: any[] = collectLookupConditions(propertyDef, visitResult.target);
 
-    const em = this.c.manager;
+    const em = this.c.getEntityManager();
     const previousRelations = await this.fetchPreviousEntities(clazz, lookupConditions);
     const promises = [];
 
@@ -365,7 +363,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
           assign(joinObj, found);
         }
       }
-      promises.push(em.save(clazz, visitResult.join));
+      promises.push(this.save(clazz, visitResult.join));
     }
     if (previousRelations.length > 0) {
       // remove old relations
@@ -405,7 +403,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
     // find previous results
     let previous: any[] = [];
     if (ids.length > 0) {
-      previous = await this.c.manager.find(klass, { where: ids });
+      previous = await this.c.for(klass).find({ where: ids });
     }
 
     const targetIdProps = targetDef.getPropertyRefIdentifier();
@@ -425,7 +423,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
         joinObj[targetId] = prop.get(target);
       });
     }
-    await this.c.manager.save(klass, join);
+    await this.save(klass, join);
 
   }
 
@@ -526,7 +524,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
           if (isArray(targets)) {
             for (const target of targets) {
               condition.applyOn(target, source);
-              notNullProps.forEach(notNullProp => {
+              notNullProps.forEach((notNullProp: any) => {
                 if (!_.has(target, notNullProp)) {
                   target[notNullProp] = '0';
                 }
@@ -537,7 +535,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
           }
         } else {
           condition.applyOn(targets, source);
-          notNullProps.forEach(notNullProp => {
+          notNullProps.forEach((notNullProp: any) => {
             if (!has(targets, notNullProp)) {
               targets[notNullProp] = '0';
             }
@@ -545,7 +543,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
         }
       }
 
-      targetObjects = await this.c.manager.save(classRef.getClass(), targetObjects);
+      targetObjects = await this.save(classRef.getClass(), targetObjects);
 
       const targets: ISaveData = {
         next: targetObjects,
@@ -585,13 +583,13 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
       if (!_.isEmpty(targetIdProps)) {
         const notNullProps = this.getNotNullablePropertyNames(classRef.getClass());
         for (const target of targetObjects) {
-          notNullProps.forEach(notNullProp => {
+          notNullProps.forEach((notNullProp: any) => {
             if (!_.has(target, notNullProp)) {
               target[notNullProp] = '0';
             }
           });
         }
-        targetObjects = await this.c.manager.save(classRef.getClass(), targetObjects);
+        targetObjects = await this.save(classRef.getClass(), targetObjects);
       }
 
       // for E-P-O
@@ -653,7 +651,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
               joinObj[targetId] = prop.get(target);
             });
 
-            notNullProps.forEach(notNullProp => {
+            notNullProps.forEach((notNullProp: any) => {
               if (!_.has(joinObj, notNullProp)) {
                 joinObj[notNullProp] = '0';
               }
@@ -711,7 +709,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
             });
 
             // for initial save we must fill nullables
-            notNullProps.forEach(notNullProp => {
+            notNullProps.forEach((notNullProp: any) => {
               joinObj[notNullProp] = '0';
             });
           }
@@ -739,7 +737,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
       if (!_.isEmpty(embed)) {
         const notNullProps = this.getNotNullablePropertyNames(targetClass);
         for (const source of targetObjects) {
-          notNullProps.forEach(notNullProp => {
+          notNullProps.forEach((notNullProp: any) => {
             if (!_.has(source, notNullProp)) {
               source[notNullProp] = '0';
             }
@@ -747,7 +745,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
         }
       }
 
-      joinObjs = await this.c.manager.save(targetClass, targetObjects);
+      joinObjs = await this.c.for<any>(targetClass).save(targetObjects);
 
       const ret: ISaveData = {
         next: joinObjs,
@@ -797,7 +795,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
       const joinRef = propertyDef.getJoinRef();
       const joinClass = joinRef.getClass();
       // const hasJoin = !_.isEmpty(sources.join);
-      const em = this.c.manager;
+      const em = this.c.getEntityManager();
       const wrapped = joinRef.getOptions(C_CLASS_WRAPPED, false);
 
       let previousRelations = [];
@@ -835,13 +833,13 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
 
       if (!_.isEmpty(sources.join)) {
         // Save join again because new data could be attached!
-        const saved: any[] = await this.c.manager.save(joinClass, sources.join);
+        const saved: any[] = await this.save(joinClass, sources.join);
         // TODO await this.handleJoinRefLeave(sourceDef, propertyDef, classRef, sources, sources);
         return { next: saved };
       }
       // }
     } else if (propertyDef.hasJoin()) {
-      const saved: any[] = await this.c.manager.save(classRef.getClass(), sources.next);
+      const saved: any[] = await this.save(classRef.getClass(), sources.next);
       await this.handleJoinDefintionLeave(sourceDef, propertyDef, classRef, sources, sources);
       return { next: saved };
     } else if (propertyDef.isEmbedded()) {
@@ -861,7 +859,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
           target[targetId] = prop.get(source);
         });
       }
-      sources.next = await this.c.manager.save(targetClass, sources.next);
+      sources.next = await this.save(targetClass, sources.next);
       // cleanup help variables
       for (const target of sources.next) {
         let idx = 0;
@@ -880,8 +878,8 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
   }
 
 
-  private async save(clazz: Function, data: any) {
-    return this.c.manager.save(clazz, data);
+  private save(clazz: Function, data: any): Promise<any> {
+    return this.c.for<T>(clazz).save(data);
   }
 
   private async saveByEntityDef<T>(entityName: string | EntityRef, objects: T[]): Promise<T[]> {
@@ -931,7 +929,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
 
       // start transaction, got to leafs and save
       try {
-        results = await this.c.manager.transaction(async em => {
+        results = await this.c.getEntityManager().transaction(async em => {
           const promises = [];
           for (const entityName of entityNames) {
             const p = this.saveByEntityDef(entityName, resolveByEntityDef[entityName]);
@@ -963,7 +961,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
 
 
   private getNotNullablePropertyNames(clazz: Function) {
-    const metadata = this.c.manager.connection.getMetadata(clazz);
+    const metadata = this.c.connection.getMetadata(clazz);
     const notNullProps = metadata.ownColumns
       .filter(x => !x.isNullable &&
         !x.propertyName.startsWith('source') && x.propertyName !== 'id')

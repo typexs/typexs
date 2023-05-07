@@ -82,9 +82,9 @@ class AuthLdapLifecycleSpec {
     expect(_.get(doingLogin.errors, '0.constraints.exists')).to.exist;
 
 
-    let userList = await c.manager.find(User);
-    let methodList = await c.manager.find(AuthMethod);
-    let sessionList = await c.manager.find(AuthSession);
+    let userList = await c.for(User).find();
+    let methodList = await c.for(AuthMethod).find();
+    let sessionList = await c.for(AuthSession).find();
 
     expect(userList).to.have.length(0);
     expect(sessionList).to.have.length(0);
@@ -102,9 +102,9 @@ class AuthLdapLifecycleSpec {
     expect(doingLogin.errors).to.be.empty;
 
 
-    userList = await c.manager.find(User);
-    methodList = await c.manager.find(AuthMethod);
-    sessionList = await c.manager.find(AuthSession);
+    userList = await c.for(User).find();
+    methodList = await c.for(AuthMethod).find();
+    sessionList = await c.for(AuthSession).find();
     // console.log(userList, methodList, sessionList);
     expect(userList).to.have.length(1);
     expect(sessionList).to.have.length(1);

@@ -58,9 +58,9 @@ class StorageControllerMongoSpec {
     storageRef.addEntityType(MdbDriver);
 
     const c = await storageRef.connect();
-    await c.manager.getMongoRepository(MdbCar).deleteMany({});
-    await c.manager.getMongoRepository(MdbDriver).deleteMany({});
-    await c.manager.getMongoRepository(MdbPerson).deleteMany({});
+    await c.for(MdbCar).deleteByCondition({});
+    await c.for(MdbDriver).deleteByCondition({});
+    await c.for(MdbPerson).deleteByCondition({});
     await c.close();
 
 

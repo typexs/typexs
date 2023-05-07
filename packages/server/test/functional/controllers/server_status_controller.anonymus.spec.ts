@@ -118,6 +118,8 @@ class ServerStatusControllerSpec {
     delete compare.storage.default.entities;
     delete baseConfig.storage.default.entities;
     delete baseConfig.storage.default.supportSchemaApi;
+    // added for sqlite settings
+    compare.storage.default.connection = { read: 0, write: 1 };
     expect(baseConfig.storage).to.deep.include(compare.storage);
 
     expect(baseConfig.server).to.have.deep.eq({

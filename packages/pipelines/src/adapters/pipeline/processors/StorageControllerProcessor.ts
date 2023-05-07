@@ -358,8 +358,8 @@ export class StorageControllerProcessor<T> extends Processor implements IQueuePr
       }
 
       if (!isEmpty(deleteConditions)) {
-        await (this.connection as TypeOrmConnectionWrapper).manager.getMongoRepository(this.entityRevRef.getClassRef().getClass())
-          .deleteMany({ $or: deleteConditions });
+        await this.connection.for(this.entityRevRef.getClassRef().getClass())
+          .deleteByCondition({ $or: deleteConditions });
       }
     } else {
       if (chunkedInstruction.length > 0) {

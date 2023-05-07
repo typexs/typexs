@@ -64,8 +64,17 @@ export class RepositoryWrapper<T> implements IObjectHandle<T> {
     return this.getRepository().count(conditions);
   }
 
-  save(obj: T[], opts?: any): Promise<T[]> {
-    return this.getRepository().save(obj, opts);
+  save(obj: T, opts?: any): Promise<T> ;
+  save(obj: T[], opts?: any): Promise<T[]>;
+  async save(obj: T | T[], opts?: any): Promise<T | T[]> {
+    const _isArr = isArray(obj);
+    await this.connection.acquire('write');
+    return this.getRepository()
+      .save((_isArr ? obj : [obj]) as T[], opts)
+      .then(x => _isArr ? x : x.shift())
+      .finally(() => {
+        this.connection.release('write');
+      });
   }
 
   async aggregate(clonePipeline: any[]): Promise<any> {
@@ -134,7 +143,8 @@ export class RepositoryWrapper<T> implements IObjectHandle<T> {
         if (has(options, 'limit')) {
           qb.limit(options['limit']);
         }
-        const r = await qb.execute();
+        await connection.acquire('write');
+        const r = await qb.execute().finally(() => connection.release('write'));
         affected = get(r, 'affected', -2);
       }
       return affected;
@@ -144,5 +154,25 @@ export class RepositoryWrapper<T> implements IObjectHandle<T> {
 
   async remove(obj: T[], opts?: any): Promise<any> {
     return this.getRepository().remove(obj, opts);
+  }
+
+
+  async find(condition?: any, opts?: any): Promise<T[]> {
+    if (condition) {
+      return this.getRepository().find(condition);
+    } else {
+      return this.getRepository().find();
+    }
+
+  }
+
+
+  async findOne(condition?: any, opts?: any): Promise<T> {
+    if (condition) {
+      return this.getRepository().findOne(condition);
+    } else {
+      return this.getRepository().findOne();
+    }
+
   }
 }

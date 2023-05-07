@@ -142,7 +142,7 @@ export class AuthHelper {
   }
 
   // private static async buildOrWhere<T>(c: TypeOrmConnectionWrapper, type: ClassType<T>, list: string[], key: string) {
-  //   const repo = c.manager.getRepository(type);
+  //   const repo = c.for(type);
   //   const q = repo.createQueryBuilder('p');
   //   let inc = 0;
   //   const query = {$or: []};

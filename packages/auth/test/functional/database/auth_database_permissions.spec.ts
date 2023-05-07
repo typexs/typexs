@@ -122,9 +122,9 @@ class AuthDatabasePermissionsSpec {
     const entityController = <EntityController>Injector.get('EntityController.default');
 
     const c = await entityController.storageRef.connect() as TypeOrmConnectionWrapper;
-    const _users = await c.manager.getRepository(User).find();
-    const rBelongsTo = await c.manager.getRepository(RBelongsTo).find();
-    const roles = await c.manager.getRepository(Role).find();
+    const _users = await c.for(User).find();
+    const rBelongsTo = await c.for(RBelongsTo).find();
+    const roles = await c.for(Role).find();
     await c.close();
 
     expect(_users).to.have.length(1);

@@ -272,7 +272,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
       const [sourceTypeId, sourceTypeName] = this.controller.nameResolver().forSource(XS_P_TYPE);
       const [sourceSeqNrId, sourceSeqNrName] = this.controller.nameResolver().forSource(XS_P_SEQ_NR);
 
-      const qb = this.connection.manager.getRepository(propertyRef.joinRef.getClass()).createQueryBuilder();
+      const qb = this.connection.getEntityManager().getRepository(propertyRef.joinRef.getClass()).createQueryBuilder();
 
       for (const source of sources.next) {
         const condition: any = {};
@@ -379,7 +379,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
     let results: any[] = [];
     if (conditions.length > 0) {
       // fetch the results
-      const repo = this.connection.manager.getRepository(clazz);
+      const repo = this.connection.getEntityManager().getRepository(clazz);
       const queryBuilder = repo.createQueryBuilder();
       for (const cond of conditions) {
         if (!cond || keys(cond).length === 0) {

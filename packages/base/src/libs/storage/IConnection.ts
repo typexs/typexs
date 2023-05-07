@@ -31,5 +31,5 @@ export interface IConnection {
    *
    * @param type
    */
-  for<T>(type: EntityType<T>): IObjectHandle<T>;
+  for?<T>(type: EntityType<T>): IObjectHandle<T>;
 }

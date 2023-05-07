@@ -88,7 +88,7 @@ class AuthDatabaseLifecycleWithAutoapproveSpec {
 
     const storageRef: StorageRef = Injector.get('storage.default');
     const c = await storageRef.connect()  as TypeOrmConnectionWrapper;
-    const users = await c.manager.getRepository(User).find();
+    const users = await c.for(User).find();
 
     const _user = users.shift();
     expect(_user).to.deep.include({
@@ -120,7 +120,7 @@ class AuthDatabaseLifecycleWithAutoapproveSpec {
     }
 
     _user.approved = true;
-    await c.manager.getRepository(User).save(_user);
+    await c.for(User).save(_user);
 
     doingLogin = await auth.doLogin(login, req, res);
     expect(doingLogin.success).to.be.true;

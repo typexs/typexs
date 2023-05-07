@@ -6,14 +6,7 @@ import { IDataExchange } from '../IDataExchange';
 import { EntityController } from '../../EntityController';
 import { NAMESPACE_BUILT_ENTITY, XS_P_PREV_ID } from '../../Constants';
 import { ClassRef } from '@allgemein/schema-api';
-import {
-  EntityControllerApi,
-  IDeleteOp,
-  IDeleteOptions,
-  NotSupportedError,
-  TypeOrmConnectionWrapper,
-  TypeOrmEntityController
-} from '@typexs/base';
+import { EntityControllerApi, IDeleteOp, IDeleteOptions, NotSupportedError, TypeOrmConnectionWrapper } from '@typexs/base';
 
 
 export type IDeleteData = IDataExchange<any[]>;
@@ -50,7 +43,7 @@ export class SqlDeleteOp<T> extends EntityDefTreeWorker implements IDeleteOp<T> 
   async visitEntity(entityDef: EntityRef, propertyDef: PropertyRef, sources: IDeleteData): Promise<IDeleteData> {
     if (this.entityDepth === 0) {
       const ids = entityDef.resolveIds(sources.next);
-      await this.c.manager.remove(entityDef.getClass(), sources.next);
+      await this.c.for(entityDef.getClass()).remove(sources.next);
       sources.next.map((v: any, i: number) => {
         v[XS_P_PREV_ID] = ids[i];
       });
@@ -136,7 +129,7 @@ export class SqlDeleteOp<T> extends EntityDefTreeWorker implements IDeleteOp<T> 
     try {
 
       // start transaction, got to leafs and save
-      await this.c.manager.transaction(async em => {
+      await this.c.getEntityManager().transaction(async em => {
         const promises = [];
         for (const entityName of entityNames) {
           const p = this.deleteByEntityDef(entityName, resolveByEntityDef[entityName]);

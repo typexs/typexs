@@ -66,11 +66,11 @@ export class SqlHelper {
       const cond = queue.shift();
       let qb: any = null;
       if (cond) {
-        const builder = new SqlConditionsBuilder<T>(connection.manager, entityRef, connection.getStorageRef(), mode);
+        const builder = new SqlConditionsBuilder<T>(connection.getEntityManager(), entityRef, connection.getStorageRef(), mode);
         builder.build(opts.orSupport && _.isArray(cond) ? { $or: cond } : cond);
         qb = builder.getQueryBuilder() as any;
       } else {
-        qb = connection.manager.getRepository(entityRef.getClass()).createQueryBuilder();
+        qb = connection.getEntityManager().getRepository(entityRef.getClass()).createQueryBuilder();
       }
 
       if (mode !== 'delete') {

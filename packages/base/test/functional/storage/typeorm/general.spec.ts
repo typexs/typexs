@@ -143,7 +143,7 @@ class StorageGeneralSpec {
 
     const c = await storage.connect();
     // WHERE type='table'
-    const q = await c.manager.query('SELECT * FROM sqlite_master WHERE type = \'table\' ;');
+    const q = await c.query('SELECT * FROM sqlite_master WHERE type = \'table\' ;');
     expect(q).has.length(1);
   }
 
@@ -171,7 +171,7 @@ class StorageGeneralSpec {
     expect(storage.getDeclaredEntities()).has.length(1);
 
     const c = await storage.connect();
-    const q = await c.manager.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
+    const q = await c.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
     expect(q).has.length(1);
 
     if (fs.existsSync(dbfile)) {
@@ -217,18 +217,18 @@ class StorageGeneralSpec {
     await storage.reload();
 
     const c = await storage.connect();
-    let repo = c.manager.getRepository('xtable');
+    const repo = c.for<X>('xtable');
     let x = new X();
     x.id = 1;
     x.txt = 'txt';
     x = await repo.save(x);
     expect(x.test).to.be.true;
 
-    repo = c.manager.getRepository('ytable');
+    const repo2 = c.for<Y>('ytable');
     let y = new Y();
     y.id = 1;
     y.txt = 'txt';
-    y = await repo.save(y);
+    y = await repo2.save(y);
     expect(y.test).to.be.true;
     expect(y.test2).to.be.true;
     await storage.shutdown(true);
@@ -246,14 +246,14 @@ class StorageGeneralSpec {
     await storage.prepare();
 
     const c = await storage.connect();
-    const repo = c.manager.getRepository(X1);
+    const repo = c.for(X1);
     let x = new X1();
     x.id = 1;
     x.txt = 'txt';
     x = await repo.save(x);
     expect(x.test).to.be.true;
 
-    const repo2 = c.manager.getRepository(Y1);
+    const repo2 = c.for(Y1);
     let y = new Y1();
     y.id = 1;
     y.txt = 'txt';

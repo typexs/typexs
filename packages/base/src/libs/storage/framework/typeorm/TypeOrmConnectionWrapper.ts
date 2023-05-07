@@ -9,6 +9,7 @@ import { ClassType } from '@allgemein/schema-api';
 import { IObjectHandle } from '../IObjectHandle';
 import { RepositoryWrapper } from './RepositoryWrapper';
 import { EntityType } from '../Constants';
+import { isNumber } from 'lodash';
 
 
 export class TypeOrmConnectionWrapper implements IConnection {
@@ -31,20 +32,43 @@ export class TypeOrmConnectionWrapper implements IConnection {
 
   locking: boolean = false;
 
-  // readSemaphore: Semaphore;
-  //
-  // writeSemaphore: Semaphore;
+  semaphore: {
+    read: Semaphore;
+    write: Semaphore;
+  } = { read: null, write: null };
+
 
   constructor(s: TypeOrmStorageRef, conn?: Connection) {
     this.locking = s.isSingleConnection();
-    // if (this.locking) {
-    //   this.writeSemaphore = new Semaphore(1);
-    // }
+    const options = s.getOptions();
+    if (options) {
+      if (options.connection) {
+        if (isNumber(options.connection.read) && options.connection.read > 0) {
+          this.semaphore.read = new Semaphore(options.connection.read);
+        }
+        if (isNumber(options.connection.write) && options.connection.write > 0) {
+          this.semaphore.write = new Semaphore(options.connection.write);
+        }
+      }
+    }
     this.storageRef = s;
     this._connection = conn;
     this.name = this.storageRef.name;
   }
 
+  acquire(mode: 'read' | 'write') {
+    if (this.semaphore[mode]) {
+      return this.semaphore[mode].acquire();
+    }
+    return null;
+  }
+
+  release(mode: 'read' | 'write') {
+    if (this.semaphore[mode]) {
+      return this.semaphore[mode].release();
+    }
+    return null;
+  }
 
   initialize() {
     this._fn = () => {

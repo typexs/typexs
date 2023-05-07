@@ -114,7 +114,7 @@ class AuthConfigSpec {
       .expect(200);
 
     const c = await bootstrap.getStorage().get('default').connect() as TypeOrmConnectionWrapper;
-    const data = await c.manager.query('select * from auth_method');
+    const data = await c.query('select * from auth_method');
 
     expect(res.body.$state.success).to.be.true;
     expect(res.body.password).to.be.null;

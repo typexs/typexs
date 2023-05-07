@@ -107,8 +107,8 @@ class AuthLdapLifecycleSpec {
     options = adapter.getOptions();
     expect(options.approval.auto).to.be.true;
 
-    let userList = await c.manager.getRepository(User).find();
-    let methodList = await c.manager.getRepository(AuthMethod).find();
+    let userList = await c.for(User).find();
+    let methodList = await c.for(AuthMethod).find();
     expect(userList).to.have.length(1);
     expect(methodList).to.have.length(1);
 
@@ -122,14 +122,14 @@ class AuthLdapLifecycleSpec {
     expect(doingLogin.isAuthenticated).to.be.true;
     expect(doingLogin.hasErrors()).to.be.false;
 
-    let sessionList = await c.manager.find(AuthSession);
+    let sessionList = await c.for(AuthSession).find();
     expect(sessionList).to.have.length(1);
     expect(_.first(sessionList)).to.deep.include({ authId: 'database' });
 
     req = res;
     const doLogout = await auth.doLogout(doingLogin.user, req, res);
 
-    sessionList = await c.manager.find(AuthSession);
+    sessionList = await c.for(AuthSession).find();
     expect(sessionList).to.have.length(0);
 
 
@@ -143,19 +143,19 @@ class AuthLdapLifecycleSpec {
     expect(doingLogin.isAuthenticated).to.be.true;
     expect(doingLogin.hasErrors()).to.be.false;
 
-    sessionList = await c.manager.find(AuthSession);
+    sessionList = await c.for(AuthSession).find();
     expect(sessionList).to.have.length(1);
     expect(_.first(sessionList)).to.deep.include({ authId: 'default' });
 
     req = res;
     await auth.doLogout(doingLogin.user, req, res);
 
-    sessionList = await c.manager.find(AuthSession);
+    sessionList = await c.for(AuthSession).find();
     expect(sessionList).to.have.length(0);
 
-    userList = await c.manager.find(User);
+    userList = await c.for(User).find();
     expect(_.map(userList, u => u.username)).to.be.deep.eq(['admin', 'billy']);
-    methodList = await c.manager.find(AuthMethod);
+    methodList = await c.for(AuthMethod).find();
 
     expect(userList).to.have.length(2);
     expect(methodList).to.have.length(2);
@@ -198,14 +198,14 @@ class AuthLdapLifecycleSpec {
     expect(doingLogin.isAuthenticated).to.be.true;
     expect(doingLogin.hasErrors()).to.be.false;
 
-    let sessionList = await c.manager.find(AuthSession);
+    let sessionList = await c.for(AuthSession).find();
     expect(sessionList).to.have.length(1);
     expect(_.first(sessionList)).to.deep.include({ authId: 'database' });
 
     req = res;
     const doLogout = await auth.doLogout(doingLogin.user, req, res);
 
-    sessionList = await c.manager.find(AuthSession);
+    sessionList = await c.for(AuthSession).find();
     expect(sessionList).to.have.length(0);
 
 
