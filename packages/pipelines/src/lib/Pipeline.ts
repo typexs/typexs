@@ -75,8 +75,11 @@ export class Pipeline implements IPipeline {
   }
 
   _call_handles(method: string, done: Function) {
-    let $p: Promise<any> = Promise.all(map(this.$handles, (handle) => {
-      return handle[method].call(handle);
+    let $p: Promise<any> = Promise.all(this.$handles.map((handle) => {
+      if(handle[method]){
+        return handle[method].call(handle);
+      }
+      return null;
     }));
     if (done) {
       $p = $p.then(function(res) {
