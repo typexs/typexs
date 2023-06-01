@@ -103,7 +103,7 @@ export class EntityResolverService {
     return returnRef;
   }
 
-  getServiceForEntity(entityRef: IEntityRef) {
+  getServiceForEntity(entityRef: IEntityRef): IQueringService {
     if (!entityRef) {
       return null;
     }
@@ -117,9 +117,9 @@ export class EntityResolverService {
     return service;
   }
 
-  getServiceFor(obj: any | IEntityRef, opts?: IEntityResolveOptions) {
+  getServiceFor(obj: any | IEntityRef, opts?: IEntityResolveOptions): IQueringService {
     if (isEntityRef(obj)) {
-
+      return this.getServiceForEntity(obj);
     }
     const entityRef = this.getEntityRef(obj, opts);
     return this.getServiceForEntity(entityRef);
