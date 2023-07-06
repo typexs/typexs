@@ -169,7 +169,6 @@ class SchedulerSpec {
               valueString: 'test2'
             }
           }
-
         ]
       }
     });
