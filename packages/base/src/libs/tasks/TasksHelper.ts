@@ -16,7 +16,7 @@ import { IWorkerInfo } from '../worker/IWorkerInfo';
 import { System } from '../system/System';
 import { Injector } from '../di/Injector';
 import { DateUtils } from '../utils/DateUtils';
-import { defaults } from 'lodash';
+import { assign, clone, defaults, has, isString } from 'lodash';
 
 
 export class TasksHelper {
@@ -262,25 +262,32 @@ export class TasksHelper {
         };
 
         const parameters = TasksHelper.getTaskParameters(argv);
+        for (const _taskSpec of taskSpec) {
+          const taskName = isString(_taskSpec) ? _taskSpec : _taskSpec.name;
+          const taskRef = tasksReg.get(taskName);
+          const taskParams = has(_taskSpec, 'incomings') ? _taskSpec['incomings'] : {};
+          assign(taskParams, clone(parameters));
 
-        // validate arguments
-        const props = TasksHelper.getIncomingParameters(taskSpec.map(x => _.isString(x) ? x : x.name).map(t => tasksReg.get(t)));
-        if (props.length > 0) {
-          for (const p of props) {
-            if (!_.has(parameters, p.storingName) && !_.has(parameters, p.name)) {
-              if (p.isOptional()) {
-                Log.warn('task command: optional parameter "' + p.name + '" for ' + taskSpec.join(', ') + ' not found');
-              } else {
-                // TODO parameter maybe passed by incomings?
-                if (_.has(argv, 'skipRequiredThrow') && argv.skipRequiredThrow) {
-                  Log.warn('task command: required parameter "' + p.name + '" for ' + taskSpec.join(', ') + ' not found.');
+          // validate arguments
+          const props = TasksHelper.getIncomingParameters([taskRef]);
+          if (props.length > 0) {
+            for (const p of props) {
+              if (!_.has(taskParams, p.storingName) && !_.has(taskParams, p.name)) {
+                if (p.isOptional()) {
+                  Log.warn('task command: optional parameter "' + p.name + '" for ' + JSON.stringify(_taskSpec) + ' not found');
                 } else {
-                  throw new Error('The required value is not passed');
+                  if (_.has(argv, 'skipRequiredThrow') && argv.skipRequiredThrow) {
+                    Log.warn('task command: required parameter "' + p.name + '" for ' + JSON.stringify(_taskSpec) + ' not found.');
+                  } else {
+                    throw new Error('The required value is not passed');
+                  }
                 }
               }
             }
           }
+
         }
+
 
         const runner = TasksHelper.runner(tasksReg, taskSpec, runnerOptions);
         await runner.setIncomings(parameters);

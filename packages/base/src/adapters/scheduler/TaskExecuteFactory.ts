@@ -5,6 +5,7 @@ import {IScheduleDef} from '../../libs/schedule/IScheduleDef';
 import {TasksHelper} from '../../libs/tasks/TasksHelper';
 import {ITaskExectorOptions} from '../../libs/tasks/ITaskExectorOptions';
 import {TASK_RUNNER_SPEC} from '../../libs/tasks/Constants';
+import { clone, isArray } from 'lodash';
 
 export interface ITaskSchedule extends ITaskExectorOptions {
   name: string | string[];
@@ -13,7 +14,7 @@ export interface ITaskSchedule extends ITaskExectorOptions {
 export class TaskExecuteFactory implements IScheduleFactory {
 
   create(taskNames: TASK_RUNNER_SPEC[], params: ITaskExectorOptions = {skipTargetCheck: false, executionConcurrency: 1}) {
-    return async function () {
+    return function () {
       return TasksHelper.exec(taskNames, params);
     };
   }
@@ -22,8 +23,8 @@ export class TaskExecuteFactory implements IScheduleFactory {
   async attach(schedule: Schedule): Promise<boolean> {
     const taskDef: ITaskSchedule = _.get(schedule.options, 'task', null);
     if (taskDef) {
-      const names = _.isArray(taskDef.name) ? taskDef.name : [taskDef.name];
-      let def = _.clone(taskDef);
+      const names = isArray(taskDef.name) ? taskDef.name : [taskDef.name];
+      let def = clone(taskDef);
       delete def.name;
       if (_.has(def, 'params')) {
         def = def['params'];

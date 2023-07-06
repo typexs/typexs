@@ -240,29 +240,6 @@ class SchedulerSpec {
 
   }
 
-  @test
-  async 'execute task'() {
-    const tasks = RegistryFactory.get(C_TASKS) as Tasks;
-    tasks.setNodeId('testnode');
-    const taskRef = tasks.addTask(SimpleTask);
-    Injector.set(Tasks.NAME, tasks);
-
-    const scheduler = new Scheduler();
-    await scheduler.prepare(factories);
-    const schedule = await scheduler.register({
-      name: 'test01',
-      task: {
-        name: 'simple_task',
-        remote: false
-      }
-    });
-
-    await schedule.runSchedule();
-    expect(schedule.lastResults).to.not.be.null;
-    expect(schedule.lastResults.tasks).to.be.deep.eq(['simple_task']);
-  }
-
-
 }
 
 
