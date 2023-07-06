@@ -144,6 +144,45 @@ class SchedulerSpec {
   }
 
 
+  @test
+  async 'execute multiple tasks with incomings'() {
+    const tasks = RegistryFactory.get(C_TASKS) as Tasks;
+    tasks.setNodeId('testnode');
+    const taskRef2 = tasks.addTask(TaskWithRequiredParameters);
+    Injector.set(Tasks.NAME, tasks);
+
+    const scheduler = new Scheduler();
+    await scheduler.prepare(factories);
+    const schedule = await scheduler.register({
+      name: 'test01',
+      task: {
+        name: [
+          {
+            name: 'task_with_required_parameters',
+            incomings: {
+              valueString: 'test1'
+            }
+          },
+          {
+            name: 'task_with_required_parameters',
+            incomings: {
+              valueString: 'test2'
+            }
+          }
+
+        ]
+      }
+    });
+
+    await schedule.runSchedule();
+    expect(schedule.lastResults).to.not.be.null;
+    expect(schedule.lastResults.tasks).to.be.deep.eq(['task_with_required_parameters', 'task_with_required_parameters']);
+    expect(schedule.lastResults.results[0].incoming).to.be.deep.eq({ valueString: 'test1' });
+    expect(schedule.lastResults.results[0].result).to.be.eq('test1');
+    expect(schedule.lastResults.results[1].incoming).to.be.deep.eq({ valueString: 'test2' });
+    expect(schedule.lastResults.results[1].result).to.be.eq('test2');
+  }
+
 }
 
 
