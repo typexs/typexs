@@ -5,8 +5,7 @@
   "browser": "browser.js",
   "scripts": {
     "start": "npx concurrently \"cd packages/app && npx ng serve\" \"npx typexs server --nodeId server\"",
-    "clean": "npx lerna run clean && npx lerna clean -y ",
-    "postinstall": "npx lerna link",
+    "clean": "npx lerna run clean && npx lerna clean -y && rm -R node_modules package-lock.json",
     "test": "npx lerna run test --concurrency=1",
     "build": "npx lerna run build  --concurrency=1",
     "fix-versions": "node scripts/fix-versions.js",
@@ -14,6 +13,9 @@
     "documentation": "npx antora --stacktrace generate --clean --fetch --log-level all --to-dir docs/build/site",
     "documentation:watch": "npx nodemon --watch docs -e adoc --exec npm run documentation -- docs/antora-playbook.yml"
   },
+  "workspaces": [
+    "packages/*/src"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://gitlab.com/typexs/typexs.git"
@@ -119,7 +121,7 @@
     "karma-jasmine": "4.0.1",
     "karma-jasmine-html-reporter": "1.6.0",
     "ldapjs": "^2.3.3",
-    "lerna": "^6.6.2",
+    "lerna": "^7.1.4",
     "light-server": "2.9.1",
     "lodash": "4.17.21",
     "merge-stream": "2.0.0",
@@ -150,8 +152,5 @@
   "private": true,
   "typexs": {
     "name": "typexs"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+  }
 }

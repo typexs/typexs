@@ -1,9 +1,8 @@
-import { assign, defaults, get, isEmpty, isNumber, set } from 'lodash';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { get, set } from 'lodash';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { AbstractGridComponent } from '../abstract-grid.component';
 import { PagerAction } from '../../pager/PagerAction';
 import { PagerService } from '../../pager/PagerService';
-import { Pager } from '../../pager/Pager';
 import { IGridColumn } from '../IGridColumn';
 import { Eq, ExprDesc, Like, Value, ValueDesc } from '@allgemein/expressions';
 import { IDatatableListGridOptions } from './IDatatableListGridOptions';
@@ -14,9 +13,8 @@ import { IDatatableListGridOptions } from './IDatatableListGridOptions';
   templateUrl: 'list-view.component.html',
   styleUrls: ['./list-view.component.scss']
 })
-export class ListViewComponent extends AbstractGridComponent implements OnInit, OnDestroy {
+export class ListViewComponent extends AbstractGridComponent {
 
-  pager: Pager;
 
   filterOpened: string = null;
 
@@ -31,35 +29,11 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
   @Input()
   options: IDatatableListGridOptions;
 
-  constructor(private pagerService: PagerService) {
-    super();
-  }
-
-  ngOnInit(): void {
-    if (!this.options) {
-      this.options = { enablePager: true, limit: 25 };
-    }
-    defaults(this.options, <IDatatableListGridOptions>{ enablePager: true });
-
-    if (this.options.enablePager) {
-      this.pager = this.pagerService.get(this.options.pagerId);
-    }
-
-    if (isEmpty(this._params)) {
-      // if params not set set default values
-      assign(this._params, {
-        limit: this.options.limit,
-        offset: 0
-      });
-      // this._params.limit = this.options.limit;
-      // this._params.offset = 0;
-    }
-
-    if (!this.maxRows && this._dataNodes) {
-      // if maxRows is empty and rows already given then derive maxlines
-      this.maxRows = this._dataNodes.length;
-      this.calcPager();
-    }
+  constructor(
+    public pagerService: PagerService,
+    public changeRef: ChangeDetectorRef
+  ) {
+    super(pagerService, changeRef);
   }
 
 
@@ -148,51 +122,6 @@ export class ListViewComponent extends AbstractGridComponent implements OnInit, 
   }
 
 
-  updateRows(action: PagerAction) {
-    if (action.name === this.options.pagerId && action.type === 'set') {
-      this.params.offset = (action.page - 1) * this.options.limit;
-      this.params.limit = this.options.limit;
-      this.paramsChange.emit(this.params);
-      this.doQuery.emit(this);
-    }
-  }
-
-
-  calcPager() {
-    if (this.options.enablePager) {
-      if (this.params && isNumber(this.maxRows) && isNumber(this.params.limit)) {
-        if (!this.params.offset) {
-          this.params.offset = 0;
-          this.paramsChange.emit(this._params);
-        }
-        this.pager.totalPages = Math.ceil(this.maxRows * 1.0 / this.params.limit * 1.0);
-
-        if (!this.pager.checkQueryParam()) {
-          this.pager.currentPage = (this.params.offset / this.options.limit) + 1;
-          this.pager.calculatePages();
-        }
-      }
-    }
-  }
-
-
-  rebuild() {
-    this.calcPager();
-    super.rebuild();
-  }
-
-  reset() {
-    this.pager.reset();
-    this.params.offset = 0;
-  }
-
-
-  ngOnDestroy(): void {
-    if (this.pager) {
-      this.pager.free();
-    }
-
-  }
 
 
 }

@@ -1,0 +1,29 @@
+<h5>Simple HTML Table</h5>
+
+
+<div class="d-flex">
+  <div class=" d-inline-flex">
+    <div class="form-group">
+      <label for="maxRows">Change amount of generated records</label>
+      <input [(ngModel)]="maxRows"
+             (ngModelChange)="update('maxRows',$event)"
+             type="text"
+             class="form-control"
+             id="maxRows">
+    </div>
+
+  </div>
+</div>
+
+<datatable-options [options]="options" (optionsChange)="optionsUpdated($event)"></datatable-options>
+
+<txs-datatable
+  [component]="simpleTableComp"
+  [columns]="columns"
+  [maxRows]="maxRows"
+  [rows]="rows"
+  [options]="options"
+  (doQuery)="doQuery($event)"
+  (gridReady)="onGridReady($event)"
+>
+</txs-datatable>

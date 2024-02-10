@@ -1,12 +1,9 @@
 import { Inject, Invoker, IStorageRef, IStorageRefOptions, Log, RuntimeLoader, Storage } from '@typexs/base';
 import { StorageSetting } from '../entities/storage/StorageSetting';
 import { clone, defaults, isString, set } from 'lodash';
-import { SystemStorageInfoApi } from '../api/SystemStorageInfo.api';
 import { StorageLoaderApi } from '../api/StorageLoader.api';
+import { IStorageLoaderOptions } from './IStorageLoaderOptions';
 
-export interface IStorageLoaderOptions {
-  autoload: boolean;
-}
 
 export class StorageLoader {
 
@@ -157,7 +154,7 @@ export class StorageLoader {
    */
   async unregister(ref: IStorageRef | string, settings?: StorageSetting) {
     let _ref: IStorageRef = null;
-    if(isString(ref)){
+    if (isString(ref)) {
       _ref = this.storage.get(ref);
     }
     await this.invoker.use(StorageLoaderApi).beforeUnregister(_ref, settings);

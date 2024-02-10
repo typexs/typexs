@@ -3,18 +3,18 @@ body, html {
   height: 100%;
 }
 
-@import "~bootstrap/dist/css/bootstrap.css";
-@import "~animate.css/animate.css";
-@import "~perfect-scrollbar/css/perfect-scrollbar.css";
+@import "bootstrap/dist/css/bootstrap.css";
+@import "animate.css/animate.css";
+@import "perfect-scrollbar/css/perfect-scrollbar.css";
 @import "icons-pct.css";
 
 $fa-font-path: '/assets/fonts/';
-@import "~@fortawesome/fontawesome-free/scss/fontawesome";
-@import "~@fortawesome/fontawesome-free/scss/brands";
-@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "@fortawesome/fontawesome-free/scss/fontawesome";
+@import "@fortawesome/fontawesome-free/scss/brands";
+@import "@fortawesome/fontawesome-free/scss/solid";
 
-@import "~ag-grid-community/dist/styles/ag-grid.css";
-@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
+@import "ag-grid-community/dist/styles/ag-grid.css";
+@import "ag-grid-community/dist/styles/ag-theme-balham.css";
 
 /**  =====================
      Google Font

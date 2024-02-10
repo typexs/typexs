@@ -45,7 +45,8 @@ const PROVIDERS = [
     TasksExecutionComponent,
     TaskStatusComponent,
     TasksLogComponent,
-    TaskStatusRowComponent
+    TaskStatusRowComponent,
+    TasksLogViewerComponent
   ],
   providers: PROVIDERS
 })

@@ -1,0 +1,56 @@
+<div class="d-flex  flex-row">
+  <div class="m-1">
+    <strong>Bearbeitung:</strong>
+  </div>
+  <div class="form-check m-1">
+    <input class="form-check-input" type="checkbox" value="" id="f1"
+           [(ngModel)]="options.insertable"
+           (ngModelChange)="update()">
+    <label class="form-check-label" for="f1"> Insertable </label>
+  </div>
+  <div class="form-check m-1">
+    <input class="form-check-input" type="checkbox" value="" id="f2"
+           [(ngModel)]="options.editable"
+           (ngModelChange)="update()">
+    <label class="form-check-label" for="f2"> Editable </label>
+  </div>
+</div>
+
+<div class="d-flex  flex-row">
+  <div class="m-1">
+    <strong>Navigation:</strong>
+  </div>
+  <div class="form-check m-1" *ngFor="let mode of modeValues">
+    <input class="form-check-input" name="mode" type="radio"
+           [value]="mode.key" id="r-{{mode.key}}"
+           [(ngModel)]="options.mode"
+           (ngModelChange)="update()">
+    <label class="form-check-label" for="r-{{mode.key}}"> {{mode.key}}</label>
+  </div>
+</div>
+
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon1">Limit</span>
+  </div>
+  <input type="text" class="form-control"
+         [ngModel]="options.limit"
+         (ngModelChange)="updateLimit($event)"
+         aria-describedby="basic-addon1">
+</div>
+
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="rows">Rows</span>
+  </div>
+  <input type="text" class="form-control"
+         [ngModel]="options.maxRows"
+         (ngModelChange)="updateRows($event)"
+         aria-describedby="rows">
+</div>
+
+<div class=" d-inline-flex">
+    <pre>
+      {{options | json}}
+    </pre>
+</div>

@@ -1,11 +1,12 @@
-import {IQueryParams} from './IQueryParams';
-import {IGridColumn} from './IGridColumn';
+import { IQueryParams } from './IQueryParams';
+import { IGridColumn } from './IGridColumn';
+import { ViewArray } from '../lib/datanodes/ViewArray';
 
 export interface IGridApi {
 
   params: IQueryParams;
 
-  rebuild(): void;
+  // limit: number;
 
   getColumns(): IGridColumn[];
 
@@ -18,6 +19,10 @@ export interface IGridApi {
   getMaxRows(): number;
 
   setMaxRows(maxRows: number): void;
+
+  getDataNodes(): ViewArray<any>[];
+
+  rebuild(): void;
 
   reset(): void;
 }

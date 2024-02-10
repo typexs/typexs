@@ -2,7 +2,7 @@ import { range } from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PagerAction } from './PagerAction';
 import { EventEmitter } from 'events';
-
+import { Location } from '@angular/common';
 
 export class Pager extends EventEmitter {
 
@@ -34,7 +34,7 @@ export class Pager extends EventEmitter {
 
   wait: any;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, id: string = 'dummy') {
+  constructor(private location: Location, private router: Router, private activatedRoute: ActivatedRoute, id: string = 'dummy') {
     super();
     this.name = id;
 
@@ -92,7 +92,7 @@ export class Pager extends EventEmitter {
       const page = this.activatedRoute.snapshot.queryParamMap.get(this.name);
       if (/^\d+$/.test(page)) {
         try {
-          this.setPage(parseInt(page, 0));
+          this.setPage(parseInt(page, 10));
           return true;
         } catch (e) {
         }
@@ -107,9 +107,7 @@ export class Pager extends EventEmitter {
     if (0 < nr && nr <= this.totalPages && nr !== this.currentPage) {
       this.doOnce(() => {
         this.currentPage = nr;
-
         this.calculatePages();
-
         const action = new PagerAction(this.currentPage, this.name);
         this.emit('page_action', action);
 
@@ -129,8 +127,7 @@ export class Pager extends EventEmitter {
       queryParamsHandling: 'merge',
       preserveFragment: true
     });
-
-    this.router.navigateByUrl(urlTree);
+    this.location.replaceState(urlTree.toString());
   }
 
 

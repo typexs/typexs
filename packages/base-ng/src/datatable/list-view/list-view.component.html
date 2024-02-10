@@ -3,20 +3,19 @@
   <txs-pager *ngIf="options.enablePager"
              [name]="options.pagerId"
              [pager]="pager"
-             (pageChange)="updateRows($event)">
+             (pageChange)="onPagerAction($event)">
   </txs-pager>
 
 
   <div class="list-container">
-    <div class="row" *ngFor="let row of _dataNodes">
+    <div class="row" *ngFor="let row of getValues() | async">
       <div class="col-md-12">
 
         <txs-view [instance]="row.data"
                   [allowViewModeSwitch]="allowViewModeSwitch"
                   [mode]="viewMode"
                   [options]="options.viewOptions"
-                  [passThrough]="passThrough"
-        >
+                  [passThrough]="passThrough">
           <div txsViewFallback>
             <txs-simple-json [instance]="row.data"
                              [options]="options.viewOptions">
@@ -32,7 +31,7 @@
              [name]="options.pagerId"
              [pager]="pager"
              frameSize="5"
-             (pageChange)="updateRows($event)">
+             (pageChange)="onPagerAction($event)">
   </txs-pager>
 
 </div>

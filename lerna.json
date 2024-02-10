@@ -1,11 +1,7 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "useWorkspaces": true,
   "version": "independent",
-  "contents": "src",
   "distTag": "v2-dev",
-  "independent": true,
-  "noGitTagVersion": true,
   "command": {
     "link": {
       "forceLocal": true
@@ -25,7 +21,7 @@
       "private": false,
       "gitReset": true,
       "distTag": "v2-dev",
-      "contents": "build/package"
+      "directory": "../build/package"
     }
   }
 }

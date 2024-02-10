@@ -7,8 +7,10 @@ export interface IDatatableOptions {
 
   /**
    * Mode of data fetching
-   * - infinite
-   * - generic
+   *
+   * - paged - a pager will be integrated in the view
+   * - infinite - an infinite scoll with reload on page bottom reach
+   * - view - show only the once loaded rows
    */
   mode?: GRID_MODE;
 
@@ -26,6 +28,11 @@ export interface IDatatableOptions {
    * Rows to show per page
    */
   limit?: number;
+
+  /**
+   * Entries to fetch on data source request
+   */
+  fetchLimit?: number;
 
   /**
    * Initial offset

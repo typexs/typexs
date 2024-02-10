@@ -1,6 +1,6 @@
 import { Entity, Property } from '@allgemein/schema-api';
 import { Hidden, Text } from '@typexs/forms';
-import { IStorageRefOptions } from '@typexs/base';
+import { IStorageRefOptions } from '@typexs/base/libs/storage/IStorageRefOptions';
 
 @Entity()
 export class StorageSetting {

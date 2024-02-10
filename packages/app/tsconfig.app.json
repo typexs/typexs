@@ -15,6 +15,12 @@
       "@typexs/base/*": [
         "./packages/base/src/*"
       ],
+      "@typexs/storage": [
+        "./packages/storage/src/browser"
+      ],
+      "@typexs/storage/*": [
+        "./packages/storage/src/*"
+      ],
       "@typexs/auth": [
         "./packages/auth/src/browser"
       ],

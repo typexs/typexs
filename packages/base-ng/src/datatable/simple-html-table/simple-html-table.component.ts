@@ -1,5 +1,5 @@
 import { assign, defaults, get, isEmpty, isNumber, set } from 'lodash';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AbstractGridComponent } from '../abstract-grid.component';
 import { PagerAction } from '../../pager/PagerAction';
 import { PagerService } from '../../pager/PagerService';
@@ -17,13 +17,8 @@ import { DOCUMENT } from '@angular/common';
   templateUrl: 'simple-html-table.component.html',
   styleUrls: ['./simple-html-table.component.scss']
 })
-export class SimpleHtmlTableComponent extends AbstractGridComponent
-  implements OnInit, OnDestroy, ISimpleTable {
+export class SimpleHtmlTableComponent extends AbstractGridComponent implements ISimpleTable {
 
-  /**
-   * Pager object for handling page navigation
-   */
-  pager: Pager;
 
   filterOpened: string = null;
 
@@ -35,46 +30,13 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent
 
   constructor(
     private pagerService: PagerService,
+    private changeRef: ChangeDetectorRef,
     @Inject(DOCUMENT) private document: Document) {
-    super();
+    super(pagerService, changeRef);
   }
 
   getSelf(): ISimpleTable {
     return this;
-  }
-
-  ngOnInit(): void {
-    if (!this.options) {
-      this.options = {};
-    }
-    defaults(this.options, <IDatatableOptions>{
-      enablePager: true,
-      limit: 25,
-      mode: K_PAGED
-    });
-
-    if (this.getGridMode() === K_PAGED) {
-      this.pager = this.pagerService.get(this.options.pagerId);
-    } else {
-      this.options.enablePager = false;
-    }
-
-    if (isEmpty(this._params)) {
-      // if params not set set default values
-      assign(this._params, {
-        limit: this.options.limit,
-        offset: 0
-      });
-    }
-
-    if (!this.maxRows && this._dataNodes) {
-      // if maxRows is empty and rows already set then derive maxlines
-      this.maxRows = this._dataNodes.length;
-    }
-
-    if (this.options.enablePager) {
-      this.calcPager();
-    }
   }
 
 
@@ -210,38 +172,6 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent
   }
 
 
-  updateRows(action: PagerAction) {
-    if (action.name === this.options.pagerId && action.type === 'set') {
-      this.params.offset = (action.page - 1) * this.options.limit;
-      this.params.limit = this.options.limit;
-      this.paramsChange.emit(this.params);
-      this.doQuery.emit(this);
-    }
-  }
-
-
-  calcPager() {
-    if (this.options.enablePager) {
-      if (this.params && isNumber(this.maxRows) && isNumber(this.params.limit)) {
-        if (!this.params.offset) {
-          this.params.offset = 0;
-          this.paramsChange.emit(this._params);
-        }
-
-        this.pager.totalPages = Math.ceil(this.maxRows * 1.0 / this.params.limit * 1.0);
-        if (!this.pager.checkQueryParam()) {
-          this.pager.currentPage = (this.params.offset / this.options.limit) + 1;
-          this.pager.calculatePages();
-        }
-      }
-    }
-  }
-
-
-  rebuild() {
-    this.calcPager();
-    super.rebuild();
-  }
 
   reset() {
     this.pager.reset();

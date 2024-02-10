@@ -3,8 +3,6 @@ import { expect } from 'chai';
 import { Bootstrap } from '../../../src/Bootstrap';
 import { Config } from '@allgemein/config';
 import { Scheduler } from '../../../src/libs/schedule/Scheduler';
-import { EventBus, subscribe } from '@allgemein/eventbus';
-import { TestHelper } from '@typexs/testing';
 import { IScheduleFactory } from '../../../src/libs/schedule/IScheduleFactory';
 import { SimpleTask } from '../tasks/tasks/SimpleTask';
 import { RuntimeLoader } from '../../../src/base/RuntimeLoader';
@@ -17,9 +15,9 @@ import { TaskRunnerRegistry } from '../../../src/libs/tasks/TaskRunnerRegistry';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { Injector } from '../../../src/libs/di/Injector';
 import { C_TASKS } from '../../../src/libs/tasks/Constants';
-import { DateTime } from 'luxon';
-import { TaskWithParameters } from 'testtask/src/tasks/TaskWithParameters';
-import { TaskWithRequiredParameters } from 'testtask/src/tasks/TaskWithRequiredParameters';
+import { TaskWithParameters } from '../../../../demo-task/src/tasks/TaskWithParameters';
+import { TaskWithRequiredParameters } from '../../../../demo-task/src/tasks/TaskWithRequiredParameters';
+
 
 let loader: RuntimeLoader = null;
 let factories: IScheduleFactory[] = [];

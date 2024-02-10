@@ -6,3 +6,4 @@ export * from './metadata/tasks-metadata.component';
 export * from './status/task-status-row.component';
 export * from './status/task-status.component';
 export * from './status/task-status-page.component';
+export * from './status/log-viewer/tasks-log-viewer.component';

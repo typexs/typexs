@@ -21,7 +21,7 @@ import { InputDemoComponent } from './components/forms/input/input-demo.componen
 import { TablesDemoComponent } from './components/tables/tables-demo.component';
 import { AgGridWrapperComponent } from './addons/ag-grid/ag-grid-wrapper.component';
 import { NavigatorService } from '@typexs/ng-router-menu';
-import { SimpleHtmlTableDemoComponent } from './components/tables/simple-html-table-demo.component';
+import { SimpleHtmlTableDemoComponent } from './components/tables/simple-html-table/simple-html-table-demo.component';
 import { StorageService } from '@typexs/storage-ng';
 import { EntityService } from '@typexs/entity-ng';
 import { DistributedStorageService } from '@typexs/distributed-storage-ng';
@@ -47,6 +47,8 @@ import { FormSelectionsComponent } from './components/forms/selection/form-selec
 import { BuildSimpleItemComponent } from './components/entities/build-simple-item/build-simple-item.component';
 import { BuildSimpleItem } from '../../../demo-task/src/entities/BuildSimpleItem';
 import { TablesOverviewComponent } from './components/tables/overview/tables-overview.component';
+import { ListViewDemoComponent } from './components/tables/list-view/list-view-demo.component';
+import { DatatableOptionsComponent } from './components/tables/datatable-options/datatable-options.component';
 
 
 @NgModule({
@@ -84,7 +86,9 @@ import { TablesOverviewComponent } from './components/tables/overview/tables-ove
     BookComponent,
     BuildSimpleItemComponent,
     SimpleViewVariantsComponent,
-    TablesOverviewComponent
+    TablesOverviewComponent,
+    ListViewDemoComponent,
+    DatatableOptionsComponent
   ],
   entryComponents: [
     ...FORM_COMPONENTS,

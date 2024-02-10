@@ -1,9 +1,9 @@
 import { keys, range } from 'lodash';
-import { Component } from '@angular/core';
-import { IDatatableOptions, IGridApi, IGridColumn, SimpleHtmlTableComponent } from '@typexs/base-ng';
+import { Component, OnChanges, SimpleChanges } from '@angular/core';
+import { IDatatableOptions, IGridApi, IGridColumn, ListViewComponent, SimpleHtmlTableComponent } from 'packages/base-ng/src';
 import { And, ExprDesc } from '@allgemein/expressions';
-import { K_PAGED } from '@typexs/base-ng/datatable/Constants';
-import { IGridEvent } from '@typexs/base-ng/datatable/IGridEvent';
+import { K_PAGED } from 'packages/base-ng/src/datatable/Constants';
+import { IGridEvent } from 'packages/base-ng/src/datatable/IGridEvent';
 
 
 function generateData(offset: number, limit: number) {
@@ -27,12 +27,12 @@ function generateData(offset: number, limit: number) {
  *
  */
 @Component({
-  selector: 'simple-html-table-demo',
-  templateUrl: 'simple-html-table-demo.component.html'
+  selector: 'list-view-demo',
+  templateUrl: 'list-view-demo.component.html'
 })
-export class SimpleHtmlTableDemoComponent {
+export class ListViewDemoComponent  {
 
-  simpleTableComp = SimpleHtmlTableComponent;
+  simpleTableComp = ListViewComponent;
 
   api: IGridApi;
 
@@ -64,6 +64,9 @@ export class SimpleHtmlTableDemoComponent {
 
   rows = generateData(0, 10);
 
+  optionsUpdated($event: any) {
+    console.log($event);
+  }
 
   update(key: string, v: any): void {
     if (key === 'maxRows') {
@@ -100,7 +103,6 @@ export class SimpleHtmlTableDemoComponent {
    * @param event
    */
   onGridReady(event: IGridEvent) {
-    console.log('grid event! ' + event.event);
     this.capturedEvent = {
       event: event.event,
       api: null,

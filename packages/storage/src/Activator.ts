@@ -1,5 +1,5 @@
 import { Config, IActivator, Injector, Storage } from '@typexs/base';
-import { IStorageLoaderOptions, StorageLoader } from './lib/StorageLoader';
+import { StorageLoader } from './lib/StorageLoader';
 import { isEmpty, uniq } from 'lodash';
 import { IEntityRef } from '@allgemein/schema-api';
 import { BasicPermission, IPermissionDef } from '@typexs/roles-api';
@@ -19,6 +19,7 @@ import {
   PERMISSION_ALLOW_UPDATE_STORAGE_ENTITY,
   PERMISSION_ALLOW_UPDATE_STORAGE_ENTITY_PATTERN
 } from './lib/Constants';
+import { IStorageLoaderOptions } from './lib/IStorageLoaderOptions';
 
 /**
  * Default storage at @typexs/base should already be loaded, so now we can attached

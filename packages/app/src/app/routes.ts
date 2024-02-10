@@ -11,7 +11,7 @@ import { LogoutComponent } from './dummy/logout/logout.component';
 import { ProfileComponent } from './dummy/profile/profile.component';
 import { NotificationDemoComponent } from './components/notification/notification-demo.component';
 import { InputDemoComponent } from './components/forms/input/input-demo.component';
-import { SimpleHtmlTableDemoComponent } from './components/tables/simple-html-table-demo.component';
+import { SimpleHtmlTableDemoComponent } from './components/tables/simple-html-table/simple-html-table-demo.component';
 import { StorageModule } from '@typexs/storage-ng';
 import { EntityModule } from '@typexs/entity-ng';
 import { DistributedStorageModule } from '@typexs/distributed-storage-ng';
@@ -28,6 +28,7 @@ import { SimpleViewVariantsComponent } from './components/content-view/simple-vi
 import { CTXT_ROUTE_USER_LOGOUT, CTXT_ROUTE_USER_PROFILE, EntityViewPageComponent } from '@typexs/base-ng';
 import { SearchPageComponent } from '@typexs/search-ng';
 import { TablesOverviewComponent } from './components/tables/overview/tables-overview.component';
+import { ListViewDemoComponent } from './components/tables/list-view/list-view-demo.component';
 
 
 export const APP_ROUTES: Routes = [
@@ -78,6 +79,11 @@ export const APP_ROUTES: Routes = [
             path: 'simple',
             component: SimpleHtmlTableDemoComponent,
             data: { label: 'Simple Table', group: 'tables' }
+          },
+          {
+            path: 'list-view',
+            component: ListViewDemoComponent,
+            data: { label: 'List view', group: 'tables' }
           }
         ]
       },

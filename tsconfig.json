@@ -39,6 +39,9 @@
     "files",
     "node_modules"
   ],
+  "files": [
+    "src/dummy.ts"
+  ],
   "include": [
     "packages/**/*"
   ],

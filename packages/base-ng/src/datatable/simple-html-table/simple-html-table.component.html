@@ -10,7 +10,7 @@
   <txs-pager *ngIf="options.enablePager"
              [name]="options.pagerId"
              [pager]="pager"
-             (pageChange)="updateRows($event)">
+             (pageChange)="onPagerAction($event)">
   </txs-pager>
 
   <div class="table-container">
@@ -46,12 +46,12 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let row of _dataNodes">
+      <tr *ngFor="let dataNode of getValues() | async">
         <td class="col-md-auto" *ngFor="let column of columns">
           <txs-simple-html-cell
             [parent]="getSelf()"
             [column]="column"
-            [row]="row.data">
+            [row]="dataNode">
           </txs-simple-html-cell>
         </td>
       </tr>
@@ -60,12 +60,13 @@
   </div>
 
 
-  <txs-pager *ngIf="options.enablePager"
+  <txs-pager *ngIf="isPagerEnabled()"
              [name]="options.pagerId"
              [pager]="pager"
              frameSize="5"
-             (pageChange)="updateRows($event)">
+             (pageChange)="onPagerAction($event)">
   </txs-pager>
+
 
 </div>
 
