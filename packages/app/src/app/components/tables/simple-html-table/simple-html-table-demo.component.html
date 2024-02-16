@@ -1,49 +1,15 @@
 <h5>Simple HTML Table</h5>
 
-<datatable-options (optionsChange)="onOptionsUpdate($event)">
-
-</datatable-options>
+<datatable-options (optionsChange)="onOptionsUpdate($event)"></datatable-options>
 
 <div class="d-flex">
   <button class="btn btn-primary" (click)="rebuild()">Rebuild</button>
   <button class="btn btn-primary" (click)="reset()">Reset</button>
 </div>
 
-<!--<div class="container">-->
-<!--  <div class="row">-->
-<!--    <div class="col">-->
-<!--      <pre *ngIf="options">{{options | json}}</pre>-->
-<!--    </div>-->
-<!--    <div class="col">-->
-<!--      <pre *ngIf="datatable && datatable.options">{{datatable.options | json}}</pre>-->
-<!--    </div>-->
-<!--    <div class="col">-->
-<!--      <pre *ngIf="datatable && datatable.options">{{datatable.options | json}}</pre>-->
-<!--    </div>-->
-<!--    <div class="col">-->
-<!--      <pre *ngIf="datatable && datatable.params">{{datatable.params | json}}</pre>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--  <div class="row">-->
-<!--    <div class="col">-->
-<!--    </div>-->
-<!--    <div class="col">-->
-<!--      <pre *ngIf="datatable">{{datatable.getDataNodes().length}}</pre>-->
-<!--    </div>-->
-<!--    <div class="col">-->
-
-<!--    </div>-->
-<!--    <div class="col">-->
-<!--      <pre *ngIf="datatable">{{datatable.api().getDataNodes().length}}</pre>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
-
 
 <p><strong>Table over Datatable Component</strong></p>
-<!--
-Passing rows and maxRows directly
--->
+
 <txs-datatable
   [component]="simpleTableComp"
   [columns]="columns"
@@ -51,19 +17,5 @@ Passing rows and maxRows directly
   [options]="options"
   [rows]="rows"
   (gridReady)="onGridReady($event)"
->
-</txs-datatable>
+></txs-datatable>
 
-<hr>
-
-<!--<p><strong>Table direct</strong></p>-->
-
-<!--<txs-simple-html-table-->
-<!--  [columns]="columns"-->
-<!--  [maxRows]="maxRows"-->
-<!--  [options]="options"-->
-<!--  [rows]="rows"-->
-<!--  (gridReady)="onGridReady($event)"-->
-<!--&gt;-->
-
-<!--</txs-simple-html-table>-->

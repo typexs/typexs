@@ -1,15 +1,12 @@
-import { assign, defaults, get, isEmpty, isNumber, set } from 'lodash';
-import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { get, set } from 'lodash';
+import { ChangeDetectorRef, Component, ElementRef, HostListener, Inject, Renderer2 } from '@angular/core';
 import { AbstractGridComponent } from '../abstract-grid.component';
-import { PagerAction } from '../../pager/PagerAction';
 import { PagerService } from '../../pager/PagerService';
-import { Pager } from '../../pager/Pager';
 import { IGridColumn } from '../IGridColumn';
 import { Eq, ExprDesc, Like, Value, ValueDesc } from '@allgemein/expressions';
-import { IDatatableOptions } from '../IDatatableOptions';
-import { K_PAGED } from '../Constants';
 import { ISimpleTable } from './ISimpleTable';
 import { DOCUMENT } from '@angular/common';
+import { Log } from '@typexs/base-ng';
 
 
 @Component({
@@ -28,10 +25,22 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements I
 
   newRows: any[] = [];
 
+  /**
+   * Mark if mouse or cursor is over the component
+   */
+  cursorFocuses = false;
+
+  private unlistenMouseEnter: () => void;
+  private unlistenMouseLeave: () => void;
+  private unlistenMouseScroll: () => void;
+
+
   constructor(
     private pagerService: PagerService,
     private changeRef: ChangeDetectorRef,
-    @Inject(DOCUMENT) private document: Document) {
+    @Inject(DOCUMENT) private document: Document,
+    private elemRef: ElementRef,
+    private renderer2: Renderer2) {
     super(pagerService, changeRef);
   }
 
@@ -43,6 +52,89 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements I
   addNewRow() {
     // TODO
   }
+
+  initialize() {
+    super.initialize();
+
+    if (this.unlistenMouseLeave) {
+      this.unlistenMouseLeave();
+    }
+    if (this.unlistenMouseEnter) {
+      this.unlistenMouseEnter();
+    }
+
+    if (this.options.mode) {
+      switch (this.options.mode) {
+        case 'infinite':
+          this.onInfiniteMode();
+          break;
+      }
+    }
+
+  }
+
+  /**
+   * Attach infinite scrolling relevent event listener
+   *
+   * - scroll listener should be only listening when mouse is over the component
+   */
+  private onInfiniteMode() {
+    Log.info('on infinite mode');
+    this.cursorFocuses = false;
+    this.unlistenMouseEnter = this.renderer2.listen(this.getTableElement(), 'mouseenter', this.onMouseEnter.bind(this));
+  }
+
+  private onMouseEnter() {
+    Log.info('enter');
+    this.cursorFocuses = true;
+    this.unlistenMouseScroll = this.renderer2.listen(this.getTableBodyElement(), 'scroll', this.onScroll.bind(this));
+    this.unlistenMouseLeave = this.renderer2.listen(this.getTableElement(), 'mouseleave', this.onMouseLeave.bind(this));
+  }
+
+  getBoundries(elem: HTMLElement) {
+    return elem.getBoundingClientRect();
+  }
+
+
+  getTableElement(): HTMLElement {
+    return this.elemRef.nativeElement;
+  }
+
+  getTableBodyElement(): HTMLElement {
+    return this.getTableElement().querySelector('tbody');
+  }
+
+  private onScroll(event: MouseEvent) {
+    const tbody = this.getTableBodyElement();
+    const scrollBottomOffset = tbody.scrollHeight - tbody.offsetHeight;
+    const bottomReached = scrollBottomOffset - tbody.scrollTop <= 0;
+    const topReached = tbody.scrollTop < tbody.offsetHeight / 2.;
+    Log.info('scroll', scrollBottomOffset, tbody.scrollTop, tbody.scrollHeight, bottomReached, topReached, this.getBoundries(tbody));
+    // this.elemRef.nativeElement as HT
+
+    if (bottomReached) {
+      this.onBottomReached();
+    }
+
+  }
+
+  private onBottomReached() {
+    // check if data nodes
+    this.getDataNodes().next();
+  }
+
+  private onMouseLeave() {
+    Log.info('leave');
+    this.cursorFocuses = false;
+    // this.unlistenMouseEnter();
+    this.unlistenMouseLeave();
+    this.unlistenMouseScroll();
+  }
+
+
+  // @HostListener('mouseenter')
+  // @HostListener('mouseleave')
+  // switchScroll()
 
   /**
    * Is insertable
@@ -172,7 +264,6 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements I
   }
 
 
-
   reset() {
     this.pager.reset();
     this.params.offset = 0;
@@ -180,6 +271,7 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements I
 
 
   ngOnDestroy(): void {
+    this.reset();
     if (this.pager) {
       this.pager.free();
     }

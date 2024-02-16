@@ -58,6 +58,22 @@ export class ViewArray<T> extends Array<T> {
     this.clearDirtyMark();
   }
 
+  next() {
+    // TODO callback for fetching record
+    if (this.maxRows) {
+      if (this.viewEndIdx + this.limit < this.maxRows) {
+        this.viewEndIdx = this.viewEndIdx + this.limit;
+      } else {
+        this.viewEndIdx = this.maxRows;
+      }
+    } else {
+      // no max rows do not check if limit reached
+      this.viewEndIdx = this.viewEndIdx + this.limit;
+    }
+    this.values$.next(Array.from(new DataNodeIterator<T>(this)));
+    this.clearDirtyMark();
+  }
+
   clear() {
     this.splice(0, this.length);
     this._viewStartIdx = 0;

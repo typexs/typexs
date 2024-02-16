@@ -16,9 +16,9 @@ export class DatatableOptionsComponent implements OnInit {
   options: IDatatableOptions & { maxRows: number } = {
     mode: K_PAGED,
     pagerId: 'page',
-    limit: 20,
+    limit: 10,
     enablePager: true,
-    maxRows: 20
+    maxRows: 200
   };
 
   @Output()

@@ -1,4 +1,4 @@
-<div class="simple-html-table-container">
+<div class="simple-html-table-container mode-{{this.options.mode}}">
 
   <div *ngIf="options.insertable">
     <button type="button" class="btn btn-primary"
@@ -33,7 +33,7 @@
           <div class="filter-popup" *ngIf="column.filter && filterOpened == column.field">
             <form (ngSubmit)="closeFilter(column)">
               <div class="form-group">
-                <label [for]="column.field">{{column.label}}</label>
+                <label [for]="column.field">{{ column.label }}</label>
                 <input [(ngModel)]="filterValue" type="text" class="form-control"
                        [id]="column.field" [ngModelOptions]="{standalone:true}">
               </div>

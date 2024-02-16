@@ -81,3 +81,23 @@ $fa-var-times: \f00d;
   }
 
 }
+
+/**
+ * Define infinite mode table scrolling
+ */
+.mode-infinite {
+  .table-container {
+     table {
+       tbody {
+         display: block;
+         overflow: auto;
+         width: 100%;
+         height: 400px;
+       }
+
+       thead tr{
+         display:block;
+       }
+     }
+  }
+}
