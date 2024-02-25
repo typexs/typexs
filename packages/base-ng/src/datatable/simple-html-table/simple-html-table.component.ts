@@ -1,12 +1,12 @@
 import { get, set } from 'lodash';
-import { ChangeDetectorRef, Component, ElementRef, HostListener, Inject, Renderer2 } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Inject, Renderer2 } from '@angular/core';
 import { AbstractGridComponent } from '../abstract-grid.component';
 import { PagerService } from '../../pager/PagerService';
 import { IGridColumn } from '../IGridColumn';
 import { Eq, ExprDesc, Like, Value, ValueDesc } from '@allgemein/expressions';
 import { ISimpleTable } from './ISimpleTable';
 import { DOCUMENT } from '@angular/common';
-import { Log } from '@typexs/base-ng';
+import { Log } from '../../lib/log/Log';
 
 
 @Component({
@@ -15,7 +15,6 @@ import { Log } from '@typexs/base-ng';
   styleUrls: ['./simple-html-table.component.scss']
 })
 export class SimpleHtmlTableComponent extends AbstractGridComponent implements ISimpleTable {
-
 
   filterOpened: string = null;
 
@@ -31,7 +30,9 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements I
   cursorFocuses = false;
 
   private unlistenMouseEnter: () => void;
+
   private unlistenMouseLeave: () => void;
+
   private unlistenMouseScroll: () => void;
 
 
@@ -53,6 +54,10 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements I
     // TODO
   }
 
+
+  /**
+   * Called by ngInit
+   */
   initialize() {
     super.initialize();
 
@@ -68,20 +73,28 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements I
         case 'infinite':
           this.onInfiniteMode();
           break;
+        case 'paged':
+          this.onPagedMode();
+          break;
       }
     }
-
   }
 
   /**
    * Attach infinite scrolling relevent event listener
    *
    * - scroll listener should be only listening when mouse is over the component
+   * - scroll in div or append at the end
    */
   private onInfiniteMode() {
-    Log.info('on infinite mode');
+    this.options.enablePager = false;
     this.cursorFocuses = false;
     this.unlistenMouseEnter = this.renderer2.listen(this.getTableElement(), 'mouseenter', this.onMouseEnter.bind(this));
+  }
+
+
+  private onPagedMode() {
+    this.options.enablePager = true;
   }
 
   private onMouseEnter() {
@@ -120,7 +133,7 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements I
 
   private onBottomReached() {
     // check if data nodes
-    this.getDataNodes().next();
+    // this.getDataNodes().nextView();
   }
 
   private onMouseLeave() {
@@ -265,7 +278,9 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements I
 
 
   reset() {
-    this.pager.reset();
+    if(this.pager){
+      this.pager.reset();
+    }
     this.params.offset = 0;
   }
 

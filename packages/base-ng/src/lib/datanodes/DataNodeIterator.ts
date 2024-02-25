@@ -13,8 +13,8 @@ export class DataNodeIterator<T> implements IterableIterator<T>, Iterable<T> {
   constructor(dataNodes: ViewArray<T>) {
     this.dataNodes = dataNodes;
     this.idx = 0;
-    this.start = dataNodes.viewStartIdx;
-    this.end = dataNodes.viewEndIdx;
+    this.start = dataNodes.startIdx;
+    this.end = dataNodes.endIdx;
 
     if (this.end > dataNodes.length) {
       this.end = dataNodes.length;

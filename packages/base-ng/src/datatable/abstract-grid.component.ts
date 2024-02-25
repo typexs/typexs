@@ -82,6 +82,37 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
     this.setRows(entries);
   }
 
+  /**
+   * Return the current limit value
+   */
+  get limit(): number {
+    return this.params.limit;
+  }
+
+  /**
+   * Set the current limit and update data node
+   * @param limit
+   */
+  set limit(limit: number) {
+    this.params.limit = limit;
+    this.getDataNodes().limit = limit;
+  }
+
+  /**
+   * Return the current offset value
+   */
+  get offset(): number {
+    return this.params.offset;
+  }
+
+  /**
+   * Set the current limit and update data node
+   * @param limit
+   */
+  set offset(offset: number) {
+    this.params.offset = offset;
+    this.getDataNodes().offset = offset;
+  }
 
   @Output()
   doQuery: EventEmitter<IGridApi> = new EventEmitter<IGridApi>();
@@ -108,10 +139,17 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   construct() {
   }
 
+  /**
+   * Impl. of ng OnInit interface
+   */
   ngOnInit(): void {
     this.initialize();
   }
 
+
+  /**
+   * Called by ngOnInit
+   */
   initialize() {
     if (!this.options) {
       this.options = {};
@@ -119,16 +157,19 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
     defaults(this.options, <IDatatableOptions>{
       enablePager: true,
       limit: 25,
-      mode: K_PAGED
+      mode: K_PAGED,
+      pagerId: 'page'
     });
 
     this.initPager();
     if (isEmpty(this.params)) {
       // if params not set set default values
-      assign(this.params, {
-        limit: this.options.limit,
-        offset: 0
-      });
+      this.limit = this.options.limit;
+      this.offset = 0;
+      // assign(this.params, {
+      //   limit: this.options.limit,
+      //   offset: 0
+      // });
     }
 
     // apply position options to parameters
@@ -185,37 +226,8 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
 
 
   /**
-   * Return the current limit value
+   *
    */
-  get limit(): number {
-    return this.params.limit;
-  }
-
-  /**
-   * Set the current limit and update data node
-   * @param limit
-   */
-  set limit(limit: number) {
-    this.params.limit = limit;
-    this.getDataNodes().limit = limit;
-  }
-
-  /**
-   * Return the current offset value
-   */
-  get offset(): number {
-    return this.params.offset;
-  }
-
-  /**
-   * Set the current limit and update data node
-   * @param limit
-   */
-  set offset(offset: number) {
-    this.params.offset = offset;
-    this.getDataNodes().offset = offset;
-  }
-
   getValues() {
     return this.getDataNodes().getValues();
   }
@@ -258,20 +270,23 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
     if (this.parent) {
       this.parent.setDataNodes(nodes);
     } else {
-      this._dataNodes.clear();
+      this._dataNodes.reset();
       // this.onChangesUpdateQuery();
       this._dataNodes.maxRows = nodes.length;
       this._dataNodes.push(...nodes);
-      this._dataNodes.calcView();
+      this._dataNodes.setView(0, null, this.limit);
+      // this._dataNodes.nextView();
     }
   }
 
 
   onPagerAction(action: PagerAction) {
-    if (action.name === this.options.pagerId && action.type === 'set') {
-      this.offset = (action.page - 1) * this.options.limit;
-      this.limit = this.options.limit;
+    if (action.name === this.pager.name && action.type === 'set') {
+      // TODO create helper method for this
+      this.offset = (action.page - 1) * this.limit;
+      // this.limit = this.options.limit;
       this.paramsChange.emit(this.params);
+      // this.getDataNodes().setView(this.offset);
       this.doQuery.emit(this);
     }
   }
@@ -314,7 +329,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   reset() {
     this.restPager();
     this.offset = 0;
-    this.getDataNodes().calcView();
+    this.getDataNodes().nextView();
   }
 
   /**
@@ -333,7 +348,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
     this._changeRef.detectChanges();
     this.initialize();
     // this.onChangesUpdateQuery();
-    this.getDataNodes().calcView();
+    this.getDataNodes().nextView();
     this.emitEvent('rebuild');
   }
 

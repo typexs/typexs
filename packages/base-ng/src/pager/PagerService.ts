@@ -10,25 +10,26 @@ export class PagerService {
 
   pagers: Pager[] = [];
 
-  constructor(private location: Location, private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(
+    private location: Location,
+    private router: Router,
+    private activatedRoute: ActivatedRoute) {
   }
 
   find(id: string) {
-    return find(this.pagers, p => p.name === id);
+    return this.pagers.find(p => p.name === id);
   }
 
   get(id: string) {
     let pager = this.find(id);
     if (!pager) {
-      pager = new Pager(this.location, this.router, this.activatedRoute, id);
-      this.pagers.push(pager);
+      pager = this.create(id);
     }
-    pager.inc();
     return pager;
   }
 
-  create() {
-    const pager = new Pager(this.location, this.router, this.activatedRoute);
+  create(id: string = 'page') {
+    const pager = new Pager(this.location, this.router, this.activatedRoute, id);
     this.pagers.push(pager);
     pager.inc();
     return pager;

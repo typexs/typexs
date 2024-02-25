@@ -7,7 +7,7 @@
     </button>
   </div>
 
-  <txs-pager *ngIf="options.enablePager"
+  <txs-pager *ngIf="isPagerEnabled()"
              [name]="options.pagerId"
              [pager]="pager"
              (pageChange)="onPagerAction($event)">
@@ -59,12 +59,10 @@
     </table>
   </div>
 
-
+  <!-- NOTE: We use the same pager like on top -->
   <txs-pager *ngIf="isPagerEnabled()"
              [name]="options.pagerId"
-             [pager]="pager"
-             frameSize="5"
-             (pageChange)="onPagerAction($event)">
+             [pager]="pager">
   </txs-pager>
 
 

@@ -23,7 +23,7 @@ export class PagerComponent implements OnInit, OnDestroy {
    * Emit events on pagechanges
    */
   @Output()
-  pageChange: EventEmitter<PagerAction> = new EventEmitter();
+  pageChange: EventEmitter<PagerAction> = new EventEmitter<PagerAction>();
 
 
   _frameSize: number = 3;
@@ -173,7 +173,10 @@ export class PagerComponent implements OnInit, OnDestroy {
       this.frameSize = this._frameSize;
     }
 
-    this.pager.on('page_action', action => this.pageChange.emit(action));
+    if (this.pageChange) {
+      this.pager.register('page_action', this.pageChange);
+    }
+
     if (exists) {
       return;
     }

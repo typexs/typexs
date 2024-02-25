@@ -3,8 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PagerAction } from './PagerAction';
 import { EventEmitter } from 'events';
 import { Location } from '@angular/common';
+import { Component, EventEmitter as ngEventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
-export class Pager extends EventEmitter {
+export class Pager {
 
   static inc = 0;
 
@@ -34,12 +35,22 @@ export class Pager extends EventEmitter {
 
   wait: any;
 
-  constructor(private location: Location, private router: Router, private activatedRoute: ActivatedRoute, id: string = 'dummy') {
-    super();
-    this.name = id;
+  emitter: { event: string; emitter: ngEventEmitter<PagerAction> }[] = [];
 
+  constructor(private location: Location, private router: Router, private activatedRoute: ActivatedRoute, id: string = 'dummy') {
+    // super();
+    this.name = id;
   }
 
+  /**
+   * Register callback for some event
+   */
+  register(eventName: string, emitter: ngEventEmitter<PagerAction>) {
+    const _exists = this.emitter.find(x => x.event === eventName && x.emitter === emitter);
+    if (!_exists) {
+      this.emitter.push({ event: eventName, emitter: emitter });
+    }
+  }
 
   doOnce(fn: () => void) {
     clearTimeout(this.wait);
@@ -105,14 +116,14 @@ export class Pager extends EventEmitter {
 
   setPage(nr: number) {
     if (0 < nr && nr <= this.totalPages && nr !== this.currentPage) {
-      this.doOnce(() => {
-        this.currentPage = nr;
-        this.calculatePages();
-        const action = new PagerAction(this.currentPage, this.name);
-        this.emit('page_action', action);
-
-        this.updateUrl();
+      this.currentPage = nr;
+      this.calculatePages();
+      const action = new PagerAction(this.currentPage, this.name);
+      this.emitter.filter(x => x.event === 'page_action').forEach(x => {
+        x.emitter.emit(action);
       });
+      // this.emit('page_action', action);
+      this.updateUrl();
     } else {
       throw new Error('pager is out of range ' + nr + ' of maxlines ' + this.totalPages);
     }
@@ -122,12 +133,15 @@ export class Pager extends EventEmitter {
     const params: any = {};
     params[this.name] = this.currentPage;
 
-    const urlTree = this.router.createUrlTree([], {
-      queryParams: params,
-      queryParamsHandling: 'merge',
-      preserveFragment: true
-    });
-    this.location.replaceState(urlTree.toString());
+    if (this.router) {
+      const urlTree = this.router.createUrlTree([], {
+        queryParams: params,
+        queryParamsHandling: 'merge',
+        preserveFragment: true
+      });
+      this.location.replaceState(urlTree.toString());
+    }
+
   }
 
 
@@ -163,7 +177,7 @@ export class Pager extends EventEmitter {
   }
 
   free() {
-    this.removeAllListeners();
+    // this.removeAllListeners();
     this.router = null;
     this.activatedRoute = null;
     return this._inc <= 0;
