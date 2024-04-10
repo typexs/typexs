@@ -1,6 +1,5 @@
-import {clearTimeout} from 'timers';
-import {IScheduleDef} from './IScheduleDef';
-import Timer = NodeJS.Timer;
+import { clearTimeout } from 'timers';
+import { IScheduleDef } from './IScheduleDef';
 
 
 export class Schedule {
@@ -9,7 +8,7 @@ export class Schedule {
 
   name: string;
 
-  timer: Timer;
+  timer: any;
 
   last: Date = null;
 

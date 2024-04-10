@@ -82,6 +82,7 @@ const COMPONENTS = [
   EntityViewPageComponent,
   ViewDataComponent,
   ListViewComponent,
+  AbstractCellComponent,
   SimpleHtmlTableComponent,
   SimpleHtmlCellComponent,
   SimpleHtmlCellValueComponent,
@@ -105,7 +106,6 @@ const COMPONENTS = [
   entryComponents: [
     JsonComponent,
     ListViewComponent,
-    AbstractCellComponent,
     SimpleHtmlTableComponent,
     SimpleHtmlCellComponent,
     SimpleHtmlCellValueComponent,
