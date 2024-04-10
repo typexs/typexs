@@ -1,5 +1,5 @@
 import { first, keys } from 'lodash';
-import { IGridColumn } from '../../datatable/IGridColumn';
+import { IGridColumn } from '../../datatable/api/IGridColumn';
 
 
 export class Helper {

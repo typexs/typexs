@@ -1,7 +1,9 @@
 import { IGridColumn } from './IGridColumn';
-import { IQueryComponentApi } from '../api/querying/IQueryComponentApi';
-import { GRID_MODE } from './Constants';
+import { IQueryComponentApi } from '../../api/querying/IQueryComponentApi';
 import { Observable } from 'rxjs';
+import { T_QUERY_CALLBACK } from '../../lib/datanodes/Constants';
+import { T_GRID_MODE } from './IGridMode';
+import { T_QUERY_MODE } from '../../api/querying/Constants';
 
 export interface IDatatableOptions {
 
@@ -12,7 +14,7 @@ export interface IDatatableOptions {
    * - infinite - an infinite scoll with reload on page bottom reach
    * - view - show only the once loaded rows
    */
-  mode?: GRID_MODE;
+  mode?: T_GRID_MODE | string;
 
   /**
    * enable or disable pager
@@ -39,6 +41,10 @@ export interface IDatatableOptions {
    */
   offset?: number;
 
+  /**
+   * Pass row limit by options
+   */
+  maxRows?: number;
 
   /**
    * Pass input annotations to underlying component
@@ -82,7 +88,7 @@ export interface IDatatableOptions {
   /**
    * Define the type of query (default: query)
    */
-  queryType?: 'query' | 'aggregate';
+  queryType?: T_QUERY_MODE;
 
   /**
    * Additional query options to pass
@@ -138,4 +144,10 @@ export interface IDatatableOptions {
     doUpdate?: (entries: any[]) => Observable<boolean>;
     doDelete?: (entries: any[]) => Observable<boolean>;
   };
+
+
+  /**
+   * Datasource navigation callback
+   */
+  queryCallback?: T_QUERY_CALLBACK<any>;
 }

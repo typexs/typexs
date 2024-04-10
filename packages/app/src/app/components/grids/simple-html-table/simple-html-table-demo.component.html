@@ -1,14 +1,16 @@
-<h5>Simple HTML Table</h5>
+<h5>Simple HTML Table over Datatable</h5>
 
-<datatable-options (optionsChange)="onOptionsUpdate($event)"></datatable-options>
+<datatable-options
+  [options]="options"
+  [viewModes]="viewModes"
+  (optionsChange)="onOptionsUpdate($event)">
+</datatable-options>
+
 
 <div class="d-flex">
   <button class="btn btn-primary" (click)="rebuild()">Rebuild</button>
   <button class="btn btn-primary" (click)="reset()">Reset</button>
 </div>
-
-
-<p><strong>Table over Datatable Component</strong></p>
 
 <txs-datatable
   [component]="simpleTableComp"
@@ -16,6 +18,6 @@
   [maxRows]="maxRows"
   [options]="options"
   [rows]="rows"
-  (gridReady)="onGridReady($event)"
-></txs-datatable>
+  (gridReady)="onGridReady($event)">
+</txs-datatable>
 

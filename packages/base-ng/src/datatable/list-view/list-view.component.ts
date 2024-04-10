@@ -1,11 +1,12 @@
 import { get, set } from 'lodash';
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { AbstractGridComponent } from '../abstract-grid.component';
+import { AbstractGridComponent } from '../api/abstract-grid.component';
 import { PagerAction } from '../../pager/PagerAction';
 import { PagerService } from '../../pager/PagerService';
-import { IGridColumn } from '../IGridColumn';
+import { IGridColumn } from '../api/IGridColumn';
 import { Eq, ExprDesc, Like, Value, ValueDesc } from '@allgemein/expressions';
 import { IDatatableListGridOptions } from './IDatatableListGridOptions';
+import { IGridMode, K_INFINITE, K_PAGED, K_VIEW } from '../api/IGridMode';
 
 
 @Component({
@@ -36,6 +37,13 @@ export class ListViewComponent extends AbstractGridComponent {
     super(pagerService, changeRef);
   }
 
+  supportedModes(): IGridMode[] {
+    return [
+      { name: K_VIEW, label: K_VIEW },
+      { name: K_PAGED, label: K_PAGED },
+      { name: K_INFINITE, label: K_INFINITE }
+    ];
+  }
 
   isSorted(column: IGridColumn, sort: 'asc' | 'desc' | 'none') {
     if (!column.sorting) {
@@ -120,8 +128,6 @@ export class ListViewComponent extends AbstractGridComponent {
     this.filterOpened = null;
     this.doQuery.emit(this);
   }
-
-
 
 
 }

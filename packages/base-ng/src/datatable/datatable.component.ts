@@ -1,4 +1,4 @@
-import { defaults, get, isObjectLike, keys, uniq } from 'lodash';
+import { get, keys, uniq } from 'lodash';
 import {
   ChangeDetectorRef,
   Component,
@@ -15,12 +15,10 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { AbstractGridComponent } from './abstract-grid.component';
+import { AbstractGridComponent } from './api/abstract-grid.component';
 import { ComponentRegistryService } from '../component/component-registry.service';
 import { Log } from '../lib/log/Log';
-import { IDatatableOptions } from './IDatatableOptions';
-import { ClassType, inputKeys, K_PAGED, methodKeys, outputKeys } from './Constants';
-import { Observable } from 'rxjs';
+import { ClassType, inputKeys, methodKeys, outputKeys } from './Constants';
 import { PagerService } from '../pager/PagerService';
 
 /**
@@ -59,7 +57,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
 
 
   ngOnInit(): void {
-    super.ngOnInit();
+    // super.ngOnInit();
 
     if (!this.component) {
       this.component = this.detectDefaultGridComponent();
@@ -113,7 +111,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
             instance[key + 'Change'].emit(changes[key].currentValue);
           }
         }
-        this.rebuild();
+        // this.rebuild();
       }
     }
   }
@@ -186,7 +184,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
 
     // run ngOnInit if present
     this.ref().changeDetectorRef.detectChanges();
-    this.emitEvent('ready');
+    this.emitEvent('initialized');
   }
 
   ngOnDestroy(): void {

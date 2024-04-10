@@ -1,14 +1,14 @@
 import {first, get, has, isArray, isEmpty, isNumber, keys, snakeCase} from 'lodash';
 import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {IEntityRef, LookupRegistry, METATYPE_ENTITY} from '@allgemein/schema-api';
-import {IGridColumn} from '../../datatable/IGridColumn';
-import {IGridApi} from '../../datatable/IGridApi';
+import {IGridColumn} from '../../datatable/api/IGridColumn';
+import {IGridApi} from '../../datatable/api/IGridApi';
 import {DatatableComponent} from '../../datatable/datatable.component';
 import {IQueringService} from './IQueringService';
 import {QueryAction} from './QueryAction';
-import {IQueryParams} from '../../datatable/IQueryParams';
+import {IQueryParams} from '../../datatable/api/IQueryParams';
 import {DEFAULT_QUERY_OPTIONS} from './Constants';
-import {IDatatableOptions} from '../../datatable/IDatatableOptions';
+import {IDatatableOptions} from '../../datatable/api/IDatatableOptions';
 import {Log} from '../../lib/log/Log';
 import {C_DEFAULT} from '../../constants';
 import {IFindOptions} from './IFindOptions';

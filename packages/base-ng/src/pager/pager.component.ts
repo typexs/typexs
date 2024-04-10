@@ -1,7 +1,6 @@
 import { isNumber, isString, isUndefined } from 'lodash';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { PagerAction } from './PagerAction';
-import { ActivatedRoute, Router } from '@angular/router';
 import { PagerService } from './PagerService';
 import { Pager } from './Pager';
 
@@ -89,36 +88,13 @@ export class PagerComponent implements OnInit, OnDestroy {
   pager: Pager;
 
   constructor(
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
     private pagerService: PagerService) {
-
   }
 
-  //
-  // setPage(nr: number) {
-  //   if (0 < nr && nr <= this.totalPages) {
-  //     this.pager.once(() => {
-  //       this.currentPage = nr;
-  //
-  //       const action = new PagerAction(nr, this.name);
-  //       this.pageChange.emit(action);
-  //       this.pager.calculatePages();
-  //       const params: any = {};
-  //       params[this.name] = nr;
-  //
-  //       const urlTree = this.router.createUrlTree([], {
-  //         queryParams: params,
-  //         queryParamsHandling: 'merge',
-  //         preserveFragment: true
-  //       });
-  //
-  //       this.router.navigateByUrl(urlTree);
-  //     });
-  //   } else {
-  //     throw new Error('pager is out of range ' + nr + ' of maxlines ' + this.totalPages);
-  //   }
-  // }
+  hasPages() {
+    return this.pager.pages$.getValue() && this.pager.pages$.getValue().length > 0;
+  }
+
 
 
   checkTotal() {
@@ -173,8 +149,9 @@ export class PagerComponent implements OnInit, OnDestroy {
       this.frameSize = this._frameSize;
     }
 
-    if (this.pageChange) {
+    if (this.pageChange.observers.length > 0) {
       this.pager.register('page_action', this.pageChange);
+      // this.pager.setPage(1, true);
     }
 
     if (exists) {
@@ -184,10 +161,9 @@ export class PagerComponent implements OnInit, OnDestroy {
     this.checkCurrent();
     this.checkTotal();
     this.checkFrameSize();
-    if (!this.pager.checkQueryParam()) {
-      this.pager.calculatePages();
-    }
   }
+
+
 
 
   ngOnDestroy(): void {

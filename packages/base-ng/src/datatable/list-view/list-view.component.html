@@ -1,16 +1,14 @@
 <div class="list-view-container">
 
-  <txs-pager *ngIf="options.enablePager"
+  <txs-pager *ngIf="isPagerEnabled()"
              [name]="options.pagerId"
-             [pager]="pager"
+             [pager]="getPager(false)"
              (pageChange)="onPagerAction($event)">
   </txs-pager>
-
 
   <div class="list-container">
     <div class="row" *ngFor="let row of getValues() | async">
       <div class="col-md-12">
-
         <txs-view [instance]="row.data"
                   [allowViewModeSwitch]="allowViewModeSwitch"
                   [mode]="viewMode"
@@ -26,12 +24,9 @@
     </div>
   </div>
 
-
-  <txs-pager *ngIf="options.enablePager"
+  <txs-pager *ngIf="isPagerEnabled()"
              [name]="options.pagerId"
-             [pager]="pager"
-             frameSize="5"
-             (pageChange)="onPagerAction($event)">
+             [pager]="getPager(false)">
   </txs-pager>
 
 </div>

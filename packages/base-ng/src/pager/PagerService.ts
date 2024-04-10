@@ -1,4 +1,4 @@
-import { find, remove } from 'lodash';
+import { remove } from 'lodash';
 import { Injectable } from '@angular/core';
 import { Pager } from './Pager';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -39,7 +39,8 @@ export class PagerService {
     const pager = this.find(id);
     if (pager) {
       pager.dec();
-      if (pager.free()) {
+      if (pager.canBeFreed()) {
+        pager.free();
         remove(this.pagers, p => p.name === id);
       }
     }

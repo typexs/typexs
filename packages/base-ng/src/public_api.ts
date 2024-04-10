@@ -87,12 +87,12 @@ export * from './pager/Pager';
 export * from './pager/PagerAction';
 export * from './pager/pager.component';
 
-export * from './datatable/abstract-grid.component';
+export * from './datatable/api/abstract-grid.component';
 export * from './datatable/datatable.component';
-export * from './datatable/IGridApi';
-export * from './datatable/IQueryParams';
-export * from './datatable/IGridColumn';
-export * from './datatable/IDatatableOptions';
+export * from './datatable/api/IGridApi';
+export * from './datatable/api/IQueryParams';
+export * from './datatable/api/IGridColumn';
+export * from './datatable/api/IDatatableOptions';
 
 
 export { AbstractComponent } from './component/abstract.component';
@@ -123,7 +123,7 @@ export { AbstractAggregateEmbeddedComponent } from './api/querying/abstract-aggr
 export { IQueringService } from './api/querying/IQueringService';
 export { IQueryComponentApi } from './api/querying/IQueryComponentApi';
 export { QueryAction } from './api/querying/QueryAction';
-export { STORAGE_REQUEST_MODE, DEFAULT_QUERY_OPTIONS, QUERY_MODE } from './api/querying/Constants';
+export { STORAGE_REQUEST_MODE, DEFAULT_QUERY_OPTIONS, T_QUERY_MODE } from './api/querying/Constants';
 export { FreeQueryInputComponent } from './api/querying/free-query/free-query-input.component';
 export { QueryEmbeddedComponent } from './component/query/query-embedded.component';
 

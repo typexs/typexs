@@ -10,10 +10,11 @@ import {
   ViewChild,
   ViewContainerRef
 } from '@angular/core';
-import { IGridColumn } from '../IGridColumn';
+import { IGridColumn } from '../api/IGridColumn';
 import { CC_GRID_CELL_VALUE, SIMPLE_TABLE } from '../../constants';
 import { ComponentRegistryService } from '../../component/component-registry.service';
 import { ISimpleTable } from './ISimpleTable';
+import { Node } from '../../lib/datanodes/Node';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class SimpleHtmlCellComponent implements OnInit, OnDestroy {
   column: IGridColumn;
 
   @Input()
-  row: any;
+  row: Node<any>;
 
   @Input()
   parent: ISimpleTable;
@@ -38,7 +39,8 @@ export class SimpleHtmlCellComponent implements OnInit, OnDestroy {
 
   ref: ComponentRef<any>;
 
-  constructor(@Inject(Injector) public injector: Injector,
+  constructor(
+    @Inject(Injector) public injector: Injector,
     @Inject(ComponentRegistryService) public config: ComponentRegistryService,
     @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver) {
   }
@@ -55,6 +57,11 @@ export class SimpleHtmlCellComponent implements OnInit, OnDestroy {
     if (!cClass) {
       cClass = this.config.getComponentClass(SIMPLE_TABLE, CC_GRID_CELL_VALUE);
     }
+
+    if (!cClass) {
+      throw new Error('Class ' + ccName + ' not found.');
+    }
+
     const factory = this.r.resolveComponentFactory(cClass);
     this.ref = this.vc.createComponent(factory);
     this.ref.instance.column = this.column;

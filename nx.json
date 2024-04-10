@@ -1,0 +1,8 @@
+{
+  "namedInputs": {
+    "default": ["{projectRoot}/.."]
+  },
+  "targetDefaults": {
+
+  }
+}

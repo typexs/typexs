@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { IDatatableOptions } from 'packages/base-ng/src';
-import { GRID_MODE, K_PAGED } from 'packages/base-ng/src/datatable/Constants';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { DatatableComponent, IDatatableOptions } from 'packages/base-ng/src';
+import { IGridMode, K_PAGED, T_GRID_MODE } from '@typexs/base-ng/datatable/api/IGridMode';
 
 /**
  * Component allowing configure options
@@ -12,8 +12,8 @@ import { GRID_MODE, K_PAGED } from 'packages/base-ng/src/datatable/Constants';
 })
 export class DatatableOptionsComponent implements OnInit {
 
-  // @Input()
-  options: IDatatableOptions & { maxRows: number } = {
+  @Input()
+  options: IDatatableOptions = {
     mode: K_PAGED,
     pagerId: 'page',
     limit: 10,
@@ -21,14 +21,21 @@ export class DatatableOptionsComponent implements OnInit {
     maxRows: 200
   };
 
+  @Input()
+  viewModes: IGridMode[];
+
   @Output()
   optionsChange = new EventEmitter<IDatatableOptions>();
 
-  modeValues: { key: GRID_MODE }[] = [{ key: 'paged' }, { key: 'infinite' }, { key: 'view' }];
+  // modeValues: { key: T_GRID_MODE }[] = [{ key: 'paged' }, { key: 'infinite' }, { key: 'view' }];
 
   ngOnInit() {
-    console.log('init');
     this.update();
+  }
+
+
+  getGridModes(): IGridMode[] {
+    return this.viewModes;
   }
 
   update() {
@@ -46,10 +53,6 @@ export class DatatableOptionsComponent implements OnInit {
     }
   }
 
-
-  // ngOnChanges(changes: SimpleChanges) {
-  //   console.log(changes);
-  // }
 
   updateRows($event: any) {
     if (!/\d+/.test($event)) {

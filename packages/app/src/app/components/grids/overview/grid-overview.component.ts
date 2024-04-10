@@ -4,13 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
-  selector: 'tablesDemo',
-  templateUrl: 'tables-overview.component.html'
+  selector: 'gridDemo',
+  templateUrl: 'grid-overview.component.html'
 })
-export class TablesOverviewComponent implements OnInit {
+export class GridOverviewComponent implements OnInit {
 
   options: IMenuOptions = {
-    base: 'demo/tables'
+    base: 'demo/grids'
   };
 
   constructor(private active: ActivatedRoute) {

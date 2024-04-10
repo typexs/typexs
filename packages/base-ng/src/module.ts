@@ -45,13 +45,14 @@ import { EntityResolverService } from './services/entity-resolver.service';
 import { JsonComponent } from './component/entities/json/json.component';
 import { EntityViewPageComponent } from './component/entities/page/page.component';
 import { BackendService } from './api/backend/backend.service';
-import { AbstractGridComponent } from './datatable/abstract-grid.component';
+import { AbstractGridComponent } from './datatable/api/abstract-grid.component';
 import { AbstractEntityViewComponent } from './component/entities/abstract-entity-view.component';
 import { AbstractInstancableComponent } from './component/abstract-instancable.component';
 import { AbstractQueryComponent } from './api/querying/abstract-query.component';
 import { AbstractAggregateEmbeddedComponent } from './api/querying/abstract-aggregate-embedded.component';
 import { QueryEmbeddedComponent } from './component/query/query-embedded.component';
 import { AbstractComponent } from './component/abstract.component';
+import { AbstractCellComponent } from './datatable/simple-html-table/abstract-cell.component';
 
 
 const PROVIDERS = [
@@ -104,6 +105,7 @@ const COMPONENTS = [
   entryComponents: [
     JsonComponent,
     ListViewComponent,
+    AbstractCellComponent,
     SimpleHtmlTableComponent,
     SimpleHtmlCellComponent,
     SimpleHtmlCellValueComponent,

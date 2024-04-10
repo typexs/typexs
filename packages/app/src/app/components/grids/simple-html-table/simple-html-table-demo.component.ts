@@ -2,9 +2,9 @@ import { assign, keys, range } from 'lodash';
 import { ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { DatatableComponent, IDatatableOptions, IGridApi, IGridColumn, SimpleHtmlTableComponent } from 'packages/base-ng/src';
 import { And, ExprDesc } from '@allgemein/expressions';
-import { GRID_MODES, K_PAGED } from 'packages/base-ng/src/datatable/Constants';
-import { IGridEvent } from 'packages/base-ng/src/datatable/IGridEvent';
+import { IGridEvent } from '@typexs/base-ng/datatable/api/IGridEvent';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { GRID_MODES, IGridMode, K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';
 
 
 function generateData(offset: number, limit: number) {
@@ -36,8 +36,6 @@ export class SimpleHtmlTableDemoComponent implements OnInit, OnChanges {
   @ViewChild(DatatableComponent)
   datatable: DatatableComponent;
 
-  @ViewChild(SimpleHtmlTableComponent)
-  simpleTable: SimpleHtmlTableComponent;
 
   simpleTableComp = SimpleHtmlTableComponent;
 
@@ -52,7 +50,8 @@ export class SimpleHtmlTableDemoComponent implements OnInit, OnChanges {
     mode: K_PAGED,
     pagerId: 'page',
     limit: 10,
-    enablePager: true
+    enablePager: true,
+    maxRows: 200
   };
 
   columns: IGridColumn[] = [
@@ -69,6 +68,11 @@ export class SimpleHtmlTableDemoComponent implements OnInit, OnChanges {
     }
   ];
 
+  viewModes: IGridMode[] = [];
+
+  loadBoundries: any = {};
+
+  frameBoundries: any = {};
 
   rows: any[];
 
@@ -79,10 +83,7 @@ export class SimpleHtmlTableDemoComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.maxRows = 20;
     this.rows = generateData(1, this.maxRows);
-  }
 
-  getGridModes() {
-    return GRID_MODES;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -91,13 +92,15 @@ export class SimpleHtmlTableDemoComponent implements OnInit, OnChanges {
 
   rebuild() {
     this.datatable?.rebuild();
-    this.simpleTable?.rebuild();
+    // this.rows = generateData(1, this.maxRows);
+    // this.simpleTable?.rebuild();
   }
 
 
   reset() {
-    this.datatable?.reset();
-    this.simpleTable?.reset();
+    // this.datatable?.reset();
+    // this.ngOnInit();
+    // this.datatable?.rebuild();
   }
 
 
@@ -107,27 +110,10 @@ export class SimpleHtmlTableDemoComponent implements OnInit, OnChanges {
       if (this.maxRows === p) {
         return;
       }
-      // const rows = range(1, p + 1)
-      //   .map(x => ({ id: x, name: 'Text ' + x }));
       const rows = generateData(1, p);
       this.rows = rows;
     }
   }
-
-  update(key: string, v: any): void {
-    if (key === 'maxRows') {
-      this.generateRows(v);
-    } else if (key === 'limit') {
-      if (/\d+/.test(v)) {
-        const limit = parseInt(v, 10);
-        this.options = assign(this.options, { limit: limit });
-        // this.options.limit = parseInt(v, 10);
-        // this.changeDet.detectChanges();
-        // this.datatable.componentRef.changeDetectorRef.detectChanges();
-      }
-    }
-  }
-
 
   // doQuery(api: IGridApi): void {
   //   let generated = generateData(api.params.offset, api.params.limit);
@@ -159,15 +145,22 @@ export class SimpleHtmlTableDemoComponent implements OnInit, OnChanges {
       data: event.data
     };
     this.api = event.api;
+    this.viewModes = this.api.supportedModes();
+    // this.frameBoundries = this.api.getDataNodes().getFrameBoundries();
+    // this.loadBoundries = this.api.getDataNodes().getLoadBoundries();
+    // this.api.getDataNodes().getState().subscribe(x => {
+    //   this.frameBoundries = this.api.getDataNodes().getFrameBoundries();
+    //   this.loadBoundries = this.api.getDataNodes().getLoadBoundries();
+    // });
+
   }
 
   onOptionsUpdate($event: IDatatableOptions) {
-    console.log($event);
     this.options = assign(this.options, $event);
-    if ((this.options as any).maxRows) {
-      this.generateRows((this.options as any).maxRows + '');
+    if (this.options.maxRows) {
+      this.generateRows(this.options.maxRows + '');
+      this.maxRows = this.options.maxRows;
     }
-
     this.rebuild();
   }
 }

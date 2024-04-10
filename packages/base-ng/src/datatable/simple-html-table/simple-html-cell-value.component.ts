@@ -1,35 +1,19 @@
-import {get, isDate} from 'lodash';
-import {Component, Input} from '@angular/core';
-import {IGridColumn} from '../IGridColumn';
-import {DatePipe} from '@angular/common';
+import { get, isDate } from 'lodash';
+import { Component, Input } from '@angular/core';
+import { IGridColumn } from '../api/IGridColumn';
+import { DatePipe } from '@angular/common';
+import { Node } from '../../lib/datanodes/Node';
+import { AbstractCellComponent } from './abstract-cell.component';
 
 
 @Component({
   selector: 'txs-simple-html-cell-value',
   templateUrl: 'simple-html-cell-value.component.html'
 })
-export class SimpleHtmlCellValueComponent {
-
-  @Input()
-  column: IGridColumn;
-
-  @Input()
-  row: any;
+export class SimpleHtmlCellValueComponent extends AbstractCellComponent {
 
   constructor(private datePipe: DatePipe) {
-
-  }
-
-
-  getValue() {
-    if (this.column.valueHandler) {
-      return this.column.valueHandler(this.row);
-    } else if (this.column.field) {
-      const v = get(this.row, this.column.field);
-      return v;
-    } else {
-      return null;
-    }
+    super();
   }
 
   format(v: any) {

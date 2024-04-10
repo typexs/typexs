@@ -2,8 +2,8 @@ import { keys, range } from 'lodash';
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
 import { IDatatableOptions, IGridApi, IGridColumn, ListViewComponent, SimpleHtmlTableComponent } from 'packages/base-ng/src';
 import { And, ExprDesc } from '@allgemein/expressions';
-import { K_PAGED } from 'packages/base-ng/src/datatable/Constants';
-import { IGridEvent } from 'packages/base-ng/src/datatable/IGridEvent';
+import { IGridEvent } from '@typexs/base-ng/datatable/api/IGridEvent';
+import { K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';
 
 
 function generateData(offset: number, limit: number) {

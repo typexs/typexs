@@ -1,4 +1,4 @@
-import { IDatatableOptions } from '../IDatatableOptions';
+import { IDatatableOptions } from '../api/IDatatableOptions';
 
 export interface ISimpleTable {
 

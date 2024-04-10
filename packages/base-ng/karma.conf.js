@@ -13,7 +13,8 @@ module.exports = function(config) {
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     files: [
-      { pattern: 'src/*.spec.ts', watched: true, included: true, served: true },
+      // 'src/**/*.spec.ts',
+      // { pattern: 'src/*.spec.ts', watched: true, included: true, served: true },
       { pattern: 'src/**/*.spec.ts', watched: true, included: true, served: true }
     ],
     client: {
@@ -42,7 +43,7 @@ module.exports = function(config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: [process.getuid() == 0 ? 'ChromeHeadlessNoSandbox' : 'ChromeHeadless'],
+    browsers: [process.getuid() === 0 ? 'ChromeHeadlessNoSandbox' : 'ChromeHeadless'],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',

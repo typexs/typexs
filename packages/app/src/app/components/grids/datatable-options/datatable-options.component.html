@@ -20,12 +20,12 @@
   <div class="m-1">
     <strong>Navigation:</strong>
   </div>
-  <div class="form-check m-1" *ngFor="let mode of modeValues">
+  <div class="form-check m-1" *ngFor="let mode of getGridModes()">
     <input class="form-check-input" name="mode" type="radio"
-           [value]="mode.key" id="r-{{mode.key}}"
+           [value]="mode.name" id="r-{{mode.name}}"
            [(ngModel)]="options.mode"
            (ngModelChange)="update()">
-    <label class="form-check-label" for="r-{{mode.key}}"> {{mode.key}}</label>
+    <label class="form-check-label" for="r-{{mode.name}}"> {{mode.name}}</label>
   </div>
 </div>
 

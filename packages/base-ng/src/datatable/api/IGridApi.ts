@@ -1,12 +1,18 @@
 import { IQueryParams } from './IQueryParams';
 import { IGridColumn } from './IGridColumn';
-import { ViewArray } from '../lib/datanodes/ViewArray';
+import { ViewArray } from '../../lib/datanodes/ViewArray';
+import { IGridMode } from './IGridMode';
 
 export interface IGridApi {
 
   params: IQueryParams;
 
-  // limit: number;
+  // doInitialize(): void;
+
+  /**
+   * Which internal modes are supported by this grid type
+   */
+  supportedModes(): IGridMode[];
 
   getColumns(): IGridColumn[];
 
@@ -20,7 +26,7 @@ export interface IGridApi {
 
   setMaxRows(maxRows: number): void;
 
-  getDataNodes(): ViewArray<any>[];
+  getDataNodes(): ViewArray<any>;
 
   rebuild(): void;
 
