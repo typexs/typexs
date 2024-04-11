@@ -1,13 +1,8 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "version": "independent",
-  "useWorkspaces": true,
   "distTag": "v2-dev",
-  "contents": "src",
   "command": {
-    "link": {
-      "forceLocal": true
-    },
     "version": {
       "ignore": "app|app-auth|testtask",
       "preid": "dev",

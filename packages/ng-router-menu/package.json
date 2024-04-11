@@ -3,9 +3,9 @@
   "name": "@typexs/ng-router-menu",
   "version": "2.2.1-dev.15",
   "description": "Angular for typexs",
-  "main": "./public_api.ts",
+  "main": "public_api.ts",
   "scripts": {
-    "clean": "rm -rf build node_modules/.cache",
+    "clean": "rm -rf ../build ../node_modules/.cache",
     "test": "ng test --code-coverage=true --watch=false",
     "build": "ng build"
   },

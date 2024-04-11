@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { DatatableComponent, IDatatableOptions } from 'packages/base-ng/src';
+import { DatatableComponent, IDatatableOptions } from '@typexs/base-ng';
 import { IGridMode, K_PAGED, T_GRID_MODE } from '@typexs/base-ng/datatable/api/IGridMode';
 
 /**

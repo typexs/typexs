@@ -45,8 +45,7 @@ class CleanupTaskSpec {
           disableCache: true,
           paths: TestHelper.includePaths(),
           include: [
-            '**/@typexs{,/base}',
-            '**/packages{,/base}'
+            '**/@typexs{,/base}'
           ]
         },
         storage: { default: TEST_STORAGE_OPTIONS }

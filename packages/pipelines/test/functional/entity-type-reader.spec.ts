@@ -6,6 +6,7 @@ import {RuntimeLoader} from '@typexs/base';
 import {XS_LIBS_PIPELINE_PROCESSORS, XS_LIBS_PIPELINE_READERS} from '../../src';
 import {ClassRef, Entity} from '@allgemein/schema-api';
 import {get} from 'lodash';
+import { TestHelper } from '../../../server/test/functional/TestHelper';
 
 @Entity()
 export class DefinedEntity {
@@ -37,20 +38,25 @@ export class EntityTypeReaderSpec {
   async 'entity type reader - find by type'() {
     const registry = new PipelineRegistry();
     const loader = new RuntimeLoader({
-      appdir: __dirname + '/../..',
+      appdir: __dirname + '/module',
       disableCache: true,
+      paths: [
+        TestHelper.root(),
+        __dirname + '/../..',
+      ],
       libs: [
         {
           topic: XS_LIBS_PIPELINE_READERS,
           refs: [
+            'adapters/pipeline/readers/*',
             'src/adapters/pipeline/readers/*'
           ],
         },
         {
           topic: XS_LIBS_PIPELINE_PROCESSORS,
           refs: [
-            'src/adapters/pipeline/processors/*',
-            'test/functional/adapters/processors/*'
+            'adapters/pipeline/processors/*',
+            'src/adapters/pipeline/processors/*'
           ],
         }
       ]

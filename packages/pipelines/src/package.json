@@ -1,1 +1,45 @@
-../package.json
+{
+  "name": "@typexs/pipelines",
+  "version": "2.2.1-dev.22",
+  "main": "index",
+  "browser": "browser",
+  "scripts": {
+    "clean": "rm -rf ../build ../node_modules/.cache",
+    "test": "nyc mocha ../test/{**,**/**,**/**/**}/*.spec.ts",
+    "posttest": "nyc report --reporter=json",
+    "build": "node ../../../scripts/build.js"
+  },
+  "directories": {
+    "lib": "",
+    "test": "../test"
+  },
+  "dependencies": {
+    "sha1": "^1.1.1"
+  },
+  "peerDependencies": {
+    "@typexs/base": "^2.2.1-dev.22"
+  },
+  "devDependencies": {
+    "@typexs/base": "2.2.1-dev.30"
+  },
+  "typexs": {
+    "name": "pipelines",
+    "declareLibs": [
+      {
+        "topic": "adapters_pipeline_processors",
+        "refs": [
+          "src/adapters/pipeline/processors",
+          "adapters/pipeline/processors"
+        ]
+      },
+      {
+        "topic": "adapters_pipeline_readers",
+        "refs": [
+          "src/adapters/pipeline/readers",
+          "adapters/pipeline/readers"
+        ]
+      }
+    ]
+  },
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
+}

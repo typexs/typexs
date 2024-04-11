@@ -1,6 +1,6 @@
 import { keys, range } from 'lodash';
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
-import { IDatatableOptions, IGridApi, IGridColumn, ListViewComponent, SimpleHtmlTableComponent } from 'packages/base-ng/src';
+import { IDatatableOptions, IGridApi, IGridColumn, ListViewComponent, SimpleHtmlTableComponent } from '@typexs/base-ng';
 import { And, ExprDesc } from '@allgemein/expressions';
 import { IGridEvent } from '@typexs/base-ng/datatable/api/IGridEvent';
 import { K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';

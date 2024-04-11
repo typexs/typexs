@@ -16,7 +16,7 @@
     "json"
   ],
   "temp-dir": "/tmp/typexs/.nyc-output/notification",
-  "report-dir": "../../coverage/notification",
+  "report-dir": "../../../coverage/notification",
   "sourceMap": true,
   "instrument": true,
   "cache": false

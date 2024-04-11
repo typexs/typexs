@@ -36,14 +36,14 @@ const settingsTemplate: any = {
 
   modules: {
     paths: [
-      __dirname + '/../../../..'
+      TestHelper.root()
     ],
     disableCache: true,
     include: [
-      '**/packages/base**',
-      '**/packages/server**'
+      '**/@allgemein{,/eventbus}*',
+      '**/@typexs{,/base}*',
+      '**/@typexs{,/server}*'
     ]
-
   },
 
 

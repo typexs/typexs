@@ -16,7 +16,7 @@
     "json"
   ],
   "temp-dir": "/tmp/typexs/.nyc-output/entity",
-  "report-dir": "../../coverage/entity",
+  "report-dir": "../../../coverage/entity",
   "sourceMap": true,
   "instrument": true,
   "cache": false

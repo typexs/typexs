@@ -1,1 +1,48 @@
-../package.json
+{
+  "$schema": "../../node_modules/ng-packagr/package.schema.json",
+  "name": "@typexs/base-ng",
+  "version": "2.2.1-dev.29",
+  "description": "Angular for typexs",
+  "main": "public_api.ts",
+  "scripts": {
+    "clean": "rm -rf ../build ../node_modules/.cache",
+    "test": "ng test --code-coverage=true --watch=false",
+    "build": "ng build"
+  },
+  "directories": {
+    "doc": "docs/de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/typexs/typexs.git"
+  },
+  "author": "Robert Kania",
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "framework",
+    "commons",
+    "typescript",
+    "typexs"
+  ],
+  "bugs": {
+    "url": "https://gitlab.com/typexs/typexs/issues"
+  },
+  "homepage": "https://gitlab.com/typexs/typexs#readme",
+  "peerDependencies": {
+    "@typexs/base": "^2.2.1-dev.22",
+    "@typexs/ng": "^2.2.1-dev.13",
+    "@typexs/server": "^2.2.1-dev.13"
+  },
+  "devDependencies": {
+    "@angular/common": "v12-lts",
+    "@angular/core": "v12-lts",
+    "@angular/forms": "v12-lts",
+    "@angular/router": "v12-lts",
+    "@typexs/base": "2.2.1-dev.30",
+    "@typexs/ng": "2.2.1-dev.21",
+    "@typexs/server": "2.2.1-dev.21",
+    "rxjs": "6.6.7"
+  },
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
+}

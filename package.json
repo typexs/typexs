@@ -6,7 +6,6 @@
   "scripts": {
     "start": "npx concurrently \"cd packages/app && npx ng serve\" \"npx typexs server --nodeId server\"",
     "clean": "npx lerna run clean && npx lerna clean -y && rm node_modules -R",
-    "postinstall": "npx lerna link",
     "test": "npx lerna run test --concurrency=1",
     "build": "npx lerna run build  --concurrency=1",
     "fix-versions": "node scripts/fix-versions.js",
@@ -15,7 +14,7 @@
     "documentation:watch": "npx nodemon --watch docs -e adoc --exec npm run documentation -- docs/antora-playbook.yml"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*/src"
   ],
   "repository": {
     "type": "git",
@@ -122,7 +121,7 @@
     "karma-jasmine": "4.0.1",
     "karma-jasmine-html-reporter": "1.6.0",
     "ldapjs": "^2.3.3",
-    "lerna": "6.6.2",
+    "lerna": "8.1.2",
     "light-server": "2.9.1",
     "lodash": "4.17.21",
     "merge-stream": "2.0.0",

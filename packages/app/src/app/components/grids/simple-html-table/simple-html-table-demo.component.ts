@@ -1,6 +1,6 @@
 import { assign, keys, range } from 'lodash';
 import { ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { DatatableComponent, IDatatableOptions, IGridApi, IGridColumn, SimpleHtmlTableComponent } from 'packages/base-ng/src';
+import { DatatableComponent, IDatatableOptions, IGridApi, IGridColumn, SimpleHtmlTableComponent } from '@typexs/base-ng';
 import { And, ExprDesc } from '@allgemein/expressions';
 import { IGridEvent } from '@typexs/base-ng/datatable/api/IGridEvent';
 import { BehaviorSubject, Observable } from 'rxjs';

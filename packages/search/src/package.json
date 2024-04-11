@@ -1,1 +1,46 @@
-../package.json
+{
+  "name": "@typexs/search",
+  "version": "2.2.1-dev.24",
+  "description": "",
+  "main": "index",
+  "browser": "browser",
+  "scripts": {
+    "clean": "rm -rf ../build ../node_modules/.cache",
+    "test": "nyc mocha ../test/{**,**/**,**/**/**}/*.spec.ts",
+    "posttest": "nyc report --reporter=json",
+    "build": "node ../../../scripts/build.js"
+  },
+  "directories": {
+    "lib": "",
+    "test": "../test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@typexs/base": "2.2.1-dev.30",
+    "@typexs/entity": "2.2.1-dev.23",
+    "@typexs/pipelines": "2.2.1-dev.22",
+    "@typexs/roles-api": "2.2.1-dev.15"
+  },
+  "devDependencies": {
+    "@elastic/elasticsearch": "^7.15.0",
+    "@typexs/server": "2.2.1-dev.21",
+    "@typexs/storage": "2.2.1-dev.23"
+  },
+  "peerDependencies": {
+    "@elastic/elasticsearch": "^7.15.0"
+  },
+  "typexs": {
+    "name": "search",
+    "declareLibs": [
+      {
+        "topic": "index.types",
+        "refs": [
+          "adapters/storage/index/*IndexType.*",
+          "src/adapters/storage/index/*IndexType.*"
+        ]
+      }
+    ]
+  },
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
+}
