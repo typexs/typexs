@@ -184,7 +184,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
 
     // run ngOnInit if present
     this.ref().changeDetectorRef.detectChanges();
-    this.emitEvent('initialized');
+    // this.emitEvent('initialized');
   }
 
   ngOnDestroy(): void {

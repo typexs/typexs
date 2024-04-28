@@ -1,4 +1,4 @@
-<div class="query-view">
+<div class="query-view" *ngIf="isReady$ | async">
 
   <txs-free-query-input
     *ngIf="options.freeQueryBuilder"

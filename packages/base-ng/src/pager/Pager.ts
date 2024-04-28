@@ -147,10 +147,8 @@ export class Pager {
       this.emitter.filter(x => x.event === 'page_action').forEach(x => {
         x.emitter.emit(action);
       });
-      // this.emit('page_action', action);
-      // this.updateUrl(this.currentPage);
     } else {
-      if (nr !== this.currentPage) {
+      if (typeof this.currentPage === 'number' && nr !== this.currentPage) {
         throw new Error('pager is out of range ' + nr + ' of maxlines ' + this.totalPages);
       }
     }

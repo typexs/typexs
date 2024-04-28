@@ -2,6 +2,7 @@ import { IQueryParams } from './IQueryParams';
 import { IGridColumn } from './IGridColumn';
 import { ViewArray } from '../../lib/datanodes/ViewArray';
 import { IGridMode } from './IGridMode';
+import { BehaviorSubject } from 'rxjs';
 
 export interface IGridApi {
 
@@ -27,6 +28,8 @@ export interface IGridApi {
   setMaxRows(maxRows: number): void;
 
   getDataNodes(): ViewArray<any>;
+
+  getControl(): BehaviorSubject<any>;
 
   rebuild(): void;
 

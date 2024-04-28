@@ -2,7 +2,7 @@ import { BehaviorSubject, iif, Observable, of } from 'rxjs';
 import { Node } from './Node';
 import { IIndexSpan } from './IIndexSpan';
 import { K_DATA_UPDATE, K_FRAME_UPDATE, K_INITIAL, K_RESET, T_QUERY_CALLBACK, T_VIEW_ARRAY_STATES } from './Constants';
-import { concatMap, first, mergeMap, switchMap, toArray, last } from 'rxjs/operators';
+import { concatMap, first, mergeMap, switchMap, toArray, last, tap } from 'rxjs/operators';
 import { Log } from '../log/Log';
 import { K_INFINITE, K_PAGED, T_GRID_MODE } from '../../datatable/api/IGridMode';
 
@@ -372,6 +372,7 @@ export class ViewArray<T> {
     }
     return this._fn(startIdx, endIdx, limit)
       .pipe(
+        // tap(x => console.log(x)),
         switchMap((values: T[] & { $count: number }) => {
           if (Array.isArray(values)) {
             if (typeof values['$count'] === 'number') {
@@ -614,8 +615,6 @@ export class ViewArray<T> {
   doChangeSpan(start: number, end: number) {
     this.updateFramedPosition(start, end);
     const isReady = this.isFrameReady();
-    // this._pipeline.next(isReady);
-    // return this.pipeline$.pipe(last());
     return this._doChange(isReady);
   }
 
@@ -633,6 +632,7 @@ export class ViewArray<T> {
       obs = this.doFrameReload();
     }
     obs = obs.pipe(
+      // tap(x => console.log(x)),
       mergeMap(v => iif(() => isReady, of([]), this.doFrameReload())),
       concatMap(this.doPreload.bind(this)),
       concatMap(this.getFrameAsArray.bind(this)),

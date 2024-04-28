@@ -1,4 +1,4 @@
-<div class="list-view-container">
+<div class="list-view-container mode-{{this.options.mode}}">
 
   <txs-pager *ngIf="isPagerEnabled()"
              [name]="options.pagerId"
@@ -6,16 +6,19 @@
              (pageChange)="onPagerAction($event)">
   </txs-pager>
 
-  <div class="list-container">
-    <div class="row" *ngFor="let row of getValues() | async">
+  <div class="list-container"
+       [infiniteScroll]="true"
+       (onBottom)="onBottomReached($event)"
+  >
+    <div class="row" *ngFor="let node of getValues() | async">
       <div class="col-md-12">
-        <txs-view [instance]="row.data"
+        <txs-view [instance]="node.data"
                   [allowViewModeSwitch]="allowViewModeSwitch"
                   [mode]="viewMode"
                   [options]="options.viewOptions"
                   [passThrough]="passThrough">
           <div txsViewFallback>
-            <txs-simple-json [instance]="row.data"
+            <txs-simple-json [instance]="node.data"
                              [options]="options.viewOptions">
             </txs-simple-json>
           </div>

@@ -1,19 +1,11 @@
 import { ViewArray } from '@typexs/base-ng/lib/datanodes/ViewArray';
 import { range } from 'lodash';
 import { Observable, of } from 'rxjs';
-import {
-  K_DATA_UPDATE,
-  K_FRAME_UPDATE,
-  K_FRAMED,
-  K_INITIAL,
-  K_RESET,
-  K_TOP_FIXED,
-  T_VIEW_ARRAY_STATES
-} from '@typexs/base-ng/lib/datanodes/Constants';
+import { K_DATA_UPDATE, K_INITIAL, K_RESET, T_VIEW_ARRAY_STATES } from '@typexs/base-ng/lib/datanodes/Constants';
 import { XS_P_$COUNT } from '@typexs/base';
 import { K_INFINITE, K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';
-import { fakeAsync, tick } from '@angular/core/testing';
-import { filter, first, last, take } from 'rxjs/operators';
+import { fakeAsync } from '@angular/core/testing';
+import { first } from 'rxjs/operators';
 
 function genData(s: number, e: number) {
   return range(s, e).map(x => ({ idx: x, name: 'T ' + x }));

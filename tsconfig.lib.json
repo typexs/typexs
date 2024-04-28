@@ -13,6 +13,12 @@
       "@typexs/base/*": [
         "./packages/base/src/*"
       ],
+      "@typexs/base-ng/*": [
+        "./packages/base-ng/src/*"
+      ],
+      "@typexs/base-ng": [
+        "./packages/base-ng/src/public_api"
+      ],
       "@typexs/auth": [
         "./packages/auth/src/browser"
       ],
@@ -73,17 +79,11 @@
       "@typexs/distributed-storage/*": [
         "./packages/distributed-storage/src/*"
       ],
-      "@typexs/base-ng/*": [
-        "./packages/base-ng/src/*"
-      ],
       "@typexs/search": [
         "./packages/search/src/browser"
       ],
       "@typexs/search/*": [
         "./packages/search/src/*"
-      ],
-      "@typexs/base-ng": [
-        "./packages/base-ng/src/public_api"
       ],
       "@typexs/forms-ng/*": [
         "./packages/forms-ng/src/*"

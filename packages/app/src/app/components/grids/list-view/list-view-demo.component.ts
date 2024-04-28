@@ -3,7 +3,7 @@ import { Component, OnChanges, SimpleChanges } from '@angular/core';
 import { IDatatableOptions, IGridApi, IGridColumn, ListViewComponent, SimpleHtmlTableComponent } from '@typexs/base-ng';
 import { And, ExprDesc } from '@allgemein/expressions';
 import { IGridEvent } from '@typexs/base-ng/datatable/api/IGridEvent';
-import { K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';
+import { K_INFINITE, K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';
 
 
 function generateData(offset: number, limit: number) {
@@ -41,7 +41,8 @@ export class ListViewDemoComponent  {
   capturedEvent: IGridEvent = null;
 
   options: IDatatableOptions = {
-    mode: K_PAGED,
+    // mode: K_PAGED,
+    mode: K_INFINITE,
     pagerId: 'page',
     limit: 25,
     enablePager: true

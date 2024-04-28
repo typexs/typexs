@@ -23,6 +23,7 @@ export const methodKeys = [
   'setRows',
   'getMaxRows',
   'getColumns',
+  'getControl',
   'getRows',
   'supportedModes'
 ];

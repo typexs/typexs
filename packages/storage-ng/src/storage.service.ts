@@ -1,4 +1,4 @@
-import { get, isArray, set } from 'lodash';
+import { isArray } from 'lodash';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
@@ -26,7 +26,6 @@ import {
   IQueringService,
   STORAGE_REQUEST_MODE
 } from '@typexs/base-ng';
-import { C_RAW } from '@typexs/ng';
 
 @Injectable()
 export class StorageService extends AbstractQueryService implements IQueringService {

@@ -11,6 +11,8 @@ export const K_RESET = 'reset';
 
 export const K_INITIAL = 'initial';
 
+export const K_INITIALIZE = 'initialize';
+
 /**
  * States of view array
  */

@@ -19,14 +19,14 @@ import { DEFAULT_QUERY_OPTIONS, K_AGGREGATE, K_QUERY } from './Constants';
 import { AbstractGridComponent } from '../../datatable/api/abstract-grid.component';
 import { Helper } from './Helper';
 import { IQueryComponentApi } from './IQueryComponentApi';
-import { first, map } from 'rxjs/operators';
+import { filter, first, map } from 'rxjs/operators';
 import { IFindOptions } from './IFindOptions';
 import { LabelHelper, XS_P_$COUNT } from '@typexs/base';
 import { IQueryOptions } from './IQueryOptions';
 import { Log } from '../../lib/log/Log';
 import { IGridEvent } from '../../datatable/api/IGridEvent';
 import { Q_EVENT_TYPE_REBUILD, Q_EVENT_TYPE_REFRESH, Q_EVENT_TYPE_REQUERY } from '../../datatable/Constants';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 
 
 /**
@@ -85,7 +85,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
   error: any = null;
 
-  _isLoaded: boolean = false;
+  isReady$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   queringService: IQueringService;
 
@@ -154,7 +154,13 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
       // TODO handle if entity ref not found or loaded
       if (success) {
         this.initialiseColumns();
-        this._isLoaded = true;
+        this.isReady$.next(true);
+        setTimeout(() => {
+          this.datatable.emitInitialize();
+        });
+
+        // this.datatable.doInitialize();
+        // this.datatable.emitEvent('initialize', null);
         // api maybe not loaded
         // if (get(this.options, 'queryOnInit', true)) {
         //   setTimeout(() => {
@@ -200,7 +206,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
    * @param changes
    */
   ngOnChanges(changes: SimpleChanges) {
-    if (this._isLoaded) {
+    if (this.isReady$.getValue()) {
       if (changes['componentClass']) {
         this.datatable.gridReady.pipe(first()).subscribe(x => {
           if (x.event === Q_EVENT_TYPE_REBUILD) {
@@ -436,7 +442,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     return this.getQueryService().aggregate(this.getEntityName(), executeQuery, queryOptions);
   }
 
-  getQueryMode(){
+  getQueryMode() {
     return this.options.queryType === K_AGGREGATE ? K_AGGREGATE : K_QUERY;
   }
 
@@ -444,15 +450,19 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     const mode = this.getQueryMode();
 
     if (mode === K_QUERY) {
-      return this.doPlainQuery(this.datatable.api()).pipe(map(results => {
-        if (results) {
-          if (results.entities && has(results, XS_P_$COUNT) && isNumber(results.$count)) {
-            results.entities[XS_P_$COUNT] = results[XS_P_$COUNT];
-            return results.entities;
-          }
-        }
-        return [];
-      }));
+      return this.doPlainQuery(this.datatable.api())
+        .pipe(
+          filter(x => !(x === null || x === undefined)),
+          map(results => {
+            if (results) {
+              if (results.entities && has(results, XS_P_$COUNT) && isNumber(results.$count)) {
+                results.entities[XS_P_$COUNT] = results[XS_P_$COUNT];
+                return results.entities;
+              }
+            }
+            return [];
+          })
+        );
     } else {
       return this.doPlainAggregate(this.datatable.api()).pipe(map(results => {
         if (results) {
@@ -558,7 +568,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
   reset() {
     this.params.offset = 0;
     this.datatable.reset();
-    this._isLoaded = false;
+    this.isReady$.next(false);
     this.entityRef = undefined;
     this.error = undefined;
   }

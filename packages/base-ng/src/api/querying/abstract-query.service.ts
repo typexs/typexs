@@ -16,7 +16,7 @@ import {
   values
 } from 'lodash';
 import { IQueringService } from './IQueringService';
-import { BehaviorSubject, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import {
   IBuildOptions,
   IEntityRef,
@@ -72,7 +72,9 @@ export abstract class AbstractQueryService implements IQueringService {
     this._entityResolverService.registerService(this);
     this.options = defaults(options || {},
       <IQueryServiceOptions>{
-        allowedBuildKeys: [C_RAW, C_SKIP_BUILDS, C_CREATE_AND_COPY, C_SKIP_CLASS_NAMESPACE_INFO]
+        allowedBuildKeys: [
+          C_RAW, C_SKIP_BUILDS, C_CREATE_AND_COPY, C_SKIP_CLASS_NAMESPACE_INFO
+        ]
       });
     this.initialize();
 
@@ -596,7 +598,7 @@ export abstract class AbstractQueryService implements IQueringService {
 
 
   callApi(context: string | IRoutePointer, api: IApiCallOptions, resultHandle?: (x: any) => any) {
-    const obs = new BehaviorSubject<any>(null);
+    const obs = new Subject<any>();
     const observable = this._backend.callApi(context, api);
     observable.subscribe(
       value => {
@@ -606,12 +608,14 @@ export abstract class AbstractQueryService implements IQueringService {
         } else {
           obs.next(value);
         }
-        obs.complete();
+        // obs.complete();
       },
       error => {
         obs.error(error);
-        obs.complete();
-      });
+        // obs.complete();
+      },
+      () => obs.complete()
+    );
     return obs.asObservable();
   }
 

@@ -53,6 +53,7 @@ import { AbstractAggregateEmbeddedComponent } from './api/querying/abstract-aggr
 import { QueryEmbeddedComponent } from './component/query/query-embedded.component';
 import { AbstractComponent } from './component/abstract.component';
 import { AbstractCellComponent } from './datatable/simple-html-table/abstract-cell.component';
+import { InfiniteScrollDirective } from './datatable/scroll/infinite-scroll.directive';
 
 
 const PROVIDERS = [
@@ -82,6 +83,7 @@ const COMPONENTS = [
   EntityViewPageComponent,
   ViewDataComponent,
   ListViewComponent,
+  InfiniteScrollDirective,
   AbstractCellComponent,
   SimpleHtmlTableComponent,
   SimpleHtmlCellComponent,
