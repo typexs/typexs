@@ -77,8 +77,6 @@ describe('directive: infinite-scroll', () => {
      * Enter and leave scroll element
      */
     it('enter and leave scroll element', fakeAsync(() => {
-      // mouse entering table body enables scroll listener
-      // const scrollElement = directive.getScrollElement();
       component.onoff = true;
       fixture.detectChanges();
 
@@ -105,7 +103,7 @@ describe('directive: infinite-scroll', () => {
     /**
      * Scroll down
      */
-    fit('scroll down', fakeAsync(() => {
+    it('scroll down', fakeAsync(() => {
       // mouse entering table body enables scroll listener
       component.onoff = true;
       fixture.detectChanges();

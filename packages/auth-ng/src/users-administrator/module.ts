@@ -32,7 +32,7 @@ import { FormsModule as NgFormModule } from '@typexs/forms-ng';
     PermissionsRolesComponent
   ],
   // providers: PROVIDERS,
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  // schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class UserAdminModule {
 

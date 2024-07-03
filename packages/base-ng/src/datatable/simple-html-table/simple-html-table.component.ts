@@ -39,7 +39,7 @@ export class SimpleHtmlTableComponent extends AbstractGridComponent implements I
   }
 
 
-  supportedModes(): IGridMode[] {
+  supportedViewModes(): IGridMode[] {
     return [
       { name: K_VIEW, label: K_VIEW },
       { name: K_PAGED, label: K_PAGED }

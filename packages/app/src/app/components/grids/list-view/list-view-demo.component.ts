@@ -1,9 +1,10 @@
 import { keys, range } from 'lodash';
-import { Component, OnChanges, SimpleChanges } from '@angular/core';
-import { IDatatableOptions, IGridApi, IGridColumn, ListViewComponent, SimpleHtmlTableComponent } from '@typexs/base-ng';
+import { Component, ViewChild } from '@angular/core';
+import { DatatableComponent, IDatatableOptions, IGridApi, IGridColumn, ListViewComponent } from '@typexs/base-ng';
 import { And, ExprDesc } from '@allgemein/expressions';
 import { IGridEvent } from '@typexs/base-ng/datatable/api/IGridEvent';
-import { K_INFINITE, K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';
+import { IGridMode, K_INFINITE } from '@typexs/base-ng/datatable/api/IGridMode';
+import { of } from 'rxjs';
 
 
 function generateData(offset: number, limit: number) {
@@ -30,13 +31,19 @@ function generateData(offset: number, limit: number) {
   selector: 'list-view-demo',
   templateUrl: 'list-view-demo.component.html'
 })
-export class ListViewDemoComponent  {
+export class ListViewDemoComponent {
+
+  @ViewChild(DatatableComponent)
+  datatableComp: DatatableComponent;
 
   simpleTableComp = ListViewComponent;
 
   api: IGridApi;
 
-  maxRows: number = 20;
+  /**
+   * Set undefined for unknown end of infinite scroll
+   */
+  maxRows: number = undefined;
 
   capturedEvent: IGridEvent = null;
 
@@ -45,7 +52,10 @@ export class ListViewDemoComponent  {
     mode: K_INFINITE,
     pagerId: 'page',
     limit: 25,
-    enablePager: true
+    enablePager: true,
+    queryCallback: (start, end, limit) => {
+      return of(range(start, end + 1).map(x => ({ id: x, name: 'Text ' + x })));
+    }
   };
 
   columns: IGridColumn[] = [
@@ -63,10 +73,20 @@ export class ListViewDemoComponent  {
   ];
 
 
-  rows = generateData(0, 10);
+
+  rows: any[] = undefined;
+
+  viewModes: IGridMode[];
 
   optionsUpdated($event: any) {
     console.log($event);
+    // this.options = $event;
+    if($event._update && $event._update.key === 'mode'){
+      console.log('change mode');
+      this.datatableComp.setViewMode($event._update.value);
+    }else if($event._update && $event._update.key === 'limit'){
+      this.datatableComp.limit = $event._update.value;
+    }
   }
 
   update(key: string, v: any): void {
@@ -80,23 +100,22 @@ export class ListViewDemoComponent  {
   }
 
 
-  doQuery(api: IGridApi): void {
-    let generated = generateData(api.params.offset, api.params.limit);
-
-    if (api.params.filters) {
-      const _keys = keys(api.params.filters);
-      let filter: ExprDesc = null;
-      if (_keys.length > 1) {
-        filter = And(..._keys.map(x => api.params.filters[x]));
-      } else {
-        filter = api.params.filters[_keys.shift()];
-      }
-      const _filter = filter.lookup({});
-      generated = generated.filter(v => _filter(v));
-    }
-
-    api.setRows(generated);
-  }
+  // doQuery(api: IGridApi): void {
+  //   let generated = generateData(api.params.offset, api.params.limit);
+  //
+  //   if (api.params.filters) {
+  //     const _keys = keys(api.params.filters);
+  //     let filter: ExprDesc = null;
+  //     if (_keys.length > 1) {
+  //       filter = And(..._keys.map(x => api.params.filters[x]));
+  //     } else {
+  //       filter = api.params.filters[_keys.shift()];
+  //     }
+  //     const _filter = filter.lookup({});
+  //     generated = generated.filter(v => _filter(v));
+  //   }
+  //   api.setRows(generated);
+  // }
 
   /**
    *  Capture send event
@@ -110,5 +129,6 @@ export class ListViewDemoComponent  {
       data: event.data
     };
     this.api = event.api;
+    this.viewModes = this.api.supportedViewModes();
   }
 }

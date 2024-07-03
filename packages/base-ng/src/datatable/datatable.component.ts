@@ -21,6 +21,9 @@ import { Log } from '../lib/log/Log';
 import { ClassType, inputKeys, methodKeys, outputKeys } from './Constants';
 import { PagerService } from '../pager/PagerService';
 
+
+const K_COMP = 'component';
+
 /**
  * Wrapper component for different grid implementiations
  *
@@ -82,10 +85,6 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     return this.componentRef;
   }
 
-  // api() {
-  //   return this.ref().instance;
-  // }
-
 
   getGridComponent() {
     return this.ref().instance;
@@ -97,9 +96,9 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
    * @param changes
    */
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['component']) {
-      if (changes['component'].currentValue && !changes['component'].firstChange) {
-        this.applyLayout(changes['component'].currentValue);
+    if (changes[K_COMP]) {
+      if (changes[K_COMP].currentValue && !changes[K_COMP].firstChange) {
+        this.applyLayout(changes[K_COMP].currentValue);
         this.rebuild();
       }
     } else {
@@ -111,11 +110,15 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
             instance[key + 'Change'].emit(changes[key].currentValue);
           }
         }
-        // this.rebuild();
       }
     }
   }
 
+
+  /**
+   *
+   * @param component
+   */
   applyLayout(component: ClassType<AbstractGridComponent>) {
     this.vc.clear();
     this.component = component;
@@ -129,12 +132,10 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     // refer to parent
     this.componentRef.instance.parent = this;
 
-
     // apply default annotation pass
     const passInputs = uniq([].concat((this.options.passInputs || []), inputKeys));
     const passOutputs = uniq([].concat((this.options.passOutputs || []), outputKeys));
     const passMethods = uniq([].concat((this.options.passMethods || []), methodKeys));
-
 
     // TODO how to pass passing through input parameters
     // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -154,14 +155,6 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
           enumerable: true
         });
       }
-      // try {
-      //   const propDesc = Object.getOwnPropertyDescriptor(this, prop);
-      //   if (propDesc) {
-      //     // copy only if exists
-      //     Object.defineProperty(this.instance, prop, propDesc);
-      //   }
-      // } catch (e) {
-      // }
     }
 
     // passing through output eventemitter
@@ -184,7 +177,6 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
 
     // run ngOnInit if present
     this.ref().changeDetectorRef.detectChanges();
-    // this.emitEvent('initialized');
   }
 
   ngOnDestroy(): void {

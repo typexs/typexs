@@ -10,3 +10,15 @@ export function resolveNamespaces(jsonSchema: any) {
   });
   return uniq(namespaces);
 }
+
+
+export function convertStringToNumber(value: number | string): number {
+  if (typeof value === 'string') {
+    if (/^\d+$/.test(value)) {
+      value = parseInt(value, 10);
+    } else {
+      value = undefined;
+    }
+  }
+  return value as number;
+}

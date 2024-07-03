@@ -1,15 +1,16 @@
-<div class="list-view-container mode-{{this.options.mode}}">
+<div class="list-view-container mode-{{this.options.mode}}" *ngIf="isInitialized()">
+  <ng-container *ngTemplateOutlet="selectedTemplate()"></ng-container>
+</div>
 
+
+<ng-template #viewPaged viewTemplate="paged">
   <txs-pager *ngIf="isPagerEnabled()"
              [name]="options.pagerId"
              [pager]="getPager(false)"
              (pageChange)="onPagerAction($event)">
   </txs-pager>
 
-  <div class="list-container"
-       [infiniteScroll]="true"
-       (onBottom)="onBottomReached($event)"
-  >
+  <div class="list-container">
     <div class="row" *ngFor="let node of getValues() | async">
       <div class="col-md-12">
         <txs-view [instance]="node.data"
@@ -32,4 +33,31 @@
              [pager]="getPager(false)">
   </txs-pager>
 
-</div>
+</ng-template>
+
+
+<ng-template #viewInfinite viewTemplate="infinite">
+
+  <div class="list-container"
+       [infiniteScroll]="infiniteOnOff"
+       [refresh]="refresh"
+       (onBottom)="onBottomReached($event)"
+  >
+    <div class="row" *ngFor="let node of getValues() | async">
+      <div class="col-md-12">
+        <txs-view [instance]="node.data"
+                  [allowViewModeSwitch]="allowViewModeSwitch"
+                  [mode]="viewMode"
+                  [options]="options.viewOptions"
+                  [passThrough]="passThrough">
+          <div txsViewFallback>
+            <txs-simple-json [instance]="node.data"
+                             [options]="options.viewOptions">
+            </txs-simple-json>
+          </div>
+        </txs-view>
+      </div>
+    </div>
+  </div>
+
+</ng-template>

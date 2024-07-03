@@ -1,10 +1,11 @@
 import { BehaviorSubject, iif, Observable, of } from 'rxjs';
 import { Node } from './Node';
 import { IIndexSpan } from './IIndexSpan';
-import { K_DATA_UPDATE, K_FRAME_UPDATE, K_INITIAL, K_RESET, T_QUERY_CALLBACK, T_VIEW_ARRAY_STATES } from './Constants';
+import { K_$COUNT, K_DATA_UPDATE, K_FRAME_UPDATE, K_INITIAL, K_RESET, T_QUERY_CALLBACK, T_VIEW_ARRAY_STATES } from './Constants';
 import { concatMap, first, mergeMap, switchMap, toArray, last, tap } from 'rxjs/operators';
 import { Log } from '../log/Log';
 import { K_INFINITE, K_PAGED, T_GRID_MODE } from '../../datatable/api/IGridMode';
+import { isNumber } from 'lodash';
 
 
 const INIT_SPAN: IIndexSpan = {
@@ -112,21 +113,8 @@ export class ViewArray<T> {
    * @param x
    */
   private prefillLimit = 1000;
-  //
-  // private _pipeline = new BehaviorSubject<any>(undefined);
-  //
-  // private pipeline$: Observable<any>;
 
   constructor(...x: any[]) {
-    // this.pipeline$ = this._pipeline.pipe(
-    //   mergeMap(v => iif(() => v, of([]), this.doFrameReload())),
-    //   concatMap(this.doPreload.bind(this)),
-    //   concatMap(this.getFrameAsArray.bind(this)),
-    //   toArray(),
-    //   concatMap(this.passToValues.bind(this)),
-    //   toArray()
-    // );
-    //
     this.markAsInitial();
     if (x.length > 0) {
       this.push(...x);
@@ -275,21 +263,21 @@ export class ViewArray<T> {
     this._maxRows = maxRows;
   }
 
-  /**
-   * Create an empty node if no entry present
-   *
-   * @param from
-   * @param to
-   * @private
-   */
-  private fillWithEmptyNode(from: number, to: number) {
-    for (let i = from; i <= to; i++) {
-      const r = this.getNode(i);
-      if (!r) {
-        this.set(i, undefined);
-      }
-    }
-  }
+  // /**
+  //  * Create an empty node if no entry present
+  //  *
+  //  * @param from
+  //  * @param to
+  //  * @private
+  //  */
+  // private fillWithEmptyNode(from: number, to: number) {
+  //   for (let i = from; i <= to; i++) {
+  //     const r = this.getNode(i);
+  //     if (!r) {
+  //       this.set(i, undefined, true);
+  //     }
+  //   }
+  // }
 
   get limit(): number {
     return this._frame.range;
@@ -365,20 +353,20 @@ export class ViewArray<T> {
   /**
    * Execute callback an apply values
    */
-  doFetch(startIdx: number, endIdx: number, limit?: number) {
+  doFetch(boundries: IIndexSpan) {
     if (!this.hasNodeCallback()) {
       // Log.error('No callback for fetching node data defined.');
       return of([]);
     }
-    return this._fn(startIdx, endIdx, limit)
+    return this._fn(boundries.start, boundries.end, boundries.range)
       .pipe(
         // tap(x => console.log(x)),
         switchMap((values: T[] & { $count: number }) => {
           if (Array.isArray(values)) {
-            if (typeof values['$count'] === 'number') {
-              this.maxRows = values['$count'];
+            if (typeof values[K_$COUNT] === 'number') {
+              this.maxRows = values[K_$COUNT];
             }
-            this.applyFetchData(startIdx, values);
+            this.applyFetchData(boundries.start, values);
           }
           return values;
         }),
@@ -420,7 +408,7 @@ export class ViewArray<T> {
     if (dir === 'backward') {
       for (let i = endIdx; i >= startIdx; i--) {
         const node = this.getNode(i);
-        if (!node || node.data === undefined) {
+        if (!node || node.isEmpty()) {
           undefinedCount.push(i);
         }
       }
@@ -477,13 +465,15 @@ export class ViewArray<T> {
   }
 
   /**
-   * Check if all frame span data are loaded
+   * Check if all frame data is loaded for a given boundry - if not set take the currently applied
    */
-  isFrameReady() {
+  isFrameReady(boundries?: IIndexSpan) {
     if (this.hasNodeCallback() && !this.isCachingEnabled()) {
       return false;
     }
-    const boundries = this.getFrameBoundries();
+    if (!boundries) {
+      boundries = this.getFrameBoundries();
+    }
     const res = this.checkForUndefined(boundries.start, boundries.end);
     return res.length === 0;
   }
@@ -491,10 +481,64 @@ export class ViewArray<T> {
   /**
    * Frame reload
    */
-  doFrameReload() {
-    // this.updateFramedPosition();
-    const boundries = this.getFrameBoundries();
-    return this.doFetch(boundries.start, boundries.end, boundries.range);
+  doFrameReload(boundries?: IIndexSpan) {
+    if (!boundries) {
+      boundries = this.getFrameBoundries();
+    }
+    return this.doFetch(boundries);
+  }
+
+
+  private checkFrameBoundries(start?: number, end?: number, limit?: number): IIndexSpan {
+    const _limit = limit ? limit : this._frame.range;
+    let change = false;
+    let _start = this._frame.start;
+    let _end = this._frame.end;
+    if (typeof start === 'number') {
+      if (_start !== start) {
+        change = true;
+      }
+      _start = start;
+    }
+    if (typeof end === 'number') {
+      if (_end !== end) {
+        change = true;
+      }
+      _end = end;
+    } else {
+      end = _start + _limit - 1;
+      if (_end !== end) {
+        change = true;
+      }
+      _end = end;
+    }
+
+    if (typeof this.maxRows === 'number') {
+      if (_end >= this.maxRows - 1) {
+        _end = this.maxRows - 1;
+      }
+    }
+
+    if (_start > _end) {
+      // restore start
+      _start = _end - _limit + 1;
+    }
+
+    if (_start < 0) {
+      _start = 0;
+    }
+    if (_end < 0) {
+      _end = 0;
+    }
+
+    return { start: _start, end: _end, range: _limit, change: change };
+  }
+
+
+  private updateFrameBoundries(boundries: IIndexSpan) {
+    this._frame.start = boundries.start;
+    this._frame.end = boundries.end;
+    return boundries;
   }
 
   /**
@@ -505,27 +549,7 @@ export class ViewArray<T> {
    * @param limit
    //  */
   private updateFramedPosition(start?: number, end?: number, limit?: number) {
-    const _limit = limit ? limit : this._frame.range;
-    let change = false;
-    if (typeof start === 'number') {
-      if (this._frame.start !== start) {
-        change = true;
-      }
-      this._frame.start = start;
-    }
-    if (typeof end === 'number') {
-      if (this._frame.end !== end) {
-        change = true;
-      }
-      this._frame.end = end;
-    } else {
-      end = this._frame.start + _limit - 1;
-      if (this._frame.end !== end) {
-        change = true;
-      }
-      this._frame.end = end;
-    }
-    return this._frame;
+    return this.updateFrameBoundries(this.checkFrameBoundries(start, end, limit));
   }
 
   getFrameBoundries() {
@@ -544,15 +568,15 @@ export class ViewArray<T> {
     return this._loaded;
   }
 
-  /**
-   * Load nodes by navigation page number
-   *
-   * @param page
-   */
-  doFetchFrameByPage(page: number) {
-    this.setCurrentPage(page);
-    return this.doFrameReload();
-  }
+  // /**
+  //  * Load nodes by navigation page number
+  //  *
+  //  * @param page
+  //  */
+  // doFetchFrameByPage(page: number) {
+  //   const boundries = this.setCurrentPage(page);
+  //   return this.doFrameReload(boundries);
+  // }
 
   getCurrentPage() {
     return this._frame.start / this._frame.range + 1;
@@ -560,8 +584,10 @@ export class ViewArray<T> {
 
   setCurrentPage(page: number) {
     const startIdx = (page - 1) * this._frame.range;
-    this.updateFramedPosition(startIdx);
-    return this.isFrameReady();
+    // this.updateFramedPosition(startIdx);
+    const frameBoundries = this.checkFrameBoundries(startIdx);
+    frameBoundries.change = this.isFrameReady(frameBoundries);
+    return frameBoundries;
   }
 
   /**
@@ -571,28 +597,28 @@ export class ViewArray<T> {
     if (this.frameMode === K_PAGED) {
       return this.doChangePage(this.getCurrentPage());
     } else if (this.frameMode === K_INFINITE) {
-      this.checkFillEmptyNodes();
+      // this.checkFillEmptyNodes();
       return this.doChangeSpan(0, this._frame.range - 1);
     } else {
       // this.checkFillEmptyNodes();
-      return this.doChangeSpan(0, this._loaded.end);
+      return this.doChangeSpan(0, this.maxRows);
     }
     // throw new Error('unknown frame mode');
   }
 
 
-  /**
-   * Check if max rows is fully filled with empty nodes
-   */
-  checkFillEmptyNodes() {
-    if (this.length < this.maxRows) {
-      let endIdx = this.getLoadBoundries().end + this.prefillLimit;
-      if (endIdx >= this.maxRows) {
-        endIdx = this.maxRows - 1;
-      }
-      this.fillWithEmptyNode(this.getLoadBoundries().end + 1, endIdx);
-    }
-  }
+  // /**
+  //  * Check if max rows is fully filled with empty nodes
+  //  */
+  // checkFillEmptyNodes() {
+  //   if (this.length < this.maxRows) {
+  //     let endIdx = this.getLoadBoundries().end + this.prefillLimit;
+  //     if (endIdx >= this.maxRows) {
+  //       endIdx = this.maxRows - 1;
+  //     }
+  //     this.fillWithEmptyNode(this.getLoadBoundries().end + 1, endIdx);
+  //   }
+  // }
 
   /**
    * Change page process with observable return
@@ -600,10 +626,10 @@ export class ViewArray<T> {
    * @param page
    */
   doChangePage(page: number) {
-    const isReady = this.setCurrentPage(page);
+    const boundries = this.setCurrentPage(page);
     // this._pipeline.next(isReady);
     // return this.pipeline$;
-    return this._doChange(isReady);
+    return this._doChange(boundries);
   }
 
   /**
@@ -613,9 +639,10 @@ export class ViewArray<T> {
    * @param end
    */
   doChangeSpan(start: number, end: number) {
-    this.updateFramedPosition(start, end);
-    const isReady = this.isFrameReady();
-    return this._doChange(isReady);
+    // this.updateFramedPosition(start, end);
+    const frameBoundries = this.checkFrameBoundries(start, end);
+    frameBoundries.change = this.isFrameReady(frameBoundries);
+    return this._doChange(frameBoundries);
   }
 
   /**
@@ -624,16 +651,17 @@ export class ViewArray<T> {
    * @param isReady
    * @private
    */
-  private _doChange(isReady: boolean) {
+  private _doChange(boundries: IIndexSpan) {
     let obs = null;
-    if (isReady) {
+    this.updateFrameBoundries(boundries);
+    if (boundries.change) {
       obs = of([]);
     } else {
-      obs = this.doFrameReload();
+      obs = this.doFrameReload(boundries);
     }
     obs = obs.pipe(
       // tap(x => console.log(x)),
-      mergeMap(v => iif(() => isReady, of([]), this.doFrameReload())),
+      mergeMap(v => iif(() => boundries.change, of([]), this.doFrameReload(boundries))),
       concatMap(this.doPreload.bind(this)),
       concatMap(this.getFrameAsArray.bind(this)),
       toArray(),
@@ -651,12 +679,17 @@ export class ViewArray<T> {
     for (let i = boundries.start; i <= boundries.end; i++) {
       const idx = i - scale;
       const node = this.getNode(i);
-      copy[idx] = node;
+      if (node) {
+        copy[idx] = node;
+      }
     }
     return copy;
   }
 
 
+  /**
+   * Return only loaded elements
+   */
   getLoadedAsArray() {
     const boundries = this.getLoadBoundries();
     // const scale = boundries.start;
@@ -664,7 +697,9 @@ export class ViewArray<T> {
     for (let i = boundries.start; i <= boundries.end; i++) {
       // const idx = i - scale;
       const node = this.getNode(i);
-      copy[i] = node;
+      if (node && !node.isEmpty()) {
+        copy[i] = node;
+      }
     }
     return copy;
   }
@@ -716,7 +751,7 @@ export class ViewArray<T> {
     if (check === null) {
       return of([]);
     }
-    return this.doFetch(check.start, check.end);
+    return this.doFetch({ start: check.start, end: check.end });
   }
 
   setPrefetchLimit(prefetch: number) {

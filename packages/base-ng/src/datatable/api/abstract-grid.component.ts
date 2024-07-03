@@ -9,19 +9,12 @@ import { ViewArray } from '../../lib/datanodes/ViewArray';
 import { assign, defaults, isEmpty, isNumber } from 'lodash';
 import { PagerService } from '../../pager/PagerService';
 import { PagerAction } from '../../pager/PagerAction';
-import {
-  K_DATA_UPDATE,
-  K_FRAME_UPDATE,
-  K_INITIAL,
-  K_INITIALIZE,
-  K_RESET,
-  T_QUERY_CALLBACK,
-  T_VIEW_ARRAY_STATES
-} from '../../lib/datanodes/Constants';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
-import { IGridMode, K_PAGED, K_VIEW, T_GRID_MODE } from './IGridMode';
+import { K_DATA_UPDATE, T_QUERY_CALLBACK, T_VIEW_ARRAY_STATES } from '../../lib/datanodes/Constants';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { IGridMode, K_INITIAL, K_INITIALIZE, K_OPTIONS, K_PAGED, K_REBUILD, K_RESET, K_VIEW } from './IGridMode';
 import { Pager } from '../../pager/Pager';
-import { filter, first } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
+import { convertStringToNumber } from '../../lib/functions';
 
 
 @Component({
@@ -54,11 +47,11 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   private _gridControl$: BehaviorSubject<IGridEvent> = new BehaviorSubject<IGridEvent>(undefined);
 
   /**
+   * Variable marking initialization
    *
    * @private
    */
   private _initialized = false;
-  // private _ready$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   /**
    * Reference to parent / called component
@@ -69,7 +62,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
 
   private _changeRef: ChangeDetectorRef;
 
-  private _prevDataState : T_VIEW_ARRAY_STATES;
+  private _prevDataState: T_VIEW_ARRAY_STATES;
 
   @Input()
   get params(): IQueryParams {
@@ -105,6 +98,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   }
 
   set maxRows(rows: number) {
+    rows = convertStringToNumber(rows);
     this.setMaxRows(rows);
   }
 
@@ -112,20 +106,36 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   @Input()
   columns: IGridColumn[];
 
+
+  /**
+   * get/set predefined rows
+   */
+  private _initRows: any[] = undefined;
+
   @Input()
   get rows() {
-    return this.getRows();
+    if (this.isInitialized()) {
+      return this.getRows();
+    } else {
+      return this._initRows;
+    }
   }
 
   set rows(entries: any[]) {
-    this.setRows(entries);
+    if (Array.isArray(entries)) {
+      if (this.isInitialized()) {
+        this.setRows(entries);
+      } else {
+        this.getHandle()._initRows = entries;
+      }
+    }
   }
 
   /**
    * Return the current limit value
    */
   get limit(): number {
-    return this.params.limit;
+    return this.getDataNodes().limit;
   }
 
   /**
@@ -133,15 +143,18 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
    * @param limit
    */
   set limit(limit: number) {
-    this.params.limit = limit;
+    limit = convertStringToNumber(limit);
     this.getDataNodes().limit = limit;
+    if (this.isInitialized()) {
+      this.getControl().next({ event: K_OPTIONS, api: this.getGridComponent(), data: { limit: limit } });
+    }
   }
 
   /**
    * Return the current offset value
    */
   get offset(): number {
-    return this.params.offset;
+    return this.getDataNodes().offset;
   }
 
   /**
@@ -149,8 +162,12 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
    * @param limit
    */
   set offset(offset: number) {
-    this.params.offset = offset;
+    offset = convertStringToNumber(offset);
     this.getDataNodes().offset = offset;
+    if (this.isInitialized()) {
+      this.getControl().next({ event: K_OPTIONS, api: this.getGridComponent(), data: { offset: offset } });
+    }
+
   }
 
   @Output()
@@ -184,13 +201,41 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   construct() {
   }
 
+
+  getColumns(): IGridColumn[] {
+    return this.columns;
+  }
+
+  setColumns(columns: IGridColumn[]) {
+    this.columns = columns;
+  }
+
   /**
    * Return supported grid types, default returns only simple view mode
    */
-  supportedModes(): IGridMode[] {
+  supportedViewModes(): IGridMode[] {
     return [
       { name: K_VIEW, label: K_VIEW }
     ];
+  }
+
+  getViewMode(): string {
+    return this.options.mode;
+  }
+
+  setViewMode(viewMode: string) {
+    const viewModeSpec = this.supportedViewModes().find(x => x.name === viewMode);
+    if (viewModeSpec) {
+      if (this.options.mode !== viewMode) {
+        this.options.mode = viewMode;
+        this.getDataNodes().reset();
+        if (this.isInitialized()) {
+          this.getControl().next({ event: K_REBUILD, api: this.getGridComponent(), data: { viewMode: viewMode } });
+        }
+      }
+    } else {
+      throw new Error('Cant change view mode, cause its isnt defined.');
+    }
   }
 
   /**
@@ -208,11 +253,21 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   ngOnInit(): void {
     this.initialize();
     this._initialized = true;
-    if (this.getDataNodes().loadedLength > 0) {
-      // if nodes passed by rows do initialization
-      this.emitInitialize();
-    }
+    this.initRowsIfSet();
+    this.emitInitialize();
+  }
 
+
+  /**
+   * Initialized cached rows
+   * @private
+   */
+  private initRowsIfSet() {
+    const initRows = this.getHandle()._initRows;
+    if (this.isInitialized() && Array.isArray(initRows)) {
+      this.setRows(initRows);
+      this.getHandle()._initRows = undefined;
+    }
   }
 
 
@@ -250,7 +305,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
     this.applyOptions();
 
     // set mode
-    this.getDataNodes().setFrameMode(this.getGridModeName());
+    this.getDataNodes().setFrameMode(this.getViewMode());
     this.calcOffset();
     this.initPager();
     // this.calcPager();
@@ -264,17 +319,27 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
     this.subscriptions.push(subControl);
   }
 
+  /**
+   * Method to react on data node changes
+   *
+   * @param control
+   */
   onData(state: T_VIEW_ARRAY_STATES) {
-    if (!this._initialized) {
+    if (!this.isInitialized()) {
       // react only when already initialized
       return;
     }
     if (this._prevDataState === K_INITIAL && state === K_DATA_UPDATE) {
-      this.emitInitialize();
+      // this.emitInitialize();
     }
     this._prevDataState = state;
   }
 
+  /**
+   * Method to react on control commands
+   *
+   * @param control
+   */
   onControl(control: IGridEvent) {
     if (!control) {
       // abort on undefined
@@ -285,6 +350,9 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
       // following two calls are not registered in mapping so use getGridComponent for right object
       gridComp.calcPager();
       gridComp.doInitialize();
+      gridComp.emitEvent(K_INITIALIZE);
+    } else if (control.event === K_REBUILD || control.event === K_OPTIONS) {
+      this.rebuild(control);
     }
   }
 
@@ -298,24 +366,35 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
 
   doInitialize() {
     this.getDataNodes()
-      .doInitialize().pipe(first())
+      .doInitialize()
+      .pipe(first())
       .subscribe(this.onUpdate.bind(this));
+  }
+
+  isInitialized() {
+    return this._initialized;
   }
 
 
   /**
-   * rebuild
+   * Rebuild
    */
-  rebuild() {
-    this._changeRef.markForCheck();
-    this._changeRef.detectChanges();
-    this.applyOptions();
-    this.getDataNodes().setFrameMode(this.getGridModeName());
-    this.calcOffset();
-    this.initPager();
-    this.calcPager();
-    this.doInitialize();
-    this.emitEvent('rebuild');
+  rebuild(event?: IGridEvent) {
+    const gridComp = this.getGridComponent();
+    gridComp.applyOptions();
+    gridComp.getDataNodes().setFrameMode(this.getViewMode());
+    gridComp.calcOffset();
+    if (this.isPagerEnabled()) {
+      gridComp.initPager();
+      gridComp.calcPager();
+    }
+    gridComp.doInitialize();
+    if (event) {
+      gridComp.emitEvent(event.event);
+    } else {
+      gridComp.emitEvent(K_REBUILD);
+    }
+
   }
 
 
@@ -332,7 +411,6 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
     // if pager enabled get a pager object
     if (this.isPagerEnabled()) {
       this.getPager();
-      // this.pager.register('page_action', this.onPagerAction.bind(this));
     } else {
       this._pager = null;
       this.options.enablePager = false;
@@ -340,7 +418,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   }
 
   isPagerEnabled() {
-    return this.getGridModeName() === K_PAGED;
+    return this.getViewMode() === K_PAGED;
   }
 
   /**
@@ -399,23 +477,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
    * Return the grid mode interface
    */
   getGridMode() {
-    return this.supportedModes().find(x => x.name === this.getGridModeName());
-  }
-
-  /**
-   * Return grid row handling mode (@see GRID_MODE)
-   */
-  getGridModeName() {
-    return this.options?.mode;
-  }
-
-  /**
-   * Set grid mode name
-   *
-   * @param name
-   */
-  setGridModeName(name: string | T_GRID_MODE) {
-    this.options.mode = name;
+    return this.supportedViewModes().find(x => x.name === this.getViewMode());
   }
 
 
@@ -436,19 +498,12 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
     if (this.parent) {
       this.parent.setDataNodes(nodes);
     } else {
-      const dn = this._dataNodes;
+      const dn = this._dataNodes; // etDataNodes();
       dn.reset();
       // following two calls are passed by mapping to underlying component
       this.maxRows = nodes.length;
       this.limit = this.options?.limit;
       dn.push(...nodes);
-      // try {
-      //   const gridComp = this.getGridComponent();
-      //   // following two calls are not registered in mapping so use getGridComponent for right object
-      //   gridComp.calcPager();
-      //   gridComp.doInitialize();
-      // } catch (e) {
-      // }
     }
   }
 
@@ -507,8 +562,16 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
    * @param maxRows
    */
   setMaxRows(maxRows: number) {
-    this.getDataNodes().maxRows = maxRows;
+    const pre = this.getDataNodes().maxRows;
+    if (pre !== maxRows) {
+      this.getDataNodes().reset();
+      this.getDataNodes().maxRows = maxRows;
+      if (this.isInitialized()) {
+        this.getControl().next({ event: K_REBUILD, api: this.getGridComponent(), data: { rows: maxRows } });
+      }
+    }
   }
+
 
   /**
    * TODO
@@ -517,17 +580,8 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   calcOffset() {
     const maxRows = this.getMaxRows();
     if (maxRows < this.limit) {
-      this.offset = 0;
+      this.getDataNodes().offset = 0;
     }
-  }
-
-
-  getColumns(): IGridColumn[] {
-    return this.columns;
-  }
-
-  setColumns(columns: IGridColumn[]) {
-    this.columns = columns;
   }
 
 
@@ -542,11 +596,17 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
     this.gridReady.emit(event);
   }
 
+  /**
+   * Return the main data object
+   */
+  getHandle() {
+    return this.parent ? this.parent : this;
+  }
 
   calcPager() {
     if (this.isPagerEnabled() && this.hasPager()) {
       if (this.params && isNumber(this.maxRows) && isNumber(this.limit)) {
-        if (!this.params.offset) {
+        if (typeof this.offset !== 'number') {
           this.offset = 0;
           this.paramsChange.emit(this.params);
         }
@@ -569,7 +629,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
     this.offset = 0;
     this.getDataNodes().reset();
     this.restPager();
-    this.emitEvent('reset');
+    this.emitEvent(K_RESET);
   }
 
   ngOnDestroy(): void {

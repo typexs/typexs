@@ -32,7 +32,7 @@ const COMPONENTS = [
   entryComponents: [],
   exports: COMPONENTS,
   providers: [],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  // schemas: [CUSTOM_ELEMENTS_SCHEMA]
 
 })
 export class SearchModule {

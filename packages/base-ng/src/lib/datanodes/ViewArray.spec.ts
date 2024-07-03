@@ -1,9 +1,9 @@
-import { ViewArray } from '@typexs/base-ng/lib/datanodes/ViewArray';
+import { ViewArray } from './ViewArray';
 import { range } from 'lodash';
 import { Observable, of } from 'rxjs';
-import { K_DATA_UPDATE, K_INITIAL, K_RESET, T_VIEW_ARRAY_STATES } from '@typexs/base-ng/lib/datanodes/Constants';
+import { K_DATA_UPDATE, K_INITIAL, K_RESET, T_VIEW_ARRAY_STATES } from './Constants';
 import { XS_P_$COUNT } from '@typexs/base';
-import { K_INFINITE, K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';
+import { K_INFINITE, K_PAGED } from './../../datatable/api/IGridMode';
 import { fakeAsync } from '@angular/core/testing';
 import { first } from 'rxjs/operators';
 
@@ -20,7 +20,7 @@ function waitForObs(obs: Observable<any>): Promise<any[]> {
 }
 
 /**
- *
+ * Test for ViewArray object handling data
  */
 describe('ViewArray', () => {
   let nodes: ViewArray<any>;
@@ -33,14 +33,12 @@ describe('ViewArray', () => {
   /**
    * Add data manuell
    */
-  it('add data to the end manually', () => {
+  it('push data to the end of array manually', () => {
     const data = genData(0, 1);
     nodes.push(...data);
-    // // add single node
-    // nodes.applyFetchData(0, range(0, 1).map(x => ({ idx: x, name: 'T ' + x })));
     expect(nodes).toHaveSize(1);
     const arr = nodes.asArray();
-    expect(arr).toEqual(genData(0, 1));
+    expect(arr).toEqual(data);
   });
 
 
@@ -105,6 +103,34 @@ describe('ViewArray', () => {
   //   expect(state).toEqual(K_FRAME_UPDATE);
   // }));
 
+
+  /**
+   * Check update frame impl.
+   */
+  it('check frame position', fakeAsync(() => {
+    let change = nodes['updateFramedPosition'](0, 10);
+    expect(change).toEqual({ start: 0, end: 10, range: 25, change: true });
+    delete change['change'];
+    expect(change).toEqual(nodes.getFrameBoundries());
+
+    change = nodes['updateFramedPosition'](10, 0);
+    expect(change).toEqual({ start: 0, end: 0, range: 25, change: true });
+    delete change['change'];
+    expect(change).toEqual(nodes.getFrameBoundries());
+
+    nodes.maxRows = 5;
+    change = nodes['updateFramedPosition'](0, 10);
+    expect(change).toEqual({ start: 0, end: 4, range: 25, change: true });
+    delete change['change'];
+    expect(change).toEqual(nodes.getFrameBoundries());
+
+    change = nodes['updateFramedPosition'](10, 0);
+    expect(change).toEqual({ start: 0, end: 0, range: 25, change: true });
+    delete change['change'];
+    expect(change).toEqual(nodes.getFrameBoundries());
+  }));
+
+
   /**
    * TODO: insert data on specific position manually
    */
@@ -133,7 +159,7 @@ describe('ViewArray', () => {
     /**
      * Load initial nodes
      */
-    it('load initial nodes', async () => {
+    it('load nodes', async () => {
       const obs = nodes.doChangeSpan(0, 24);
       const res = await waitForObs(obs);
       const frame = nodes.getFrameBoundries();
@@ -144,9 +170,9 @@ describe('ViewArray', () => {
     });
 
     /**
-     * Load nodes in infinite mode
+     * Load nodes multiple times in parallel processing
      */
-    it('load nodes parallel', async () => {
+    it('load nodes multiple times parallel', async () => {
       const startIdxs = range(0, 200, 20);
 
       const promise = [];
@@ -167,6 +193,33 @@ describe('ViewArray', () => {
       const data = nodes.getLoadedAsArray();
       expect(data).toHaveSize(205);
       expect(data.map(x => x.data)).toEqual(genData(0, 205));
+    });
+
+
+    /**
+     * Set load limit by maxRows
+     */
+    it('load nodes till maxRows reached', async () => {
+      nodes.maxRows = 100;
+      const startIdxs = range(0, 200, 20);
+      const promise = [];
+      while (startIdxs.length > 0) {
+        const s = startIdxs.shift();
+        const obs = nodes.doChangeSpan(s, s + 25 - 1);
+        promise.push(waitForObs(obs));
+      }
+
+      await Promise.all(promise);
+
+      const frame = nodes.getFrameBoundries();
+      expect(frame).toEqual({ start: 75, end: 99, range: 25 });
+
+      const loaded = nodes.getLoadBoundries();
+      expect(loaded).toEqual({ start: 0, end: 99, range: 25 });
+
+      const data = nodes.getLoadedAsArray();
+      expect(data).toHaveSize(100);
+      expect(data.map(x => x.data)).toEqual(genData(0, 100));
     });
 
   });
@@ -219,7 +272,7 @@ describe('ViewArray', () => {
 
       let page = nodes.getCurrentPage();
       expect(page).toEqual(1);
-      obs = nodes.doFetchFrameByPage(page + 1);
+      obs = nodes.doChangePage(page + 1);
       res = await waitForObs(obs);
 
       page = nodes.getCurrentPage();
@@ -245,12 +298,14 @@ describe('ViewArray', () => {
       expect(nodes.getFrameBoundries()).toEqual({ start: 0, end: 0, range: 25 });
 
       let okay = nodes.setCurrentPage(1);
+      nodes['updateFrameBoundries'](okay);
       expect(nodes.isFrameReady()).toBeTrue();
       expect(nodes.getFrameBoundries()).toEqual({ start: 0, end: 24, range: 25 });
       let arr = nodes.getFrameAsArray().map(x => x.data);
       expect(arr).toEqual(genData(0, 25));
 
       okay = nodes.setCurrentPage(2);
+      nodes['updateFrameBoundries'](okay);
       expect(nodes.isFrameReady()).toBeTrue();
       expect(nodes.getFrameBoundries()).toEqual({ start: 25, end: 49, range: 25 });
       arr = nodes.getFrameAsArray().map(x => x.data);

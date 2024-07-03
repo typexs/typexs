@@ -1,17 +1,18 @@
 import { Observable } from 'rxjs';
 
-export const K_TOP_FIXED = 'top-fixed';
-export const K_FRAMED = 'framed';
+// export const K_TOP_FIXED = 'top-fixed';
+// export const K_FRAMED = 'framed';
 
 
 export const K_DATA_UPDATE = 'data-update';
 export const K_FRAME_UPDATE = 'frame-update';
 
+export const K_REBUILD = 'rebuild';
 export const K_RESET = 'reset';
-
 export const K_INITIAL = 'initial';
 
 export const K_INITIALIZE = 'initialize';
+export const K_$COUNT = '$count';
 
 /**
  * States of view array

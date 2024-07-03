@@ -6,6 +6,14 @@ export class IGridMode {
 export const K_PAGED = 'paged';
 export const K_INFINITE = 'infinite';
 export const K_VIEW = 'view';
+
+
+export const K_INITIAL = 'initial';
+export const K_REBUILD = 'rebuild';
+export const K_OPTIONS = 'options';
+export const K_RESET = 'reset';
+export const K_INITIALIZE = 'initialize';
+
 /**
  * - paged - a pager will be integrated in the view
  * - infinite - an infinite scoll with reload on page bottom reach

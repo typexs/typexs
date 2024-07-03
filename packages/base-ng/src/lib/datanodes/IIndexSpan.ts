@@ -5,5 +5,6 @@ export interface IIndexSpan {
 
   range?: number;
 
+  change?: boolean;
   // limit?: number;
 }

@@ -1,12 +1,12 @@
-import { get, set } from 'lodash';
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { AbstractGridComponent } from '../api/abstract-grid.component';
 import { PagerService } from '../../pager/PagerService';
-import { IGridColumn } from '../api/IGridColumn';
-import { Eq, ExprDesc, Like, Value, ValueDesc } from '@allgemein/expressions';
 import { IDatatableListGridOptions } from './IDatatableListGridOptions';
-import { IGridMode, K_INFINITE, K_PAGED, K_VIEW } from '../api/IGridMode';
-import { Log } from '../../lib/log/Log';
+import { IGridMode, K_INFINITE, K_OPTIONS, K_PAGED, K_VIEW } from '../api/IGridMode';
+import { TemplateDirective } from '../Template.directive';
+import { filter } from 'rxjs/operators';
+import { InfiniteScrollDirective } from '../infinite-scroll/infinite-scroll.directive';
+import { IGridEvent } from '../api/IGridEvent';
 
 
 @Component({
@@ -16,10 +16,9 @@ import { Log } from '../../lib/log/Log';
 })
 export class ListViewComponent extends AbstractGridComponent {
 
+  @ViewChildren(TemplateDirective)
+  templateRefs: QueryList<TemplateDirective>;
 
-  filterOpened: string = null;
-
-  filterValue: any = null;
 
   @Input()
   allowViewModeSwitch: boolean = true;
@@ -30,14 +29,42 @@ export class ListViewComponent extends AbstractGridComponent {
   @Input()
   options: IDatatableListGridOptions;
 
+  infiniteOnOff: boolean = true;
+
+  refresh: boolean;
+
+  private _selectedTemplateName: string = null;
+  private _selectedTemplate: TemplateRef<any>;
+
   constructor(
     public pagerService: PagerService,
     public changeRef: ChangeDetectorRef
   ) {
     super(pagerService, changeRef);
+    this.gridReady.subscribe(x => this.onGridReady(x));
   }
 
-  supportedModes(): IGridMode[] {
+  // ngOnInit() {
+  //   super.ngOnInit();
+  //
+  // }
+
+  onGridReady(x: IGridEvent) {
+    if (x.event === K_OPTIONS && x.api.getViewMode() === K_INFINITE) {
+      this.refresh = false;
+    }
+  }
+
+  setViewMode(viewMode: string) {
+    if (viewMode === K_INFINITE) {
+      this.infiniteOnOff = true;
+    } else {
+      this.infiniteOnOff = false;
+    }
+    super.setViewMode(viewMode);
+  }
+
+  supportedViewModes(): IGridMode[] {
     return [
       { name: K_VIEW, label: K_VIEW },
       { name: K_PAGED, label: K_PAGED },
@@ -46,94 +73,36 @@ export class ListViewComponent extends AbstractGridComponent {
   }
 
 
-  onBottomReached($event: any){
-    Log.info('asd');
+  selectedTemplate() {
+    const gridMode = this.getViewMode();
+    if (this._selectedTemplateName !== gridMode || !this._selectedTemplate) {
+      this._selectedTemplateName = gridMode;
+      this._selectedTemplate = this.getTemplate(gridMode);
+      // this.changeRef.markForCheck();
+    }
+    return this._selectedTemplate;
   }
 
-  // isSorted(column: IGridColumn, sort: 'asc' | 'desc' | 'none') {
-  //   if (!column.sorting) {
-  //     return false;
-  //   }
-  //
-  //   const _sort = get(this.params.sorting, column.field);
-  //   if (!_sort && sort === 'none') {
-  //     return true;
-  //   } else if (_sort === sort) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
-  //
-  //
-  // doSort(column: IGridColumn) {
-  //   if (!this.params.sorting) {
-  //     this.params.sorting = {};
-  //   }
-  //   const _sort = get(this.params.sorting, column.field);
-  //   if (_sort) {
-  //     if (_sort === 'asc') {
-  //       set(this.params.sorting, column.field, 'desc');
-  //     } else {
-  //       delete this.params.sorting[column.field];
-  //     }
-  //   } else {
-  //     set(this.params.sorting, column.field, 'asc');
-  //   }
-  //   this.paramsChange.emit(this.params);
-  //   this.doQuery.emit(this);
-  // }
-  //
-  //
-  // openFilter(column: IGridColumn) {
-  //   this.filterOpened = column.field;
-  //   const filter: ExprDesc = get(this.params.filters, column.field);
-  //   if (filter) {
-  //     this.filterValue = filter.value instanceof ValueDesc ? filter.value.value : filter.value;
-  //   } else {
-  //     this.filterValue = null;
-  //   }
-  // }
-  //
-  //
-  // closeFilter(column: IGridColumn) {
-  //   if (!this.params.filters) {
-  //     this.params.filters = {};
-  //   }
-  //   if (this.filterValue) {
-  //
-  //     let value: any = null;
-  //     switch (column.filterDataType) {
-  //       case 'date':
-  //         value = new Date(this.filterValue);
-  //         break;
-  //       case 'double':
-  //         value = parseFloat(this.filterValue);
-  //         break;
-  //       case 'number':
-  //         value = parseInt(this.filterValue, 10);
-  //         break;
-  //       default:
-  //         value = this.filterValue;
-  //     }
-  //
-  //     switch (column.filterType) {
-  //       case 'contains':
-  //         set(this.params.filters, column.field, Like(column.field, Value(value)));
-  //         break;
-  //       case 'suggest':
-  //       case 'equal':
-  //       default:
-  //         set(this.params.filters, column.field, Eq(column.field, Value(value)));
-  //         break;
-  //     }
-  //   } else {
-  //     delete this.params.filters[column.field];
-  //   }
-  //   this.paramsChange.emit(this.params);
-  //   this.filterOpened = null;
-  //   this.doQuery.emit(this);
-  // }
+  getTemplate(templateName: string): TemplateRef<any> {
+    if (this.templateRefs) {
+      return this.templateRefs
+        .toArray()
+        .find(x => x.name.toLowerCase() === templateName.toLowerCase()).template;
+    } else {
+      return null;
+    }
+  }
 
 
-  // protected readonly K_INFINITE = K_INFINITE;
+  onBottomReached($event: any) {
+    const boundries = this.getDataNodes().getFrameBoundries();
+    console.log('asd', boundries);
+    const start = boundries.end;
+    const end = start + boundries.range;
+    this.getDataNodes().doChangeSpan(start, end).subscribe(x => {
+      console.log('fetched');
+    });
+
+    // this.getDataNodes().
+  }
 }

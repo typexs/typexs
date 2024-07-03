@@ -1,10 +1,8 @@
-import { assign, keys, range } from 'lodash';
+import { assign, range } from 'lodash';
 import { ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { DatatableComponent, IDatatableOptions, IGridApi, IGridColumn, SimpleHtmlTableComponent } from '@typexs/base-ng';
-import { And, ExprDesc } from '@allgemein/expressions';
 import { IGridEvent } from '@typexs/base-ng/datatable/api/IGridEvent';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { GRID_MODES, IGridMode, K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';
+import { IGridMode, K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';
 
 
 function generateData(offset: number, limit: number) {
@@ -41,7 +39,7 @@ export class SimpleHtmlTableDemoComponent implements OnInit, OnChanges {
 
   api: IGridApi;
 
-  maxRows: number = 0;
+  maxRows: number = 200;
 
 
   capturedEvent: IGridEvent = null;
@@ -50,8 +48,7 @@ export class SimpleHtmlTableDemoComponent implements OnInit, OnChanges {
     mode: K_PAGED,
     pagerId: 'page',
     limit: 10,
-    enablePager: true,
-    maxRows: 200
+    enablePager: true
   };
 
   columns: IGridColumn[] = [
@@ -145,7 +142,7 @@ export class SimpleHtmlTableDemoComponent implements OnInit, OnChanges {
       data: event.data
     };
     this.api = event.api;
-    this.viewModes = this.api.supportedModes();
+    this.viewModes = this.api.supportedViewModes();
     // this.frameBoundries = this.api.getDataNodes().getFrameBoundries();
     // this.loadBoundries = this.api.getDataNodes().getLoadBoundries();
     // this.api.getDataNodes().getState().subscribe(x => {

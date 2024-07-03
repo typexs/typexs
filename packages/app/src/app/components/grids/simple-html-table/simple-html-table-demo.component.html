@@ -1,8 +1,9 @@
-<h5>Simple HTML Table over Datatable</h5>
+<h5>Simple HTML Table</h5>
 
 <datatable-options
   [options]="options"
   [viewModes]="viewModes"
+  [(maxRows)]="maxRows"
   (optionsChange)="onOptionsUpdate($event)">
 </datatable-options>
 

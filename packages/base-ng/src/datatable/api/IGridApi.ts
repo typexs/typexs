@@ -8,12 +8,22 @@ export interface IGridApi {
 
   params: IQueryParams;
 
-  // doInitialize(): void;
-
   /**
    * Which internal modes are supported by this grid type
    */
-  supportedModes(): IGridMode[];
+  supportedViewModes(): IGridMode[];
+
+  /**
+   * Return the current view mode
+   */
+  getViewMode(): string;
+
+  /**
+   * Set the current view mode
+   *
+   * @param viewMode
+   */
+  setViewMode(viewMode: string): void;
 
   getColumns(): IGridColumn[];
 

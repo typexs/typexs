@@ -7,7 +7,8 @@ export const inputKeys = [
   'columns',
   'maxRows',
   'rows',
-  'limit'
+  'limit',
+  'offset'
 ];
 
 export const outputKeys = [
@@ -18,14 +19,17 @@ export const outputKeys = [
 
 export const methodKeys = [
   'rebuild',
-  'setMaxRows',
-  'setColumns',
-  'setRows',
+  'isInitialized',
   'getMaxRows',
+  'setMaxRows',
   'getColumns',
+  'setColumns',
   'getControl',
   'getRows',
-  'supportedModes'
+  'setRows',
+  'getViewMode',
+  'setViewMode',
+  'supportedViewModes'
 ];
 
 /**

@@ -53,7 +53,8 @@ import { AbstractAggregateEmbeddedComponent } from './api/querying/abstract-aggr
 import { QueryEmbeddedComponent } from './component/query/query-embedded.component';
 import { AbstractComponent } from './component/abstract.component';
 import { AbstractCellComponent } from './datatable/simple-html-table/abstract-cell.component';
-import { InfiniteScrollDirective } from './datatable/scroll/infinite-scroll.directive';
+import { InfiniteScrollDirective } from './datatable/infinite-scroll/infinite-scroll.directive';
+import { TemplateDirective } from './datatable/Template.directive';
 
 
 const PROVIDERS = [
@@ -82,6 +83,7 @@ const COMPONENTS = [
   JsonComponent,
   EntityViewPageComponent,
   ViewDataComponent,
+  TemplateDirective,
   ListViewComponent,
   InfiniteScrollDirective,
   AbstractCellComponent,
@@ -124,7 +126,7 @@ const COMPONENTS = [
   ],
   exports: COMPONENTS,
   providers: PROVIDERS,
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  // schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class BaseModule {
 

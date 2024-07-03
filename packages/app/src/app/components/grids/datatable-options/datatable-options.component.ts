@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { DatatableComponent, IDatatableOptions } from '@typexs/base-ng';
 import { IGridMode, K_PAGED, T_GRID_MODE } from '@typexs/base-ng/datatable/api/IGridMode';
+import { cloneDeep } from 'lodash';
 
 /**
  * Component allowing configure options
@@ -17,17 +18,21 @@ export class DatatableOptionsComponent implements OnInit {
     mode: K_PAGED,
     pagerId: 'page',
     limit: 10,
-    enablePager: true,
-    maxRows: 200
+    enablePager: true
   };
+
+  @Input()
+  maxRows: number = undefined;
+  @Output()
+  maxRowsChange: EventEmitter<number> = new EventEmitter();
+
 
   @Input()
   viewModes: IGridMode[];
 
   @Output()
-  optionsChange = new EventEmitter<IDatatableOptions>();
+  optionsChange = new EventEmitter<IDatatableOptions & { _update: any }>();
 
-  // modeValues: { key: T_GRID_MODE }[] = [{ key: 'paged' }, { key: 'infinite' }, { key: 'view' }];
 
   ngOnInit() {
     this.update();
@@ -38,8 +43,10 @@ export class DatatableOptionsComponent implements OnInit {
     return this.viewModes;
   }
 
-  update() {
-    this.optionsChange.emit(this.options);
+  update(key?: string, value?: any) {
+    const options = Object.assign(cloneDeep(this.options), { _update: { key: key, value: value } });
+
+    this.optionsChange.emit(options);
   }
 
   updateLimit(nr: string) {
@@ -48,20 +55,13 @@ export class DatatableOptionsComponent implements OnInit {
     }
     try {
       this.options.limit = parseInt(nr, 10);
-      this.update();
+      this.update('limit', nr);
     } catch (e) {
     }
   }
 
 
   updateRows($event: any) {
-    if (!/\d+/.test($event)) {
-      return;
-    }
-    const pre = parseInt($event, 10);
-    if (this.options.maxRows !== pre) {
-      this.options.maxRows = pre;
-      this.update();
-    }
+    this.maxRowsChange.emit($event);
   }
 }

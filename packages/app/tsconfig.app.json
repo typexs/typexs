@@ -2,24 +2,34 @@
   "extends": "./../../tsconfig.json",
   "compilerOptions": {
     "outDir": "build/app",
+    "sourceMap": true,
     "types": [
       "node"
     ],
     "paths": {
-      "react-native-sqlite-storage": [
-        "./src/dummy.ts"
-      ],
       "@typexs/base": [
         "./packages/base/src/browser"
       ],
       "@typexs/base/*": [
         "./packages/base/src/*"
       ],
+      "@typexs/base-ng/*": [
+        "./packages/base-ng/src/*"
+      ],
+      "@typexs/base-ng": [
+        "./packages/base-ng/src/public_api"
+      ],
       "@typexs/storage": [
         "./packages/storage/src/browser"
       ],
       "@typexs/storage/*": [
         "./packages/storage/src/*"
+      ],
+      "@typexs/storage-ng/*": [
+        "./packages/storage-ng/src/*"
+      ],
+      "@typexs/storage-ng": [
+        "./packages/storage-ng/src/public_api"
       ],
       "@typexs/auth": [
         "./packages/auth/src/browser"
@@ -57,31 +67,18 @@
       "@typexs/roles/*": [
         "./packages/roles/src/*"
       ],
-      "@typexs/base-ng/*": [
-        "./packages/base-ng/src/*"
-      ],
-      "@typexs/base-ng": [
-        "./packages/base-ng/src/public_api"
-      ],
-      "@typexs/storage-ng/*": [
-        "./packages/storage-ng/src/"
-      ],
-      "@typexs/storage-ng": [
-        "./packages/storage-ng/src/public_api"
-      ],
       "@typexs/search/*": [
-        "./packages/search/src/"
+        "./packages/search/src/*"
       ],
       "@typexs/search": [
         "./packages/search/src/browser"
       ],
       "@typexs/search-ng/*": [
-        "./packages/search-ng/src/"
+        "./packages/search-ng/src/*"
       ],
       "@typexs/search-ng": [
         "./packages/search-ng/src/public_api"
       ],
-
       "@typexs/ng-router-menu/*": [
         "./packages/ng-router-menu/src/*"
       ],
@@ -135,7 +132,10 @@
   "include": [
     "src/polyfills.ts",
     "src/main.ts",
-    "src/dummy.ts"
+//    "src/dummy.ts"
+  ],
+  "exclude": [
+    "node_modules/@typexs"
   ],
   "angularCompilerOptions": {
     "genDir": "build/app-aot",

@@ -23,34 +23,39 @@
   <div class="form-check m-1" *ngFor="let mode of getGridModes()">
     <input class="form-check-input" name="mode" type="radio"
            [value]="mode.name" id="r-{{mode.name}}"
-           [(ngModel)]="options.mode"
-           (ngModelChange)="update()">
-    <label class="form-check-label" for="r-{{mode.name}}"> {{mode.name}}</label>
+           (click)="update('mode', mode.name)" [checked]="options.mode === mode.name">
+    <label class="form-check-label" for="r-{{mode.name}}"> {{ mode.name }}</label>
   </div>
 </div>
 
-<div class="input-group mb-3">
-  <div class="input-group-prepend">
-    <span class="input-group-text" id="basic-addon1">Limit</span>
+<div class="row">
+
+  <div class="col input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="basic-addon1">Limit</span>
+    </div>
+    <input type="text" class="form-control"
+           [ngModel]="options.limit"
+           (ngModelChange)="updateLimit($event)"
+           aria-describedby="basic-addon1">
   </div>
-  <input type="text" class="form-control"
-         [ngModel]="options.limit"
-         (ngModelChange)="updateLimit($event)"
-         aria-describedby="basic-addon1">
+
+  <div class="col input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="rows">Rows</span>
+    </div>
+    <input type="text" class="form-control"
+           [ngModel]="maxRows"
+           (ngModelChange)="updateRows($event)"
+           aria-describedby="rows">
+  </div>
 </div>
 
-<div class="input-group mb-3">
-  <div class="input-group-prepend">
-    <span class="input-group-text" id="rows">Rows</span>
-  </div>
-  <input type="text" class="form-control"
-         [ngModel]="options.maxRows"
-         (ngModelChange)="updateRows($event)"
-         aria-describedby="rows">
-</div>
+<ng-content></ng-content>
 
 <div class=" d-inline-flex">
     <pre>
-      {{options | json}}
+      {{ options | json }}
+      Max: {{ maxRows }}
     </pre>
 </div>

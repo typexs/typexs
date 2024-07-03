@@ -29,7 +29,7 @@ const COMPONENTS: any[] = [
   ],
   exports: COMPONENTS,
   providers: PROVIDERS,
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  // schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DistributedStorageModule {
 
