@@ -96,7 +96,6 @@ export class PagerComponent implements OnInit, OnDestroy {
   }
 
 
-
   checkTotal() {
     if (!this.totalPages) {
       this.totalPages = 0;
@@ -157,16 +156,14 @@ export class PagerComponent implements OnInit, OnDestroy {
     if (exists) {
       return;
     }
-
     this.checkCurrent();
     this.checkTotal();
     this.checkFrameSize();
   }
 
 
-
-
   ngOnDestroy(): void {
+    this.pager = undefined;
     this.pagerService.remove(this.name);
   }
 }

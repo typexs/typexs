@@ -412,7 +412,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
     if (this.isPagerEnabled()) {
       this.getPager();
     } else {
-      this._pager = null;
+      this._pager = undefined;
       this.options.enablePager = false;
     }
   }
@@ -443,7 +443,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
    * Check if pager object ist set
    */
   hasPager() {
-    return !(this._pager === undefined || this._pager === null);
+    return !(this._pager === undefined || this._pager === null) && !this._pager.isFreeed();
   }
 
 
@@ -642,7 +642,6 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
         this._pager = null;
       }
     }
-
   }
 
 

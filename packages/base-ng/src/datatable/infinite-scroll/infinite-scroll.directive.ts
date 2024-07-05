@@ -1,9 +1,22 @@
 import { fromEvent, Observable, Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
-import { Directive, ElementRef, EventEmitter, Inject, Input, OnChanges, OnInit, Output, Renderer2, SimpleChanges } from '@angular/core';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import {
+  Directive,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Input,
+  OnChanges,
+  OnInit,
+  Output, QueryList,
+  Renderer2,
+  SimpleChanges,
+  ViewChildren
+} from '@angular/core';
+import { debounceTime, distinctUntilChanged, map, shareReplay, startWith } from 'rxjs/operators';
 import { IScrollEvent } from './IScrollEvent';
 import { IInfiniteScrollApi } from './IInfiniteScrollApi';
+import { convertStringToNumber } from '../../lib/functions';
 
 
 /**
@@ -19,16 +32,26 @@ import { IInfiniteScrollApi } from './IInfiniteScrollApi';
   // standalone: true,
   selector: '[infiniteScroll]'
 })
-export class InfiniteScrollDirective implements OnInit, OnChanges, IInfiniteScrollApi {
+export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi {
 
-  @Input('mode')
+  @ViewChildren('rows')
+  rows: QueryList<any>;
+
+  @Input()
   mode: 'simple' | 'overflow' = 'overflow';
 
   @Input('infiniteScroll')
   onoff: boolean = false;
 
-  @Input('refresh')
+  @Input()
   refresh: boolean = false;
+
+
+  @Input()
+  adaptScrollbar!: boolean;
+
+  @Input()
+  rowItems!: QueryList<any>;
 
   /**
    * use also sub-directive
@@ -46,16 +69,21 @@ export class InfiniteScrollDirective implements OnInit, OnChanges, IInfiniteScro
    */
   maxEntries: number = undefined;
 
-  placeholderElement: any;
+  placeholderElements: any = [];
 
   /**
    * Loading is finished
    */
-  isFinished: boolean;
+  private isFinished: boolean;
 
-  previousBottom: number = undefined;
+  private previousBottom: number = undefined;
 
-  movingDirection: 'up' | 'down' | 'none' = 'none';
+  private movingDirection: 'up' | 'down' | 'none' = 'none';
+
+  /**
+   * Mark if mouse or cursor is over the component
+   */
+  private cursorFocuses = false;
 
   private unlistenMouseEnter: () => void;
 
@@ -65,10 +93,7 @@ export class InfiniteScrollDirective implements OnInit, OnChanges, IInfiniteScro
 
   private scrollSubscription: Subscription;
 
-  /**
-   * Mark if mouse or cursor is over the component
-   */
-  cursorFocuses = false;
+  private rowSubscription: Subscription;
 
 
   constructor(
@@ -79,24 +104,39 @@ export class InfiniteScrollDirective implements OnInit, OnChanges, IInfiniteScro
 
   }
 
-  ngOnInit() {
-  }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['onoff']) {
-      if (changes['onoff'].currentValue) {
+    const cOnOff = changes['onoff'];
+    const cRefresh = changes['refresh'];
+    const cMode = changes['mode'];
+    const cAdaptScrollbar = changes['adaptScrollbar'];
+    if (cOnOff) {
+      if (cOnOff.currentValue) {
         this.enable();
       } else {
         this.disable();
       }
     }
-    if (changes['refresh']) {
-      if (changes['refresh'].currentValue) {
+    if (cRefresh) {
+      if (cRefresh.currentValue !== cRefresh.previousValue) {
         this.disable();
         this.enable();
         this.refresh = false;
       }
     }
+    if (cMode) {
+      if (cMode.currentValue !== cMode.previousValue) {
+        this.disable();
+        this.enable();
+      }
+    }
+    if (cAdaptScrollbar) {
+      if (((cAdaptScrollbar && cAdaptScrollbar.currentValue !== cAdaptScrollbar.previousValue)) && this.isPlaceholderMode()) {
+        this.updatePlaceHolder();
+        this.listenForRowChanges();
+      }
+    }
+
   }
 
   /**
@@ -107,30 +147,109 @@ export class InfiniteScrollDirective implements OnInit, OnChanges, IInfiniteScro
    */
   enable() {
     this.disable();
-    const scollEl = this.getScrollElement();
-
-    this.renderer2.setStyle(scollEl, 'overflow', 'auto');
-
-    if (!scollEl.style.height) {
-      this.renderer2.setStyle(scollEl, 'height', '400px');
+    if (this.mode === 'overflow') {
+      this.enableOverflow();
+    } else {
+      this.enableBody();
     }
-
-    this.unlistenMouseEnter = this.renderer2.listen(
-      scollEl,
-      'mouseenter',
-      this.onMouseEnter.bind(this));
-    this.scrollObservable = fromEvent(
-      scollEl,
-      'scroll'
-    )
-      .pipe(
-        debounceTime(50),
-        map(() => scollEl.scrollTop),
-        distinctUntilChanged());
-
   }
 
-  disable() {
+
+  private enableBody() {
+    this.listenOnScroll();
+    this.scrollSubscription = this.scrollObservable.subscribe(this.onScrollBody.bind(this));
+  }
+
+
+  private enableOverflow() {
+    const scollEl = this.getScrollElement() as HTMLElement;
+    if (this.mode === 'overflow') {
+      this.renderer2.setStyle(scollEl, 'overflow', 'auto');
+      if (!scollEl.style.height) {
+        // TODO make height configurable by value or by function
+        // TODO add padding-right cause scrollbar makes frame width smaller by 12px (ps. calculate scrollbar width)
+        const top = scollEl.offsetParent.getBoundingClientRect().bottom;
+        let height = this.document.documentElement.clientHeight - top;
+        height = height - height * 0.2;
+        if (height < 500) {
+          height = 500;
+        }
+        this.renderer2.setStyle(scollEl, 'height', height + 'px');
+      }
+    }
+    this.unlistenMouseEnter = this.renderer2.listen(scollEl, 'mouseenter', this.onMouseEnter.bind(this));
+    this.listenOnScroll(scollEl);
+  }
+
+  updatePlaceHolder() {
+    const elem = this.getElement();
+    const placeholders = elem.querySelectorAll(':scope > .placeholder');
+    // TODO if node count is the same as maxEntries and no placehoder exists, then do notthing
+    const elemCount = elem.childElementCount - placeholders.length;
+    console.log('updatePlaceHolder', elemCount, this.maxEntries);
+    if (elemCount >= this.maxEntries - 1) {
+      placeholders.forEach(x => this.renderer2.removeChild(elem, x));
+      return;
+    }
+
+    let prevIdx = -1;
+    let prevElem = null;
+    let sumHeight = 0;
+    let sumItems = 0;
+    for (let i = 0; i < elem.childNodes.length; i++) {
+      const subelem = elem.childNodes.item(i) as HTMLElement;
+      if (!(subelem instanceof HTMLElement)) {
+        continue;
+      }
+      const isPlaceHolder = subelem.classList.contains('placeholder');
+      if (isPlaceHolder) {
+        // check if it should be shortend
+        this.renderer2.removeChild(elem, subelem);
+        // this.placeholderElements.
+        continue;
+      }
+      sumHeight += subelem.clientHeight;
+      // TODO add distance between should be added
+      sumItems++;
+      const idx = convertStringToNumber(subelem.getAttribute('idx'));
+      const offsetIdx = idx - prevIdx;
+
+      if (offsetIdx > 1 && prevElem) {
+        // missing something
+        const _elem = this.createElem(idx, prevIdx, offsetIdx);
+        this.renderer2.insertBefore(elem, _elem, subelem);
+      }
+      prevElem = subelem;
+      prevIdx = idx;
+    }
+
+    const offsetIdx = this.maxEntries - prevIdx - 1;
+    if (offsetIdx > 1 && prevElem) {
+      // missing something
+      const _elem = this.createElem(this.maxEntries, prevIdx, offsetIdx);
+      this.renderer2.appendChild(elem, _elem);
+    }
+
+    const size = sumHeight / sumItems;
+    elem.querySelectorAll('.placeholder').forEach(el => {
+      const amount = convertStringToNumber(el.getAttribute('size'));
+      this.renderer2.setStyle(el, 'height', amount * size + 'px');
+    });
+  }
+
+
+  private createElem(idx: number, prevIdx: number, offsetIdx: number) {
+    const _elem = this.renderer2.createElement('div') as HTMLElement;
+    _elem.classList.add('placeholder');
+    _elem.setAttribute('size', offsetIdx + '');
+    _elem.setAttribute('from', (prevIdx + 1) + '');
+    _elem.setAttribute('to', (idx - 1) + '');
+    // this.placeholderElements.push(_elem);
+    return _elem;
+  }
+
+
+  private disable() {
     if (this.unlistenMouseLeave) {
       this.unlistenMouseLeave();
       this.unlistenMouseLeave = undefined;
@@ -139,17 +258,32 @@ export class InfiniteScrollDirective implements OnInit, OnChanges, IInfiniteScro
       this.unlistenMouseEnter();
       this.unlistenMouseEnter = undefined;
     }
+    const scrollEl = this.getElement() as HTMLElement;
+    if (scrollEl && scrollEl.style && scrollEl.style.overflow) {
+      this.renderer2.removeStyle(scrollEl, 'overflow');
+      this.renderer2.removeStyle(scrollEl, 'height');
+    }
+    // remove placeholder some exist if exist
+    scrollEl.querySelectorAll('.placeholder').forEach(el => {
+      this.renderer2.removeChild(scrollEl, el);
+    });
+    this._resetRefs();
+  }
+
+
+  private _resetRefs() {
     if (this.scrollSubscription) {
       this.scrollSubscription.unsubscribe();
+      this.scrollSubscription = undefined;
     }
-    this.scrollObservable = null;
+    if (this.rowSubscription) {
+      this.rowSubscription.unsubscribe();
+      this.rowSubscription = undefined;
+    }
+    this.scrollObservable = undefined;
     this.cursorFocuses = false;
     this.previousBottom = undefined;
-
-    if (this.getScrollElement() && this.getScrollElement().style.overflow) {
-      this.renderer2.removeStyle(this.getScrollElement(), 'overflow');
-    }
-
+    this.scrollElement = undefined;
   }
 
 
@@ -160,8 +294,9 @@ export class InfiniteScrollDirective implements OnInit, OnChanges, IInfiniteScro
         this.getScrollElement(),
         'mouseleave',
         this.onMouseLeave.bind(this));
-    this.scrollSubscription = this.scrollObservable.subscribe(this.onScroll.bind(this));
+    this.scrollSubscription = this.scrollObservable.subscribe(this.onScrollOverflow.bind(this));
   }
+
 
   private onMouseLeave() {
     this.cursorFocuses = false;
@@ -173,20 +308,35 @@ export class InfiniteScrollDirective implements OnInit, OnChanges, IInfiniteScro
       this.scrollElement = this.elemRef.nativeElement;
       this.movingDirection = 'none';
     }
-
-  }
-
-  getBoundries(elem: HTMLElement) {
-    return elem.getBoundingClientRect();
   }
 
 
-  getScrollElement(): HTMLElement {
+  private isOverflowMode() {
+    return this.mode === 'overflow';
+  }
+
+
+  private isPlaceholderMode() {
+    return typeof this.maxEntries === 'number' && this.maxEntries >= 0 && this.adaptScrollbar;
+  }
+
+
+  getScrollElement(): HTMLElement | Window {
     if (!this.scrollElement) {
       // TODO check if CSS or TempRef or ElemRef
-      this.scrollElement = this.elemRef.nativeElement;
+      if (this.isOverflowMode()) {
+        this.scrollElement = this.elemRef.nativeElement;
+      } else {
+        this.scrollElement = window;
+        // this.scrollElement = this.document.documentElement;
+      }
     }
     return this.scrollElement;
+  }
+
+
+  getElement(): HTMLElement {
+    return this.elemRef.nativeElement;
   }
 
 
@@ -196,19 +346,48 @@ export class InfiniteScrollDirective implements OnInit, OnChanges, IInfiniteScro
    * - in which direction the scroll goes, if we go up then we done have to call bottom reached
    * - scale which records should be loaded
    * - switch between scroll div with overflow and without
+   * - trigger when top reached
    *
    * @param event
    * @private
    */
-  private onScroll(event: Event) {
-    const tbody = this.getScrollElement();
-    const scrollElemTop = tbody.getBoundingClientRect().top;
+  private onScrollOverflow(event: Event) {
+    const scrollEl = this.getElement();
+    this._onScroll(scrollEl);
+  }
+
+
+  private onScrollBody(event: Event) {
+    // const windowEl = this.getScrollElement() as Window;
+    const documentEl = this.document.documentElement;
+    this._onScroll(documentEl);
+  }
+
+
+  private _onScroll(scrollEl: HTMLElement) {
+    const scrollElemTop = scrollEl.getBoundingClientRect().top;
+
+    const viewTop = scrollEl.scrollTop;
+    let diff = 0;
+    if (this.isOverflowMode()) {
+      diff = (scrollElemTop - viewTop);
+    } else {
+      diff = -viewTop;
+    }
+
     // top pixel of view frame
-    const viewTop = tbody.scrollTop;
     // full scroll height
-    const scrollHeight = tbody.scrollHeight;
+    let scrollHeight = 0;
+    const nodes = this.getElement().querySelectorAll(':scope > div:not(.placeholder)');
+    if (nodes.length > 0) {
+      const lastEl = nodes[nodes.length - 1];
+      if (lastEl) {
+        scrollHeight = lastEl.getBoundingClientRect().bottom - diff;
+      }
+    }
+    // const scrollHeight = scrollEl.scrollHeight;
     // bottom limit of scroll
-    const viewBottom = viewTop + tbody.clientHeight;
+    const viewBottom = viewTop + scrollEl.clientHeight;
     if (this.previousBottom) {
       if (this.previousBottom <= viewBottom) {
         this.movingDirection = 'down';
@@ -220,19 +399,33 @@ export class InfiniteScrollDirective implements OnInit, OnChanges, IInfiniteScro
     }
     this.previousBottom = viewBottom;
 
-    const viewFrame = tbody.clientHeight * .5;
+    const viewFrame = scrollEl.clientHeight * .5;
     const reachBorder = scrollHeight - viewFrame;
 
     /*
      * Find element idx in view frame
      */
-    const childCount = this.getScrollElement().childElementCount;
+    // const childCount = scrollEl.childElementCount;
+    const idx = this.getElementIdxForFrame(viewTop, viewBottom, diff);
+    // check if bottom is near or reached
+    const event: IScrollEvent = {
+      type: 'bottom', api: this, idx: idx, top: viewTop, bottom: viewBottom, diff: diff, direction: this.movingDirection
+    };
+
+    if (reachBorder <= viewBottom && this.movingDirection === 'down') {
+      console.log(event);
+      this.onBottom.emit(event);
+    }
+  }
+
+
+  private getElementIdxForFrame(viewTop: number, viewBottom: number, diff = 0) {
     const idx = [];
-    for (let i = 0; i < this.getScrollElement().childNodes.length; i++) {
-      const elem = this.getScrollElement().childNodes.item(i) as HTMLElement;
-      if (elem && elem.getBoundingClientRect) {
+    const scrollEl = this.getElement();
+    for (let i = 0; i < scrollEl.childNodes.length; i++) {
+      const elem = scrollEl.childNodes.item(i) as HTMLElement;
+      if (elem && elem.getBoundingClientRect && !elem.classList.contains('.placeholder')) {
         const elemBnd = elem.getBoundingClientRect();
-        const diff = (scrollElemTop - viewTop);
         const elemTop = elemBnd.top - diff;
         const elemBottom = elemBnd.bottom - diff;
         // elem.setAttribute('cb', JSON.stringify(elemBnd));
@@ -246,188 +439,39 @@ export class InfiniteScrollDirective implements OnInit, OnChanges, IInfiniteScro
         }
       }
     }
-
-    console.log(viewBottom, viewTop, reachBorder, scrollHeight, this.movingDirection, { childCount: childCount, idx: idx });
-
-    // check if bottom is near or reached
-    if (reachBorder <= viewBottom && this.movingDirection === 'down') {
-      this.onBottom.emit(<IScrollEvent>{ type: 'bottom', api: this, idx: idx });
-      console.log('bottom reached');
-      // } else {
-      // TODO fire scroll event
-    }
-
-    // const elements = this.getElementsInViewPort(tbody, viewTop, viewBottom);
-    // const placeholder = elements.filter(x => x.classList.contains('placeholder'));
-    // if (placeholder.length > 0) {
-    //   const first = elements[0];
-    //   const last = elements[elements.length - 1];
-    //
-    //   const startIdxAttr = first.getAttribute('idx');
-    //   const endIdxAttr = last.getAttribute('idx');
-    //
-    //   let startIdx = parseInt(startIdxAttr, 10);
-    //   let endIdx = parseInt(endIdxAttr, 10);
-    //
-    //   if (startIdx > 0) {
-    //     startIdx = startIdx - 1;
-    //   }
-    //
-    //   if (endIdx > 0) {
-    //     endIdx = endIdx + 1;
-    //     //
-    //     // if (endIdx >= this.maxRows) {
-    //     //   endIdx = this.maxRows - 1;
-    //     // }
-    //   }
-    //
-    //   // this.getDataNodes().doChangeSpan(startIdx, endIdx).subscribe(x => {
-    //   });
-    // }
-    // const scrollBottomOffset = tbody.scrollHeight - tbody.offsetHeight;
-    // const bottomReached = scrollBottomOffset - tbody.scrollTop <= 0;
-    // const topReached = tbody.scrollTop < tbody.offsetHeight / 2.;
-    // Log.info('scroll', scrollBottomOffset, tbody.scrollTop, tbody.scrollHeight, bottomReached, topReached, this.getBoundries(tbody));
-    // // this.elemRef.nativeElement as HT
-    //
-    // if (bottomReached) {
-    //   this.onBottomReached();
-    // }
+    return idx;
   }
 
-  // getElementsInViewPort(tbody: HTMLElement, viewTop: number, viewBottom: number) {
-  //   const elements = [];
-  //   for (let i = 0; i < tbody.childNodes.length; i++) {
-  //     const tr = tbody.childNodes.item(i) as HTMLElement;
-  //     if (tr.offsetTop >= viewTop && (tr.offsetTop + tr.clientHeight) <= viewBottom) {
-  //       elements.push(tr);
-  //     } else {
-  //       if (elements.length > 0) {
-  //         break;
-  //       }
-  //     }
-  //
-  //   }
-  //   return elements;
-  // }
-  //
 
-  // getCurrentScrollViewYBoundries() {
-  //   const scrollElement = this.getScrollElement();
-  //   // get offset to table
-  //   let offsetRootTop = scrollElement.offsetTop;
-  //   if (scrollElement.tagName.toLocaleLowerCase() === 'tbody') {
-  //     // need thead for offset calulation if exists
-  //     const theadElem = scrollElement.parentElement.querySelector('thead');
-  //     if (theadElem) {
-  //       offsetRootTop += theadElem.offsetTop;
-  //     }
-  //   }
-  //   // const scrollBounds = scrollElement.getBoundingClientRect();
-  //   const viewTop = scrollElement.scrollTop;
-  //   const viewBottom = scrollElement.scrollTop + scrollElement.clientHeight;
-  //
-  //   return {
-  //     top: viewTop,
-  //     bottom: viewBottom,
-  //     offsetTop: offsetRootTop
-  //   };
-  // }
+  private listenOnScroll(scollEl?: HTMLElement | Window) {
+    if (!scollEl) {
+      scollEl = this.getScrollElement();
+    }
+    this.scrollObservable = fromEvent(
+      scollEl,
+      'scroll'
+    )
+      .pipe(
+        map(() => scollEl instanceof Window ? scollEl.scrollY : (scollEl).scrollTop),
+        startWith(0),
+        distinctUntilChanged(),
+        shareReplay(1),
+        debounceTime(25)
+      );
+  }
 
-  // getElementsInScrollView() {
-  //   const scrollElement = this.getScrollElement();
-  //   const boundries = this.getCurrentScrollViewYBoundries();
-  //   // const start = false;
-  //   const viewTop = boundries.top;
-  //   const viewBottom = boundries.bottom;
-  //   const offsetRootTop = boundries.offsetTop;
-  //   const ret: any = {
-  //     top: viewTop,
-  //     height: boundries.bottom - viewTop,
-  //     meanEntryHeight: 0,
-  //     bottom: viewBottom,
-  //     entries: []
-  //   };
-  //   const elements = [];
-  //   for (let i = 0; i < scrollElement.childNodes.length; i++) {
-  //     const x = scrollElement.childNodes.item(i) as HTMLElement;
-  //     if (x) {
-  //       if (x.classList && x.classList.contains('placeholder')) {
-  //         break;
-  //       }
-  //       const offsetTop = x.offsetTop - offsetRootTop;
-  //       if (viewTop <= offsetTop && offsetTop <= viewBottom) {
-  //         const z: any = {
-  //           top: offsetTop,
-  //           bottom: offsetTop + x.offsetHeight,
-  //           entry: x
-  //         };
-  //         z.height = z.bottom - z.top;
-  //         if (ret.entries.length > 0) {
-  //           z.paddingTop = z.top - ret.entries[ret.entries.length - 1].bottom;
-  //         }
-  //         ret.entries.push(z);
-  //       } else if (elements.length > 0) {
-  //         break;
-  //       }
-  //     }
-  //   }
-  //
-  //   const heights = ret.entries.filter((x: any) => typeof x.height !== 'undefined').map((x: any) => x.height);
-  //   const paddingTops = ret.entries.filter((x: any) => typeof x.paddingTop !== 'undefined').map((x: any) => x.paddingTop);
-  //
-  //   ret.meanEntryHeight = mean(heights);
-  //   ret.meanEntryPadding = mean(paddingTops);
-  //
-  //   if (ret.entries.length > 0) {
-  //     const first = ret.entries[0];
-  //     const last = ret.entries[ret.entries.length - 1];
-  //     ret.firstTop = first.top;
-  //     ret.lastBottom = last.bottom;
-  //     ret.startIdx = parseInt(first.entry.getAttribute('idx'), 10);
-  //     ret.endIdx = parseInt(last.entry.getAttribute('idx'), 10);
-  //     const bottomEmptySpace = ret.lastBottom - ret.firstTop;
-  //     const missing = ret.bottom - ret.top - bottomEmptySpace;
-  //     ret.possibleAdditional = 0;
-  //     if (missing > 0) {
-  //       const amount = missing / (ret.meanEntryHeight + ret.meanEntryPadding);
-  //       if (amount > 0) {
-  //         ret.possibleAdditional = Math.ceil(amount);
-  //       }
-  //     }
-  //   }
-  //
-  //   return ret;
-  // }
-  //
-  //
-  // private onBottomReached() {
-  //   // check if data nodes
-  //   // this.getDataNodes().nextView();
-  // }
-  //
-  //
-  // checkIfLoadNeeded() {
-  //   if (this.getDataNodes().isReachedMaxRows()) {
-  //     return;
-  //   }
-  //   const tbody = this.getScrollElement();
-  //
-  //   const firstElem = tbody.querySelector('tr:first-child');
-  //   const lastElem = tbody.querySelector('tr:not(.placeholder):last-child');
-  //
-  //   // this.getDataNodes().fetch()
-  //   const offsetTop = tbody.scrollTop;
-  //   const offsetBottom = tbody.scrollTop + tbody.offsetHeight;
-  //   const lastBottom = lastElem.clientTop + lastElem.clientHeight;
-  //
-  //   if (lastBottom < offsetBottom) {
-  //     // new records to load
-  //     // this.getDataNodes().fetchNext();
-  //   } else {
-  //     // no need to load
-  //   }
-  // }
+
+  private listenForRowChanges() {
+    if (this.rowItems && !this.rowSubscription) {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      // const self = this;
+      this.rowSubscription = this.rowItems.changes.subscribe(x => {
+        if (this.isPlaceholderMode()) {
+          this.updatePlaceHolder();
+        }
+      });
+    }
+  }
 
 
 }

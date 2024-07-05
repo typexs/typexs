@@ -1,6 +1,13 @@
 import { keys, range } from 'lodash';
 import { Component, ViewChild } from '@angular/core';
-import { DatatableComponent, IDatatableOptions, IGridApi, IGridColumn, ListViewComponent } from '@typexs/base-ng';
+import {
+  DatatableComponent,
+  IDatatableListGridOptions,
+  IDatatableOptions,
+  IGridApi,
+  IGridColumn,
+  ListViewComponent
+} from '@typexs/base-ng';
 import { And, ExprDesc } from '@allgemein/expressions';
 import { IGridEvent } from '@typexs/base-ng/datatable/api/IGridEvent';
 import { IGridMode, K_INFINITE } from '@typexs/base-ng/datatable/api/IGridMode';
@@ -47,7 +54,7 @@ export class ListViewDemoComponent {
 
   capturedEvent: IGridEvent = null;
 
-  options: IDatatableOptions = {
+  options: IDatatableListGridOptions = {
     // mode: K_PAGED,
     mode: K_INFINITE,
     pagerId: 'page',
@@ -55,7 +62,8 @@ export class ListViewDemoComponent {
     enablePager: true,
     queryCallback: (start, end, limit) => {
       return of(range(start, end + 1).map(x => ({ id: x, name: 'Text ' + x })));
-    }
+    },
+    infiniteMode: 'overflow'
   };
 
   columns: IGridColumn[] = [
@@ -73,7 +81,6 @@ export class ListViewDemoComponent {
   ];
 
 
-
   rows: any[] = undefined;
 
   viewModes: IGridMode[];
@@ -81,10 +88,10 @@ export class ListViewDemoComponent {
   optionsUpdated($event: any) {
     console.log($event);
     // this.options = $event;
-    if($event._update && $event._update.key === 'mode'){
+    if ($event._update && $event._update.key === 'mode') {
       console.log('change mode');
       this.datatableComp.setViewMode($event._update.value);
-    }else if($event._update && $event._update.key === 'limit'){
+    } else if ($event._update && $event._update.key === 'limit') {
       this.datatableComp.limit = $event._update.value;
     }
   }
@@ -96,6 +103,8 @@ export class ListViewDemoComponent {
         const rows = range(1, p + 1).map(x => ({ id: x, name: 'Text ' + x }));
         this.rows = rows;
       }
+    } else if (key === 'infinite-mode') {
+      this.options.infiniteMode = v;
     }
   }
 
@@ -130,5 +139,9 @@ export class ListViewDemoComponent {
     };
     this.api = event.api;
     this.viewModes = this.api.supportedViewModes();
+  }
+
+  getInfiniteMode() {
+    return [{ name: 'simple' }, { name: 'overflow' }];
   }
 }

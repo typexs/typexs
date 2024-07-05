@@ -228,7 +228,7 @@ export class ViewArray<T> {
     this.arr.clear();
     this._loaded = Object.assign({}, INIT_SPAN);
     this._frame = Object.assign({}, INIT_SPAN);
-    this.maxRows = undefined;
+    // this.maxRows = undefined;
   }
 
   /**

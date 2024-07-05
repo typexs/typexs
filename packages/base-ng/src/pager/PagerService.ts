@@ -40,8 +40,8 @@ export class PagerService {
     if (pager) {
       pager.dec();
       if (pager.canBeFreed()) {
-        pager.free();
         remove(this.pagers, p => p.name === id);
+        pager.free();
       }
     }
   }

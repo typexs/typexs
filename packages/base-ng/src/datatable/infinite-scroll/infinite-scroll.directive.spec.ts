@@ -80,23 +80,25 @@ describe('directive: infinite-scroll', () => {
       component.onoff = true;
       fixture.detectChanges();
 
-      const boundires = directive.getScrollElement().getBoundingClientRect();
-      const scrollHeight = directive.getScrollElement().scrollHeight;
-      const scrollTop = directive.getScrollElement().scrollTop;
+      const scrollElement = directive.getScrollElement() as HTMLElement;
 
-      expect(boundires.height).toEqual(400);
+      const boundires = scrollElement.getBoundingClientRect();
+      const scrollHeight = scrollElement.scrollHeight;
+      const scrollTop = scrollElement.scrollTop;
+
+      expect(boundires.height).toEqual(500);
       expect(scrollHeight).toBeGreaterThan(600);
       expect(scrollTop).toEqual(0);
 
-      expect(directive.cursorFocuses).toBeFalse();
+      expect(directive['cursorFocuses']).toBeFalse();
       div.triggerEventHandler('mouseenter', {});
       // tick(10);
       fixture.detectChanges();
-      expect(directive.cursorFocuses).toBeTrue();
+      expect(directive['cursorFocuses']).toBeTrue();
       div.triggerEventHandler('mouseleave', {});
       // tick(10);
       fixture.detectChanges();
-      expect(directive.cursorFocuses).toBeFalse();
+      expect(directive['cursorFocuses']).toBeFalse();
     }));
 
 
@@ -107,7 +109,7 @@ describe('directive: infinite-scroll', () => {
       // mouse entering table body enables scroll listener
       component.onoff = true;
       fixture.detectChanges();
-      expect(directive.cursorFocuses).toBeFalse();
+      expect(directive['cursorFocuses']).toBeFalse();
       div.triggerEventHandler('mouseenter', {});
       // tick(10);
 
@@ -118,14 +120,14 @@ describe('directive: infinite-scroll', () => {
 
 
       // do not reached bottom
-      const scrollElement = directive.getScrollElement();
+      const scrollElement = directive.getScrollElement() as HTMLElement;
       scrollTo(scrollElement, { top: 200, left: 0 });
       let scroll = new Event('scroll');
       scrollElement.dispatchEvent(scroll);
       tick(150);
       fixture.detectChanges();
 
-      let scrollTop = directive.getScrollElement().scrollTop;
+      let scrollTop = scrollElement.scrollTop;
       expect(scrollTop).toEqual(200);
 
       // do reach bottom
@@ -135,12 +137,12 @@ describe('directive: infinite-scroll', () => {
       tick(150);
       fixture.detectChanges();
 
-      scrollTop = directive.getScrollElement().scrollTop;
+      scrollTop = scrollElement.scrollTop;
       expect(scrollTop).toEqual(400);
 
 
       fixture.detectChanges();
-      expect(directive.cursorFocuses).toBeTrue();
+      expect(directive['cursorFocuses']).toBeTrue();
       div.triggerEventHandler('mouseleave', {});
 
     }));
@@ -149,5 +151,8 @@ describe('directive: infinite-scroll', () => {
 
   // TODO check if fire onScroll on bottom of element
 
+  // TODO mode switch check
+
+  // TODO refresh
 
 });

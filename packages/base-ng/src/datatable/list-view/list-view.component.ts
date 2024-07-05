@@ -1,12 +1,13 @@
-import { ChangeDetectorRef, Component, Input, QueryList, TemplateRef, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
 import { AbstractGridComponent } from '../api/abstract-grid.component';
 import { PagerService } from '../../pager/PagerService';
 import { IDatatableListGridOptions } from './IDatatableListGridOptions';
-import { IGridMode, K_INFINITE, K_OPTIONS, K_PAGED, K_VIEW } from '../api/IGridMode';
+import { IGridMode, K_INFINITE, K_INITIALIZE, K_OPTIONS, K_PAGED, K_VIEW } from '../api/IGridMode';
 import { TemplateDirective } from '../Template.directive';
-import { filter } from 'rxjs/operators';
-import { InfiniteScrollDirective } from '../infinite-scroll/infinite-scroll.directive';
 import { IGridEvent } from '../api/IGridEvent';
+import { IScrollEvent } from '../infinite-scroll/IScrollEvent';
+import { Subscription } from 'rxjs';
+import { InfiniteScrollDirective } from '../infinite-scroll/infinite-scroll.directive';
 
 
 @Component({
@@ -14,11 +15,13 @@ import { IGridEvent } from '../api/IGridEvent';
   templateUrl: 'list-view.component.html',
   styleUrls: ['./list-view.component.scss']
 })
-export class ListViewComponent extends AbstractGridComponent {
+export class ListViewComponent extends AbstractGridComponent implements AfterViewInit {
 
   @ViewChildren(TemplateDirective)
   templateRefs: QueryList<TemplateDirective>;
 
+  @ViewChildren('rows')
+  rowItems: QueryList<any>;
 
   @Input()
   allowViewModeSwitch: boolean = true;
@@ -33,6 +36,10 @@ export class ListViewComponent extends AbstractGridComponent {
 
   refresh: boolean;
 
+  update: boolean;
+
+  sub: Subscription;
+
   private _selectedTemplateName: string = null;
   private _selectedTemplate: TemplateRef<any>;
 
@@ -44,14 +51,19 @@ export class ListViewComponent extends AbstractGridComponent {
     this.gridReady.subscribe(x => this.onGridReady(x));
   }
 
-  // ngOnInit() {
-  //   super.ngOnInit();
-  //
-  // }
+  ngOnInit() {
+    super.ngOnInit();
+
+  }
+
+  ngAfterViewInit() {
+  }
 
   onGridReady(x: IGridEvent) {
     if (x.event === K_OPTIONS && x.api.getViewMode() === K_INFINITE) {
       this.refresh = false;
+    } else if (x.event === K_INITIALIZE) {
+
     }
   }
 
@@ -77,8 +89,11 @@ export class ListViewComponent extends AbstractGridComponent {
     const gridMode = this.getViewMode();
     if (this._selectedTemplateName !== gridMode || !this._selectedTemplate) {
       this._selectedTemplateName = gridMode;
+      if (this.sub) {
+        this.sub.unsubscribe();
+        this.sub = undefined;
+      }
       this._selectedTemplate = this.getTemplate(gridMode);
-      // this.changeRef.markForCheck();
     }
     return this._selectedTemplate;
   }
@@ -94,15 +109,17 @@ export class ListViewComponent extends AbstractGridComponent {
   }
 
 
-  onBottomReached($event: any) {
+
+  onBottomReached($event: IScrollEvent) {
     const boundries = this.getDataNodes().getFrameBoundries();
-    console.log('asd', boundries);
     const start = boundries.end;
     const end = start + boundries.range;
-    this.getDataNodes().doChangeSpan(start, end).subscribe(x => {
-      console.log('fetched');
-    });
 
+    // this.listenForRowChanges();
+
+    this.getDataNodes().doChangeSpan(start, end).subscribe(x => {
+      console.log('data fetched');
+    });
     // this.getDataNodes().
   }
 }

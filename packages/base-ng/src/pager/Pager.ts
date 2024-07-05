@@ -20,6 +20,7 @@ export class Pager {
 
   private frameEnd: number;
 
+
   frameSize: number = 3;
 
   currentPage: number;
@@ -211,13 +212,18 @@ export class Pager {
 
   free() {
     // this.removeAllListeners();
-    this.router = null;
-    this.activatedRoute = null;
-    this.emitter = [];
+    this.router = undefined;
+    this.activatedRoute = undefined;
+    this.location = undefined;
+    this.emitter = undefined;
     if (this.queryListenerSubscription) {
       this.queryListenerSubscription.unsubscribe();
-      this.queryListenerSubscription = null;
+      this.queryListenerSubscription = undefined;
     }
+  }
+
+  isFreeed() {
+    return !this.activatedRoute;
   }
 
   calculate(offset: number, limit: number, maxRows: number) {
