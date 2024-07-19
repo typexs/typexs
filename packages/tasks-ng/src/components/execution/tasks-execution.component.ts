@@ -2,7 +2,7 @@ import { isNull, isNumber, isString, keys } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { TaskExchangeRef, TaskRef } from '@typexs/base';
 import { ActivatedRoute } from '@angular/router';
-import { BackendTasksService } from '../backend-tasks.service';
+import { BackendTasksService } from '../../services/backend-tasks.service';
 import { TaskEvent } from '@typexs/base/libs/tasks/event/TaskEvent';
 
 /**

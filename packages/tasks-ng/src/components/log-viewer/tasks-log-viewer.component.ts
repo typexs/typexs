@@ -1,16 +1,11 @@
-import {
-  defaults, find, isArray, isEmpty, isFunction, isNumber, intersection,
-  get, clone, upperFirst, isNull, keys, values, isString, filter, merge, isPlainObject,
-  concat, kebabCase, has, snakeCase, isRegExp, orderBy, remove, first, set, assign,
-  capitalize, isUndefined
-} from 'lodash';
+import { first, has, isEmpty, isUndefined } from 'lodash';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { JsonUtils } from '@allgemein/base';
 import { DatePipe } from '@angular/common';
-import { BackendTasksService } from '../../backend-tasks.service';
-import { Observable, Subscriber, Subscription, timer } from 'rxjs';
+import { interval, Observable, Subscriber, Subscription, timer } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { Log } from '@typexs/base-ng';
+import { BackendTasksService } from '../../services/backend-tasks.service';
 
 /**
  * Show tasks list which should be filtered for running tasks, runned task
@@ -30,11 +25,17 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   runnerId: string;
 
-  // @Input()
-  // taskLog: TaskLog;
+  @Input()
+  running: boolean = true;
 
   @Input()
-  running: boolean;
+  offset: number = 1000;
+
+  @Input()
+  autoUpdate: boolean = false;
+
+  @Input()
+  allowSwitchMode: boolean = true;
 
   _mode: 'tail' | 'less' = 'tail';
 
@@ -70,7 +71,7 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
 
   subscription: Subscription = null;
 
-  offset: number = 5000;
+  updateSubscription: Subscription = null;
 
 
   constructor(
@@ -85,15 +86,40 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
     //   this.nodeId = this.taskLog.respId;
     // }
     this.handle();
+
+    if (this.autoUpdate) {
+      this.enableAutoUpdate();
+    }
   }
 
+  enableAutoUpdate() {
+    if (!this.updateSubscription && this.mode === 'tail') {
+      this.updateSubscription = interval(this.offset).subscribe(x => {
+        this.tail();
+      });
+    }
+  }
+
+  disableAutoUpdate() {
+    if (this.updateSubscription) {
+      this.updateSubscription.unsubscribe();
+      this.updateSubscription = undefined;
+    }
+  }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['taskLog']) {
-      if (!this.subscription && this.mode === 'tail') {
-        this.subscription = timer(this.offset).subscribe(x => {
-          this.tail();
-        });
+    if (changes['autoUpdate']) {
+      if (changes['autoUpdate'].currentValue) {
+        this.enableAutoUpdate();
+      } else {
+        this.disableAutoUpdate();
+        this.handle();
+      }
+    }
+    if (changes['running']) {
+      if (!changes['running'].currentValue) {
+        this.disableAutoUpdate();
+        this.handle();
       }
     }
     let reload = false;
@@ -219,16 +245,16 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  getLog(from: number = 1, offset: number = 50) {
-    this.tasksService.getTaskLog(this.runnerId, this.nodeId, from, offset).subscribe(x => {
-      if (x) {
-        this.append(x);
-      }
-    },
-    error => {
-      Log.debug(error);
-    });
-  }
+  // getLog(from: number = 1, offset: number = 50) {
+  //   this.tasksService.getTaskLog(this.runnerId, this.nodeId, from, offset).subscribe(x => {
+  //       if (x) {
+  //         this.append(x);
+  //       }
+  //     },
+  //     error => {
+  //       Log.debug(error);
+  //     });
+  // }
 
 
   append(x: string[]) {
@@ -257,6 +283,7 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.resetSub();
+    this.disableAutoUpdate();
     this.finishUpdate();
   }
 

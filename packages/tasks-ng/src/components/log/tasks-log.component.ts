@@ -1,18 +1,10 @@
-import {
-  defaults, find, isArray, isEmpty, isFunction, isNumber, intersection,
-  get, clone, upperFirst, isNull, keys, values, isString, filter, merge, isPlainObject,
-  concat, kebabCase, has, snakeCase, isRegExp, orderBy, remove, first, set, assign,
-  capitalize, isUndefined
-} from 'lodash';
+import { set } from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { TaskRef } from '@typexs/base';
-import { BackendTasksService } from '../backend-tasks.service';
-import { SystemInfoService } from '@typexs/base-ng';
+import { BackendTasksService } from '../../services/backend-tasks.service';
+import { C_URL_HANDLER, C_URL_TITLE, CC_GRID_CELL_ROUTER_LINK, IDatatableOptions, IGridColumn, SystemInfoService } from '@typexs/base-ng';
 import { StorageService } from '@typexs/storage-ng';
 import { TaskLog } from '@typexs/base/entities/TaskLog';
-import { IDatatableOptions } from '@typexs/base-ng';
-import { IGridColumn } from '@typexs/base-ng';
-import { C_URL_HANDLER, C_URL_TITLE, CC_GRID_CELL_ROUTER_LINK } from '@typexs/base-ng';
 
 /**
  * Show tasks list which should be filtered for running tasks, runned task

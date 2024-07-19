@@ -1,7 +1,7 @@
-import {Component, Input} from '@angular/core';
-import {TaskLog} from '@typexs/base/entities/TaskLog';
-import {ActivatedRoute} from '@angular/router';
-import {BackendTasksService} from '../backend-tasks.service';
+import { Component, Input } from '@angular/core';
+import { TaskLog } from '@typexs/base/entities/TaskLog';
+import { ActivatedRoute } from '@angular/router';
+import { BackendTasksService } from '../../services/backend-tasks.service';
 
 /**
  * Show status of a task (running or finished)
@@ -18,7 +18,7 @@ import {BackendTasksService} from '../backend-tasks.service';
 @Component({
   selector: 'txs-task-status-page',
   styleUrls: ['task-status-page.component.scss'],
-  templateUrl: './task-status-page.component.html',
+  templateUrl: './task-status-page.component.html'
 })
 export class TaskStatusPageComponent {
 
@@ -34,8 +34,9 @@ export class TaskStatusPageComponent {
   taskLogs: { [k: string]: TaskLog } = {};
 
 
-  constructor(private route: ActivatedRoute,
-              private taskService: BackendTasksService) {
+  constructor(
+    private route: ActivatedRoute,
+    private taskService: BackendTasksService) {
   }
 
 
@@ -47,7 +48,7 @@ export class TaskStatusPageComponent {
   lookupNeighbours() {
     if (this.taskLog) {
       this.taskLogs = {};
-      this.taskService.query({$or: [{id: this.taskLog.id + 1}, {id: this.taskLog.id - 1}]}, {targetIds: [this.nodeId]})
+      this.taskService.query({ $or: [{ id: this.taskLog.id + 1 }, { id: this.taskLog.id - 1 }] }, { targetIds: [this.nodeId] })
         .subscribe(x => {
           if (x) {
             x.entities.map((y: TaskLog) => {

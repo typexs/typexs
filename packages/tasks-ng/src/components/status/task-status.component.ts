@@ -1,6 +1,6 @@
 import {isArray} from 'lodash';
 import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {BackendTasksService} from '../backend-tasks.service';
+import {BackendTasksService} from '../../services/backend-tasks.service';
 import {TaskLog} from '@typexs/base/entities/TaskLog';
 import {Subscription} from 'rxjs';
 import {Log} from '@typexs/base-ng';
@@ -89,28 +89,28 @@ export class TaskStatusComponent implements OnInit, OnDestroy, OnChanges {
       this.subscription = this.tasksService
         .taskStatus(this.runnerId, {targetIds: [this.nodeId]})
         .subscribe(tasks => {
-            if (isArray(tasks)) {
-              this.taskLog = tasks.shift();
-            } else {
-              this.taskLog = tasks;
-            }
+          if (isArray(tasks)) {
+            this.taskLog = tasks.shift();
+          } else {
+            this.taskLog = tasks;
+          }
 
-            if (this.taskLog) {
-              this.status.emit(this.taskLog);
-              if (!this.taskLog.running) {
-                this.running = false;
-              }
-            } else {
+          if (this.taskLog) {
+            this.status.emit(this.taskLog);
+            if (!this.taskLog.running) {
               this.running = false;
             }
-          },
-          error => {
-            Log.error(error);
+          } else {
             this.running = false;
-          },
-          () => {
-            this.running = false;
-          });
+          }
+        },
+        error => {
+          Log.error(error);
+          this.running = false;
+        },
+        () => {
+          this.running = false;
+        });
     }
   }
 

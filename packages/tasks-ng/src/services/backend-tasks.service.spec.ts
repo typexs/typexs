@@ -3,7 +3,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { RouterTestingModule } from '@angular/router/testing';
 import { BackendTasksService } from './backend-tasks.service';
 import { Injector } from '@angular/core';
-import { StorageService } from '@typexs/storage-ng';
+import { StorageService } from '@typexs/storage-ng/public_api';
 import {
   AppService,
   AuthService,
