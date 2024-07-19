@@ -1,4 +1,4 @@
-import { fromEvent, Observable, Subscription } from 'rxjs';
+import { fromEvent, Observable, Subscription, merge } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import {
   Directive,
@@ -13,7 +13,7 @@ import {
   SimpleChanges,
   ViewChildren
 } from '@angular/core';
-import { debounceTime, distinctUntilChanged, map, shareReplay, startWith } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, shareReplay, startWith, tap } from 'rxjs/operators';
 import { IScrollEvent } from './IScrollEvent';
 import { IInfiniteScrollApi } from './IInfiniteScrollApi';
 import { convertStringToNumber } from '../../lib/functions';
@@ -40,12 +40,14 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi {
   @Input()
   mode: 'simple' | 'overflow' = 'overflow';
 
+  @Input()
+  captureOn: 'scroll' | 'end' = 'scroll';
+
   @Input('infiniteScroll')
   onoff: boolean = false;
 
   @Input()
   refresh: boolean = false;
-
 
   @Input()
   adaptScrollbar!: boolean;
@@ -290,10 +292,7 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi {
   private onMouseEnter() {
     this.cursorFocuses = true;
     this.unlistenMouseLeave = this.renderer2
-      .listen(
-        this.getScrollElement(),
-        'mouseleave',
-        this.onMouseLeave.bind(this));
+      .listen(this.getScrollElement(), 'mouseleave', this.onMouseLeave.bind(this));
     this.scrollSubscription = this.scrollObservable.subscribe(this.onScrollOverflow.bind(this));
   }
 
@@ -352,19 +351,20 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi {
    * @private
    */
   private onScrollOverflow(event: Event) {
+    console.log(event);
     const scrollEl = this.getElement();
-    this._onScroll(scrollEl);
+    this._onScroll(scrollEl, event);
   }
 
 
   private onScrollBody(event: Event) {
     // const windowEl = this.getScrollElement() as Window;
     const documentEl = this.document.documentElement;
-    this._onScroll(documentEl);
+    this._onScroll(documentEl, event);
   }
 
 
-  private _onScroll(scrollEl: HTMLElement) {
+  private _onScroll(scrollEl: HTMLElement, event: Event): void {
     const scrollElemTop = scrollEl.getBoundingClientRect().top;
 
     const viewTop = scrollEl.scrollTop;
@@ -408,13 +408,13 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi {
     // const childCount = scrollEl.childElementCount;
     const idx = this.getElementIdxForFrame(viewTop, viewBottom, diff);
     // check if bottom is near or reached
-    const event: IScrollEvent = {
+    const scrollEvent: IScrollEvent = {
       type: 'bottom', api: this, idx: idx, top: viewTop, bottom: viewBottom, diff: diff, direction: this.movingDirection
     };
 
     if (reachBorder <= viewBottom && this.movingDirection === 'down') {
-      console.log(event);
-      this.onBottom.emit(event);
+      console.log(scrollEvent);
+      this.onBottom.emit(scrollEvent);
     }
   }
 
@@ -447,17 +447,25 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi {
     if (!scollEl) {
       scollEl = this.getScrollElement();
     }
-    this.scrollObservable = fromEvent(
-      scollEl,
-      'scroll'
-    )
+
+    const scrollEnd = fromEvent(scollEl, 'scrollend');
+    const scroll = fromEvent(scollEl, 'scroll');
+
+    this.scrollObservable = merge(scroll, scrollEnd)
       .pipe(
-        map(() => scollEl instanceof Window ? scollEl.scrollY : (scollEl).scrollTop),
+        // untilDestroyed(),
+        tap(x => console.log(x)),
+        map((value, index) => {
+          value['_scrollTop'] = scollEl instanceof Window ? scollEl.scrollY : (scollEl).scrollTop;
+          return value;
+        }),
         startWith(0),
-        distinctUntilChanged(),
-        shareReplay(1),
-        debounceTime(25)
+        distinctUntilChanged((x, y) => x['_scrollTop'] === y['_scrollTop']),
+        debounceTime(25),
+        shareReplay(1)
       );
+
+
   }
 
 
