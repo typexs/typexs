@@ -83,6 +83,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
       for (const source of sources.next) {
         notNullProps.forEach((notNullProp: any) => {
           if (!_.has(source, notNullProp)) {
+            // @ts-ignore
             source[notNullProp] = '0';
           }
         });
@@ -526,6 +527,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
               condition.applyOn(target, source);
               notNullProps.forEach((notNullProp: any) => {
                 if (!_.has(target, notNullProp)) {
+                  // @ts-ignore
                   target[notNullProp] = '0';
                 }
               });
@@ -537,6 +539,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
           condition.applyOn(targets, source);
           notNullProps.forEach((notNullProp: any) => {
             if (!has(targets, notNullProp)) {
+              // @ts-ignore
               targets[notNullProp] = '0';
             }
           });
@@ -585,6 +588,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
         for (const target of targetObjects) {
           notNullProps.forEach((notNullProp: any) => {
             if (!_.has(target, notNullProp)) {
+              // @ts-ignore
               target[notNullProp] = '0';
             }
           });
@@ -739,6 +743,7 @@ export class SqlSaveOp<T> extends EntityDefTreeWorker implements ISaveOp<T> {
         for (const source of targetObjects) {
           notNullProps.forEach((notNullProp: any) => {
             if (!_.has(source, notNullProp)) {
+              // @ts-ignore
               source[notNullProp] = '0';
             }
           });

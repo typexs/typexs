@@ -29,6 +29,7 @@ export class Helper {
         }
       }
       if (!_.has(groups, group)) {
+        // @ts-ignore
         groups[group] = [];
       }
       groups[group].push(clazz);

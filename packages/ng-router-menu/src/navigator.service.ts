@@ -103,7 +103,7 @@ export class NavigatorService {
       if (route.children && !isEmpty(route.children)) {
         this.readRoutes(route.children, entry);
       } else if (route.loadChildren && has(route, '_loadedConfig.routes')) {
-        const routes = get(route, '_loadedConfig.routes', []);
+        const routes = get(route, '_loadedConfig.routes', []) as any;
         if (!isEmpty(routes)) {
           this.readRoutes(routes, entry);
         }
