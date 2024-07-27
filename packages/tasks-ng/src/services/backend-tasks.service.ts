@@ -6,14 +6,14 @@ import {
   API_CTRL_TASK_LOG,
   API_CTRL_TASK_STATUS,
   API_CTRL_TASKS_METADATA
-} from 'packages/server/src';
-import { C_TASKS, C_WORKERS, IMessageOptions, ITaskExectorOptions, SystemNodeInfo, TaskEvent, TaskLog, TaskRef, Tasks } from 'packages/base/src';
+} from '@typexs/server';
+import { C_TASKS, C_WORKERS, IMessageOptions, ITaskExectorOptions, SystemNodeInfo, TaskEvent, TaskLog, TaskRef, Tasks } from '@typexs/base';
 import { combineLatest, Observable, Subject, timer } from 'rxjs';
-import { AbstractQueryService, AppService, BackendService, IApiCallOptions, Log, SystemInfoService } from 'packages/base-ng/src/public_api';
+import { AbstractQueryService, AppService, BackendService, IApiCallOptions, Log, SystemInfoService } from '@typexs/base-ng';
 import { ExprDesc } from '@allgemein/expressions';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { filter, first, mergeMap, takeUntil, tap } from 'rxjs/operators';
-import { StorageService } from 'packages/storage-ng/src/public_api';
+import { StorageService } from '@typexs/storage-ng';
 
 
 /**
@@ -127,22 +127,22 @@ export class BackendTasksService {
 
     const subject = new Subject();
     const repeat$:
-    Observable<TaskLog> =
+      Observable<TaskLog> =
       timer(0, options.interval)
         .pipe(takeUntil(subject))
         .pipe(mergeMap(x => this.getTaskStatus(runnerId, options)))
         .pipe(tap(x => {
-          if (isArray(x)) {
-            let running = true;
-            for (const y of x) {
-              running = running && y.running;
+            if (isArray(x)) {
+              let running = true;
+              for (const y of x) {
+                running = running && y.running;
+              }
+              if (!running) {
+                subject.next();
+                subject.complete();
+              }
             }
-            if (!running) {
-              subject.next();
-              subject.complete();
-            }
-          }
-        })
+          })
         );
     return repeat$;
   }
@@ -192,33 +192,33 @@ export class BackendTasksService {
           });
 
           this.backend.callApi(API_CTRL_TASKS_METADATA).subscribe((data: any) => {
-            this.tasks = RegistryFactory.get(C_TASKS);
-            this.tasks.reset();
-            if (data) {
-              const workerNodeIds = this.workerNodes.map(w => w.nodeId);
-              this.tasks.fromJsonSchema(data)
-                .then(
-                  (refs: TaskRef[]) => {
-                    refs.forEach(ref => {
-                      const workers = intersection(ref.nodeInfos.map(x => x.nodeId), workerNodeIds);
-                      ref.setOption('nodeIds', workers);
-                    });
+              this.tasks = RegistryFactory.get(C_TASKS);
+              this.tasks.reset();
+              if (data) {
+                const workerNodeIds = this.workerNodes.map(w => w.nodeId);
+                this.tasks.fromJsonSchema(data)
+                  .then(
+                    (refs: TaskRef[]) => {
+                      refs.forEach(ref => {
+                        const workers = intersection(ref.nodeInfos.map(x => x.nodeId), workerNodeIds);
+                        ref.setOption('nodeIds', workers);
+                      });
+                      x.next(this.tasks);
+                      x.complete();
+                    })
+                  .catch(x => {
+                    x.error(x);
                     x.next(this.tasks);
                     x.complete();
-                  })
-                .catch(x => {
-                  x.error(x);
-                  x.next(this.tasks);
-                  x.complete();
-                });
-            } else {
-              x.next(this.tasks);
-              x.complete();
-            }
-          },
-          error => {
-            Log.error(error);
-          });
+                  });
+              } else {
+                x.next(this.tasks);
+                x.complete();
+              }
+            },
+            error => {
+              Log.error(error);
+            });
         });
 
     } else {
@@ -247,8 +247,8 @@ export class BackendTasksService {
     }
 
     return this.backend.callApi(API_CTRL_TASK_GET_METADATA_VALUE, {
-      params: { taskName: taskName, incomingName: incomingName }, query: opts
-    }
+        params: { taskName: taskName, incomingName: incomingName }, query: opts
+      }
     );
   }
 

@@ -1,8 +1,8 @@
 import { first, has, isEmpty, isUndefined } from 'lodash';
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { JsonUtils } from '@allgemein/base';
+import { JsonUtils } from '@allgemein/base/utils/JsonUtils';
 import { DatePipe } from '@angular/common';
-import { interval, Observable, Subscriber, Subscription, timer } from 'rxjs';
+import { interval, Observable, Subscriber, Subscription } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 import { Log } from '@typexs/base-ng';
 import { BackendTasksService } from '../../services/backend-tasks.service';

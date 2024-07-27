@@ -1,4 +1,4 @@
-import { fromEvent, Observable, Subscription, merge } from 'rxjs';
+import { fromEvent, merge, Observable, Subscription } from 'rxjs';
 import { DOCUMENT } from '@angular/common';
 import {
   Directive,
@@ -7,8 +7,8 @@ import {
   Inject,
   Input,
   OnChanges,
-  OnInit,
-  Output, QueryList,
+  Output,
+  QueryList,
   Renderer2,
   SimpleChanges,
   ViewChildren

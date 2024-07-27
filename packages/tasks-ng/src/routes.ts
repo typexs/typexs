@@ -1,15 +1,16 @@
-import {TasksMetadataComponent} from './metadata/tasks-metadata.component';
+import {TasksMetadataComponent} from './components/metadata/tasks-metadata.component';
+// TODO move this to @typexs/task modul when created
 import {
   PERMISSION_ALLOW_TASK_EXEC,
   PERMISSION_ALLOW_TASK_EXEC_PATTERN,
   PERMISSION_ALLOW_TASK_LOG,
   PERMISSION_ALLOW_TASK_STATUS,
   PERMISSION_ALLOW_TASK_GET_METADATA
-} from '@typexs/server';
+} from '@typexs/server/libs/Constants';
 import {AuthGuardService} from '@typexs/base-ng';
-import {TasksLogComponent} from './log/tasks-log.component';
-import {TasksExecutionComponent} from './execution/tasks-execution.component';
-import {TaskStatusPageComponent} from './status/task-status-page.component';
+import {TasksLogComponent} from './components/log/tasks-log.component';
+import {TasksExecutionComponent} from './components/execution/tasks-execution.component';
+import {TaskStatusPageComponent} from './components/status/task-status-page.component';
 import {Routes} from '@angular/router';
 
 export const TASK_ROUTES: Routes = [

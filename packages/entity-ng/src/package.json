@@ -1,9 +1,9 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/entity-ng",
-  "version": "2.2.1-dev.26",
+  "version": "12.2.1-dev.26",
   "description": "Angular for typexs",
-  "main": "public_api.ts",
+  "main": "public_api",
   "scripts": {
     "clean": "rm -rf ../build ../node_modules/.cache",
     "test": "ng test --code-coverage=true --watch=false",
@@ -31,11 +31,11 @@
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
     "@typexs/base": "^2.2.1-dev.22",
-    "@typexs/base-ng": "^2.2.1-dev.16",
+    "@typexs/base-ng": "^12.2.1-dev.16",
     "@typexs/entity": "^2.2.1-dev.13",
     "@typexs/forms": "^2.2.1-dev.13",
-    "@typexs/forms-ng": "^2.2.1-dev.13",
-    "@typexs/ng": "^2.2.1-dev.13"
+    "@typexs/forms-ng": "^12.2.1-dev.13",
+    "@typexs/ng": "^12.2.1-dev.13"
   },
   "devDependencies": {
     "@angular/common": "v12-lts",

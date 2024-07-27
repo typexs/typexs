@@ -2,7 +2,7 @@ import { defaults, get, has, isArrayLike, isBoolean, isEmpty, isNumber, isObject
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
-import { API_CTRL_SERVER_PING, API_CTRL_SERVER_ROUTES } from '@typexs/server';
+import { API_CTRL_SERVER_PING, API_CTRL_SERVER_ROUTES } from '@typexs/server/libs/Constants';
 import { catchError, filter, first, mergeMap, tap } from 'rxjs/operators';
 import { IBackendClientService } from '../api/backend/IBackendClientService';
 import { MessageService } from '../messages/message.service';
