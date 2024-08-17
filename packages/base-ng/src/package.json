@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/base-ng",
-  "version": "12.2.1-dev.29",
+  "version": "12.3.0-dev.0",
   "description": "Angular for typexs",
   "main": "public_api.ts",
   "scripts": {
@@ -39,9 +39,9 @@
     "@angular/core": "v12-lts",
     "@angular/forms": "v12-lts",
     "@angular/router": "v12-lts",
-    "@typexs/base": "2.2.1-dev.30",
-    "@typexs/ng": "12.2.1-dev.21",
-    "@typexs/server": "2.2.1-dev.21",
+    "@typexs/base": "2.3.0-dev.0",
+    "@typexs/ng": "12.3.0-dev.0",
+    "@typexs/server": "2.3.0-dev.0",
     "rxjs": "6.6.7"
   },
   "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
