@@ -3,9 +3,9 @@
   "name": "@typexs/base-ng",
   "version": "12.3.0-dev.0",
   "description": "Angular for typexs",
-  "main": "public_api.ts",
+  "main": "public_api",
   "scripts": {
-    "clean": "rm -rf ../build ../node_modules/.cache",
+    "clean": "rm -rf ../build ../node_modules ./node_modules",
     "test": "ng test --code-coverage=true --watch=false",
     "build": "ng build"
   },

@@ -107,6 +107,7 @@ export { ViewDataComponent } from './component/view/view-data.component';
 export { EntityViewPageComponent } from './component/entities/page/page.component';
 
 
+export * from './datatable/simple-table/abstract-simple-table-cell.component';
 export * from './datatable/simple-table/simple-table.component';
 export * from './datatable/simple-table/simple-table-cell.component';
 export * from './datatable/simple-table/simple-table-cell-value.component';
@@ -114,8 +115,13 @@ export * from './datatable/simple-table/simple-table-cell-object-reference-rende
 export * from './datatable/simple-table/simple-table-cell-entity-operations-renderer.component';
 export * from './datatable/simple-table/simple-table-cell-entity-reference-renderer.component';
 export * from './datatable/simple-table/simple-table-cell-router-link-renderer.component';
+
 export * from './datatable/list-view/list-view.component';
 export { IDatatableListGridOptions } from './datatable/list-view/IDatatableListGridOptions';
+
+export * from './datatable/Template.directive';
+export * from './datatable/infinite-scroll/infinite-scroll.directive';
+
 
 export { AbstractQueryService } from './api/querying/abstract-query.service';
 export { AbstractQueryComponent } from './api/querying/abstract-query.component';

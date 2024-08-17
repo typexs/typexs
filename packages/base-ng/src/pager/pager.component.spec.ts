@@ -5,7 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserTestingModule } from '@angular/platform-browser/testing';
 import { PagerComponent } from './pager.component';
 import { PagerService } from './PagerService';
-import { BaseModule, PagerAction } from '@typexs/base-ng';
+import { PagerAction } from './PagerAction';
 
 
 describe('component: pager', () => {

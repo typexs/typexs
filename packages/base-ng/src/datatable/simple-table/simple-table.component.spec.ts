@@ -5,21 +5,16 @@ import { PagerService } from './../../pager/PagerService';
 import { SimpleTableComponent } from './simple-table.component';
 import { APP_BASE_HREF, DatePipe } from '@angular/common';
 import { ApplicationInitStatus, Injector, NO_ERRORS_SCHEMA } from '@angular/core';
-import {
-  CC_GRID,
-  CC_GRID_CELL_VALUE,
-  ComponentRegistryService,
-  IDatatableOptions,
-  ObjectToComponentResolver,
-  PagerComponent,
-  SIMPLE_TABLE,
-  SimpleTableCellComponent,
-  SimpleTableCellValueComponent
-} from '@typexs/base-ng';
 import { assign, range } from 'lodash';
 import { By } from '@angular/platform-browser';
 import { K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';
-
+import { ObjectToComponentResolver } from '../../component/ObjectToComponentResolver';
+import { ComponentRegistryService } from '../../component/component-registry.service';
+import { PagerComponent } from '../../pager/pager.component';
+import { IDatatableOptions } from '../../datatable/api/IDatatableOptions';
+import { SimpleTableCellValueComponent } from '../../datatable/simple-table/simple-table-cell-value.component';
+import { SimpleTableCellComponent } from '../../datatable/simple-table/simple-table-cell.component';
+import { SIMPLE_TABLE, CC_GRID, CC_GRID_CELL_VALUE } from '../../constants';
 
 describe('component: simple-table', () => {
   let component: SimpleTableComponent;

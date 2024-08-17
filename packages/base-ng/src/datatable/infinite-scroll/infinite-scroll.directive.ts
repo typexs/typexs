@@ -18,10 +18,10 @@ import { IScrollEvent, T_SCROLL } from './IScrollEvent';
 import { IInfiniteScrollApi } from './IInfiniteScrollApi';
 import { convertStringToNumber } from '../../lib/functions';
 import { IIndexSpan } from '../../lib/datanodes/IIndexSpan';
-import { Log } from '@typexs/base-ng';
 import { IViewBox } from './IViewBox';
 import { clone, isNumber, orderBy, range, remove, uniq } from 'lodash';
 import { IViewCheckOptions, IViewCheckParamCapture } from './Constants';
+import { Log } from './../../lib/log/Log';
 
 
 const K_SCROLL_TOP = '_scrollTop';

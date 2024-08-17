@@ -4,8 +4,9 @@ import { InfiniteScrollDirective } from './infinite-scroll.directive';
 import { By } from '@angular/platform-browser';
 import { range } from 'lodash';
 import { scrollTo } from '../../lib/document.functions';
-import { IScrollEvent } from '@typexs/base-ng/datatable/infinite-scroll/IScrollEvent';
 import { CommonModule } from '@angular/common';
+import { IScrollEvent } from './IScrollEvent';
+
 
 
 // TODO NOTE test "factor" up oder down

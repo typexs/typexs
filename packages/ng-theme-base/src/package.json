@@ -30,6 +30,7 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
+    "@fortawesome/fontawesome-free": "5.15.3",
     "@typexs/base": "^12.2.1-dev.22",
     "@typexs/base-ng": "^2.2.1-dev.16",
     "@typexs/forms-ng": "^2.2.1-dev.13",

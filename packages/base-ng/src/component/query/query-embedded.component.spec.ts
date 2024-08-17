@@ -3,17 +3,18 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TestQueryService } from '../../testing/TestQueryService';
 import { BrowserTestingModule } from '@angular/platform-browser/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { APP_BASE_HREF, DatePipe } from '@angular/common';
-import { ApplicationInitStatus, Injector } from '@angular/core';
-import {
-  CC_GRID, CC_GRID_CELL_VALUE,
-  ComponentRegistryService,
-  DatatableComponent,
-  EntityResolverService,
-  ObjectToComponentResolver, PagerComponent,
-  PagerService, SIMPLE_TABLE, SimpleTableCellComponent, SimpleTableCellValueComponent, SimpleTableComponent
-} from '@typexs/base-ng';
-
+import { APP_BASE_HREF } from '@angular/common';
+import { ApplicationInitStatus } from '@angular/core';
+import { DatatableComponent } from '../../datatable/datatable.component';
+import { ObjectToComponentResolver } from '../../component/ObjectToComponentResolver';
+import { ComponentRegistryService } from '../../component/component-registry.service';
+import { PagerComponent } from '../../pager/pager.component';
+import { PagerService } from '../../pager/PagerService';
+import { EntityResolverService } from '../../services/entity-resolver.service';
+import { SimpleTableCellValueComponent } from '../../datatable/simple-table/simple-table-cell-value.component';
+import { SimpleTableCellComponent } from '../../datatable/simple-table/simple-table-cell.component';
+import { CC_GRID, CC_GRID_CELL_VALUE, SIMPLE_TABLE } from '../../constants';
+import { SimpleTableComponent } from '../../datatable/simple-table/simple-table.component';
 
 describe('Component: QueryEmbeddedComponent', () => {
   let component: QueryEmbeddedComponent;
@@ -40,7 +41,7 @@ describe('Component: QueryEmbeddedComponent', () => {
         ApplicationInitStatus,
         PagerService,
         ComponentRegistryService,
-        ObjectToComponentResolver,
+        ObjectToComponentResolver
       ]
     });
     const compRegistry = TestBed.inject(ComponentRegistryService);

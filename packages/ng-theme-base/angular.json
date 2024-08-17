@@ -10,8 +10,9 @@
       "architect": {
          "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
+
           "options": {
-            "project": "ng-package.json"
+            "project": "src/ng-package.json"
           },
           "configurations": {
             "production": {
