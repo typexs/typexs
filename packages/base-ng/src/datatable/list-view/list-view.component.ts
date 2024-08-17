@@ -38,6 +38,8 @@ export class ListViewComponent extends AbstractGridComponent implements AfterVie
 
   update: boolean;
 
+  finished: boolean = false;
+
   sub: Subscription;
 
   private _selectedTemplateName: string = null;
@@ -115,15 +117,12 @@ export class ListViewComponent extends AbstractGridComponent implements AfterVie
 
 
   onDataScroll($event: IScrollEvent) {
-    // TODO if initial
     const boundries = this.getDataNodes().getFrameBoundries();
     const _range = boundries.range;
     let start = boundries.end;
     let end = start + boundries.range;
     if ($event && $event.loadIdx.length > 0) {
-
       $event.loadIdx.filter(x => this.getDataNodes().isValueSet(x));
-
       const _start = Math.min(...$event.loadIdx);
       const _end = Math.max(...$event.loadIdx);
       start = Math.floor(_start / _range) * _range;
@@ -137,7 +136,8 @@ export class ListViewComponent extends AbstractGridComponent implements AfterVie
       if (isNotValueSet.length > 0) {
         this.getDataNodes().doChangeSpan(start, end).subscribe(x => {
           const finished = this.getDataNodes().isReachedMaxRows();
-          console.log('finished=' + finished);
+          // TODO check if finished
+          // console.log('finished=' + finished);
         });
       }
     }

@@ -12,9 +12,9 @@ import { AppService } from './services/app.service';
 import { InvokerService } from './services/invoker.service';
 import { HttpBackendService } from './services/http-backend.service';
 import { DatatableComponent } from './datatable/datatable.component';
-import { SimpleHtmlTableComponent } from './datatable/simple-html-table/simple-html-table.component';
-import { SimpleHtmlCellComponent } from './datatable/simple-html-table/simple-html-cell.component';
-import { SimpleHtmlCellValueComponent } from './datatable/simple-html-table/simple-html-cell-value.component';
+import { SimpleTableComponent } from './datatable/simple-table/simple-table.component';
+import { SimpleTableCellComponent } from './datatable/simple-table/simple-table-cell.component';
+import { SimpleTableCellValueComponent } from './datatable/simple-table/simple-table-cell-value.component';
 import {
   CC_GRID,
   CC_GRID_CELL_ENTITY_OPERATIONS,
@@ -28,19 +28,19 @@ import {
 import { FormsModule } from '@angular/forms';
 // eslint-disable-next-line max-len
 import {
-  SimpleHtmlCellEntityReferenceRendererComponent
-} from './datatable/simple-html-table/simple-html-cell-entity-reference-renderer.component';
+  SimpleTableCellEntityReferenceRendererComponent
+} from './datatable/simple-table/simple-table-cell-entity-reference-renderer.component';
 // eslint-disable-next-line max-len
 import {
-  SimpleHtmlCellObjectReferenceRendererComponent
-} from './datatable/simple-html-table/simple-html-cell-object-reference-renderer.component';
+  SimpleTableCellObjectReferenceRendererComponent
+} from './datatable/simple-table/simple-table-cell-object-reference-renderer.component';
 // eslint-disable-next-line max-len
 import {
-  SimpleHtmlCellEntityOperationsRendererComponent
-} from './datatable/simple-html-table/simple-html-cell-entity-operations-renderer.component';
+  SimpleTableCellEntityOperationsRendererComponent
+} from './datatable/simple-table/simple-table-cell-entity-operations-renderer.component';
 import { RouterModule } from '@angular/router';
 import { FreeQueryInputComponent } from './api/querying/free-query/free-query-input.component';
-import { SimpleHtmlCellRouterLinkRendererComponent } from './datatable/simple-html-table/simple-html-cell-router-link-renderer.component';
+import { SimpleTableCellRouterLinkRendererComponent } from './datatable/simple-table/simple-table-cell-router-link-renderer.component';
 import { Log } from './lib/log/Log';
 import { CommonModule, DatePipe } from '@angular/common';
 import { ComponentRegistryService } from './component/component-registry.service';
@@ -58,7 +58,7 @@ import { AbstractQueryComponent } from './api/querying/abstract-query.component'
 import { AbstractAggregateEmbeddedComponent } from './api/querying/abstract-aggregate-embedded.component';
 import { QueryEmbeddedComponent } from './component/query/query-embedded.component';
 import { AbstractComponent } from './component/abstract.component';
-import { AbstractCellComponent } from './datatable/simple-html-table/abstract-cell.component';
+import { AbstractSimpleTableCellComponent } from './datatable/simple-table/abstract-simple-table-cell.component';
 import { InfiniteScrollDirective } from './datatable/infinite-scroll/infinite-scroll.directive';
 import { TemplateDirective } from './datatable/Template.directive';
 
@@ -91,16 +91,15 @@ const COMPONENTS = [
   ViewDataComponent,
   TemplateDirective,
   ListViewComponent,
-  // ListViewInfiniteComponent,
   InfiniteScrollDirective,
-  AbstractCellComponent,
-  SimpleHtmlTableComponent,
-  SimpleHtmlCellComponent,
-  SimpleHtmlCellValueComponent,
-  SimpleHtmlCellEntityReferenceRendererComponent,
-  SimpleHtmlCellObjectReferenceRendererComponent,
-  SimpleHtmlCellEntityOperationsRendererComponent,
-  SimpleHtmlCellRouterLinkRendererComponent,
+  AbstractSimpleTableCellComponent,
+  SimpleTableComponent,
+  SimpleTableCellComponent,
+  SimpleTableCellValueComponent,
+  SimpleTableCellEntityReferenceRendererComponent,
+  SimpleTableCellObjectReferenceRendererComponent,
+  SimpleTableCellEntityOperationsRendererComponent,
+  SimpleTableCellRouterLinkRendererComponent,
   FreeQueryInputComponent,
   AbstractComponent,
   AbstractGridComponent,
@@ -117,13 +116,13 @@ const COMPONENTS = [
   entryComponents: [
     JsonComponent,
     ListViewComponent,
-    SimpleHtmlTableComponent,
-    SimpleHtmlCellComponent,
-    SimpleHtmlCellValueComponent,
-    SimpleHtmlCellEntityReferenceRendererComponent,
-    SimpleHtmlCellObjectReferenceRendererComponent,
-    SimpleHtmlCellEntityOperationsRendererComponent,
-    SimpleHtmlCellRouterLinkRendererComponent,
+    SimpleTableComponent,
+    SimpleTableCellComponent,
+    SimpleTableCellValueComponent,
+    SimpleTableCellEntityReferenceRendererComponent,
+    SimpleTableCellObjectReferenceRendererComponent,
+    SimpleTableCellEntityOperationsRendererComponent,
+    SimpleTableCellRouterLinkRendererComponent,
     QueryEmbeddedComponent
   ],
   imports: [
@@ -132,7 +131,7 @@ const COMPONENTS = [
     FormsModule
   ],
   exports: COMPONENTS,
-  providers: PROVIDERS,
+  providers: PROVIDERS
   // schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class BaseModule {
@@ -153,7 +152,7 @@ export class BaseModule {
     private appConfig: AppService,
     private compRegistry: ComponentRegistryService) {
     Log.initialize();
-    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID], SimpleHtmlTableComponent, {
+    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID], SimpleTableComponent, {
       label: 'Simple table',
       datatable: true,
       default: true
@@ -164,11 +163,11 @@ export class BaseModule {
       datatable: true
     });
 
-    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID_CELL_VALUE], SimpleHtmlCellValueComponent);
-    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID_CELL_ENTITY_REFERENCE], SimpleHtmlCellEntityReferenceRendererComponent);
-    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID_CELL_OBJECT_REFERENCE], SimpleHtmlCellObjectReferenceRendererComponent);
-    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID_CELL_ENTITY_OPERATIONS], SimpleHtmlCellEntityOperationsRendererComponent);
-    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID_CELL_ROUTER_LINK], SimpleHtmlCellRouterLinkRendererComponent);
+    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID_CELL_VALUE], SimpleTableCellValueComponent);
+    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID_CELL_ENTITY_REFERENCE], SimpleTableCellEntityReferenceRendererComponent);
+    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID_CELL_OBJECT_REFERENCE], SimpleTableCellObjectReferenceRendererComponent);
+    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID_CELL_ENTITY_OPERATIONS], SimpleTableCellEntityOperationsRendererComponent);
+    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID_CELL_ROUTER_LINK], SimpleTableCellRouterLinkRendererComponent);
 
 
     compRegistry.setComponentForClass(JsonComponent, '.*', {

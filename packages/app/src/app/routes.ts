@@ -11,7 +11,7 @@ import { LogoutComponent } from './dummy/logout/logout.component';
 import { ProfileComponent } from './dummy/profile/profile.component';
 import { NotificationDemoComponent } from './components/notification/notification-demo.component';
 import { InputDemoComponent } from './components/forms/input/input-demo.component';
-import { SimpleHtmlTableDemoComponent } from './components/grids/simple-html-table/simple-html-table-demo.component';
+import { SimpleTableDemoComponent } from './components/grids/simple-html-table/simple-table-demo.component';
 import { StorageModule } from '@typexs/storage-ng';
 import { EntityModule } from '@typexs/entity-ng';
 import { DistributedStorageModule } from '@typexs/distributed-storage-ng';
@@ -77,7 +77,7 @@ export const APP_ROUTES: Routes = [
           { path: '', redirectTo: 'simple', pathMatch: 'full' },
           {
             path: 'simple',
-            component: SimpleHtmlTableDemoComponent,
+            component: SimpleTableDemoComponent,
             data: { label: 'Simple Table', group: 'tables' }
           },
           {

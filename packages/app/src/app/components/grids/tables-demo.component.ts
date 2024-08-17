@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IGridColumn } from '@typexs/base-ng';
-import { SimpleHtmlTableComponent } from '@typexs/base-ng';
+import { SimpleTableComponent } from '@typexs/base-ng';
 import { AgGridWrapperComponent } from '../../addons/ag-grid/ag-grid-wrapper.component';
 
 
@@ -10,7 +10,7 @@ import { AgGridWrapperComponent } from '../../addons/ag-grid/ag-grid-wrapper.com
 })
 export class TablesDemoComponent {
 
-  simpleTableComp = SimpleHtmlTableComponent;
+  simpleTableComp = SimpleTableComponent;
 
   agGridComp = AgGridWrapperComponent;
 

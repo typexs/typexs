@@ -107,13 +107,13 @@ export { ViewDataComponent } from './component/view/view-data.component';
 export { EntityViewPageComponent } from './component/entities/page/page.component';
 
 
-export * from './datatable/simple-html-table/simple-html-table.component';
-export * from './datatable/simple-html-table/simple-html-cell.component';
-export * from './datatable/simple-html-table/simple-html-cell-value.component';
-export * from './datatable/simple-html-table/simple-html-cell-object-reference-renderer.component';
-export * from './datatable/simple-html-table/simple-html-cell-entity-operations-renderer.component';
-export * from './datatable/simple-html-table/simple-html-cell-entity-reference-renderer.component';
-export * from './datatable/simple-html-table/simple-html-cell-router-link-renderer.component';
+export * from './datatable/simple-table/simple-table.component';
+export * from './datatable/simple-table/simple-table-cell.component';
+export * from './datatable/simple-table/simple-table-cell-value.component';
+export * from './datatable/simple-table/simple-table-cell-object-reference-renderer.component';
+export * from './datatable/simple-table/simple-table-cell-entity-operations-renderer.component';
+export * from './datatable/simple-table/simple-table-cell-entity-reference-renderer.component';
+export * from './datatable/simple-table/simple-table-cell-router-link-renderer.component';
 export * from './datatable/list-view/list-view.component';
 export { IDatatableListGridOptions } from './datatable/list-view/IDatatableListGridOptions';
 

@@ -1019,7 +1019,6 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
         } else if (idx.length > 0) {
           break;
         }
-        // c++;
       }
     }
     return idx;

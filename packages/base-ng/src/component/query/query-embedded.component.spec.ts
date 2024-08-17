@@ -11,7 +11,7 @@ import {
   DatatableComponent,
   EntityResolverService,
   ObjectToComponentResolver, PagerComponent,
-  PagerService, SIMPLE_TABLE, SimpleHtmlCellComponent, SimpleHtmlCellValueComponent, SimpleHtmlTableComponent
+  PagerService, SIMPLE_TABLE, SimpleTableCellComponent, SimpleTableCellValueComponent, SimpleTableComponent
 } from '@typexs/base-ng';
 
 
@@ -28,10 +28,10 @@ describe('Component: QueryEmbeddedComponent', () => {
       declarations: [
         QueryEmbeddedComponent,
         DatatableComponent,
-        SimpleHtmlTableComponent,
+        SimpleTableComponent,
         PagerComponent,
-        SimpleHtmlCellComponent,
-        SimpleHtmlCellValueComponent
+        SimpleTableCellComponent,
+        SimpleTableCellValueComponent
       ],
       providers: [
         TestQueryService,
@@ -44,13 +44,13 @@ describe('Component: QueryEmbeddedComponent', () => {
       ]
     });
     const compRegistry = TestBed.inject(ComponentRegistryService);
-    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID], SimpleHtmlTableComponent, {
+    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID], SimpleTableComponent, {
       label: 'Simple table',
       datatable: true,
       default: true
     });
 
-    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID_CELL_VALUE], SimpleHtmlCellValueComponent);
+    compRegistry.setComponentClass([SIMPLE_TABLE, CC_GRID_CELL_VALUE], SimpleTableCellValueComponent);
 
     const service = TestBed.inject(TestQueryService);
     fixture = TestBed.createComponent(QueryEmbeddedComponent);

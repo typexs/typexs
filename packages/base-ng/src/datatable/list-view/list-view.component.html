@@ -37,13 +37,14 @@
 
 
 <ng-template #viewInfinite viewTemplate="infinite">
-
   <div class="list-container"
        infiniteScroll
        [refresh]="refresh"
-       (onDataScroll)="onDataScroll($event)"
+       [finished]="finished"
        [mode]="options.infiniteMode"
-       [maxEntries]="maxRows">
+       [maxEntries]="maxRows"
+       (onDataScroll)="onDataScroll($event)"
+  >
     <!-- idx ist used by infiniteScroll directive -->
     <div #rows class="row" [attr.idx]="node ? node.idx : -1" *ngFor="let node of getValues() | async">
       <div class="col-md-12" *ngIf="node">

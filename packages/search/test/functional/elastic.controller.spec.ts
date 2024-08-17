@@ -27,7 +27,6 @@ import { TestHelper } from './TestHelper';
 import { ElasticMappingUpdater } from '../../src/lib/elastic/mapping/ElasticMappingUpdater';
 import { C_CORE_INDEX, C_DATA_INDEX, C_SEARCH_INDEX_2, clear } from './testdata';
 
-// use(chaiAsPromised);
 
 const lorem = 'lorem ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod ' +
   'tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero ' +

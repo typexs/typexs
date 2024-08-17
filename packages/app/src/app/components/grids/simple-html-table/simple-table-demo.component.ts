@@ -1,6 +1,6 @@
 import { assign, range } from 'lodash';
 import { ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { DatatableComponent, IDatatableOptions, IGridApi, IGridColumn, SimpleHtmlTableComponent } from '@typexs/base-ng';
+import { DatatableComponent, IDatatableOptions, IGridApi, IGridColumn, SimpleTableComponent } from '@typexs/base-ng';
 import { IGridEvent } from '@typexs/base-ng/datatable/api/IGridEvent';
 import { IGridMode, K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';
 
@@ -27,15 +27,15 @@ function generateData(offset: number, limit: number) {
  */
 @Component({
   selector: 'simple-html-table-demo',
-  templateUrl: 'simple-html-table-demo.component.html'
+  templateUrl: 'simple-table-demo.component.html'
 })
-export class SimpleHtmlTableDemoComponent implements OnInit, OnChanges {
+export class SimpleTableDemoComponent implements OnInit, OnChanges {
 
   @ViewChild(DatatableComponent)
   datatable: DatatableComponent;
 
 
-  simpleTableComp = SimpleHtmlTableComponent;
+  simpleTableComp = SimpleTableComponent;
 
   api: IGridApi;
 
