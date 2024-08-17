@@ -1,6 +1,6 @@
 {
   "name": "@typexs/storage",
-  "version": "2.3.0-dev.0",
+  "version": "2.3.0-dev.1",
   "description": "Storage for typexs",
   "main": "index",
   "browser": "browser",
@@ -33,10 +33,10 @@
     "@typexs/roles-api": "2.3.0-dev.0"
   },
   "devDependencies": {
-    "@typexs/base": "2.3.0-dev.0",
-    "@typexs/forms": "2.3.0-dev.0",
-    "@typexs/server": "2.3.0-dev.0",
-    "@typexs/testing": "2.3.0-dev.0"
+    "@typexs/base": "2.3.0-dev.1",
+    "@typexs/forms": "2.3.0-dev.1",
+    "@typexs/server": "2.3.0-dev.1",
+    "@typexs/testing": "2.3.0-dev.1"
   },
   "peerDependencies": {
     "@typexs/base": "^2.3.0-dev.0",
