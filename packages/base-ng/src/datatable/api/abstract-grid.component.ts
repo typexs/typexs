@@ -220,7 +220,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   }
 
   getViewMode(): string {
-    return this.options.mode;
+    return this.options?.mode;
   }
 
   setViewMode(viewMode: string) {
@@ -365,10 +365,18 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   }
 
   doInitialize() {
-    this.getDataNodes()
-      .doInitialize()
-      .pipe(first())
-      .subscribe(this.onUpdate.bind(this));
+    let queryOnStartup = this.getOptions().queryOnInit;
+    if (typeof queryOnStartup !== 'boolean') {
+      // default
+      queryOnStartup = true;
+    }
+
+    if (queryOnStartup) {
+      this.getDataNodes()
+        .doInitialize()
+        .pipe(first())
+        .subscribe(this.onUpdate.bind(this));
+    }
   }
 
   isInitialized() {
@@ -563,11 +571,16 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
    */
   setMaxRows(maxRows: number) {
     const pre = this.getDataNodes().maxRows;
-    if (pre !== maxRows) {
+    if (typeof maxRows === 'number' && pre !== maxRows) {
       this.getDataNodes().reset();
       this.getDataNodes().maxRows = maxRows;
       if (this.isInitialized()) {
-        this.getControl().next({ event: K_REBUILD, api: this.getGridComponent(), data: { rows: maxRows } });
+        this.getControl()
+          .next({
+            event: K_REBUILD,
+            api: this.getGridComponent(),
+            data: { rows: maxRows }
+          });
       }
     }
   }

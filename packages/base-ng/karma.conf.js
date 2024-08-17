@@ -16,7 +16,7 @@ module.exports = function(config) {
       // 'src/**/*.spec.ts',
       // { pattern: 'src/*.spec.ts', watched: true, included: true, served: true },
       { pattern: 'src/**/*.spec.ts', watched: true, included: true, served: true },
-      { pattern: '../../node_modules/@typexs/**', included: false, served: false }
+      // { pattern: '../../node_modules/@typexs/**', included: false, served: false }
     ],
     client: {
       jasmine: {

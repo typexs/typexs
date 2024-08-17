@@ -1,14 +1,6 @@
-import { keys, range } from 'lodash';
+import { range } from 'lodash';
 import { Component, ViewChild } from '@angular/core';
-import {
-  DatatableComponent,
-  IDatatableListGridOptions,
-  IDatatableOptions,
-  IGridApi,
-  IGridColumn,
-  ListViewComponent
-} from '@typexs/base-ng';
-import { And, ExprDesc } from '@allgemein/expressions';
+import { DatatableComponent, IDatatableListGridOptions, IGridApi, IGridColumn, ListViewComponent } from '@typexs/base-ng';
 import { IGridEvent } from '@typexs/base-ng/datatable/api/IGridEvent';
 import { IGridMode, K_INFINITE } from '@typexs/base-ng/datatable/api/IGridMode';
 import { of } from 'rxjs';
@@ -60,9 +52,7 @@ export class ListViewDemoComponent {
     pagerId: 'page',
     limit: 25,
     enablePager: true,
-    queryCallback: (start, end, limit) => {
-      return of(range(start, end + 1).map(x => ({ id: x, name: 'Text ' + x })));
-    },
+    queryCallback: this.queryCallback.bind(this),
     infiniteMode: 'overflow'
   };
 
@@ -94,6 +84,10 @@ export class ListViewDemoComponent {
     } else if ($event._update && $event._update.key === 'limit') {
       this.datatableComp.limit = $event._update.value;
     }
+  }
+
+  queryCallback(start: number, end: number, limit: number) {
+    return of(range(start, end + 1).map(x => ({ id: x, name: 'Text ' + x })));
   }
 
   update(key: string, v: any): void {

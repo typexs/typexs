@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, ModuleWithProviders, NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { SystemInfoService } from './services/system-info.service';
 import { DefaultAuthGuardService } from './api/auth/default-auth-guard.service';
 import { NoopAuthService } from './api/auth/noop-auth.service';
@@ -27,11 +27,17 @@ import {
 } from './constants';
 import { FormsModule } from '@angular/forms';
 // eslint-disable-next-line max-len
-import { SimpleHtmlCellEntityReferenceRendererComponent } from './datatable/simple-html-table/simple-html-cell-entity-reference-renderer.component';
+import {
+  SimpleHtmlCellEntityReferenceRendererComponent
+} from './datatable/simple-html-table/simple-html-cell-entity-reference-renderer.component';
 // eslint-disable-next-line max-len
-import { SimpleHtmlCellObjectReferenceRendererComponent } from './datatable/simple-html-table/simple-html-cell-object-reference-renderer.component';
+import {
+  SimpleHtmlCellObjectReferenceRendererComponent
+} from './datatable/simple-html-table/simple-html-cell-object-reference-renderer.component';
 // eslint-disable-next-line max-len
-import { SimpleHtmlCellEntityOperationsRendererComponent } from './datatable/simple-html-table/simple-html-cell-entity-operations-renderer.component';
+import {
+  SimpleHtmlCellEntityOperationsRendererComponent
+} from './datatable/simple-html-table/simple-html-cell-entity-operations-renderer.component';
 import { RouterModule } from '@angular/router';
 import { FreeQueryInputComponent } from './api/querying/free-query/free-query-input.component';
 import { SimpleHtmlCellRouterLinkRendererComponent } from './datatable/simple-html-table/simple-html-cell-router-link-renderer.component';
@@ -85,6 +91,7 @@ const COMPONENTS = [
   ViewDataComponent,
   TemplateDirective,
   ListViewComponent,
+  // ListViewInfiniteComponent,
   InfiniteScrollDirective,
   AbstractCellComponent,
   SimpleHtmlTableComponent,

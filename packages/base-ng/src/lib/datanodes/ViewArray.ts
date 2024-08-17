@@ -672,7 +672,7 @@ export class ViewArray<T> {
     return obs;
   }
 
-  getFrameAsArray(): Node<T>[] {
+  getFrameAsArray(mode: 'push' | 'index' = 'push'): Node<T>[] {
     const boundries = this.getFrameBoundries();
     const scale = boundries.start;
     const copy: Node<T>[] = [];
@@ -680,7 +680,11 @@ export class ViewArray<T> {
       const idx = i - scale;
       const node = this.getNode(i);
       if (node) {
-        copy[idx] = node;
+        if (mode === 'push') {
+          copy.push(node);
+        } else {
+          copy[idx] = node;
+        }
       }
     }
     return copy;
@@ -690,7 +694,7 @@ export class ViewArray<T> {
   /**
    * Return only loaded elements
    */
-  getLoadedAsArray() {
+  getLoadedAsArray(mode: 'push' | 'index' = 'push') {
     const boundries = this.getLoadBoundries();
     // const scale = boundries.start;
     const copy: Node<T>[] = [];
@@ -698,7 +702,11 @@ export class ViewArray<T> {
       // const idx = i - scale;
       const node = this.getNode(i);
       if (node && !node.isEmpty()) {
-        copy[i] = node;
+        if (mode === 'push') {
+          copy.push(node);
+        } else {
+          copy[i] = node;
+        }
       }
     }
     return copy;

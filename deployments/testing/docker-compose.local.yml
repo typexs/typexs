@@ -36,6 +36,9 @@ services:
     ports:
       - 127.0.0.1:9200:9200
       - 127.0.0.1:9300:9300
+    volumes:
+      - elasticsearch:/usr/share/elasticsearch/data
+      - ./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     networks:
       - txs_base_net
 
@@ -89,3 +92,6 @@ services:
     command: --copy-service --loglevel debug
     networks:
       - txs_base_net
+
+volumes:
+  elasticsearch:

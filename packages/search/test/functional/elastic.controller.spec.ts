@@ -6,7 +6,7 @@ import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
 import { GreatEntity } from './fake_app_controller/entities/GreatEntity';
 import { IndexEntityRef } from '../../src/lib/registry/IndexEntityRef';
 import { expect, use } from 'chai';
-import chaiAsPromised from 'chai-as-promised';
+// import chaiAsPromised from 'chai-as-promised';
 import { ElasticEntityController } from '../../src/lib/elastic/ElasticEntityController';
 import { Client } from '@elastic/elasticsearch';
 import { DataEntity } from './fake_app_controller/entities/DataEntity';
@@ -27,7 +27,7 @@ import { TestHelper } from './TestHelper';
 import { ElasticMappingUpdater } from '../../src/lib/elastic/mapping/ElasticMappingUpdater';
 import { C_CORE_INDEX, C_DATA_INDEX, C_SEARCH_INDEX_2, clear } from './testdata';
 
-use(chaiAsPromised);
+// use(chaiAsPromised);
 
 const lorem = 'lorem ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod ' +
   'tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero ' +

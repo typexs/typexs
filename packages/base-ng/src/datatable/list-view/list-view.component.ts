@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, QueryList, TemplateRef, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { AbstractGridComponent } from '../api/abstract-grid.component';
 import { PagerService } from '../../pager/PagerService';
 import { IDatatableListGridOptions } from './IDatatableListGridOptions';
@@ -7,7 +7,7 @@ import { TemplateDirective } from '../Template.directive';
 import { IGridEvent } from '../api/IGridEvent';
 import { IScrollEvent } from '../infinite-scroll/IScrollEvent';
 import { Subscription } from 'rxjs';
-import { InfiniteScrollDirective } from '../infinite-scroll/infinite-scroll.directive';
+import { range } from 'lodash';
 
 
 @Component({
@@ -30,7 +30,7 @@ export class ListViewComponent extends AbstractGridComponent implements AfterVie
   viewMode: string = 'teaser';
 
   @Input()
-  options: IDatatableListGridOptions;
+  options: IDatatableListGridOptions = undefined;
 
   infiniteOnOff: boolean = true;
 
@@ -52,6 +52,9 @@ export class ListViewComponent extends AbstractGridComponent implements AfterVie
   }
 
   ngOnInit() {
+    if (this.getViewMode() === K_INFINITE) {
+      this.getOptions().queryOnInit = false;
+    }
     super.ngOnInit();
 
   }
@@ -70,7 +73,9 @@ export class ListViewComponent extends AbstractGridComponent implements AfterVie
   setViewMode(viewMode: string) {
     if (viewMode === K_INFINITE) {
       this.infiniteOnOff = true;
+      this.getOptions().queryOnInit = false;
     } else {
+      this.getOptions().queryOnInit = undefined;
       this.infiniteOnOff = false;
     }
     super.setViewMode(viewMode);
@@ -109,17 +114,33 @@ export class ListViewComponent extends AbstractGridComponent implements AfterVie
   }
 
 
-
-  onBottomReached($event: IScrollEvent) {
+  onDataScroll($event: IScrollEvent) {
+    // TODO if initial
     const boundries = this.getDataNodes().getFrameBoundries();
-    const start = boundries.end;
-    const end = start + boundries.range;
+    const _range = boundries.range;
+    let start = boundries.end;
+    let end = start + boundries.range;
+    if ($event && $event.loadIdx.length > 0) {
 
-    // this.listenForRowChanges();
+      $event.loadIdx.filter(x => this.getDataNodes().isValueSet(x));
 
-    this.getDataNodes().doChangeSpan(start, end).subscribe(x => {
-      console.log('data fetched');
-    });
-    // this.getDataNodes().
+      const _start = Math.min(...$event.loadIdx);
+      const _end = Math.max(...$event.loadIdx);
+      start = Math.floor(_start / _range) * _range;
+      end = Math.ceil(_end / _range) * _range;
+      const maxRows = this.getDataNodes().maxRows;
+      if (maxRows >= 0 && end >= maxRows) {
+        end = maxRows - 1;
+      }
+
+      const isNotValueSet = range(start, end + 1).filter(x => !this.getDataNodes().isValueSet(x));
+      if (isNotValueSet.length > 0) {
+        this.getDataNodes().doChangeSpan(start, end).subscribe(x => {
+          const finished = this.getDataNodes().isReachedMaxRows();
+          console.log('finished=' + finished);
+        });
+      }
+    }
+
   }
 }

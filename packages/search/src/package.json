@@ -5,7 +5,7 @@
   "main": "index",
   "browser": "browser",
   "scripts": {
-    "clean": "rm -rf ../build ../node_modules/.cache",
+    "clean": "rm -rf ../build ../node_modules",
     "test": "nyc mocha ../test/{**,**/**,**/**/**}/*.spec.ts",
     "posttest": "nyc report --reporter=json",
     "build": "node ../../../scripts/build.js"

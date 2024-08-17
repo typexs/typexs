@@ -1,13 +1,14 @@
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
 import * as _ from 'lodash';
-import {Driver} from './entities/Driver';
-import {Car} from './entities/Car';
-import {Truth} from './entities/Truth';
-import {__CLASS__, RegistryFactory} from '@allgemein/schema-api';
-import {TypeOrmEntityRegistry} from '../../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
-import {__REGISTRY__} from '../../../../src/libs/Constants';
-import {REGISTRY_TYPEORM} from '../../../../src/libs/storage/framework/typeorm/Constants';
+import { Driver } from './entities/Driver';
+import { Car } from './entities/Car';
+import { Truth } from './entities/Truth';
+import { __CLASS__, RegistryFactory } from '@allgemein/schema-api';
+import { TypeOrmEntityRegistry } from '../../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
+import { __REGISTRY__ } from '../../../../src/libs/Constants';
+import { REGISTRY_TYPEORM } from '../../../../src/libs/storage/framework/typeorm/Constants';
+import { clone } from 'lodash';
 
 
 @suite('functional/storage/typeorm/entity_transformations')
@@ -22,15 +23,15 @@ class EntityTransformationsSpec {
   @test
   async 'simple transformations'() {
     const registry = TypeOrmEntityRegistry.$();
-    const data = {id: 1, lastName: 'Engels', firstName: 'Friedrich'};
+    const data = { id: 1, lastName: 'Engels', firstName: 'Friedrich' };
     const entityDef = registry.getEntityRefFor(Driver);
     const author = entityDef.build(data);
     expect(author).to.be.instanceOf(Driver);
-    expect(author).to.deep.eq(_.assign(_.clone(data), {[__CLASS__]: 'Driver', [__REGISTRY__]: 'typeorm'}));
+    expect(author).to.deep.eq({ [__CLASS__]: 'Driver', [__REGISTRY__]: 'typeorm', ...clone(data) });
 
-    const author2 = entityDef.build(data, {skipClassNamespaceInfo: true});
+    const author2 = entityDef.build(data, { skipClassNamespaceInfo: true });
     expect(author2).to.be.instanceOf(Driver);
-    expect(author2).to.deep.eq(_.assign(_.clone(data)));
+    expect(author2).to.deep.eq(clone(data));
   }
 
 

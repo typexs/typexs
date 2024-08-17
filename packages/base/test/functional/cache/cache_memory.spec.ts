@@ -35,7 +35,8 @@ class CacheMemorySpec {
       .configure({
         app: { name: 'test' },
         modules: {
-          paths: TestHelper.includePaths(), disableCache: true
+          paths: TestHelper.includePaths(),
+          disableCache: true
         },
         storage: { default: TEST_STORAGE_OPTIONS }
       });

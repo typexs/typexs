@@ -36,6 +36,7 @@ export class OAuth2Adapter extends AbstractAuthAdapter {
 
   type: string = K_AUTH_OAUTH2;
 
+  // @ts-ignore
   options: IOAuth2Options;
 
   strategy: any;

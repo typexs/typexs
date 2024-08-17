@@ -52,6 +52,7 @@ export class DatabaseAdapter extends AbstractAuthAdapter {
 
   type: string = K_AUTH_DATABASE;
 
+  // @ts-ignore
   options: IDatabaseAuthOptions;
 
 

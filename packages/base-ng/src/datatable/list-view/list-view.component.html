@@ -39,16 +39,14 @@
 <ng-template #viewInfinite viewTemplate="infinite">
 
   <div class="list-container"
-       [infiniteScroll]="infiniteOnOff"
+       infiniteScroll
        [refresh]="refresh"
-       (onBottom)="onBottomReached($event)"
+       (onDataScroll)="onDataScroll($event)"
        [mode]="options.infiniteMode"
-       [adaptScrollbar]="options.adaptScrollbar"
-       [maxEntries]="maxRows"
-       [rowItems]="rowItems">
+       [maxEntries]="maxRows">
     <!-- idx ist used by infiniteScroll directive -->
-    <div #rows class="row" [attr.idx]="node.idx" *ngFor="let node of getValues() | async">
-      <div class="col-md-12">
+    <div #rows class="row" [attr.idx]="node ? node.idx : -1" *ngFor="let node of getValues() | async">
+      <div class="col-md-12" *ngIf="node">
         <txs-view [instance]="node.data"
                   [allowViewModeSwitch]="allowViewModeSwitch"
                   [mode]="viewMode"
