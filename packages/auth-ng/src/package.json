@@ -30,15 +30,15 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs#readme",
   "peerDependencies": {
-    "@typexs/auth": "^2.2.1-dev.12",
-    "@typexs/base-ng": "^12.2.1-dev.16",
-    "@typexs/entity": "^2.2.1-dev.13",
-    "@typexs/entity-ng": "^12.2.1-dev.13",
-    "@typexs/forms": "^2.2.1-dev.13",
-    "@typexs/forms-ng": "^12.2.1-dev.13",
-    "@typexs/ng": "^12.2.1-dev.13",
-    "@typexs/ng-theme-base": "^12.2.1-dev.13",
-    "@typexs/roles-api": "^2.2.1-dev.13"
+    "@typexs/auth": "^2.3.0-dev.0",
+    "@typexs/base-ng": "^12.3.0-dev.1",
+    "@typexs/entity": "^2.3.0-dev.0",
+    "@typexs/entity-ng": "^12.3.0-dev.1",
+    "@typexs/forms": "^2.3.0-dev.0",
+    "@typexs/forms-ng": "^12.3.0-dev.1",
+    "@typexs/ng": "^12.3.0-dev.0",
+    "@typexs/ng-theme-base": "^12.3.0-dev.1",
+    "@typexs/roles-api": "^2.3.0-dev.0"
   },
   "devDependencies": {
     "@angular/common": "v12-lts",

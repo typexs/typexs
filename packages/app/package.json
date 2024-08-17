@@ -2,17 +2,17 @@
   "name": "app",
   "version": "12.0.0",
   "devDependencies": {
-    "@typexs/base": "^12.2.1-dev.22",
-    "@typexs/base-ng": "^12.2.1-dev.16",
-    "@typexs/storage-ng": "^12.2.1-dev.13",
-    "@typexs/search-ng": "^12.2.1-dev.15",
-    "@typexs/storage": "^12.2.1-dev.13",
-    "@typexs/forms-ng": "^12.2.1-dev.13",
-    "@typexs/forms": "^12.2.1-dev.13",
-    "@typexs/entity": "^12.2.1-dev.13",
-    "@typexs/entity-ng": "^12.2.1-dev.13",
-    "@typexs/distributed-storage-ng": "^12.2.1-dev.13",
-    "@typexs/tasks-ng": "^12.2.1-dev.13"
+    "@typexs/base": "2.3.0-dev.0",
+    "@typexs/base-ng": "12.3.0-dev.1",
+    "@typexs/storage-ng": "12.3.0-dev.1",
+    "@typexs/search-ng": "12.3.0-dev.1",
+    "@typexs/storage": "2.3.0-dev.0",
+    "@typexs/forms-ng": "12.3.0-dev.1",
+    "@typexs/forms": "2.3.0-dev.0",
+    "@typexs/entity": "2.3.0-dev.0",
+    "@typexs/entity-ng": "12.3.0-dev.1",
+    "@typexs/distributed-storage-ng": "12.3.0-dev.1",
+    "@typexs/tasks-ng": "12.3.0-dev.1"
   },
   "dependencies": {},
   "private": true

@@ -52,10 +52,10 @@
     "yargs": "17.2.1"
   },
   "peerDependencies": {
-    "typeorm": "0.2.34",
-    "winston": "3.3.3",
-    "yargonaut": "1.1.4",
-    "yargs": "17.2.1"
+    "typeorm": "^0.2.34",
+    "winston": "^3.3.3",
+    "yargonaut": "^1.1.4",
+    "yargs": "^17.2.1"
   },
   "typexs": {
     "name": "base"

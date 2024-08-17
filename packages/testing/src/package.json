@@ -26,7 +26,7 @@
     "controllers"
   ],
   "peerDependencies": {
-    "@typexs/base": "^2.2.1-dev.22"
+    "@typexs/base": "^2.3.0-dev.0"
   },
   "devDependencies": {
     "@typexs/base": "2.3.0-dev.0"

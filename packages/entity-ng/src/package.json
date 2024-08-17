@@ -30,12 +30,12 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@typexs/base": "^2.2.1-dev.22",
-    "@typexs/base-ng": "^12.2.1-dev.16",
-    "@typexs/entity": "^2.2.1-dev.13",
-    "@typexs/forms": "^2.2.1-dev.13",
-    "@typexs/forms-ng": "^12.2.1-dev.13",
-    "@typexs/ng": "^12.2.1-dev.13"
+    "@typexs/base": "^2.3.0-dev.0",
+    "@typexs/base-ng": "^12.3.0-dev.1",
+    "@typexs/entity": "^2.3.0-dev.0",
+    "@typexs/forms": "^2.3.0-dev.0",
+    "@typexs/forms-ng": "^12.3.0-dev.1",
+    "@typexs/ng": "^12.3.0-dev.0"
   },
   "devDependencies": {
     "@angular/common": "v12-lts",
@@ -43,11 +43,11 @@
     "@angular/forms": "v12-lts",
     "@angular/router": "v12-lts",
     "@typexs/base": "2.3.0-dev.0",
-    "@typexs/base-ng": "2.2.1-dev.29",
+    "@typexs/base-ng": "12.3.0-dev.1",
     "@typexs/entity": "2.3.0-dev.0",
     "@typexs/forms": "2.3.0-dev.0",
-    "@typexs/forms-ng": "2.2.1-dev.26",
-    "@typexs/ng": "2.2.1-dev.21",
+    "@typexs/forms-ng": "12.3.0-dev.1",
+    "@typexs/ng": "12.3.0-dev.0",
     "chai": "4.3.4",
     "rxjs": "6.6.7"
   },

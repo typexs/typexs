@@ -22,11 +22,11 @@
     "typexs"
   ],
   "peerDependencies": {
-    "@typexs/base": "^2.2.1-dev.22",
-    "@typexs/base-ng": "^12.2.1-dev.16",
-    "@typexs/forms-ng": "^12.2.1-dev.13",
-    "@typexs/server": "^2.2.1-dev.13",
-    "@typexs/storage-ng": "^12.2.1-dev.13"
+    "@typexs/base": "^2.3.0-dev.0",
+    "@typexs/base-ng": "^12.3.0-dev.1",
+    "@typexs/forms-ng": "^12.3.0-dev.1",
+    "@typexs/server": "^2.3.0-dev.0",
+    "@typexs/storage-ng": "^12.3.0-dev.1"
   },
   "devDependencies": {
     "@angular/common": "v12-lts",
