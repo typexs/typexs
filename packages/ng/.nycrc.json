@@ -16,7 +16,7 @@
     "json"
   ],
   "temp-dir": "/tmp/typexs/.nyc-output/ng",
-  "report-dir": "../../coverage/ng",
+  "report-dir": "../../../coverage/ng",
   "sourceMap": true,
   "instrument": true,
   "cache": false

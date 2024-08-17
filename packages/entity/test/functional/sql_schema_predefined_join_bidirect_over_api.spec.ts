@@ -1,17 +1,17 @@
 import '../../src/libs/decorators/register';
-import {EntityAPIController} from '../../src/controllers/EntityAPIController';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { EntityAPIController } from '../../src/controllers/EntityAPIController';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
 import * as _ from 'lodash';
-import {Bootstrap, Injector, IRuntimeLoaderOptions, TypeOrmEntityRegistry} from '@typexs/base';
-import {TestHelper} from './TestHelper';
-import {K_ROUTE_CONTROLLER, Server} from '@typexs/server';
-import {Permission} from './schemas/role_permissions/Permission';
-import {Role} from './schemas/role_permissions/Role';
-import {RBelongsTo2} from './schemas/role_permissions/RBelongsTo2';
-import {TEST_STORAGE_OPTIONS} from './config';
-import {RegistryFactory} from '@allgemein/schema-api';
-import {EntityRegistry, NAMESPACE_BUILT_ENTITY, REGISTRY_TXS_SCHEMA} from '../../src';
+import { Bootstrap, Injector, IRuntimeLoaderOptions, TypeOrmEntityRegistry } from '@typexs/base';
+import { TestHelper } from './TestHelper';
+import { K_ROUTE_CONTROLLER, Server } from '@typexs/server';
+import { Permission } from './schemas/role_permissions/Permission';
+import { Role } from './schemas/role_permissions/Role';
+import { RBelongsTo2 } from './schemas/role_permissions/RBelongsTo2';
+import { TEST_STORAGE_OPTIONS } from './config';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { EntityRegistry, NAMESPACE_BUILT_ENTITY, REGISTRY_TXS_SCHEMA } from '../../src';
 
 
 const settingsTemplate: any = {
@@ -20,23 +20,27 @@ const settingsTemplate: any = {
     role_permissions: {
       synchronize: true,
       type: 'sqlite',
-      database: ':memory:',
+      database: ':memory:'
       // logging: 'all',
       // logger: 'simple-console'
     }
   },
 
-  app: {name: 'demo', path: __dirname + '/../..'},
+  app: {
+    name: 'demo',
+    path: __dirname + '/../../src'
+  },
 
   modules: <IRuntimeLoaderOptions>{
     paths: [
-      __dirname + '/../../..'
+      __dirname + '/../../../..'
     ],
     disableCache: true,
     include: [
-      '**/packages/base**',
-      '**/packages/server**',
-      '**/packages/entity**',
+      '**/@allgemein{,/eventbus}*',
+      '**/@typexs{,/base}*',
+      '**/@typexs{,/server}*',
+      '**/@typexs{,/entity}*'
       // '**/packages/fake_app**'
     ],
 
@@ -50,7 +54,7 @@ const settingsTemplate: any = {
   logging: {
     enable: false,
     level: 'debug',
-    transports: [{console: {name: 'sql_schema_predefined_join_bidirect_over_api'}}],
+    transports: [{ console: { name: 'sql_schema_predefined_join_bidirect_over_api' } }]
   },
 
 
@@ -85,7 +89,7 @@ class SqlSchemaPredefinedJoinBidirectOverApiSpec {
     Bootstrap.reset();
     (RegistryFactory.get(NAMESPACE_BUILT_ENTITY) as EntityRegistry).reload([Permission, Role, RBelongsTo2]);
 
-    bootstrap = Bootstrap.setConfigSources([{type: 'system'}])
+    bootstrap = Bootstrap.setConfigSources([{ type: 'system' }])
       .configure(settings)
       .activateErrorHandling()
       .activateLogger();

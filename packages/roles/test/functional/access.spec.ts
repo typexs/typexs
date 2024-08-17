@@ -1,40 +1,45 @@
 // process.env.SQL_LOG = '1';
-import {expect} from 'chai';
-import {Bootstrap, Injector, ITypexsOptions} from '@typexs/base';
-import {suite, test} from '@testdeck/mocha';
-import {TEST_STORAGE_OPTIONS} from './config';
-import {Access} from '../../src/libs/Access';
-import {PermissionsRegistry} from '../../src';
-import {BasicPermission, IPermissions, IRole, IRolesHolder} from '@typexs/roles-api';
+import { expect } from 'chai';
+import { Bootstrap, Injector, ITypexsOptions } from '@typexs/base';
+import { suite, test } from '@testdeck/mocha';
+import { TEST_STORAGE_OPTIONS } from './config';
+import { Access } from '../../src/libs/Access';
+import { PermissionsRegistry } from '../../src';
+import { BasicPermission, IPermissions, IRole, IRolesHolder } from '@typexs/roles-api';
 import { TestHelper } from './TestHelper';
 
 let bootstrap: Bootstrap;
 let inc = 0;
 const LOG_EVENT = TestHelper.logEnable(false);
+
+const INCLUDES = ['**/@allgemein{,/eventbus}*',
+  '**/@typexs{,/base}*',
+  '**/@typexs{,/server}*',
+  '**/@typexs{,/entity}*',
+  '**/@typexs{,/roles-api}*',
+  '**/@typexs{,/roles}*'
+];
+
+
 @suite('functional/access')
 class AccessSpec {
 
 
   static async before() {
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
         // app: {name: 'test', nodeId: 'worker'},
-        logging: {enable: LOG_EVENT, level: 'debug'},
+        logging: { enable: LOG_EVENT, level: 'debug' },
         modules: {
           paths: [
-            __dirname + '/../../..'
+            __dirname + '/../../../..'
           ],
           disableCache: true,
-          include: [
-            '**/packages/base**',
-            '**/packages/server**',
-            '**/packages/roles-api**',
-            '**/packages/entity**'
-          ],
+          include: INCLUDES
 
         },
-        storage: {default: TEST_STORAGE_OPTIONS},
+        storage: { default: TEST_STORAGE_OPTIONS }
         // workers: {access: [{name: 'TaskMonitorWorker', access: 'allow'}]}
       });
     bootstrap.activateLogger();

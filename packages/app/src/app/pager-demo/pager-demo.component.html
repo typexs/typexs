@@ -6,7 +6,7 @@
     (pageChange)="onPageChange($event)">
   </txs-pager>
 
-    <h4>Simple pager for 10 items with 2 instances</h4>
+  <h4>Simple pager for 10 items with 2 instances</h4>
 
   <txs-pager
     name="pager2"
@@ -23,8 +23,8 @@
   <h4>Simple pager for 10 items with current page</h4>
 
   <pre *ngIf="pager3">
-    currentPage = {{pager3.currentPage}}
-    frameSize = {{pager3.pages}}
+    currentPage = {{ pager3.currentPage }}
+    frameSize = {{ pager3.pages$.getValue() }}
   </pre>
 
   <txs-pager

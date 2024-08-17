@@ -1,0 +1,24 @@
+<h5>Simple HTML Table</h5>
+
+<datatable-options
+  [options]="options"
+  [viewModes]="viewModes"
+  [(maxRows)]="maxRows"
+  (optionsChange)="onOptionsUpdate($event)">
+</datatable-options>
+
+
+<!--<div class="d-flex">-->
+<!--  <button class="btn btn-primary" (click)="rebuild()">Rebuild</button>-->
+<!--  <button class="btn btn-primary" (click)="reset()">Reset</button>-->
+<!--</div>-->
+
+<txs-datatable
+  [component]="comp"
+  [columns]="columns"
+  [maxRows]="maxRows"
+  [options]="options"
+  [rows]="rows"
+  (gridReady)="onGridReady($event)">
+</txs-datatable>
+

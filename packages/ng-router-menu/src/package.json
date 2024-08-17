@@ -1,1 +1,41 @@
-../package.json
+{
+  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
+  "name": "@typexs/ng-router-menu",
+  "version": "12.2.1-dev.15",
+  "description": "Angular for typexs",
+  "main": "public_api",
+  "scripts": {
+    "clean": "rm -rf ../build ../node_modules/.cache",
+    "test": "ng test --code-coverage=true --watch=false",
+    "build": "ng build"
+  },
+  "directories": {
+    "doc": "docs/de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/typexs/ng.git"
+  },
+  "author": "Robert Kania",
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "framework",
+    "commons",
+    "typescript",
+    "typexs"
+  ],
+  "bugs": {
+    "url": "https://gitlab.com/typexs/ng/issues"
+  },
+  "homepage": "https://gitlab.com/typexs/ng#readme",
+  "devDependencies": {
+    "@angular/common": "v12-lts",
+    "@angular/core": "v12-lts",
+    "@angular/platform-browser": "v12-lts",
+    "@angular/router": "v12-lts",
+    "lodash": "4.17.21",
+    "rxjs": "6.6.7"
+  },
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
+}

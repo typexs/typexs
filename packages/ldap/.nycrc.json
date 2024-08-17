@@ -16,7 +16,7 @@
     "json"
   ],
   "temp-dir": "/tmp/typexs/.nyc-output/ldap",
-  "report-dir": "../../coverage/ldap",
+  "report-dir": "../../../coverage/ldap",
   "sourceMap": true,
   "instrument": true,
   "cache": false

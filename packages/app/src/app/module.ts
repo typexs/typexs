@@ -18,10 +18,10 @@ import { LogoutComponent } from './dummy/logout/logout.component';
 import { ProfileComponent } from './dummy/profile/profile.component';
 import { NotificationDemoComponent } from './components/notification/notification-demo.component';
 import { InputDemoComponent } from './components/forms/input/input-demo.component';
-import { TablesDemoComponent } from './components/tables/tables-demo.component';
+import { TablesDemoComponent } from './components/grids/tables-demo.component';
 import { AgGridWrapperComponent } from './addons/ag-grid/ag-grid-wrapper.component';
 import { NavigatorService } from '@typexs/ng-router-menu';
-import { SimpleHtmlTableDemoComponent } from './components/tables/simple-html-table/simple-html-table-demo.component';
+import { SimpleTableDemoComponent } from './components/grids/simple-table/simple-table-demo.component';
 import { StorageService } from '@typexs/storage-ng';
 import { EntityService } from '@typexs/entity-ng';
 import { DistributedStorageService } from '@typexs/distributed-storage-ng';
@@ -46,9 +46,9 @@ import { AppService, AuthService, ComponentRegistryService } from '@typexs/base-
 import { FormSelectionsComponent } from './components/forms/selection/form-selections.component';
 import { BuildSimpleItemComponent } from './components/entities/build-simple-item/build-simple-item.component';
 import { BuildSimpleItem } from '../../../demo-task/src/entities/BuildSimpleItem';
-import { TablesOverviewComponent } from './components/tables/overview/tables-overview.component';
-import { ListViewDemoComponent } from './components/tables/list-view/list-view-demo.component';
-import { DatatableOptionsComponent } from './components/tables/datatable-options/datatable-options.component';
+import { GridOverviewComponent } from './components/grids/overview/grid-overview.component';
+import { ListViewDemoComponent } from './components/grids/list-view/list-view-demo.component';
+import { DatatableOptionsComponent } from './components/grids/datatable-options/datatable-options.component';
 
 
 @NgModule({
@@ -76,7 +76,7 @@ import { DatatableOptionsComponent } from './components/tables/datatable-options
     ProfileComponent,
     NotificationDemoComponent,
     AgGridWrapperComponent,
-    SimpleHtmlTableDemoComponent,
+    SimpleTableDemoComponent,
     EmbeddedStorageOverviewComponent,
     EmbeddedStorageDefaultComponent,
     EmbeddedStorageAgGridComponent,
@@ -86,7 +86,7 @@ import { DatatableOptionsComponent } from './components/tables/datatable-options
     BookComponent,
     BuildSimpleItemComponent,
     SimpleViewVariantsComponent,
-    TablesOverviewComponent,
+    GridOverviewComponent,
     ListViewDemoComponent,
     DatatableOptionsComponent
   ],

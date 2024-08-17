@@ -1,5 +1,6 @@
 import { IQueryOptions } from './IQueryOptions';
-import { K_PAGED } from '../../datatable/Constants';
+
+import { K_PAGED } from '../../datatable/api/IGridMode';
 
 export const DEFAULT_QUERY_OPTIONS: IQueryOptions = {
   mode: K_PAGED,
@@ -11,11 +12,14 @@ export const DEFAULT_QUERY_OPTIONS: IQueryOptions = {
 };
 
 
+export const K_QUERY = 'query';
+export const K_AGGREGATE = 'aggregate';
+
 /**
  * Querying
  */
 
-export type QUERY_MODE =
+export type T_QUERY_MODE =
   'aggregate' |
   'query';
 

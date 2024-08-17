@@ -5,6 +5,7 @@ import {QueryAction} from '../QueryAction';
 import {Log} from '../../../lib/log/Log';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import { K_QUERY, T_QUERY_MODE } from '../Constants';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class FreeQueryInputComponent implements OnInit, OnDestroy {
 
 
   @Input()
-  mode: 'aggregate' | 'query' = 'query';
+  mode: T_QUERY_MODE = K_QUERY;
 
   @Input()
   lines: number = 1;
@@ -27,7 +28,7 @@ export class FreeQueryInputComponent implements OnInit, OnDestroy {
   @Output()
   queryState: EventEmitter<QueryAction> = new EventEmitter();
 
-  history: { mode: 'aggregate' | 'query'; text: string; query: any }[] = [];
+  history: { mode: T_QUERY_MODE; text: string; query: any }[] = [];
 
   historyToggle: boolean = false;
 
@@ -116,7 +117,7 @@ export class FreeQueryInputComponent implements OnInit, OnDestroy {
     $event.stopPropagation();
   }
 
-  selectEntry(entry: { mode: 'aggregate' | 'query'; text: string; query: any }) {
+  selectEntry(entry: { mode: T_QUERY_MODE; text: string; query: any }) {
     this.mode = entry.mode;
     this.freeTextQuery = entry.text;
     this.build();
@@ -132,7 +133,7 @@ export class FreeQueryInputComponent implements OnInit, OnDestroy {
     if (!isEmpty(this.freeTextQuery)) {
       try {
         const errors: string[] = [];
-        if (this.mode === 'query') {
+        if (this.mode === K_QUERY) {
           const expr = Expressions.parse(this.freeTextQuery);
           if (expr) {
             this.jsonQuery = expr;

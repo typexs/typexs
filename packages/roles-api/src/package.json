@@ -1,1 +1,28 @@
-../package.json
+{
+  "name": "@typexs/roles-api",
+  "version": "2.2.1-dev.15",
+  "main": "index",
+  "scripts": {
+    "clean": "rm -rf ../build ../node_modules/.cache",
+    "build": "node ../../../scripts/build.js"
+  },
+  "directories": {
+    "lib": "",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/typexs/typexs.git"
+  },
+  "author": "Robert Kania",
+  "license": "MIT",
+  "peerDependencies": {
+    "@cezaryrk/minimatch": "3.0.4"
+  },
+  "devDependencies": {
+    "@cezaryrk/minimatch": "3.0.4"
+  },
+  "typexs": {
+    "name": "roles-api"
+  }
+}

@@ -1,12 +1,16 @@
 import { range } from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PagerAction } from './PagerAction';
-import { EventEmitter } from 'events';
 import { Location } from '@angular/common';
+import { EventEmitter as ngEventEmitter } from '@angular/core';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { Log } from '../lib/log/Log';
 
-export class Pager extends EventEmitter {
+export class Pager {
 
   static inc = 0;
+
+  readonly id: number;
 
   readonly name: string;
 
@@ -15,6 +19,7 @@ export class Pager extends EventEmitter {
   private frameStart: number;
 
   private frameEnd: number;
+
 
   frameSize: number = 3;
 
@@ -30,22 +35,52 @@ export class Pager extends EventEmitter {
   /**
    * Pages for display
    */
-  pages: number[] = [];
+  pages$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
 
-  wait: any;
+  emitter: { event: string; emitter: ngEventEmitter<PagerAction> }[] = [];
 
-  constructor(private location: Location, private router: Router, private activatedRoute: ActivatedRoute, id: string = 'dummy') {
-    super();
+  /**
+   * Cache subscriptions
+   */
+  queryListenerSubscription: Subscription = null;
+
+
+  constructor(
+    private location: Location,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
+    id: string = 'dummy') {
     this.name = id;
-
+    this.id = Pager.inc++;
   }
 
-
-  doOnce(fn: () => void) {
-    clearTimeout(this.wait);
-    this.wait = setTimeout(fn, 50);
+  /**
+   * Register callback for some event
+   */
+  register(eventName: string, emitter: ngEventEmitter<PagerAction>) {
+    const _exists = this.emitter.find(x => x.event === eventName && (x.emitter === emitter));
+    if (!_exists) {
+      this.emitter.push({ event: eventName, emitter: emitter });
+      this.listenForQueryParam();
+    }
   }
 
+  listenForQueryParam() {
+    if (this.queryListenerSubscription) {
+      return;
+    }
+    this.queryListenerSubscription = this.activatedRoute.queryParamMap.subscribe(value => {
+      if (value.has(this.name)) {
+        const _value = value.get(this.name);
+        if (/^\d+$/.test(_value)) {
+          const nr = parseInt(_value, 10);
+          if (this.currentPage !== nr) {
+            this.setPage(nr);
+          }
+        }
+      }
+    });
+  }
 
   calculatePages() {
     if (this.minPage > 0 && this.totalPages > 0) {
@@ -70,7 +105,9 @@ export class Pager extends EventEmitter {
         this.frameStart <= this.currentPage &&
         this.currentPage <= this.frameEnd &&
         this.frameEnd <= this.totalPages) {
-        this.pages = range(this.frameStart, this.frameEnd + 1);
+        const page = range(this.frameStart, this.frameEnd + 1);
+        this.pages$.next(page);
+        this.updateUrl(this.currentPage);
       } else {
         throw new Error('pager error' +
           ' min=' + this.minPage +
@@ -95,39 +132,44 @@ export class Pager extends EventEmitter {
           this.setPage(parseInt(page, 10));
           return true;
         } catch (e) {
+          Log.error(e);
         }
       }
-
     }
     return false;
   }
 
 
-  setPage(nr: number) {
-    if (0 < nr && nr <= this.totalPages && nr !== this.currentPage) {
-      this.doOnce(() => {
-        this.currentPage = nr;
-        this.calculatePages();
-        const action = new PagerAction(this.currentPage, this.name);
-        this.emit('page_action', action);
-
-        this.updateUrl();
+  setPage(nr: number, force = false) {
+    if ((0 < nr && nr <= this.totalPages && nr !== this.currentPage) || force) {
+      this.currentPage = nr;
+      this.calculatePages();
+      const action = new PagerAction(this.currentPage, this.name);
+      this.emitter.filter(x => x.event === 'page_action').forEach(x => {
+        x.emitter.emit(action);
       });
     } else {
-      throw new Error('pager is out of range ' + nr + ' of maxlines ' + this.totalPages);
+      if (typeof this.currentPage === 'number' && nr !== this.currentPage) {
+        throw new Error('pager is out of range ' + nr + ' of maxlines ' + this.totalPages);
+      }
     }
   }
 
-  updateUrl() {
-    const params: any = {};
-    params[this.name] = this.currentPage;
-
-    const urlTree = this.router.createUrlTree([], {
-      queryParams: params,
-      queryParamsHandling: 'merge',
-      preserveFragment: true
-    });
-    this.location.replaceState(urlTree.toString());
+  updateUrl(page: number) {
+    const params: any = {
+      [this.name]: undefined
+    };
+    if (page > 0) {
+      params[this.name] = page;
+    }
+    if (this.router) {
+      const urlTree = this.router.createUrlTree([], {
+        queryParams: params,
+        queryParamsHandling: 'merge',
+        preserveFragment: true
+      });
+      this.location.replaceState(urlTree.toString());
+    }
   }
 
 
@@ -158,14 +200,41 @@ export class Pager extends EventEmitter {
   }
 
   reset() {
+    this.totalPages = 0;
+    this.pages$.next([]);
     this.currentPage = 1;
-    this.updateUrl();
+    this.updateUrl(0);
+  }
+
+  canBeFreed() {
+    return this._inc <= 0;
   }
 
   free() {
-    this.removeAllListeners();
-    this.router = null;
-    this.activatedRoute = null;
-    return this._inc <= 0;
+    // this.removeAllListeners();
+    this.router = undefined;
+    this.activatedRoute = undefined;
+    this.location = undefined;
+    this.emitter = undefined;
+    if (this.queryListenerSubscription) {
+      this.queryListenerSubscription.unsubscribe();
+      this.queryListenerSubscription = undefined;
+    }
+  }
+
+  isFreeed() {
+    return !this.activatedRoute;
+  }
+
+  calculate(offset: number, limit: number, maxRows: number) {
+    this.totalPages = Math.ceil(maxRows * 1.0 / limit * 1.0);
+    // if (!this.checkQueryParam()) {
+    this.currentPage = (offset / limit) + 1;
+    this.calculatePages();
+    // }
+  }
+
+  hasPages() {
+    return this.pages$.getValue().length > 0;
   }
 }

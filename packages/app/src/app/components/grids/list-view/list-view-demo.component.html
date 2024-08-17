@@ -1,0 +1,32 @@
+<h5>List View Grid</h5>
+
+
+<datatable-options
+  [options]="options"
+  [viewModes]="viewModes"
+  [(maxRows)]="maxRows"
+  (optionsChange)="onOptionsUpdate($event)">
+
+  <div class="d-flex  flex-row" *ngIf="options.mode === 'infinite'">
+    <div class="m-1">
+      <strong>Infinite mode:</strong>
+    </div>
+    <div class="form-check m-1" *ngFor="let m of getInfiniteMode()">
+      <input class="form-check-input" name="infiniteMode" type="radio"
+             [value]="m.name" id="r-{{m.name}}"
+             (click)="update('infinite-mode', m.name)" [checked]="options.infiniteMode === m.name">
+      <label class="form-check-label" for="r-{{m.name}}"> {{ m.name }}</label>
+    </div>
+  </div>
+
+</datatable-options>
+
+<txs-datatable
+  [component]="comp"
+  [columns]="columns"
+  [maxRows]="maxRows"
+  [rows]="rows"
+  [options]="options"
+  (gridReady)="onGridReady($event)"
+>
+</txs-datatable>

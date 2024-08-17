@@ -1,14 +1,15 @@
 import * as _ from 'lodash';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {Config} from '@allgemein/config';
-import {Bootstrap} from '../../../../src/Bootstrap';
-import {TypeOrmStorageRef} from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { Config } from '@allgemein/config';
+import { Bootstrap } from '../../../../src/Bootstrap';
+import { TypeOrmStorageRef } from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
 import {
   EVENT_STORAGE_REF_PREPARED,
   EVENT_STORAGE_REF_SHUTDOWN
 } from '../../../../src/libs/storage/framework/typeorm/Constants';
 import { postgres_host, postgres_port } from '../../config';
+import { TestHelper } from '../../../../../testing/src';
 
 
 let bootstrap: Bootstrap;
@@ -32,13 +33,11 @@ class StorageGeneralSpec {
 
   @test
   async 'mass connections on psql'() {
-    bootstrap = await Bootstrap.setConfigSources([{type: 'system'}]).configure({
-      app: {path: '.'},
+    bootstrap = await Bootstrap.setConfigSources([{ type: 'system' }]).configure({
+      app: { path: '.' },
       modules: {
-        paths: [
-          __dirname + '/../../../..'
-        ],
-        include:[
+        paths: TestHelper.includePaths(),
+        include: [
           '**/@typexs/base/**'
         ]
       },

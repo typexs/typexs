@@ -1,23 +1,25 @@
-<div class="list-view-container">
+<div class="list-view-container mode-{{this.options.mode}}" *ngIf="isInitialized()">
+  <ng-container *ngTemplateOutlet="selectedTemplate()"></ng-container>
+</div>
 
-  <txs-pager *ngIf="options.enablePager"
+
+<ng-template #viewPaged viewTemplate="paged">
+  <txs-pager *ngIf="isPagerEnabled()"
              [name]="options.pagerId"
-             [pager]="pager"
+             [pager]="getPager(false)"
              (pageChange)="onPagerAction($event)">
   </txs-pager>
 
-
   <div class="list-container">
-    <div class="row" *ngFor="let row of getValues() | async">
+    <div #rows class="row" *ngFor="let node of getValues() | async">
       <div class="col-md-12">
-
-        <txs-view [instance]="row.data"
+        <txs-view [instance]="node.data"
                   [allowViewModeSwitch]="allowViewModeSwitch"
                   [mode]="viewMode"
                   [options]="options.viewOptions"
                   [passThrough]="passThrough">
           <div txsViewFallback>
-            <txs-simple-json [instance]="row.data"
+            <txs-simple-json [instance]="node.data"
                              [options]="options.viewOptions">
             </txs-simple-json>
           </div>
@@ -26,12 +28,39 @@
     </div>
   </div>
 
-
-  <txs-pager *ngIf="options.enablePager"
+  <txs-pager *ngIf="isPagerEnabled()"
              [name]="options.pagerId"
-             [pager]="pager"
-             frameSize="5"
-             (pageChange)="onPagerAction($event)">
+             [pager]="getPager(false)">
   </txs-pager>
 
-</div>
+</ng-template>
+
+
+<ng-template #viewInfinite viewTemplate="infinite">
+  <div class="list-container"
+       infiniteScroll
+       [refresh]="refresh"
+       [finished]="finished"
+       [mode]="options.infiniteMode"
+       [maxEntries]="maxRows"
+       (onDataScroll)="onDataScroll($event)"
+  >
+    <!-- idx ist used by infiniteScroll directive -->
+    <div #rows class="row" [attr.idx]="node ? node.idx : -1" *ngFor="let node of getValues() | async">
+      <div class="col-md-12" *ngIf="node">
+        <txs-view [instance]="node.data"
+                  [allowViewModeSwitch]="allowViewModeSwitch"
+                  [mode]="viewMode"
+                  [options]="options.viewOptions"
+                  [passThrough]="passThrough">
+          <div txsViewFallback>
+            <txs-simple-json [instance]="node.data"
+                             [options]="options.viewOptions">
+            </txs-simple-json>
+          </div>
+        </txs-view>
+      </div>
+    </div>
+  </div>
+
+</ng-template>

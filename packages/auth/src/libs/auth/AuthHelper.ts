@@ -58,7 +58,7 @@ export class AuthHelper {
       } else if (signup instanceof AbstractUserLogin) {
         // mail could be passed by freestyle data object
         if (_.has(dataContainer, 'data.mail')) {
-          method.mail = _.get(dataContainer, 'data.mail');
+          method.mail = _.get(dataContainer, 'data.mail') as string;
         }
       }
     }
@@ -94,7 +94,7 @@ export class AuthHelper {
       } else if (signup instanceof AbstractUserLogin) {
         // mail could be passed by freestyle data object
         if (_.has(dataContainer, 'data.mail')) {
-          user.mail = _.get(dataContainer, 'data.mail');
+          user.mail = _.get(dataContainer, 'data.mail') as string;
         }
       }
     }

@@ -1,15 +1,14 @@
-// import * as got from 'got';
-import {suite, test, timeout} from '@testdeck/mocha';
-
-import {expect} from 'chai';
-import {Injector, Log} from '@typexs/base';
-import {Server} from '../../../src/libs/server/Server';
-import {HttpFactory, IHttp} from '@allgemein/http';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { Log } from '@typexs/base';
+import { Server } from '../../../src/libs/server/Server';
+import { HttpFactory, IHttp } from '@allgemein/http';
 
 
 let server: Server = null;
-
 let http: IHttp;
+
+const LOCALHOST = '127.0.0.1';
 
 @suite('functional/server/server')
 class RegistrySpec {
@@ -35,7 +34,7 @@ class RegistrySpec {
 
   @test
   async 'timeout check '() {
-    server.initialize({ip: 'localhost', port: 8000, protocol: 'http', timeout: 100});
+    server.initialize({ip: LOCALHOST, port: 8000, protocol: 'http', timeout: 100});
     await server.start();
     server.stall = 1000;
     const _url = server.url();
@@ -58,7 +57,7 @@ class RegistrySpec {
    */
   @test
   async 'server abort'() {
-    server.initialize({ip: 'localhost', port: 8000, protocol: 'http'});
+    server.initialize({ip: LOCALHOST, port: 8000, protocol: 'http'});
     await server.start();
     server.stall = 1000;
     setTimeout(() => {
@@ -78,7 +77,8 @@ class RegistrySpec {
    */
   @test
   async 'http server simple request'() {
-    server.initialize({ip: 'localhost', port: 8000, protocol: 'http'});
+
+    server.initialize({ip: LOCALHOST, port: 8000, protocol: 'http'});
     await server.start();
     const _url = server.url();
     const req = await http.get(_url);
@@ -90,7 +90,7 @@ class RegistrySpec {
    */
   @test
   async 'http server socket timeout request'() {
-    server.initialize({ip: 'localhost', port: 8000, protocol: 'http'});
+    server.initialize({ip: LOCALHOST, port: 8000, protocol: 'http'});
     await server.start();
     try {
       server.stall = 500;

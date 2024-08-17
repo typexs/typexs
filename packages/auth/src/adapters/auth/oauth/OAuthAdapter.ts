@@ -30,6 +30,7 @@ export class OAuthAdapter extends AbstractAuthAdapter {
 
   type: string = K_AUTH_OAUTH;
 
+  // @ts-ignore
   options: IOAuthOptions;
 
   passport: any;

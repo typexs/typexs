@@ -1,13 +1,14 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "version": "independent",
-  "distTag": "v2-dev",
+  "distTag": "v2.3-dev",
   "command": {
-    "link": {
-      "forceLocal": true
-    },
     "version": {
       "ignore": "app|app-auth|testtask",
+      "allowBranch": [
+        "main",
+        "master"
+      ],
       "preid": "dev",
       "noPush": true,
       "gitTagVersion": true,
@@ -17,6 +18,10 @@
       "private": false
     },
     "publish": {
+      "allowBranch": [
+        "main",
+        "master"
+      ],
       "noPush": true,
       "private": false,
       "gitReset": true,

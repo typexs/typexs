@@ -11,13 +11,11 @@ import { PipeHandle } from './pipeline/PipeHandle';
 const handleCallResults = function(res: any, cb: any, data: any) {
   if (res) {
     if (ProcessingHelper.isPromise(res)) {
-      // Log.info('asdasdasd3 ');
       // const x = setTimeout(() => {
       //   Log.error('timeout', res, cb, data);
       // }, 60000);
       res.then((_res: any) => {
         // clearTimeout(x);
-        // Log.info('asdasdasd4 ');
         if (_res) {
           cb(null, _res);
         } else {
@@ -25,7 +23,6 @@ const handleCallResults = function(res: any, cb: any, data: any) {
         }
       }).catch((err: Error) => {
         // clearTimeout(x);
-        // Log.error('asdasdasd5 ', err.stack);
         cb(err);
       });
     } else {
@@ -48,7 +45,8 @@ export abstract class Processor extends EventEmitter implements IProcessor {
     this.logger = _.get(options, 'logger', Log.getLogger());
     // this.$_name_ = options['_name_'] || 'unknown'
 
-    // TODO @depreacted
+    // TODO
+    //  @depreacted
     this.$broker = null;
 
     // if the processor is bound to an pipeline
@@ -127,10 +125,8 @@ export abstract class Processor extends EventEmitter implements IProcessor {
             cb(null, data);
           }
         }
-
       });
     }
-
   }
 
   // set broker(b) {

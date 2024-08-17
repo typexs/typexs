@@ -1,23 +1,4 @@
-export const K_PAGED = 'paged';
-export const K_INFINITE = 'infinite';
-export const K_VIEW = 'view';
 // export const K_VIEW = 'view';
-
-/**
- * - paged - a pager will be integrated in the view
- * - infinite - an infinite scoll with reload on page bottom reach
- * - view - show only the once loaded rows
- */
-export type GRID_MODE = 'paged' | 'infinite' | 'view';
-
-/**
- * List with supported grid modes
- */
-export const GRID_MODES = [
-  { key: K_VIEW, label: K_VIEW },
-  { key: K_PAGED, label: K_PAGED },
-  { key: K_INFINITE, label: K_INFINITE }
-];
 
 export const inputKeys = [
   'options',
@@ -26,7 +7,8 @@ export const inputKeys = [
   'columns',
   'maxRows',
   'rows',
-  'limit'
+  'limit',
+  'offset'
 ];
 
 export const outputKeys = [
@@ -37,12 +19,17 @@ export const outputKeys = [
 
 export const methodKeys = [
   'rebuild',
-  'setMaxRows',
-  'setColumns',
-  'setRows',
+  'isInitialized',
   'getMaxRows',
+  'setMaxRows',
   'getColumns',
-  'getRows'
+  'setColumns',
+  'getControl',
+  'getRows',
+  'setRows',
+  'getViewMode',
+  'setViewMode',
+  'supportedViewModes'
 ];
 
 /**

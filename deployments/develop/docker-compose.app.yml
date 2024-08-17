@@ -1,6 +1,9 @@
 version: '3'
+
 networks:
   dev: { }
+
+
 services:
   mongo:
     image: mongo:4
@@ -8,7 +11,7 @@ services:
       - 127.0.0.1:27017:27017
     volumes:
       - ./local/mongodb:/data/db
-    networks:
+    networks: &networks
       - dev
 
   redis:
@@ -17,8 +20,7 @@ services:
       - 127.0.0.1:6379:6379
     volumes:
       - ./local/redis/db:/data
-    networks:
-      - dev
+    networks: *networks
 
   elastic:
     image: elasticsearch:7.14.2
@@ -32,8 +34,7 @@ services:
     ports:
       - 127.0.0.1:9200:9200
       - 127.0.0.1:9300:9300
-    networks:
-      - dev
+    networks: *networks
 
   psql:
     image: postgres:16
@@ -44,7 +45,6 @@ services:
       POSTGRES_USER: txsbase
       POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_PASSWORD:
-    networks:
-      - dev
+    networks: *networks
 
 

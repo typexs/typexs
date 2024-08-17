@@ -12,7 +12,6 @@ describe('Service: EntityOptionsService', () => {
   describe('initialize by string', () => {
     let service: EntityOptionsService;
 
-
     beforeEach(() => {
       const bed = TestBed.configureTestingModule({
         imports: [

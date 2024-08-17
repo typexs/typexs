@@ -65,6 +65,7 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
 
   type: string = K_AUTH_LDAP;
 
+  // @ts-ignore
   options: ILdapAuthOptions;
 
   // ldap: any;

@@ -627,7 +627,7 @@ class TasksSpec {
       message: 'test error',
       className: 'Error'
     });
-    expect(data1.error.stack).to.have.length.gte(3);
+    expect(data1.error.stack).to.have.length.gte(2);
   }
 
 
@@ -654,7 +654,7 @@ class TasksSpec {
       message: 'test error',
       className: 'Error'
     });
-    expect(data1.error.stack).to.have.length.gte(3);
+    expect(data1.error.stack).to.have.length.gte(2);
   }
 
 

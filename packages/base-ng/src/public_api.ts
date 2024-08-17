@@ -87,12 +87,12 @@ export * from './pager/Pager';
 export * from './pager/PagerAction';
 export * from './pager/pager.component';
 
-export * from './datatable/abstract-grid.component';
+export * from './datatable/api/abstract-grid.component';
 export * from './datatable/datatable.component';
-export * from './datatable/IGridApi';
-export * from './datatable/IQueryParams';
-export * from './datatable/IGridColumn';
-export * from './datatable/IDatatableOptions';
+export * from './datatable/api/IGridApi';
+export * from './datatable/api/IQueryParams';
+export * from './datatable/api/IGridColumn';
+export * from './datatable/api/IDatatableOptions';
 
 
 export { AbstractComponent } from './component/abstract.component';
@@ -107,13 +107,13 @@ export { ViewDataComponent } from './component/view/view-data.component';
 export { EntityViewPageComponent } from './component/entities/page/page.component';
 
 
-export * from './datatable/simple-html-table/simple-html-table.component';
-export * from './datatable/simple-html-table/simple-html-cell.component';
-export * from './datatable/simple-html-table/simple-html-cell-value.component';
-export * from './datatable/simple-html-table/simple-html-cell-object-reference-renderer.component';
-export * from './datatable/simple-html-table/simple-html-cell-entity-operations-renderer.component';
-export * from './datatable/simple-html-table/simple-html-cell-entity-reference-renderer.component';
-export * from './datatable/simple-html-table/simple-html-cell-router-link-renderer.component';
+export * from './datatable/simple-table/simple-table.component';
+export * from './datatable/simple-table/simple-table-cell.component';
+export * from './datatable/simple-table/simple-table-cell-value.component';
+export * from './datatable/simple-table/simple-table-cell-object-reference-renderer.component';
+export * from './datatable/simple-table/simple-table-cell-entity-operations-renderer.component';
+export * from './datatable/simple-table/simple-table-cell-entity-reference-renderer.component';
+export * from './datatable/simple-table/simple-table-cell-router-link-renderer.component';
 export * from './datatable/list-view/list-view.component';
 export { IDatatableListGridOptions } from './datatable/list-view/IDatatableListGridOptions';
 
@@ -123,7 +123,7 @@ export { AbstractAggregateEmbeddedComponent } from './api/querying/abstract-aggr
 export { IQueringService } from './api/querying/IQueringService';
 export { IQueryComponentApi } from './api/querying/IQueryComponentApi';
 export { QueryAction } from './api/querying/QueryAction';
-export { STORAGE_REQUEST_MODE, DEFAULT_QUERY_OPTIONS, QUERY_MODE } from './api/querying/Constants';
+export { STORAGE_REQUEST_MODE, DEFAULT_QUERY_OPTIONS, T_QUERY_MODE } from './api/querying/Constants';
 export { FreeQueryInputComponent } from './api/querying/free-query/free-query-input.component';
 export { QueryEmbeddedComponent } from './component/query/query-embedded.component';
 

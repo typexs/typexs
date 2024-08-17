@@ -32,7 +32,7 @@ export class TestHelper {
   static includePaths(module = 'base') {
     const root = this.root();
     return [
-      join(root, 'packages', module),
+      join(root, 'packages', module, 'src'),
       join(root, 'node_modules', '@allgemein')
     ];
   }

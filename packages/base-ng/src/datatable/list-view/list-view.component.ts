@@ -1,11 +1,13 @@
-import { get, set } from 'lodash';
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { AbstractGridComponent } from '../abstract-grid.component';
-import { PagerAction } from '../../pager/PagerAction';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, QueryList, TemplateRef, ViewChildren } from '@angular/core';
+import { AbstractGridComponent } from '../api/abstract-grid.component';
 import { PagerService } from '../../pager/PagerService';
-import { IGridColumn } from '../IGridColumn';
-import { Eq, ExprDesc, Like, Value, ValueDesc } from '@allgemein/expressions';
 import { IDatatableListGridOptions } from './IDatatableListGridOptions';
+import { IGridMode, K_INFINITE, K_INITIALIZE, K_OPTIONS, K_PAGED, K_VIEW } from '../api/IGridMode';
+import { TemplateDirective } from '../Template.directive';
+import { IGridEvent } from '../api/IGridEvent';
+import { IScrollEvent } from '../infinite-scroll/IScrollEvent';
+import { Subscription } from 'rxjs';
+import { range } from 'lodash';
 
 
 @Component({
@@ -13,12 +15,13 @@ import { IDatatableListGridOptions } from './IDatatableListGridOptions';
   templateUrl: 'list-view.component.html',
   styleUrls: ['./list-view.component.scss']
 })
-export class ListViewComponent extends AbstractGridComponent {
+export class ListViewComponent extends AbstractGridComponent implements AfterViewInit {
 
+  @ViewChildren(TemplateDirective)
+  templateRefs: QueryList<TemplateDirective>;
 
-  filterOpened: string = null;
-
-  filterValue: any = null;
+  @ViewChildren('rows')
+  rowItems: QueryList<any>;
 
   @Input()
   allowViewModeSwitch: boolean = true;
@@ -27,101 +30,117 @@ export class ListViewComponent extends AbstractGridComponent {
   viewMode: string = 'teaser';
 
   @Input()
-  options: IDatatableListGridOptions;
+  options: IDatatableListGridOptions = undefined;
+
+  infiniteOnOff: boolean = true;
+
+  refresh: boolean;
+
+  update: boolean;
+
+  finished: boolean = false;
+
+  sub: Subscription;
+
+  private _selectedTemplateName: string = null;
+  private _selectedTemplate: TemplateRef<any>;
 
   constructor(
     public pagerService: PagerService,
     public changeRef: ChangeDetectorRef
   ) {
     super(pagerService, changeRef);
+    this.gridReady.subscribe(x => this.onGridReady(x));
   }
 
-
-  isSorted(column: IGridColumn, sort: 'asc' | 'desc' | 'none') {
-    if (!column.sorting) {
-      return false;
+  ngOnInit() {
+    if (this.getViewMode() === K_INFINITE) {
+      this.getOptions().queryOnInit = false;
     }
+    super.ngOnInit();
 
-    const _sort = get(this.params.sorting, column.field);
-    if (!_sort && sort === 'none') {
-      return true;
-    } else if (_sort === sort) {
-      return true;
-    }
-    return false;
   }
 
+  ngAfterViewInit() {
+  }
 
-  doSort(column: IGridColumn) {
-    if (!this.params.sorting) {
-      this.params.sorting = {};
+  onGridReady(x: IGridEvent) {
+    if (x.event === K_OPTIONS && x.api.getViewMode() === K_INFINITE) {
+      this.refresh = false;
+    } else if (x.event === K_INITIALIZE) {
+
     }
-    const _sort = get(this.params.sorting, column.field);
-    if (_sort) {
-      if (_sort === 'asc') {
-        set(this.params.sorting, column.field, 'desc');
-      } else {
-        delete this.params.sorting[column.field];
-      }
+  }
+
+  setViewMode(viewMode: string) {
+    if (viewMode === K_INFINITE) {
+      this.infiniteOnOff = true;
+      this.getOptions().queryOnInit = false;
     } else {
-      set(this.params.sorting, column.field, 'asc');
+      this.getOptions().queryOnInit = undefined;
+      this.infiniteOnOff = false;
     }
-    this.paramsChange.emit(this.params);
-    this.doQuery.emit(this);
+    super.setViewMode(viewMode);
+  }
+
+  supportedViewModes(): IGridMode[] {
+    return [
+      { name: K_VIEW, label: K_VIEW },
+      { name: K_PAGED, label: K_PAGED },
+      { name: K_INFINITE, label: K_INFINITE }
+    ];
   }
 
 
-  openFilter(column: IGridColumn) {
-    this.filterOpened = column.field;
-    const filter: ExprDesc = get(this.params.filters, column.field);
-    if (filter) {
-      this.filterValue = filter.value instanceof ValueDesc ? filter.value.value : filter.value;
+  selectedTemplate() {
+    const gridMode = this.getViewMode();
+    if (this._selectedTemplateName !== gridMode || !this._selectedTemplate) {
+      this._selectedTemplateName = gridMode;
+      if (this.sub) {
+        this.sub.unsubscribe();
+        this.sub = undefined;
+      }
+      this._selectedTemplate = this.getTemplate(gridMode);
+    }
+    return this._selectedTemplate;
+  }
+
+  getTemplate(templateName: string): TemplateRef<any> {
+    if (this.templateRefs) {
+      return this.templateRefs
+        .toArray()
+        .find(x => x.name.toLowerCase() === templateName.toLowerCase()).template;
     } else {
-      this.filterValue = null;
+      return null;
     }
   }
 
 
-  closeFilter(column: IGridColumn) {
-    if (!this.params.filters) {
-      this.params.filters = {};
-    }
-    if (this.filterValue) {
-
-      let value: any = null;
-      switch (column.filterDataType) {
-        case 'date':
-          value = new Date(this.filterValue);
-          break;
-        case 'double':
-          value = parseFloat(this.filterValue);
-          break;
-        case 'number':
-          value = parseInt(this.filterValue, 10);
-          break;
-        default:
-          value = this.filterValue;
+  onDataScroll($event: IScrollEvent) {
+    const boundries = this.getDataNodes().getFrameBoundries();
+    const _range = boundries.range;
+    let start = boundries.end;
+    let end = start + boundries.range;
+    if ($event && $event.loadIdx.length > 0) {
+      $event.loadIdx.filter(x => this.getDataNodes().isValueSet(x));
+      const _start = Math.min(...$event.loadIdx);
+      const _end = Math.max(...$event.loadIdx);
+      start = Math.floor(_start / _range) * _range;
+      end = Math.ceil(_end / _range) * _range;
+      const maxRows = this.getDataNodes().maxRows;
+      if (maxRows >= 0 && end >= maxRows) {
+        end = maxRows - 1;
       }
 
-      switch (column.filterType) {
-        case 'contains':
-          set(this.params.filters, column.field, Like(column.field, Value(value)));
-          break;
-        case 'suggest':
-        case 'equal':
-        default:
-          set(this.params.filters, column.field, Eq(column.field, Value(value)));
-          break;
+      const isNotValueSet = range(start, end + 1).filter(x => !this.getDataNodes().isValueSet(x));
+      if (isNotValueSet.length > 0) {
+        this.getDataNodes().doChangeSpan(start, end).subscribe(x => {
+          const finished = this.getDataNodes().isReachedMaxRows();
+          // TODO check if finished
+          // console.log('finished=' + finished);
+        });
       }
-    } else {
-      delete this.params.filters[column.field];
     }
-    this.paramsChange.emit(this.params);
-    this.filterOpened = null;
-    this.doQuery.emit(this);
+
   }
-
-
-
-
 }

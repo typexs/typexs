@@ -1,7 +1,7 @@
 <div class="pager-container">
 
   <!-- pager -->
-  <ul *ngIf="pager.pages && pager.pages.length" class="pagination justify-content-center ">
+  <ul *ngIf="hasPages()" class="pagination justify-content-center ">
     <li class="page-item" [ngClass]="{disabled:pager.currentPage === 1}">
       <a class="page-link" (click)="pager.setPage(1)" aria-label="Previous">
         <span>First</span>
@@ -18,7 +18,7 @@
         <span class="sr-only">Previous</span>
       </a>
     </li>
-    <li class="page-item" *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+    <li class="page-item" *ngFor="let page of pager.pages$ | async" [ngClass]="{active:pager.currentPage === page}">
       <a class="page-link" (click)="pager.setPage(page)">{{page}}</a>
     </li>
     <li class="page-item" [ngClass]="{disabled:pager.currentPage === pager.totalPages}">

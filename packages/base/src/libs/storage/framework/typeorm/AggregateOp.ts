@@ -427,9 +427,9 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
           // initial operator
           const fn = handler.getOperationHandle(ast.name);
           return this.addSelectField(fn(valueRes.q), _.isString(ast.key) ? ast.key : null, 'operation');
-        } else if (valueRes instanceof Value) {
+        } else if ((valueRes as any) instanceof Value) {
           const fn = handler.getOperationHandle(ast.name);
-          return this.addSelectField(fn(handler.escape(valueRes.value)), _.isString(ast.key) ? ast.key : null, 'operation');
+          return this.addSelectField(fn(handler.escape((valueRes as any).value)), _.isString(ast.key) ? ast.key : null, 'operation');
         }
       } else {
         // inside an operator return

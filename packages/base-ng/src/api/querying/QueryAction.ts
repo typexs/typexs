@@ -1,10 +1,10 @@
 import {ExprDesc} from '@allgemein/expressions';
-import {QUERY_MODE} from './Constants';
+import {T_QUERY_MODE} from './Constants';
 
 
 export class QueryAction {
 
-  readonly mode: QUERY_MODE;
+  readonly mode: T_QUERY_MODE;
 
   /**
    * Mango-Query
@@ -16,7 +16,7 @@ export class QueryAction {
    */
   readonly query: any;
 
-  constructor(q: any, mode: QUERY_MODE = 'query') {
+  constructor(q: any, mode: T_QUERY_MODE = 'query') {
     if (q instanceof ExprDesc) {
       this.mango = q;
       this.query = q.toJson();

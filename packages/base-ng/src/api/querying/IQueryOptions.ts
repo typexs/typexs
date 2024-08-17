@@ -1,5 +1,5 @@
-import { IDatatableOptions } from '../../datatable/IDatatableOptions';
-import { IGridEvent } from '../../datatable/IGridEvent';
+import { IDatatableOptions } from '../../datatable/api/IDatatableOptions';
+import { IGridEvent } from '../../datatable/api/IGridEvent';
 import { IQueryComponentApi } from './IQueryComponentApi';
 
 export interface IQueryOptions extends IDatatableOptions {

@@ -77,7 +77,7 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
     this.applyInitialOptions();
 
     this.getQueryService().isLoaded().subscribe(x => {
-      this._isLoaded = true;
+      this.isReady$.next(true);
       // api maybe not loaded
       setTimeout(() => {
         this.doQuery(this.datatable.api());
