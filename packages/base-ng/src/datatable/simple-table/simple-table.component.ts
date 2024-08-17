@@ -38,7 +38,9 @@ export class SimpleTableComponent extends AbstractGridComponent implements ISimp
     return this;
   }
 
-
+  /**
+   * Return the supported view modes
+   */
   supportedViewModes(): IGridMode[] {
     return [
       { name: K_VIEW, label: K_VIEW },
@@ -62,68 +64,10 @@ export class SimpleTableComponent extends AbstractGridComponent implements ISimp
     }
   }
 
-  // ngAfterViewInit() {
-  //   // if (this.getGridModeName() === K_INFINITE) {
-  //   //   // check if clientView is filled
-  //   //
-  //   //   // on infinite calculate scollHeight
-  //   //   // this.calcScrollHeight();
-  //   // }
-  //
-  // }
-
 
   private onPagedMode() {
     this.options.enablePager = true;
   }
-
-
-  // @HostListener('mouseenter')
-  // @HostListener('mouseleave')
-  // switchScroll()
-
-  // /**
-  //  * Is insertable
-  //  */
-  // isInsertable() {
-  //   return this.options.insertable;
-  // }
-  //
-  // /**
-  //  * Is editable
-  //  */
-  // isEditable() {
-  //   return this.options.editable;
-  // }
-  //
-  // /**
-  //  * Is deletable
-  //  */
-  // isDeletable() {
-  //   return this.options.deletable;
-  // }
-
-  // /**
-  //  * Save will call an event on
-  //  *
-  //  * @param type
-  //  */
-  // doCreate() {
-  //   // if (has(this.options, 'crudCallbacks.doCreate')) {
-  //   //   this.options.crudCallbacks
-  //   //     .doCreate()
-  //   //     .subscribe();
-  //   // } else {
-  //   //
-  //   // }
-  //
-  //   // we need a two way binding
-  //   this.gridReady.emit({
-  //     event: 'create',
-  //     api: this,
-  //     data: {}
-  //   });
-  // }
 
 
   isSorted(column: IGridColumn, sort: 'asc' | 'desc' | 'none') {

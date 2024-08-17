@@ -5,7 +5,7 @@
   [options]="options"
   [viewModes]="viewModes"
   [(maxRows)]="maxRows"
-  (optionsChange)="optionsUpdated($event)">
+  (optionsChange)="onOptionsUpdate($event)">
 
   <div class="d-flex  flex-row" *ngIf="options.mode === 'infinite'">
     <div class="m-1">
@@ -17,23 +17,12 @@
              (click)="update('infinite-mode', m.name)" [checked]="options.infiniteMode === m.name">
       <label class="form-check-label" for="r-{{m.name}}"> {{ m.name }}</label>
     </div>
-
-<!--    <div class="m-1">-->
-<!--      <strong>Adapt Scrollbar:</strong>-->
-<!--    </div>-->
-<!--    <div class="form-check m-1">-->
-<!--      <input class="form-check-input" type="checkbox" value="" id="as"-->
-<!--             [(ngModel)]="options.adaptScrollbar"-->
-<!--             (ngModelChange)="update('adapt-scrollbar', null)">-->
-<!--      <label class="form-check-label" for="as"> Adapt scrollbar</label>-->
-<!--    </div>-->
-
   </div>
 
 </datatable-options>
 
 <txs-datatable
-  [component]="simpleTableComp"
+  [component]="comp"
   [columns]="columns"
   [maxRows]="maxRows"
   [rows]="rows"

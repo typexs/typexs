@@ -4,14 +4,7 @@ import { DatatableComponent, IDatatableListGridOptions, IGridApi, IGridColumn, L
 import { IGridEvent } from '@typexs/base-ng/datatable/api/IGridEvent';
 import { IGridMode, K_INFINITE } from '@typexs/base-ng/datatable/api/IGridMode';
 import { of } from 'rxjs';
-
-
-function generateData(offset: number, limit: number) {
-  return range(offset, offset + limit).map(x => ({
-    id: x,
-    name: 'Entry ' + x
-  }));
-}
+import { generateData } from '../functions';
 
 /**
  * Test of simple-html-table layout
@@ -35,7 +28,7 @@ export class ListViewDemoComponent {
   @ViewChild(DatatableComponent)
   datatableComp: DatatableComponent;
 
-  simpleTableComp = ListViewComponent;
+  comp = ListViewComponent;
 
   api: IGridApi;
 
@@ -75,11 +68,11 @@ export class ListViewDemoComponent {
 
   viewModes: IGridMode[];
 
-  optionsUpdated($event: any) {
-    console.log($event);
+  onOptionsUpdate($event: any) {
+    // console.log($event);
     // this.options = $event;
     if ($event._update && $event._update.key === 'mode') {
-      console.log('change mode');
+      // console.log('change mode');
       this.datatableComp.setViewMode($event._update.value);
     } else if ($event._update && $event._update.key === 'limit') {
       this.datatableComp.limit = $event._update.value;
@@ -87,7 +80,8 @@ export class ListViewDemoComponent {
   }
 
   queryCallback(start: number, end: number, limit: number) {
-    return of(range(start, end + 1).map(x => ({ id: x, name: 'Text ' + x })));
+    // return of(range(start, end + 1).map(x => ({ id: x, name: 'Text ' + x })));
+    return of(generateData(start, end, limit));
   }
 
   update(key: string, v: any): void {
@@ -101,24 +95,6 @@ export class ListViewDemoComponent {
       this.options.infiniteMode = v;
     }
   }
-
-
-  // doQuery(api: IGridApi): void {
-  //   let generated = generateData(api.params.offset, api.params.limit);
-  //
-  //   if (api.params.filters) {
-  //     const _keys = keys(api.params.filters);
-  //     let filter: ExprDesc = null;
-  //     if (_keys.length > 1) {
-  //       filter = And(..._keys.map(x => api.params.filters[x]));
-  //     } else {
-  //       filter = api.params.filters[_keys.shift()];
-  //     }
-  //     const _filter = filter.lookup({});
-  //     generated = generated.filter(v => _filter(v));
-  //   }
-  //   api.setRows(generated);
-  // }
 
   /**
    *  Capture send event

@@ -3,14 +3,9 @@ import { ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewChi
 import { DatatableComponent, IDatatableOptions, IGridApi, IGridColumn, SimpleTableComponent } from '@typexs/base-ng';
 import { IGridEvent } from '@typexs/base-ng/datatable/api/IGridEvent';
 import { IGridMode, K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';
+import { of } from 'rxjs';
+import { generateData } from '../functions';
 
-
-function generateData(offset: number, limit: number) {
-  return range(offset, offset + limit).map(x => ({
-    id: x,
-    name: 'Entry ' + x
-  }));
-}
 
 /**
  * Test of simple-html-table layout
@@ -29,18 +24,16 @@ function generateData(offset: number, limit: number) {
   selector: 'simple-html-table-demo',
   templateUrl: 'simple-table-demo.component.html'
 })
-export class SimpleTableDemoComponent implements OnInit, OnChanges {
+export class SimpleTableDemoComponent {
 
   @ViewChild(DatatableComponent)
-  datatable: DatatableComponent;
+  datatableComp: DatatableComponent;
 
-
-  simpleTableComp = SimpleTableComponent;
+  comp = SimpleTableComponent;
 
   api: IGridApi;
 
   maxRows: number = 200;
-
 
   capturedEvent: IGridEvent = null;
 
@@ -48,7 +41,8 @@ export class SimpleTableDemoComponent implements OnInit, OnChanges {
     mode: K_PAGED,
     pagerId: 'page',
     limit: 10,
-    enablePager: true
+    enablePager: true,
+    queryCallback: this.queryCallback.bind(this)
   };
 
   columns: IGridColumn[] = [
@@ -67,50 +61,48 @@ export class SimpleTableDemoComponent implements OnInit, OnChanges {
 
   viewModes: IGridMode[] = [];
 
-  loadBoundries: any = {};
-
-  frameBoundries: any = {};
-
   rows: any[];
 
-  constructor(private changeDet: ChangeDetectorRef) {
+
+  // ngOnInit() {
+  //   this.maxRows = 20;
+  //   // this.rows = generateData(1, this.maxRows);
+  //
+  // }
+  //
+  // ngOnChanges(changes: SimpleChanges) {
+  //   console.log(changes);
+  // }
+
+  queryCallback(start: number, end: number, limit: number) {
+    // return of(range(start, end + 1).map(x => ({ id: x, name: 'Text ' + x })));
+    return of(generateData(start, end, limit));
   }
 
-
-  ngOnInit() {
-    this.maxRows = 20;
-    this.rows = generateData(1, this.maxRows);
-
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
-  }
-
-  rebuild() {
-    this.datatable?.rebuild();
-    // this.rows = generateData(1, this.maxRows);
-    // this.simpleTable?.rebuild();
-  }
+  // rebuild() {
+  //   this.datatable?.rebuild();
+  //   // this.rows = generateData(1, this.maxRows);
+  //   // this.simpleTable?.rebuild();
+  // }
+  //
+  //
+  // reset() {
+  //   // this.datatable?.reset();
+  //   // this.ngOnInit();
+  //   // this.datatable?.rebuild();
+  // }
 
 
-  reset() {
-    // this.datatable?.reset();
-    // this.ngOnInit();
-    // this.datatable?.rebuild();
-  }
-
-
-  generateRows(v: string) {
-    if (/\d+/.test(v + '')) {
-      const p = parseInt(v, 10);
-      if (this.maxRows === p) {
-        return;
-      }
-      const rows = generateData(1, p);
-      this.rows = rows;
-    }
-  }
+  // generateRows(v: string) {
+  //   if (/\d+/.test(v + '')) {
+  //     const p = parseInt(v, 10);
+  //     if (this.maxRows === p) {
+  //       return;
+  //     }
+  //     const rows = generateData(1, p);
+  //     this.rows = rows;
+  //   }
+  // }
 
   // doQuery(api: IGridApi): void {
   //   let generated = generateData(api.params.offset, api.params.limit);
@@ -143,21 +135,21 @@ export class SimpleTableDemoComponent implements OnInit, OnChanges {
     };
     this.api = event.api;
     this.viewModes = this.api.supportedViewModes();
-    // this.frameBoundries = this.api.getDataNodes().getFrameBoundries();
-    // this.loadBoundries = this.api.getDataNodes().getLoadBoundries();
-    // this.api.getDataNodes().getState().subscribe(x => {
-    //   this.frameBoundries = this.api.getDataNodes().getFrameBoundries();
-    //   this.loadBoundries = this.api.getDataNodes().getLoadBoundries();
-    // });
-
   }
 
-  onOptionsUpdate($event: IDatatableOptions) {
-    this.options = assign(this.options, $event);
-    if (this.options.maxRows) {
-      this.generateRows(this.options.maxRows + '');
-      this.maxRows = this.options.maxRows;
+  onOptionsUpdate($event: any) {
+    // this.options = assign(this.options, $event);
+    // if (this.options.maxRows) {
+    //   this.generateRows(this.options.maxRows + '');
+    //   this.maxRows = this.options.maxRows;
+    // }
+    // // this.rebuild();
+    if ($event._update && $event._update.key === 'mode') {
+      // console.log('change mode');
+      this.datatableComp.setViewMode($event._update.value);
+    } else if ($event._update && $event._update.key === 'limit') {
+      this.datatableComp.limit = $event._update.value;
     }
-    this.rebuild();
+
   }
 }

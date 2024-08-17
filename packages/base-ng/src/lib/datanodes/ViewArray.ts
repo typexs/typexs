@@ -2,10 +2,8 @@ import { BehaviorSubject, iif, Observable, of } from 'rxjs';
 import { Node } from './Node';
 import { IIndexSpan } from './IIndexSpan';
 import { K_$COUNT, K_DATA_UPDATE, K_FRAME_UPDATE, K_INITIAL, K_RESET, T_QUERY_CALLBACK, T_VIEW_ARRAY_STATES } from './Constants';
-import { concatMap, first, mergeMap, switchMap, toArray, last, tap } from 'rxjs/operators';
-import { Log } from '../log/Log';
-import { K_INFINITE, K_PAGED, T_GRID_MODE } from '../../datatable/api/IGridMode';
-import { isNumber } from 'lodash';
+import { concatMap, last, mergeMap, switchMap, toArray } from 'rxjs/operators';
+import { K_INFINITE, K_PAGED, K_VIEW, T_GRID_MODE } from '../../datatable/api/IGridMode';
 
 
 const INIT_SPAN: IIndexSpan = {
@@ -719,7 +717,7 @@ export class ViewArray<T> {
    * @private
    */
   private passToValues(nodes: Node<T>[]) {
-    if (this.frameMode === K_PAGED) {
+    if (this.frameMode === K_PAGED || this.frameMode === K_VIEW) {
       this.getNodeValues().next(nodes);
     } else {
       this.getNodeValues().next(this.getLoadedAsArray());

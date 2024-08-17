@@ -21,7 +21,7 @@ import { InputDemoComponent } from './components/forms/input/input-demo.componen
 import { TablesDemoComponent } from './components/grids/tables-demo.component';
 import { AgGridWrapperComponent } from './addons/ag-grid/ag-grid-wrapper.component';
 import { NavigatorService } from '@typexs/ng-router-menu';
-import { SimpleTableDemoComponent } from './components/grids/simple-html-table/simple-table-demo.component';
+import { SimpleTableDemoComponent } from './components/grids/simple-table/simple-table-demo.component';
 import { StorageService } from '@typexs/storage-ng';
 import { EntityService } from '@typexs/entity-ng';
 import { DistributedStorageService } from '@typexs/distributed-storage-ng';
