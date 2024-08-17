@@ -5,6 +5,10 @@
   "command": {
     "version": {
       "ignore": "app|app-auth|testtask",
+      "allowBranch": [
+        "main",
+        "master"
+      ],
       "preid": "dev",
       "noPush": true,
       "gitTagVersion": true,
@@ -14,6 +18,10 @@
       "private": false
     },
     "publish": {
+      "allowBranch": [
+        "main",
+        "master"
+      ],
       "noPush": true,
       "private": false,
       "gitReset": true,
