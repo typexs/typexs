@@ -1,14 +1,13 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/storage-ng",
-  "version": "12.3.0-dev.2",
+  "version": "12.3.0-dev.3",
   "description": "Angular for typexs",
   "main": "public_api.ts",
   "scripts": {
-     "clean": "npm run clean:build && npm run clean:modules",
+    "clean": "npm run clean:build && npm run clean:modules",
     "clean:build": "rm -rf ../build",
     "clean:modules": "rm -rf node_modules ../node_modules",
-
     "test": "ng test --code-coverage=true --watch=false",
     "build": "ng build"
   },
@@ -45,12 +44,12 @@
     "@angular/core": "v12-lts",
     "@angular/forms": "v12-lts",
     "@angular/router": "v12-lts",
-    "@typexs/base": "2.3.0-dev.1",
-    "@typexs/base-ng": "12.3.0-dev.2",
-    "@typexs/forms": "2.3.0-dev.1",
-    "@typexs/forms-ng": "12.3.0-dev.2",
-    "@typexs/ng": "12.3.0-dev.1",
-    "@typexs/storage": "2.3.0-dev.1",
+    "@typexs/base": "2.3.0-dev.2",
+    "@typexs/base-ng": "12.3.0-dev.3",
+    "@typexs/forms": "2.3.0-dev.2",
+    "@typexs/forms-ng": "12.3.0-dev.3",
+    "@typexs/ng": "12.3.0-dev.2",
+    "@typexs/storage": "2.3.0-dev.2",
     "lodash": "4.17.21",
     "rxjs": "6.6.7"
   },

@@ -1,14 +1,13 @@
 {
   "name": "@typexs/auth",
-  "version": "2.3.0-dev.1",
+  "version": "2.3.0-dev.2",
   "description": "Auth module for typexs",
   "main": "index",
   "browser": "browser",
   "scripts": {
-     "clean": "npm run clean:build && npm run clean:modules",
+    "clean": "npm run clean:build && npm run clean:modules",
     "clean:build": "rm -rf ../build",
     "clean:modules": "rm -rf node_modules ../node_modules",
-
     "test": "nyc mocha ../test/{**,**/**,**/**/**}/*.spec.ts",
     "posttest": "nyc report --reporter=json",
     "build": "node ../../../scripts/build.js"
@@ -25,18 +24,18 @@
     "auth"
   ],
   "dependencies": {
-    "@typexs/base": "2.3.0-dev.1",
-    "@typexs/entity": "2.3.0-dev.1",
-    "@typexs/forms": "2.3.0-dev.1",
-    "@typexs/ng": "12.3.0-dev.1",
-    "@typexs/roles": "2.3.0-dev.1",
-    "@typexs/roles-api": "2.3.0-dev.0",
+    "@typexs/base": "2.3.0-dev.2",
+    "@typexs/entity": "2.3.0-dev.2",
+    "@typexs/forms": "2.3.0-dev.2",
+    "@typexs/ng": "12.3.0-dev.2",
+    "@typexs/roles": "2.3.0-dev.2",
+    "@typexs/roles-api": "2.3.0-dev.1",
     "bcrypt": "^5.0.0",
     "jsonwebtoken": "^8.5.1"
   },
   "devDependencies": {
-    "@typexs/server": "2.3.0-dev.1",
-    "@typexs/testing": "2.3.0-dev.1"
+    "@typexs/server": "2.3.0-dev.2",
+    "@typexs/testing": "2.3.0-dev.2"
   },
   "peerDependencies": {
     "@typexs/server": "^2.3.0-dev.0"

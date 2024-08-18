@@ -1,6 +1,6 @@
 {
   "name": "@typexs/entity",
-  "version": "2.3.0-dev.1",
+  "version": "2.3.0-dev.2",
   "description": "Schema for typexs",
   "main": "index",
   "browser": "browser",
@@ -9,10 +9,9 @@
     "test": "../test"
   },
   "scripts": {
-     "clean": "npm run clean:build && npm run clean:modules",
+    "clean": "npm run clean:build && npm run clean:modules",
     "clean:build": "rm -rf ../build",
     "clean:modules": "rm -rf node_modules ../node_modules",
-
     "test": "nyc mocha ../test/{**,**/**,**/**/**}/*.spec.ts",
     "posttest": "nyc report --reporter=json",
     "build": "node ../../../scripts/build.js"
@@ -34,15 +33,15 @@
   },
   "homepage": "https://gitlab.com/typexs/entity",
   "dependencies": {
-    "@typexs/roles-api": "2.3.0-dev.0"
+    "@typexs/roles-api": "2.3.0-dev.1"
   },
   "devDependencies": {
-    "@typexs/base": "2.3.0-dev.1",
-    "@typexs/forms": "2.3.0-dev.1",
-    "@typexs/pipelines": "2.3.0-dev.1",
-    "@typexs/server": "2.3.0-dev.1",
-    "@typexs/storage": "2.3.0-dev.1",
-    "@typexs/testing": "2.3.0-dev.1"
+    "@typexs/base": "2.3.0-dev.2",
+    "@typexs/forms": "2.3.0-dev.2",
+    "@typexs/pipelines": "2.3.0-dev.2",
+    "@typexs/server": "2.3.0-dev.2",
+    "@typexs/storage": "2.3.0-dev.2",
+    "@typexs/testing": "2.3.0-dev.2"
   },
   "peerDependencies": {
     "@typexs/base": "^2.3.0-dev.0",

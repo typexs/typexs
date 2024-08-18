@@ -1,12 +1,11 @@
 {
   "name": "@typexs/roles-api",
-  "version": "2.3.0-dev.0",
+  "version": "2.3.0-dev.1",
   "main": "index",
   "scripts": {
-     "clean": "npm run clean:build && npm run clean:modules",
+    "clean": "npm run clean:build && npm run clean:modules",
     "clean:build": "rm -rf ../build",
     "clean:modules": "rm -rf node_modules ../node_modules",
-
     "build": "node ../../../scripts/build.js"
   },
   "directories": {
