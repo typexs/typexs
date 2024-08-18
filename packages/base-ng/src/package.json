@@ -5,7 +5,9 @@
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
-    "clean": "rm -rf ../build ../node_modules ./node_modules",
+    "clean": "npm run clean:build && npm run clean:modules",
+    "clean:build": "rm -rf ../build",
+    "clean:modules": "rm -rf node_modules ../node_modules",
     "test": "ng test --code-coverage=true --watch=false",
     "build": "ng build"
   },

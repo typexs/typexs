@@ -8,7 +8,7 @@ const { existsSync } = require('fs');
 async function build() {
   const cwd = path.join(process.cwd());
   const packageDir = path.resolve(path.join(cwd, '..'));
-  await exec('npx tsc --build', {cwd: packageDir });
+  await exec('npx tsc --build', { cwd: packageDir });
   const packageJson = require(cwd + '/package.json');
   packageJson.main = 'index.js';
   packageJson.browser = 'browser.js';
@@ -17,21 +17,25 @@ async function build() {
   delete packageJson.publishConfig;
   fs.writeFileSync(packageDir + '/build/package/package.json', JSON.stringify(packageJson, null, 2));
   // copy json files
-  const files = [].concat(
-    glob.sync(packageDir + '/LICENSE', { follow: false }),
-    glob.sync(packageDir + '/README*', { follow: false }),
-    glob.sync(packageDir + '/src/**/*.json', { follow: false }).filter(x => !/package\.json/.test(x)),
-    glob.sync(packageDir + '/src/bin/*', { follow: false })
-  );
-  files.forEach(x => {
-    const y = x.replace(packageDir, cwd).replace(cwd, packageDir + '/build/package');
+  const files = []
+    .concat(
+      glob.sync(packageDir + '/LICENSE', { follow: false }),
+      glob.sync(packageDir + '/README*', { follow: false }),
+      glob.sync(packageDir + '/src/**/*.json', { follow: false }).filter(x => !/package\.json/.test(x)),
+      glob.sync(packageDir + '/src/bin/*', { follow: false })
+    )
+    .filter(x => x.indexOf('node_modules') === -1);
+  const buildDir = path.join(packageDir, 'build', 'package');
+  files.forEach((x) => {
+    let y = x.replace(packageDir, '').replace('/src', ''); //.replace(cwd, packageDir + '/build/package');
+    y = path.join(buildDir, y);
     const dirname = path.dirname(y);
     if (!existsSync(dirname)) {
       fs.mkdirSync(dirname, { recursive: true });
     }
     fs.writeFileSync(y, fs.readFileSync(x));
   });
-  console.log('')
+  console.log('');
 }
 
 build().then(x => {
