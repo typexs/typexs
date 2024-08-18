@@ -59,6 +59,20 @@
     "yargonaut": "^1.1.4",
     "yargs": "^17.2.1"
   },
+  "peerDependenciesMeta": {
+    "winston": {
+      "optional": true
+    },
+    "typeorm": {
+      "optional": true
+    },
+    "yargonaut": {
+      "optional": true
+    },
+    "yargs": {
+      "optional": true
+    }
+  },
   "typexs": {
     "name": "base"
   },
