@@ -1,16 +1,30 @@
 import { BehaviorSubject, iif, Observable, of } from 'rxjs';
 import { Node } from './Node';
 import { IIndexSpan } from './IIndexSpan';
-import { K_$COUNT, K_DATA_UPDATE, K_FRAME_UPDATE, K_INITIAL, K_RESET, T_QUERY_CALLBACK, T_VIEW_ARRAY_STATES } from './Constants';
+import {
+  K_$COUNT,
+  K_APPEND,
+  K_DATA_UPDATE,
+  K_FRAME_UPDATE,
+  K_INITIAL, K_INSERT,
+  K_REMOVE,
+  K_RESET,
+  T_QUERY_CALLBACK,
+  T_VIEW_ARRAY_STATES
+} from './Constants';
 import { concatMap, last, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { K_INFINITE, K_PAGED, K_VIEW, T_GRID_MODE } from '../../datatable/api/IGridMode';
 
 
 const INIT_SPAN: IIndexSpan = {
   start: 0,
-  end: 0,
+  end: -1,
   range: 25
 };
+
+export interface IArrayEvent {
+  type: T_VIEW_ARRAY_STATES;
+}
 
 /**
  * ViewArray
@@ -72,9 +86,6 @@ export class ViewArray<T> {
 
 
   /**
-   * Mode
-   *  - framed - fixed frame size for records display (paging)
-   *  - top-fixed - frame is fixed on top (record 0) till current selection
    *
    * @private
    */
@@ -101,7 +112,7 @@ export class ViewArray<T> {
    *
    * @private
    */
-  private state$ = new BehaviorSubject<T_VIEW_ARRAY_STATES>(undefined);
+  private state$ = new BehaviorSubject<IArrayEvent>(undefined);
 
 
   /**
@@ -111,6 +122,17 @@ export class ViewArray<T> {
    * @param x
    */
   private prefillLimit = 1000;
+
+  /**
+   * Define handles for data access and change
+   */
+  private handles: {
+    [key: string]: {
+      get: (node: Node<any>) => any,
+      set: (node: Node<any>, value: any) => void
+    }
+  } = {};
+
 
   constructor(...x: any[]) {
     this.markAsInitial();
@@ -131,14 +153,27 @@ export class ViewArray<T> {
     this.markAs(K_FRAME_UPDATE);
   }
 
-  private markAs(value: T_VIEW_ARRAY_STATES) {
-    this.state$.next(value);
+  private markAs(value: T_VIEW_ARRAY_STATES, data: any = {}) {
+    this.state$.next({ type: value, ...data });
   }
 
   getNode(idx: number): Node<T> {
     return this.arr.get(idx);
   }
 
+  setNode(node: Node<any>, skipCalc = false) {
+    this.arr.set(node.idx, node);
+    if (!skipCalc) {
+      this.calcLoadedIndex([node.idx]);
+    }
+    return node;
+  }
+
+  /**
+   * Get the node value
+   *
+   * @param idx
+   */
   get(idx: number): T {
     return this.getNode(idx)?.data;
   }
@@ -150,14 +185,150 @@ export class ViewArray<T> {
    * @param idx
    * @param value
    */
-  set(idx: number, value: T, skipCalc = false) {
-    const node = new Node<T>(value, idx);
-    this.arr.set(idx, node);
-    if (!skipCalc) {
-      this.calcLoadedIndex([idx]);
+  set(idx: number, value: T | Node<T>, skipCalc = false) {
+    let node = null;
+    if (value instanceof Node) {
+      node = value;
+    } else {
+      node = new Node<T>(value, idx);
+    }
+    node.idx = idx;
+    return this.setNode(node, skipCalc);
+  }
+
+  /**
+   * Add data as node to the end of the view array
+   */
+  append(value: T | Node<any>, upCount = true) {
+    let idx = undefined;
+    if (this.hasMaxItems()) {
+      // extend max node else
+      idx = this.maxRows;
+      this.maxRows = this.maxRows + 1;
+    } else {
+      if (this.getLoadBoundries().end === -1) {
+        idx = this.getLoadBoundries().end = 0;
+      } else {
+        idx = this.getLoadBoundries().end + 1;
+      }
+    }
+    const ret = this.set(idx, value);
+    this.markAs(K_APPEND, { node: ret });
+    return ret;
+  }
+
+  /**
+   * Remove node with data from some position
+   *
+   * @param idx
+   */
+  remove(idx: number | Node<T>, downCount = false) {
+    const node = idx instanceof Node ? idx : this.getNode(idx);
+    if (node) {
+      this.arr.delete(node.idx);
+      node.idx = undefined;
+      if (downCount) {
+        // TODO
+        this.upDownMax(-1);
+      }
+    }
+    this.markAs(K_REMOVE, { node: node });
+    return node;
+  }
+
+  /**
+   * Insert a node or value on a special position.
+   * If option override is set then override existing value.
+   *
+   * @param idx
+   * @param value
+   */
+  insert(idx: number, value: T | Node<T>, override = false) {
+    const repNode = this.getNode(idx);
+    if (repNode && !override) {
+      this.idxUpDownCount(idx);
+    }
+    const ret = this.set(idx, value);
+    this.markAs(K_INSERT, { node: ret });
+    return ret;
+  }
+
+  /**
+   * Move a node from one position to another, change idx upwards the new position
+   *
+   * @param fromIdx
+   * @param toIdx
+   */
+  move(fromIdx: number, toIdx: number) {
+    const fromNode = this.getNode(fromIdx);
+    const toNode = this.getNode(toIdx);
+    if (toNode) {
+      this.idxUpDownCount(toIdx);
+    }
+    this.remove(fromNode);
+    this.insert(toIdx, fromNode);
+  }
+
+
+  /**
+   * Return all idx or selected by passed filter function.
+   *
+   * @param filter
+   */
+  keysAsArray(filter?: (k: number) => boolean) {
+    const keys = [];
+    for (const l of this.arr.keys()) {
+      if (filter) {
+        if (filter(l)) {
+          keys.push(l);
+        }
+      } else {
+        keys.push(l);
+      }
+    }
+    return keys;
+  }
+
+
+  /**
+   * Increment all idx from a given idx by a given size.
+   * When size is 0 nothing is done. When size is greater then 0,
+   * then all idx greater then given idx are up-counted else
+   * all idx lower given idx are down-counted by given size.
+   *
+   * @param fromIdx
+   */
+  idxUpDownCount(fromIdx: number, size = 1) {
+    if (size === 0) {
+      return;
+    }
+    let mode = size > 0 ? 'up' : 'down';
+    const keysUp = this.keysAsArray(x => mode === 'up' ? x >= fromIdx : x <= fromIdx).sort();
+    const newIdx = [];
+    for (const idx of mode === 'up' ? keysUp.reverse() : keysUp) {
+      const changeNode = this.getNode(idx);
+      if (changeNode) {
+        const changeIdx = idx + size;
+        changeNode.idx = changeIdx;
+        this.arr.delete(idx);
+        this.arr.set(changeIdx, changeNode);
+        newIdx.push(changeIdx);
+      }
+    }
+    if (newIdx.length > 0) {
+      this.calcLoadedIndex(newIdx);
     }
   }
 
+  // TODO
+  // /**
+  //  * Switch node between from and to position
+  //  * @param fromIdx
+  //  * @param toIdx
+  //  */
+  // switch(fromIdx: number, toIdx: number) {
+  //
+  // }
 
   /**
    * Append entries to array without
@@ -165,11 +336,11 @@ export class ViewArray<T> {
    * @param items
    */
   push(...items: any[]): number {
-    let l = this.loadedLength;
+    let l = this.max();
     const _items = items.map(x => new Node<T>(x, l++));
     const idx: number[] = [];
     _items.forEach(x => {
-      this.arr.set(x.idx, x);
+      this.set(x.idx, x, true);
       idx.push(x.idx);
     });
     this.calcLoadedIndex(idx);
@@ -184,21 +355,33 @@ export class ViewArray<T> {
   }
 
   get loadedLength() {
-    return this._loaded.end - this._loaded.start;
+    const loaded = this.getLoadBoundries();
+    return loaded.end - loaded.start + 1;
   }
 
   get frameLength() {
-    return this._frame.end - this._frame.start;
+    return this._frame.end - this._frame.start + 1;
   }
 
   calcLoadedIndex(idxs: number[]) {
+    if (idxs.length === 0) {
+      return;
+    }
     const min = Math.min(...idxs);
     const max = Math.max(...idxs);
-    if (this._loaded.start >= min) {
+    if (this._loaded.start >= min || this._loaded.start === -1) {
       this._loaded.start = min;
     }
     if (this._loaded.end < max) {
       this._loaded.end = max;
+    }
+    if (this._frame.end === -1) {
+      this._frame.start = min;
+      if (this._frame.range > max) {
+        this._frame.end = max;
+      } else {
+        this._frame.end = this._frame.range - 1;
+      }
     }
     this.markAsDataUpdate();
   }
@@ -260,6 +443,27 @@ export class ViewArray<T> {
   set maxRows(maxRows: number) {
     this._maxRows = maxRows;
   }
+
+  hasMaxItems() {
+    return typeof this.maxRows !== 'undefined';
+  }
+
+  max() {
+    if (this.hasMaxItems()) {
+      return this.maxRows;
+    } else {
+      return this.getLoadBoundries().end + 1;
+    }
+  }
+
+  upDownMax(value: number) {
+    if (this.hasMaxItems()) {
+      this.maxRows = this.maxRows + value;
+    } else {
+      this.getLoadBoundries().end = this.getLoadBoundries().end + value;
+    }
+  }
+
 
   // /**
   //  * Create an empty node if no entry present
@@ -463,7 +667,8 @@ export class ViewArray<T> {
   }
 
   /**
-   * Check if all frame data is loaded for a given boundry - if not set take the currently applied
+   * Check if all frame data is loaded for a given boundry.
+   * If not set take the currently applied boundy.
    */
   isFrameReady(boundries?: IIndexSpan) {
     if (this.hasNodeCallback() && !this.isCachingEnabled()) {
@@ -471,7 +676,13 @@ export class ViewArray<T> {
     }
     if (!boundries) {
       boundries = this.getFrameBoundries();
+      if (boundries.end === -1) {
+        boundries.end = boundries.start + boundries.range - 1;
+      }
     }
+    // if (boundries.end < boundries.start) {
+    //   return false;
+    // }
     const res = this.checkForUndefined(boundries.start, boundries.end);
     return res.length === 0;
   }
@@ -511,7 +722,7 @@ export class ViewArray<T> {
       _end = end;
     }
 
-    if (typeof this.maxRows === 'number') {
+    if (this.hasMaxItems()) {
       if (_end >= this.maxRows - 1) {
         _end = this.maxRows - 1;
       }
@@ -566,15 +777,6 @@ export class ViewArray<T> {
     return this._loaded;
   }
 
-  // /**
-  //  * Load nodes by navigation page number
-  //  *
-  //  * @param page
-  //  */
-  // doFetchFrameByPage(page: number) {
-  //   const boundries = this.setCurrentPage(page);
-  //   return this.doFrameReload(boundries);
-  // }
 
   getCurrentPage() {
     return this._frame.start / this._frame.range + 1;
@@ -582,7 +784,6 @@ export class ViewArray<T> {
 
   setCurrentPage(page: number) {
     const startIdx = (page - 1) * this._frame.range;
-    // this.updateFramedPosition(startIdx);
     const frameBoundries = this.checkFrameBoundries(startIdx);
     frameBoundries.change = this.isFrameReady(frameBoundries);
     return frameBoundries;
@@ -604,7 +805,6 @@ export class ViewArray<T> {
     // throw new Error('unknown frame mode');
   }
 
-
   // /**
   //  * Check if max rows is fully filled with empty nodes
   //  */
@@ -625,8 +825,6 @@ export class ViewArray<T> {
    */
   doChangePage(page: number) {
     const boundries = this.setCurrentPage(page);
-    // this._pipeline.next(isReady);
-    // return this.pipeline$;
     return this._doChange(boundries);
   }
 

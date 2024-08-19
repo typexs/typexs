@@ -1,4 +1,4 @@
-import { ViewArray } from './ViewArray';
+import { IArrayEvent, ViewArray } from './ViewArray';
 import { range } from 'lodash';
 import { Observable, of } from 'rxjs';
 import { K_DATA_UPDATE, K_INITIAL, K_RESET, T_VIEW_ARRAY_STATES } from './Constants';
@@ -42,31 +42,23 @@ describe('ViewArray', () => {
   });
 
 
-  /**
-   * check state initial when state is changed
-   */
   it('check state initialize on construct', fakeAsync(() => {
-    // nodes = new ViewArray<any>();
     let state = null;
     nodes.getState().pipe(first()).subscribe(x => {
       state = x;
     });
-    expect(state).toEqual(K_INITIAL);
+    expect(state).toEqual({ type: K_INITIAL });
   }));
 
-  /**
-   * check state initial when data is reseted
-   */
   it('check state on reset', fakeAsync(() => {
-    // nodes = new ViewArray<any>();
-    const state: T_VIEW_ARRAY_STATES[] = [];
+    const state: IArrayEvent[] = [];
     const sub = nodes.getState().subscribe(x => {
       state.push(x);
     });
     nodes.push({ name: 'Test' });
     nodes.reset();
     sub.unsubscribe();
-    expect(state).toEqual([
+    expect(state.map(x => x.type)).toEqual([
       K_INITIAL,
       K_DATA_UPDATE,
       K_RESET,
@@ -74,39 +66,15 @@ describe('ViewArray', () => {
     ]);
   }));
 
-  /**
-   * check state when data added
-   */
   it('check state when data added', fakeAsync(() => {
-    // nodes = new ViewArray<any>();
     nodes.push({ name: 'Test' });
     let state = null;
     nodes.getState().pipe(first()).subscribe(x => {
       state = x;
     });
-    expect(state).toEqual(K_DATA_UPDATE);
+    expect(state).toEqual({ type: K_DATA_UPDATE });
   }));
 
-
-  // /**
-  //  * check state when frame change
-  //  */
-  // fit('check when frame change', fakeAsync(() => {
-  //   // nodes = new ViewArray<any>();
-  //   nodes.push({ name: 'Test' });
-  //   nodes.doChangePage(1).subscribe(x => {});
-  //   let state = null;
-  //   tick(50);
-  //   nodes.getState().subscribe(x => {
-  //     state = x;
-  //   });
-  //   expect(state).toEqual(K_FRAME_UPDATE);
-  // }));
-
-
-  /**
-   * Check update frame impl.
-   */
   it('check frame position', fakeAsync(() => {
     let change = nodes['updateFramedPosition'](0, 10);
     expect(change).toEqual({ start: 0, end: 10, range: 25, change: true });
@@ -131,34 +99,73 @@ describe('ViewArray', () => {
   }));
 
 
-  /**
-   * TODO: insert data on specific position manually
-   */
-  // it('insert data on specific position manually', () => {
-  // });
+  it('append data on the end', () => {
+    let node = nodes.append({ name: 'Test' });
+    expect(node.idx).toEqual(0);
+    expect(node.data).toEqual({ name: 'Test' });
+    node = nodes.append({ name: 'Test 2' });
+    expect(node.idx).toEqual(1);
+    expect(node.data).toEqual({ name: 'Test 2' });
+    expect(nodes.loadedLength).toEqual(2);
+    expect(nodes.max()).toEqual(2);
+  });
 
-  /**
-   * TODO: remove data manuell
-   */
-  // it('remove data manuell', () => {
-  // });
+  it('insert data on specific position manually', () => {
+    const data = genData(0, 5);
+    nodes.push(...data);
+    expect(nodes).toHaveSize(5);
+    expect(nodes.max()).toEqual(5);
+    const node = nodes.insert(2, { name: 'Inserted data' });
+    expect(node.idx).toEqual(2);
+    expect(nodes).toHaveSize(6);
+    expect(nodes.max()).toEqual(6);
+    expect(nodes.get(3)).toEqual({ idx: 2, name: 'T 2' });
+  });
 
-  /**
-   * Tests for infinite mode
-   */
+  it('remove data without down-count', () => {
+    const data = genData(0, 5);
+    nodes.push(...data);
+    expect(nodes).toHaveSize(5);
+    expect(nodes.max()).toEqual(5);
+    nodes.remove(2);
+    expect(nodes).toHaveSize(4);
+    expect(nodes.max()).toEqual(5);
+  });
+
+  it('remove data with down-count', () => {
+    const data = genData(0, 5);
+    nodes.push(...data);
+    expect(nodes).toHaveSize(5);
+    expect(nodes.max()).toEqual(5);
+    nodes.remove(2, true);
+    expect(nodes).toHaveSize(4);
+    expect(nodes.max()).toEqual(4);
+  });
+
+  it('move data', () => {
+    const data = genData(0, 6);
+    nodes.push(...data);
+    expect(nodes).toHaveSize(6);
+    expect(nodes.getLoadedAsArray().map(x => x.data)).toEqual(data);
+    nodes.move(1, 4);
+    expect(nodes).toHaveSize(6);
+    expect(nodes.getLoadedAsArray().map(x => x.data)).toEqual([
+      { idx: 0, name: 'T 0' },
+      { idx: 2, name: 'T 2' },
+      { idx: 3, name: 'T 3' },
+      { idx: 1, name: 'T 1' },
+      { idx: 4, name: 'T 4' },
+      { idx: 5, name: 'T 5' }
+    ]);
+  });
+
   describe('in infinite mode with callback', () => {
 
-    /**
-     * Define mode and callback for data retrieval
-     */
     beforeEach(() => {
       nodes.setFrameMode(K_INFINITE);
       nodes.setNodeCallback((startIdx, endIdx) => of(genData(startIdx, endIdx + 1)));
     });
 
-    /**
-     * Load initial nodes
-     */
     it('load nodes', async () => {
       const obs = nodes.doChangeSpan(0, 24);
       const res = await waitForObs(obs);
@@ -169,9 +176,6 @@ describe('ViewArray', () => {
       expect(nodes.getLoadedAsArray().map(x => x.data)).toEqual(data);
     });
 
-    /**
-     * Load nodes multiple times in parallel processing
-     */
     it('load nodes multiple times parallel', async () => {
       const startIdxs = range(0, 200, 20);
 
@@ -196,9 +200,6 @@ describe('ViewArray', () => {
     });
 
 
-    /**
-     * Set load limit by maxRows
-     */
     it('load nodes till maxRows reached', async () => {
       nodes.maxRows = 100;
       const startIdxs = range(0, 200, 20);
@@ -225,9 +226,6 @@ describe('ViewArray', () => {
   });
 
 
-  /**
-   * Tests for framed mode
-   */
   describe('in paged mode with callback', () => {
 
     beforeEach(() => {
@@ -235,10 +233,6 @@ describe('ViewArray', () => {
       nodes.setNodeCallback((startIdx, endIdx) => of(genData(startIdx, endIdx + 1)));
     });
 
-
-    /**
-     * Check if frame data is missing and reload missing values
-     */
     it('check if frame data missing', async () => {
       const data = genData(0, 1);
       nodes.setCacheLimit(10);
@@ -255,20 +249,17 @@ describe('ViewArray', () => {
     });
 
 
-    /**
-     * Load data by page selection
-     */
     it('pull next data and load missing', async () => {
       nodes.setCacheLimit(10);
       let ready = nodes.isFrameReady();
       expect(ready).toBeFalse();
       const frame = nodes.getFrameBoundries();
-      expect(frame).toEqual({ start: 0, end: 0, range: 25 });
+      expect(frame).toEqual({ start: 0, end: -1, range: 25 });
       let obs = nodes.doFrameReload();
       let res = await waitForObs(obs);
       ready = nodes.isFrameReady();
-      expect(ready).toBeTrue();
-      expect(nodes.getLoadBoundries()).toEqual({ start: 0, end: 0, range: 25 });
+      expect(ready).toBeFalse();
+      expect(nodes.getLoadBoundries()).toEqual({ start: 0, end: -1, range: 25 });
 
       let page = nodes.getCurrentPage();
       expect(page).toEqual(1);
@@ -285,17 +276,13 @@ describe('ViewArray', () => {
       expect(arr).toEqual(genData(25, 50));
     });
 
-
-    /**
-     * Preload data defined by prefetchLimit
-     */
     it('load eager coming data and change next', async () => {
       nodes.setPrefetchLimit(100);
       nodes.setCacheLimit(100);
       const obs = nodes.doPreload();
       const res = await waitForObs(obs);
       expect(nodes.getLoadBoundries()).toEqual({ start: 0, end: 99, range: 25 });
-      expect(nodes.getFrameBoundries()).toEqual({ start: 0, end: 0, range: 25 });
+      expect(nodes.getFrameBoundries()).toEqual({ start: 0, end: 24, range: 25 });
 
       let okay = nodes.setCurrentPage(1);
       nodes['updateFrameBoundries'](okay);
@@ -313,9 +300,6 @@ describe('ViewArray', () => {
     });
 
 
-    /**
-     * Change page process forward with preload
-     */
     it('execute page change with preload forward', async () => {
       nodes.setPrefetchLimit(100);
       let obs = nodes.doChangePage(1);
@@ -332,9 +316,6 @@ describe('ViewArray', () => {
     });
 
 
-    /**
-     * Change page process forward without preload
-     */
     it('execute page change without preload forward', async () => {
       nodes.setPrefetchLimit(0);
       let obs = nodes.doChangePage(1);
@@ -351,9 +332,6 @@ describe('ViewArray', () => {
     });
 
 
-    /**
-     * Change page process backward with preload
-     */
     it('execute page change with preload backward', async () => {
       nodes.setPrefetchLimit(100);
       let obs = nodes.doChangePage(4);
@@ -370,9 +348,6 @@ describe('ViewArray', () => {
     });
 
 
-    /**
-     * Reaching maxRows limit during page change
-     */
     it('reaching maxRows limit during page change', async () => {
       // nodes.setPrefetchLimit(100);
       nodes.maxRows = 40;
@@ -391,12 +366,7 @@ describe('ViewArray', () => {
       expect(nodes.hasMorePages()).toBeFalse();
     });
 
-    /**
-     * Reaching maxRows on first page passed by $count parameter
-     */
     it('reaching maxRows on first page passed by $count parameter', async () => {
-      // nodes.setPrefetchLimit(100);
-      // nodes.maxRows = 40;
       nodes.setNodeCallback((startIdx, endIdx) => {
         const x = genData(0, 10) as any;
         x[XS_P_$COUNT] = 10;
@@ -419,221 +389,5 @@ describe('ViewArray', () => {
 
   });
 
-
-  // /**
-  //  * Check setting values by apply method
-  //  */
-  // it('apply fetch data on begin of array', () => {
-  //   // add single node
-  //   nodes.applyFetchData(0, range(0, 1).map(x => ({ idx: x, name: 'T ' + x })));
-  //   expect(nodes).toHaveSize(1);
-  //   expect(nodes.asArray()).toEqual([{
-  //     'idx': 0,
-  //     'name': 'T 0'
-  //   }]);
-  // });
-  //
-  // /**
-  //  * Check setting values by apply method
-  //  */
-  // it('apply fetch data on further part of array', () => {
-  //   // add single node
-  //   nodes.applyFetchData(10, range(0, 1).map(x => ({ idx: x, name: 'T ' + x })));
-  //   expect(nodes).toHaveSize(11);
-  //   expect(nodes.asArray()).toEqual([
-  //     undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, {
-  //       'idx': 0,
-  //       'name': 'T 0'
-  //     }]);
-  // });
-  //
-  //
-  // /**
-  //  * Check undefined value detection
-  //  */
-  // it('check if undefined values are found', () => {
-  //   // add single node
-  //   // nodes[19] = undefined;
-  //   nodes.set(19, undefined);
-  //   expect(nodes.loadedLength).toEqual(20);
-  //
-  //   expect(nodes.checkForUndefined(0, 10).length).toEqual(10);
-  //   expect(nodes.checkForUndefined(0, 100).length).toEqual(20);
-  //   expect(nodes.checkForUndefined(18, 100).length).toEqual(2);
-  //   expect(nodes.checkForUndefined(19, 100).length).toEqual(1);
-  //   expect(nodes.checkForUndefined(20, 100).length).toEqual(-1);
-  //
-  //   expect(nodes.checkForUndefined(-1, 10, 'backward').length).toEqual(-1);
-  //   expect(nodes.checkForUndefined(0, 10, 'backward').length).toEqual(1);
-  //   expect(nodes.checkForUndefined(9, 100, 'backward').length).toEqual(10);
-  //   expect(nodes.checkForUndefined(9, 10, 'backward').length).toEqual(10);
-  //   expect(nodes.checkForUndefined(4, 10, 'backward').length).toEqual(5);
-  //   // expect(nodes.checkForUndefined(0,100)).toEqual(20);
-  // });
-  //
-  //
-  // describe('fetch data by callback', () => {
-  //
-  //   /**
-  //    * Fetch initial data
-  //    */
-  //   it('initial data', async () => {
-  //     const data = range(0, 10)
-  //       .map(r => ({
-  //         idx: r,
-  //         name: '' + r
-  //       }));
-  //     nodes.maxRows = 100;
-  //     nodes.setNodeCallback((startIdx: number, endIdx: number) =>
-  //       of(data)
-  //     );
-  //     // spyOn(nodes, 'applyFetchData');
-  //     // nodes.calcViewFrame();
-  //     nodes.fetch(0, 10);
-  //     await new Promise((resolve, reject) => setTimeout(resolve, 500));
-  //     // expect(nodes.applyFetchData).toHaveBeenCalled();
-  //     expect(nodes).toHaveSize(10);
-  //     expect(nodes.asArray()).toEqual(data);
-  //   });
-  //
-  //
-  //   /**
-  //    * Fetch following
-  //    */
-  //   it('next data', async () => {
-  //     const data = range(0, 10)
-  //       .map(r => ({
-  //         idx: r,
-  //         name: '' + r
-  //       }));
-  //     nodes.maxRows = 100;
-  //     nodes.setNodeCallback((startIdx: number, endIdx: number) => of(data));
-  //     nodes.fetch(10, 10);
-  //     await new Promise((resolve, reject) => setTimeout(resolve, 500));
-  //     expect(nodes).toHaveSize(20);
-  //     expect(nodes.asArray()).toEqual([].concat(range(10).map(() => undefined), data));
-  //   });
-  // });
-  //
-  //
-  // /**
-  //  * Reset of array
-  //  */
-  // it('reset of array', () => {
-  //   nodes.push(1, 2, 3, 4);
-  //   expect(nodes).toHaveSize(4);
-  //   expect(nodes).toHaveSize(4);
-  //   nodes.reset();
-  //   expect(nodes).toHaveSize(0);
-  //   nodes.applyFetchData(100, [1, 2, 3, 4]);
-  //   expect(nodes).toHaveSize(104);
-  //   nodes.reset();
-  //   expect(nodes).toHaveSize(0);
-  // });
-  //
-  //
-  // /**
-  //  * Next view calculation
-  //  */
-  // it('next view calculation', () => {
-  //   nodes.limit = 10;
-  //   nodes.push(...range(0, 200));
-  //   // nodes.nextView();
-  //   nodes.updateView();
-  //   let next = nodes.getValues();
-  //   expect(next).toHaveSize(10);
-  //   expect(next).toEqual(range(0, 10));
-  //   nodes.nextView();
-  //   next = nodes.getValues();
-  //   expect(next).toHaveSize(10);
-  //   expect(next).toEqual(range(10, 20));
-  // });
-  //
-  //
-  // /**
-  //  * Previous view calculation
-  //  */
-  // it('previous view calculation', () => {
-  //   nodes.limit = 10;
-  //   nodes.push(...range(0, 200));
-  //   nodes.setView(100, 110);
-  //   nodes.previousView();
-  //   let next = nodes.getValues();
-  //   expect(next).toHaveSize(10);
-  //   expect(next).toEqual(range(90, 100));
-  //   nodes.previousView();
-  //   next = nodes.getValues();
-  //   expect(next).toHaveSize(10);
-  //   expect(next).toEqual(range(80, 90));
-  // });
-  //
-  //
-  // /**
-  //  *
-  //  */
-  // it('iterate over range iterator', async () => {
-  //   const v1 = { value: 1 };
-  //   const v2 = { value: 2 };
-  //   const nodes = new ViewArray();
-  //   nodes.push(v1, v2);
-  //   nodes.nextView();
-  //   // expect(nodes.isDirty()).toBeFalse();
-  //   const data = [];
-  //   const values: any[] = await new Promise((resolve, reject) => {
-  //     nodes.getNodeValues().subscribe(x => {
-  //       resolve(x);
-  //     }, error => {
-  //       console.error(error);
-  //     });
-  //   });
-  //   for (const entry of values) {
-  //     data.push(entry.data);
-  //   }
-  //   expect(data.length).toEqual(nodes.loadedLength);
-  //   expect(data).toEqual([v1, v2]);
-  // });
-  //
-  // it('iterate over range iterator with limit', async () => {
-  //   const values = range(1, 10).map(x => ({ value: x }));
-  //   nodes.push(...values);
-  //   nodes.setView(0, null, 5);
-  //   const data = [];
-  //   const _values: any[] = await new Promise((resolve, reject) => {
-  //     nodes.getNodeValues().subscribe((x: any) => {
-  //       resolve(x);
-  //     }, error => {
-  //       console.error(error);
-  //     });
-  //   });
-  //   for (const entry of _values) {
-  //     data.push(entry.data);
-  //   }
-  //   expect(data.length).toEqual(nodes.limit);
-  //   expect(data).toEqual(values.filter((value, index) => index < nodes.limit));
-  // });
-  //
-  // /**
-  //  * Get values of current frame with limit and offset
-  //  */
-  // it('get values of current frame with limit and offset', async () => {
-  //   const values = range(1, 10).map(x => ({ value: x }));
-  //   nodes.push(...values);
-  //   nodes.setView(4, null, 5);
-  //   const _values: any[] = await new Promise((resolve, reject) => {
-  //     nodes.getNodeValues().subscribe(x => {
-  //       resolve(x);
-  //     }, error => {
-  //       console.error(error);
-  //     });
-  //   });
-  //   const data = [];
-  //   for (const entry of _values) {
-  //     data.push(entry.data);
-  //   }
-  //   expect(data.length).toEqual(nodes.limit);
-  //   const res = values.filter((value, index) => index >= nodes.startIdx);
-  //   expect(data).toEqual(res);
-  // });
-  //
 
 });

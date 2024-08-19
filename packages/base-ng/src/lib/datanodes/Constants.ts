@@ -12,14 +12,27 @@ export const K_RESET = 'reset';
 export const K_INITIAL = 'initial';
 
 export const K_INITIALIZE = 'initialize';
+export const K_INSERT = 'insert';
+export const K_APPEND = 'append';
+export const K_REMOVE = 'remove';
+
+
 export const K_$COUNT = '$count';
 
 /**
  * States of view array
  */
-export type T_VIEW_ARRAY_STATES = 'initial' | 'data-update' | 'frame-update' | 'reset' | 'destroy';
+export type T_VIEW_ARRAY_STATES =
+  'initial' |
+  'data-update' |
+  'frame-update' |
+  'reset' |
+  'destroy' |
+  'insert' |
+  'append' |
+  'remove';
 
 /**
  * Query callback
  */
-export type T_QUERY_CALLBACK<T> =  (start: number, end: number, limit?: number) => Observable<T[] & {$count?: number}>;
+export type T_QUERY_CALLBACK<T> = (start: number, end: number, limit?: number) => Observable<T[] & { $count?: number }>;
