@@ -336,7 +336,7 @@ export class ViewArray<T> {
    * @param items
    */
   push(...items: any[]): number {
-    let l = this.max();
+    let l = this.highestLoadedIdx() + 1;
     const _items = items.map(x => new Node<T>(x, l++));
     const idx: number[] = [];
     _items.forEach(x => {
@@ -462,6 +462,10 @@ export class ViewArray<T> {
     } else {
       this.getLoadBoundries().end = this.getLoadBoundries().end + value;
     }
+  }
+
+  highestLoadedIdx(){
+    return this._loaded.end;
   }
 
 

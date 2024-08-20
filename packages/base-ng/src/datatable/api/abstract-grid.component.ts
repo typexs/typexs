@@ -572,7 +572,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   setMaxRows(maxRows: number) {
     const pre = this.getDataNodes().maxRows;
     if (typeof maxRows === 'number' && pre !== maxRows) {
-      this.getDataNodes().reset();
+      // this.getDataNodes().reset();
       this.getDataNodes().maxRows = maxRows;
       if (this.isInitialized()) {
         this.getControl()

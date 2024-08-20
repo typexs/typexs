@@ -46,19 +46,19 @@
       </tr>
       </thead>
       <tbody>
-      <tr [attr.idx]="dataNode ? dataNode.idx : -1"
-          [ngClass]="{ 'placeholder': dataNode.isEmpty() }"
-          *ngFor="let dataNode of getValues() | async">
-        <ng-container *ngIf="!dataNode.isEmpty()">
+      <tr [attr.idx]="node ? node.idx : -1"
+          [ngClass]="{ 'placeholder': node.isEmpty() }"
+          *ngFor="let node of getValues() | async">
+        <ng-container *ngIf="!node.isEmpty()">
           <td *ngFor="let column of columns">
             <txs-simple-html-cell
               [parent]="getSelf()"
               [column]="column"
-              [row]="dataNode">
+              [row]="node">
             </txs-simple-html-cell>
           </td>
         </ng-container>
-        <ng-container *ngIf="dataNode.isEmpty()">
+        <ng-container *ngIf="node.isEmpty()">
           <td [colSpan]="columns.length">Loading ...</td>
         </ng-container>
 

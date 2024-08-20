@@ -7,14 +7,14 @@ import { APP_BASE_HREF, DatePipe } from '@angular/common';
 import { ApplicationInitStatus, Injector, NO_ERRORS_SCHEMA } from '@angular/core';
 import { assign, range } from 'lodash';
 import { By } from '@angular/platform-browser';
-import { K_PAGED } from '@typexs/base-ng/datatable/api/IGridMode';
+import { K_PAGED } from '../api/IGridMode';
 import { ObjectToComponentResolver } from '../../component/ObjectToComponentResolver';
 import { ComponentRegistryService } from '../../component/component-registry.service';
 import { PagerComponent } from '../../pager/pager.component';
 import { IDatatableOptions } from '../../datatable/api/IDatatableOptions';
 import { SimpleTableCellValueComponent } from '../../datatable/simple-table/simple-table-cell-value.component';
 import { SimpleTableCellComponent } from '../../datatable/simple-table/simple-table-cell.component';
-import { SIMPLE_TABLE, CC_GRID, CC_GRID_CELL_VALUE } from '../../constants';
+import { CC_GRID, CC_GRID_CELL_VALUE, SIMPLE_TABLE } from '../../constants';
 
 describe('component: simple-table', () => {
   let component: SimpleTableComponent;
@@ -135,6 +135,7 @@ describe('component: simple-table', () => {
       expect(dataNodes.maxRows).toEqual(rowLimit);
       expect(dataNodes).toHaveSize(rowLimit);
       fixture.detectChanges();
+
       const tableDe = fixture.debugElement;
       const rowElements = tableDe.queryAll(By.css('tbody > tr'));
       expect(rowElements.length).toEqual(limit);
