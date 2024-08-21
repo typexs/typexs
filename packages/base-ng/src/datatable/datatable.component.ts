@@ -20,6 +20,9 @@ import { ComponentRegistryService } from '../component/component-registry.servic
 import { Log } from '../lib/log/Log';
 import { ClassType, inputKeys, methodKeys, outputKeys } from './Constants';
 import { PagerService } from '../pager/PagerService';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { IGridEvent } from './api/IGridEvent';
+import { ViewArray } from '../lib/datanodes/ViewArray';
 
 
 const K_COMP = 'component';
@@ -61,11 +64,16 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
 
   ngOnInit(): void {
     // super.ngOnInit();
-
     if (!this.component) {
       this.component = this.detectDefaultGridComponent();
     }
     this.applyLayout(this.component);
+  }
+
+  /**
+   * Disable initializations
+   */
+  ngAfterViewInit() {
   }
 
   detectDefaultGridComponent() {
@@ -88,6 +96,22 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
 
   getGridComponent() {
     return this.ref().instance;
+  }
+
+  getDataNodes(): ViewArray<any> {
+    return this.getGridComponent().getDataNodes();
+  }
+
+  setDataNodes(nodes: any[]) {
+    this.getGridComponent().setDataNodes(nodes);
+  }
+
+  getControl(): BehaviorSubject<IGridEvent> {
+    return this.getGridComponent().getControl();
+  }
+
+  getControlObserver(): Observable<IGridEvent> {
+    return this.getGridComponent().getControlObserver();
   }
 
   /**
@@ -175,7 +199,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
       }
     }
 
-    // run ngOnInit if present
+    // run ngOnInit and ngAfterViewInit if present
     this.ref().changeDetectorRef.detectChanges();
   }
 

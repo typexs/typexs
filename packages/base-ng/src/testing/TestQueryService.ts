@@ -1,6 +1,5 @@
 import { IQueringService } from '../api/querying/IQueringService';
 import { Observable } from 'rxjs';
-import { ILookupRegistry } from '@allgemein/schema-api';
 
 export class TestQueryService implements IQueringService {
   aggregate(entityName: string, aggregate?: any, options?: any): Observable<any> {

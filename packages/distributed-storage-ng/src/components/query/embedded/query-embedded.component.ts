@@ -48,7 +48,10 @@ export class DistributedStorageQueryEmbeddedComponent
       this.params = {};
     }
 
-    this.applyInitialOptions();
+    this.applyOptions();
+  }
+
+  ngAfterViewInit(){
     if (this.entityName && !this.options.entityTypeSelection) {
       setTimeout(() => {
         this.requery();

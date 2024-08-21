@@ -25,8 +25,6 @@ export class SimpleTableComponent extends AbstractGridComponent implements ISimp
 
   filterValue: any = null;
 
-
-
   constructor(
     private pagerService: PagerService,
     private changeRef: ChangeDetectorRef
@@ -48,13 +46,11 @@ export class SimpleTableComponent extends AbstractGridComponent implements ISimp
     ];
   }
 
-
   /**
-   * Called by ngInit
+   * Extend apply options
    */
-  initialize() {
-    super.initialize();
-
+  applyOptions() {
+    super.applyOptions();
     if (this.options.mode) {
       switch (this.options.mode) {
         case 'paged':
@@ -63,6 +59,14 @@ export class SimpleTableComponent extends AbstractGridComponent implements ISimp
       }
     }
   }
+
+  // /**
+  //  * Called after view is initialized
+  //  */
+  // initialize() {
+  //   super.initialize();
+  //
+  // }
 
 
   private onPagedMode() {

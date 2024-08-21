@@ -74,7 +74,7 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
     }
 
     this.applySearchSpace();
-    this.applyInitialOptions();
+    this.applyOptions();
 
     this.getQueryService().isLoaded().subscribe(x => {
       this.isReady$.next(true);

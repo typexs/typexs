@@ -58,10 +58,6 @@ export class ListViewComponent extends AbstractGridComponent implements AfterVie
       this.getOptions().queryOnInit = false;
     }
     super.ngOnInit();
-
-  }
-
-  ngAfterViewInit() {
   }
 
   onGridReady(x: IGridEvent) {
@@ -104,6 +100,11 @@ export class ListViewComponent extends AbstractGridComponent implements AfterVie
     }
     return this._selectedTemplate;
   }
+
+  isInitialized() {
+    return super.isInitialized() && this.templateRefs && this.templateRefs.length > 0;
+  }
+
 
   getTemplate(templateName: string): TemplateRef<any> {
     if (this.templateRefs) {

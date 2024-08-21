@@ -1,5 +1,5 @@
 import { assign, defaults, get, has, isArray, isEmpty, isNumber, keys, set } from 'lodash';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ClassType, IEntityRef, JS_DATA_TYPES } from '@allgemein/schema-api';
 import { ExprDesc, Expressions } from '@allgemein/expressions';
 import { IGridColumn } from '../../datatable/api/IGridColumn';
@@ -40,7 +40,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 @Component({
   template: ''
 })
-export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponentApi {
+export class AbstractQueryComponent implements OnInit, OnChanges, AfterViewInit, IQueryComponentApi {
 
   @Input()
   name: string;
@@ -89,6 +89,49 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
   queringService: IQueringService;
 
+
+  /**
+   * ==============================
+   *  Angular implementations
+   * ==============================
+   */
+
+  /**
+   * Impl. of onInit method
+   *
+   */
+  ngOnInit() {
+    if (!this.params) {
+      this.params = {};
+    }
+
+    this.applyOptions();
+  }
+
+  /**
+   * Impl. of afterViewInit method
+   *
+   */
+  ngAfterViewInit() {
+    if (this.datatable) {
+      this.datatable.gridReady.subscribe(this.onGridEvent.bind(this));
+      this.isReady$.subscribe(x => {
+        if(x){
+          setTimeout(() => {
+            this.datatable.emitInitialize();
+          });
+        }
+      });
+    }
+    this.initialize();
+  }
+
+
+  /**
+   * ==============================
+   */
+
+
   getEntityName() {
     if (this.name) {
       return this.name;
@@ -117,7 +160,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     return !!this.queringService;
   }
 
-  applyInitialOptions() {
+  applyOptions() {
     defaults(this.options, DEFAULT_QUERY_OPTIONS);
     if (this.options) {
       // add callback for record retrieval
@@ -136,28 +179,13 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
   }
 
 
-  ngOnInit() {
-    this.doInit();
-  }
-
-  doInit() {
-    if (!this.params) {
-      this.params = {};
-    }
-
-    this.applyInitialOptions();
-
-    this.datatable.gridReady.subscribe(this.onGridEvent.bind(this));
-
+  initialize() {
     this.getQueryService().isLoaded().subscribe(x => {
       const success = this.findEntityRef();
       // TODO handle if entity ref not found or loaded
       if (success) {
         this.initialiseColumns();
         this.isReady$.next(true);
-        setTimeout(() => {
-          this.datatable.emitInitialize();
-        });
 
         // this.datatable.doInitialize();
         // this.datatable.emitEvent('initialize', null);
@@ -171,8 +199,9 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
         throw new Error(this.error);
       }
     });
-
   }
+
+
 
   /**
    * Processing grid events passed through gridReady event emitter.
@@ -217,7 +246,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
         this.requery();
       } else if (changes['name']) {
         this.reset();
-        this.doInit();
+        this.initialize();
       }
     }
   }
