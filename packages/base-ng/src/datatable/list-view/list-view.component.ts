@@ -49,8 +49,8 @@ export class ListViewComponent extends AbstractGridComponent implements AfterVie
     public pagerService: PagerService,
     public changeRef: ChangeDetectorRef
   ) {
-    super(pagerService, changeRef);
-    this.gridReady.subscribe(x => this.onGridReady(x));
+    super(pagerService,changeRef);
+    // this.gridReady.subscribe(x => this.onGridReady(x));
   }
 
   ngOnInit() {

@@ -1,4 +1,5 @@
-<div class="simple-table-container mode-{{this.options.mode}}">
+<div class="simple-table-container mode-{{this.options.mode}}"
+     *ngIf="isInitialized()">
 
 <!--  <div *ngIf="options.insertable">-->
 <!--    <button type="button" class="btn btn-primary"-->

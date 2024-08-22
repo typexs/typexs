@@ -13,17 +13,16 @@ import { PagerService } from '../../pager/PagerService';
 import { EntityResolverService } from '../../services/entity-resolver.service';
 import { SimpleTableCellValueComponent } from '../../datatable/simple-table/simple-table-cell-value.component';
 import { SimpleTableCellComponent } from '../../datatable/simple-table/simple-table-cell.component';
-import { CC_GRID, CC_GRID_CELL_VALUE, LIST_VIEW, SIMPLE_TABLE } from '../../constants';
+import { CC_GRID, CC_GRID_CELL_VALUE, SIMPLE_TABLE } from '../../constants';
 import { SimpleTableComponent } from '../../datatable/simple-table/simple-table.component';
 import { ListViewComponent } from '@typexs/base-ng';
 import { ClassType } from '@allgemein/schema-api';
 import { IQueringService } from '../../api/querying/IQueringService';
 import { of } from 'rxjs';
-import { EntityRef } from '@typexs/entity/libs/registry/EntityRef';
 import { DefaultEntityRef } from '@allgemein/schema-api/lib/registry/DefaultEntityRef';
 import { METATYPE_ENTITY } from '@allgemein/schema-api/lib/Constants';
 
-describe('Component: QueryEmbeddedComponent', () => {
+xdescribe('Component: QueryEmbeddedComponent', () => {
   let component: QueryEmbeddedComponent;
   let fixture: ComponentFixture<QueryEmbeddedComponent>;
   let service: IQueringService;

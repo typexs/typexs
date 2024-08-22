@@ -510,7 +510,7 @@ export class ViewArray<T> {
   isReachedMaxRows() {
     if (typeof this.maxRows === 'number') {
       // todo check if last row
-      return this._loaded.end >= this.maxRows - 1;
+      return this.loadedLength >= this.maxRows - 1;
       // return this.length >= this.maxRows;
     }
     return false;
@@ -848,6 +848,8 @@ export class ViewArray<T> {
   /**
    * Change process
    *
+   * TODO create a central event pipe handling frame changes
+   *
    * @param isReady
    * @private
    */
@@ -861,7 +863,7 @@ export class ViewArray<T> {
     }
     obs = obs.pipe(
       // tap(x => console.log(x)),
-      mergeMap(v => iif(() => boundries.change, of([]), this.doFrameReload(boundries))),
+      // mergeMap(v => iif(() => boundries.change, of([]), this.doFrameReload(boundries))),
       concatMap(this.doPreload.bind(this)),
       concatMap(this.getFrameAsArray.bind(this)),
       toArray(),

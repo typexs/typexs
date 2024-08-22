@@ -1,6 +1,8 @@
 // export const K_VIEW = 'view';
 
 export const inputKeys = [
+  '_dataNodes',
+  '_params',
   'options',
   'params',
   'passThrough',
@@ -8,7 +10,8 @@ export const inputKeys = [
   'maxRows',
   'rows',
   'limit',
-  'offset'
+  'offset',
+
 ];
 
 export const outputKeys = [
@@ -25,6 +28,7 @@ export const methodKeys = [
   'getColumns',
   'setColumns',
   'getControl',
+  'getControlObserver',
   'getRows',
   'setRows',
   'getViewMode',

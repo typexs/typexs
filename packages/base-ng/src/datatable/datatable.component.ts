@@ -40,6 +40,14 @@ const K_COMP = 'component';
 export class DatatableComponent extends AbstractGridComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
+   * Cache initial set values, this is necessary for initialization
+   * over a datatable.
+   *
+   * @private
+   */
+  protected _initCache: any = {};
+
+  /**
    * The wrapped grid component which is used for the display
    */
   @Input()
@@ -51,14 +59,38 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
 
   componentRef: ComponentRef<AbstractGridComponent>;
 
+  get maxRows() {
+    return this._initCache['maxRows'];
+  }
+
+  set maxRows(rows: number) {
+    this._initCache['maxRows'] = rows;
+  }
+
+  get limit() {
+    return this._initCache['limit'];
+  }
+
+  set limit(limit: number) {
+    this._initCache['limit'] = limit;
+  }
+
+  get rows() {
+    return this._initCache['rows'];
+  }
+
+  set rows(rows: any[]) {
+    this._initCache['rows'] = rows;
+  }
 
   constructor(
     @Inject(Injector) public injector: Injector,
     @Inject(ComponentFactoryResolver) public r: ComponentFactoryResolver,
     @Inject(ComponentRegistryService) public componentRegistryService: ComponentRegistryService,
     @Inject(PagerService) public pagerService: PagerService,
-    @Inject(ChangeDetectorRef) public changeRef: ChangeDetectorRef) {
-    super(pagerService, changeRef);
+    @Inject(ChangeDetectorRef) public changeRef: ChangeDetectorRef
+  ) {
+    super(pagerService,changeRef);
   }
 
 
@@ -98,8 +130,12 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     return this.ref().instance;
   }
 
+  /**
+   * Data nodes should be the same object as embedded.
+   * It is referred from remove object.
+   */
   getDataNodes(): ViewArray<any> {
-    return this.getGridComponent().getDataNodes();
+    return super.getDataNodes();
   }
 
   setDataNodes(nodes: any[]) {
@@ -138,6 +174,13 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     }
   }
 
+  getInputPropertyNames(){
+    let add = [].concat(inputKeys);
+    if(this.options && this.options.passInputs){
+      add.push(...this.options.passInputs);
+    }
+    return uniq(add);
+  }
 
   /**
    *
@@ -157,7 +200,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     this.componentRef.instance.parent = this;
 
     // apply default annotation pass
-    const passInputs = uniq([].concat((this.options.passInputs || []), inputKeys));
+    const passInputs = this.getInputPropertyNames();
     const passOutputs = uniq([].concat((this.options.passOutputs || []), outputKeys));
     const passMethods = uniq([].concat((this.options.passMethods || []), methodKeys));
 
@@ -166,19 +209,23 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     const self = this;
     const instance = this.getGridComponent();
     for (const prop of passInputs) {
-      if (typeof this[prop] !== 'undefined') {
-        // this.instance[prop] = this[prop];
-        Object.defineProperty(instance, prop, {
-          get(): any {
-            return self[prop];
-          },
-          set(v: any) {
-            self[prop] = v;
-          },
-          configurable: true,
-          enumerable: true
-        });
+      // const propDesc = Object.getOwnPropertyDescriptor(this, prop);
+      // if (propDesc) {
+      if(!['rows', 'limit', 'maxRows'].includes(prop)){
+        this._initCache[prop] = this[prop];
       }
+      // wrap properties to instance
+      Object.defineProperty(self, prop, {
+        get(): any {
+          return instance[prop];
+        },
+        set(v: any) {
+          instance[prop] = v;
+        },
+        configurable: true,
+        enumerable: true
+      });
+      // }
     }
 
     // passing through output eventemitter
@@ -199,9 +246,38 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
       }
     }
 
+    this.initCacheIfSet();
+
     // run ngOnInit and ngAfterViewInit if present
     this.ref().changeDetectorRef.detectChanges();
   }
+
+  /**
+   * Initialized cached rows
+   * @private
+   */
+  private initCacheIfSet() {
+    const initCache = this._initCache;
+    const passInputs = this.getInputPropertyNames();
+    // keep order _dataNodes must be first
+    for(const input of passInputs){
+      this.setCached(input);
+    }
+    // rest open
+    for (const key in initCache) {
+      this.setCached(key);
+    }
+  }
+
+  setCached(key: string){
+    if (typeof this[key] === 'function') {
+      this[key](this._initCache[key]);
+    } else {
+      this[key] = this._initCache[key];
+    }
+    delete this._initCache[key];
+  }
+
 
   ngOnDestroy(): void {
     if (this.componentRef) {

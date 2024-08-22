@@ -29,7 +29,7 @@ export class SimpleTableComponent extends AbstractGridComponent implements ISimp
     private pagerService: PagerService,
     private changeRef: ChangeDetectorRef
   ) {
-    super(pagerService, changeRef);
+    super(pagerService,changeRef);
   }
 
   getSelf(): ISimpleTable {
