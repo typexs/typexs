@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/tasks-ng",
-  "version": "12.3.0-dev.8",
+  "version": "12.3.0-dev.9",
   "description": "Angular for typexs",
   "main": "public_api.ts",
   "scripts": {
@@ -36,10 +36,10 @@
     "@angular/forms": "v12-lts",
     "@angular/router": "v12-lts",
     "@typexs/base": "2.3.0-dev.4",
-    "@typexs/base-ng": "12.3.0-dev.8",
-    "@typexs/forms-ng": "12.3.0-dev.8",
+    "@typexs/base-ng": "12.3.0-dev.9",
+    "@typexs/forms-ng": "12.3.0-dev.9",
     "@typexs/server": "2.3.0-dev.4",
-    "@typexs/storage-ng": "12.3.0-dev.8",
+    "@typexs/storage-ng": "12.3.0-dev.9",
     "rxjs": "6.6.7"
   },
   "publishConfig": {
