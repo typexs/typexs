@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-theme-base",
-  "version": "12.3.0-dev.9",
+  "version": "12.3.0-dev.10",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -42,10 +42,10 @@
     "perfect-scrollbar": "^1.5.1"
   },
   "devDependencies": {
-    "@typexs/base": "2.3.0-dev.4",
-    "@typexs/base-ng": "12.3.0-dev.9",
-    "@typexs/forms-ng": "12.3.0-dev.9",
-    "@typexs/ng-router-menu": "12.3.0-dev.5",
+    "@typexs/base": "2.3.0-dev.5",
+    "@typexs/base-ng": "12.3.0-dev.10",
+    "@typexs/forms-ng": "12.3.0-dev.10",
+    "@typexs/ng-router-menu": "12.3.0-dev.6",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.0.1",
     "perfect-scrollbar": "^1.5.1"
