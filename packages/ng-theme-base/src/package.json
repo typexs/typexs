@@ -51,7 +51,7 @@
     "perfect-scrollbar": "^1.5.1"
   },
   "publishConfig": {
-    "tag": "v12.3-dev1"
+    "tag": "v12.3-dev"
   },
   "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }
