@@ -27,7 +27,7 @@
     "winston-transport": "^4.4.0"
   },
   "publishConfig": {
-    "tag": "v2.3-dev1"
+    "tag": "v2.3-dev"
   },
   "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }
