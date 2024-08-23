@@ -28,6 +28,6 @@
     "name": "roles-api"
   },
   "publishConfig": {
-    "tag": "v2.3-dev"
+    "tag": "v2.3-dev1"
   }
 }

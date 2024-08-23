@@ -1,7 +1,6 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "version": "independent",
-  "distTag": "v2.3-dev",
   "command": {
     "version": {
       "ignore": "app|app-auth|testtask",
