@@ -25,7 +25,6 @@
       "noPush": true,
       "private": false,
       "gitReset": true,
-      "distTag": "v2.3-dev",
       "directory": "../build/package"
     }
   }

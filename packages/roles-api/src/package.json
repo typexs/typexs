@@ -26,5 +26,8 @@
   },
   "typexs": {
     "name": "roles-api"
+  },
+  "publishConfig": {
+    "tag": "v2.3-dev"
   }
 }
