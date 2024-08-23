@@ -1,6 +1,6 @@
 {
   "name": "@typexs/auth",
-  "version": "2.3.0-dev.3",
+  "version": "2.3.0-dev.4",
   "description": "Auth module for typexs",
   "main": "index",
   "browser": "browser",
@@ -27,7 +27,7 @@
     "@typexs/base": "2.3.0-dev.3",
     "@typexs/entity": "2.3.0-dev.3",
     "@typexs/forms": "2.3.0-dev.3",
-    "@typexs/ng": "12.3.0-dev.3",
+    "@typexs/ng": "12.3.0-dev.4",
     "@typexs/roles": "2.3.0-dev.3",
     "@typexs/roles-api": "2.3.0-dev.1",
     "bcrypt": "^5.0.0",
