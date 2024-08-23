@@ -1102,7 +1102,7 @@ describe('directive: infinite-scroll', () => {
 
         });
 
-        xit('check box size on scroll', () => {
+        it('check box size on scroll', () => {
           const se = directive.getScrollElement() as HTMLElement;
           scrollTo(se, { top: 400, left: 0 });
 
@@ -1111,7 +1111,7 @@ describe('directive: infinite-scroll', () => {
             top: 400, bottom: 900, diff: 0, resized: 0, scaled: 500
           });
           const elemIdx = directive['getElementIdxForFrame'](se, size);
-          expect(elemIdx).toEqual(range(7, 20));
+          expect(elemIdx).toEqual(range(7, 21));
         });
 
       });

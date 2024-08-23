@@ -99,6 +99,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     if (!this.component) {
       this.component = this.detectDefaultGridComponent();
     }
+    this.options = this.options || {};
     this.applyLayout(this.component);
   }
 
@@ -147,7 +148,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
   }
 
   getControlObserver(): Observable<IGridEvent> {
-    return this.getGridComponent().getControlObserver();
+    return super.getControlObserver();
   }
 
   /**

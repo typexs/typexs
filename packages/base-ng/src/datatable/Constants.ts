@@ -2,6 +2,8 @@
 
 export const inputKeys = [
   '_dataNodes',
+  '_gridControl$',
+  'gridControl$',
   '_params',
   'options',
   'params',

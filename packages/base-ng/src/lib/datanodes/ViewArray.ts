@@ -405,11 +405,16 @@ export class ViewArray<T> {
   }
 
 
+  /**
+   * Reset map and variables
+   *
+   * @private
+   */
   private resetVars() {
     this.arr.clear();
+    const limit = this.limit;
     this._loaded = Object.assign({}, INIT_SPAN);
-    this._frame = Object.assign({}, INIT_SPAN);
-    // this.maxRows = undefined;
+    this._frame = Object.assign({}, INIT_SPAN, { limit: limit });
   }
 
   /**
@@ -464,7 +469,7 @@ export class ViewArray<T> {
     }
   }
 
-  highestLoadedIdx(){
+  highestLoadedIdx() {
     return this._loaded.end;
   }
 

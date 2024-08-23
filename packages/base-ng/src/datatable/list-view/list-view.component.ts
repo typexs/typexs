@@ -15,7 +15,7 @@ import { range } from 'lodash';
   templateUrl: 'list-view.component.html',
   styleUrls: ['./list-view.component.scss']
 })
-export class ListViewComponent extends AbstractGridComponent implements AfterViewInit {
+export class ListViewComponent extends AbstractGridComponent {
 
   @ViewChildren(TemplateDirective)
   templateRefs: QueryList<TemplateDirective>;
@@ -49,7 +49,7 @@ export class ListViewComponent extends AbstractGridComponent implements AfterVie
     public pagerService: PagerService,
     public changeRef: ChangeDetectorRef
   ) {
-    super(pagerService,changeRef);
+    super(pagerService, changeRef);
     // this.gridReady.subscribe(x => this.onGridReady(x));
   }
 
@@ -101,9 +101,10 @@ export class ListViewComponent extends AbstractGridComponent implements AfterVie
     return this._selectedTemplate;
   }
 
-  isInitialized() {
+  isTemplateReady(){
     return super.isInitialized() && this.templateRefs && this.templateRefs.length > 0;
   }
+
 
 
   getTemplate(templateName: string): TemplateRef<any> {

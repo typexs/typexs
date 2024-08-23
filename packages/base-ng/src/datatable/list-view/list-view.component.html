@@ -1,4 +1,4 @@
-<div class="list-view-container mode-{{this.options.mode}}" *ngIf="isInitialized()">
+<div class="list-view-container mode-{{this.options.mode}}" *ngIf="isTemplateReady()">
   <ng-container *ngTemplateOutlet="selectedTemplate()"></ng-container>
 </div>
 

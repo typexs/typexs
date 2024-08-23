@@ -1,5 +1,17 @@
 import { assign, defaults, get, has, isArray, isEmpty, isNumber, keys, set } from 'lodash';
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  AfterContentInit,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component, ContentChild,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { ClassType, IEntityRef, JS_DATA_TYPES } from '@allgemein/schema-api';
 import { ExprDesc, Expressions } from '@allgemein/expressions';
 import { IGridColumn } from '../../datatable/api/IGridColumn';
@@ -27,6 +39,7 @@ import { Log } from '../../lib/log/Log';
 import { IGridEvent } from '../../datatable/api/IGridEvent';
 import { Q_EVENT_TYPE_REBUILD, Q_EVENT_TYPE_REFRESH, Q_EVENT_TYPE_REQUERY } from '../../datatable/Constants';
 import { BehaviorSubject, Observable, of } from 'rxjs';
+import { K_OPTIONS, K_REBUILD } from '../../datatable/api/IGridMode';
 
 
 /**
@@ -38,9 +51,15 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
  * - extend/add specialized columns
  */
 @Component({
-  template: ''
+  template: '<txs-datatable></txs-datatable>'
 })
-export class AbstractQueryComponent implements OnInit, OnChanges, AfterViewInit, IQueryComponentApi {
+export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponentApi {
+
+  /**
+   * Resolve datatable reference before content change detection
+   */
+  @ViewChild(DatatableComponent, { static: true })
+  datatable: DatatableComponent;
 
   @Input()
   name: string;
@@ -78,17 +97,15 @@ export class AbstractQueryComponent implements OnInit, OnChanges, AfterViewInit,
   @Input()
   componentClass: ClassType<AbstractGridComponent>;
 
-  @ViewChild('datatable', { static: true })
-  datatable: DatatableComponent;
-
   entityRef: IEntityRef;
 
   error: any = null;
 
-  isReady$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  // isReady$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   queringService: IQueringService;
 
+  ready = false;
 
   /**
    * ==============================
@@ -104,25 +121,16 @@ export class AbstractQueryComponent implements OnInit, OnChanges, AfterViewInit,
     if (!this.params) {
       this.params = {};
     }
-
     this.applyOptions();
-  }
 
-  /**
-   * Impl. of afterViewInit method
-   *
-   */
-  ngAfterViewInit() {
-    if (this.datatable) {
-      this.datatable.gridReady.subscribe(this.onGridEvent.bind(this));
-      this.isReady$.subscribe(x => {
-        if(x){
-          setTimeout(() => {
-            this.datatable.emitInitialize();
-          });
-        }
-      });
-    }
+    this.datatable.getControlObserver().subscribe(this.onGridEvent.bind(this));
+    // this.isReady$.subscribe(x => {
+    //   if (x) {
+    //     setTimeout(() => {
+    //       this.datatable.emitInitialize();
+    //     });
+    //   }
+    // });
     this.initialize();
   }
 
@@ -130,8 +138,6 @@ export class AbstractQueryComponent implements OnInit, OnChanges, AfterViewInit,
   /**
    * ==============================
    */
-
-
   getEntityName() {
     if (this.name) {
       return this.name;
@@ -185,8 +191,9 @@ export class AbstractQueryComponent implements OnInit, OnChanges, AfterViewInit,
       // TODO handle if entity ref not found or loaded
       if (success) {
         this.initialiseColumns();
-        this.isReady$.next(true);
-
+        this.ready = true;
+        // this.isReady$.next(true);
+        // this.changeDetectorRef.detectChanges();
         // this.datatable.doInitialize();
         // this.datatable.emitEvent('initialize', null);
         // api maybe not loaded
@@ -202,7 +209,6 @@ export class AbstractQueryComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
 
-
   /**
    * Processing grid events passed through gridReady event emitter.
    * If "options.eventHandle" exists then it will handle passed events.
@@ -215,18 +221,21 @@ export class AbstractQueryComponent implements OnInit, OnChanges, AfterViewInit,
    * @param x: IGridEvent
    */
   onGridEvent(x: IGridEvent) {
+    if (!x) {
+      return;
+    }
     let res = true;
-    if (this.options.eventHandle) {
-      res = this.options.eventHandle(x, this);
-    }
-
-    if (res) {
-      if (x.event === Q_EVENT_TYPE_REQUERY) {
-        this.requery();
-      } else if (x.event === Q_EVENT_TYPE_REFRESH) {
-        this.doQuery(this.datatable.api());
-      }
-    }
+    // if (this.options.eventHandle) {
+    //   res = this.options.eventHandle(x, this);
+    // }
+    //
+    // if (res) {
+    //   if (x.event === Q_EVENT_TYPE_REQUERY) {
+    //     this.requery();
+    //   } else if (x.event === Q_EVENT_TYPE_REFRESH) {
+    //     this.doQuery(this.datatable.api());
+    //   }
+    // }
   }
 
   /**
@@ -235,15 +244,11 @@ export class AbstractQueryComponent implements OnInit, OnChanges, AfterViewInit,
    * @param changes
    */
   ngOnChanges(changes: SimpleChanges) {
-    if (this.isReady$.getValue()) {
+    if (this.ready) {
       if (changes['componentClass']) {
-        this.datatable.gridReady.pipe(first()).subscribe(x => {
-          if (x.event === Q_EVENT_TYPE_REBUILD) {
-            this.requery();
-          }
-        });
+        this.datatable.triggerControl(K_REBUILD);
       } else if (changes['options']) {
-        this.requery();
+        this.datatable.triggerControl(K_OPTIONS, 'query-options');
       } else if (changes['name']) {
         this.reset();
         this.initialize();
@@ -326,7 +331,8 @@ export class AbstractQueryComponent implements OnInit, OnChanges, AfterViewInit,
   onQueryAction(action: QueryAction) {
     this.datatable.api().reset();
     this.freeQuery = action.query;
-    this.doQuery(this.datatable.api());
+    this.datatable.triggerControl(K_QUERY);
+    // this.doQuery(this.datatable.api());
   }
 
   /**
@@ -477,7 +483,9 @@ export class AbstractQueryComponent implements OnInit, OnChanges, AfterViewInit,
 
   queryCallback(start: number, end: number, limit?: number): Observable<any[]> {
     const mode = this.getQueryMode();
-
+    // this.params.offset = start;
+    // const distance = end - start + 1;
+    // this.params.limit = distance;
     if (mode === K_QUERY) {
       return this.doPlainQuery(this.datatable.api())
         .pipe(
@@ -505,79 +513,83 @@ export class AbstractQueryComponent implements OnInit, OnChanges, AfterViewInit,
     }
   }
 
-  doQuery(api: IGridApi): void {
-    let executeQuery: any = null;
-    const mode = this.getQueryMode();
-    const queryOptions: IFindOptions = {};
-    if (this.options.queryOptions) {
-      assign(queryOptions, this.options.queryOptions);
-    }
+  doQuery(api: IGridApi) {
 
-    const filterQuery = this.prepareFilterQuery();
-
-    const _d = this.prepareParams(api);
-    assign(queryOptions, _d);
-
-    this.applyParams(api, filterQuery);
-
-    if (mode === K_QUERY) {
-      this.applyFreeQuery(filterQuery);
-      const mangoQuery = this.buildMangoQuery(filterQuery);
-
-      if (mangoQuery) {
-        executeQuery = mangoQuery;
-      }
-
-      if (this.options.beforeQuery) {
-        this.options.beforeQuery(executeQuery, queryOptions);
-      }
-      this.getQueryService().query(this.getEntityName(), executeQuery, queryOptions)
-        .subscribe(
-          (results: any) => {
-            if (results) {
-              if (results.entities && has(results, '$count') && isNumber(results.$count)) {
-                if (!this.entityRef) {
-                  this.rebuildColumns(results.entities, api);
-                }
-                api.setRows(results.entities);
-                api.setMaxRows(results.$count);
-                api.rebuild();
-              }
-            }
-          }
-        );
-    } else {
-      executeQuery = [];
-      if (this.freeQuery) {
-        if (isArray(this.freeQuery)) {
-          executeQuery = this.freeQuery;
-        } else {
-          throw new Error('aggregation query is not an array');
-        }
-      } else {
-        throw new Error('aggregation query is empty');
-      }
-
-      const mangoQuery = this.buildMangoQuery(filterQuery);
-      if (mangoQuery) {
-        executeQuery.push({ $match: mangoQuery });
-      }
-
-      this.getQueryService().aggregate(this.getEntityName(), executeQuery, queryOptions)
-        .subscribe(
-          (results: any) => {
-            if (results) {
-              if (results.entities && has(results, XS_P_$COUNT) && isNumber(results.$count)) {
-                this.rebuildColumns(results.entities, api);
-                api.setRows(results.entities);
-                api.setMaxRows(results.$count);
-                api.rebuild();
-              }
-            }
-          }
-        );
-    }
   }
+
+  // doQuery(api: IGridApi): void {
+  //   let executeQuery: any = null;
+  //   const mode = this.getQueryMode();
+  //   const queryOptions: IFindOptions = {};
+  //   if (this.options.queryOptions) {
+  //     assign(queryOptions, this.options.queryOptions);
+  //   }
+  //
+  //   const filterQuery = this.prepareFilterQuery();
+  //
+  //   const _d = this.prepareParams(api);
+  //   assign(queryOptions, _d);
+  //
+  //   this.applyParams(api, filterQuery);
+  //
+  //   if (mode === K_QUERY) {
+  //     this.applyFreeQuery(filterQuery);
+  //     const mangoQuery = this.buildMangoQuery(filterQuery);
+  //
+  //     if (mangoQuery) {
+  //       executeQuery = mangoQuery;
+  //     }
+  //
+  //     if (this.options.beforeQuery) {
+  //       this.options.beforeQuery(executeQuery, queryOptions);
+  //     }
+  //     this.getQueryService().query(this.getEntityName(), executeQuery, queryOptions)
+  //       .subscribe(
+  //         (results: any) => {
+  //           if (results) {
+  //             if (results.entities && has(results, '$count') && isNumber(results.$count)) {
+  //               if (!this.entityRef) {
+  //                 this.rebuildColumns(results.entities, api);
+  //               }
+  //               api.setRows(results.entities);
+  //               api.setMaxRows(results.$count);
+  //               api.rebuild();
+  //             }
+  //           }
+  //         }
+  //       );
+  //   } else {
+  //     executeQuery = [];
+  //     if (this.freeQuery) {
+  //       if (isArray(this.freeQuery)) {
+  //         executeQuery = this.freeQuery;
+  //       } else {
+  //         throw new Error('aggregation query is not an array');
+  //       }
+  //     } else {
+  //       throw new Error('aggregation query is empty');
+  //     }
+  //
+  //     const mangoQuery = this.buildMangoQuery(filterQuery);
+  //     if (mangoQuery) {
+  //       executeQuery.push({ $match: mangoQuery });
+  //     }
+  //
+  //     this.getQueryService().aggregate(this.getEntityName(), executeQuery, queryOptions)
+  //       .subscribe(
+  //         (results: any) => {
+  //           if (results) {
+  //             if (results.entities && has(results, XS_P_$COUNT) && isNumber(results.$count)) {
+  //               this.rebuildColumns(results.entities, api);
+  //               api.setRows(results.entities);
+  //               api.setMaxRows(results.$count);
+  //               api.rebuild();
+  //             }
+  //           }
+  //         }
+  //       );
+  //   }
+  // }
 
 
   private rebuildColumns(entities: any[], api: IGridApi) {
@@ -597,7 +609,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, AfterViewInit,
   reset() {
     this.params.offset = 0;
     this.datatable.reset();
-    this.isReady$.next(false);
+    // this.isReady$.next(false);
     this.entityRef = undefined;
     this.error = undefined;
   }

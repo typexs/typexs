@@ -16,7 +16,7 @@ import { SimpleTableCellValueComponent } from '../../datatable/simple-table/simp
 import { SimpleTableCellComponent } from '../../datatable/simple-table/simple-table-cell.component';
 import { CC_GRID, CC_GRID_CELL_VALUE, SIMPLE_TABLE } from '../../constants';
 
-xdescribe('component: simple-table', () => {
+describe('component: simple-table', () => {
   let component: SimpleTableComponent;
   let fixture: ComponentFixture<SimpleTableComponent>;
   let testBedStatic: TestBedStatic;
@@ -90,7 +90,7 @@ xdescribe('component: simple-table', () => {
       expect(dataNodes.loadedLength).toEqual(rowLimit);
       expect(dataNodes.limit).toEqual(limit);
       fixture.detectChanges();
-      // tick(100);
+      tick(100);
       const pager = component.getPager();
       expect(pager.currentPage).toEqual(1);
       expect(pager.minPage).toEqual(1);
@@ -102,7 +102,6 @@ xdescribe('component: simple-table', () => {
       expect(dataNodes).toHaveSize(rowLimit);
 
       const tableDe = fixture.debugElement;
-      // const tableEl = tableDe.nativeElement;
       const rowElements = tableDe.queryAll(By.css('tbody > tr'));
       expect(rowElements.length).toEqual(limit);
       for (const [k, v] of rowElements.entries()) {
@@ -162,6 +161,7 @@ xdescribe('component: simple-table', () => {
       expect(pager.totalPages).toEqual(10);
       let data = component.getDataNodes().getLoadBoundries();
       expect(data).toEqual({ start: 0, end: 99, range: 25 });
+
       component.rows = range(0, 25).map(x => ({ id: x, name: 'Row ' + x }));
       fixture.detectChanges();
 
@@ -175,7 +175,7 @@ xdescribe('component: simple-table', () => {
     /**
      * Check if pager adapts on limit change
      */
-    it('pager changes on limit change', fakeAsync(() => {
+    it('changes options limit and rebuild', fakeAsync(() => {
       fixture.detectChanges();
       const pager = component.getPager();
       expect(pager.currentPage).toEqual(1);
@@ -184,9 +184,9 @@ xdescribe('component: simple-table', () => {
       let data = component.getDataNodes().getLoadBoundries();
       expect(data).toEqual({ start: 0, end: 99, range: 25 });
       component.options = assign(component.options, { limit: 25 });
-      component.rebuild();
+      component.rebuild(null, false);
 
-      fixture.detectChanges();
+      // fixture.detectChanges();
       expect(pager.currentPage).toEqual(1);
       expect(pager.minPage).toEqual(1);
       expect(pager.totalPages).toEqual(4);

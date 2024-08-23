@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChild, Input, ViewChild } from '@angular/core';
 import { IQueringService } from '../../api/querying/IQueringService';
 import { AbstractQueryComponent } from '../../api/querying/abstract-query.component';
 import { EntityResolverService } from '../../services/entity-resolver.service';
+import { DatatableComponent } from '../../datatable/datatable.component';
 
 
 /**
@@ -18,7 +19,6 @@ import { EntityResolverService } from '../../services/entity-resolver.service';
   styleUrls: ['./query-embedded.component.scss']
 })
 export class QueryEmbeddedComponent extends AbstractQueryComponent {
-
 
   @Input()
   get service() {
