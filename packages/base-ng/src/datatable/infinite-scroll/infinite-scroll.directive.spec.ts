@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { IScrollEvent } from './IScrollEvent';
 
 
-
 // TODO NOTE test "factor" up oder down
 // TODO check if fire onScroll on bottom of element
 // TODO mode switch check between simple / overflow
@@ -18,7 +17,7 @@ import { IScrollEvent } from './IScrollEvent';
 /**
  * Tests for infinite scroll
  */
-describe('directive: infinite-scroll', () => {
+describe('directive: InfiniteScrollDirective', () => {
   let component: any;
   let fixture: ComponentFixture<any>;
   let div: DebugElement;
@@ -165,8 +164,7 @@ describe('directive: infinite-scroll', () => {
 
     @Component({
       template: `
-        <div infiniteScroll
-             [enable]="onoff"
+        <div [infiniteScroll]="onoff"
              [mode]="mode"
              [maxEntries]="maxEntries"
              [factor]="factor"
@@ -222,15 +220,13 @@ describe('directive: infinite-scroll', () => {
       expect(directive['scrollSubscription'] !== undefined).toBeTrue();
     });
 
-
   });
 
   describe('scroll in overflow mode', () => {
 
     @Component({
       template: `
-        <div infiniteScroll
-             [enable]="onoff"
+        <div [infiniteScroll]="onoff"
              (onDataScroll)="onReached($event)"
              class="container">
           <div class="row" #rows [attr.idx]="row.id" *ngFor="let row of list">
@@ -409,8 +405,7 @@ describe('directive: infinite-scroll', () => {
 
     @Component({
       template: `
-        <div infiniteScroll
-             [enable]="onoff"
+        <div [infiniteScroll]="onoff"
              [maxEntries]="maxEntries"
              (onDataScroll)="onReached($event)"
              class="container">
@@ -448,7 +443,7 @@ describe('directive: infinite-scroll', () => {
       fixture.detectChanges();
       tick(50);
       fixture.detectChanges();
-      directive.onItemsChange()
+      directive.onItemsChange();
       expect(se.scrollHeight).toBeGreaterThanOrEqual(1000);
       expect(directive.getPlaceHolderElements().length).toEqual(1);
       expect(directive.getPlaceHolderElements().item(0).getAttribute('from')).toEqual('56');
@@ -578,8 +573,7 @@ describe('directive: infinite-scroll', () => {
   describe('check helper methods for index calculation', () => {
     @Component({
       template: `
-        <div infiniteScroll
-             [enable]="onoff"
+        <div [infiniteScroll]="onoff"
              [maxEntries]="maxEntries"
              [mode]="mode"
              (onDataScroll)="onRangeReached($event)"
@@ -1165,7 +1159,7 @@ describe('directive: infinite-scroll', () => {
           expect(elemIdx).toEqual(range(0, 12));
         }));
 
-       it('check box size on scroll', fakeAsync(() => {
+        it('check box size on scroll', fakeAsync(() => {
           tick(50);
           let se: any = directive.getScrollElement() as Window;
           scrollTo(se, { top: 400, left: 0 });
@@ -1173,8 +1167,8 @@ describe('directive: infinite-scroll', () => {
           se = (se as Window).document.documentElement as HTMLElement;
 
           const size = directive['getViewBox'](se);
-         expect(size.top).toEqual(400);
-         expect(size.bottom).toEqual(841);
+          expect(size.top).toEqual(400);
+          expect(size.bottom).toEqual(841);
           const elemIdx = directive['getElementIdxForFrame'](el, size);
           expect(elemIdx).toEqual(range(9, 22));
         }));

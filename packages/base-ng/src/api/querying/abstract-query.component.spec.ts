@@ -44,7 +44,7 @@ const getTestBedConfig = () => {
 };
 
 
-describe('Component: AbstractQueryComponent', () => {
+describe('component: AbstractQueryComponent', () => {
   let component: QueryEmbeddedComponent;
   let demo: any;
   let fixture: ComponentFixture<any>;

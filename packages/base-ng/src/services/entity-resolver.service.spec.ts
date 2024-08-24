@@ -31,7 +31,7 @@ export class SomeObj {
  * - check id generation
  *
  */
-describe('EntityResolverService', () => {
+describe('service: EntityResolverService', () => {
   let service: EntityResolverService;
   let injector: TestBed;
 

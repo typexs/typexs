@@ -66,7 +66,7 @@ const getTestBedConfig = () => {
 };
 
 
-describe('Component: QueryEmbeddedComponent', () => {
+describe('component: QueryEmbeddedComponent', () => {
   let component: QueryEmbeddedComponent;
   let demo: any;
   let fixture: ComponentFixture<any>;

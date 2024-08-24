@@ -8,7 +8,7 @@ import { PagerService } from './PagerService';
 import { PagerAction } from './PagerAction';
 
 
-describe('component: pager', () => {
+describe('component: PagerComponent', () => {
 
 
   describe('', () => {

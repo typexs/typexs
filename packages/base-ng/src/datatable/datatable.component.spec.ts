@@ -47,7 +47,7 @@ const getTestBedConfig = () => {
 };
 
 
-describe('datatable', () => {
+describe('component: DatatableComponent', () => {
 
   let component: DatatableComponent;
   let demo: any;

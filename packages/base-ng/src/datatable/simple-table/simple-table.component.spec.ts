@@ -16,7 +16,7 @@ import { SimpleTableCellValueComponent } from '../../datatable/simple-table/simp
 import { SimpleTableCellComponent } from '../../datatable/simple-table/simple-table-cell.component';
 import { CC_GRID, CC_GRID_CELL_VALUE, SIMPLE_TABLE } from '../../constants';
 
-describe('component: simple-table', () => {
+describe('component: SimpleTableComponent', () => {
   let component: SimpleTableComponent;
   let fixture: ComponentFixture<SimpleTableComponent>;
   let testBedStatic: TestBedStatic;

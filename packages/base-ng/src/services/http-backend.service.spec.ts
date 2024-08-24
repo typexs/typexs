@@ -23,7 +23,7 @@ import { IRoute } from './../api/backend/IRoute';
  * - check reload routes
  *
  */
-describe('HttpBackendService', () => {
+describe('service: HttpBackendService', () => {
   let service: HttpBackendService;
   let injector: TestBed;
   let httpMock: HttpTestingController;

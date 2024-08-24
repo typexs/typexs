@@ -22,7 +22,7 @@ function waitForObs(obs: Observable<any>): Promise<any[]> {
 /**
  * Test for ViewArray object handling data
  */
-describe('ViewArray', () => {
+describe('lib: ViewArray', () => {
   let nodes: ViewArray<any>;
 
   beforeEach(() => {
