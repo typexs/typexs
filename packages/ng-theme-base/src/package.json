@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-theme-base",
-  "version": "12.3.0-dev.12",
+  "version": "12.3.0-dev.13",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -43,8 +43,8 @@
   },
   "devDependencies": {
     "@typexs/base": "2.3.0-dev.6",
-    "@typexs/base-ng": "12.3.0-dev.12",
-    "@typexs/forms-ng": "12.3.0-dev.12",
+    "@typexs/base-ng": "12.3.0-dev.13",
+    "@typexs/forms-ng": "12.3.0-dev.13",
     "@typexs/ng-router-menu": "12.3.0-dev.7",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.0.1",
