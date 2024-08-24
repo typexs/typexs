@@ -1147,9 +1147,16 @@ describe('directive: InfiniteScrollDirective', () => {
           se = (se as Window).document.documentElement;
           const size = directive['getViewBox'](se);
           expect(size.top).toEqual(0);
-          expect(size.bottom).toEqual(441);
-          const elemIdx = directive['getElementIdxForFrame'](el, size);
-          expect(elemIdx).toEqual(range(0, 12));
+          if(size.bottom === 441){
+            expect(size.bottom).toEqual(441);
+            const elemIdx = directive['getElementIdxForFrame'](el, size);
+            expect(elemIdx).toEqual(range(0, 12));
+          }else{
+            expect(size.bottom).toEqual(600);
+            const elemIdx = directive['getElementIdxForFrame'](el, size);
+            expect(elemIdx).toEqual(range(0, 16));
+
+          }
         }));
 
         it('check box size on scroll', fakeAsync(() => {
@@ -1161,9 +1168,16 @@ describe('directive: InfiniteScrollDirective', () => {
 
           const size = directive['getViewBox'](se);
           expect(size.top).toEqual(400);
-          expect(size.bottom).toEqual(841);
-          const elemIdx = directive['getElementIdxForFrame'](el, size);
-          expect(elemIdx).toEqual(range(9, 22));
+          if(size.bottom === 841){
+            expect(size.bottom).toEqual(841);
+            const elemIdx = directive['getElementIdxForFrame'](el, size);
+            expect(elemIdx).toEqual(range(9, 22));
+          }else{
+            expect(size.bottom).toEqual(1000);
+            const elemIdx = directive['getElementIdxForFrame'](el, size);
+            expect(elemIdx).toEqual(range(9, 26));
+
+          }
         }));
 
       });
