@@ -488,13 +488,14 @@ describe('directive: InfiniteScrollDirective', () => {
 
     beforeEach(waitForAsync(testBedEmpty(ITC)));
 
-    it('check if is correctly initialized', fakeAsync(() => {
-      tick(50);
+    fit('check if is correctly initialized', fakeAsync(() => {
       fixture.detectChanges();
       directive.onItemsChange();
       const se = directive.getScrollElement() as Window;
       const elem = directive.getElement() as HTMLElement;
       expect(se).toBeInstanceOf(Window);
+      console.log(JSON.stringify(se.screen));
+      console.log(JSON.stringify(elem.getBoundingClientRect()));
       // @ts-ignore
       expect(se !== elem).toBeTrue();
       expect(elem.childNodes.length).toEqual(50);
@@ -549,7 +550,6 @@ describe('directive: InfiniteScrollDirective', () => {
     beforeEach(waitForAsync(testBedEmpty(ITC)));
 
     it('check if is correctly initialized', fakeAsync(() => {
-      tick(25);
       fixture.detectChanges();
       directive.onItemsChange();
       const se = directive.getScrollElement() as Window;
@@ -660,7 +660,6 @@ describe('directive: InfiniteScrollDirective', () => {
       describe('nearest element for list with 10 elements', () => {
 
         beforeEach(testBedBeforeWithEntries(ITCAdapt, 10));
-
 
         it('from 20 offset 1000', () => {
           // NOTE: no entries are after 20
@@ -810,8 +809,6 @@ describe('directive: InfiniteScrollDirective', () => {
             // NOTE: nearest element to offset 0 beginning with index 0 from last to first
             idx = directive['getNearestElement'](el, 50, 2000, false);
             expect(idx).toEqual(-1);
-            // const node = el.childNodes.item(idx) as HTMLElement;
-            // expect(node.getAttribute('idx')).toEqual(39 + '');
           });
 
           it('from 50 offset 2000 reverse', () => {
@@ -870,8 +867,6 @@ describe('directive: InfiniteScrollDirective', () => {
             // NOTE: nearest element to offset 0 beginning with index 0 from last to first
             idx = directive['getNearestElement'](el, 50, 2000, false);
             expect(idx).toEqual(-1);
-            // const node = el.childNodes.item(idx) as HTMLElement;
-            // expect(node.getAttribute('idx')).toEqual(39 + '');
           });
 
           it('from 50 offset 2000 reverse', () => {
