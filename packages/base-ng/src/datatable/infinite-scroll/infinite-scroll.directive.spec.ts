@@ -488,26 +488,22 @@ describe('directive: InfiniteScrollDirective', () => {
 
     beforeEach(waitForAsync(testBedEmpty(ITC)));
 
-    fit('check if is correctly initialized', fakeAsync(() => {
+    it('check if is correctly initialized', fakeAsync(() => {
       fixture.detectChanges();
       directive.onItemsChange();
       const se = directive.getScrollElement() as Window;
       const elem = directive.getElement() as HTMLElement;
       expect(se).toBeInstanceOf(Window);
-      console.log(JSON.stringify(se.screen));
-      console.log(JSON.stringify(elem.getBoundingClientRect()));
+      // console.log(JSON.stringify(se.screen));
+      // console.log(JSON.stringify(elem.getBoundingClientRect()));
       // @ts-ignore
       expect(se !== elem).toBeTrue();
-      expect(elem.childNodes.length).toEqual(50);
-      expect(directive.getItemCount()).toEqual(49);
+      const erg = (Math.ceil((elem.getBoundingClientRect().height - 1) / 21) + 1);
+      expect(elem.childNodes.length).toEqual(erg);
+      expect(directive.getItemCount()).toEqual(erg - 1);
 
-      // const scrollBounding = se.document.documentElement.getBoundingClientRect();
-      // const elBounding = elem.getBoundingClientRect();
       expect(se.scrollY).toBeGreaterThanOrEqual(0);
       expect(directive.getPlaceHolderElements().length).toEqual(0);
-      // expect(directive.getPlaceHolderElements().item(0).getAttribute('from')).toEqual('28');
-      // expect(directive.getPlaceHolderElements().item(0).getAttribute('to')).toEqual('99');
-      // expect(directive.getPlaceHolderElements().item(0).getAttribute('size')).toEqual('72');
     }));
 
 

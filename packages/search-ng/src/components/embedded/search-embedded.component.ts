@@ -17,8 +17,8 @@ import { IEntityViewOptions } from '@typexs/base-ng/component/entities/IEntityVi
  */
 @Component({
   selector: 'txs-search-embedded',
-  templateUrl: './embedded.component.html',
-  styleUrls: ['./embedded.component.scss']
+  templateUrl: './search-embedded.component.html',
+  styleUrls: ['./search-embedded.component.scss']
 })
 export class SearchEmbeddedComponent extends AbstractQueryComponent {
 
@@ -74,15 +74,16 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
     }
 
     this.applySearchSpace();
-    this.applyOptions();
-
-    this.getQueryService().isLoaded().subscribe(x => {
-      // this.isReady$.next(true);
-      // api maybe not loaded
-      setTimeout(() => {
-        this.doQuery(this.datatable.api());
-      });
-    });
+    super.ngOnInit();
+    // this.applyOptions();
+    //
+    // this.getQueryService().isLoaded().subscribe(x => {
+    //   // this.isReady$.next(true);
+    //   // api maybe not loaded
+    //   setTimeout(() => {
+    //     this.doQuery(this.datatable.api());
+    //   });
+    // });
   }
 
 

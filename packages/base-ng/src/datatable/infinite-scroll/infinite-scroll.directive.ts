@@ -363,20 +363,7 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
    */
   onItemsChange(boundries?: IIndexSpan, scroll?: IScrollEvent) {
     this.calcReload(boundries);
-    // if (scroll) {
-    // Search surroundings for placeholder
-    // TODO optimize this
-    // let nTopIdx = 0;
-    // let nBottomIdx = -1;
-    // let span = boundries.end - boundries.start;
-    // if (scroll.nTopIdx >= 0 && (scroll.nTopIdx - span > nTopIdx)) {
-    //   nTopIdx = scroll.nTopIdx - span;
-    // }
-    // if (scroll.nBottomIdx >= 0 && (scroll.nBottomIdx + span > nTopIdx)) {
-    //   nBottomIdx = scroll.nBottomIdx + span;
-    // }
     this.updatePlaceHolder();
-    // }
   }
 
   private calcReload(boundries?: IIndexSpan) {
