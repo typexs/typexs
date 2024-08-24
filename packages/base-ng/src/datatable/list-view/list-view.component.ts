@@ -55,7 +55,7 @@ export class ListViewComponent extends AbstractGridComponent {
 
   ngOnInit() {
     if (this.getViewMode() === K_INFINITE) {
-      this.getOptions().queryOnInit = false;
+      this.infiniteOnOff = true;
     }
     super.ngOnInit();
   }
@@ -68,12 +68,29 @@ export class ListViewComponent extends AbstractGridComponent {
     }
   }
 
+  /**
+   * When infinite mode is enabled and the infiniteScroll directive also, then the update of items is done
+   * by onDataScroll callback and not on startup.
+   *
+   * @return boolean
+   */
+  shouldQueryOnStartup(): boolean {
+    const onStartupUp = super.shouldQueryOnStartup();
+    if(this.isQueryOnInitSet()){
+      // when result is override by queryOnInit flag
+      return onStartupUp;
+    }
+    if(this.infiniteOnOff) {
+      // handle by onDragScroll callback
+      return false;
+    }
+    return onStartupUp;
+  }
+
   setViewMode(viewMode: string) {
     if (viewMode === K_INFINITE) {
       this.infiniteOnOff = true;
-      this.getOptions().queryOnInit = false;
     } else {
-      this.getOptions().queryOnInit = undefined;
       this.infiniteOnOff = false;
     }
     super.setViewMode(viewMode);

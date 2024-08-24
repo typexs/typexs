@@ -48,7 +48,7 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
   @Input()
   captureOn: ('scroll' | 'scrollend')[] = ['scroll', 'scrollend'];
 
-  @Input('enable')
+  @Input('infiniteScroll')
   onoff: boolean;
 
   _enabled = false;

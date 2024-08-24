@@ -38,7 +38,7 @@
 
 <ng-template #viewInfinite viewTemplate="infinite">
   <div class="list-container"
-       infiniteScroll
+       [infiniteScroll]="infiniteOnOff"
        [refresh]="refresh"
        [finished]="finished"
        [mode]="options.infiniteMode"

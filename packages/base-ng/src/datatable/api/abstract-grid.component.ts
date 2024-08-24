@@ -303,7 +303,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
     if (viewModeSpec) {
       if (this.options.mode !== viewMode) {
         this.options.mode = viewMode;
-        this.getDataNodes().reset();
+        // this.getDataNodes().reset();
       }
     } else {
       throw new Error('Cant change view mode, cause its isnt defined.');
@@ -420,15 +420,22 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
     return this.parent !== undefined;
   }
 
-  doInitialize() {
+  isQueryOnInitSet(){
+    return typeof this.getOptions().queryOnInit !== 'undefined';
+  }
+
+  shouldQueryOnStartup(){
     let queryOnStartup = this.getOptions().queryOnInit;
-    if (typeof queryOnStartup !== 'boolean') {
+    if (!this.isQueryOnInitSet()) {
       // default
       queryOnStartup = true;
     }
+    return queryOnStartup;
+  }
 
+  doInitialize() {
     // const maxRowReached = this.getDataNodes().isReachedMaxRows();
-    if (queryOnStartup) {
+    if (this.shouldQueryOnStartup()) {
       this.getDataNodes()
         .doInitialize()
         .pipe(first())
