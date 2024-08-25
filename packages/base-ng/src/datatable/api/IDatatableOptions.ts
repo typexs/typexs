@@ -150,4 +150,9 @@ export interface IDatatableOptions {
    * Datasource navigation callback
    */
   queryCallback?: T_QUERY_CALLBACK<any>;
+
+  /**
+   * Enable or disable autoloading of entries by queryCallback
+   */
+  queryAutoLoad?: boolean;
 }

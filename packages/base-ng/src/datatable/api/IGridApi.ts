@@ -3,6 +3,7 @@ import { IGridColumn } from './IGridColumn';
 import { ViewArray } from '../../lib/datanodes/ViewArray';
 import { IGridMode } from './IGridMode';
 import { BehaviorSubject } from 'rxjs';
+import { GRID_EVENT_TYPE, IGridEvent } from './IGridEvent';
 
 export interface IGridApi {
 
@@ -37,11 +38,15 @@ export interface IGridApi {
 
   setMaxRows(maxRows: number): void;
 
-  getDataNodes(): ViewArray<any>;
+  getNodes(): ViewArray<any>;
 
   getControl(): BehaviorSubject<any>;
 
-  rebuild(): void;
+  isInitialized(): boolean;
+
+  triggerControl(e: GRID_EVENT_TYPE | string, changeKey?: string, data?: any): void;
+
+  rebuild(event?: IGridEvent): void;
 
   reset(): void;
 }

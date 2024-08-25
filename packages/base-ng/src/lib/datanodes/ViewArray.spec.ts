@@ -2,10 +2,10 @@ import { IArrayEvent, ViewArray } from './ViewArray';
 import { range } from 'lodash';
 import { Observable, of } from 'rxjs';
 import { K_DATA_UPDATE, K_INITIAL, K_RESET, T_VIEW_ARRAY_STATES } from './Constants';
-import { XS_P_$COUNT } from '@typexs/base';
 import { K_INFINITE, K_PAGED } from './../../datatable/api/IGridMode';
 import { fakeAsync } from '@angular/core/testing';
 import { first } from 'rxjs/operators';
+import { XS_P_$COUNT } from '../../datatable/Constants';
 
 function genData(s: number, e: number) {
   return range(s, e).map(x => ({ idx: x, name: 'T ' + x }));

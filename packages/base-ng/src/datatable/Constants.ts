@@ -1,7 +1,22 @@
-// export const K_VIEW = 'view';
+import { DatatableComponent } from './datatable.component';
 
-export const inputKeys = [
-  '_dataNodes',
+/**
+ * Variables from @typexs/base
+ */
+export const XS_P_$COUNT = '$count';
+export const XS_P_$LIMIT = '$limit';
+export const XS_P_$OFFSET = '$offset';
+export const K_ENTITY_BUILT = '_built_';
+export const C_SKIP_BUILDS = 'skipBuilds';
+export const C_RAW = 'raw';
+export const C_LABEL = 'label';
+export const C_ENTITY_LABEL = 'entity_label';
+export const C_$LABEL = '$label';
+export const __DEFAULT__ = '__default__';
+
+
+export const inputKeys: string[] = [
+  '_nodes',
   '_gridControl$',
   'gridControl$',
   '_params',
@@ -33,6 +48,7 @@ export const methodKeys = [
   'getControlObserver',
   'getRows',
   'setRows',
+  'triggerControl',
   'getViewMode',
   'setViewMode',
   'supportedViewModes'

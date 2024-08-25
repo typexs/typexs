@@ -1,17 +1,5 @@
 import { assign, defaults, get, has, isArray, isEmpty, isNumber, keys, set } from 'lodash';
-import {
-  AfterContentInit,
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component, ContentChild,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ClassType, IEntityRef, JS_DATA_TYPES } from '@allgemein/schema-api';
 import { ExprDesc, Expressions } from '@allgemein/expressions';
 import { IGridColumn } from '../../datatable/api/IGridColumn';
@@ -33,14 +21,13 @@ import { Helper } from './Helper';
 import { IQueryComponentApi } from './IQueryComponentApi';
 import { filter, first, map } from 'rxjs/operators';
 import { IFindOptions } from './IFindOptions';
-import { LabelHelper, XS_P_$COUNT } from '@typexs/base';
+import { LabelHelper } from '@typexs/base';
 import { IQueryOptions } from './IQueryOptions';
 import { Log } from '../../lib/log/Log';
 import { IGridEvent } from '../../datatable/api/IGridEvent';
-import { Q_EVENT_TYPE_REBUILD, Q_EVENT_TYPE_REFRESH, Q_EVENT_TYPE_REQUERY } from '../../datatable/Constants';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '../../datatable/Constants';
+import { Observable } from 'rxjs';
 import { K_OPTIONS, K_REBUILD } from '../../datatable/api/IGridMode';
-
 
 /**
  * Storage query embedded component
@@ -481,40 +468,66 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     return this.options.queryType === K_AGGREGATE ? K_AGGREGATE : K_QUERY;
   }
 
+  /**
+   * Impl. queryCallback for grid component
+   *
+   * @param start
+   * @param end
+   * @param limit
+   */
   queryCallback(start: number, end: number, limit?: number): Observable<any[]> {
+    return this.executeQuery(this.datatable.api());
+  }
+
+  /**
+   * Standalone Q
+   * @param api
+   */
+  executeQuery(api: IGridApi) {
     const mode = this.getQueryMode();
-    // this.params.offset = start;
-    // const distance = end - start + 1;
-    // this.params.limit = distance;
     if (mode === K_QUERY) {
       return this.doPlainQuery(this.datatable.api())
         .pipe(
           filter(x => !(x === null || x === undefined)),
           map(results => {
-            if (results) {
-              if (results.entities && has(results, XS_P_$COUNT) && isNumber(results.$count)) {
-                results.entities[XS_P_$COUNT] = results[XS_P_$COUNT];
-                return results.entities;
-              }
-            }
-            return [];
+            return this._processQueryResults(results);
           })
         );
     } else {
       return this.doPlainAggregate(this.datatable.api()).pipe(map(results => {
-        if (results) {
-          if (results.entities && has(results, XS_P_$COUNT) && isNumber(results.$count)) {
-            results.entities[XS_P_$COUNT] = results[XS_P_$COUNT];
-            return results.entities;
-          }
-        }
-        return [];
+        return this._processQueryResults(results);
       }));
     }
   }
 
-  doQuery(api: IGridApi) {
+  /**
+   * Process results from query
+   *
+   * @param results
+   */
+  _processQueryResults(results: any) {
+    if (results) {
+      if (results.entities) {
+        [XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET].forEach(x => {
+          if (has(results, x) && isNumber(results[x])) {
+            results.entities[x] = results[x];
+          }
+        });
+        return results.entities;
+      }
+    }
+    return [];
+  }
 
+  doQuery(api: IGridApi): void {
+    const query = this.executeQuery(api);
+    query.pipe(first()).subscribe(x => {
+      if (!this.entityRef) {
+        this.rebuildColumns(x, api);
+      }
+      api.setRows(x);
+      api.rebuild({ event: K_REBUILD, api: api, data: { rows: x } });
+    });
   }
 
   // doQuery(api: IGridApi): void {

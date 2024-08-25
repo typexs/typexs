@@ -49,7 +49,7 @@
       <tbody>
       <tr [attr.idx]="node ? node.idx : -1"
           [ngClass]="{ 'placeholder': node.isEmpty() }"
-          *ngFor="let node of getValues() | async">
+          *ngFor="let node of getNodeData() | async">
         <ng-container *ngIf="!node.isEmpty()">
           <td *ngFor="let column of columns">
             <txs-simple-html-cell

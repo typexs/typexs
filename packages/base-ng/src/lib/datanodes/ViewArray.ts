@@ -108,6 +108,11 @@ export class ViewArray<T> {
   private preFetch = 0;
 
   /**
+   * Enable or disable fetching by callback
+   */
+  private fetchByCallback = true;
+
+  /**
    * State of the array
    *
    * @private
@@ -167,6 +172,10 @@ export class ViewArray<T> {
       this.calcLoadedIndex([node.idx]);
     }
     return node;
+  }
+
+  setFetchByCallback(value: boolean){
+    this.fetchByCallback = value;
   }
 
   /**
@@ -414,7 +423,7 @@ export class ViewArray<T> {
     this.arr.clear();
     const limit = this.limit;
     this._loaded = Object.assign({}, INIT_SPAN);
-    this._frame = Object.assign({}, INIT_SPAN, { limit: limit });
+    this._frame = Object.assign({}, INIT_SPAN, { range: limit });
   }
 
   /**
@@ -474,22 +483,6 @@ export class ViewArray<T> {
   }
 
 
-  // /**
-  //  * Create an empty node if no entry present
-  //  *
-  //  * @param from
-  //  * @param to
-  //  * @private
-  //  */
-  // private fillWithEmptyNode(from: number, to: number) {
-  //   for (let i = from; i <= to; i++) {
-  //     const r = this.getNode(i);
-  //     if (!r) {
-  //       this.set(i, undefined, true);
-  //     }
-  //   }
-  // }
-
   get limit(): number {
     return this._frame.range;
   }
@@ -497,7 +490,6 @@ export class ViewArray<T> {
   set limit(limit: number) {
     this._frame.range = limit;
     this.updateFramedPosition(0);
-    // this.setView();
   }
 
   get offset(): number {
@@ -557,15 +549,15 @@ export class ViewArray<T> {
   /**
    * Helper to check if callback is present
    */
-  hasNodeCallback() {
-    return typeof this._fn === 'function';
+  isFetchByCallbackSet() {
+    return typeof this._fn === 'function' && this.fetchByCallback;
   }
 
   /**
    * Execute callback an apply values
    */
   doFetch(boundries: IIndexSpan) {
-    if (!this.hasNodeCallback()) {
+    if (!this.isFetchByCallbackSet()) {
       // Log.error('No callback for fetching node data defined.');
       return of([]);
     }
@@ -577,7 +569,7 @@ export class ViewArray<T> {
             if (typeof values[K_$COUNT] === 'number') {
               this.maxRows = values[K_$COUNT];
             }
-            this.applyFetchData(boundries.start, values);
+            this.insertNodes(boundries.start, values);
           }
           return values;
         }),
@@ -587,12 +579,12 @@ export class ViewArray<T> {
 
 
   /**
-   * Add data to array
+   * Add data to array on a given start position
    *
    * @param startIdx
    * @param nodes
    */
-  applyFetchData(startIdx: number, nodes: T[]) {
+  insertNodes(startIdx: number, nodes: T[]) {
     // check if size
     const idx = [];
     let posIdx = startIdx;
@@ -680,7 +672,7 @@ export class ViewArray<T> {
    * If not set take the currently applied boundy.
    */
   isFrameReady(boundries?: IIndexSpan) {
-    if (this.hasNodeCallback() && !this.isCachingEnabled()) {
+    if (this.isFetchByCallbackSet() && !this.isCachingEnabled()) {
       return false;
     }
     if (!boundries) {
@@ -805,13 +797,10 @@ export class ViewArray<T> {
     if (this.frameMode === K_PAGED) {
       return this.doChangePage(this.getCurrentPage());
     } else if (this.frameMode === K_INFINITE) {
-      // this.checkFillEmptyNodes();
       return this.doChangeSpan(0, this._frame.range - 1);
     } else {
-      // this.checkFillEmptyNodes();
       return this.doChangeSpan(0, this.maxRows);
     }
-    // throw new Error('unknown frame mode');
   }
 
   // /**

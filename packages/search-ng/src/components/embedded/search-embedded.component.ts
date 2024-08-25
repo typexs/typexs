@@ -110,26 +110,7 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
     }
 
 
-    const _d: any = {};
-    if (api.params.offset) {
-      _d['offset'] = api.params.offset;
-    } else if (this.params.offset) {
-      _d['offset'] = this.params.offset;
-    } else {
-      _d['offset'] = 0;
-    }
-    if (api.params.limit) {
-      _d['limit'] = api.params.limit;
-    } else if (this.params.limit) {
-      _d['limit'] = this.params.limit;
-    } else {
-      _d['limit'] = 25;
-    }
-    if (!_.isEmpty(api.params.sorting)) {
-      _d['sort'] = api.params.sorting;
-    } else if (this.params.sorting) {
-      _d['sort'] = this.params.sorting;
-    }
+    const _d: any = this.prepareParams(api);
     _.assign(queryOptions, _d);
 
     const filterQuery: ExprDesc[] = [];
@@ -176,14 +157,7 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
       }
     }
 
-    if (filterQuery.length > 1) {
-      mangoQuery = And(...filterQuery);
-    } else if (filterQuery.length === 1) {
-      mangoQuery = filterQuery.shift();
-    } else {
-      mangoQuery = null;
-    }
-
+    mangoQuery = this.buildMangoQuery(filterQuery) as ExprDesc;
 
     if (mangoQuery) {
       executeQuery = mangoQuery.toJson();

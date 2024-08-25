@@ -11,7 +11,7 @@
   </txs-pager>
 
   <div class="list-container">
-    <div #rows class="row" *ngFor="let node of getValues() | async">
+    <div #rows class="row" *ngFor="let node of getNodeData() | async">
       <div class="col-md-12">
         <txs-view [instance]="node.data"
                   [allowViewModeSwitch]="allowViewModeSwitch"
@@ -46,7 +46,7 @@
        (onDataScroll)="onDataScroll($event)"
   >
     <!-- idx ist used by infiniteScroll directive -->
-    <div #rows class="row" [attr.idx]="node ? node.idx : -1" *ngFor="let node of getValues() | async">
+    <div #rows class="row" [attr.idx]="node ? node.idx : -1" *ngFor="let node of getNodeData() | async">
       <div class="col-md-12" *ngIf="node">
         <txs-view [instance]="node.data"
                   [allowViewModeSwitch]="allowViewModeSwitch"
