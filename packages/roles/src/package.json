@@ -1,6 +1,6 @@
 {
   "name": "@typexs/roles",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "",
   "main": "index",
   "browser": "browser",
@@ -24,13 +24,13 @@
   "license": "MIT",
   "dependencies": {
     "@cezaryrk/minimatch": "^3.0.4",
-    "@typexs/roles-api": "2.3.0",
+    "@typexs/roles-api": "2.3.1",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@typexs/base": "2.3.0",
-    "@typexs/entity": "2.3.0",
-    "@typexs/testing": "2.3.0"
+    "@typexs/base": "2.3.1",
+    "@typexs/entity": "2.3.1",
+    "@typexs/testing": "2.3.1"
   },
   "peerDependencies": {
     "@typexs/base": "^2.3.0-dev.0",

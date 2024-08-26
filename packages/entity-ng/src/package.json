@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/entity-ng",
-  "version": "12.3.0",
+  "version": "12.3.1",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -44,12 +44,12 @@
     "@angular/core": "v12-lts",
     "@angular/forms": "v12-lts",
     "@angular/router": "v12-lts",
-    "@typexs/base": "2.3.0",
-    "@typexs/base-ng": "12.3.0",
-    "@typexs/entity": "2.3.0",
-    "@typexs/forms": "2.3.0",
-    "@typexs/forms-ng": "12.3.0",
-    "@typexs/ng": "12.3.0",
+    "@typexs/base": "2.3.1",
+    "@typexs/base-ng": "12.3.1",
+    "@typexs/entity": "2.3.1",
+    "@typexs/forms": "2.3.1",
+    "@typexs/forms-ng": "12.3.1",
+    "@typexs/ng": "12.3.1",
     "chai": "4.3.4",
     "rxjs": "6.6.7"
   },
