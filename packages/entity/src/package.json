@@ -54,7 +54,7 @@
     "name": "typexs-entity"
   },
   "publishConfig": {
-    "tag": "v2.3-dev"
+    "tag": "v2.3"
   },
   "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

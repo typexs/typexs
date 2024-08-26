@@ -77,7 +77,7 @@
     "name": "base"
   },
   "publishConfig": {
-    "tag": "v2.3-dev"
+    "tag": "v2.3"
   },
   "gitHead": "fa0ea8d60470bb9f72960742a07891628b66f0c1"
 }
