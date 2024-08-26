@@ -52,5 +52,3 @@ export {
 } from './lib/Constants';
 export { IStorageRefMetadata } from './lib/storage_api/IStorageRefMetadata';
 export { StorageSetting } from './entities/storage/StorageSetting';
-export * from './ops/ActivateStorageSetting';
-export * from './ops/TestStorageSettings';

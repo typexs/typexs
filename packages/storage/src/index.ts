@@ -16,5 +16,7 @@ export { StorageLoaderApi } from './api/StorageLoader.api';
  * Storage loader
  */
 export { StorageLoader } from './lib/StorageLoader';
+export { ActivateStorageSetting } from './ops/ActivateStorageSetting';
+export { TestStorageSettings } from './ops/TestStorageSettings';
 
 
