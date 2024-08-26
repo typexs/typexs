@@ -32,7 +32,7 @@ export class ListViewComponent extends AbstractGridComponent {
   @Input()
   options: IDatatableListGridOptions = undefined;
 
-  infiniteOnOff: boolean = true;
+  infiniteOnOff: boolean = false;
 
   refresh: boolean;
 
@@ -136,25 +136,25 @@ export class ListViewComponent extends AbstractGridComponent {
 
 
   onDataScroll($event: IScrollEvent) {
-    const boundries = this.getDataNodes().getFrameBoundries();
+    const boundries = this.getNodes().getFrameBoundries();
     const _range = boundries.range;
     let start = boundries.end;
     let end = start + boundries.range;
     if ($event && $event.loadIdx.length > 0) {
-      $event.loadIdx.filter(x => this.getDataNodes().isValueSet(x));
+      $event.loadIdx.filter(x => this.getNodes().isValueSet(x));
       const _start = Math.min(...$event.loadIdx);
       const _end = Math.max(...$event.loadIdx);
       start = Math.floor(_start / _range) * _range;
       end = Math.ceil(_end / _range) * _range;
-      const maxRows = this.getDataNodes().maxRows;
+      const maxRows = this.getNodes().maxRows;
       if (maxRows >= 0 && end >= maxRows) {
         end = maxRows - 1;
       }
 
-      const isNotValueSet = range(start, end + 1).filter(x => !this.getDataNodes().isValueSet(x));
+      const isNotValueSet = range(start, end + 1).filter(x => !this.getNodes().isValueSet(x));
       if (isNotValueSet.length > 0) {
-        this.getDataNodes().doChangeSpan(start, end).subscribe(x => {
-          const finished = this.getDataNodes().isReachedMaxRows();
+        this.getNodes().doChangeSpan(start, end).subscribe(x => {
+          const finished = this.getNodes().isReachedMaxRows();
           // TODO check if finished
           // console.log('finished=' + finished);
         });

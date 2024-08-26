@@ -90,7 +90,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     @Inject(PagerService) public pagerService: PagerService,
     @Inject(ChangeDetectorRef) public changeRef: ChangeDetectorRef
   ) {
-    super(pagerService,changeRef);
+    super(pagerService, changeRef);
   }
 
 
@@ -135,12 +135,12 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
    * Data nodes should be the same object as embedded.
    * It is referred from remove object.
    */
-  getDataNodes(): ViewArray<any> {
-    return super.getDataNodes();
+  getNodes(): ViewArray<any> {
+    return super.getNodes();
   }
 
-  setDataNodes(nodes: any[]) {
-    this.getGridComponent().setDataNodes(nodes);
+  setNodeData(nodes: any[]) {
+    this.getGridComponent().setNodeData(nodes);
   }
 
   getControl(): BehaviorSubject<IGridEvent> {
@@ -175,9 +175,9 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     }
   }
 
-  getInputPropertyNames(){
+  getInputPropertyNames() {
     let add = [].concat(inputKeys);
-    if(this.options && this.options.passInputs){
+    if (this.options && this.options.passInputs) {
       add.push(...this.options.passInputs);
     }
     return uniq(add);
@@ -212,7 +212,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     for (const prop of passInputs) {
       // const propDesc = Object.getOwnPropertyDescriptor(this, prop);
       // if (propDesc) {
-      if(!['rows', 'limit', 'maxRows'].includes(prop)){
+      if (!['rows', 'limit', 'maxRows', 'offset'].includes(prop)) {
         this._initCache[prop] = this[prop];
       }
       // wrap properties to instance
@@ -257,11 +257,11 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
    * Initialized cached rows
    * @private
    */
-  private initCacheIfSet() {
+  private initCacheIfSet() {true
     const initCache = this._initCache;
     const passInputs = this.getInputPropertyNames();
     // keep order _dataNodes must be first
-    for(const input of passInputs){
+    for (const input of passInputs) {
       this.setCached(input);
     }
     // rest open
@@ -270,7 +270,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     }
   }
 
-  setCached(key: string){
+  setCached(key: string) {
     if (typeof this[key] === 'function') {
       this[key](this._initCache[key]);
     } else {

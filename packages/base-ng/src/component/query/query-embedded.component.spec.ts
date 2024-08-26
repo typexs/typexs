@@ -25,11 +25,11 @@ import { IQueringService } from '../../api/querying/IQueringService';
 import { of } from 'rxjs';
 import { DefaultEntityRef } from '@allgemein/schema-api/lib/registry/DefaultEntityRef';
 import { METATYPE_ENTITY } from '@allgemein/schema-api/lib/Constants';
-import { XS_P_$COUNT } from '@typexs/base';
 import { range } from 'lodash';
 import { By } from '@angular/platform-browser';
 import { JsonComponent } from '../../component/entities/json/json.component';
 import { FreeQueryInputComponent } from '../../api/querying/free-query/free-query-input.component';
+import { XS_P_$COUNT } from '../../datatable/Constants';
 
 const getTestBedConfig = () => {
   return {
@@ -121,7 +121,7 @@ describe('component: QueryEmbeddedComponent', () => {
   });
 
 
-  describe('use query embedded tag', () => {
+  describe('use query embedded tag with auto update of nodes', () => {
 
     @Component({
       template: `
@@ -213,8 +213,8 @@ describe('component: QueryEmbeddedComponent', () => {
       expect(rowElements.length).toEqual(25);
       let contents = rowElements.map(x => JSON.parse(x.nativeNode.outerText));
       expect(contents).toHaveSize(25);
-      expect(contents[0]).toEqual({id: 0, name: 'Hallo 0'});
-      expect(contents[contents.length - 1]).toEqual({id: 24, name: 'Hallo 24'});
+      expect(contents[0]).toEqual({ id: 0, name: 'Hallo 0' });
+      expect(contents[contents.length - 1]).toEqual({ id: 24, name: 'Hallo 24' });
       const pageLinks = fixture.debugElement.queryAll(By.css('.pager-container:first-child a.page-link'));
       const nextPage = pageLinks.find(x => /Next/.test(x.nativeElement.textContent));
       nextPage.nativeElement.click();
@@ -226,8 +226,8 @@ describe('component: QueryEmbeddedComponent', () => {
       rowElements = queryEl.queryAll(By.css('.list-container > .row'));
       contents = rowElements.map(x => JSON.parse(x.nativeNode.outerText));
       expect(contents).toHaveSize(25);
-      expect(contents[0]).toEqual({id: 25, name: 'Hallo 25'});
-      expect(contents[contents.length - 1]).toEqual({id: 49, name: 'Hallo 49'});
+      expect(contents[0]).toEqual({ id: 25, name: 'Hallo 25' });
+      expect(contents[contents.length - 1]).toEqual({ id: 49, name: 'Hallo 49' });
     }));
 
     // TODO check re-query

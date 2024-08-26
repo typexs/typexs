@@ -16,9 +16,9 @@ logging:
 modules:
   disableCache: true
   paths:
-    - './demo'
+    - './packages/demo-task'
   include:
     - '**/@allgemein{,**/*}'
     - '**/@typexs{,**/*}'
-    - '**/demo{,**/*}'
+    - '**/demo-task{,**/*}'
     - '**/testtask{,**/*}'

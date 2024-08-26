@@ -7,7 +7,7 @@ import { APP_BASE_HREF, DatePipe } from '@angular/common';
 import { ApplicationInitStatus, Injector, NO_ERRORS_SCHEMA } from '@angular/core';
 import { assign, range } from 'lodash';
 import { By } from '@angular/platform-browser';
-import { K_PAGED } from '../api/IGridMode';
+import { K_PAGED, K_REBUILD } from '../api/IGridMode';
 import { ObjectToComponentResolver } from '../../component/ObjectToComponentResolver';
 import { ComponentRegistryService } from '../../component/component-registry.service';
 import { PagerComponent } from '../../pager/pager.component';
@@ -86,7 +86,7 @@ describe('component: SimpleTableComponent', () => {
     });
 
     it('paging should be correctly initialized', fakeAsync(() => {
-      const dataNodes = component.getDataNodes();
+      const dataNodes = component.getNodes();
       expect(dataNodes.loadedLength).toEqual(rowLimit);
       expect(dataNodes.limit).toEqual(limit);
       fixture.detectChanges();
@@ -132,7 +132,7 @@ describe('component: SimpleTableComponent', () => {
       expect(pager.currentPage).toEqual(2);
       expect(pager.minPage).toEqual(1);
       expect(pager.totalPages).toEqual(rowLimit / limit);
-      const dataNodes = component.getDataNodes();
+      const dataNodes = component.getNodes();
       expect(dataNodes.limit).toEqual(limit);
       expect(dataNodes.maxRows).toEqual(rowLimit);
       expect(dataNodes).toHaveSize(rowLimit);
@@ -159,7 +159,7 @@ describe('component: SimpleTableComponent', () => {
       expect(pager.currentPage).toEqual(1);
       expect(pager.minPage).toEqual(1);
       expect(pager.totalPages).toEqual(10);
-      let data = component.getDataNodes().getLoadBoundries();
+      let data = component.getNodes().getLoadBoundries();
       expect(data).toEqual({ start: 0, end: 99, range: 25 });
 
       component.rows = range(0, 25).map(x => ({ id: x, name: 'Row ' + x }));
@@ -168,7 +168,7 @@ describe('component: SimpleTableComponent', () => {
       expect(pager.currentPage).toEqual(1);
       expect(pager.minPage).toEqual(1);
       expect(pager.totalPages).toEqual(3);
-      data = component.getDataNodes().getLoadBoundries();
+      data = component.getNodes().getLoadBoundries();
       expect(data).toEqual({ start: 0, end: 24, range: 25 });
     }));
 
@@ -181,16 +181,16 @@ describe('component: SimpleTableComponent', () => {
       expect(pager.currentPage).toEqual(1);
       expect(pager.minPage).toEqual(1);
       expect(pager.totalPages).toEqual(10);
-      let data = component.getDataNodes().getLoadBoundries();
+      let data = component.getNodes().getLoadBoundries();
       expect(data).toEqual({ start: 0, end: 99, range: 25 });
       component.options = assign(component.options, { limit: 25 });
-      component.rebuild(null, false);
+      component.rebuild({ event: K_REBUILD, api: null, data: { rows: [] } });
 
       // fixture.detectChanges();
       expect(pager.currentPage).toEqual(1);
       expect(pager.minPage).toEqual(1);
       expect(pager.totalPages).toEqual(4);
-      data = component.getDataNodes().getLoadBoundries();
+      data = component.getNodes().getLoadBoundries();
       expect(data).toEqual({ start: 0, end: 99, range: 25 });
     }));
 

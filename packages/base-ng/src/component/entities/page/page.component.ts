@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { IEntityRef } from '@allgemein/schema-api';
 import { EntityResolverService } from '../../../services/entity-resolver.service';
-import { C_FLEXIBLE, LabelHelper } from '@typexs/base';
+import { C_FLEXIBLE } from '@typexs/base';
 import { IViewOptions } from '../../view/IViewOptions';
 import { IEntityResolveOptions } from '../../../services/IEntityResolveOptions';
 

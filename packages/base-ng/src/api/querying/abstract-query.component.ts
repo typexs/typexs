@@ -1,17 +1,5 @@
 import { assign, defaults, get, has, isArray, isEmpty, isNumber, keys, set } from 'lodash';
-import {
-  AfterContentInit,
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component, ContentChild,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ClassType, IEntityRef, JS_DATA_TYPES } from '@allgemein/schema-api';
 import { ExprDesc, Expressions } from '@allgemein/expressions';
 import { IGridColumn } from '../../datatable/api/IGridColumn';
@@ -33,14 +21,13 @@ import { Helper } from './Helper';
 import { IQueryComponentApi } from './IQueryComponentApi';
 import { filter, first, map } from 'rxjs/operators';
 import { IFindOptions } from './IFindOptions';
-import { LabelHelper, XS_P_$COUNT } from '@typexs/base';
+import { LabelHelper } from '@typexs/base';
 import { IQueryOptions } from './IQueryOptions';
 import { Log } from '../../lib/log/Log';
 import { IGridEvent } from '../../datatable/api/IGridEvent';
-import { Q_EVENT_TYPE_REBUILD, Q_EVENT_TYPE_REFRESH, Q_EVENT_TYPE_REQUERY } from '../../datatable/Constants';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '../../datatable/Constants';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { K_OPTIONS, K_REBUILD } from '../../datatable/api/IGridMode';
-
 
 /**
  * Storage query embedded component
@@ -105,7 +92,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
   queringService: IQueringService;
 
-  ready = false;
+  ready$ = new BehaviorSubject(false);
 
   /**
    * ==============================
@@ -191,17 +178,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
       // TODO handle if entity ref not found or loaded
       if (success) {
         this.initialiseColumns();
-        this.ready = true;
-        // this.isReady$.next(true);
-        // this.changeDetectorRef.detectChanges();
-        // this.datatable.doInitialize();
-        // this.datatable.emitEvent('initialize', null);
-        // api maybe not loaded
-        // if (get(this.options, 'queryOnInit', true)) {
-        //   setTimeout(() => {
-        //     this.doQuery(this.datatable.api());
-        //   });
-        // }
+        this.ready$.next(true);
       } else {
         throw new Error(this.error);
       }
@@ -244,7 +221,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
    * @param changes
    */
   ngOnChanges(changes: SimpleChanges) {
-    if (this.ready) {
+    if (this.ready$.getValue()) {
       if (changes['componentClass']) {
         this.datatable.triggerControl(K_REBUILD);
       } else if (changes['options']) {
@@ -381,6 +358,14 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     return _d;
   }
 
+  applyQueryOptions() {
+    const queryOptions: IFindOptions = {};
+    if (this.options.queryOptions) {
+      assign(queryOptions, this.options.queryOptions);
+    }
+    return queryOptions;
+  }
+
   applyParams(api: IGridApi, filterQuery: any[]) {
     if (!isEmpty(api?.params?.filters)) {
       keys(api.params.filters).map(k => {
@@ -407,12 +392,24 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     }
   }
 
+  /**
+   * Empty method for extending query by extensions
+   *
+   * @param api
+   * @param filterQuery
+   * @param queryOptions
+   */
+  applyQueryAdditions(api: IGridApi, filterQuery: any[], queryOptions: any) {
+  }
+
+
   buildMangoQuery(filterQuery: any[]) {
     let mangoQuery: object = null;
-    if (filterQuery.length > 1) {
-      mangoQuery = { $and: filterQuery };
-    } else if (filterQuery.length === 1) {
-      mangoQuery = filterQuery.shift();
+    const _filterQuery = filterQuery.map(x => x instanceof ExprDesc ? x.toJson() : x).filter(x => !!x);
+    if (_filterQuery.length > 1) {
+      mangoQuery = { $and: _filterQuery };
+    } else if (_filterQuery.length === 1) {
+      mangoQuery = _filterQuery.shift();
     } else {
       mangoQuery = null;
     }
@@ -422,25 +419,14 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
   doPlainQuery(api: IGridApi) {
     const filterQuery = this.prepareFilterQuery();
-
-    const queryOptions: IFindOptions = {};
-    if (this.options.queryOptions) {
-      assign(queryOptions, this.options.queryOptions);
-    }
-
+    const queryOptions = this.applyQueryOptions();
     const _d = this.prepareParams(api);
     assign(queryOptions, _d);
-
     this.applyParams(api, filterQuery);
     this.applyFreeQuery(filterQuery);
+    this.applyQueryAdditions(api, filterQuery, queryOptions);
 
-    let executeQuery: any = null;
-
-    const mangoQuery = this.buildMangoQuery(filterQuery);
-    if (mangoQuery) {
-      executeQuery = mangoQuery;
-    }
-
+    const executeQuery = this.buildMangoQuery(filterQuery);
     if (this.options.beforeQuery) {
       this.options.beforeQuery(executeQuery, queryOptions);
     }
@@ -477,119 +463,76 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     return this.getQueryService().aggregate(this.getEntityName(), executeQuery, queryOptions);
   }
 
+  /**
+   * Return the mode of the query. Which can be "query" or "aggregate".
+   */
   getQueryMode() {
     return this.options.queryType === K_AGGREGATE ? K_AGGREGATE : K_QUERY;
   }
 
+  /**
+   * Impl. queryCallback for grid component
+   *
+   * @param start
+   * @param end
+   * @param limit
+   */
   queryCallback(start: number, end: number, limit?: number): Observable<any[]> {
+    return this.executeQuery(this.datatable.api());
+  }
+
+  /**
+   * Execute query
+   *
+   * @param api
+   */
+  executeQuery(api: IGridApi) {
     const mode = this.getQueryMode();
-    // this.params.offset = start;
-    // const distance = end - start + 1;
-    // this.params.limit = distance;
     if (mode === K_QUERY) {
-      return this.doPlainQuery(this.datatable.api())
+      return this.doPlainQuery(api)
         .pipe(
           filter(x => !(x === null || x === undefined)),
           map(results => {
-            if (results) {
-              if (results.entities && has(results, XS_P_$COUNT) && isNumber(results.$count)) {
-                results.entities[XS_P_$COUNT] = results[XS_P_$COUNT];
-                return results.entities;
-              }
-            }
-            return [];
+            return this._processQueryResults(results);
           })
         );
     } else {
-      return this.doPlainAggregate(this.datatable.api()).pipe(map(results => {
-        if (results) {
-          if (results.entities && has(results, XS_P_$COUNT) && isNumber(results.$count)) {
-            results.entities[XS_P_$COUNT] = results[XS_P_$COUNT];
-            return results.entities;
-          }
-        }
-        return [];
-      }));
+      return this.doPlainAggregate(api)
+        .pipe(map(results => {
+          return this._processQueryResults(results);
+        }));
     }
   }
 
-  doQuery(api: IGridApi) {
-
+  /**
+   * Process results from query
+   *
+   * @param results
+   */
+  _processQueryResults(results: any) {
+    if (results) {
+      if (results.entities) {
+        [XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET].forEach(x => {
+          if (has(results, x) && isNumber(results[x])) {
+            results.entities[x] = results[x];
+          }
+        });
+        return results.entities;
+      }
+    }
+    return [];
   }
 
-  // doQuery(api: IGridApi): void {
-  //   let executeQuery: any = null;
-  //   const mode = this.getQueryMode();
-  //   const queryOptions: IFindOptions = {};
-  //   if (this.options.queryOptions) {
-  //     assign(queryOptions, this.options.queryOptions);
-  //   }
-  //
-  //   const filterQuery = this.prepareFilterQuery();
-  //
-  //   const _d = this.prepareParams(api);
-  //   assign(queryOptions, _d);
-  //
-  //   this.applyParams(api, filterQuery);
-  //
-  //   if (mode === K_QUERY) {
-  //     this.applyFreeQuery(filterQuery);
-  //     const mangoQuery = this.buildMangoQuery(filterQuery);
-  //
-  //     if (mangoQuery) {
-  //       executeQuery = mangoQuery;
-  //     }
-  //
-  //     if (this.options.beforeQuery) {
-  //       this.options.beforeQuery(executeQuery, queryOptions);
-  //     }
-  //     this.getQueryService().query(this.getEntityName(), executeQuery, queryOptions)
-  //       .subscribe(
-  //         (results: any) => {
-  //           if (results) {
-  //             if (results.entities && has(results, '$count') && isNumber(results.$count)) {
-  //               if (!this.entityRef) {
-  //                 this.rebuildColumns(results.entities, api);
-  //               }
-  //               api.setRows(results.entities);
-  //               api.setMaxRows(results.$count);
-  //               api.rebuild();
-  //             }
-  //           }
-  //         }
-  //       );
-  //   } else {
-  //     executeQuery = [];
-  //     if (this.freeQuery) {
-  //       if (isArray(this.freeQuery)) {
-  //         executeQuery = this.freeQuery;
-  //       } else {
-  //         throw new Error('aggregation query is not an array');
-  //       }
-  //     } else {
-  //       throw new Error('aggregation query is empty');
-  //     }
-  //
-  //     const mangoQuery = this.buildMangoQuery(filterQuery);
-  //     if (mangoQuery) {
-  //       executeQuery.push({ $match: mangoQuery });
-  //     }
-  //
-  //     this.getQueryService().aggregate(this.getEntityName(), executeQuery, queryOptions)
-  //       .subscribe(
-  //         (results: any) => {
-  //           if (results) {
-  //             if (results.entities && has(results, XS_P_$COUNT) && isNumber(results.$count)) {
-  //               this.rebuildColumns(results.entities, api);
-  //               api.setRows(results.entities);
-  //               api.setMaxRows(results.$count);
-  //               api.rebuild();
-  //             }
-  //           }
-  //         }
-  //       );
-  //   }
-  // }
+  doQuery(api: IGridApi): void {
+    const query = this.executeQuery(api);
+    query.pipe(first()).subscribe(x => {
+      if (!this.entityRef) {
+        this.rebuildColumns(x, api);
+      }
+      api.setRows(x);
+      api.rebuild({ event: K_REBUILD, api: api, data: { rows: x } });
+    });
+  }
 
 
   private rebuildColumns(entities: any[], api: IGridApi) {

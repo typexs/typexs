@@ -1,0 +1,14 @@
+{
+  "name": "demo-task",
+  "version": "1.0.1",
+  "dependencies": {
+    "@typexs/base": "*",
+    "@typexs/entity": "*",
+    "@typexs/forms": "*",
+    "@typexs/search": "*"
+  },
+  "private": true,
+  "typexs": {
+    "name": "testtask"
+  }
+}
