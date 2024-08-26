@@ -27,7 +27,8 @@ import { Log } from '../../lib/log/Log';
 import { IGridEvent } from '../../datatable/api/IGridEvent';
 import { XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '../../datatable/Constants';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { K_OPTIONS, K_REBUILD } from '../../datatable/api/IGridMode';
+import { K_OPTIONS } from '../../datatable/api/IGridMode';
+import { K_REBUILD } from '../../lib/datanodes/Constants';
 
 /**
  * Storage query embedded component

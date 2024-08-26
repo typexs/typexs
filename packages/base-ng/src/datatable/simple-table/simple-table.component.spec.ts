@@ -7,7 +7,7 @@ import { APP_BASE_HREF, DatePipe } from '@angular/common';
 import { ApplicationInitStatus, Injector, NO_ERRORS_SCHEMA } from '@angular/core';
 import { assign, range } from 'lodash';
 import { By } from '@angular/platform-browser';
-import { K_PAGED, K_REBUILD } from '../api/IGridMode';
+import { K_PAGED } from '../api/IGridMode';
 import { ObjectToComponentResolver } from '../../component/ObjectToComponentResolver';
 import { ComponentRegistryService } from '../../component/component-registry.service';
 import { PagerComponent } from '../../pager/pager.component';
@@ -15,6 +15,7 @@ import { IDatatableOptions } from '../../datatable/api/IDatatableOptions';
 import { SimpleTableCellValueComponent } from '../../datatable/simple-table/simple-table-cell-value.component';
 import { SimpleTableCellComponent } from '../../datatable/simple-table/simple-table-cell.component';
 import { CC_GRID, CC_GRID_CELL_VALUE, SIMPLE_TABLE } from '../../constants';
+import { K_REBUILD } from '@typexs/base-ng';
 
 describe('component: SimpleTableComponent', () => {
   let component: SimpleTableComponent;

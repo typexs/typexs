@@ -17,8 +17,7 @@ export {
   _API_CTRL_STORAGE_DELETE_ENTITY,
   _API_CTRL_STORAGE_DELETE_ENTITIES_BY_CONDITION,
   _API_CTRL_STORAGE_FIND_ENTITY,
-  _API_CTRL_STORAGE_GET_ENTITY
-  ,
+  _API_CTRL_STORAGE_GET_ENTITY,
   _API_CTRL_STORAGE_METADATA,
   _API_CTRL_STORAGE_METADATA_ALL_ENTITIES,
   _API_CTRL_STORAGE_METADATA_ALL_STORES,
@@ -53,3 +52,5 @@ export {
 } from './lib/Constants';
 export { IStorageRefMetadata } from './lib/storage_api/IStorageRefMetadata';
 export { StorageSetting } from './entities/storage/StorageSetting';
+export * from './ops/ActivateStorageSetting';
+export * from './ops/TestStorageSettings';

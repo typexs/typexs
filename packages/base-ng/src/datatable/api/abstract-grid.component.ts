@@ -1,15 +1,4 @@
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges
-} from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { IGridColumn } from './IGridColumn';
 import { IDatatableOptions } from './IDatatableOptions';
 import { IQueryParams } from './IQueryParams';
@@ -20,13 +9,20 @@ import { ViewArray } from '../../lib/datanodes/ViewArray';
 import { assign, defaults, isEmpty, isNumber, keys } from 'lodash';
 import { PagerService } from '../../pager/PagerService';
 import { PagerAction } from '../../pager/PagerAction';
-import { K_DATA_UPDATE, T_QUERY_CALLBACK, T_VIEW_ARRAY_STATES } from '../../lib/datanodes/Constants';
+import {
+  K_DATA_UPDATE,
+  K_INITIAL,
+  K_INITIALIZE,
+  K_REBUILD,
+  K_RESET,
+  T_QUERY_CALLBACK,
+  T_VIEW_ARRAY_STATES
+} from '../../lib/datanodes/Constants';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { IGridMode, K_INITIAL, K_INITIALIZE, K_OPTIONS, K_PAGED, K_REBUILD, K_RESET, K_VIEW } from './IGridMode';
+import { IGridMode, K_OPTIONS, K_PAGED, K_VIEW } from './IGridMode';
 import { Pager } from '../../pager/Pager';
-import { distinctUntilChanged, first, tap } from 'rxjs/operators';
+import { distinctUntilChanged, first } from 'rxjs/operators';
 import { convertStringToNumber } from '../../lib/functions';
-import { K_QUERY } from '../../api/querying/Constants';
 import { XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '../Constants';
 import { IIndexSpan } from '../../lib/datanodes/IIndexSpan';
 

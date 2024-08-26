@@ -1,13 +1,14 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, QueryList, TemplateRef, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { AbstractGridComponent } from '../api/abstract-grid.component';
 import { PagerService } from '../../pager/PagerService';
 import { IDatatableListGridOptions } from './IDatatableListGridOptions';
-import { IGridMode, K_INFINITE, K_INITIALIZE, K_OPTIONS, K_PAGED, K_VIEW } from '../api/IGridMode';
+import { IGridMode, K_INFINITE, K_OPTIONS, K_PAGED, K_VIEW } from '../api/IGridMode';
 import { TemplateDirective } from '../Template.directive';
 import { IGridEvent } from '../api/IGridEvent';
 import { IScrollEvent } from '../infinite-scroll/IScrollEvent';
 import { Subscription } from 'rxjs';
 import { range } from 'lodash';
+import { K_INITIALIZE } from '../../lib/datanodes/Constants';
 
 
 @Component({
