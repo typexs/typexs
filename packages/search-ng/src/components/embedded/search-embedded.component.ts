@@ -1,15 +1,18 @@
 import { Component, Input } from '@angular/core';
-import * as _ from 'lodash';
-import { defaultsDeep } from 'lodash';
-import { AbstractQueryComponent, IGridApi, ListViewComponent } from '@typexs/base-ng';
+import { assign, defaultsDeep, has, isEmpty } from 'lodash';
+import {
+  AbstractQueryComponent,
+  IDatatableListGridOptions,
+  IEntityViewOptions,
+  IGridApi,
+  K_REBUILD,
+  ListViewComponent
+} from '@typexs/base-ng';
 import { IElasticFindOptions, ISearchFacet } from '@typexs/search';
-import { And, ExprDesc, Expressions, In, Key, Like, Value } from '@allgemein/expressions';
-import { QueryAction } from '../query-form/QueryAction';
+import { ExprDesc, Expressions, In, Key, Like, Value } from '@allgemein/expressions';
 import { StorageService } from '@typexs/storage-ng';
 import { __CLASS__, __NS__ } from '@allgemein/schema-api';
-import { IDatatableListGridOptions } from '@typexs/base-ng';
 import { C_SEARCH_INDEX } from '../../Constants';
-import { IEntityViewOptions } from '@typexs/base-ng/component/entities/IEntityViewOptions';
 
 
 /**
@@ -34,6 +37,8 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
     { name: 'Namespace', type: 'value', field: __NS__ + '.keyword' }
   ];
 
+  private selectedFacets: any[] = [];
+
 
   constructor(private storageService: StorageService) {
     super();
@@ -44,13 +49,20 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
 
   applySearchSpace() {
     this.name = '*';
-    if (!_.isEmpty(this.entityTypes)) {
+    if (!isEmpty(this.entityTypes)) {
       this.name = this.entityTypes.join(',');
     }
   }
 
 
-  ngOnInit() {
+  // ngOnInit() {
+  //   super.ngOnInit();
+  // }
+
+  /**
+   * Override initialize
+   */
+  initialize() {
     defaultsDeep(this.options, <IDatatableListGridOptions>{
       viewOptions: <IEntityViewOptions>{
         resolver: {
@@ -61,70 +73,121 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
         }
       }
     });
-    super.ngOnInit();
-  }
-
-  doInit() {
-    if (!this.params) {
-      this.params = {};
-    }
-
-    if (!this.componentClass) {
-      this.componentClass = ListViewComponent;
-    }
-
     this.applySearchSpace();
-    super.ngOnInit();
-    // this.applyOptions();
-    //
-    // this.getQueryService().isLoaded().subscribe(x => {
-    //   // this.isReady$.next(true);
-    //   // api maybe not loaded
-    //   setTimeout(() => {
-    //     this.doQuery(this.datatable.api());
-    //   });
-    // });
+    this.getQueryService().isLoaded().subscribe(x => {
+      this.ready$.next(true);
+    });
   }
 
+  // doInit() {
+  //   if (!this.params) {
+  //     this.params = {};
+  //   }
+  //
+  //   if (!this.componentClass) {
+  //     this.componentClass = ListViewComponent;
+  //   }
+  //
+  //   this.applySearchSpace();
+  //   // super.ngOnInit();
+  //   // this.applyOptions();
+  //   //
+  //   // this.getQueryService().isLoaded().subscribe(x => {
+  //   //   // this.isReady$.next(true);
+  //   //   // api maybe not loaded
+  //   //   setTimeout(() => {
+  //   //     this.doQuery(this.datatable.api());
+  //   //   });
+  //   // });
+  // }
 
-  onQueryAction(action: QueryAction) {
-    this.datatable.api().reset();
-    this.freeQuery = action.query;
-    this.doQuery(this.datatable.api());
-  }
+
+  // onQueryAction(action: QueryAction) {
+  //   this.datatable.api().reset();
+  //   this.freeQuery = action.query;
+  //   this.doQuery(this.datatable.api());
+  // }
 
 
   onFacet(data: any) {
-    this.requery();
+    // this.requery();
+    this.datatable.triggerControl(K_REBUILD);
   }
 
 
-  doQuery(api: IGridApi): void {
-    let executeQuery: any = null;
-    let mangoQuery: ExprDesc = null;
+  // doQuery(api: IGridApi): void {
+  //   const filterQuery = this.prepareFilterQuery();
+  //   const queryOptions = this.applyQueryOptions();
+  //   const _d: any = this.prepareParams(api);
+  //   assign(queryOptions, _d);
+  //   this.applyParams(api, filterQuery);
+  //   this.applyFreeQuery(filterQuery);
+  //   this.applyQueryAdditions(api, filterQuery, queryOptions)
+  //
+  //   let executeQuery: any = null;
+  //   let mangoQuery = this.buildMangoQuery(filterQuery) as ExprDesc;
+  //   if (mangoQuery) {
+  //     executeQuery = mangoQuery.toJson();
+  //   }
+  //
+  //   if (this.options.beforeQuery) {
+  //     this.options.beforeQuery(executeQuery, queryOptions);
+  //   }
+  //
+  //   this.getQueryService().query(this.name, executeQuery, queryOptions)
+  //     .subscribe(
+  //       (results: any) => {
+  //         if (results) {
+  //           if (results.entities && has(results, '$count') && typeof results.$count === 'number') {
+  //             const res = this._processQueryResults(results);
+  //
+  //             api.setMaxRows(res['$count']);
+  //             api.setRows(res);
+  //             api.rebuild();
+  //           }
+  //         }
+  //       }
+  //     );
+  // }
+
+  applyQueryOptions() {
     const queryOptions: IElasticFindOptions = {
       passResults: true
     };
     if (this.options.queryOptions) {
-      _.assign(queryOptions, this.options.queryOptions);
+      assign(queryOptions, this.options.queryOptions);
     }
+    return queryOptions;
+  }
 
-
-    const _d: any = this.prepareParams(api);
-    _.assign(queryOptions, _d);
-
-    const filterQuery: ExprDesc[] = [];
-    if (api.params && !_.isEmpty(api.params.filters)) {
-      _.keys(api.params.filters).map(k => {
-        if (!_.isEmpty(api.params.filters[k])) {
-          filterQuery.push(api.params.filters[k]);
+  applyFreeQuery(filterQuery: any[]) {
+    let mangoQuery: ExprDesc = null;
+    if (this.freeQuery) {
+      if (typeof this.freeQuery === 'string') {
+        mangoQuery = Like(Key('_all'), Value(this.freeQuery));
+        if (!isEmpty(mangoQuery)) {
+          filterQuery.push(mangoQuery);
         }
-      });
+      } else {
+        mangoQuery = Expressions.fromJson(this.freeQuery);
+        if (!isEmpty(mangoQuery)) {
+          filterQuery.push(mangoQuery);
+        }
+      }
     }
+  }
 
-    const selectedFacets: any[] = [];
-
-    if (!_.isEmpty(this.facets)) {
+  /**
+   * Use method for extending query with facets
+   *
+   * @param api
+   * @param filterQuery
+   * @param queryOptions
+   */
+  applyQueryAdditions(api: IGridApi, filterQuery: any[], queryOptions: any) {
+    // TODO impl
+    this.selectedFacets = [];
+    if (!isEmpty(this.facets)) {
       queryOptions.facets = {};
       for (const f of this.facets) {
         queryOptions.facets[f.field] = [
@@ -133,63 +196,34 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
 
         if (f.results) {
           const selectedResults = f.results.filter((x: any) => x.selected);
-          if (!_.isEmpty(selectedResults)) {
+          if (!isEmpty(selectedResults)) {
             filterQuery.push(In(f.field, selectedResults.map((x: any) => x.key)));
             selectedResults.forEach((x: any) => {
-              selectedFacets.push({ name: f.name, key: x.key });
+              this.selectedFacets.push({ name: f.name, key: x.key });
             });
           }
         }
       }
     }
+  }
 
-    if (this.freeQuery) {
-      if (_.isString(this.freeQuery)) {
-        mangoQuery = Like(Key('_all'), Value(this.freeQuery));
-        if (!_.isEmpty(mangoQuery)) {
-          filterQuery.push(mangoQuery);
-        }
-      } else {
-        mangoQuery = Expressions.fromJson(this.freeQuery);
-        if (!_.isEmpty(mangoQuery)) {
-          filterQuery.push(mangoQuery);
-        }
+
+  _processQueryResults(results: any[]) {
+    const _results = super._processQueryResults(results);
+    if (has(results, '$facets')) {
+      // results['$facets'];
+      for (const f of results['$facets']) {
+        const entry = this.facets.find(x => x.name === f.name);
+        entry.results = f.values ? f.values : [];
+        this.selectedFacets.filter((x: any) => x.name === f.name).forEach(x => {
+          const resultedEntry = entry.results.find((y: any) => y.key === x.key);
+          if (resultedEntry) {
+            resultedEntry.selected = true;
+          }
+        });
       }
     }
-
-    mangoQuery = this.buildMangoQuery(filterQuery) as ExprDesc;
-
-    if (mangoQuery) {
-      executeQuery = mangoQuery.toJson();
-    }
-
-    this.getQueryService().query(this.name, executeQuery, queryOptions)
-      .subscribe(
-        (results: any) => {
-          if (results) {
-            if (results.entities && _.has(results, '$count') && _.isNumber(results.$count)) {
-              if (_.has(results, '$facets')) {
-                // results['$facets'];
-                for (const f of results['$facets']) {
-                  const entry = this.facets.find(x => x.name === f.name);
-                  entry.results = f.values ? f.values : [];
-
-                  selectedFacets.filter((x: any) => x.name === f.name).forEach(x => {
-                    const resultedEntry = entry.results.find((y: any) => y.key === x.key);
-                    if (resultedEntry) {
-                      resultedEntry.selected = true;
-                    }
-                  });
-
-                }
-              }
-              api.setRows(results.entities);
-              api.setMaxRows(results.$count);
-              api.rebuild();
-            }
-          }
-        }
-      );
+    return _results;
   }
 
 

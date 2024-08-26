@@ -10,6 +10,7 @@ export const K_VIEW = 'view';
 
 export const K_INITIAL = 'initial';
 export const K_REBUILD = 'rebuild';
+export const K_REQUERY = 'requery';
 export const K_OPTIONS = 'options';
 export const K_RESET = 'reset';
 export const K_INITIALIZE = 'initialize';

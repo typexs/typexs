@@ -122,6 +122,8 @@ export { IDatatableListGridOptions } from './datatable/list-view/IDatatableListG
 export * from './datatable/Template.directive';
 export * from './datatable/infinite-scroll/infinite-scroll.directive';
 
+export { XS_P_$OFFSET, XS_P_$LIMIT, XS_P_$COUNT, K_ENTITY_BUILT } from './datatable/Constants';
+export * from './datatable/api/IGridMode';
 
 export { AbstractQueryService } from './api/querying/abstract-query.service';
 export { AbstractQueryComponent } from './api/querying/abstract-query.component';
@@ -129,7 +131,7 @@ export { AbstractAggregateEmbeddedComponent } from './api/querying/abstract-aggr
 export { IQueringService } from './api/querying/IQueringService';
 export { IQueryComponentApi } from './api/querying/IQueryComponentApi';
 export { QueryAction } from './api/querying/QueryAction';
-export { STORAGE_REQUEST_MODE, DEFAULT_QUERY_OPTIONS, T_QUERY_MODE } from './api/querying/Constants';
+export { STORAGE_REQUEST_MODE, DEFAULT_QUERY_OPTIONS, T_QUERY_MODE, K_QUERY, K_AGGREGATE } from './api/querying/Constants';
 export { FreeQueryInputComponent } from './api/querying/free-query/free-query-input.component';
 export { QueryEmbeddedComponent } from './component/query/query-embedded.component';
 
