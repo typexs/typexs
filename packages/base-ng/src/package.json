@@ -37,14 +37,14 @@
     "@typexs/server": "^2.3.0-dev.0"
   },
   "devDependencies": {
-    "@angular/common": "v12-lts",
-    "@angular/core": "v12-lts",
-    "@angular/forms": "v12-lts",
-    "@angular/router": "v12-lts",
+    "@angular/common": "v13-lts",
+    "@angular/core": "v13-lts",
+    "@angular/forms": "v13-lts",
+    "@angular/router": "v13-lts",
     "@typexs/base": "2.3.1",
     "@typexs/ng": "12.3.1",
     "@typexs/server": "2.3.1",
-    "rxjs": "6.6.7"
+    "rxjs": "~7.5.0"
   },
   "publishConfig": {
     "tag": "v12.3"

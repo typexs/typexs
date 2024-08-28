@@ -32,12 +32,12 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "devDependencies": {
-    "@angular/common": "v12-lts",
-    "@angular/core": "v12-lts",
-    "@angular/platform-browser": "v12-lts",
-    "@angular/router": "v12-lts",
+    "@angular/common": "v13-lts",
+    "@angular/core": "v13-lts",
+    "@angular/platform-browser": "v13-lts",
+    "@angular/router": "v13-lts",
     "lodash": "4.17.21",
-    "rxjs": "6.6.7"
+    "rxjs": "~7.5.0"
   },
   "publishConfig": {
     "tag": "v12.3"

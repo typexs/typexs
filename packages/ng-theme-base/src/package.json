@@ -32,11 +32,11 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@fortawesome/fontawesome-free": "^5.15.3",
-    "@typexs/base": "^2.3.0-dev.0",
-    "@typexs/base-ng": "^12.3.0-dev.1",
-    "@typexs/forms-ng": "^12.3.0-dev.1",
-    "@typexs/ng-router-menu": "^12.3.0-dev.1",
+    "@fortawesome/fontawesome-free": "^6.0.0",
+    "@typexs/base": "^2.3.0",
+    "@typexs/base-ng": "^12.3.0",
+    "@typexs/forms-ng": "^12.3.0",
+    "@typexs/ng-router-menu": "^12.3.0",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.0.1",
     "perfect-scrollbar": "^1.5.1"
