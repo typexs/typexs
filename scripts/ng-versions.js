@@ -66,7 +66,7 @@ const { major, inc } = require('semver');
     }
   }
 
-  packageNames.forEach(x => {
+  todo.forEach(x => {
     fs.writeFileSync(x.file, JSON.stringify(x.content, null, 2));
   });
 })().then(x => {
