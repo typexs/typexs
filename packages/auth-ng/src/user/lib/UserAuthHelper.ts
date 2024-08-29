@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
-import {ActivatedRouteSnapshot} from '@angular/router';
-import {Route} from '@angular/compiler/src/core';
-import {K_ANONYM_VIEW, K_IS_AUTHENTICATED, K_PERMISSIONS} from './Constants';
+import { ActivatedRouteSnapshot, Route } from '@angular/router';
+import { K_ANONYM_VIEW, K_IS_AUTHENTICATED, K_PERMISSIONS } from './Constants';
 
 export class UserAuthHelper {
 

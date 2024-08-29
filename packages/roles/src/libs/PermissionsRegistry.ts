@@ -63,7 +63,7 @@ export class PermissionsRegistry {
    */
   async loadDefs(permissions: IPermissionDef[], _module: string = 'default') {
     // collect permissions
-    const retPermissions = [];
+    const retPermissions: any[] = [];
 
     for (const p of permissions) {
 
