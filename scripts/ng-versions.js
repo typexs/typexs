@@ -30,40 +30,44 @@ const { major, inc } = require('semver');
     }
   }
 
+  const todo = [];
 
   for (const packageJsonFile of files) {
     const packageJson = JSON.parse(fs.readFileSync(packageJsonFile).toString());
-    packageJson
-
-
-    ['dependencies', 'peerDependencies', 'devDependencies'].forEach(x => {
-      const deps = packageJson[x];
-      if (deps) {
-        Object.keys(deps).map(name => {
-          if (map[name] && map[name] !== deps[name]) {
-            deps[name] = map[name];
+    const packageName = packageJson.name;
+    const packageChange = packageNames.find(x => x.packageName === packageName);
+    let _changed = false;
+    if (packageChange) {
+      packageJson.version = packageChange.version;
+      const tag = 'v' + major(packageChange.version) + '-lts';
+      packageJson.publishConfig.tag = tag;
+      _changed = true;
+    }
+    ['dependencies', 'peerDependencies', 'devDependencies'].forEach(depGroup => {
+      const deps = packageJson[depGroup];
+      if (deps === undefined) {
+        return;
+      }
+      const depPackageNames = Object.keys(deps);
+      for (const depPackageName of depPackageNames) {
+        const packageToChange = packageNames.find(x => x.packageName === depPackageName);
+        if (packageToChange) {
+          if (depGroup === 'peerDependencies') {
+            deps[depPackageName] = '>=' + packageToChange.version;
+          } else {
+            deps[depPackageName] = '^' + packageToChange.version;
           }
-        });
+          _changed = true;
+        }
       }
     });
-
+    if (_changed) {
+      todo.push({ file: packageJsonFile, content: packageJson });
+    }
   }
 
-
-  console.log(packageNames);
-  // for (const packageJsonFile of files) {
-  //   const packageJson = JSON.parse(fs.readFileSync(packageJsonFile).toString());
-  //   ['dependencies', 'peerDependencies', 'devDependencies'].forEach(x => {
-  //     const deps = packageJson[x];
-  //     if (deps) {
-  //       Object.keys(deps).map(name => {
-  //         if (map[name] && map[name] !== deps[name]) {
-  //           deps[name] = map[name];
-  //         }
-  //       });
-  //     }
-  //   });
-  //   fs.writeFileSync(packageJsonFile, JSON.stringify(packageJson, null, 2));
-  // }
+  packageNames.forEach(x => {
+    fs.writeFileSync(x.file, JSON.stringify(x.content, null, 2));
+  });
 })().then(x => {
 });
