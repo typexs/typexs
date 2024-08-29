@@ -1,10 +1,11 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "target": "es2017",
     "module": "es2020",
     "lib": [
-      "dom",
-      "es2020"
+      "es2020",
+      "dom"
     ],
     "paths": {
       "@typexs/base": [

@@ -138,7 +138,7 @@ export class BackendTasksService {
                 running = running && y.running;
               }
               if (!running) {
-                subject.next();
+                subject.next(undefined);
                 subject.complete();
               }
             }

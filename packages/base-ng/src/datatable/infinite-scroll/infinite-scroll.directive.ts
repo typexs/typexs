@@ -1020,7 +1020,7 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
       scollEl = this.getScrollElement();
     }
 
-    const listenOnEvents = [this.subject, ...this.captureOn.map(x => fromEvent(scollEl, x))];
+    const listenOnEvents = [this.subject, ...this.captureOn.map(x => fromEvent(scollEl, x))] as any[];
     this.scrollObservable = listenOnEvents.length === 1 ? listenOnEvents[0] : merge(...listenOnEvents)
       .pipe(
         map((value, index) => {

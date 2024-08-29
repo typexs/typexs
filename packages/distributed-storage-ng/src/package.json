@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/distributed-storage-ng",
-  "version": "12.3.1",
+  "version": "13.0.0",
   "description": "Angular for typexs",
   "main": "public_api.ts",
   "scripts": {
@@ -32,25 +32,25 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs#readme",
   "peerDependencies": {
-    "@typexs/base-ng": "^12.3.0-dev.1",
-    "@typexs/distributed-storage": "^2.3.0-dev.0",
-    "@typexs/forms-ng": "^12.3.0-dev.1",
-    "@typexs/ng": "^12.3.0-dev.0"
+    "@typexs/base-ng": ">=13.0.0",
+    "@typexs/distributed-storage": ">=2.3.0",
+    "@typexs/forms-ng": ">=13.0.0",
+    "@typexs/ng": ">=13.0.0"
   },
   "devDependencies": {
-    "@angular/common": "v12-lts",
-    "@angular/core": "v12-lts",
-    "@angular/forms": "v12-lts",
-    "@angular/router": "v12-lts",
-    "@typexs/base": "2.3.1",
-    "@typexs/base-ng": "12.3.1",
-    "@typexs/distributed-storage": "2.3.1",
-    "@typexs/forms-ng": "12.3.1",
-    "@typexs/ng": "12.3.1",
-    "rxjs": "6.6.7"
+    "@angular/common": "v13-lts",
+    "@angular/core": "v13-lts",
+    "@angular/forms": "v13-lts",
+    "@angular/router": "v13-lts",
+    "@typexs/base": "^2.3.1",
+    "@typexs/base-ng": "^13.0.0",
+    "@typexs/distributed-storage": "^2.3.1",
+    "@typexs/forms-ng": "^13.0.0",
+    "@typexs/ng": "^13.0.0",
+    "rxjs": "~7.5.0"
   },
   "publishConfig": {
-    "tag": "v12.3"
+    "tag": "v13-lts"
   },
   "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

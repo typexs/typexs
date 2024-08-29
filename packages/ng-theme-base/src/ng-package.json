@@ -4,6 +4,9 @@
   "allowedNonPeerDependencies": [
     "@fortawesome/fontawesome-free"
   ],
+  "assets": [
+    "./scss/**/*.*"
+  ],
   "lib": {
     "entryFile": "public_api.ts",
     "styleIncludePaths": [

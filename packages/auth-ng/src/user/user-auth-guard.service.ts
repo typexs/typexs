@@ -1,14 +1,14 @@
 import { AuthMessage, AuthService, IAuthGuardProvider } from '@typexs/base-ng';
 import { IMenuLinkGuard, NavEntry } from '@typexs/ng-router-menu';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Route, RouterStateSnapshot } from '@angular/router';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 import { filter, mergeMap, tap } from 'rxjs/operators';
 import { PermissionHelper } from '@typexs/roles-api';
 import { UserAuthHelper } from './lib/UserAuthHelper';
-import { Route } from '@angular/compiler/src/core';
-
+// import { Route } from '@angular/compiler/src/core';
+//
 // import {Log} from '@typexs/ng-base/modules/base/lib/log/Log';
 
 
@@ -145,7 +145,7 @@ export class UserAuthGuardService implements IAuthGuardProvider, IMenuLinkGuard 
   }
 
 
-  private checkAccess(route: Route, subscribe: boolean = true): Observable<boolean> {
+  private checkAccess(route: ActivatedRouteSnapshot | Route, subscribe: boolean = true): Observable<boolean> {
     const hasAuth = UserAuthHelper.checkIfAuthRequired(route);
     if (_.isBoolean(hasAuth)) {
       if (this.isReady.getValue() === true) {
@@ -159,7 +159,7 @@ export class UserAuthGuardService implements IAuthGuardProvider, IMenuLinkGuard 
   }
 
 
-  private validateAccess(hasAuth: boolean, route: Route, subscribe: boolean = true): Observable<boolean> {
+  private validateAccess(hasAuth: boolean, route: ActivatedRouteSnapshot | Route, subscribe: boolean = true): Observable<boolean> {
     const permissions = UserAuthHelper.getRoutePermissions(route);
     if (_.isNull(permissions)) {
       // no special permissions needed
