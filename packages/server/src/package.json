@@ -1,6 +1,6 @@
 {
   "name": "@typexs/server",
-  "version": "2.3.2",
+  "version": "2.3.3",
   "description": "Servers for typexs",
   "main": "index",
   "browser": "browser",
@@ -37,8 +37,8 @@
     "@typexs/roles-api": "^2.3.1"
   },
   "devDependencies": {
-    "@typexs/base": "^2.3.2",
-    "@typexs/testing": "^2.3.2",
+    "@typexs/base": "^2.3.3",
+    "@typexs/testing": "^2.3.3",
     "class-transformer": "0.3.1",
     "class-validator": "0.12.2",
     "routing-controllers": "0.9.0"
