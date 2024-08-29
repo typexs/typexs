@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-router-menu",
-  "version": "12.3.1",
+  "version": "13.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -40,7 +40,7 @@
     "rxjs": "~7.5.0"
   },
   "publishConfig": {
-    "tag": "v12.3"
+    "tag": "v13-lts"
   },
   "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

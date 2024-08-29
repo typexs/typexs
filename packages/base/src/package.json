@@ -47,7 +47,7 @@
     "typedi": "0.8.0"
   },
   "devDependencies": {
-    "@typexs/testing": "2.3.1",
+    "@typexs/testing": "^2.3.1",
     "typeorm": "0.2.34",
     "winston": "3.3.3",
     "yargonaut": "^1.1.4",
