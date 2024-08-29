@@ -1,6 +1,6 @@
 {
   "name": "@typexs/entity",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "description": "Schema for typexs",
   "main": "index",
   "browser": "browser",
@@ -36,12 +36,12 @@
     "@typexs/roles-api": "^2.3.1"
   },
   "devDependencies": {
-    "@typexs/base": "^2.3.1",
-    "@typexs/forms": "^2.3.1",
-    "@typexs/pipelines": "^2.3.1",
-    "@typexs/server": "^2.3.1",
-    "@typexs/storage": "^2.3.1",
-    "@typexs/testing": "^2.3.1"
+    "@typexs/base": "^2.3.2",
+    "@typexs/forms": "^2.3.2",
+    "@typexs/pipelines": "^2.3.2",
+    "@typexs/server": "^2.3.2",
+    "@typexs/storage": "^2.3.2",
+    "@typexs/testing": "^2.3.2"
   },
   "peerDependencies": {
     "@typexs/base": ">=2.3.0",
