@@ -1,0 +1,630 @@
+=== https://gitlab.com/typexs/typexs/compare/v2.3.1...v2.3.3[2.3.3] (2024-08-29)
+
+=== https://gitlab.com/typexs/typexs/compare/v2.3.0...v2.3.1[2.3.1] (2024-08-26)
+
+== https://gitlab.com/typexs/typexs/compare/v2.1.0...v2.3.0[2.3.0] (2024-08-26)
+
+==== Bug Fixes
+
+* add additional exports
+(https://gitlab.com/typexs/typexs/commit/17cdd3ecc1079f29de1fb348ef1db9f7019d563d[17cdd3e])
+* add getController to IOp
+(https://gitlab.com/typexs/typexs/commit/ad4962bb7acd426e50be08e9e8844744c1dd7c6b[ad4962b])
+* add grid ready callbacks
+(https://gitlab.com/typexs/typexs/commit/61015054cb499667994d7f09ebbfb700ed729887[6101505])
+* add more abstraction with storage object handle
+(https://gitlab.com/typexs/typexs/commit/54c49805588de0f5597bd20b0f9eb87143fb083e[54c4980])
+* add new methods to view array for handling entries
+(https://gitlab.com/typexs/typexs/commit/453b5979e4a23cd9c136c711b781701f45f3c051[453b597])
+* add other tag for ng modules
+(https://gitlab.com/typexs/typexs/commit/cf4846465cd2c2dce7ef017cfab49a111acc3ded[cf48464])
+* add some functions to view array
+(https://gitlab.com/typexs/typexs/commit/8aba416e37e8a94e799a87eb0bd9625727a31020[8aba416])
+* add storage loader hooks and allow deactivation
+(https://gitlab.com/typexs/typexs/commit/102a4cb0cd4f624dc8b4de3ef0b9e22ddaccef7d[102a4cb])
+* allow keys in build options
+(https://gitlab.com/typexs/typexs/commit/407814c045467c2acdfdfbddc9ab48e3c310e615[407814c])
+* better pager and sht coop
+(https://gitlab.com/typexs/typexs/commit/7c77d27739aa5f8b6a6e96fa77849010d08656ab[7c77d27])
+* build errors
+(https://gitlab.com/typexs/typexs/commit/20016555d902bc91313bff3b31d3f1f2e1f12e1a[2001655])
+* change *-ng module version to angular version
+(https://gitlab.com/typexs/typexs/commit/9030477619a7ede621fb99dc0f65403d82b6f9aa[9030477])
+* changes on simple table
+(https://gitlab.com/typexs/typexs/commit/534327c7dd89509b461f98cad95ac9484fd1495d[534327c])
+* changing get storage by name
+(https://gitlab.com/typexs/typexs/commit/125a58c734a8d5928cddeaf4cab68d8dbe9b3066[125a58c])
+* check if routes present
+(https://gitlab.com/typexs/typexs/commit/cecd39ab6b5916ae38add4d208ecb3f65e942398[cecd39a])
+* check namespace in typeorm storage ref
+(https://gitlab.com/typexs/typexs/commit/6ae14054d99bc76889e148b9a6f22fd8dadc2e2d[6ae1405])
+* correct handling of queryOnInit flag
+(https://gitlab.com/typexs/typexs/commit/cda03625d76de7e7e32e126aa8d5498f0f76ea77[cda0362])
+* dependencies datepipe
+(https://gitlab.com/typexs/typexs/commit/bd6198f420caf4816cf398a92e70aaee7a16ced8[bd6198f])
+* entity reference wrong interpretation
+(https://gitlab.com/typexs/typexs/commit/eca269583917baf5f2227354be0f7de90308b467[eca2695])
+* grid component limit switch
+(https://gitlab.com/typexs/typexs/commit/540fcfc419de813ca9a366c8ab7df2cee349d11f[540fcfc])
+* json support in property conversion
+(https://gitlab.com/typexs/typexs/commit/58b22b1e97b8971dc5d50b332d482ea5c903f950[58b22b1])
+* make query component query service independent
+(https://gitlab.com/typexs/typexs/commit/484705f80be39908e84013711e31231d618841a3[484705f])
+* make search component work on abstract query component
+(https://gitlab.com/typexs/typexs/commit/0d142e5d9859df8dc17791fd8ddfb525db7bc5e0[0d142e5])
+* make simple table demo work
+(https://gitlab.com/typexs/typexs/commit/a096eaf7607925ee510655051ddb8d2be290a3b3[a096eaf])
+* make url in simple table
+(https://gitlab.com/typexs/typexs/commit/2679737be31278317556bf767230a29ce9268fd4[2679737])
+* multiple fixes
+(https://gitlab.com/typexs/typexs/commit/34e51e77d889ae7bd131382163606565df652b91[34e51e7])
+* namespace problem on annotated schame api entity loading
+(https://gitlab.com/typexs/typexs/commit/7055e4f6b8147f28a7ccc2e6386042121f6761e2[7055e4f])
+* optimization of grid embedding
+(https://gitlab.com/typexs/typexs/commit/9033f048324c52c64a95b52f2082bef8ce3d7b6a[9033f04])
+* parse json correctly in controller
+(https://gitlab.com/typexs/typexs/commit/d614572ece391295263e454f115d6fbba77f1d44[d614572])
+* restore lerna v6
+(https://gitlab.com/typexs/typexs/commit/de94ba471a5fecee079aa8a1bc7ef99e8cfed10a[de94ba4])
+* save serialize
+(https://gitlab.com/typexs/typexs/commit/e537df1145fc3504229f8869d8302a4712341895[e537df1])
+* schedule multiple tasks
+(https://gitlab.com/typexs/typexs/commit/63f1be2577b941d73f216053372e2ae4595cbf3a[63f1be2])
+* schedule multiple tasks
+(https://gitlab.com/typexs/typexs/commit/fd99d1f5c06340c38000bcf4beb4de9ff430d0fe[fd99d1f])
+* storage loader with id
+(https://gitlab.com/typexs/typexs/commit/0b07f76c46c0a9d7d0886347025d5614f0e61a29[0b07f76])
+* task-ng reorg and log-viewer updates
+(https://gitlab.com/typexs/typexs/commit/be9ec5949c5e6c7059e462c14233feb0ab70af9a[be9ec59])
+* try optimize base-ng
+(https://gitlab.com/typexs/typexs/commit/aaa0b23e80ec1f789f32663f5c80c32a11b9d469[aaa0b23])
+* type error
+(https://gitlab.com/typexs/typexs/commit/e2209d8562e0e9b8f4d2103616bda1439036d303[e2209d8])
+* type errors caused by orderBy
+(https://gitlab.com/typexs/typexs/commit/703f0d1ef144692ad93d09ede63143a1b3202ae1[703f0d1])
+* update
+(https://gitlab.com/typexs/typexs/commit/a810c532365ff81e4344c32f9b8a8228b3d9cb37[a810c53])
+* update config schema
+(https://gitlab.com/typexs/typexs/commit/5f16426e60df09d786bebb542bffa583e7f96bb9[5f16426])
+* upgrade to lerna v8 and make test running again
+(https://gitlab.com/typexs/typexs/commit/ccb6369b3519fcdab8eb16a0535368707498c88c[ccb6369])
+* work on ci error
+(https://gitlab.com/typexs/typexs/commit/6eb351ed139a6064d9801a7573f6f45c91a70f58[6eb351e])
+* work on datatable lifecycle flow
+(https://gitlab.com/typexs/typexs/commit/fc4ece9bf971dc2b4a48fec014ed1db3d9f7657b[fc4ece9])
+* work on embedding of another component
+(https://gitlab.com/typexs/typexs/commit/32df997a405cddee01b07b01df7c743622680e3e[32df997])
+* work on infinite impl
+(https://gitlab.com/typexs/typexs/commit/1207316304ef2c897fb7369f200fc46a6b2e4832[1207316])
+* work on infinite pipeline
+(https://gitlab.com/typexs/typexs/commit/1b3f257373cd977ae288b03cb7a667baa2a2a135[1b3f257])
+* work on infinite scroll
+(https://gitlab.com/typexs/typexs/commit/3a9738fee744716216ad64771eab07117469fd7c[3a9738f])
+* work on infinite scroll in simple table
+(https://gitlab.com/typexs/typexs/commit/76aa6bfa4952fb44a8299ca186880cd40e3c19f7[76aa6bf])
+* work on tables
+(https://gitlab.com/typexs/typexs/commit/d87163123d6ac221f801edcd6404b6bdc5898ea5[d871631])
+* work on view mode switch
+(https://gitlab.com/typexs/typexs/commit/0efa4b3632f19817f861daa9a83561d8a2792d05[0efa4b3])
+
+==== Features
+
+* abstract grid manuelly set rows
+(https://gitlab.com/typexs/typexs/commit/57abde845b0201ff14bc2307eaa475d9301ff162[57abde8])
+* add repository wrapper
+(https://gitlab.com/typexs/typexs/commit/6e3633cf994e1f0b632dcd60abb86ae140a29ff0[6e3633c])
+
+== https://gitlab.com/typexs/typexs/compare/a7685a56323d61edf5a7a518beff3946c9558d3e...v2.1.0[2.1.0] (2023-02-05)
+
+==== Bug Fixes
+
+* active dynamic storage ref on save
+(https://gitlab.com/typexs/typexs/commit/a289d27f181f21c1718c14a7ad5fc9d0aedaa9d2[a289d27])
+* adaptions for new schema-api
+(https://gitlab.com/typexs/typexs/commit/0f4dc862aa14a9ca793ee04183d7bfbf20386100[0f4dc86])
+* add ’s for entity refs delivered by api
+(https://gitlab.com/typexs/typexs/commit/03f1f3ac3a9cf6ba1fc3ba5f7d3941f0eeec4596[03f1f3a])
+* add class+namespace info to index
+(https://gitlab.com/typexs/typexs/commit/3324ca080e86d6088a9cf28f36a1e688d2efa3c2[3324ca0])
+* add cleanup task + controller reader + better controller api
+integration
+(https://gitlab.com/typexs/typexs/commit/6d18aa06352f390dfde7058644375ce2b3c248f6[6d18aa0])
+* add conditions provider
+(https://gitlab.com/typexs/typexs/commit/9a567472d967f750571f5e3ac178428f5318e4cd[9a56747])
+* add entity helper for post process
+(https://gitlab.com/typexs/typexs/commit/4121e6015ded47c33ad4d19470a2788b80042f4c[4121e60])
+* add internalName
+(https://gitlab.com/typexs/typexs/commit/8f7c0be9a6dc29d7110a0a376aea9ff5ad96b2af[8f7c0be])
+* add json as stringify-able if no json support by db given
+(https://gitlab.com/typexs/typexs/commit/23144ff58f89484dfcf0ce2c8dea617cea74e800[23144ff])
+* add ldap modul structure
+(https://gitlab.com/typexs/typexs/commit/f106d7127842144feff7556fc56c2e153721e05d[f106d71])
+* add ldapjs for auth tests
+(https://gitlab.com/typexs/typexs/commit/f26915028a88459fc369dc0daea7858df57ed02b[f269150])
+* add memory infos to task switch
+(https://gitlab.com/typexs/typexs/commit/e45b9bafaa916275c8537837799810ee81f37566[e45b9ba])
+* add missing methods
+(https://gitlab.com/typexs/typexs/commit/00d84789da9304bfaec6f9aa11f3672b63369ace[00d8478])
+* add new data types bigint, bignumber and json
+(https://gitlab.com/typexs/typexs/commit/799e45d722af9821ca185b783b114e407ad13bb9[799e45d])
+* add new data types date:created and date:updated
+(https://gitlab.com/typexs/typexs/commit/9edad4b2dcbf193bbf75df7e54ae0d794c4a8656[9edad4b])
+* add new search option
+(https://gitlab.com/typexs/typexs/commit/574c79c7ca5e23e44f368f69688ff8d125aea251[574c79c])
+* add new search option
+(https://gitlab.com/typexs/typexs/commit/a8e4cae1d5265b9e3c99e47e3f9491f5476a3001[a8e4cae])
+* add prepare activator modul callback and cleanup for storage chagnes
+(https://gitlab.com/typexs/typexs/commit/a2076ea4789ca6c2e0b3ae9fbf704b023132dbee[a2076ea])
+* add settings
+(https://gitlab.com/typexs/typexs/commit/a07a7f70f0e52dc3841707cd8edd9dc6d6fdf055[a07a7f7])
+* add state to the entity
+(https://gitlab.com/typexs/typexs/commit/8ff879266084a4bb1d94d54699d2e3af81521c65[8ff8792])
+* add state to the entity
+(https://gitlab.com/typexs/typexs/commit/d7966888828ca4ad407ac012a85d4b0ef16db6ab[d796688])
+* add testing package
+(https://gitlab.com/typexs/typexs/commit/cbb52eaa36df4465ae74ae50fa788f5e6236db7c[cbb52ea])
+* add two system fields for indexing
+(https://gitlab.com/typexs/typexs/commit/de16e08f50006f604399adddb8b8aa6a4dd73369[de16e08])
+* alias key lookup
+(https://gitlab.com/typexs/typexs/commit/0ae4d68257967684549f9ca0c601241a5166e3b9[0ae4d68])
+* allow passing of defined parameters through passOptions
+(https://gitlab.com/typexs/typexs/commit/17407a5540ec0e13cf401ffc5be4b09ef950309b[17407a5])
+* auth changes
+(https://gitlab.com/typexs/typexs/commit/c08cdb77402c5c46d6cf36d9ce7fda3ca315b13a[c08cdb7])
+* auth database optimialisation
+(https://gitlab.com/typexs/typexs/commit/738e7fd50816bf33cddc580377c11aa201638cdc[738e7fd])
+* automatically downgrade on heap problems
+(https://gitlab.com/typexs/typexs/commit/2681e6c37e85d10b255220688910498297842592[2681e6c])
+* automatically downgrade on heap problems
+(https://gitlab.com/typexs/typexs/commit/0575d3d767c15f8be0a5a88d641e679eb240cf0f[0575d3d])
+* base-ng resolver problem with inherited id’s
+(https://gitlab.com/typexs/typexs/commit/c92a32252ab010f56c78d95e0955e6dfdb1436a8[c92a322])
+* base-ng resolver workaround for _id with adittional inherited id’s
+(https://gitlab.com/typexs/typexs/commit/a772e3ecc532823562cf564bab6e56400d9f5c0f[a772e3e])
+* base-theme remove wrong css import
+(https://gitlab.com/typexs/typexs/commit/e93dfa0c2675886a9b52f06fe59eee12c725b73b[e93dfa0])
+* better handling for property options
+(https://gitlab.com/typexs/typexs/commit/4923ef13813f89424c1d46070d377e6481966a81[4923ef1])
+* better search results resolve + storage sort fix
+(https://gitlab.com/typexs/typexs/commit/423cb701be80b8164a0e919ef37040076507b324[423cb70])
+* blocking of tests
+(https://gitlab.com/typexs/typexs/commit/9c9ae1dec0dbc8841c7985d7374b1f4f7d5dff9d[9c9ae1d])
+* build auth-ng + grid label
+(https://gitlab.com/typexs/typexs/commit/4867c2687be4a464bd404dc7f613a66d88d30cc3[4867c26])
+* cache remove key if null or undefined
+(https://gitlab.com/typexs/typexs/commit/ad539af1f5ff5d4b027173da832484f10d5eca6e[ad539af])
+* change entity field length
+(https://gitlab.com/typexs/typexs/commit/a46249b10a9b291278b9f9a25ef1d38c639d3923[a46249b])
+* change name
+(https://gitlab.com/typexs/typexs/commit/602cfa0f8b11ad24163a2192db7c45e2c7878cfd[602cfa0])
+* cleanup
+(https://gitlab.com/typexs/typexs/commit/a9bddff8331c45f97a08854006cf2552435a9031[a9bddff])
+* cleanup
+(https://gitlab.com/typexs/typexs/commit/4d703f56767d49c09d6464583e96f17267eb7a3d[4d703f5])
+* cleanup task - make fromDate for the offset configurable
+(https://gitlab.com/typexs/typexs/commit/b5ff70e6e11d7e4f189e7e020ac5b72f95a03739[b5ff70e])
+* comments
+(https://gitlab.com/typexs/typexs/commit/7edb04d3769a90152aa6616e70dea0c416a78991[7edb04d])
+* comments
+(https://gitlab.com/typexs/typexs/commit/24aa99f5e0292c4c418cb409f05a62da7ff180d6[24aa99f])
+* config load directory mode was wrong handled
+(https://gitlab.com/typexs/typexs/commit/d7743c8b69d48e096fe7da829901cc3b6cded924[d7743c8])
+* correct class name in json schema
+(https://gitlab.com/typexs/typexs/commit/1cd2681464d0dbe6241c055efa6a77a4007ad7c9[1cd2681])
+* correct conversion of date type
+(https://gitlab.com/typexs/typexs/commit/3afa472d9c0b69eeee2bdbd1e59b1d58e4ff5549[3afa472])
+* correct entity controller reader
+(https://gitlab.com/typexs/typexs/commit/026f9b51d7a240b8442d797537e599bbf7d99d8b[026f9b5])
+* correct entity registry
+(https://gitlab.com/typexs/typexs/commit/ed06f068f2cf76131ee5ab07d7bf56043175ed65[ed06f06])
+* correct errors
+(https://gitlab.com/typexs/typexs/commit/0e0f9676d1125dea61a0654073fd8bfa51a545ae[0e0f967])
+* correct imports
+(https://gitlab.com/typexs/typexs/commit/55975d0afdf29089a6a6f2ca32f0751dc4247451[55975d0])
+* correct index for longs
+(https://gitlab.com/typexs/typexs/commit/c205f1bd7c2d51d3bf1095409f9a8b4ea3a0b427[c205f1b])
+* correct output
+(https://gitlab.com/typexs/typexs/commit/2a990e86a8f17f099c883bca495bd63556f90156[2a990e8])
+* correct schema handler options check
+(https://gitlab.com/typexs/typexs/commit/28ee296e6507a767dc1746ab05a7bec2249869dd[28ee296])
+* correct type the state
+(https://gitlab.com/typexs/typexs/commit/6dcdaeb0bc8925df20eb790d6920728601e4401b[6dcdaeb])
+* correct type the state
+(https://gitlab.com/typexs/typexs/commit/28202b06bbfccce049883e83fc9f8c605535b93e[28202b0])
+* correct validate namespace in registries
+(https://gitlab.com/typexs/typexs/commit/b1352ee42bd9501aff77add7ed2bd11e6175c7c8[b1352ee])
+* css correction
+(https://gitlab.com/typexs/typexs/commit/ab2ac15cf265770dd0cc109e49ded8ba485fda9c[ab2ac15])
+* db schema handling
+(https://gitlab.com/typexs/typexs/commit/ef93127d6af66d76e7f56a15e7b740b45d190eee[ef93127])
+* default error class
+(https://gitlab.com/typexs/typexs/commit/5d16b036a9235468c730fe383178e069261b17e8[5d16b03])
+* deliver only decorated types in storage + entity api
+(https://gitlab.com/typexs/typexs/commit/fa56401c281e117950ac3836690fc8ce6de65505[fa56401])
+* disable error throwing in executor
+(https://gitlab.com/typexs/typexs/commit/25cd38f5f2fd5727366c4f908b2ae6c09c143de4[25cd38f])
+* distributed storage catch results formating
+(https://gitlab.com/typexs/typexs/commit/1b823cf30b281eb3af89766dec47b07d8ff7e0ef[1b823cf])
+* distributed storage doesn’t load a registry
+(https://gitlab.com/typexs/typexs/commit/f400c009a9ee8b05d4f4f19643d244417a9aa05a[f400c00])
+* do not check if filter isEmpty it breaks numeric filter like
+\{'`x.z`':6}
+(https://gitlab.com/typexs/typexs/commit/06d2282abd58ac8b38fc0ad997285ef105eee348[06d2282])
+* downgrade typeorm
+(https://gitlab.com/typexs/typexs/commit/75a596911b19a23597b38c7a63e065b1af6d35c4[75a5969])
+* elastic mapping
+(https://gitlab.com/typexs/typexs/commit/1e2b15b3633b4ec059eeb5a87d93102f39d7ef2c[1e2b15b])
+* enqueue state of tasks
+(https://gitlab.com/typexs/typexs/commit/4eb2e7d2fd6d210433b20cb9c7dab80087e71d9f[4eb2e7d])
+* enqueue state of tasks
+(https://gitlab.com/typexs/typexs/commit/aa82c6f9ec266f34486e4a87fccee18c8b57e0c9[aa82c6f])
+* entity api metadata output
+(https://gitlab.com/typexs/typexs/commit/9a84af1c1bf2f03cc078b08cf584bbb55e20b916[9a84af1])
+* entity api metadata output
+(https://gitlab.com/typexs/typexs/commit/967e3919376ce01cfa0c2a8f77429cb5d798600c[967e391])
+* entity controller import
+(https://gitlab.com/typexs/typexs/commit/e757b30f4848cf6791171fb70493a95267419296[e757b30])
+* entity reader fix passing options
+(https://gitlab.com/typexs/typexs/commit/02d91901b7edbb8cd0f44028046bf5ba18e77f76[02d9190])
+* entity resolving problems
+(https://gitlab.com/typexs/typexs/commit/83581abe963664e87a842e8c1aa50c1ad685b687[83581ab])
+* entity view page + elastic output
+(https://gitlab.com/typexs/typexs/commit/0ba501c2c0f5dcd171c0b8a4035a98db9c26afd7[0ba501c])
+* extend entity controller
+(https://gitlab.com/typexs/typexs/commit/3d2c288bbd6a70a964c0fedd92041bf57883da5b[3d2c288])
+* extend IOps by namespace + adapt search
+(https://gitlab.com/typexs/typexs/commit/1c2370d71ceca3d869a64eea6949f1a7bbf6b1c7[1c2370d])
+* extend semaphore listeners
+(https://gitlab.com/typexs/typexs/commit/e62c45f761b447fc02de1189a2090fcd40e2e11d[e62c45f])
+* filter other properties then incoming + outgoing in tasks
+(https://gitlab.com/typexs/typexs/commit/9bf8f5951939c0fc2b2a8203b65ed6fd6bcc2477[9bf8f59])
+* find + save for e-po + e-p-o
+(https://gitlab.com/typexs/typexs/commit/62c47d5fee2c7b54a1bd06998cd920b15a5f7eea[62c47d5])
+* fix generated properties
+(https://gitlab.com/typexs/typexs/commit/d2196ee42e2392000ee27361f9b145b4fa8a6194[d2196ee])
+* forgot correct changed variable from value to object
+(https://gitlab.com/typexs/typexs/commit/53d92332ecff0addf598753860352f7bd3c7cec8[53d9233])
+* format
+(https://gitlab.com/typexs/typexs/commit/ffcff6636a1a2965371524eaae201f6bcbd17384[ffcff66])
+* format
+(https://gitlab.com/typexs/typexs/commit/36f63f89ae81cafe7623529c5aafa41dff4c6a75[36f63f8])
+* gitignore
+(https://gitlab.com/typexs/typexs/commit/a513ed5fafd34aa102a6a6fd0d14b451332b798f[a513ed5])
+* grid update
+(https://gitlab.com/typexs/typexs/commit/1c048f95dc539dee7b52fe31019671af3059060c[1c048f9])
+* identifier missing error
+(https://gitlab.com/typexs/typexs/commit/759f25f8513f94570daf831cb7396e80d0ad7111[759f25f])
+* ignore index namespaces
+(https://gitlab.com/typexs/typexs/commit/2c9b2b8c269960a0cfd88ff8fa62fd61ed6bacad[2c9b2b8])
+* index problem errors
+(https://gitlab.com/typexs/typexs/commit/be4e4e571ef783f278265a939011637b34111362[be4e4e5])
+* initial add auth package content
+(https://gitlab.com/typexs/typexs/commit/ed186911af5c49bbf46ee9481299825ce3229b7e[ed18691])
+* layouts
+(https://gitlab.com/typexs/typexs/commit/e61a50c358316f74ebdbf6e3c78ae246f22b9bbc[e61a50c])
+* ldap
+(https://gitlab.com/typexs/typexs/commit/2c641a4f8cd951b5db50a84251f6bd1c61d33d3b[2c641a4])
+* ldap
+(https://gitlab.com/typexs/typexs/commit/ca0980a38bb072f7fe8be162c5bfd5635d951a07[ca0980a])
+* ldap not reached error
+(https://gitlab.com/typexs/typexs/commit/57f058d4dfba555dba097f81e29eaa20a8d1bbb2[57f058d])
+* make conditions callable in readers
+(https://gitlab.com/typexs/typexs/commit/2ceb5d4bad2bcb072ccbb485adeaf6696e917313[2ceb5d4])
+* make conditions callable in readers
+(https://gitlab.com/typexs/typexs/commit/03b625630652e910e515c88c621f19f1722eb8f1[03b6256])
+* make entity resolver flexible
+(https://gitlab.com/typexs/typexs/commit/9892b6cf541ac26fa86072bd16d4a4bdc925e047[9892b6c])
+* minor bugs
+(https://gitlab.com/typexs/typexs/commit/7db664e1260ba9aa859965b28f75c71e4cac69b9[7db664e])
+* minor changes
+(https://gitlab.com/typexs/typexs/commit/fc8b84298f08e2a10cd2837bb26be5a58a06d48b[fc8b842])
+* minor changes
+(https://gitlab.com/typexs/typexs/commit/f95a7b9a92e10b7bff24cad664847931183cef1d[f95a7b9])
+* minor fixes
+(https://gitlab.com/typexs/typexs/commit/0ecc2652e523a46bf4a67af53f1d76250a7a7280[0ecc265])
+* multiple changes
+(https://gitlab.com/typexs/typexs/commit/71b2dcc31e358769e538fc6a46206cae52fc9e3d[71b2dcc])
+* multiple formatting
+(https://gitlab.com/typexs/typexs/commit/08640766736dd5323626fbe9c16f4905098ed0de[0864076])
+* multiple work
+(https://gitlab.com/typexs/typexs/commit/89588cbd2adf88298b4a89cd7165b2162a3d5fb7[89588cb])
+* ng
+(https://gitlab.com/typexs/typexs/commit/9836adeb25a896af35306a1ae41b4f4b4f3f0994[9836ade])
+* ng + baes-ng + search-ng
+(https://gitlab.com/typexs/typexs/commit/37c1ae697f25ad8d8afc62b09af0507e5f72ea63[37c1ae6])
+* ng entity label + id handling
+(https://gitlab.com/typexs/typexs/commit/cba7b74f94a37ff8ee9f9263ed101ea5d774ed6d[cba7b74])
+* ng fixes
+(https://gitlab.com/typexs/typexs/commit/23e5b9a0bf57488e7c555c59b6e04cde9db8eaeb[23e5b9a])
+* ng query component fixes
+(https://gitlab.com/typexs/typexs/commit/e5c8951ccc6b7c5149cd3350293c3d375cf6d7ad[e5c8951])
+* ng querying
+(https://gitlab.com/typexs/typexs/commit/be628127bc5ef65b9201f64a71869617683866e3[be62812])
+* ng stuff
+(https://gitlab.com/typexs/typexs/commit/2da9d47629c685d40796789f158b204c2750c2fb[2da9d47])
+* ng wrong self imports
+(https://gitlab.com/typexs/typexs/commit/7e2e9812bd8073d96e7f4f30afa24da642be6531[7e2e981])
+* optimize code performance
+(https://gitlab.com/typexs/typexs/commit/15534e28e5102aa08b65739b3fa05dc4b75552db[15534e2])
+* packaging problems
+(https://gitlab.com/typexs/typexs/commit/f7f6861d44a6753e7ec54a1fbef07daf2c70e5a0[f7f6861])
+* pipeline - make array processing configurable
+(https://gitlab.com/typexs/typexs/commit/4cb74d5319492db7499bac0b25f4e02a7343858e[4cb74d5])
+* pipeline - wrong property name passed
+(https://gitlab.com/typexs/typexs/commit/5061fdd74423229ff4d03028a129e40fff4164d9[5061fdd])
+* pipeline make storage reader aggregation able
+(https://gitlab.com/typexs/typexs/commit/1d45c7a7726b1542db42becda50dd77c7eb09797[1d45c7a])
+* pipelines
+(https://gitlab.com/typexs/typexs/commit/97904ff81661327a0378a4947edd534498e71e8d[97904ff])
+* pipelines - don’t add ns+class in storage processor
+(https://gitlab.com/typexs/typexs/commit/37d292868c4b0188bb7d7695aff862f36eb79827[37d2928])
+* pipelines passing onCatch function also to inherited class
+(https://gitlab.com/typexs/typexs/commit/459a62a15877c3876b4c0cd6a023e99ddbd5add6[459a62a])
+* prevent possible call on empty array promise.all
+(https://gitlab.com/typexs/typexs/commit/44c5fe774c9812f5677f73f14ae0bcc92fff62de[44c5fe7])
+* problems with db-specific conversion
+(https://gitlab.com/typexs/typexs/commit/0af287d239c628d36cbc78b2fdbe225ab990d02e[0af287d])
+* readonly creation
+(https://gitlab.com/typexs/typexs/commit/fa910bc4f532ab55fd3601e90d580a5c16765a5c[fa910bc])
+* redis + luxon types
+(https://gitlab.com/typexs/typexs/commit/c5450e1e08822a4c8fcd12f796b789a955e83561[c5450e1])
+* reload connection problems
+(https://gitlab.com/typexs/typexs/commit/bbc6f949c6212ecc4b1918bb1ef45c0521c9390b[bbc6f94])
+* remote task defs show properties
+(https://gitlab.com/typexs/typexs/commit/b78ee5e5e251d1167b2072eb6bda0ecabd5a1a51[b78ee5e])
+* remove backend registry reference and let default registry handl
+frontend entities
+(https://gitlab.com/typexs/typexs/commit/256bf89a756b7b1799196e2af7b5337936092d16[256bf89])
+* remove event logger
+(https://gitlab.com/typexs/typexs/commit/b5f45a3ec957d6bb4c45b013376a9efd9f29076d[b5f45a3])
+* remove Log
+(https://gitlab.com/typexs/typexs/commit/ffaf3aa238edd65ffc25ce09e884e7050e32bbaf[ffaf3aa])
+* remove Log set console
+(https://gitlab.com/typexs/typexs/commit/612ccdcb1559631ceaabe2a4034f7b05a2d3d4de[612ccdc])
+* remove ng entry from forms
+(https://gitlab.com/typexs/typexs/commit/0036312bce503e942b15edb18318e1b9e7f48b9a[0036312])
+* renaming schema to entity
+(https://gitlab.com/typexs/typexs/commit/6d0ecac6709f2d497ed484996fe637e8215bdec8[6d0ecac])
+* renaming schema to entity
+(https://gitlab.com/typexs/typexs/commit/b6fa03373d26605a37cfc7aa45a11dd8bbfedb09[b6fa033])
+* rewrite for modul spin-off storage
+(https://gitlab.com/typexs/typexs/commit/45bb291a4adf465c7dac6d71372042fec5f2eb6f[45bb291])
+* schema save e-p-o joins in leave with previous relations check
+(https://gitlab.com/typexs/typexs/commit/2c2a324a97d14df2aafe758d5b7d0582b65bcd9a[2c2a324])
+* schema sql find op
+(https://gitlab.com/typexs/typexs/commit/1185dbb7613311f47666bbd06560cc37c786efe0[1185dbb])
+* schema sql find op
+(https://gitlab.com/typexs/typexs/commit/bf5d102b7807ed3e71a05f803cb2ba010d768fad[bf5d102])
+* schema sql save op
+(https://gitlab.com/typexs/typexs/commit/bba9e465893901c030d95058ac1646eb8b899acd[bba9e46])
+* schema sql save op
+(https://gitlab.com/typexs/typexs/commit/6db0382345925ae5cd180785887cf86be84c0c24[6db0382])
+* schema sql save op
+(https://gitlab.com/typexs/typexs/commit/734abff53d44ab4d8f892fcd96e14af50530b3f2[734abff])
+* search - add argument for skipping indexing for tasks
+(https://gitlab.com/typexs/typexs/commit/96fe76b0edb910a3519c76bc64af40d1e8d1213c[96fe76b])
+* search - do not shutdown own logger in finalization
+(https://gitlab.com/typexs/typexs/commit/546e0aacbf9c611239add66c1979e38a5542fd9b[546e0aa])
+* search mapping merging
+(https://gitlab.com/typexs/typexs/commit/c2320952f1803031397b2e77a0cfac6a845b0bd9[c232095])
+* search output
+(https://gitlab.com/typexs/typexs/commit/d31d526ccaf6225e49076fe6fcc6c082e4900a2b[d31d526])
+* search-elastic controller entity id generation
+(https://gitlab.com/typexs/typexs/commit/f1f6a9e90dde49171230b3908b77da29c13dd740[f1f6a9e])
+* select option fix
+(https://gitlab.com/typexs/typexs/commit/6bd9b3bdabe128cb628f61f874ed0881693ae0a3[6bd9b3b])
+* semaphore error
+(https://gitlab.com/typexs/typexs/commit/75d84e75bff4c6af7e19f7153138948a62116b9c[75d84e7])
+* semaphore error
+(https://gitlab.com/typexs/typexs/commit/67ac3ff409de6974eff383a0fef8131e6a4dea4a[67ac3ff])
+* serialization of schema’s
+(https://gitlab.com/typexs/typexs/commit/57b2d9d4a9fec383c9ab65d18af9e43e7083e637[57b2d9d])
+* spin off modul distributed-storage from base
+(https://gitlab.com/typexs/typexs/commit/4d22074a1c1462c1f05857d3a94637fa04d5929a[4d22074])
+* storage api metadata output
+(https://gitlab.com/typexs/typexs/commit/2721261e0ce3a789eac423e35019726ecb913674[2721261])
+* storage handling
+(https://gitlab.com/typexs/typexs/commit/4b51806ba5fe787927cd8163aa636ddd6588f2e6[4b51806])
+* storingName handling
+(https://gitlab.com/typexs/typexs/commit/a63057df5264b9089c4a69a513024538b73b02ae[a63057d])
+* style
+(https://gitlab.com/typexs/typexs/commit/0e2c5cdbf5b3df32c1a1a9213005f9aca5b36617[0e2c5cd])
+* take auth changes back
+(https://gitlab.com/typexs/typexs/commit/3e525c6c39e0bb3e1dc45175b2919bead9e55781[3e525c6])
+* task cleanup update
+(https://gitlab.com/typexs/typexs/commit/56325476c24e24d9a57e8206ab92aa1ed16abde6[5632547])
+* task cleanup update
+(https://gitlab.com/typexs/typexs/commit/8493f98cca0e22d3cfc6a54d6ccb6608d8bedaf1[8493f98])
+* task cleanup update
+(https://gitlab.com/typexs/typexs/commit/2e32853cb051aa5691b01c68ea24c88ea262aa72[2e32853])
+* task executor message change
+(https://gitlab.com/typexs/typexs/commit/7dc9e5fc695c77b28baab395bcac6d9fae0e5af3[7dc9e5f])
+* task log date field with datetime
+(https://gitlab.com/typexs/typexs/commit/3a80150a5ff62a9bc7973f9d57d8510d7e7dfa8b[3a80150])
+* task log storing optimazation
+(https://gitlab.com/typexs/typexs/commit/eb42b9f575ad119f1fca0ff273ee6554bac61cbc[eb42b9f])
+* task queue worker correct log msg
+(https://gitlab.com/typexs/typexs/commit/cc2f3ce800d071c7884ee660c107a3124e8c0209[cc2f3ce])
+* task refs
+(https://gitlab.com/typexs/typexs/commit/c375e629461ec462090ca8b1559b81e0c323ba63[c375e62])
+* task worker should listen an all tasks events, only the proposed once
+(https://gitlab.com/typexs/typexs/commit/4d270456062ff13f49378f6fd9e44176b41b9142[4d27045])
+* tasks - add constants for state + correct cleanup task test
+(https://gitlab.com/typexs/typexs/commit/25a6cf22ecb972945167205619a3c3f2a0ad3739[25a6cf2])
+* tasks - correct skip index
+(https://gitlab.com/typexs/typexs/commit/a84dab9bfeec86270147f568d0cbfe36ac9a9f7d[a84dab9])
+* tasks - return also not decorated infos
+(https://gitlab.com/typexs/typexs/commit/e972b6768f5ffeba1ebd4661d80dd2d337e3253f[e972b67])
+* try correct wrong seqNr by find
+(https://gitlab.com/typexs/typexs/commit/f48b9a7d5e10ec13366b74b6d1d79dc9d1aff249[f48b9a7])
+* try fix length not passed
+(https://gitlab.com/typexs/typexs/commit/6086599a884f46f5cebcd336fcef0cb1579ba4d6[6086599])
+* try make performance better
+(https://gitlab.com/typexs/typexs/commit/2583fc9c4a8f62aa14d9c01575e5fc2db02c8375[2583fc9])
+* try make performance better
+(https://gitlab.com/typexs/typexs/commit/d43cd92c0e868b719f21904f8320c6b6474b7244[d43cd92])
+* try make performance better
+(https://gitlab.com/typexs/typexs/commit/b16f169ed79967ff20e98acb545b777cf3e19fc6[b16f169])
+* try make performance better
+(https://gitlab.com/typexs/typexs/commit/a5b84794c39754148b8099a1d90acb6fbab5c635[a5b8479])
+* try reduce memory usage
+(https://gitlab.com/typexs/typexs/commit/f5439ebc8a1a9e94dd8f43607d4d93813815f519[f5439eb])
+* try upgrade on typeorm 0.2.38
+(https://gitlab.com/typexs/typexs/commit/1d379745d65f331f8b5e74e47cc44d1a284f5290[1d37974])
+* typeormstorageref if type of column can’t be resolved skip and throw
+warning message.
+(https://gitlab.com/typexs/typexs/commit/77e495c74898af3ee1d5af1a0d6ff5460ed4ab8a[77e495c])
+* typeormstorageref if type of column can’t be resolved skip and throw
+warning message.
+(https://gitlab.com/typexs/typexs/commit/f98c651ef49fa6706d71f7d48f91152de0f8ee64[f98c651])
+* ui bugs
+(https://gitlab.com/typexs/typexs/commit/171e1eedecd9bb678e837022f3ac7d2c865cff1b[171e1ee])
+* update
+(https://gitlab.com/typexs/typexs/commit/becb5d350a4de8d57a4f84e8ae66460205a3b40a[becb5d3])
+* update
+(https://gitlab.com/typexs/typexs/commit/b466b799ece442e8e878a98daed9bd80d673354e[b466b79])
+* update
+(https://gitlab.com/typexs/typexs/commit/7378166586888f809723271231adb579995b5640[7378166])
+* update
+(https://gitlab.com/typexs/typexs/commit/4d09f8d615455ddebc05c5de9c1e1938028fc943[4d09f8d])
+* update
+(https://gitlab.com/typexs/typexs/commit/e62b41a3ef06be89368edc174c4fecaee1634694[e62b41a])
+* update
+(https://gitlab.com/typexs/typexs/commit/3fe786a5d3565389a81f576eed463b9307af01e2[3fe786a])
+* update
+(https://gitlab.com/typexs/typexs/commit/685c8490b64ee32ce9dfd33a570500ec84c207c7[685c849])
+* update
+(https://gitlab.com/typexs/typexs/commit/409154ab7a71de5e293512c175afd909596d951b[409154a])
+* update
+(https://gitlab.com/typexs/typexs/commit/c2da67156215934b3ef2632579a9e0c0175ff30f[c2da671])
+* update
+(https://gitlab.com/typexs/typexs/commit/f18461cdc8172c9872a07e0039accf0b67e2a23c[f18461c])
+* update
+(https://gitlab.com/typexs/typexs/commit/9362b28f71792805bbc93f70e1fce4aa15e45bb6[9362b28])
+* update
+(https://gitlab.com/typexs/typexs/commit/2d464beef24f4289d52448b6d8a5198ea978df53[2d464be])
+* update
+(https://gitlab.com/typexs/typexs/commit/450e53fc091ae6e9ffc1f3111fd31d63cb61d075[450e53f])
+* update
+(https://gitlab.com/typexs/typexs/commit/7c3c785d92471a306a5ab0cbc37d4ee294f994d1[7c3c785])
+* update
+(https://gitlab.com/typexs/typexs/commit/daca456b35c25ed15b3a4ff96a7c8712166b4230[daca456])
+* update
+(https://gitlab.com/typexs/typexs/commit/feb412b25101a90b31b1a1f75ebf028fcc6fea32[feb412b])
+* update
+(https://gitlab.com/typexs/typexs/commit/66b76c2d9ce43bf6260524c0bed5843ea3a93c21[66b76c2])
+* update
+(https://gitlab.com/typexs/typexs/commit/34302dd6246535974330d1c73bffe0fd74ec465b[34302dd])
+* update
+(https://gitlab.com/typexs/typexs/commit/8df957308b374982efde4f2b74e04a6809e78069[8df9573])
+* update
+(https://gitlab.com/typexs/typexs/commit/d118630a3ff681edd59cca24f56da2efde78b766[d118630])
+* update
+(https://gitlab.com/typexs/typexs/commit/069acb228a8179463ba2e139a06f272feffc8a98[069acb2])
+* update
+(https://gitlab.com/typexs/typexs/commit/e0fd08614bdc7b4b300ca44c02394d8adb26ca64[e0fd086])
+* update
+(https://gitlab.com/typexs/typexs/commit/a7685a56323d61edf5a7a518beff3946c9558d3e[a7685a5])
+* update angular to v12-lts version
+(https://gitlab.com/typexs/typexs/commit/6421d59d6063762b469c3ab8ba80bd72ab3424c5[6421d59])
+* update angular to v12-lts version
+(https://gitlab.com/typexs/typexs/commit/4d4ef3ce31713d4e0e07eb9379204ad3b879ccbd[4d4ef3c])
+* update ignore
+(https://gitlab.com/typexs/typexs/commit/4816d3ed1baf9c2f1141d71b756f29cf1ed13cb4[4816d3e])
+* update index exports
+(https://gitlab.com/typexs/typexs/commit/7ece3395a5cb34b990da6a664b6546cbb65b31de[7ece339])
+* update ng entity
+(https://gitlab.com/typexs/typexs/commit/2dd6bfb485b840b45929580b5e9782866f26383f[2dd6bfb])
+* update package
+(https://gitlab.com/typexs/typexs/commit/f1570d6bbdc79bf3497102834d9d6222baae42ee[f1570d6])
+* update packages
+(https://gitlab.com/typexs/typexs/commit/86a6b48b8b67f5e1d5c5c6c31ce312b873984917[86a6b48])
+* update public api
+(https://gitlab.com/typexs/typexs/commit/732e576533c0790afca0b2e3efc664568e075130[732e576])
+* update schema-api
+(https://gitlab.com/typexs/typexs/commit/24fb7e78b5d809d631f20c0eb0539eaf0ce0fe89[24fb7e7])
+* update search
+(https://gitlab.com/typexs/typexs/commit/7ba0f55240c9040a8363875e5dd3a7faa6dab335[7ba0f55])
+* update tasks storage
+(https://gitlab.com/typexs/typexs/commit/f2fdf6445c25f5845b045a90fcfb439f29ea7e4c[f2fdf64])
+* update web server paths
+(https://gitlab.com/typexs/typexs/commit/dfb48382abb44bf94a039363b1dbac980da6b584[dfb4838])
+* update/remove existing relations
+(https://gitlab.com/typexs/typexs/commit/dcf46ce9929f17fe8cdbe501adf68c06f90a73aa[dcf46ce])
+* updates
+(https://gitlab.com/typexs/typexs/commit/efb3b7d792ce380571371cbe1afcf5f74e8e113c[efb3b7d])
+* use lesser promises in async worker queue
+(https://gitlab.com/typexs/typexs/commit/eeaa8f4dc6c05e4ac26afed4c3ca8a30b53e9191[eeaa8f4])
+* use testing packages
+(https://gitlab.com/typexs/typexs/commit/a30ad3fb397a994b60001b6c4d03547a9946bd21[a30ad3f])
+* wip
+(https://gitlab.com/typexs/typexs/commit/8b90277d142aeb37e229ddfc85087217732f2423[8b90277])
+* wip on multiple entities for same backend table
+(https://gitlab.com/typexs/typexs/commit/da9f4f9367d735be9bcf14be07348f2036b3be83[da9f4f9])
+* work on better deserialization of json schema
+(https://gitlab.com/typexs/typexs/commit/f22b0de36b1ff87622bca6035c4eddc79b0f20ef[f22b0de])
+* work on conditions provider
+(https://gitlab.com/typexs/typexs/commit/6807a42ab215a5f7274de58bab31ac1c8803e3fa[6807a42])
+* work on data type translation
+(https://gitlab.com/typexs/typexs/commit/f2280362bd62c498f5f2f77724e8e4eac372197b[f228036])
+* work on ldap module
+(https://gitlab.com/typexs/typexs/commit/975b66cc8d7c0c1e5cd6a1f280e9416a4d8419d8[975b66c])
+* work on locally task message exchange
+(https://gitlab.com/typexs/typexs/commit/a67b8fac2c7369663c2a3f05e2b99cdc0e1eda83[a67b8fa])
+* work on mark for built entities
+(https://gitlab.com/typexs/typexs/commit/53f86f68d9b86d6dba7736cad55ffc10fbb2dbe0[53f86f6])
+* work on ng layout + task logging
+(https://gitlab.com/typexs/typexs/commit/0014a88cfbba1e12467a90873f08a29539ce9fde[0014a88])
+* work on ng template + entity routing fixing
+(https://gitlab.com/typexs/typexs/commit/2cc5952f71909c9a31fc2419f2d0e4ea63c5aa17[2cc5952])
+* work on reindex on index change
+(https://gitlab.com/typexs/typexs/commit/a4fae9b03bd0044e3c8d7c620fb3d3a40c5545c1[a4fae9b])
+* work on schema
+(https://gitlab.com/typexs/typexs/commit/f976fa0246b8c4a0a5c2a4ad778276959b2fd3d2[f976fa0])
+* work on search module elastic mapping
+(https://gitlab.com/typexs/typexs/commit/6cf585d3ce1f11a4b31c627a2cdf8a5166b2cf88[6cf585d])
+* work on storage ref on startup
+(https://gitlab.com/typexs/typexs/commit/af0f90a69877839cb1136867552f94ab5220df35[af0f90a])
+* work on task ui
+(https://gitlab.com/typexs/typexs/commit/f4f2d94e4c4e4ac6031b08e1d1b0b521398917db[f4f2d94])
+* work on tasks
+(https://gitlab.com/typexs/typexs/commit/67354c0e5cdeca76c5a131f74bdecf25d9b00ab6[67354c0])
+* work on tasks
+(https://gitlab.com/typexs/typexs/commit/b2ccbd444244dc24270937bfc3b4e44eee00f082[b2ccbd4])
+* wrong import
+(https://gitlab.com/typexs/typexs/commit/c5ce4faf0ed0eb000f57b3c494ca6448ac3f7c97[c5ce4fa])
+* wrong options pass check corrected
+(https://gitlab.com/typexs/typexs/commit/08cb8346c083fc5fae9797c3954d7a562580c172[08cb834])
+* wrong ref
+(https://gitlab.com/typexs/typexs/commit/6b8538055601d1228603e82c0269c600a4a7f853[6b85380])
+* wrong var name
+(https://gitlab.com/typexs/typexs/commit/c8f0b3cb17ec279d634bebef2e770d679922665d[c8f0b3c])
+
+==== Features
+
+* activate search
+(https://gitlab.com/typexs/typexs/commit/ff92a420ff3184df3ecb1c7fba2383ab3ce9941b[ff92a42])
+* add auth module
+(https://gitlab.com/typexs/typexs/commit/adaffd673ba982bf030f68e5d6f43c5171ef15d0[adaffd6])
+* add auth module
+(https://gitlab.com/typexs/typexs/commit/831a616da7422620b0eaf1ab1c01e29946130cda[831a616])
+* add pipelines module
+(https://gitlab.com/typexs/typexs/commit/ed47dadd3a58ea99110f29128f73f712396dc94d[ed47dad])
+* add pipelines modules
+(https://gitlab.com/typexs/typexs/commit/ce905073e040292037295f289d7e8f2a8f9ea471[ce90507])
+* add search module
+(https://gitlab.com/typexs/typexs/commit/9a48c3ed6ec13562526f2b8cff3b602faf2be9c6[9a48c3e])
+* initial notification package
+(https://gitlab.com/typexs/typexs/commit/596257ad7049ecc2a36cf3a5248efed222ee910d[596257a])
+* move app to packages
+(https://gitlab.com/typexs/typexs/commit/e7ef942316f96252fa31029d27c8a28fea3ddfc5[e7ef942])
+* multiple fixes
+(https://gitlab.com/typexs/typexs/commit/83b60c84e580bf34b944a732bae8a9a285ca5b17[83b60c8])
+* pipelines refactor and correct on catch
+(https://gitlab.com/typexs/typexs/commit/e9ca0cbb4bf0fe4ca2ffc7f1b9231dc8d216454b[e9ca0cb])
+* rewrite for new eventbus package
+(https://gitlab.com/typexs/typexs/commit/f835189133b8e91d09b285c5617167e35ce9c834[f835189])
+* work on ldap module prototype
+(https://gitlab.com/typexs/typexs/commit/1c7b445d0c415f1381bf1ec28fea6e4999c4998e[1c7b445])
+* work on queue caching
+(https://gitlab.com/typexs/typexs/commit/593022f3a24d3a38db5514b3f57e006e3494e755[593022f])
