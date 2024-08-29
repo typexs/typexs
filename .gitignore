@@ -72,6 +72,9 @@ typings/
 build
 tmp/
 
+# Angular
+.angular
+
 **/scss/themes/ext
 **/scss/themes/ext/*
 
