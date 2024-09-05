@@ -12,6 +12,8 @@ import { IScrollEvent } from './IScrollEvent';
 // TODO check if fire onScroll on bottom of element
 // TODO mode switch check between simple / overflow
 // TODO refresh
+// TODO check if ignoring of getNoneItemsElements during nodeCount calculation works
+// TODO check if itemSelector works
 
 
 /**
@@ -177,7 +179,7 @@ describe('directive: InfiniteScrollDirective', () => {
           </div>
         </div>`,
       styles: [
-        '.row { height: 20px; margin-top:1px }'
+        '.item { height: 20px; margin-top:1px }'
       ]
     })
     class ITCInputs {
@@ -234,7 +236,7 @@ describe('directive: InfiniteScrollDirective', () => {
           </div>
         </div>`,
       styles: [
-        '.row { height: 20px; margin-top:1px }'
+        '.item { height: 20px; margin-top:1px }'
       ]
     })
     class ITC {
@@ -414,7 +416,7 @@ describe('directive: InfiniteScrollDirective', () => {
           </div>
         </div>`,
       styles: [
-        '.row { height: 20px; margin-top:1px }'
+        '.item { height: 20px; margin-top:1px }'
       ]
     })
     class ITC {
@@ -466,7 +468,7 @@ describe('directive: InfiniteScrollDirective', () => {
           </div>
         </div>`,
       styles: [
-        '.row { height: 20px; margin-top:1px }'
+        '.item { height: 20px; margin-top:1px }'
       ]
     })
     class ITC {
@@ -522,7 +524,7 @@ describe('directive: InfiniteScrollDirective', () => {
           </div>
         </div>`,
       styles: [
-        '.row { height: 20px; margin-top:1px }'
+        '.item { height: 20px; margin-top:1px }'
       ]
     })
     class ITC {
@@ -1058,7 +1060,7 @@ describe('directive: InfiniteScrollDirective', () => {
             </div>
           `,
           styles: [
-            '.row {height: 40px; }'
+            '.item {height: 40px; }'
           ]
         })
         class ITCOverflow {
@@ -1117,7 +1119,7 @@ describe('directive: InfiniteScrollDirective', () => {
             </div>
           `,
           styles: [
-            '.row {height: 40px; }'
+            '.item {height: 40px; }'
           ]
         })
         class ITCSimple {
