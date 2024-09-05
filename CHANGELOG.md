@@ -1,3 +1,12 @@
+## [2.3.4](https://gitlab.com/typexs/typexs/compare/v2.3.3...v2.3.4) (2024-09-05)
+
+
+### Bug Fixes
+
+* handle params correctly passed by override ([928c77d](https://gitlab.com/typexs/typexs/commit/928c77da216ed263eb60181c1559a91929e0daf4))
+
+
+
 ## [2.3.3](https://gitlab.com/typexs/typexs/compare/v2.3.1...v2.3.3) (2024-08-29)
 
 
