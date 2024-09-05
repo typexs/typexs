@@ -77,11 +77,11 @@ export class ListViewComponent extends AbstractGridComponent {
    */
   shouldQueryOnStartup(): boolean {
     const onStartupUp = super.shouldQueryOnStartup();
-    if(this.isQueryOnInitSet()){
+    if (this.isQueryOnInitSet()) {
       // when result is override by queryOnInit flag
       return onStartupUp;
     }
-    if(this.infiniteOnOff) {
+    if (this.infiniteOnOff) {
       // handle by onDragScroll callback
       return false;
     }
@@ -119,10 +119,9 @@ export class ListViewComponent extends AbstractGridComponent {
     return this._selectedTemplate;
   }
 
-  isTemplateReady(){
+  isTemplateReady() {
     return super.isInitialized() && this.templateRefs && this.templateRefs.length > 0;
   }
-
 
 
   getTemplate(templateName: string): TemplateRef<any> {
@@ -155,9 +154,7 @@ export class ListViewComponent extends AbstractGridComponent {
       const isNotValueSet = range(start, end + 1).filter(x => !this.getNodes().isValueSet(x));
       if (isNotValueSet.length > 0) {
         this.getNodes().doChangeSpan(start, end).subscribe(x => {
-          const finished = this.getNodes().isReachedMaxRows();
-          // TODO check if finished
-          // console.log('finished=' + finished);
+          this.finished = this.getNodes().isReachedMaxRows();
         });
       }
     }
