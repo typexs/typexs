@@ -95,7 +95,7 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
     (
       (node: ChildNode) =>
         node && node instanceof HTMLElement &&
-        (node.classList.contains('row') || node.hasAttribute('idx')) ? true : false
+        (node.classList.contains('item') || node.hasAttribute('idx')) ? true : false
     );
 
   @Input()
@@ -140,8 +140,6 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
     height: this.approxHeight,
     margin: this.approxMargin
   };
-
-  // private approxCalcLast: number = -1;
 
   constructor(
     private elemRef: ElementRef,
@@ -233,9 +231,7 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
     }
 
     if (cMaxEntries) {
-      if (((cMaxEntries && cMaxEntries.currentValue !== cMaxEntries.previousValue))
-        // && this.isPlaceholderMode()
-      ) {
+      if (((cMaxEntries && cMaxEntries.currentValue !== cMaxEntries.previousValue))) {
         if (!this.skipInit) {
           if (this._enabled) {
             this.subject.next(0);
@@ -253,11 +249,6 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
     this.disable();
     this.enable();
   }
-
-  //
-  // doAdaptScrollbar() {
-  //   this.updatePlaceHolder();
-  // }
 
 
   /**
@@ -295,7 +286,6 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
   private enableBody() {
     this.listenOnScroll();
     this.registerScroll(this.onScrollBody);
-    // this.scrollSubscription = this.scrollObservable.subscribe(this.onScrollBody.bind(this));
   }
 
 
@@ -366,6 +356,7 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
     this.updatePlaceHolder();
   }
 
+
   private calcReload(boundries?: IIndexSpan) {
     // update internal node count
     const el = this.getElement();
@@ -384,8 +375,9 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
     if (!el) {
       el = this.getElement();
     }
-    const plchldr = this.getPlaceHolderElements();
-    this.nodeCount = el.childElementCount - plchldr.length;
+    // const plchldr = this.getPlaceHolderElements();
+    const x = this.getNoneItemElements();
+    this.nodeCount = el.childElementCount - x.length;
     return this.nodeCount;
   }
 
@@ -683,6 +675,13 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
     return this.getElement().querySelectorAll(':scope > .placeholder');
   }
 
+  /**
+   * Return all other elements
+   */
+  getNoneItemElements() {
+    return this.getElement().querySelectorAll(':scope > :not(.item)');
+  }
+
 
   /**
    * Check a viewbox for missings ids, if nothing missing or finished return an empty array
@@ -777,7 +776,7 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
 
 
   /**
-   * Return the index of the "row" node which is nearest to the offset. If reverse is true then we are looking
+   * Return the index of the "item" node which is nearest to the offset. If reverse is true then we are looking
    * for the nearest from top and if it is false we are looking for the nearest from the bottom.
    * If nothing can be found than returns -1. Search is starting from passed index idx.
    *
@@ -1036,11 +1035,6 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
           (x, y) => x !== 0 && y !== 0 && x[K_SCROLL_TOP] === y[K_SCROLL_TOP]),
         debounceTime(this.debounceTime),
         shareReplay(1)
-        // ,
-        // catchError((err) => {
-        //   console.log(err)
-        //   return of('EROR');
-        // })
       );
   }
 
@@ -1113,7 +1107,6 @@ export class InfiniteScrollDirective implements OnChanges, IInfiniteScrollApi, O
     // TODO this node count maybe wrong elements are also ng comments
     const elemCount = this.getItemCount();
     const maxElem = this.getMaxEntries();
-
 
     if (elemCount >= maxElem - 1) {
       // placeholder no more necessary

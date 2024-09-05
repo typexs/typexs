@@ -29,6 +29,7 @@ import { XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '../../datatable/Constant
 import { BehaviorSubject, Observable } from 'rxjs';
 import { K_OPTIONS } from '../../datatable/api/IGridMode';
 import { K_REBUILD } from '../../lib/datanodes/Constants';
+import { IParamsOverride } from './IParamsOverride';
 
 /**
  * Storage query embedded component
@@ -88,8 +89,6 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
   entityRef: IEntityRef;
 
   error: any = null;
-
-  // isReady$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   queringService: IQueringService;
 
@@ -334,27 +333,43 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     return filterQuery;
   }
 
+  /**
+   * Prepare parameter for query with sourceKey and fallback
+   *
+   * @param api
+   * @param override
+   * @param sourceKey
+   * @param fallback
+   * @private
+   */
+  private _prepareParam(api: IGridApi, override: IParamsOverride = {}, sourceKey: string, fallback?: any) {
+    let _d = null;
+    if (typeof override[sourceKey] === 'number') {
+      _d = override[sourceKey];
+    } else if (api && api.params && api.params[sourceKey]) {
+      _d = api.params[sourceKey];
+    } else if (this.params[sourceKey]) {
+      _d = this.params[sourceKey];
+    } else if (typeof fallback !== 'undefined') {
+      _d = fallback;
+    }
+    return _d;
+  }
 
-  prepareParams(api: IGridApi) {
-    const _d: any = {};
-    if (api?.params?.offset) {
-      _d['offset'] = api.params.offset;
-    } else if (this.params.offset) {
-      _d['offset'] = this.params.offset;
-    } else {
-      _d['offset'] = 0;
-    }
-    if (api?.params?.limit) {
-      _d['limit'] = api.params.limit;
-    } else if (this.params.limit) {
-      _d['limit'] = this.params.limit;
-    } else {
-      _d['limit'] = 25;
-    }
-    if (!isEmpty(api?.params?.sorting)) {
-      _d['sort'] = api.params.sorting;
-    } else if (this.params.sorting) {
-      _d['sort'] = this.params.sorting;
+  /**
+   * Prepare parameters for query range and sort directions
+   *
+   * @param api
+   * @param override
+   */
+  prepareParams(api: IGridApi, override: IParamsOverride = {}) {
+    const _d: any = {
+      offset: this._prepareParam(api, override, 'offset', 0),
+      limit: this._prepareParam(api, override, 'limit', 25)
+    };
+    const sort = this._prepareParam(api, override, 'sorting');
+    if (sort) {
+      _d['sort'] = sort;
     }
     return _d;
   }
@@ -418,10 +433,11 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
   }
 
 
-  doPlainQuery(api: IGridApi) {
+  doPlainQuery(api: IGridApi, override: IParamsOverride = {}) {
+    override = override || {};
     const filterQuery = this.prepareFilterQuery();
     const queryOptions = this.applyQueryOptions();
-    const _d = this.prepareParams(api);
+    const _d = this.prepareParams(api, override);
     assign(queryOptions, _d);
     this.applyParams(api, filterQuery);
     this.applyFreeQuery(filterQuery);
@@ -434,15 +450,15 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     return this.getQueryService().query(this.getEntityName(), executeQuery, queryOptions);
   }
 
-  doPlainAggregate(api: IGridApi) {
+  doPlainAggregate(api: IGridApi, override: IParamsOverride = {}) {
+    override = override || {};
     const filterQuery = this.prepareFilterQuery();
-
     const queryOptions: IFindOptions = {};
     if (this.options.queryOptions) {
       assign(queryOptions, this.options.queryOptions);
     }
 
-    const _d = this.prepareParams(api);
+    const _d = this.prepareParams(api, override);
     assign(queryOptions, _d);
 
     this.applyParams(api, filterQuery);
@@ -479,7 +495,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
    * @param limit
    */
   queryCallback(start: number, end: number, limit?: number): Observable<any[]> {
-    return this.executeQuery(this.datatable.api());
+    return this.executeQuery(this.datatable.api(), { offset: start, limit: end - start + 1 });
   }
 
   /**
@@ -487,10 +503,10 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
    *
    * @param api
    */
-  executeQuery(api: IGridApi) {
+  executeQuery(api: IGridApi, override: IParamsOverride = {}) {
     const mode = this.getQueryMode();
     if (mode === K_QUERY) {
-      return this.doPlainQuery(api)
+      return this.doPlainQuery(api, override)
         .pipe(
           filter(x => !(x === null || x === undefined)),
           map(results => {
@@ -498,7 +514,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
           })
         );
     } else {
-      return this.doPlainAggregate(api)
+      return this.doPlainAggregate(api, override)
         .pipe(map(results => {
           return this._processQueryResults(results);
         }));
@@ -524,8 +540,8 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     return [];
   }
 
-  doQuery(api: IGridApi): void {
-    const query = this.executeQuery(api);
+  doQuery(api: IGridApi, override: IParamsOverride = {}): void {
+    const query = this.executeQuery(api, override);
     query.pipe(first()).subscribe(x => {
       if (!this.entityRef) {
         this.rebuildColumns(x, api);
