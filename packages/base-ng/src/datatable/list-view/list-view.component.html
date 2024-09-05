@@ -11,7 +11,7 @@
   </txs-pager>
 
   <div class="list-container">
-    <div #rows class="row" *ngFor="let node of getNodeData() | async">
+    <div #rows class="row item" *ngFor="let node of getNodeData() | async">
       <div class="col-md-12">
         <txs-view [instance]="node.data"
                   [allowViewModeSwitch]="allowViewModeSwitch"

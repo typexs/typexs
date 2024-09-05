@@ -172,7 +172,7 @@ describe('directive: InfiniteScrollDirective', () => {
              [finished]="finished"
              (onDataScroll)="onReached($event)"
              class="container">
-          <div class="row" #rows [attr.idx]="row.id" *ngFor="let row of list">
+          <div class="row item" #rows [attr.idx]="row.id" *ngFor="let row of list">
             <div class="col-12">{{ row.name }}</div>
           </div>
         </div>`,
@@ -229,7 +229,7 @@ describe('directive: InfiniteScrollDirective', () => {
         <div [infiniteScroll]="onoff"
              (onDataScroll)="onReached($event)"
              class="container">
-          <div class="row" #rows [attr.idx]="row.id" *ngFor="let row of list">
+          <div class="item" #rows [attr.idx]="row.id" *ngFor="let row of list">
             <div class="col-12">{{ row.name }}</div>
           </div>
         </div>`,
@@ -409,7 +409,7 @@ describe('directive: InfiniteScrollDirective', () => {
              [maxEntries]="maxEntries"
              (onDataScroll)="onReached($event)"
              class="container">
-          <div class="row" #rows [attr.idx]="row.id" *ngFor="let row of list">
+          <div class="item" #rows [attr.idx]="row.id" *ngFor="let row of list">
             <div class="col-12">{{ row.name }}</div>
           </div>
         </div>`,
@@ -461,7 +461,7 @@ describe('directive: InfiniteScrollDirective', () => {
              [mode]="mode"
              (onDataScroll)="onReached($event)"
              class="container">
-          <div class="row" #rows [attr.idx]="row.id" *ngFor="let row of list">
+          <div class="item" #rows [attr.idx]="row.id" *ngFor="let row of list">
             <div class="col-12">{{ row.name }}</div>
           </div>
         </div>`,
@@ -517,7 +517,7 @@ describe('directive: InfiniteScrollDirective', () => {
              [maxEntries]="maxEntries"
              (onDataScroll)="onReached($event)"
              class="container">
-          <div class="row" #rows [attr.idx]="row.id" *ngFor="let row of list">
+          <div class="item" #rows [attr.idx]="row.id" *ngFor="let row of list">
             <div class="col-12">{{ row.name }}</div>
           </div>
         </div>`,
@@ -576,7 +576,7 @@ describe('directive: InfiniteScrollDirective', () => {
              [mode]="mode"
              (onDataScroll)="onRangeReached($event)"
              class="container">
-          <div #rows class="row" [attr.idx]="row.id" *ngFor="let row of list">
+          <div #rows class="item" [attr.idx]="row.id" *ngFor="let row of list">
             <div class="col-12">{{ row.name }}</div>
           </div>
         </div>
@@ -1052,7 +1052,7 @@ describe('directive: InfiniteScrollDirective', () => {
                  [mode]="mode"
                  (onDataScroll)="onRangeReached($event)"
                  class="container">
-              <div #rows class="row" [attr.idx]="row.id" *ngFor="let row of list">
+              <div #rows class="item" [attr.idx]="row.id" *ngFor="let row of list">
                 <div class="col-12">{{ row.name }}</div>
               </div>
             </div>
@@ -1111,7 +1111,7 @@ describe('directive: InfiniteScrollDirective', () => {
                  [mode]="mode"
                  (onDataScroll)="onRangeReached($event)"
                  class="container">
-              <div #rows class="row" [attr.idx]="row.id" *ngFor="let row of list">
+              <div #rows class="item" [attr.idx]="row.id" *ngFor="let row of list">
                 <div class="col-12">{{ row.name }}</div>
               </div>
             </div>
