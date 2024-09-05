@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-admin-ui",
-  "version": "13.0.2",
+  "version": "13.0.3",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -47,14 +47,14 @@
     "@angular/core": "v13-lts",
     "@angular/router": "v13-lts",
     "@typexs/base": "^2.3.3",
-    "@typexs/base-ng": "^13.0.2",
-    "@typexs/forms-ng": "^13.0.2",
+    "@typexs/base-ng": "^13.0.3",
+    "@typexs/forms-ng": "^13.0.3",
     "@typexs/ng": "^13.0.2",
     "@typexs/ng-router-menu": "^13.0.2",
-    "@typexs/ng-theme-base": "^13.0.2",
+    "@typexs/ng-theme-base": "^13.0.3",
     "@typexs/server": "^2.3.3",
-    "@typexs/storage-ng": "^13.0.2",
-    "@typexs/tasks-ng": "^13.0.2",
+    "@typexs/storage-ng": "^13.0.3",
+    "@typexs/tasks-ng": "^13.0.3",
     "rxjs": "~7.5.0"
   },
   "publishConfig": {
