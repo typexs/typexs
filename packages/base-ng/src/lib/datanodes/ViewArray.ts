@@ -253,8 +253,9 @@ export class ViewArray<T> {
    * @param value
    */
   insert(idx: number, value: T | Node<T>, override = false) {
-    const repNode = this.getNode(idx);
-    if (repNode && !override) {
+    // if node exists
+    const alreadyExistsingNode = this.getNode(idx);
+    if (alreadyExistsingNode && !override) {
       this.idxUpDownCount(idx);
     }
     const ret = this.set(idx, value);
@@ -268,14 +269,17 @@ export class ViewArray<T> {
    * @param fromIdx
    * @param toIdx
    */
-  move(fromIdx: number, toIdx: number) {
-    const fromNode = this.getNode(fromIdx);
-    const toNode = this.getNode(toIdx);
-    if (toNode) {
-      this.idxUpDownCount(toIdx);
-    }
-    this.remove(fromNode);
-    this.insert(toIdx, fromNode);
+  swap(fromIdx: number, toIdx: number) {
+    let fromNode = this.getNode(fromIdx);
+    let toNode = this.getNode(toIdx);
+    // if (toNode) {
+    //   this.idxUpDownCount(toIdx);
+    // }
+    // remove node
+    fromNode = this.remove(fromNode);
+    toNode = this.remove(toNode);
+    this.set(fromIdx, toNode, true);
+    this.set(toIdx, fromNode, true);
   }
 
 

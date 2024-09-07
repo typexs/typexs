@@ -1,7 +1,7 @@
 import { IArrayEvent, ViewArray } from './ViewArray';
 import { range } from 'lodash';
 import { Observable, of } from 'rxjs';
-import { K_DATA_UPDATE, K_INITIAL, K_RESET, T_VIEW_ARRAY_STATES } from './Constants';
+import { K_DATA_UPDATE, K_INITIAL, K_RESET } from './Constants';
 import { K_INFINITE, K_PAGED } from './../../datatable/api/IGridMode';
 import { fakeAsync } from '@angular/core/testing';
 import { first } from 'rxjs/operators';
@@ -142,21 +142,23 @@ describe('lib: ViewArray', () => {
     expect(nodes.max()).toEqual(4);
   });
 
-  it('move data', () => {
+  it('swap two nodes', () => {
     const data = genData(0, 6);
     nodes.push(...data);
     expect(nodes).toHaveSize(6);
     expect(nodes.getLoadedAsArray().map(x => x.data)).toEqual(data);
-    nodes.move(1, 4);
+    nodes.swap(1, 4);
     expect(nodes).toHaveSize(6);
-    expect(nodes.getLoadedAsArray().map(x => x.data)).toEqual([
+    const arr = nodes.getLoadedAsArray();
+    expect(arr.map(x => x.data)).toEqual([
       { idx: 0, name: 'T 0' },
+      { idx: 4, name: 'T 4' },
       { idx: 2, name: 'T 2' },
       { idx: 3, name: 'T 3' },
       { idx: 1, name: 'T 1' },
-      { idx: 4, name: 'T 4' },
       { idx: 5, name: 'T 5' }
     ]);
+    expect(arr.map(x => x.idx)).toEqual([0, 1, 2, 3, 4, 5]);
   });
 
   describe('in infinite mode with callback', () => {
