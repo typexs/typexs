@@ -1,6 +1,6 @@
 {
   "name": "@typexs/typexs",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "main": "index.js",
   "browser": "browser.js",
   "scripts": {

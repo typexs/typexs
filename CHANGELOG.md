@@ -1,3 +1,14 @@
+## [2.3.5](https://gitlab.com/typexs/typexs/compare/v2.3.4...v2.3.5) (2024-09-07)
+
+
+### Bug Fixes
+
+* make update nodes in view array public ([eaf69d7](https://gitlab.com/typexs/typexs/commit/eaf69d7659f717d3cdab0230626bb32e8991b154))
+* problems with passing arguments fro dt to child comp ([96ed826](https://gitlab.com/typexs/typexs/commit/96ed826888a0bea1e1e384090cc422f9d96adec1))
+* swaping nodes in view array ([9ce8d65](https://gitlab.com/typexs/typexs/commit/9ce8d655c431658bbe73a80c26ee3d7cc9bde3e1))
+
+
+
 ## [2.3.4](https://gitlab.com/typexs/typexs/compare/v2.3.3...v2.3.4) (2024-09-05)
 
 
