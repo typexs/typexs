@@ -174,7 +174,7 @@ export class ViewArray<T> {
     return node;
   }
 
-  setFetchByCallback(value: boolean){
+  setFetchByCallback(value: boolean) {
     this.fetchByCallback = value;
   }
 
@@ -909,13 +909,16 @@ export class ViewArray<T> {
   }
 
   /**
-   * Copy values to the
+   * Copy values an notify subscriber
    *
    * @param nodes
    * @private
    */
-  private passToValues(nodes: Node<T>[]) {
+  passToValues(nodes?: Node<T>[]) {
     if (this.frameMode === K_PAGED || this.frameMode === K_VIEW) {
+      if (!nodes) {
+        nodes = this.getFrameAsArray();
+      }
       this.getNodeValues().next(nodes);
     } else {
       this.getNodeValues().next(this.getLoadedAsArray());
