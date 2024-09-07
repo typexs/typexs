@@ -19,7 +19,6 @@ export const inputKeys: string[] = [
   '_nodes',
   '_gridControl$',
   'gridControl$',
-  '_params',
   'options',
   'params',
   'passThrough',

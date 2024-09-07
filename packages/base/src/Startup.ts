@@ -27,7 +27,6 @@ import { Workers } from './libs/worker/Workers';
 import { ExchangeMessageRegistry } from './libs/messaging/ExchangeMessageRegistry';
 import { ConfigUtils } from './libs/utils/ConfigUtils';
 import { TaskRunnerRegistry } from './libs/tasks/TaskRunnerRegistry';
-import { TaskQueueWorker } from './workers/TaskQueueWorker';
 import { Injector } from './libs/di/Injector';
 
 

@@ -212,7 +212,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     for (const prop of passInputs) {
       // const propDesc = Object.getOwnPropertyDescriptor(this, prop);
       // if (propDesc) {
-      if (!['rows', 'limit', 'maxRows', 'offset'].includes(prop)) {
+      if (!['rows', 'limit', 'maxRows', 'offset', 'params'].includes(prop)) {
         this._initCache[prop] = this[prop];
       }
       // wrap properties to instance
@@ -257,7 +257,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
    * Initialized cached rows
    * @private
    */
-  private initCacheIfSet() {true
+  private initCacheIfSet() {
     const initCache = this._initCache;
     const passInputs = this.getInputPropertyNames();
     // keep order _dataNodes must be first
@@ -271,12 +271,14 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
   }
 
   setCached(key: string) {
-    if (typeof this[key] === 'function') {
-      this[key](this._initCache[key]);
-    } else {
-      this[key] = this._initCache[key];
+    if (key in this._initCache) {
+      if (typeof this[key] === 'function') {
+        this[key](this._initCache[key]);
+      } else {
+        this[key] = this._initCache[key];
+      }
+      delete this._initCache[key];
     }
-    delete this._initCache[key];
   }
 
 

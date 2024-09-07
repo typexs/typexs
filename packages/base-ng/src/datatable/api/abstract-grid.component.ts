@@ -95,11 +95,13 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   }
 
   set params(v: IQueryParams) {
-    if (typeof v.limit === 'number') {
-      this.setLimit(v.limit);
-    }
-    if (typeof v.offset === 'number') {
-      this.setOffset(v.offset);
+    if (v && typeof v === 'object') {
+      if (typeof v.limit === 'number') {
+        this.setLimit(v.limit);
+      }
+      if (typeof v.offset === 'number') {
+        this.setOffset(v.offset);
+      }
     }
     this._params = v;
     this.paramsChange.emit(this._params);
