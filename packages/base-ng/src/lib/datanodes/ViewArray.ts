@@ -14,6 +14,7 @@ import {
 } from './Constants';
 import { concatMap, last, mergeMap, switchMap, toArray } from 'rxjs/operators';
 import { K_INFINITE, K_PAGED, K_VIEW, T_GRID_MODE } from '../../datatable/api/IGridMode';
+import { orderBy } from 'lodash';
 
 
 const INIT_SPAN: IIndexSpan = {
@@ -194,12 +195,18 @@ export class ViewArray<T> {
    * @param idx
    * @param value
    */
-  set(idx: number, value: T | Node<T>, skipCalc = false) {
+  set(idx: number, value: T | Node<T>, skipCalc = false, skipPrevDel = false) {
     let node = null;
     if (value instanceof Node) {
       node = value;
     } else {
       node = new Node<T>(value, idx);
+    }
+    if (node.idx && idx && !skipPrevDel) {
+      if (node.idx !== idx && this.arr.has(node.idx)) {
+        // remove from old position
+        this.arr.delete(node.idx);
+      }
     }
     node.idx = idx;
     return this.setNode(node, skipCalc);
@@ -235,13 +242,13 @@ export class ViewArray<T> {
     const node = idx instanceof Node ? idx : this.getNode(idx);
     if (node) {
       this.arr.delete(node.idx);
-      node.idx = undefined;
+      // node.idx = undefined;
       if (downCount) {
         // TODO
         this.upDownMax(-1);
       }
+      this.markAs(K_REMOVE, { node: node });
     }
-    this.markAs(K_REMOVE, { node: node });
     return node;
   }
 
@@ -264,7 +271,7 @@ export class ViewArray<T> {
   }
 
   /**
-   * Move a node from one position to another, change idx upwards the new position
+   * Swap position of two nodes
    *
    * @param fromIdx
    * @param toIdx
@@ -278,8 +285,83 @@ export class ViewArray<T> {
     // remove node
     fromNode = this.remove(fromNode);
     toNode = this.remove(toNode);
-    this.set(fromIdx, toNode, true);
-    this.set(toIdx, fromNode, true);
+    this.set(fromIdx, toNode, true, true);
+    this.set(toIdx, fromNode, true, true);
+  }
+
+  /**
+   * Move a node from position fromIdx to toIdx and change idx of the nodes between the change.
+   * Return the changes position offset. If moved down then value will be negative else positiv.
+   * Zero is no change.
+   *
+   * @param fromIdx
+   * @param toIdx
+   * @return number
+   */
+  move(fromIdx: number, toIdx: number, size = 1) {
+    if (size < 0) {
+      throw new Error('size must be a positive integer');
+    }
+    let offset = toIdx - fromIdx;
+    if (offset === 0) {
+      return offset;
+    }
+
+    let takeOut = this.between(fromIdx, fromIdx + size - 1);
+    takeOut.map(x => this.remove(x, false));
+    let idx: number[] = [];
+    // adjust offset for size > 1
+    let adjustedOffset = offset - size + 1;
+    if (offset > 0) {
+      // move up, node between to and from must be count down
+      // 1,2 -> 3,4; [3,4] - 2; [1,2] + 3 = [3,4]:
+      const idxs = this.changeIdx(fromIdx + size, toIdx, -size);
+      idx.push(...idxs);
+    } else {
+      // move down, node between from and to must be count up
+      // 012345 -> 045123
+      // 4,5 -> 1,2; [1,2,3] + 2 = [3,4,5]
+      const idxs = this.changeIdx(toIdx, fromIdx - 1, size);
+      idx.push(...idxs);
+      adjustedOffset = offset;
+    }
+
+
+    takeOut.map(x => {
+      const newIdx = x.idx + adjustedOffset;
+      this.set(newIdx, x, false, true);
+      idx.push(newIdx);
+    });
+    if (idx.length > 0) {
+      this.calcLoadedIndex(idx);
+    }
+    return offset;
+  }
+
+  /**
+   * Change idx by passed size of multiple nodes between from and to idx.
+   * @param startIdx
+   * @param stopIdx
+   * @param offset
+   */
+  changeIdx(startIdx: number, stopIdx: number, offset = 1) {
+    if (startIdx > stopIdx) {
+      throw new Error('index is out of bound');
+    }
+    const nodes = this.between(startIdx, stopIdx);
+    let idx = [];
+    // const dir = toIdx - fromIdx + offset;
+    if (offset >= 0) {
+      nodes.sort((a, b) => b.idx - a.idx);
+    } else {
+      nodes.sort((a, b) => a.idx - b.idx);
+    }
+    for (const n of nodes) {
+      const newIdx = n.idx + offset;
+      this.set(newIdx, n, false);
+      idx.push(newIdx);
+    }
+    return idx;
   }
 
 
@@ -302,6 +384,23 @@ export class ViewArray<T> {
     return keys;
   }
 
+  /**
+   * Return the node entries between idx from and to (including last one).
+   *
+   * @param fromIdx
+   * @param toIdx
+   * @return Node<T>
+   */
+  between(fromIdx: number, toIdx: number): Node<T>[] {
+    const arr: Node<T>[] = [];
+    for (let i = fromIdx; i <= toIdx; i++) {
+      const node = this.getNode(i);
+      if (node) {
+        arr.push(node);
+      }
+    }
+    return arr;
+  }
 
   /**
    * Increment all idx from a given idx by a given size.

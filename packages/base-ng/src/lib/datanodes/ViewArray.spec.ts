@@ -161,6 +161,121 @@ describe('lib: ViewArray', () => {
     expect(arr.map(x => x.idx)).toEqual([0, 1, 2, 3, 4, 5]);
   });
 
+  it('change idx of 3 nodes upwards', () => {
+    const data = genData(0, 6);
+    nodes.push(...data);
+    const changedIdx = nodes.changeIdx(1, 3, 1);
+    expect(changedIdx).toEqual([4, 3, 2]);
+    expect(nodes).toHaveSize(5);
+    const arr = nodes.getLoadedAsArray();
+    const dataNew = arr.map(x => [x.idx, x.data.idx]);
+    expect(dataNew).toEqual([
+      [0,0],
+      [2,1],
+      [3,2],
+      [4,3],
+      [5,5]
+    ]);
+    expect(arr.map(x => x.idx)).toEqual([0, 2, 3, 4, 5]);
+  });
+
+
+  it('change idx of 3 nodes downwards', () => {
+    const data = genData(0, 6);
+    nodes.push(...data);
+    const changedIdx = nodes.changeIdx(1, 3, -1);
+    expect(changedIdx).toEqual([0,1,2]);
+    expect(nodes).toHaveSize(5);
+    const arr = nodes.getLoadedAsArray();
+    const dataNew = arr.map(x => [x.idx, x.data.idx]);
+    expect(dataNew).toEqual([
+      [0,1],
+      [1,2],
+      [2,3],
+      [4,4],
+      [5,5]
+    ]);
+    expect(arr.map(x => x.idx)).toEqual([0, 1, 2,  4, 5]);
+
+  });
+
+  it('move one node from on position two another', () => {
+    const data = genData(0, 6);
+    nodes.push(...data);
+    expect(nodes).toHaveSize(6);
+    expect(nodes.getLoadedAsArray().map(x => x.data)).toEqual(data);
+    nodes.move(1, 4);
+    expect(nodes).toHaveSize(6);
+    const arr = nodes.getLoadedAsArray();
+    expect(arr.map(x => x.data)).toEqual([
+      { idx: 0, name: 'T 0' },
+      { idx: 2, name: 'T 2' },
+      { idx: 3, name: 'T 3' },
+      { idx: 4, name: 'T 4' },
+      { idx: 1, name: 'T 1' },
+      { idx: 5, name: 'T 5' }
+    ]);
+    expect(arr.map(x => x.idx)).toEqual([0, 1, 2, 3, 4, 5]);
+  });
+
+  it('move multiple node from on position two another', () => {
+    const data = genData(0, 6);
+    nodes.push(...data);
+    expect(nodes).toHaveSize(6);
+    expect(nodes.getLoadedAsArray().map(x => x.data)).toEqual(data);
+    nodes.move(1, 4, 2);
+    expect(nodes).toHaveSize(6);
+    const arr = nodes.getLoadedAsArray();
+    expect(arr.map(x => x.data)).toEqual([
+      { idx: 0, name: 'T 0' },
+      { idx: 3, name: 'T 3' },
+      { idx: 4, name: 'T 4' },
+      { idx: 1, name: 'T 1' },
+      { idx: 2, name: 'T 2' },
+      { idx: 5, name: 'T 5' }
+    ]);
+    expect(arr.map(x => x.idx)).toEqual([0, 1, 2, 3, 4, 5]);
+  });
+
+
+  it('move node from on position two another downwards', () => {
+    const data = genData(0, 6);
+    nodes.push(...data);
+    expect(nodes).toHaveSize(6);
+    expect(nodes.getLoadedAsArray().map(x => x.data)).toEqual(data);
+    nodes.move(4, 1);
+    expect(nodes).toHaveSize(6);
+    const arr = nodes.getLoadedAsArray();
+    expect(arr.map(x => x.data)).toEqual([
+      { idx: 0, name: 'T 0' },
+      { idx: 4, name: 'T 4' },
+      { idx: 1, name: 'T 1' },
+      { idx: 2, name: 'T 2' },
+      { idx: 3, name: 'T 3' },
+      { idx: 5, name: 'T 5' }
+    ]);
+    expect(arr.map(x => x.idx)).toEqual([0, 1, 2, 3, 4, 5]);
+  });
+
+  it('move multiple nodes from on position two another downwards', () => {
+    const data = genData(0, 6);
+    nodes.push(...data);
+    expect(nodes).toHaveSize(6);
+    expect(nodes.getLoadedAsArray().map(x => x.data)).toEqual(data);
+    nodes.move(4, 1, 2);
+    expect(nodes).toHaveSize(6);
+    const arr = nodes.getLoadedAsArray();
+    expect(arr.map(x => x.data)).toEqual([
+      { idx: 0, name: 'T 0' },
+      { idx: 4, name: 'T 4' },
+      { idx: 5, name: 'T 5' },
+      { idx: 1, name: 'T 1' },
+      { idx: 2, name: 'T 2' },
+      { idx: 3, name: 'T 3' }
+    ]);
+    expect(arr.map(x => x.idx)).toEqual([0, 1, 2, 3, 4, 5]);
+  });
+
   describe('in infinite mode with callback', () => {
 
     beforeEach(() => {
