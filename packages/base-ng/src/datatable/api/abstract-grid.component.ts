@@ -111,6 +111,12 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   paramsChange: EventEmitter<IQueryParams> = new EventEmitter<IQueryParams>();
 
   @Input()
+  freeQuery: any;
+
+  @Output()
+  freeQueryChange: EventEmitter<any> = new EventEmitter<any>();
+
+  @Input()
   options: IDatatableOptions;
 
   @Input()

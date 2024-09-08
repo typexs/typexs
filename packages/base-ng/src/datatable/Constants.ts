@@ -27,6 +27,7 @@ export const inputKeys: string[] = [
   'rows',
   'limit',
   'offset',
+  'freeQuery'
 
 ];
 

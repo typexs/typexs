@@ -401,7 +401,10 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
   applyFreeQuery(filterQuery: any[]) {
     if (this.freeQuery) {
-      const mQuery = Expressions.fromJson(this.freeQuery);
+      let mQuery = this.freeQuery;
+      if (!(this.freeQuery instanceof ExprDesc)) {
+        mQuery = Expressions.fromJson(this.freeQuery);
+      }
       if (!isEmpty(mQuery)) {
         filterQuery.push(mQuery.toJson());
       }
