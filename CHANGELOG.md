@@ -1,3 +1,12 @@
+## [2.3.7](https://gitlab.com/typexs/typexs/compare/v2.3.6...v2.3.7) (2024-09-08)
+
+
+### Bug Fixes
+
+* add freeQuery pass io from query to data component ([fe08118](https://gitlab.com/typexs/typexs/commit/fe08118f6d3ec6f3e19c14d112bdc843e8e2b5ae))
+
+
+
 ## [2.3.6](https://gitlab.com/typexs/typexs/compare/v2.3.5...v2.3.6) (2024-09-08)
 
 
