@@ -1,3 +1,12 @@
+## [2.3.6](https://gitlab.com/typexs/typexs/compare/v2.3.5...v2.3.6) (2024-09-08)
+
+
+### Bug Fixes
+
+* correct moving nodes in view array ([30c3fca](https://gitlab.com/typexs/typexs/commit/30c3fca31818f0cfbe3506ca04d471d5e0b5d046))
+
+
+
 ## [2.3.5](https://gitlab.com/typexs/typexs/compare/v2.3.4...v2.3.5) (2024-09-07)
 
 
