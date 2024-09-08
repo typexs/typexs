@@ -34,7 +34,8 @@ export const inputKeys: string[] = [
 export const outputKeys = [
   'doQuery',
   'gridReady',
-  'paramsChange'
+  'paramsChange',
+  'freeQueryChange'
 ];
 
 export const methodKeys = [
