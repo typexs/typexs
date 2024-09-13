@@ -200,7 +200,10 @@ export class Bootstrap {
 
     this.storage.getStorageRefs().forEach(x => {
       Injector.set([K_STORAGE, x.getName()].join('.'), x);
-      entityControllerRegistry.add(x.getController());
+      const ctrl = x.getController();
+      if (ctrl) {
+        entityControllerRegistry.add(x.getController());
+      }
     });
     return this;
   }
