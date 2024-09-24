@@ -45,14 +45,10 @@ export class Storage {
     if (this.storageFramework[useFramework]) {
       const ref = await this.storageFramework[useFramework].create(name, options);
       this.storageRefs[name] = ref;
-      try{
-        if(Injector.get('storage.'+name)){
-
-        }
-      }catch (err){
-
+      const key = 'storage.' + name;
+      if (!Injector.has(key)) {
+        Injector.set(key, ref);
       }
-
       return ref;
     } else {
       throw new Error('no framework with ' + useFramework + ' exists');
@@ -333,6 +329,10 @@ export class Storage {
     const ref = this.get(name);
     if (ref) {
       delete this.storageRefs[name];
+      const key = 'storage.' + name;
+      if (Injector.has(key)) {
+        Injector.remove(key);
+      }
       await ref.shutdown(false);
     }
   }
