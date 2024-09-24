@@ -1,3 +1,16 @@
+## [2.3.9](https://gitlab.com/typexs/typexs/compare/v2.3.8...v2.3.9) (2024-09-24)
+
+
+### Bug Fixes
+
+* add exists check to injector ([139dba7](https://gitlab.com/typexs/typexs/commit/139dba7e2c4ca0fed7667725e2a7a7d5d2f7bb2a))
+* catch error when controller is fetched for central registration ([37774d1](https://gitlab.com/typexs/typexs/commit/37774d1040d6b78a8906385fd7e5faab117d5c9c))
+* do not register emtpy controller ([0fc8737](https://gitlab.com/typexs/typexs/commit/0fc8737900d0eb75fb8d062e64aa4212d65da391))
+* entity controller registry add only if exists ([2161d9e](https://gitlab.com/typexs/typexs/commit/2161d9e12f104e81d8611c721844f46703df9755))
+* make storage register add or remove injector token ([ce468a6](https://gitlab.com/typexs/typexs/commit/ce468a63fcf93e4a02ee8acb9515b1da15013c07))
+
+
+
 ## [2.3.8](https://gitlab.com/typexs/typexs/compare/v2.3.7...v2.3.8) (2024-09-08)
 
 
