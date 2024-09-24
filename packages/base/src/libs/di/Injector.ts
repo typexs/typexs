@@ -24,6 +24,11 @@ export class Injector {
     return <T>this.$().set(identifier, x);
   }
 
+  static has<T>(identifier: ServiceIdentifier<T> | string | Token<T> | ObjectType<T> | { service: T }): boolean {
+    return this.$().has(identifier);
+  }
+
+
   static create<T>(identifier: ServiceIdentifier<T> | ClassType<T>, service?: ServiceMetadata<any, any> | undefined): T {
     return this.$().create(identifier, service);
   }
@@ -57,6 +62,13 @@ export class Injector {
   set<T>(identifier: ServiceIdentifier<T> | string | Token<T> | ObjectType<T> | { service: T }, x: T) {
     Container.set(<any>identifier, x);
     return x;
+  }
+
+  /**
+   * Checks if the service exists with given name or type from the service container.
+   */
+  has<T>(identifier: ServiceIdentifier<T> | string | Token<T> | ObjectType<T> | { service: T }): boolean {
+    return Container.has(<any>identifier);
   }
 
   /**

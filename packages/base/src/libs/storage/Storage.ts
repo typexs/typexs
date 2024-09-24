@@ -11,6 +11,7 @@ import { C_DEFAULT, FileUtils, NotSupportedError, NotYetImplementedError, Platfo
 import { REGISTRY_TYPEORM } from './framework/typeorm/Constants';
 import { callMethod } from '../functions';
 import { __SOURCE__ } from './Constants';
+import { Injector } from '../di/Injector';
 
 
 export class Storage {
@@ -44,6 +45,14 @@ export class Storage {
     if (this.storageFramework[useFramework]) {
       const ref = await this.storageFramework[useFramework].create(name, options);
       this.storageRefs[name] = ref;
+      try{
+        if(Injector.get('storage.'+name)){
+
+        }
+      }catch (err){
+
+      }
+
       return ref;
     } else {
       throw new Error('no framework with ' + useFramework + ' exists');
