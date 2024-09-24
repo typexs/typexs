@@ -1,6 +1,6 @@
 {
   "name": "@typexs/notification",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "main": "index",
   "browser": "browser",
   "typexs": {
@@ -19,7 +19,7 @@
     "test": "../test"
   },
   "devDependencies": {
-    "@typexs/base": "^2.3.4",
+    "@typexs/base": "^2.3.5",
     "winston-transport": "^4.4.0"
   },
   "peerDependencies": {

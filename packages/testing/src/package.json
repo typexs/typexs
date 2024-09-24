@@ -1,6 +1,6 @@
 {
   "name": "@typexs/testing",
-  "version": "2.3.4",
+  "version": "2.3.5",
   "description": "Testing for typexs",
   "main": "index",
   "browser": "browser",
@@ -31,7 +31,7 @@
     "@typexs/base": ">=2.3.0"
   },
   "devDependencies": {
-    "@typexs/base": "^2.3.4"
+    "@typexs/base": "^2.3.5"
   },
   "bugs": {
     "url": "https://gitlab.com/typexs/typexs/-/issues"
