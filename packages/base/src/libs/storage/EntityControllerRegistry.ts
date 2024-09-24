@@ -4,12 +4,12 @@ import { first, isEmpty } from 'lodash';
 
 export class EntityControllerRegistry {
 
-  static NAME: string = EntityControllerRegistry.name;
+  static NAME: string = 'EntityControllerRegistry';
 
   private entityControllers: IEntityController[] = [];
 
   add(e: IEntityController) {
-    if (!this.entityControllers.includes(e)) {
+    if (e && !this.entityControllers.includes(e)) {
       this.entityControllers.unshift(e);
     }
   }
