@@ -344,11 +344,11 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
    */
   private _prepareParam(api: IGridApi, override: IParamsOverride = {}, sourceKey: string, fallback?: any) {
     let _d = null;
-    if (typeof override[sourceKey] === 'number') {
+    if (typeof override[sourceKey] === 'number' && !isNaN(override[sourceKey])) {
       _d = override[sourceKey];
-    } else if (api && api.params && api.params[sourceKey]) {
+    } else if (api && api.params && api.params[sourceKey]  && !isNaN(api.params[sourceKey])) {
       _d = api.params[sourceKey];
-    } else if (this.params[sourceKey]) {
+    } else if (this.params[sourceKey] && !isNaN(this.params[sourceKey])) {
       _d = this.params[sourceKey];
     } else if (typeof fallback !== 'undefined') {
       _d = fallback;
