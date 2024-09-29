@@ -807,46 +807,62 @@ export class ViewArray<T> {
     let _start = this._frame.start;
     let _end = this._frame.end;
     const _limit = limit ? limit : this._frame.range;
+    const maxRows = this.hasMaxItems() ? this.maxRows : undefined;
+    const isZero = end === 0;
+
     if (typeof start === 'number' && !isNaN(start)) {
       if (_start !== start) {
         change = true;
       }
       _start = start;
-    }
-    if (typeof end === 'number' && !isNaN(end)) {
-      if (_end !== end) {
-        change = true;
-      }
-      _end = end;
-    } else if (_limit > 0) {
-      end = _start + _limit - 1;
-      if (_end !== end) {
-        change = true;
-      }
-      _end = end;
-    } else {
-      _end = undefined;
-    }
-
-    if (this.hasMaxItems()) {
-      if (_end === undefined || _end >= this.maxRows - 1) {
-        _end = this.maxRows - 1;
+      if (maxRows && _start >= maxRows) {
+        _start = undefined;
+        _end = undefined;
       }
     }
 
-    if (_end !== undefined && _start > _end) {
-      // restore start
-      _start = _end - _limit + 1;
+    if (_start !== undefined) {
+      if (typeof end === 'number' && !isNaN(end)) {
+        if (_end !== end) {
+          change = true;
+        }
+        _end = end;
+      } else if (_limit > 0) {
+        end = _start + _limit - 1;
+        if (_end !== end) {
+          change = true;
+        }
+        _end = end;
+      } else {
+        _end = undefined;
+      }
+
+
+      if (maxRows) {
+        if (_end === undefined || isZero || _end >= maxRows - 1) {
+          _end = maxRows - 1;
+        }
+      }
+
+      if (_end !== undefined && _start > _end) {
+        // restore start
+        if (!isZero) {
+          _start = _end - _limit + 1;
+        } else {
+          _end = _start + _limit - 1;
+        }
+      }
+
+      if (_start < 0) {
+        _start = 0;
+      }
+      if (_end !== undefined && _end < 0) {
+        _end = 0;
+      }
+
     }
 
-    if (_start < 0) {
-      _start = 0;
-    }
-    if (_end !== undefined && _end < 0) {
-      _end = 0;
-    }
-
-    return { start: _start, ...(_end ? { end: _end } : {}), range: _limit, change: change };
+    return { start: _start, end: _end, range: _limit, change: change };
   }
 
 
@@ -944,6 +960,13 @@ export class ViewArray<T> {
     return this._doChange(frameBoundries);
   }
 
+  areBoundriesSet(boundries: IIndexSpan) {
+    if (boundries.start === undefined) {
+      return false;
+    }
+    return true;
+  }
+
   /**
    * Change process
    *
@@ -953,6 +976,10 @@ export class ViewArray<T> {
    * @private
    */
   private _doChange(boundries: IIndexSpan) {
+    if(!this.areBoundriesSet(boundries)){
+      return of([]);
+    }
+
     let obs = null;
     this.updateFrameBoundries(boundries);
     if (boundries.change) {

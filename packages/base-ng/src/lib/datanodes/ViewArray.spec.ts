@@ -75,25 +75,33 @@ describe('lib: ViewArray', () => {
     expect(state).toEqual({ type: K_DATA_UPDATE });
   }));
 
-  it('check frame position', fakeAsync(() => {
+  it('update framed position', fakeAsync(() => {
     let change = nodes['updateFramedPosition'](0, 10);
     expect(change).toEqual({ start: 0, end: 10, range: 25, change: true });
     delete change['change'];
     expect(change).toEqual(nodes.getFrameBoundries());
 
     change = nodes['updateFramedPosition'](10, 0);
-    expect(change).toEqual({ start: 0, end: 0, range: 25, change: true });
+    expect(change).toEqual({ start: 10, end: 34, range: 25, change: true });
     delete change['change'];
-    expect(change).toEqual(nodes.getFrameBoundries());
+    const x = nodes.getFrameBoundries();
+    expect(change).toEqual(x);
+  }));
 
+  it('update framed position with maxRows=5', fakeAsync(() => {
     nodes.maxRows = 5;
-    change = nodes['updateFramedPosition'](0, 10);
+    let change = nodes['updateFramedPosition'](0, 10);
     expect(change).toEqual({ start: 0, end: 4, range: 25, change: true });
     delete change['change'];
     expect(change).toEqual(nodes.getFrameBoundries());
 
+    change = nodes['updateFramedPosition'](2, 0);
+    expect(change).toEqual({ start: 2, end: 4, range: 25, change: true });
+    delete change['change'];
+    expect(change).toEqual(nodes.getFrameBoundries());
+
     change = nodes['updateFramedPosition'](10, 0);
-    expect(change).toEqual({ start: 0, end: 0, range: 25, change: true });
+    expect(change).toEqual({ start: undefined, end: undefined, range: 25, change: true });
     delete change['change'];
     expect(change).toEqual(nodes.getFrameBoundries());
   }));
@@ -330,7 +338,7 @@ describe('lib: ViewArray', () => {
       await Promise.all(promise);
 
       const frame = nodes.getFrameBoundries();
-      expect(frame).toEqual({ start: 75, end: 99, range: 25 });
+      expect(frame).toEqual({ start: 80, end: 99, range: 25 });
 
       const loaded = nodes.getLoadBoundries();
       expect(loaded).toEqual({ start: 0, end: 99, range: 25 });
