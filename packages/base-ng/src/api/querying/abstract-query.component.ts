@@ -346,7 +346,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     let _d = null;
     if (typeof override[sourceKey] === 'number' && !isNaN(override[sourceKey])) {
       _d = override[sourceKey];
-    } else if (api && api.params && api.params[sourceKey]  && !isNaN(api.params[sourceKey])) {
+    } else if (api && api.params && api.params[sourceKey] && !isNaN(api.params[sourceKey])) {
       _d = api.params[sourceKey];
     } else if (this.params[sourceKey] && !isNaN(this.params[sourceKey])) {
       _d = this.params[sourceKey];
@@ -498,7 +498,23 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
    * @param limit
    */
   queryCallback(start: number, end: number, limit?: number): Observable<any[]> {
-    return this.executeQuery(this.datatable.api(), { offset: start, limit: end - start + 1 });
+    let _override = false;
+    let _start = 0;
+    let _limit = 0;
+    if (typeof start === 'number' && !isNaN(start) && typeof end === 'number' && !isNaN(end)) {
+      // when start and end is set
+      _start = start;
+      _limit = end - start + 1;
+      _override = true;
+    } else if (typeof limit === 'number' && !isNaN(limit) && limit > 0) {
+      // when limit and start is set and limit is greater then 0
+      _limit = limit;
+      if(typeof start === 'number' && !isNaN(start)) {
+        _start = start;
+      }
+      _override = true;
+    }
+    return this.executeQuery(this.datatable.api(), _override ? { offset: _start, limit: _limit } : undefined);
   }
 
   /**
