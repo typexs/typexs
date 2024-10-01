@@ -1,3 +1,15 @@
+## [2.3.10](https://gitlab.com/typexs/typexs/compare/v2.3.9...v2.3.10) (2024-10-01)
+
+
+### Bug Fixes
+
+* better check of parameters for queryCallback ([865d3aa](https://gitlab.com/typexs/typexs/commit/865d3aa9b0c15529391abc407811e36af556daf4))
+* boundries check should detect NaN ([1b48f58](https://gitlab.com/typexs/typexs/commit/1b48f5869d7a6a26b7706244bae7e31c7729ae20))
+* check frame position update ([3995b3b](https://gitlab.com/typexs/typexs/commit/3995b3b9a83b76385f05fd97884fd415c5e9e9ca))
+* check if nan is passed to limit or offset ([e3f0569](https://gitlab.com/typexs/typexs/commit/e3f0569488c7599045a50e54dfad210fad11a62d))
+
+
+
 ## [2.3.9](https://gitlab.com/typexs/typexs/compare/v2.3.8...v2.3.9) (2024-09-24)
 
 
