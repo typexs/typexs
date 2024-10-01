@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/forms-ng",
-  "version": "13.0.8",
+  "version": "13.0.9",
   "description": "Angular for typexs",
   "main": "public_api.ts",
   "scripts": {
@@ -41,10 +41,10 @@
     "@angular/core": "v13-lts",
     "@angular/forms": "v13-lts",
     "@angular/router": "v13-lts",
-    "@typexs/base": "^2.3.5",
-    "@typexs/base-ng": "^13.0.8",
-    "@typexs/entity": "^2.3.5",
-    "@typexs/forms": "^2.3.5",
+    "@typexs/base": "^2.3.6",
+    "@typexs/base-ng": "^13.0.9",
+    "@typexs/entity": "^2.3.6",
+    "@typexs/forms": "^2.3.6",
     "rxjs": "~7.5.0"
   },
   "publishConfig": {
