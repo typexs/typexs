@@ -449,7 +449,9 @@ export class Bootstrap {
     return commands;
   }
 
-
+  /**
+   * Return the path of the app
+   */
   getAppPath() {
     return get(this.getConfiguration(), 'app.path', null);
   }
@@ -468,11 +470,16 @@ export class Bootstrap {
   }
 
 
+  /**
+   * Return RuntimeLoader object
+   */
   getLoader(): IRuntimeLoader {
     return this.runtimeLoader;
   }
 
-
+  /**
+   * Return Storage object
+   */
   getStorage() {
     return this.storage;
   }

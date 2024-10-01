@@ -5,6 +5,8 @@ const exec = util.promisify(require('node:child_process').exec);
 const path = require('node:path');
 const { existsSync } = require('fs');
 
+const deleteKeys = ['private', 'scripts'];
+
 async function build() {
   const cwd = path.join(process.cwd());
   const packageDir = path.resolve(path.join(cwd, '..'));
@@ -12,9 +14,10 @@ async function build() {
   const packageJson = require(cwd + '/package.json');
   packageJson.main = 'index.js';
   packageJson.browser = 'browser.js';
-  delete packageJson.private;
-  delete packageJson.scripts;
-  delete packageJson.publishConfig;
+  deleteKeys.forEach(x => {
+    delete packageJson[x];
+  });
+  // delete packageJson.publishConfig;
   fs.writeFileSync(packageDir + '/build/package/package.json', JSON.stringify(packageJson, null, 2));
   // copy json files
   const files = []
