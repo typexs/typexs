@@ -33,31 +33,31 @@ export class DistributedStorageQueryEmbeddedComponent
     this.setQueryService(service);
   }
 
-  // reset loading entity
+  /**
+   * Impl. of OnInit method
+   */
   ngOnInit(): void {
-    this.doInit();
-  }
-
-  doInit() {
     // pass entity name to name
     if (this.entityName && !this.name) {
       this.name = this.entityName;
     }
 
-    if (!this.params) {
-      this.params = {};
-    }
-
-    this.applyOptions();
+    super.ngOnInit();
   }
 
-  ngAfterViewInit(){
-    if (this.entityName && !this.options.entityTypeSelection) {
-      setTimeout(() => {
-        this.requery();
-      });
-    }
+  /**
+   * Do not initialize entity ref
+   */
+  initializeEntityRef() {
   }
+
+  // ngAfterViewInit() {
+  //   if (this.entityName && !this.options.entityTypeSelection) {
+  //     setTimeout(() => {
+  //       this.requery();
+  //     });
+  //   }
+  // }
 
   changeEntityName(): void {
     this.name = this.entityName;

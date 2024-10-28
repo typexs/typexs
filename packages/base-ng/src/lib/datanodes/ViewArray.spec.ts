@@ -301,6 +301,18 @@ describe('lib: ViewArray', () => {
       expect(nodes.getLoadedAsArray().map(x => x.data)).toEqual(data);
     });
 
+
+    it('load more nodes then in limit', async () => {
+      const obs = nodes.doChangeSpan(0, 70);
+      const res = await waitForObs(obs);
+      const frame = nodes.getFrameBoundries();
+      expect(frame).toEqual({ start: 0, end: 70, range: 25 });
+      const data = genData(0, 71);
+      expect(res.map(x => x.data)).toEqual(data);
+      expect(nodes.getLoadedAsArray().map(x => x.data)).toEqual(data);
+    });
+
+
     it('load nodes multiple times parallel', async () => {
       const startIdxs = range(0, 200, 20);
 

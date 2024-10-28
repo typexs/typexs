@@ -976,7 +976,7 @@ export class ViewArray<T> {
    * @private
    */
   private _doChange(boundries: IIndexSpan) {
-    if(!this.areBoundriesSet(boundries)){
+    if (!this.areBoundriesSet(boundries)) {
       return of([]);
     }
 
@@ -991,7 +991,7 @@ export class ViewArray<T> {
       // tap(x => console.log(x)),
       // mergeMap(v => iif(() => boundries.change, of([]), this.doFrameReload(boundries))),
       concatMap(this.doPreload.bind(this)),
-      concatMap(this.getFrameAsArray.bind(this)),
+      concatMap(() => this.getFrameAsArray('push', boundries)),
       toArray(),
       concatMap(this.passToValues.bind(this)),
       toArray(),
@@ -1000,8 +1000,11 @@ export class ViewArray<T> {
     return obs;
   }
 
-  getFrameAsArray(mode: 'push' | 'index' = 'push'): Node<T>[] {
-    const boundries = this.getFrameBoundries();
+  getFrameAsArray(mode: 'push' | 'index' = 'push', boundries?: IIndexSpan): Node<T>[] {
+    if (!boundries) {
+      boundries = this.getFrameBoundries();
+    }
+
     const scale = boundries.start;
     const copy: Node<T>[] = [];
     for (let i = boundries.start; i <= boundries.end; i++) {

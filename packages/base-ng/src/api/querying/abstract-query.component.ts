@@ -111,13 +111,6 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     this.applyOptions();
 
     this.datatable.getControlObserver().subscribe(this.onGridEvent.bind(this));
-    // this.isReady$.subscribe(x => {
-    //   if (x) {
-    //     setTimeout(() => {
-    //       this.datatable.emitInitialize();
-    //     });
-    //   }
-    // });
     this.initialize();
   }
 
@@ -171,8 +164,17 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     }
   }
 
-
+  /**
+   * Initialize
+   */
   initialize() {
+    this.initializeEntityRef();
+  }
+
+  /**
+   * Initialize entity ref after query service is loaded
+   */
+  initializeEntityRef() {
     this.getQueryService().isLoaded().subscribe(x => {
       const success = this.findEntityRef();
       // TODO handle if entity ref not found or loaded
@@ -509,7 +511,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     } else if (typeof limit === 'number' && !isNaN(limit) && limit > 0) {
       // when limit and start is set and limit is greater then 0
       _limit = limit;
-      if(typeof start === 'number' && !isNaN(start)) {
+      if (typeof start === 'number' && !isNaN(start)) {
         _start = start;
       }
       _override = true;
