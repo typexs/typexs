@@ -1,3 +1,14 @@
+## [2.3.11](https://gitlab.com/typexs/typexs/compare/v2.3.10...v2.3.11) (2024-10-28)
+
+
+### Bug Fixes
+
+* json stringify only when json not supported ([6ba81d7](https://gitlab.com/typexs/typexs/commit/6ba81d7384a302be2921ca771df5336d6cfc4c70))
+* json support detection ([cb7450d](https://gitlab.com/typexs/typexs/commit/cb7450d7a802c30070fa625da4b6bff64437e5ad))
+* ng query issues ([12942bf](https://gitlab.com/typexs/typexs/commit/12942bf3a22d2afd7a282ad57c5775e782e66df4))
+
+
+
 ## [2.3.10](https://gitlab.com/typexs/typexs/compare/v2.3.9...v2.3.10) (2024-10-01)
 
 
