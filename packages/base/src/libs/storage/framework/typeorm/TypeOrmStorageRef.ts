@@ -319,9 +319,10 @@ export class TypeOrmStorageRef extends StorageRef {
       }
     });
 
-
     // change unknown types to convert json
-    this.applyObjectToStringifiedJsonConversion(columns);
+    if(!this.getSchemaHandler().supportsJson()){
+      this.applyObjectToStringifiedJsonConversion(columns);
+    }
 
     if (this.dbType === 'mongodb') {
       /**
@@ -340,6 +341,7 @@ export class TypeOrmStorageRef extends StorageRef {
       }
 
     } else {
+
       remove(getMetadataArgsStorage().columns, x =>
         x.target === cls && x.mode === 'objectId' && x.propertyName === '_id');
     }
