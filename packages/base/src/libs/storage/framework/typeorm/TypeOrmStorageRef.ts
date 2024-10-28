@@ -297,16 +297,14 @@ export class TypeOrmStorageRef extends StorageRef {
         if (this.getSchemaHandler()) {
           if (!has(x.options, C_BACKUP_TYPE)) {
             set(x.options, C_BACKUP_TYPE, type);
-            const resolved = this.getSchemaHandler()
-              .translateToStorageType(type, x.options as any);
+            const resolved = this.getSchemaHandler().translateToStorageType(type, x.options as any);
             if (resolved && resolved.type) {
               x.options.type = resolved.type;
             } else {
               Log.warn(`TypeOrmStorageRef: Can't resolve type ${type} of property ${x.propertyName} of class ${cls.name}.`);
             }
           } else {
-            const resolved = this.getSchemaHandler()
-              .translateToStorageType(get(x.options, C_BACKUP_TYPE), x.options as any);
+            const resolved = this.getSchemaHandler().translateToStorageType(get(x.options, C_BACKUP_TYPE), x.options as any);
             if (resolved && resolved.type) {
               x.options.type = resolved.type;
             } else {
@@ -320,7 +318,7 @@ export class TypeOrmStorageRef extends StorageRef {
     });
 
     // change unknown types to convert json
-    if(!this.getSchemaHandler().supportsJson()){
+    if (this.getSchemaHandler() && !this.getSchemaHandler().supportsJson()) {
       this.applyObjectToStringifiedJsonConversion(columns);
     }
 
