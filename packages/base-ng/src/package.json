@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/base-ng",
-  "version": "13.0.10",
+  "version": "13.0.11",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -41,9 +41,9 @@
     "@angular/core": "v13-lts",
     "@angular/forms": "v13-lts",
     "@angular/router": "v13-lts",
-    "@typexs/base": "^2.3.7",
-    "@typexs/ng": "^13.0.6",
-    "@typexs/server": "^2.3.7",
+    "@typexs/base": "^2.3.8",
+    "@typexs/ng": "^13.0.7",
+    "@typexs/server": "^2.3.8",
     "rxjs": "~7.5.0"
   },
   "publishConfig": {

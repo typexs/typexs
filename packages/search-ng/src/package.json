@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/search-ng",
-  "version": "13.0.10",
+  "version": "13.0.11",
   "description": "Angular for typexs",
   "main": "public_api.ts",
   "scripts": {
@@ -34,10 +34,10 @@
     "@angular/core": "v13-lts",
     "@angular/forms": "v13-lts",
     "@angular/router": "v13-lts",
-    "@typexs/base-ng": "^13.0.10",
-    "@typexs/forms-ng": "^13.0.10",
-    "@typexs/search": "^2.3.7",
-    "@typexs/storage-ng": "^13.0.10",
+    "@typexs/base-ng": "^13.0.11",
+    "@typexs/forms-ng": "^13.0.11",
+    "@typexs/search": "^2.3.8",
+    "@typexs/storage-ng": "^13.0.11",
     "lodash": "4.17.21",
     "rxjs": "~7.5.0"
   },
