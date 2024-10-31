@@ -2,7 +2,7 @@
 import { ApplicationInitStatus, Component, ViewChild } from '@angular/core';
 import {
   AbstractGridComponent,
-  AbstractQueryComponent, ComponentRegistryService,
+  AbstractQueryComponent, CodeComponent, ComponentRegistryService,
   DatatableComponent, EntityResolverService, IDatatableListGridOptions, IQueringService, JsonComponent,
   ListViewComponent, ObjectToComponentResolver,
   PagerComponent, PagerService, QueryEmbeddedComponent,
@@ -34,6 +34,7 @@ const getTestBedConfig = () => {
       AbstractQueryComponent,
       ViewDataComponent,
       JsonComponent,
+      CodeComponent,
       PagerComponent,
       DatatableComponent,
       ListViewComponent,

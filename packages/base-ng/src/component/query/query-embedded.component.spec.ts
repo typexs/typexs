@@ -30,6 +30,8 @@ import { By } from '@angular/platform-browser';
 import { JsonComponent } from '../../component/entities/json/json.component';
 import { FreeQueryInputComponent } from '../../api/querying/free-query/free-query-input.component';
 import { XS_P_$COUNT } from '../../datatable/Constants';
+import { CodeComponent } from '@typexs/base-ng';
+import { FormsModule } from '@angular/forms';
 
 const getTestBedConfig = () => {
   return {
@@ -43,6 +45,7 @@ const getTestBedConfig = () => {
       FreeQueryInputComponent,
       ViewDataComponent,
       JsonComponent,
+      CodeComponent,
       TemplateDirective,
       PagerComponent,
       DatatableComponent,
