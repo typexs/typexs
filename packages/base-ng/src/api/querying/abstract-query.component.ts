@@ -413,6 +413,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
     }
   }
 
+
   /**
    * Empty method for extending query by extensions
    *

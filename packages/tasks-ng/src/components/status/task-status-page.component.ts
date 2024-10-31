@@ -36,7 +36,8 @@ export class TaskStatusPageComponent {
 
   constructor(
     private route: ActivatedRoute,
-    private taskService: BackendTasksService) {
+    private taskService: BackendTasksService
+    ) {
   }
 
 
@@ -61,8 +62,6 @@ export class TaskStatusPageComponent {
           }
         });
     }
-
-
   }
 
   changeRunnerId(runnerId: string) {
@@ -74,7 +73,6 @@ export class TaskStatusPageComponent {
     if (this.navigatorEnable) {
       this.lookupNeighbours();
     }
-
   }
 
 

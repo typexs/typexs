@@ -1,5 +1,6 @@
 import {Directive, ElementRef, Input, OnInit} from '@angular/core';
 import PerfectScrollbar from 'perfect-scrollbar';
+// import 'perfect-scrollbar/dist/perfect-scrollbar';
 
 
 @Directive({

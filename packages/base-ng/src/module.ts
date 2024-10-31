@@ -61,6 +61,8 @@ import { AbstractComponent } from './component/abstract.component';
 import { AbstractSimpleTableCellComponent } from './datatable/simple-table/abstract-simple-table-cell.component';
 import { InfiniteScrollDirective } from './datatable/infinite-scroll/infinite-scroll.directive';
 import { TemplateDirective } from './datatable/Template.directive';
+import { SafeHtmlPipe } from './pipe/safe-html.pipe';
+import { CodeComponent } from './component/code/code.component';
 
 
 const PROVIDERS = [
@@ -107,7 +109,9 @@ const COMPONENTS = [
   AbstractInstancableComponent,
   AbstractQueryComponent,
   AbstractAggregateEmbeddedComponent,
-  QueryEmbeddedComponent
+  QueryEmbeddedComponent,
+  SafeHtmlPipe,
+  CodeComponent
 ];
 
 

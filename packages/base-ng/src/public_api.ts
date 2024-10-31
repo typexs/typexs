@@ -81,6 +81,16 @@ export { ILoggerOptions } from './lib/log/ILoggerOptions';
 export { Log, LOGLEVEL, LOGLEVELS } from './lib/log/Log';
 
 /**
+ * Pipes
+ */
+export { SafeHtmlPipe } from './pipe/safe-html.pipe';
+
+/**
+ * Code/Console Viewer
+ */
+export {CodeComponent} from './component/code/code.component';
+
+/**
  * ViewArray
  */
 export * from './lib/datanodes/Constants';

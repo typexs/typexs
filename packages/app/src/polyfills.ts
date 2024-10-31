@@ -79,8 +79,36 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 (window as any).global = window;
 
 import 'bootstrap/dist/js/bootstrap';
-import 'perfect-scrollbar/dist/perfect-scrollbar';
-import 'prismjs/prism';
+// import 'perfect-scrollbar/dist/perfect-scrollbar';
+
+/**
+ * Import prism libs
+ */
+// import 'clipboard';
+import 'prismjs';
+import 'prismjs/plugins/toolbar/prism-toolbar';
+import 'prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard';
+import 'prismjs/plugins/show-language/prism-show-language';
+import 'prismjs/plugins/line-numbers/prism-line-numbers';
+import 'prismjs/components/prism-shell-session';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-log';
+import 'prismjs/components/prism-sql';
+import 'prismjs/components/prism-typescript';
+
+// highlight not working well for dynamic content
+// import hljs from 'highlight.js/lib/core';
+// import shell from 'highlight.js/lib/languages/shell';
+// import accesslog from 'highlight.js/lib/languages/accesslog';
+// import json from 'highlight.js/lib/languages/json';
+// // Then register the languages you need
+// hljs.registerLanguage('shell', shell);
+// hljs.registerLanguage('accesslog', accesslog);
+// hljs.registerLanguage('log', accesslog);
+// hljs.registerLanguage('json', json);
+// (window as any).hljs = hljs;
+
 import 'd3/dist/d3';
 
 (window as any).global = window;
@@ -88,6 +116,7 @@ import 'd3/dist/d3';
 import {Buffer} from 'buffer';
 
 (window as any).Buffer = Buffer;
+
 
 (window as any).process = {
   browser: true,

@@ -1,9 +1,10 @@
-import {isArray} from 'lodash';
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges} from '@angular/core';
-import {BackendTasksService} from '../../services/backend-tasks.service';
-import {TaskLog} from '@typexs/base/entities/TaskLog';
-import {Subscription} from 'rxjs';
-import {Log} from '@typexs/base-ng';
+import { isArray } from 'lodash';
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { BackendTasksService } from '../../services/backend-tasks.service';
+import { TaskLog } from '@typexs/base/entities/TaskLog';
+import { Subscription } from 'rxjs';
+import { Log } from '@typexs/base-ng';
+
 
 /**
  * Show status of a task (running or finished)
@@ -61,6 +62,7 @@ export class TaskStatusComponent implements OnInit, OnDestroy, OnChanges {
     this.update();
   }
 
+
   ngOnChanges(changes: SimpleChanges) {
     let reload = false;
     if (changes['runnerId']) {
@@ -87,32 +89,36 @@ export class TaskStatusComponent implements OnInit, OnDestroy, OnChanges {
     if (!this.running) {
       this.running = true;
       this.subscription = this.tasksService
-        .taskStatus(this.runnerId, {targetIds: [this.nodeId]})
+        .taskStatus(this.runnerId, { targetIds: [this.nodeId] })
         .subscribe(tasks => {
-          if (isArray(tasks)) {
-            this.taskLog = tasks.shift();
-          } else {
-            this.taskLog = tasks;
-          }
-
-          if (this.taskLog) {
-            this.status.emit(this.taskLog);
-            if (!this.taskLog.running) {
+            if (isArray(tasks)) {
+              this.taskLog = tasks.shift();
+            } else {
+              this.taskLog = tasks;
+            }
+            if (this.taskLog) {
+              this.status.emit(this.taskLog);
+              if (!this.taskLog.running) {
+                this.running = false;
+              }
+            } else {
               this.running = false;
             }
-          } else {
+          },
+          error => {
+            Log.error(error);
             this.running = false;
-          }
-        },
-        error => {
-          Log.error(error);
-          this.running = false;
-        },
-        () => {
-          this.running = false;
-        });
+          },
+          () => {
+            this.running = false;
+          });
     }
   }
 
+  onLogAppend($event: any) {
+    // console.log($event);
 
+  }
+
+  // update
 }

@@ -13,7 +13,7 @@ import { TasksMetadataComponent } from './components/metadata/tasks-metadata.com
 import { TasksExecutionComponent } from './components/execution/tasks-execution.component';
 import { TaskStatusComponent } from './components/status/task-status.component';
 import { TaskStatusRowComponent } from './components/status/task-status-row.component';
-import { TasksLogComponent } from './components/log/tasks-log.component';
+import { TasksLogsComponent } from './components/logs-list/tasks-logs.component';
 import { TaskStatusPageComponent } from './components/status/task-status-page.component';
 import { TasksLogViewerComponent } from './components/log-viewer/tasks-log-viewer.component';
 
@@ -28,7 +28,7 @@ const PROVIDERS = [
     TasksExecutionComponent,
     TaskStatusComponent,
     TaskStatusPageComponent,
-    TasksLogComponent,
+    TasksLogsComponent,
     TaskStatusRowComponent,
     TasksLogViewerComponent
   ],
@@ -44,7 +44,7 @@ const PROVIDERS = [
     TasksMetadataComponent,
     TasksExecutionComponent,
     TaskStatusComponent,
-    TasksLogComponent,
+    TasksLogsComponent,
     TaskStatusRowComponent,
     TasksLogViewerComponent
   ],

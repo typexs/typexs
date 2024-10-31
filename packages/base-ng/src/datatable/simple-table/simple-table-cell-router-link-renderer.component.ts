@@ -29,11 +29,11 @@ export class SimpleTableCellRouterLinkRendererComponent extends AbstractSimpleTa
   }
 
   routerLinkArray(entry: any) {
-    return this.getRouterLinkHandle()(entry, this.row);
+    return this.getRouterLinkHandle()(entry, this.getData());
   }
 
   title(e: any) {
-    return this.getTitleHandle()(e, this.row);
+    return this.getTitleHandle()(e, this.getData());
   }
 
   isEmpty() {

@@ -35,9 +35,9 @@ export class SimpleTableCellEntityOperationsRendererComponent extends AbstractSi
   getRouterLink(type: string) {
     const handle = get(this.column, C_URL_HANDLER) as Function;
     if (handle) {
-      return handle(type, this.column, this.row.data);
+      return handle(type, this.column, this.getData());
     }
-    return [this.getUrlPrefix(), this.getEntityRef().name, type, this.buildLookupConditions(this.row.data)].filter(x => !!x);
+    return [this.getUrlPrefix(), this.getEntityRef().name, type, this.buildLookupConditions(this.getData())].filter(x => !!x);
   }
 
   buildLookupConditions(res: any) {

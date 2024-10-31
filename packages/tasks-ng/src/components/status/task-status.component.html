@@ -9,25 +9,24 @@
       </button>
     </div>
     <div class="row detail-tables">
-
       <div class="col-md-auto mr-2">
         <table class="table table-responsive detail-table table-borderless">
           <tbody>
           <tr>
             <th>Task-ID</th>
-            <td>#{{taskLog.tasksId}}</td>
+            <td>#{{ taskLog.tasksId }}</td>
           </tr>
           <tr>
             <th>Taskname</th>
-            <td>{{taskLog.taskName}}</td>
+            <td>{{ taskLog.taskName }}</td>
           </tr>
           <tr>
             <th>Caller (nodeId)</th>
-            <td>{{taskLog.nodeId}}</td>
+            <td>{{ taskLog.nodeId }}</td>
           </tr>
           <tr>
             <th>Runner (respId)</th>
-            <td>{{taskLog.respId}}</td>
+            <td>{{ taskLog.respId }}</td>
           </tr>
           </tbody>
         </table>
@@ -37,16 +36,16 @@
           <tbody>
           <tr>
             <th>Progress</th>
-            <td>{{taskLog.progress / taskLog.total | percent : '1.1-1' }}</td>
+            <td>{{ taskLog.progress / taskLog.total | percent : '1.1-1' }}</td>
           </tr>
           <tr>
             <th>Running / Done</th>
             <td>
                 <span class="badge"
-                      [ngClass]="{'badge-warning':!taskLog.running,'badge-success':taskLog.running}">{{taskLog.running}}</span>
+                      [ngClass]="{'badge-warning':!taskLog.running,'badge-success':taskLog.running}">{{ taskLog.running }}</span>
               /
               <span class="badge"
-                    [ngClass]="{'badge-warning':!taskLog.done,'badge-success':taskLog.done}">{{taskLog.done}}</span>
+                    [ngClass]="{'badge-warning':!taskLog.done,'badge-success':taskLog.done}">{{ taskLog.done }}</span>
             </td>
           </tr>
           <tr>
@@ -55,12 +54,12 @@
                 <span class="badge badge" [ngClass]="{
                   'badge-warning':taskLog.done,
                   'badge-success':taskLog.done && !taskLog.hasError,
-                  'badge-danger':taskLog.done && taskLog.hasError}">{{taskLog.state}}</span>
+                  'badge-danger':taskLog.done && taskLog.hasError}">{{ taskLog.state }}</span>
             </td>
           </tr>
           <tr>
             <th>Errored</th>
-            <td>{{taskLog.hasError}}</td>
+            <td>{{ taskLog.hasError }}</td>
           </tr>
           </tbody>
         </table>
@@ -70,24 +69,23 @@
           <tbody>
           <tr>
             <th>Created</th>
-            <td>{{taskLog.created | date:'dd.MM.yyyy HH:mm:ss.SSS'}}</td>
+            <td>{{ taskLog.created | date:'dd.MM.yyyy HH:mm:ss.SSS' }}</td>
           </tr>
           <tr>
             <th>Started</th>
-            <td>{{taskLog.started | date:'dd.MM.yyyy HH:mm:ss.SSS'}}</td>
+            <td>{{ taskLog.started | date:'dd.MM.yyyy HH:mm:ss.SSS' }}</td>
           </tr>
           <tr>
             <th>Stopped</th>
-            <td>{{taskLog.stopped | date:'dd.MM.yyyy HH:mm:ss.SSS'}}</td>
+            <td>{{ taskLog.stopped | date:'dd.MM.yyyy HH:mm:ss.SSS' }}</td>
           </tr>
           <tr>
             <th>Duration</th>
-            <td class="text-right">{{taskLog.duration }}</td>
+            <td class="text-right">{{ taskLog.duration }}</td>
           </tr>
           </tbody>
         </table>
       </div>
-
     </div>
   </div>
 
@@ -97,11 +95,6 @@
       <li class="nav-item">
         <a class="nav-link" [ngClass]="{active:contentContainer == 'log'}" (click)="contentContainer = 'log'">Log</a>
       </li>
-
-      <!--    <li class="nav-item">-->
-      <!--      <a class="nav-link" [ngClass]="{active:contentContainer == 'error'}"-->
-      <!--         (click)="contentContainer = 'error'">Error</a>-->
-      <!--    </li>-->
       <li class="nav-item">
         <a class="nav-link" [ngClass]="{active:contentContainer == 'json'}"
            (click)="contentContainer = 'json'">JSON</a>
@@ -110,21 +103,18 @@
 
     <div [ngSwitch]="contentContainer" class="tab-content">
       <div *ngSwitchCase="'log'">
-        <txs-task-log-viewer [runnerId]="runnerId" [nodeId]="nodeId" [running]="running"></txs-task-log-viewer>
+        <txs-task-log-viewer
+          [runnerId]="runnerId"
+          [nodeId]="nodeId"
+          [running]="running"
+          [autoUpdate]="true"
+          (status)="onLogAppend($event)"
+        >
+        </txs-task-log-viewer>
       </div>
-
-      <!--
-      <div *ngSwitchCase="'error'">
-        <div class="alert alert-danger rounded" *ngIf="logError">
-          <pre class="language-shell">{{logError}}</pre>
-        </div>
-      </div>
-  -->
       <div *ngSwitchCase="'json'">
-        <pre class="language-json">{{taskLog | json}}</pre>
+        <txs-code language="json" [content]="taskLog | json"></txs-code>
       </div>
-
-
     </div>
   </div>
 </div>

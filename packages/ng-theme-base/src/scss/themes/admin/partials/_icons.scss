@@ -13,10 +13,19 @@ menu-link {
   }
 }
 
+
+$fa-var-default-icon: $fa-var-folder-plus;
+
+
 .icon {
   @extend %fa-icon;
   @extend .fas;
   vertical-align: 0;
+
+  /* User default icon ;) */
+  &:before {
+    content: fa-content($fa-var-default-icon);
+  }
 
 
   &.icon-admin {

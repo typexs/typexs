@@ -12,9 +12,9 @@ import { TaskLog } from '@typexs/base/entities/TaskLog';
  */
 @Component({
   selector: 'txs-tasks-log',
-  templateUrl: './tasks-log.component.html'
+  templateUrl: './tasks-logs.component.html'
 })
-export class TasksLogComponent implements OnInit {
+export class TasksLogsComponent implements OnInit {
 
   tasks: TaskRef[];
 
@@ -41,7 +41,11 @@ export class TasksLogComponent implements OnInit {
   columnsPostProcess(columns: IGridColumn[]) {
     const column = columns.find(x => x.field === 'tasksId');
     column.cellValueRenderer = CC_GRID_CELL_ROUTER_LINK;
-    set((<any>column), C_URL_HANDLER, (v: any, row: any) => [this.tasksService.getNgUrlPrefix(), 'status', row.respId, row.tasksId]);
+    set((<any>column), C_URL_HANDLER,
+      (v: any, row: any) => {
+        return [this.tasksService.getNgUrlPrefix(), 'status', row.respId, row.tasksId];
+      }
+    );
     set((<any>column), C_URL_TITLE, (v: any, row: any) => v);
   }
 

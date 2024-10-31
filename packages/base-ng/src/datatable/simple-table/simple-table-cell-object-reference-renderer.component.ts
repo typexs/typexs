@@ -1,9 +1,4 @@
-import {get} from 'lodash';
-import {Component, Input} from '@angular/core';
-import {IGridColumn} from '../api/IGridColumn';
-import {IPropertyRef} from '@allgemein/schema-api';
-import {C_PROPERTY} from '../../constants';
-import { Node } from '../../lib/datanodes/Node';
+import { Component } from '@angular/core';
 import { AbstractSimpleTableCellComponent } from './abstract-simple-table-cell.component';
 
 

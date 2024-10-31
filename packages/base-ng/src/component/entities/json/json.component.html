@@ -2,9 +2,9 @@
 
   <div class="json-header" *ngIf="label()">
     <div>
-      <label><a [routerLink]="url()">{{label()}}</a> </label>
+      <label><a [routerLink]="url()">{{ label() }}</a> </label>
     </div>
-    <div class="badge badge-primary">{{type()}}</div>
+    <div class="badge badge-primary">{{ type() }}</div>
   </div>
 
 
@@ -17,5 +17,5 @@
     </div>
   </div>
 
-  <pre class="language-js">{{ instance | json }}</pre>
+  <txs-code [content]="instance | json" language="json"></txs-code>
 </div>

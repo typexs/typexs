@@ -1,0 +1,13 @@
+<div class="log">
+  <div class="spinner" *ngIf="loading">
+    <div class="d-flex justify-content-around ">
+      <div class="dot-spin">
+      </div>
+    </div>
+  </div>
+
+
+  <div class="log-output line-numbers" #log [ngClass]="{'hidden': loading}">
+  </div>
+
+</div>

@@ -8,7 +8,7 @@ import {
   PERMISSION_ALLOW_TASK_GET_METADATA
 } from '@typexs/server/libs/Constants';
 import {AuthGuardService} from '@typexs/base-ng';
-import {TasksLogComponent} from './components/log/tasks-log.component';
+import {TasksLogsComponent} from './components/logs-list/tasks-logs.component';
 import {TasksExecutionComponent} from './components/execution/tasks-execution.component';
 import {TaskStatusPageComponent} from './components/status/task-status-page.component';
 import {Routes} from '@angular/router';
@@ -22,7 +22,7 @@ export const TASK_ROUTES: Routes = [
   },
   {
     path: 'tasks/logs',
-    component: TasksLogComponent,
+    component: TasksLogsComponent,
     data: {label: 'Logs', group: 'admin', permissions: [PERMISSION_ALLOW_TASK_LOG]},
     canActivate: [AuthGuardService]
   },

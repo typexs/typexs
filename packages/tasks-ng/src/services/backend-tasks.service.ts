@@ -43,7 +43,8 @@ export class BackendTasksService {
     private backend: BackendService,
     private infoService: SystemInfoService,
     private appService: AppService,
-    private injector: Injector) {
+    private injector: Injector
+  ) {
     let serviceClass: Function = appService.getService('taskQueryService');
     if (!serviceClass || !isFunction(serviceClass)) {
       serviceClass = StorageService;

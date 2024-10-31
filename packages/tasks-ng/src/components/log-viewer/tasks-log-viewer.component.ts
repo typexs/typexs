@@ -1,5 +1,5 @@
 import { first, has, isEmpty, isUndefined } from 'lodash';
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { JsonUtils } from '@allgemein/base/utils/JsonUtils';
 import { DatePipe } from '@angular/common';
 import { interval, Observable, Subscriber, Subscription } from 'rxjs';
@@ -8,9 +8,14 @@ import { Log } from '@typexs/base-ng';
 import { BackendTasksService } from '../../services/backend-tasks.service';
 
 /**
- * Show tasks list which should be filtered for running tasks, runned task
+ * Show task log
  *
- * TODO what should happened if task log entry is missing or log content is not found
+ * TODOs
+ * - TODO: what should happened if task log entry is missing or log content is not found
+ * - TODO: what should happend when log file is to long
+ * - TODO: make logfile downloadable
+ * - TODO: impl. own console output theme (like gitlab ci output)
+ *
  */
 @Component({
   selector: 'txs-task-log-viewer',
@@ -37,18 +42,13 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   allowSwitchMode: boolean = true;
 
-  _mode: 'tail' | 'less' = 'tail';
+  @Input()
+  mode: 'tail' | 'less' = 'less';
 
   _tail: number = 50;
 
-  get mode(): 'tail' | 'less' {
-    return this._mode;
-  }
-
-  set mode(mode: 'tail' | 'less') {
-    this._mode = mode;
-    this.handle();
-  }
+  @Output()
+  status: EventEmitter<any> = new EventEmitter<any>();
 
   @ViewChild('logPanel', { static: false })
   elemRef: ElementRef;
@@ -61,7 +61,7 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
 
   fetchedLines: number = 0;
 
-  fetchSize = 100;
+  fetchSize = 500;
 
   update: boolean;
 
@@ -73,6 +73,9 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
 
   updateSubscription: Subscription = null;
 
+  initialize: boolean = true;
+
+  autoScroll: boolean = true;
 
   constructor(
     private tasksService: BackendTasksService,
@@ -81,89 +84,117 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
 
 
   ngOnInit() {
-    // if (this.taskLog) {
-    //   this.runnerId = this.taskLog.tasksId;
-    //   this.nodeId = this.taskLog.respId;
-    // }
-    this.handle();
-
-    if (this.autoUpdate) {
-      this.enableAutoUpdate();
+    if (!(this.runnerId || this.nodeId)) {
+      throw new Error('runnerId or nodeId not present');
     }
+
+    if (this.autoUpdate && this.running) {
+      this.enableAutoUpdate();
+    } else {
+      this.newLog();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    let reload = false;
+    ['runnerId', 'nodeId'].forEach(x => {
+      if (changes[x] && !changes[x].isFirstChange()) {
+        reload = reload || changes[x].currentValue !== changes[x].previousValue;
+      }
+    });
+    if (reload) {
+      this.ngOnDestroy();
+    } else {
+      // const todo: 'new' | 'enable' | 'disable' = null;
+      if (changes['running'] && changes['running'].currentValue !== changes['running'].previousValue) {
+        if (!changes['running'].currentValue) {
+          this.disableAutoUpdate();
+        }
+      }
+      if (changes['autoUpdate'] && !changes['autoUpdate'].isFirstChange()) {
+        if (changes['autoUpdate'].currentValue !== changes['autoUpdate'].previousValue) {
+          if (changes['autoUpdate'].currentValue) {
+            this.enableAutoUpdate();
+          } else {
+            this.disableAutoUpdate();
+          }
+        }
+      }
+      if (changes['mode'] && !changes['mode'].isFirstChange() && changes['mode'].currentValue !== changes['mode'].previousValue) {
+        this.ngOnInit();
+      }
+    }
+  }
+
+
+  newLog() {
+    this.reset();
+    this.fetchData();
   }
 
   enableAutoUpdate() {
-    if (!this.updateSubscription && this.mode === 'tail') {
-      this.updateSubscription = interval(this.offset).subscribe(x => {
-        this.tail();
-      });
+    if (!this.updateSubscription) {
+      this.newLog();
+      this.updateSubscription = interval(this.offset)
+        .subscribe(x => {
+          this.fetchData();
+        });
     }
   }
+
 
   disableAutoUpdate() {
     if (this.updateSubscription) {
       this.updateSubscription.unsubscribe();
       this.updateSubscription = undefined;
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['autoUpdate']) {
-      if (changes['autoUpdate'].currentValue) {
-        this.enableAutoUpdate();
-      } else {
-        this.disableAutoUpdate();
-        this.handle();
-      }
-    }
-    if (changes['running']) {
-      if (!changes['running'].currentValue) {
-        this.disableAutoUpdate();
-        this.handle();
-      }
-    }
-    let reload = false;
-    if (changes['runnerId']) {
-      reload = true;
-    }
-    if (changes['nodeId']) {
-      reload = true;
-    }
-
-    if (reload) {
-      this.ngOnDestroy();
-      this.handle();
+      // handle last
+      this.fetchData();
     }
   }
 
 
-  reset() {
+  resetLog() {
     this.position = 0;
     this.maxlines = 0;
     this.fetchedLines = 0;
     this.log = '';
+    // this.formattedLog = '';
     this.logError = '';
+    this.status.emit({ type: 'reset', lines: 0 });
   }
 
-  handle() {
+  reset() {
+    this.initialize = true;
+    this.resetLog();
+  }
+
+  switchAutoScroll(){
+    this.autoScroll = !this.autoScroll;
+  }
+
+  fetchData() {
     this.resetSub();
-    switch (this._mode) {
+    switch (this.mode) {
       case 'tail':
-        this.tail();
+        this.fetchTail();
         break;
       case 'less':
-        this.less();
+        this.fetchLess();
         break;
     }
   }
 
-  tail() {
-    if (this.runnerId && this.nodeId) {
-      this.subscription = this.tasksService
-        .getTaskLog(this.runnerId, this.nodeId, null, null, this._tail)
-        .subscribe(x => {
+
+  /**
+   * Fetch only tail of log data
+   */
+  fetchTail() {
+
+    this.subscription = this.tasksService
+      .getTaskLog(this.runnerId, this.nodeId, null, null, this._tail)
+      .subscribe(x => {
           if (x) {
-            this.reset();
+            this.resetLog();
             const extractLines = this.extractLines(x);
             this.append(extractLines);
           }
@@ -174,15 +205,15 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
         },
         () => {
           this.resetSub();
+          this.initialize = false;
         });
-    } else {
-      this.resetSub();
-    }
   }
 
 
-  less() {
-    this.reset();
+  /**
+   * Fetch data from beginning to the current end in chunked mode
+   */
+  fetchLess() {
     let _subscriber: Subscriber<any> = null;
     this.subscription = new Observable(subscriber => {
       _subscriber = subscriber;
@@ -195,23 +226,24 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
         })
       )
       .subscribe(x => {
-        const extractLines = this.extractLines(x);
-        this.fetchedLines += extractLines.length;
-        const appended = this.append(extractLines);
-        if (appended > 0 || this.running) {
-          _subscriber.next(1);
-        } else {
-          _subscriber.complete();
-        }
-      },
-      error => {
-        Log.error(error);
-        _subscriber.error(error);
-        this.resetSub();
-      },
-      () => {
-        this.resetSub();
-      });
+          const extractLines = this.extractLines(x);
+          this.fetchedLines += extractLines.length;
+          const appended = this.append(extractLines);
+          if (appended >= this.fetchSize - 1) {
+            _subscriber.next(1);
+          } else {
+            _subscriber.complete();
+          }
+        },
+        error => {
+          Log.error(error);
+          _subscriber.error(error);
+          this.resetSub();
+        },
+        () => {
+          this.resetSub();
+          this.initialize = false;
+        });
   }
 
 
@@ -245,18 +277,6 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
   }
 
 
-  // getLog(from: number = 1, offset: number = 50) {
-  //   this.tasksService.getTaskLog(this.runnerId, this.nodeId, from, offset).subscribe(x => {
-  //       if (x) {
-  //         this.append(x);
-  //       }
-  //     },
-  //     error => {
-  //       Log.debug(error);
-  //     });
-  // }
-
-
   append(x: string[]) {
     if (isUndefined(this.position) || !this.position) {
       this.position = 1;
@@ -265,19 +285,47 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
       this.log = '';
     }
     const buildLines = this.buildLog(x);
-    this.log += buildLines.join('\n') + '\n';
-    this.maxlines += buildLines.length;
+    const lines = buildLines.length;
+    if (lines > 0) {
+      if (this.log) {
+        this.log += '\n';
+        // this.formattedLog += '\n';
+      }
+      const log = buildLines.join('\n');
+      this.log += log;
+      // this.formattedLog += this.highlight(log);
+      this.maxlines += lines;
+    }
     // scroll to the bottom
     if (this.elemRef) {
       const logElem = this.elemRef.nativeElement;
-      logElem.scrollTop = logElem.scrollHeight;
+      logElem.scrollTop = logElem.scrollHeight + 50;
     }
-    return buildLines.length;
+    this.status.emit({ type: 'append', lines: lines });
+    return lines;
   }
+
+  // getLog() {
+  //   if (Prism && Prism.highlight) {
+  //     return this.highlight(this.log);
+  //   } else {
+  //     return this.log;
+  //   }
+  // }
+  //
+  // getFormattedLog() {
+  //   const res = '<pre><code>' + this.formattedLog + '</code></pre>';
+  //   return res;
+  // }
+  //
+  // highlight(str: string) {
+  //   return Prism.highlight(str, Prism.languages.shellsession, 'shellsession');
+  // }
 
 
   finishUpdate() {
     // clearInterval(this.t);
+    this.status.emit({ type: 'finished', lines: null });
   }
 
 
@@ -287,4 +335,9 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
     this.finishUpdate();
   }
 
+  switchMode(tail: 'less' | 'tail') {
+    this.mode = tail;
+    this.resetSub();
+    this.ngOnInit();
+  }
 }
