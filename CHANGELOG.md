@@ -1,3 +1,12 @@
+## [2.3.12](https://gitlab.com/typexs/typexs/compare/v2.3.11...v2.3.12) (2024-10-31)
+
+
+### Bug Fixes
+
+* work on task log viewer ([a9ee6a5](https://gitlab.com/typexs/typexs/commit/a9ee6a5cbc6d7f66b4e88834f07480d6d1935d0c))
+
+
+
 ## [2.3.11](https://gitlab.com/typexs/typexs/compare/v2.3.10...v2.3.11) (2024-10-28)
 
 
