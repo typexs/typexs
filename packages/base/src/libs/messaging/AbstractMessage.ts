@@ -120,8 +120,7 @@ export abstract class AbstractMessage<REQ extends AbstractEvent, RES extends Abs
 
     // when no targets given, we don't know for how many worker we should listen
     if (!this.targetIds || isEmpty(this.targetIds)) {
-      if (isUndefined(this.options.waitIfNoTarget) ||
-        !get(this.options, 'waitIfNoTarget', false)) {
+      if (isUndefined(this.options.waitIfNoTarget) || !get(this.options, 'waitIfNoTarget', false)) {
         const ready = this.ready();
         this.emit('postprocess');
         this.results = await ready;
@@ -129,6 +128,8 @@ export abstract class AbstractMessage<REQ extends AbstractEvent, RES extends Abs
       }
     }
 
+    // TODO rewrite this, 'subscribe' register a static method call, so if this running parallel the this could be miss directed/interpreted
+    // TODO extend eventbus to register a callback method to an instance
     subscribe(this.getResClass())(this, 'onResults');
 
     await EventBus.register(this);

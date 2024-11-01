@@ -136,9 +136,12 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.updateSubscription) {
       this.newLog();
       this.updateSubscription = interval(this.offset)
-        .subscribe(x => {
-          this.fetchData();
-        });
+        .subscribe(
+          x => {
+            if (!this.subscription) {
+              this.fetchData();
+            }
+          });
     }
   }
 
@@ -148,7 +151,7 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
       this.updateSubscription.unsubscribe();
       this.updateSubscription = undefined;
       // handle last
-      this.fetchData();
+      setTimeout(() => this.fetchData(), this.offset);
     }
   }
 
@@ -168,7 +171,7 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
     this.resetLog();
   }
 
-  switchAutoScroll(){
+  switchAutoScroll() {
     this.autoScroll = !this.autoScroll;
   }
 
@@ -227,13 +230,16 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe(x => {
           const extractLines = this.extractLines(x);
-          this.fetchedLines += extractLines.length;
+          const lines = extractLines.length;
+          this.fetchedLines += lines;
           const appended = this.append(extractLines);
-          if (appended >= this.fetchSize - 1) {
-            _subscriber.next(1);
+          console.log(lines, appended)
+          if (lines >= this.fetchSize - 1) {
+            setTimeout(() => _subscriber.next(1));
           } else {
             _subscriber.complete();
           }
+
         },
         error => {
           Log.error(error);
@@ -269,11 +275,11 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
     logs = logs.map((x: any) => JsonUtils.parse(x)).filter(x => has(x, 'message'));
     return logs
       .map((e: any) => e.message ?
-        this.datePipe.transform(new Date(e.timestamp), 'yyyy-MM-dd HH:mm:ss.SSS') + ''
-        + ' [' + e.level + '] ' + e.message
+        this.datePipe.transform(new Date(e.timestamp),
+          'yyyy-MM-dd HH:mm:ss.SSS') + ' [' + e.level + '] ' + e.message
         :
-        this.datePipe.transform(e.time, 'yyyy-MM-dd HH:mm:ss.SSS') + ''
-        + ' [' + e.level + '] ' + e.args.join('\n'));
+        this.datePipe.transform(e.time,
+          'yyyy-MM-dd HH:mm:ss.SSS') + ' [' + e.level + '] ' + e.args.join('\n'));
   }
 
 
@@ -284,47 +290,23 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
     if (isUndefined(this.log) || !this.log) {
       this.log = '';
     }
+    const fetchLines = x.length;
     const buildLines = this.buildLog(x);
     const lines = buildLines.length;
     if (lines > 0) {
       if (this.log) {
         this.log += '\n';
-        // this.formattedLog += '\n';
       }
       const log = buildLines.join('\n');
       this.log += log;
-      // this.formattedLog += this.highlight(log);
       this.maxlines += lines;
     }
-    // scroll to the bottom
-    if (this.elemRef) {
-      const logElem = this.elemRef.nativeElement;
-      logElem.scrollTop = logElem.scrollHeight + 50;
-    }
-    this.status.emit({ type: 'append', lines: lines });
+    this.status.emit({ type: 'append', lines: fetchLines, appended: lines });
     return lines;
   }
 
-  // getLog() {
-  //   if (Prism && Prism.highlight) {
-  //     return this.highlight(this.log);
-  //   } else {
-  //     return this.log;
-  //   }
-  // }
-  //
-  // getFormattedLog() {
-  //   const res = '<pre><code>' + this.formattedLog + '</code></pre>';
-  //   return res;
-  // }
-  //
-  // highlight(str: string) {
-  //   return Prism.highlight(str, Prism.languages.shellsession, 'shellsession');
-  // }
-
 
   finishUpdate() {
-    // clearInterval(this.t);
     this.status.emit({ type: 'finished', lines: null });
   }
 

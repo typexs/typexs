@@ -1,5 +1,8 @@
 <div class="log-viewer">
-  <div class="d-flex justify-content-end">
+  <div class="d-flex justify-content-between">
+    <div class="spinner">
+      <div *ngIf="running" class="dot-carousel"></div>
+    </div>
     <div class="text-right" *ngIf="allowSwitchMode">
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" [checked]="mode === 'tail'"

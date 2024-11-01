@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-import {Get, HttpError, InternalServerError, JsonController, Param, QueryParam} from 'routing-controllers';
+import { Get, HttpError, InternalServerError, JsonController, Param, QueryParam } from 'routing-controllers';
 import {
   Cache,
   IError,
@@ -39,10 +39,11 @@ import {
   PERMISSION_ALLOW_TASKS_METADATA,
   PERMISSION_ALLOW_TASKS_RUNNING
 } from '../libs/Constants';
-import {ContextGroup} from '../decorators/ContextGroup';
-import {Access} from '../decorators/Access';
-import {Helper} from '../libs/Helper';
-import {IJsonSchema7} from '@allgemein/schema-api';
+import { ContextGroup } from '../decorators/ContextGroup';
+import { Access } from '../decorators/Access';
+import { Helper } from '../libs/Helper';
+import { IJsonSchema7 } from '@allgemein/schema-api';
+import { defaults, isNumber } from 'lodash';
 
 @ContextGroup(C_API)
 @JsonController(_API_CTRL_TASKS)
@@ -209,37 +210,35 @@ export class TasksAPIController {
    */
   @Access(PERMISSION_ALLOW_TASK_LOG)
   @Get(_API_CTRL_TASK_LOG)
-  async getLogContent(@Param('nodeId') nodeId: string,
+  async getLogContent(
+    @Param('nodeId') nodeId: string,
     @Param('runnerId') runnerId: string,
     @QueryParam('limit') limitLine: number = null,
     @QueryParam('offset') offsetLine: number = null,
     @QueryParam('tail') tail: number = null,
-    @QueryParam('options') options: any = {}) {
+    @QueryParam('options') options: any = {}
+  ) {
 
     let _opts = options || {};
-    _opts = _.defaults(_opts, <IMessageOptions & IFileSelectOptions>{
+    _opts = defaults(_opts, <IMessageOptions & IFileSelectOptions>{
       filterErrors: false,
       outputMode: 'only_value',
       targetIds: [nodeId],
       unit: 'line'
-
-      // tail: tail,
-      // offset: offsetLine,
-      // limit: limitLine
     });
 
     let less = false;
-    if (_.isNumber(offsetLine)) {
+    if (isNumber(offsetLine)) {
       _opts.offset = offsetLine;
       less = true;
     }
 
-    if (_.isNumber(limitLine)) {
+    if (isNumber(limitLine)) {
       _opts.limit = limitLine;
       less = true;
     }
 
-    if (less && _.isNumber(tail)) {
+    if (less && isNumber(tail)) {
       _opts.tail = tail;
     } else if (!less) {
       _opts.tail = 50;
@@ -264,8 +263,8 @@ export class TasksAPIController {
   @Access(PERMISSION_ALLOW_TASK_STATUS)
   @Get(_API_CTRL_TASK_STATUS)
   async getTaskStatus(
-  @Param('runnerId') runnerId: string,
-    @QueryParam('options') options: IMessageOptions = {},
+    @Param('runnerId') runnerId: string,
+    @QueryParam('options') options: IMessageOptions = {}
   ) {
     let _opts = options || {};
     _opts = _.defaults(_opts, <IMessageOptions>{
@@ -318,7 +317,7 @@ export class TasksAPIController {
     let _opts = options || {};
     _opts = _.defaults(_opts, <IMessageOptions>{
       filterErrors: true,
-      outputMode: 'only_value',
+      outputMode: 'only_value'
     });
     try {
       const results = await this.taskExchange.getRunningTasks(_opts);

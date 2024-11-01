@@ -11,6 +11,7 @@ import {Config} from '@allgemein/config';
 import {CFG_KEY_APP_PATH, CFG_KEY_FILESYSTEM} from '../../../libs/filesystem/Constants';
 import {IFileSystemConfig} from '../../../libs/filesystem/IFileSystemConfig';
 import {MatchUtils} from '../../../libs/utils/MatchUtils';
+import { isUndefined } from 'lodash';
 
 
 export class FileSystemExchange extends AbstractExchange<FileSystemRequest, FileSystemResponse> {
@@ -68,15 +69,15 @@ export class FileSystemExchange extends AbstractExchange<FileSystemRequest, File
     const path = opts.path;
 
     let unit: 'byte' | 'line' = 'byte';
-    if (!_.isUndefined(opts.unit)) {
+    if (!isUndefined(opts.unit)) {
       unit = opts.unit;
     }
 
-    if (_.isUndefined(opts.limit) && _.isUndefined(opts.offset) && _.isUndefined(opts.tail)) {
+    if (isUndefined(opts.limit) && isUndefined(opts.offset) && isUndefined(opts.tail)) {
       res.data = await FileUtils.readFile(path);
-    } else if (!_.isUndefined(opts.tail)) {
+    } else if (!isUndefined(opts.tail)) {
       res.data = await FileReadUtils.tail(path, opts.tail ? opts.tail : 50);
-    } else if (!_.isUndefined(opts.limit) || !_.isUndefined(opts.offset)) {
+    } else if (!isUndefined(opts.limit) || !isUndefined(opts.offset)) {
       if (unit === 'line') {
         res.data = await FileReadUtils.less(path, opts.offset ? opts.offset : 0, opts.limit ? opts.limit : 0);
       } else {
@@ -92,7 +93,7 @@ export class FileSystemExchange extends AbstractExchange<FileSystemRequest, File
     const opts = request.options;
     const path = opts.path;
 
-    if (!_.isUndefined(opts.glob) && opts.glob) {
+    if (!isUndefined(opts.glob) && opts.glob) {
       res.data = await FileUtils.glob(path);
     } else {
       res.data = await new Promise((resolve, reject) => {
@@ -106,7 +107,7 @@ export class FileSystemExchange extends AbstractExchange<FileSystemRequest, File
       });
     }
 
-    if (!_.isUndefined(opts.stats) && opts.stats) {
+    if (!isUndefined(opts.stats) && opts.stats) {
       res.data = await Promise.all(res.data.map(async (x: string) => {
         return {
           path: x,
@@ -146,7 +147,7 @@ export class FileSystemExchange extends AbstractExchange<FileSystemRequest, File
 
 
     const stats = await FileReadUtils.statInfo(path);
-    if (!_.isUndefined(opts.stats) && opts.stats) {
+    if (!isUndefined(opts.stats) && opts.stats) {
       res.stats = stats;
     }
 
@@ -171,7 +172,7 @@ export class FileSystemExchange extends AbstractExchange<FileSystemRequest, File
         res = responses.data;
       }
 
-      if (!_.isUndefined(responses.options.stats) && responses.options.stats && responses.stats.isFile) {
+      if (!isUndefined(responses.options.stats) && responses.options.stats && responses.stats.isFile) {
         res = {
           data: res,
           stats: responses.stats
