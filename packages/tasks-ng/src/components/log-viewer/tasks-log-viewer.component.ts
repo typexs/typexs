@@ -232,8 +232,8 @@ export class TasksLogViewerComponent implements OnInit, OnChanges, OnDestroy {
           const extractLines = this.extractLines(x);
           const lines = extractLines.length;
           this.fetchedLines += lines;
-          const appended = this.append(extractLines);
-          console.log(lines, appended)
+          this.append(extractLines);
+          // console.log(lines, appended)
           if (lines >= this.fetchSize - 1) {
             setTimeout(() => _subscriber.next(1));
           } else {
