@@ -1,3 +1,12 @@
+## [2.3.13](https://gitlab.com/typexs/typexs/compare/v2.3.12...v2.3.13) (2024-11-01)
+
+
+### Bug Fixes
+
+* optimize log ui output ([d742a62](https://gitlab.com/typexs/typexs/commit/d742a6270e4d393478e906472aa6019356280b79))
+
+
+
 ## [2.3.12](https://gitlab.com/typexs/typexs/compare/v2.3.11...v2.3.12) (2024-10-31)
 
 
