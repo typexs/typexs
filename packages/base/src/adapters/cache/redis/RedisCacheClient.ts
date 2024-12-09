@@ -1,67 +1,87 @@
-import * as _ from 'lodash';
-import { isNull, isUndefined } from 'lodash';
-import { ClientOpts, createClient, RedisClient } from 'redis';
+import { isBuffer, isEmpty, isNull, isUndefined } from 'lodash';
+import { createClient, RedisClientType, SetOptions } from 'redis';
 import { IRedisCacheClient } from './IRedisCacheClient';
 import { ICacheGetOptions, ICacheSetOptions } from '../../../libs/cache/ICacheOptions';
 import { Serializer } from '@allgemein/base';
+import { IRedisCacheOptions } from './IRedisCacheOptions';
 
 
 export class RedisCacheClient implements IRedisCacheClient {
 
-  options: ClientOpts;
+  options: IRedisCacheOptions;
 
-  client: RedisClient;
+  client: RedisClientType;
 
   private connected = false;
 
 
-  constructor(options: ClientOpts) {
+  constructor(options: IRedisCacheOptions) {
     this.options = options;
+
+    let url = this.options.url;
+    if (!url) {
+      // redis://alice:foobared@awesome.redis.server:6380
+      let host = '';
+      if (this.options.host) {
+        host += this.options.host;
+      } else {
+        host += 'localhost';
+      }
+
+      if (this.options.port) {
+        host += ':' + this.options.port;
+      } else {
+        host += ':6379';
+      }
+
+      let user = '';
+      if (this.options.username && this.options.password) {
+        user += this.options.username + ':' + this.options.password;
+      }
+
+      if (user) {
+        url = 'redis://' + user + '@' + host;
+      } else {
+        url = 'redis://' + host;
+      }
+
+      this.options.url = url;
+    }
+
+    if (!this.options.socket) {
+      this.options.socket = {};
+    }
+
+    if (!this.options.socket.connectTimeout) {
+      this.options.socket.connectTimeout = 5000;
+    }
   }
 
 
-  connect(): Promise<IRedisCacheClient> {
+  async connect(): Promise<IRedisCacheClient> {
     if (this.connected) {
       return Promise.resolve(this);
     }
-    return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => {
-        reject(new Error('timeout redis'));
-      }, 5000);
-      const onError = (err: Error) => {
-        reject(err);
-      };
-      this.client = createClient(this.options);
-      // unref for not blocking in shutdown
+
+    this.client = createClient(this.options) as RedisClientType;
+    try {
+      this.client = await this.client.connect();
       this.client.unref();
-      this.client.once('error', onError);
-      this.client.once('ready', args => {
-        clearTimeout(timer);
-        this.client.removeListener('error', onError);
-        this.connected = true;
-        resolve(this);
-      });
-    });
+      this.connected = true;
+      return this;
+    } catch (e) {
+      this.client = undefined;
+      throw e;
+    }
   }
 
 
-  get(key: string, options?: ICacheGetOptions) {
-    return new Promise((resolve, reject) => {
-      if (!this.client || !this.connected) {
-        reject(new Error('no connection'));
-      }
-      this.client.get(key, (err, reply) => {
-        if (err) {
-          reject(err);
-        } else {
-          if (_.isBuffer(reply)) {
-            reply = reply.toString();
-          }
-          const _value = this.unserialize(reply);
-          resolve(_value);
-        }
-      });
-    });
+  async get(key: string, options?: ICacheGetOptions) {
+    let reply = await this.client.get(key);
+    if (isBuffer(reply)) {
+      reply = reply.toString();
+    }
+    return this.unserialize(reply);
   }
 
   serialize(v: any) {
@@ -82,99 +102,71 @@ export class RedisCacheClient implements IRedisCacheClient {
   }
 
   set(key: string, value: any, options?: ICacheSetOptions) {
-    return new Promise((resolve, reject) => {
-      if (!this.client || !this.connected) {
-        reject(new Error('no connection'));
-      }
+    if (!this.client || !this.connected) {
+      throw new Error('no connection');
+    }
 
-      if (isNull(value) || isUndefined(value)) {
-        const args: any[] = [key];
-        args.push((err: Error, reply: any) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(reply);
-          }
-        });
-        // eslint-disable-next-line prefer-spread
-        this.client.del.apply(this.client, args);
-      } else {
-        const _value = this.serialize(value);
-        const args: any[] = [key, _value];
-        if (options && options.ttl) {
-          if (options.ttl % 1000 === 0) {
-            args.push('EX', Math.round(options.ttl / 1000));
-          } else {
-            args.push('PX', options.ttl);
-          }
+    if (isNull(value) || isUndefined(value)) {
+      return this.client.del(key);
+    } else {
+      const _value = this.serialize(value);
+      if (options && options.ttl) {
+        const setOptions: SetOptions = {};
+        if (options.ttl % 1000 === 0) {
+          setOptions.EX = Math.round(options.ttl / 1000);
+        } else {
+          setOptions.PX = options.ttl;
         }
-        args.push((err: Error, reply: any) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(reply);
-          }
-        });
-        // eslint-disable-next-line prefer-spread
-        this.client.set.apply(this.client, args);
+        return this.client.set(key, _value, setOptions);
+      } else {
+        return this.client.set(key, _value);
       }
-    });
+    }
   }
 
 
+  /**
+   * Remove keys by given pattern (wildcard is *)
+   * @param name
+   */
+  async removeKeysByPattern(name: string): Promise<number> {
+    const reply = await this.client.keys(name);
+    if (!isEmpty(reply)) {
+      const reply1 = await this.client.del(reply);
+      return reply1;
+    } else {
+      return 0;
+    }
+  }
+
+
+  /**
+   * Close connection to redis
+   */
   close() {
     if (this.connected) {
-      return new Promise(
-        (resolve, reject) => {
-          if (this.client) {
-            this.client.quit((err, reply) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve(reply);
-              }
-            });
-          } else {
-            resolve(null);
-          }
-        })
-        .then(x => {
-          this.connected = false;
-          this.client = null;
-          return x;
-        })
-        .catch(err => {
-          this.connected = false;
-          this.client = null;
-          throw err;
-        });
+      if (this.client.isOpen) {
+        return this.client.quit()
+          .then(x => {
+            this._reset();
+            return x;
+          })
+          .catch(err => {
+            this._reset();
+            throw err;
+          });
+      } else {
+        this._reset();
+      }
     }
-    // this.connected = false;
     return null;
   }
 
-  async removeKeysByPattern(name: string): Promise<number> {
-    return new Promise((resolve, reject) => {
-      this.client.keys(name, (err, reply) => {
-        if (err) {
-          reject(err);
-        } else {
-          if (!_.isEmpty(reply)) {
-            this.client.del(reply, (err1, reply1) => {
-              if (err1) {
-                reject(err1);
-              } else {
-                resolve(reply1);
-              }
-            });
-          } else {
-            resolve(0);
-          }
-        }
-      });
-    });
-
-    // return null;
+  private _reset(){
+    this.connected = false;
+    if(this.client){
+      this.client.removeAllListeners();
+      this.client = null;
+    }
   }
-
 }

@@ -189,7 +189,7 @@ export class ElasticMangoWalker implements IMangoWalker {
    * @param res
    * @param ast
    */
-  leaveObject(res: any, ast: PAst): any {
+  leaveObject(res: any, ast: PAst,): any {
     return values(res);
   }
 

@@ -352,7 +352,7 @@ export class TypeOrmSqlConditionsBuilder<T> implements IMangoWalker {
 
   leaveOperator(res: any, ast: PAst) {
     if (ast instanceof And || ast instanceof Or) {
-      const op = ast.name.toUpperCase();
+      const op = ast['name'].toUpperCase();
       return this.buildQueryObject(res, op);
     } else if (ast instanceof Not) {
       res.q = 'NOT (' + res.q + ')';

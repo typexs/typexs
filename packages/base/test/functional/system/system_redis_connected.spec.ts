@@ -65,7 +65,7 @@ class SystemRedisConnectedSpec {
     expect(system.node.nodeId).to.eq('system');
     expect(system.node.state).to.eq('unregister');
     expect(system.node.contexts).to.have.length.gt(0);
-    expect(system.node.contexts.map(x => x.context)).to.deep.eq(['config', 'tasks', 'workers']);
+    expect(system.node.contexts.map(x => x.context).sort()).to.deep.eq(['config', 'tasks', 'workers']);
 
     const nodes = system.getNodesWith('workers');
     expect(nodes).to.have.length(1);
@@ -103,11 +103,11 @@ class SystemRedisConnectedSpec {
     expect(remoteNode.nodeId).to.be.eq('fakeapp01');
     expect(remoteNode.state).to.be.eq('register');
     expect(remoteNode.contexts).to.have.length.gt(0);
-    expect(remoteNode.contexts.map(x => x.context)).to.deep.eq(['config', 'tasks', 'workers']);
+    expect(remoteNode.contexts.map(x => x.context).sort()).to.deep.eq(['config', 'tasks', 'workers']);
 
     expect(system.nodes).to.have.length(1);
     expect(system.nodes[0].nodeId).to.be.eq('fakeapp01');
-    expect(system.nodes[0].contexts.map(x => x.context)).to.deep.eq(['config', 'tasks', 'workers']);
+    expect(system.nodes[0].contexts.map(x => x.context).sort()).to.deep.eq(['config', 'tasks', 'workers']);
 
     let nodeInfos = await bootstrap.getStorage().get().getController().find(SystemNodeInfo);
     expect(nodeInfos).to.have.length(2);

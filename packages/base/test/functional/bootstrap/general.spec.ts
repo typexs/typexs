@@ -256,8 +256,10 @@ class BootstrapGeneralSpec {
 
     await bootstrap.shutdown();
     expect(activators).to.have.length(2);
+    // @ts-ignore
     const testActivator = activators.find(x => x['done'] === true);
     expect(testActivator).is.not.null;
+    // @ts-ignore
     expect(testActivator['done']).to.be.true;
     // expect(activators[0]['done']).to.be.true;
 

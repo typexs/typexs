@@ -10,7 +10,7 @@
       ],
       "preid": "dev",
       "noPush": true,
-      "gitTagVersion": false,
+      "gitTagVersion": true,
       "exact": false,
       "message": "build: update versions",
       "push": false,

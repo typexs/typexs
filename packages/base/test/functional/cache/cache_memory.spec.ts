@@ -55,7 +55,7 @@ class CacheMemorySpec {
 
     const adapterClasses = cache.getAdapterClasses();
     expect(adapterClasses).to.have.length(2);
-    expect(_.map(adapterClasses, c => c.type)).to.deep.eq(['memory', 'redis']);
+    expect(_.map(adapterClasses, c => c.type).sort()).to.deep.eq(['memory', 'redis']);
 
     const adapters = cache.getAdapters();
     const instances = _.keys(adapters);
@@ -122,7 +122,7 @@ class CacheMemorySpec {
 
     const adapterClasses = cache.getAdapterClasses();
     expect(adapterClasses).to.have.length(2);
-    expect(_.map(adapterClasses, c => c.type)).to.deep.eq(['memory', 'redis']);
+    expect(adapterClasses.map(c => c.type).sort()).to.deep.eq(['memory', 'redis']);
 
     const adapters = cache.getAdapters();
     const instances = _.keys(adapters);

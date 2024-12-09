@@ -210,6 +210,7 @@ export abstract class AbstractMessage<REQ extends AbstractEvent, RES extends Abs
 
     remove(this.targetIds, x => x === res.nodeId);
 
+    // @ts-ignore
     res[K_NODE_ID] = res.nodeId;
     if (!res.skipping) {
       this.responses.push(res);

@@ -6,12 +6,12 @@ networks:
 services:
 
   redis:
-    image: redis:5
+    image: redis:7
     networks:
       - txs_base_net
 
   redis2:
-    image: redis:5
+    image: redis:7
     networks:
       - txs_base_net
 

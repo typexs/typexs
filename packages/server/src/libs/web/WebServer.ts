@@ -126,7 +126,7 @@ export class WebServer extends Server implements IServer {
           }
         }
 
-        controllerClasses = controllerClasses.filter(x => this.access(entry, x.name));
+        controllerClasses = controllerClasses.filter(x => this.access(entry, x.name)).sort();
 
         routing.controllers = controllerClasses;
         routing.middlewares = getMetadataArgsStorage().middlewares.map(x => x.target);

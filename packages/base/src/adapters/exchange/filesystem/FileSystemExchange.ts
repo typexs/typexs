@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as fs from 'fs';
 import {join, resolve} from 'path';
-import {FileUtils} from '@allgemein/base';
+import { FileUtils, Glob } from '@allgemein/base';
 import {AbstractExchange} from '../../../libs/messaging/AbstractExchange';
 import {FileSystemRequest} from './FileSystemRequest';
 import {FileSystemResponse} from './FileSystemResponse';
@@ -94,7 +94,7 @@ export class FileSystemExchange extends AbstractExchange<FileSystemRequest, File
     const path = opts.path;
 
     if (!isUndefined(opts.glob) && opts.glob) {
-      res.data = await FileUtils.glob(path);
+      res.data = await Glob.async(path);
     } else {
       res.data = await new Promise((resolve, reject) => {
         fs.readdir(path, (err, files) => {

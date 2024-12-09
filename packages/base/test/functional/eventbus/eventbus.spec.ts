@@ -1,14 +1,14 @@
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
 import * as _ from 'lodash';
-import {Bootstrap} from '../../../src/Bootstrap';
-import {Config} from '@allgemein/config';
+import { Bootstrap } from '../../../src/Bootstrap';
+import { Config } from '@allgemein/config';
 import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
-import {EventBus, IEventBusConfiguration} from '@allgemein/eventbus';
-import {Container} from 'typedi';
-import {TestHelper} from '@typexs/testing';
-import {C_DEFAULT} from '@allgemein/base';
-import {subscribe} from '@allgemein/eventbus';
+import { EventBus, IEventBusConfiguration } from '@allgemein/eventbus';
+import { Container } from 'typedi';
+import { TestHelper } from '@typexs/testing';
+import { C_DEFAULT } from '@allgemein/base';
+import { subscribe } from '@allgemein/eventbus';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -16,7 +16,8 @@ const LOG_EVENT = TestHelper.logEnable(false);
 let inc = 0;
 
 class TestEvent {
-  id: number ;
+  id: number;
+
   constructor(id: number = -1) {
     this.id = id;
   }
@@ -34,13 +35,21 @@ class TestEventHandler {
   }
 }
 
-@suite('functional/eventbus/eventbus')
+@suite('functional/eventbus')
 class EventbusSpec {
 
 
   static async before() {
     EventBus.$().shutdown();
-    EventBus.$().addConfiguration({adapter: 'redis', extra: {host: redis_host, port: redis_port}, name: C_DEFAULT});
+    EventBus.$().addConfiguration({
+      adapter: 'redis',
+      name: C_DEFAULT,
+      extra: {
+        host: redis_host,
+        port: redis_port,
+        unref: true
+      }
+    });
   }
 
   static async after() {

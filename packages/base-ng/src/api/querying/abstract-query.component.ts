@@ -247,7 +247,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
 
   initialiseColumns() {
-    if (!this.columns && !get(this.options, 'columnsOverride', false)) {
+    if (this.entityRef && !this.columns && !get(this.options, 'columnsOverride', false) && !get(this.options, 'columnsInitialise', false)) {
       this.columns = [];
 
       this.entityRef.getPropertyRefs().forEach(x => {

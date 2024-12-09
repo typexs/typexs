@@ -34,8 +34,12 @@ class SystemOnSingleBackendSpec {
         logging: { enable: LOG_EVENT, level: 'debug', loggers: [{ name: '*', level: 'debug' }] },
         modules: { paths: TestHelper.includePaths() },
         storage: { default: TEST_PSQL_STORAGE_OPTIONS },
-        eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis',
-            extra: { host: redis_host, port: redis_port, unref: true } } }
+        eventbus: {
+          default: <IEventBusConfiguration>{
+            adapter: 'redis',
+            extra: { host: redis_host, port: redis_port, unref: true }
+          }
+        }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -100,7 +104,7 @@ class SystemOnSingleBackendSpec {
     expect(system.nodes).to.have.length(1);
     expect(system.nodes[0].nodeId).to.be.eq('fakeapp01');
 
-    let nodeInfos = await bootstrap.getStorage().get().getController().find(SystemNodeInfo);
+    let nodeInfos = await bootstrap.getStorage().get().getController().find(SystemNodeInfo, { nodeId: { $in: ['system', 'fakeapp01'] } });
     expect(nodeInfos).to.have.length(2);
 
     p.shutdown();
@@ -111,7 +115,7 @@ class SystemOnSingleBackendSpec {
     expect(remoteNode.state).to.be.eq('unregister');
     expect(system.nodes).to.have.length(0);
 
-    nodeInfos = await bootstrap.getStorage().get().getController().find(SystemNodeInfo);
+    nodeInfos = await bootstrap.getStorage().get().getController().find(SystemNodeInfo, { nodeId: { $in: ['system', 'fakeapp01'] } });
     expect(nodeInfos).to.have.length(1);
     expect(nodeInfos.map((x: any) => {
       return { isBackend: x.isBackend, nodeId: x.nodeId };

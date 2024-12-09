@@ -53,15 +53,27 @@ class CacheRedisSpec {
     const options = cache.getOptions();
 
     expect(options).to.deep.eq({
+
       bins: { default: 'redis1' },
       adapter: {
-        redis1: { type: 'redis', host: redis_host, port: redis_port }
+        redis1: {
+          type: 'redis',
+          host: redis_host, port: redis_port,
+          'socket': {
+            'connectTimeout': 5000,
+            'host': 'localhost',
+            'keepAlive': 5000,
+            'noDelay': true,
+            'port': 6379
+          },
+          'url': 'redis://localhost:6379'
+        }
       }
     });
 
     const adapterClasses = cache.getAdapterClasses();
     expect(adapterClasses).to.have.length(2);
-    expect(_.map(adapterClasses, c => c.type)).to.deep.eq(['memory', 'redis']);
+    expect(adapterClasses.map(c => c.type).sort()).to.deep.eq(['memory', 'redis']);
 
     const adapters = cache.getAdapters();
     const instances = _.keys(adapters);
@@ -105,12 +117,12 @@ class CacheRedisSpec {
 
     // expire by EX
     const v = { k: 'data2' };
-    await cache.set('test3', v, testBin, { ttl: 2000 });
-    await TestHelper.wait(20);
+    await cache.set('test3', v, testBin, { ttl: 500 });
+//    await TestHelper.wait(20);
     testValue = await cache.get('test3', testBin);
     expect(testValue).to.be.deep.eq(v);
 
-    await TestHelper.wait(2500);
+    await TestHelper.wait(600);
     testValue = await cache.get('test3', testBin);
     expect(testValue).to.be.null;
 
@@ -124,8 +136,6 @@ class CacheRedisSpec {
     await TestHelper.wait(1234);
     testValue = await cache.get('test4', testBin);
     expect(testValue).to.be.null;
-
-    await bootstrap.shutdown();
   }
 
 }

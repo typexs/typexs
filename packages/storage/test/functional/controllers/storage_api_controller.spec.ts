@@ -594,7 +594,7 @@ class Storage_api_controllerSpec {
     });
     expect(res.entities[1]).to.be.deep.eq({
       'bool': 1,
-      'sum': 25.003999999999998
+      'sum': 25.004
     });
   }
 

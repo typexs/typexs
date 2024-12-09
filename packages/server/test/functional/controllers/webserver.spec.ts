@@ -65,24 +65,23 @@ class WebserverSpec {
       {
         'authorized': false,
         'context': 'default',
-        'controller': 'JsonDataDeliveryFourth',
-        'controllerMethod': 'get4',
-        'permissions': null,
-        'method': 'get',
-        'params': [],
-        'route': '/get4'
-      },
-      {
-        'authorized': false,
-        'context': 'default',
         'controller': 'JsonDataDeliveryThird',
         'controllerMethod': 'get',
         'permissions': null,
         'method': 'get',
         'params': [],
         'route': '/get'
+      },
+      {
+        'authorized': false,
+        'context': 'default',
+        'controller': 'JsonDataDeliveryFourth',
+        'controllerMethod': 'get4',
+        'permissions': null,
+        'method': 'get',
+        'params': [],
+        'route': '/get4'
       }
-
     ]);
 
   }
@@ -265,22 +264,22 @@ class WebserverSpec {
         {
           'authorized': false,
           'context': 'default',
-          'controller': 'JsonDataDeliveryFourth',
-          'controllerMethod': 'get4',
-          'permissions': null,
-          'method': 'get',
-          'params': [],
-          'route': '/get4'
-        },
-        {
-          'authorized': false,
-          'context': 'default',
           'controller': 'JsonDataDeliveryThird',
           'controllerMethod': 'get',
           'permissions': null,
           'method': 'get',
           'params': [],
           'route': '/get'
+        },
+        {
+          'authorized': false,
+          'context': 'default',
+          'controller': 'JsonDataDeliveryFourth',
+          'controllerMethod': 'get4',
+          'permissions': null,
+          'method': 'get',
+          'params': [],
+          'route': '/get4'
         },
         {
           'authorized': false,
@@ -344,21 +343,21 @@ class WebserverSpec {
       [
         {
           context: 'default',
-          route: '/get4',
-          method: 'get',
-          params: [],
-          controller: 'JsonDataDeliveryFourth',
-          controllerMethod: 'get4',
-          permissions: null,
-          authorized: false
-        },
-        {
-          context: 'default',
           route: '/get',
           method: 'get',
           params: [],
           controller: 'JsonDataDeliveryThird',
           controllerMethod: 'get',
+          permissions: null,
+          authorized: false
+        },
+        {
+          context: 'default',
+          route: '/get4',
+          method: 'get',
+          params: [],
+          controller: 'JsonDataDeliveryFourth',
+          controllerMethod: 'get4',
           permissions: null,
           authorized: false
         },

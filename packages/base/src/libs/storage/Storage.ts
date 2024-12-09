@@ -1,13 +1,13 @@
 import { IStorageRefOptions } from './IStorageRefOptions';
 import { assign, has, isArray, isEmpty, isFunction, isObjectLike, isString, keys, values } from 'lodash';
-import { K_DEFAULT_FRAMEWORK, C_ENTITY, K_CLS_STORAGE_TYPES } from '../Constants';
+import { C_ENTITY, K_CLS_STORAGE_TYPES, K_DEFAULT_FRAMEWORK } from '../Constants';
 import { ClassType, IClassRef } from '@allgemein/schema-api';
 import { IStorage } from './IStorage';
 import { IStorageRef } from './IStorageRef';
 import { Log } from '../../libs/logging/Log';
 import { IRuntimeLoader } from '../core/IRuntimeLoader';
 import { StringUtils } from '../utils/StringUtils';
-import { C_DEFAULT, FileUtils, NotSupportedError, NotYetImplementedError, PlatformUtils } from '@allgemein/base';
+import { C_DEFAULT, Glob, NotSupportedError, NotYetImplementedError, PlatformUtils } from '@allgemein/base';
 import { REGISTRY_TYPEORM } from './framework/typeorm/Constants';
 import { callMethod } from '../functions';
 import { __SOURCE__ } from './Constants';
@@ -184,7 +184,7 @@ export class Storage {
                 if (!PlatformUtils.isAbsolute(entry)) {
                   entry = PlatformUtils.join(appdir, entry);
                 }
-                const paths = await FileUtils.glob(entry);
+                const paths = await Glob.async(entry);
                 const entries = [];
                 for (const path of paths) {
                   object = await this.fromPath(path);
