@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 
@@ -362,7 +361,6 @@ class TasksSpec {
   }
 
 
-
   @test
   async 'runtime error in (class-registered task)'() {
     const taskRef = tasks.addTask(SimpleTaskError);
@@ -370,7 +368,7 @@ class TasksSpec {
     const runner = new TaskRunner(tasks, [taskRef.name]);
     const data = await runner.run();
     expect(data.results).to.have.length(1);
-    expect(_.find(data.results, x => x.has_error)).exist;
+    expect(data.results.find(x => x.has_error)).exist;
   }
 
   @test

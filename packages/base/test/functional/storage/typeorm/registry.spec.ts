@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { get } from '@typexs/generic';
+
+
 import { expect } from 'chai';
 import { suite, test } from '@testdeck/mocha';
 import { TypeOrmEntityRegistry } from '../../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
@@ -37,8 +39,8 @@ class StorageTypeormRegistrySpec {
     const entityRef = registry.getEntityRefFor(House);
     const properties = entityRef.getPropertyRefs();
 
-    const targets = metadata.tables.filter(x => _.get(x, 'target.name', null) === 'House');
-    const columns = metadata.columns.filter(x => _.get(x, 'target.name', null) === 'House');
+    const targets = metadata.tables.filter(x => get(x, 'target.name', null) === 'House');
+    const columns = metadata.columns.filter(x => get(x, 'target.name', null) === 'House');
 
     expect(entityRef).to.not.be.null;
     expect(targets).to.have.length(1);
@@ -58,8 +60,8 @@ class StorageTypeormRegistrySpec {
     const properties = registry.listProperties();
 
 
-    const targets = metadata.tables.filter(x => _.get(x, 'target.name', '').startsWith('House'));
-    const columns = metadata.columns.filter(x => _.get(x, 'target.name', '').startsWith('House'));
+    const targets = metadata.tables.filter(x => get(x, 'target.name', '').startsWith('House'));
+    const columns = metadata.columns.filter(x => get(x, 'target.name', '').startsWith('House'));
 
     expect(entityRef).to.not.be.null;
     expect(targets).to.have.length(2);
@@ -73,12 +75,12 @@ class StorageTypeormRegistrySpec {
   async 'register dynamically created entity'() {
     const metadata = getMetadataArgsStorage();
 
-    let targets = metadata.tables.filter(x => _.get(x, 'target.name', '').startsWith('HouseOf'));
+    let targets = metadata.tables.filter(x => get(x, 'target.name', '').startsWith('HouseOf'));
     expect(targets).to.have.length(0);
     const clazz = SchemaUtils.clazz('HouseOfDance');
     Entity()(clazz);
 
-    targets = metadata.tables.filter(x => _.get(x, 'target.name', '').startsWith('HouseOf'));
+    targets = metadata.tables.filter(x => get(x, 'target.name', '').startsWith('HouseOf'));
     expect(targets).to.have.length(1);
     let entities = registry.listEntities();
     expect(entities).to.have.length(0);
@@ -89,14 +91,14 @@ class StorageTypeormRegistrySpec {
 
     let properties = registry.listProperties();
     expect(properties).to.have.length(0);
-    let columns = metadata.columns.filter(x => _.get(x, 'target.name', '').startsWith('HouseOf'));
+    let columns = metadata.columns.filter(x => get(x, 'target.name', '').startsWith('HouseOf'));
     expect(columns).to.have.length(0);
     Column({ type: 'string' })({ constructor: clazz }, 'greatColumn');
 
     properties = registry.listProperties();
     expect(properties).to.have.length(1);
 
-    columns = metadata.columns.filter(x => _.get(x, 'target.name', '').startsWith('HouseOf'));
+    columns = metadata.columns.filter(x => get(x, 'target.name', '').startsWith('HouseOf'));
     expect(columns).to.have.length(1);
   }
 
@@ -106,8 +108,8 @@ class StorageTypeormRegistrySpec {
     const metadata = getMetadataArgsStorage();
     const entityRef = registry.getEntityRefFor(EntityWithDbSchema);
     const properties = entityRef.getPropertyRefs();
-    const target = metadata.tables.find(x => _.get(x, 'target.name', null) === 'EntityWithDbSchema');
-    const columns = metadata.columns.filter(x => _.get(x, 'target.name', null) === 'EntityWithDbSchema');
+    const target = metadata.tables.find(x => get(x, 'target.name', null) === 'EntityWithDbSchema');
+    const columns = metadata.columns.filter(x => get(x, 'target.name', null) === 'EntityWithDbSchema');
 
     expect(entityRef).to.not.be.null;
     expect(target).to.deep.eq({
@@ -129,7 +131,7 @@ class StorageTypeormRegistrySpec {
     const metadata = getMetadataArgsStorage();
     const entityRef = registry.getEntityRefFor(EntityPassInternalName);
 
-    const target = metadata.tables.find(x => _.get(x, 'target.name', null) === 'EntityPassInternalName');
+    const target = metadata.tables.find(x => get(x, 'target.name', null) === 'EntityPassInternalName');
     expect(target).to.deep.eq({
       target: EntityPassInternalName,
       type: 'regular',

@@ -5,7 +5,7 @@ export class UrlHelper {
 
   static replace(url: string, replace: any = null) {
     if (replace) {
-      keys(replace).forEach(k => {
+       Object.keys(replace).forEach(k => {
         url = url.replace(':' + k, replace[k]);
       });
     }

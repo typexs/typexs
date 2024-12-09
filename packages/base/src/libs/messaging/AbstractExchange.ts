@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import {ClassType} from '@allgemein/schema-api';
 import {AbstractEvent} from './AbstractEvent';
 import {System} from '../../libs/system/System';
@@ -8,6 +7,7 @@ import {EventBus, subscribe} from '@allgemein/eventbus';
 import {ILoggerApi} from '../../libs/logging/ILoggerApi';
 import {Log} from '../../libs/logging/Log';
 import {IMessageOptions} from './IMessageOptions';
+import { isEmpty } from 'lodash';
 
 
 export abstract class AbstractExchange<REQ extends AbstractEvent, RES extends AbstractEvent> {
@@ -76,7 +76,7 @@ export abstract class AbstractExchange<REQ extends AbstractEvent, RES extends Ab
 
 
   async onRequest(request: REQ) {
-    if (!_.isEmpty(request.targetIds) && !request.targetIds.includes(this.getSystem().node.nodeId)) {
+    if (!isEmpty(request.targetIds) && !request.targetIds.includes(this.getSystem().node.nodeId)) {
       // process request only if it is mine
       return;
     }

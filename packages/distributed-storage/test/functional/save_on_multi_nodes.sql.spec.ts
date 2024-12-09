@@ -1,24 +1,25 @@
-import * as _ from 'lodash';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {Bootstrap} from '@typexs/base/Bootstrap';
-import {Config} from '@allgemein/config';
-import {TEST_STORAGE_OPTIONS} from '../../../base/test/functional/config';
-import {IEventBusConfiguration} from '@allgemein/eventbus';
-import {Container} from 'typedi';
-import {TestHelper} from '@typexs/testing';
-import {SpawnHandle} from '@typexs/testing';
+import { first, uniq } from '@typexs/generic';
+
+
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { Bootstrap } from '@typexs/base/Bootstrap';
+import { Config } from '@allgemein/config';
+import { TEST_STORAGE_OPTIONS } from '../../../base/test/functional/config';
+import { IEventBusConfiguration } from '@allgemein/eventbus';
+import { Container } from 'typedi';
+import { SpawnHandle, TestHelper } from '@typexs/testing';
 
 import { DistributedStorageEntityController } from '../../src/lib/DistributedStorageEntityController';
-import {ITypexsOptions} from '@typexs/base/libs/ITypexsOptions';
-import {DataRow} from './fake_app/entities/DataRow';
-import {__REMOTE_IDS__, XS_P_$ERRORED, XS_P_$SAVED} from './../../src/lib/Constants';
-import {IEntityController} from '@typexs/base/libs/storage/IEntityController';
-import {generateSqlDataRows} from './helper';
-import {Injector} from '@typexs/base/libs/di/Injector';
-import {StorageRef} from '@typexs/base/libs/storage/StorageRef';
-import {__NODE_ID__, __REGISTRY__, C_STORAGE_DEFAULT} from '@typexs/base/libs/Constants';
-import {__CLASS__} from '@allgemein/schema-api';
+import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
+import { DataRow } from './fake_app/entities/DataRow';
+import { __REMOTE_IDS__, XS_P_$ERRORED, XS_P_$SAVED } from './../../src/lib/Constants';
+import { IEntityController } from '@typexs/base/libs/storage/IEntityController';
+import { generateSqlDataRows } from './helper';
+import { Injector } from '@typexs/base/libs/di/Injector';
+import { StorageRef } from '@typexs/base/libs/storage/StorageRef';
+import { __NODE_ID__, __REGISTRY__, C_STORAGE_DEFAULT } from '@typexs/base/libs/Constants';
+import { __CLASS__ } from '@allgemein/schema-api';
 import { MODUL_CONFIG, redis_host, redis_port } from './config';
 
 // process.env.SQL_LOG = '1';
@@ -143,7 +144,7 @@ class DistributedStorageSaveSpec {
     expect(results).to.have.length(3);
     expect(results[0]).to.be.instanceOf(DataRow);
 
-    const testEntry = _.first(results);
+    const testEntry = first(results);
     testEntry.someString = 'editedString';
     testEntry.someNumber = 321;
     testEntry.someBool = true;
@@ -241,7 +242,7 @@ class DistributedStorageSaveSpec {
     expect(saved[0][__REMOTE_IDS__].remote01.id).to.be.gt(10);
 
     expect(results).to.have.length(10);
-    expect(_.uniq(results.map(x => x[__NODE_ID__]))).to.be.deep.eq(['remote01']);
+    expect(uniq(results.map(x => x[__NODE_ID__]))).to.be.deep.eq(['remote01']);
     expect(results[0]).to.be.instanceOf(DataRow);
   }
 

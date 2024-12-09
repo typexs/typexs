@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { defaults, get, has, isNull, set } from '@typexs/generic';
+
+
 import { DefaultUserLogin } from '../../../libs/models/DefaultUserLogin';
 import { AbstractAuthAdapter } from '../../../libs/adapter/AbstractAuthAdapter';
 
@@ -91,7 +93,7 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
 
 
   async prepare(opts: ILdapAuthOptions) {
-    _.defaults(opts, DEFAULTS);
+    defaults(opts, DEFAULTS);
     this.queue = new AsyncWorkerQueue<AuthDataContainer<DefaultUserLogin>>(this, { name: 'ldap', concurrent: 5 });
     super.prepare(opts);
   }
@@ -107,9 +109,9 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
         return false;
       }
       // retry 3
-      let r = _.get(container, 'retry', 3);
+      let r = get(container, 'retry', 3);
       if (r > 0) {
-        _.set(container, 'retry', --r);
+        set(container, 'retry', --r);
         return this.authenticate(container);
       } else {
         return false;
@@ -122,12 +124,12 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
   createOnLogin(login: AuthDataContainer<DefaultUserLogin>): boolean {
     const ldapData = login.data;
     let mail = null;
-    if (_.has(ldapData, this.options.mailAttr)) {
+    if (has(ldapData, this.options.mailAttr)) {
       // set mail field @see Auth.ts:createUser
-      mail = _.get(ldapData, this.options.mailAttr);
+      mail = get(ldapData, this.options.mailAttr);
     }
 
-    if (_.isNull(login.data) || _.isNull(mail)) {
+    if (isNull(login.data) || isNull(mail)) {
       login.addError({
         property: 'mail is not present',
         value: 'mail',
@@ -201,7 +203,7 @@ export class LdapAdapter extends AbstractAuthAdapter implements IQueueProcessor<
 
     } finally {
       // await ldap.close();
-      // if(!_.get(this.options,'reconnect',false)){
+      // if(!get(this.options,'reconnect',false)){
       //   await this.ldap;
       // }
       // this.timer = setTimeout(this.disconnect.bind(this), this.idle);

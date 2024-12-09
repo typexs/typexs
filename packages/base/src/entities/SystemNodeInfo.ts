@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { isString } from '@typexs/generic';
+
+
 import { Column, Entity, Index, PrimaryColumn } from 'typeorm';
 import { INodeInfo } from '../libs/system/INodeInfo';
 import { Required } from '@allgemein/schema-api';
@@ -61,10 +63,10 @@ export class SystemNodeInfo {
   }
 
   restore() {
-    if (_.isString(this.started_at)) {
+    if (isString(this.started_at)) {
       this.started_at = new Date(this.started_at);
     }
-    if (_.isString(this.updated_at)) {
+    if (isString(this.updated_at)) {
       this.updated_at = new Date(this.updated_at);
     }
   }

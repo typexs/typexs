@@ -1,14 +1,15 @@
 // process.env.SQL_LOG = '1';
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import * as _ from 'lodash';
-import {TestHelper} from './TestHelper';
-import {TEST_STORAGE_OPTIONS} from './config';
-import {TypeOrmConnectionWrapper, TypeOrmEntityRegistry} from '@typexs/base';
-import {ILookupRegistry, RegistryFactory} from '@allgemein/schema-api';
-import {EntityRegistry} from '../../src/libs/EntityRegistry';
-import {NAMESPACE_BUILT_ENTITY} from '../../src/libs/Constants';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+
+import { TestHelper } from './TestHelper';
+import { TEST_STORAGE_OPTIONS } from './config';
+import { TypeOrmConnectionWrapper, TypeOrmEntityRegistry } from '@typexs/base';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { EntityRegistry } from '../../src/libs/EntityRegistry';
+import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
+import { clone } from '@typexs/generic';
 
 
 const FINDOPT = {
@@ -45,7 +46,7 @@ class SqlIndirectReferencingSpec {
   @test
   async 'entity lifecycle for integrated property'() {
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     //    (<any>options).name = 'direct_property';
 
 
@@ -117,7 +118,7 @@ class SqlIndirectReferencingSpec {
 
   @test
   async 'entity lifecycle for integrated property with multiple references'() {
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'integrated_property';
 
 

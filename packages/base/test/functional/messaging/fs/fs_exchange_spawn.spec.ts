@@ -221,7 +221,7 @@ class MessagingSpec {
       {
         'isFile': true,
         'path': 'node_01.ts',
-        'size': 2171
+        'size': 2169
       },
       {
         'isFile': true,

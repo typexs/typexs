@@ -9,9 +9,10 @@ import { IDistributedUpdateOptions } from './IDistributedUpdateOptions';
 import { IUpdateOp } from '@typexs/base/libs/storage/framework/IUpdateOp';
 import { IWorkerInfo } from '@typexs/base/libs/worker/IWorkerInfo';
 import { DistributedQueryWorker } from '../../workers/DistributedQueryWorker';
-import * as _ from 'lodash';
+
 import { ClassUtils } from '@allgemein/base';
 import { C_WORKERS } from '@typexs/base/libs/worker/Constants';
+import { defaults, intersection, remove } from '@typexs/generic';
 
 
 export class DistributedUpdateOp<T>
@@ -67,7 +68,7 @@ export class DistributedUpdateOp<T>
     this.update = update;
     this.options = options || {};
 
-    _.defaults(this.options, {
+    defaults(this.options, {
       timeout: 10000
     });
     this.timeout = this.options.timeout;
@@ -88,11 +89,11 @@ export class DistributedUpdateOp<T>
       .map(n => n.nodeId);
 
     if (this.options.targetIds) {
-      this.targetIds = _.intersection(this.targetIds, this.options.targetIds);
+      this.targetIds = intersection(this.targetIds, this.options.targetIds);
     }
 
     if (this.options.skipLocal) {
-      _.remove(this.targetIds, x => x === this.getSystem().getNodeId());
+      remove(this.targetIds, x => x === this.getSystem().getNodeId());
     }
 
 

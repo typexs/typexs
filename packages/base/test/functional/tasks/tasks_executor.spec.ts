@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { snakeCase } from '@typexs/generic';
+
+
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { SimpleTaskPromise } from './tasks/SimpleTaskPromise';
@@ -111,8 +113,8 @@ class TasksSpec {
 
     expect(data.results).to.not.be.empty;
     const x = data.results.find(
-      (x: any) => x.name === _.snakeCase('SimpleTaskPromise'));
-    expect(x.name).to.be.eq(_.snakeCase('SimpleTaskPromise'));
+      (x: any) => x.name === snakeCase('SimpleTaskPromise'));
+    expect(x.name).to.be.eq(snakeCase('SimpleTaskPromise'));
     expect(x.result).to.be.eq('test');
 
     await TestHelper.wait(1000);
@@ -161,8 +163,8 @@ class TasksSpec {
     expect(data).to.have.length(1);
     const entry = data.shift();
     expect(entry.results).to.not.be.empty;
-    const x = entry.results.find((x: any) => x.name === _.snakeCase('SimpleTaskPromise'));
-    expect(x.name).to.be.eq(_.snakeCase('SimpleTaskPromise'));
+    const x = entry.results.find((x: any) => x.name === snakeCase('SimpleTaskPromise'));
+    expect(x.name).to.be.eq(snakeCase('SimpleTaskPromise'));
     expect(x.result).to.be.eq('test');
 
     await TestHelper.wait(1000);
@@ -261,8 +263,8 @@ class TasksSpec {
     const entry = data.shift();
     expect(entry.results).to.not.be.empty;
     const x = entry.results.find(
-      (x: any) => x.name === _.snakeCase('SimpleTaskPromise'));
-    expect(x.name).to.be.eq(_.snakeCase('SimpleTaskPromise'));
+      (x: any) => x.name === snakeCase('SimpleTaskPromise'));
+    expect(x.name).to.be.eq(snakeCase('SimpleTaskPromise'));
     expect(x.result).to.be.eq('test');
 
     await TestHelper.wait(100);
@@ -320,8 +322,8 @@ class TasksSpec {
     const entry = data.shift();
     expect(entry.results).to.not.be.empty;
     const x = entry.results.find(
-      (x: any) => x.name === _.snakeCase('SimpleTaskPromise'));
-    expect(x.name).to.be.eq(_.snakeCase('SimpleTaskPromise'));
+      (x: any) => x.name === snakeCase('SimpleTaskPromise'));
+    expect(x.name).to.be.eq(snakeCase('SimpleTaskPromise'));
     expect(x.result).to.be.eq('test');
   }
 
@@ -354,8 +356,8 @@ class TasksSpec {
     const entry = results.shift();
     expect(entry.results).to.not.be.empty;
     const x = entry.results.find(
-      (x: any) => x.name === _.snakeCase('SimpleTaskPromise'));
-    expect(x.name).to.be.eq(_.snakeCase('SimpleTaskPromise'));
+      (x: any) => x.name === snakeCase('SimpleTaskPromise'));
+    expect(x.name).to.be.eq(snakeCase('SimpleTaskPromise'));
     expect(x.result).to.be.eq('test');
   }
 
@@ -382,8 +384,8 @@ class TasksSpec {
     for (const entry of data) {
       expect(entry.results).to.not.be.empty;
       const x = entry.results.find(
-        (x: any) => x.name === _.snakeCase('SimpleTaskPromise'));
-      expect(x.name).to.be.eq(_.snakeCase('SimpleTaskPromise'));
+        (x: any) => x.name === snakeCase('SimpleTaskPromise'));
+      expect(x.name).to.be.eq(snakeCase('SimpleTaskPromise'));
       expect(x.result).to.be.eq('test');
     }
   }
@@ -410,8 +412,8 @@ class TasksSpec {
     for (const entry of data) {
       expect(entry.results).to.not.be.empty;
       const x = entry.results.find(
-        (x: any) => x.name === _.snakeCase('SimpleTaskPromise'));
-      expect(x.name).to.be.eq(_.snakeCase('SimpleTaskPromise'));
+        (x: any) => x.name === snakeCase('SimpleTaskPromise'));
+      expect(x.name).to.be.eq(snakeCase('SimpleTaskPromise'));
       expect(x.result).to.be.eq('test');
     }
 

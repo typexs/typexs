@@ -1,4 +1,3 @@
-// import { isEmpty } from 'lodash';
 // import { existsSync, writeFileSync } from 'fs';
 // import { dirname, join } from 'path';
 // import { Config, FileUtils, Inject, Log, RuntimeLoader } from '@typexs/base';

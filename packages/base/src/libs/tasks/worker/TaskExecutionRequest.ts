@@ -1,15 +1,17 @@
-import * as _ from 'lodash';
-import {System} from '../../system/System';
-import {EventEmitter} from 'events';
-import {EventBus, subscribe} from '@allgemein/eventbus';
-import {TaskQueueWorker} from '../../../workers/TaskQueueWorker';
-import {IWorkerInfo} from '../../worker/IWorkerInfo';
-import {ITaskExecutionRequestOptions} from './ITaskExecutionRequestOptions';
-import {Tasks} from '../Tasks';
-import {TaskRef} from '../TaskRef';
-import {Log} from '../../logging/Log';
+import { cloneDeep, concat, find, get, intersection, remove } from '@typexs/generic';
+
+
+import { System } from '../../system/System';
+import { EventEmitter } from 'events';
+import { EventBus, subscribe } from '@allgemein/eventbus';
+import { TaskQueueWorker } from '../../../workers/TaskQueueWorker';
+import { IWorkerInfo } from '../../worker/IWorkerInfo';
+import { ITaskExecutionRequestOptions } from './ITaskExecutionRequestOptions';
+import { Tasks } from '../Tasks';
+import { TaskRef } from '../TaskRef';
+import { Log } from '../../logging/Log';
 import { TASK_RUNNER_SPEC, TASK_STATE_ENQUEUE, TASK_STATE_REQUEST_ERROR } from '../Constants';
-import {TasksHelper} from '../TasksHelper';
+import { TasksHelper } from '../TasksHelper';
 import { TaskEvent } from '../event/TaskEvent';
 import { TaskProposeEvent } from '../event/TaskProposeEvent';
 
@@ -48,13 +50,13 @@ export class TaskExecutionRequest extends EventEmitter {
       targetIds: [], skipTargetCheck: false
     }): Promise<TaskEvent[]> {
 
-    this.timeout = _.get(options, 'timeout', 10000);
+    this.timeout = get(options, 'timeout', 10000);
 
     if (!options.skipTargetCheck) {
-      const workerIds = _.concat([], [this.system.node], this.system.nodes)
+      const workerIds = concat([], [this.system.node], this.system.nodes)
         .filter(n => {
-          const x = _.find(n.contexts, c => c.context === 'workers');
-          return _.get(x, 'workers', []).find((y: IWorkerInfo) => y.className === TaskQueueWorker.NAME);
+          const x = find(n.contexts, c => c.context === 'workers');
+          return get(x, 'workers', []).find((y: IWorkerInfo) => y.className === TaskQueueWorker.NAME);
         }).map(x => x.nodeId);
 
 
@@ -66,9 +68,9 @@ export class TaskExecutionRequest extends EventEmitter {
 
       if (options.targetIds.length === 0) {
         // get intersection of nodeInfos
-        this.targetIds = _.intersection(...possibleTargetIds);
+        this.targetIds = intersection(...possibleTargetIds);
       } else {
-        this.targetIds = _.intersection(options.targetIds, ...possibleTargetIds);
+        this.targetIds = intersection(options.targetIds, ...possibleTargetIds);
       }
 
       if (this.targetIds.length === 0) {
@@ -83,9 +85,9 @@ export class TaskExecutionRequest extends EventEmitter {
     this.event.nodeId = this.system.node.nodeId;
     this.event.taskSpec = taskSpec;
     this.event.targetIds = this.targetIds;
-    for (const k of _.keys(parameters)) {
+    for (const k of  Object.keys(parameters)) {
       if (!/^_/.test(k)) {
-        this.event.addParameter(k, _.get(parameters, k));
+        this.event.addParameter(k, get(parameters, k));
       }
     }
 
@@ -146,9 +148,9 @@ export class TaskExecutionRequest extends EventEmitter {
     if (this.targetIds.indexOf(event.respId) === -1) {
       return;
     }
-    _.remove(this.targetIds, x => x === event.respId);
+    remove(this.targetIds, x => x === event.respId);
 
-    const eClone = _.cloneDeep(event);
+    const eClone = cloneDeep(event);
     this.responses.push(eClone);
 
     Log.debug('task exec request [' + this.targetIds.length + ']: ', eClone);

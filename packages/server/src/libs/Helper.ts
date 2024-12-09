@@ -1,8 +1,10 @@
-import * as _ from 'lodash';
-import {C_DEFAULT, K_META_CONTEXT_ARGS} from './Constants';
-import {K_INST_ID, K_NODE_ID, MetaArgs} from '@typexs/base';
+import { has, includes, isArray, isPlainObject } from '@typexs/generic';
+
+
+import { C_DEFAULT, K_META_CONTEXT_ARGS } from './Constants';
+import { K_INST_ID, K_NODE_ID, MetaArgs } from '@typexs/base';
 import * as fs from 'fs';
-import {Stats} from 'fs';
+import { Stats } from 'fs';
 
 
 export interface WalkValues {
@@ -28,7 +30,7 @@ export class Helper {
           group = entry.ctxtGroup;
         }
       }
-      if (!_.has(groups, group)) {
+      if (!has(groups, group)) {
         // @ts-ignore
         groups[group] = [];
       }
@@ -73,7 +75,7 @@ export class Helper {
       }
 
       if (lines.length >= stat.size || (lineCount >= maxlines - 1 && maxlines - 1 >= 0)) {
-        if (_.includes(NEW_LINE_CHARACTERS, lines.substring(0, 1))) {
+        if (includes(NEW_LINE_CHARACTERS, lines.substring(0, 1))) {
           lines = lines.substring(1);
         }
         await new Promise((resolve, reject) => fs.close(file, err => err ? reject(err) : resolve(null)));
@@ -86,7 +88,7 @@ export class Helper {
       return readPreviousChar(stat, file, chars)
         .then((nextCharacter) => {
           lines = nextCharacter + lines;
-          if (_.includes(NEW_LINE_CHARACTERS, nextCharacter) && lines.length > 1) {
+          if (includes(NEW_LINE_CHARACTERS, nextCharacter) && lines.length > 1) {
             lineCount++;
           }
           chars++;
@@ -150,7 +152,7 @@ export class Helper {
           } else {
             started = false;
           }
-          if (_.includes(NEW_LINE_CHARACTERS, nextCharacter)) {
+          if (includes(NEW_LINE_CHARACTERS, nextCharacter)) {
             lineCount++;
             if (started) {
               lineSelectedCount++;
@@ -174,10 +176,10 @@ export class Helper {
       if (obj === null || obj === undefined) {
         return;
       }
-      if (_.isArray(obj)) {
+      if (isArray(obj)) {
         for (let j = 0; j < obj.length; j++) {
           const el = obj[j];
-          const isLeaf = !_.isArray(el) && !_.isPlainObject(el);
+          const isLeaf = !isArray(el) && !isPlainObject(el);
           await fn({
             value: el,
             key: key,
@@ -190,9 +192,9 @@ export class Helper {
             await walk(el, j, el, key ? [...location, ...[key], ...[j]] : [...location, ...[j]]);
           }
         }
-      } else if (_.isPlainObject(obj)) {
-        for (const _key of _.keys(obj)) {
-          const isLeaf = !_.isArray(obj[_key]) && !_.isPlainObject(obj[_key]);
+      } else if (isPlainObject(obj)) {
+        for (const _key of  Object.keys(obj)) {
+          const isLeaf = !isArray(obj[_key]) && !isPlainObject(obj[_key]);
           await fn({
             value: obj[_key],
             key: _key,
@@ -222,7 +224,7 @@ export class Helper {
 
 
   static convertError(responses: any[]) {
-    if (_.isArray(responses)) {
+    if (isArray(responses)) {
       for (let i = 0; i < responses.length; i++) {
         const response = responses[i];
         if (response instanceof Error) {

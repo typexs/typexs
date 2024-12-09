@@ -1,6 +1,6 @@
 // import { IEntityRef } from '../registry/IEntityRef';
 // import { IPropertyRef } from '../registry/IPropertyRef';
-import * as _ from 'lodash';
+import { find, get, has, set } from '@typexs/generic';
 import { IDataExchange } from './IDataExchange';
 import { IClassRef, IEntityRef, IPropertyRef } from '@allgemein/schema-api';
 
@@ -53,7 +53,7 @@ export abstract class EntityDefTreeWorker {
     const def: IQEntry = { def: entityDef, sources: sources, refer: referPropertyDef };
     this.queue.push(def);
     def.result = await this.visitEntity(entityDef, referPropertyDef, sources);
-    if (!(_.has(def.result, 'abort') && def.result.abort)) {
+    if (!(has(def.result, 'abort') && def.result.abort)) {
       const properties = entityDef.getPropertyRefs();
       await this.walkProperties(properties, def);
     }
@@ -77,7 +77,7 @@ export abstract class EntityDefTreeWorker {
   //   const def: IQEntry = { def: entityDef, sources: sources, refer: referPropertyDef };
   //   this.queue.push(def);
   //   def.result = await this.visitObject(entityDef, referPropertyDef, sources);
-  //   if (!(_.has(def.result, 'abort') && def.result.abort)) {
+  //   if (!(has(def.result, 'abort') && def.result.abort)) {
   //     const properties = entityDef.getPropertyRefs();
   //     await this.walkProperties(properties, def);
   //   }
@@ -129,19 +129,19 @@ export abstract class EntityDefTreeWorker {
     if (!this.isCircular(entityDef)) {
 
       const visitResult = await this.visitEntityReference(previous.def, property, entityDef, previous.result);
-      const status = _.get(visitResult, 'status', null);
+      const status = get(visitResult, 'status', null);
       if (visitResult) {
         delete visitResult['status'];
       }
 
       let result = null;
-      if (!(_.has(visitResult, 'abort') && visitResult.abort)) {
+      if (!(has(visitResult, 'abort') && visitResult.abort)) {
         result = await this.onEntity(entityDef, property, visitResult);
       } else {
         result = visitResult;
       }
       if (status) {
-        _.set(result, 'status', status);
+        set(result, 'status', status);
       }
 
       await this.leaveEntityReference(previous.def, property, entityDef, result, visitResult);
@@ -153,7 +153,7 @@ export abstract class EntityDefTreeWorker {
   }
 
   isCircular(sourceDef: IPropertyRef | IEntityRef | IClassRef) {
-    const exists = _.find(this.queue, (q: IQEntry) => q.def === sourceDef);
+    const exists = find(this.queue, (q: IQEntry) => q.def === sourceDef);
     return exists != null;
   }
 
@@ -172,18 +172,18 @@ export abstract class EntityDefTreeWorker {
     const def: IQEntry = { def: classDef, sources: previous.result, refer: property };
     this.queue.push(def);
     def.result = await this.visitObjectReference(previous.def, property, classDef, previous.result);
-    const status = _.get(def.result, 'status', null);
+    const status = get(def.result, 'status', null);
     if (def.result) {
       delete def.result['status'];
     }
 
-    if (!(_.has(def.result, 'abort') && def.result.abort)) {
+    if (!(has(def.result, 'abort') && def.result.abort)) {
       // const properties = EntityRegistry.getIPropertyRefsFor(classDef);
       const properties = classDef.getPropertyRefs() as IPropertyRef[];
       await this.walkProperties(properties, def);
     }
     if (status) {
-      _.set(def.result, 'status', status);
+      set(def.result, 'status', status);
     }
     def.result = await this.leaveObjectReference(previous.def, property, classDef, def.result);
     if (def.result) {
@@ -207,17 +207,17 @@ export abstract class EntityDefTreeWorker {
   //   const def: IQEntry = {def: classDef, sources: previous.result, refer: property};
   //   this.queue.push(def);
   //   def.result = await this.visitExternalReference(previous.def, property, classDef, previous.result);
-  //   const status = _.get(def.result, 'status', null);
+  //   const status = get(def.result, 'status', null);
   //   if (def.result) {
   //     delete def.result['status'];
   //   }
-  //   if (!(_.has(def.result, 'abort') && def.result.abort)) {
+  //   if (!(has(def.result, 'abort') && def.result.abort)) {
   //     // const properties = EntityRegistry.getIPropertyRefsFor(classDef);
   //     const properties = classDef.getIPropertyRefs() as IPropertyRef[];
   //     await this.walkProperties(properties, def);
   //   }
   //   if (status) {
-  //     _.set(def.result, 'status', status);
+  //     set(def.result, 'status', status);
   //   }
   //   def.result = await this.leaveExternalReference(previous.def, property, classDef, def.result);
   //   if (def.result) {

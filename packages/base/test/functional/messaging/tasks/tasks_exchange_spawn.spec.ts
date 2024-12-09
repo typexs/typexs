@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+
 import {suite, test} from '@testdeck/mocha';
 import * as path from 'path';
 import * as fsExtra from 'fs-extra';
@@ -120,9 +120,9 @@ class MessagingSpec {
   async 'get log file path as map from local and remote only'() {
     const exchange = Injector.get(TasksExchange);
     const results = await exchange.getLogFilePath('abcdef', {filterErrors: true, outputMode: 'map'});
-    expect(_.keys(results)).to.have.length(2);
+    expect( Object.keys(results)).to.have.length(2);
     const new2 = {};
-    _.keys(results).sort().map(x => {
+     Object.keys(results).sort().map(x => {
       new2[x] = results[x];
     });
     expect(new2).to.be.deep.eq({

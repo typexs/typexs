@@ -1,5 +1,5 @@
 import { redis_host, redis_port, SPAWN_TIMEOUT, TEST_MONGO_STORAGE_OPTIONS } from './../config';
-import * as _ from 'lodash';
+
 import { IEventBusConfiguration } from '@allgemein/eventbus';
 import { Config } from '@allgemein/config';
 import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
@@ -9,6 +9,8 @@ import { Injector } from '@typexs/base/libs/di/Injector';
 import { C_STORAGE_DEFAULT } from '@typexs/base/libs/Constants';
 import { StorageRef } from '@typexs/base/libs/storage/StorageRef';
 import { TestHelper } from '@typexs/testing';
+import { set } from '@typexs/generic';
+
 
 (async function() {
   const LOG_EVENT = !!process.argv.find(x => x === '--enable_log');
@@ -20,7 +22,7 @@ import { TestHelper } from '@typexs/testing';
   }
 
   const DB_OPTIONS = TEST_MONGO_STORAGE_OPTIONS;
-  _.set(DB_OPTIONS, 'database', 'typexs_remote');
+  set(DB_OPTIONS, 'database', 'typexs_remote');
   let bootstrap = Bootstrap
     .setConfigSources([{ type: 'system' }])
     .configure(<ITypexsOptions & any>{
@@ -60,7 +62,7 @@ import { TestHelper } from '@typexs/testing';
   /*
   let commands = bootstrap.getCommands();
   expect(commands.length).to.be.gt(0);
-  let command = _.find(commands, e => e.command == 'worker');
+  let command = find(commands, e => e.command == 'worker');
   command.handler({});
   */
 

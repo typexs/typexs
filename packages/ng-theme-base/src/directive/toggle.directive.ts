@@ -40,7 +40,7 @@ export class ToggleDirective {
       }
 
       if (!isEmpty(hostToggleRfes)) {
-        const _keys = keys(hostToggleRfes);
+        const _keys =  Object.keys(hostToggleRfes);
         for (const k of _keys) {
           this._toggleRef(k, hostToggleRfes[k]);
         }

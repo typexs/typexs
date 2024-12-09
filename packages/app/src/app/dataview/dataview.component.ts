@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import {get, isBoolean, isDate, isNumber, isString} from 'lodash';
+import {get, isBoolean, isDate, isNumber, isString} from '@typexs/generic';
 import {
   AfterViewInit,
   Component,

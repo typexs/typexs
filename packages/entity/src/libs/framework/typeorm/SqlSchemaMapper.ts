@@ -1,6 +1,7 @@
 import {
   IDBType,
-  IStorageRefOptions, K_ENTITY_BUILT,
+  IStorageRefOptions,
+  K_ENTITY_BUILT,
   Log,
   NotSupportedError,
   NotYetImplementedError,
@@ -19,8 +20,6 @@ import {
 } from 'typeorm';
 import { SchemaRef } from '../../registry/SchemaRef';
 import { EntityRef } from '../../registry/EntityRef';
-import * as _ from 'lodash';
-import { assign, clone, defaults } from 'lodash';
 import { PropertyRef } from '../../registry/PropertyRef';
 import { XS_P_PROPERTY, XS_P_PROPERTY_ID, XS_P_SEQ_NR, XS_P_TYPE } from '../../Constants';
 import { SchemaUtils } from '../../SchemaUtils';
@@ -29,12 +28,13 @@ import { IDataExchange } from '../IDataExchange';
 import { EntityDefTreeWorker } from '../EntityDefTreeWorker';
 import { NameResolver } from './NameResolver';
 import { JoinDesc } from '../../descriptors/JoinDesc';
-import { ClassRef, IClassRef, ILookupRegistry, METATYPE_CLASS_REF, RegistryFactory, IEntityRef } from '@allgemein/schema-api';
+import { ClassRef, IClassRef, IEntityRef, ILookupRegistry, METATYPE_CLASS_REF, RegistryFactory } from '@allgemein/schema-api';
 import { ExprDesc } from '@allgemein/expressions';
 import { EntityRegistry } from '../../EntityRegistry';
 import { MetadataArgsStorage } from 'typeorm/metadata-args/MetadataArgsStorage';
 import { C_CLASS_WRAPPED, C_REGULAR } from './Constants';
 import { C_TYPEORM } from '@typexs/base/libs/storage/framework/typeorm/Constants';
+import { assign, capitalize, clone, defaults, has, isEmpty, isPlainObject } from '@typexs/generic';
 
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -148,7 +148,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
       const entityClass = results.next;
 
       // TODO prefix support?
-      const hasPrefix = _.has(results, 'prefix');
+      const hasPrefix = has(results, 'prefix');
       let propName = propertyDef.name;
       let propStoreName = propertyDef.storingName;
       if (hasPrefix) {
@@ -259,7 +259,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
     //   inverseSideProperty: () => entityDef.storingName + '.' + propertyDef.,
     //   options: {}
     // };
-    // _.set(propertyDef, 'relation', relation);
+    // set(propertyDef, 'relation', relation);
     return sources;
   }
 
@@ -307,7 +307,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
       }
     } else if (sourceRef instanceof EntityRef) {
       const storeClass = this.handleCreatePropertyClass(
-        propertyDef, [sourceRef.name, _.capitalize(propertyDef.name)].filter(x => !_.isEmpty(x)).join('')
+        propertyDef, [sourceRef.name, capitalize(propertyDef.name)].filter(x => !isEmpty(x)).join('')
       );
       this.attachPrimaryKeys(sourceRef, propertyDef, storeClass);
 
@@ -327,7 +327,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
       if (!propertyDef.isCollection()) {
         return { next: sources.next, prefix: propertyDef.name };
       } else {
-        const storeClass = this.handleCreatePropertyClass(propertyDef, _.capitalize(propertyDef.name) + classRef.className);
+        const storeClass = this.handleCreatePropertyClass(propertyDef, capitalize(propertyDef.name) + classRef.className);
         this.attachPropertyPrimaryKeys(storeClass);
         propertyDef.getJoinRef().setOption(C_CLASS_WRAPPED, true);
         return { next: storeClass };
@@ -394,7 +394,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
     } else {
       idProps = this.schemaDef.getPropertiesFor(targetDef.getClass()).filter(p => p.isIdentifier());
     }
-    if (_.isEmpty(idProps)) {
+    if (isEmpty(idProps)) {
       throw new NotYetImplementedError('no primary key is defined on ' + targetDef.machineName);
     }
     idProps.forEach(property => {
@@ -411,11 +411,11 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
       this.createColumnIfNotExists(C_REGULAR, targetClass, targetId, propDef);
     });
 
-    if (!_.isEmpty(propertyNames)) {
+    if (!isEmpty(propertyNames)) {
       throw new Error('amount of given reference keys is not equal with primary keys of referred entity');
     }
 
-    if (!_.isEmpty(indexNames)) {
+    if (!isEmpty(indexNames)) {
       Index(indexNames)(<any>{ constructor: targetClass });
     }
     return sources;
@@ -481,7 +481,7 @@ export class SqlSchemaMapper extends EntityDefTreeWorker implements ISchemaMappe
     const container = { constructor: targetClass };
     if (propertyRef instanceof PropertyRef) {
       annotation = this.ColumnDef(propertyRef, altPropertyName, skipIdentifier);
-    } else if (_.isPlainObject(propertyRef)) {
+    } else if (isPlainObject(propertyRef)) {
       switch (type) {
         case 'primary-generated':
           annotation = PrimaryGeneratedColumn(propertyRef);

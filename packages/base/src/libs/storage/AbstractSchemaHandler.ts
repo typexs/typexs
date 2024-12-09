@@ -1,5 +1,5 @@
-import * as _ from 'lodash';
-import { get, isFunction } from 'lodash';
+
+import { get, isArray, isFunction, isString } from 'lodash';
 import { IDBType } from './IDBType';
 import { JS_DATA_TYPES } from '@allgemein/schema-api';
 import { ICollection } from './ICollection';
@@ -58,7 +58,7 @@ export abstract class AbstractSchemaHandler {
     if (!AbstractSchemaHandler.typeMap[this.type]) {
       AbstractSchemaHandler.typeMap[this.type] = {};
     }
-    _.keys(typeMap).map(k => {
+    Object.keys(typeMap).map(k => {
       AbstractSchemaHandler.typeMap[this.type][k] = typeMap[k];
     });
 
@@ -80,14 +80,14 @@ export abstract class AbstractSchemaHandler {
         throw new NotSupportedError('regex operation not supported');
       },
       in: (k: string, v: string | any[]) => {
-        if (_.isArray(v)) {
+        if (isArray(v)) {
           return k + ' IN (' + v.join(', ') + ')';
         } else {
           return k + ' IN (' + v + ')';
         }
       },
       nin: (k: string, v: string | any[]) => {
-        if (_.isArray(v)) {
+        if (isArray(v)) {
           return k + ' NOT IN (' + v.join(', ') + ')';
         } else {
           return k + ' NOT IN (' + v + ')';
@@ -112,7 +112,7 @@ export abstract class AbstractSchemaHandler {
       }
     };
 
-    _.keys(fn).forEach(x => {
+    Object.keys(fn).forEach(x => {
       this.registerOperationHandle(x, fn[x]);
     });
 
@@ -134,7 +134,7 @@ export abstract class AbstractSchemaHandler {
 
 
   escape(name: string, quote: boolean = true) {
-    if (_.isString(name)) {
+    if (isString(name)) {
       if (quote) {
         return '\'' + name.replace(/'/, '\'\'') + '\'';
       } else {
@@ -150,7 +150,7 @@ export abstract class AbstractSchemaHandler {
     const c = await this.getConnection();
     const collections = await c.connection.createQueryRunner().getTables(names);
     const colls: ICollection[] = [];
-    _.map(collections, c => {
+    collections.map(c => {
       const props: ICollectionProperty[] = [];
       c.columns.map((c: any) => {
         props.push(c);
@@ -160,7 +160,7 @@ export abstract class AbstractSchemaHandler {
         framework: 'typeorm',
         properties: props
       };
-      _.keys(c).filter(x => x !== 'columns').map(k => {
+      Object.keys(c).filter(x => x !== 'columns').map(k => {
         _c[k] = c[k];
       });
 
@@ -216,7 +216,7 @@ export abstract class AbstractSchemaHandler {
   }
 
   getTypeMap() {
-    return _.get(AbstractSchemaHandler.typeMap, this.type, {});
+    return get(AbstractSchemaHandler.typeMap, this.type, {});
   }
 
   translateToStorageType(jsType: string | Function, options: { length?: number; [k: string]: any } = null): IDBType {

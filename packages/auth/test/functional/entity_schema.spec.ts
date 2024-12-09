@@ -1,6 +1,6 @@
-import { suite, test, timeout } from '@testdeck/mocha';
+import { suite, test } from '@testdeck/mocha';
 import { Bootstrap, Injector, StorageRef, TypeOrmEntityRegistry } from '@typexs/base';
-import * as _ from 'lodash';
+
 import { expect } from 'chai';
 import { TESTDB_SETTING, TestHelper } from './TestHelper';
 import { EntityController } from '@typexs/entity';
@@ -8,6 +8,8 @@ import { User } from '../../src/entities/User';
 import { Permission } from '@typexs/roles';
 import { Role } from '@typexs/roles/entities/Role';
 import { TypeOrmConnectionWrapper } from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { clone, map } from '@typexs/generic';
+
 
 const logValue = TestHelper.logEnable(false);
 const settingsTemplate = {
@@ -24,7 +26,7 @@ let bootstrap: Bootstrap;
 class EntitySchemaSpec {
 
   static async before() {
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     bootstrap = await TestHelper.bootstrap_basic(settings);
 
   }
@@ -46,7 +48,7 @@ class EntitySchemaSpec {
     const c = await ref.connect() as TypeOrmConnectionWrapper;
 
     const tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\' and tbl_name not like \'%sqlite%\';');
-    expect(_.map(tables, t => t.name)).to.have.include.members([
+    expect(map(tables, t => t.name)).to.have.include.members([
       'auth_method',
       'auth_session',
       'permission',

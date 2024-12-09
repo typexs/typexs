@@ -106,7 +106,7 @@ export class EntityAPIController {
 
 
   static _beforeBuild(entityDef: EntityRef, from: any, to: any) {
-    keys(from).filter(k => k.startsWith('$')).map(k => {
+     Object.keys(from).filter(k => k.startsWith('$')).map(k => {
       to[k] = from[k];
     });
   }

@@ -74,7 +74,7 @@ export class StorageAPIController {
 
 
   static _beforeBuild(entityRef: IEntityRef, from: any, to: any) {
-    keys(from).filter(k => k.startsWith('$')).map(k => {
+     Object.keys(from).filter(k => k.startsWith('$')).map(k => {
       to[k] = from[k];
     });
   }
@@ -132,7 +132,7 @@ export class StorageAPIController {
   static checkOptions(opts: any, options: any) {
     if (!isEmpty(opts)) {
       // const checked = {};
-      // keys(opts).filter(k => [
+      //  Object.keys(opts).filter(k => [
       //     'raw',
       //     'timeout',
       //     'validate',
@@ -329,7 +329,7 @@ export class StorageAPIController {
     };
 
     // pass $dollared key
-    keys(result).filter(x => isString(x) && /^\$/.test(x)).forEach(k => {
+     Object.keys(result).filter(x => isString(x) && /^\$/.test(x)).forEach(k => {
       results[k] = result[k];
     });
 

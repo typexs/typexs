@@ -382,7 +382,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
       const repo = this.connection.getEntityManager().getRepository(clazz);
       const queryBuilder = repo.createQueryBuilder();
       for (const cond of conditions) {
-        if (!cond || keys(cond).length === 0) {
+        if (!cond ||  Object.keys(cond).length === 0) {
           throw new Error('conditions for query are empty ' + JSON.stringify(conditions));
         }
         const query = SqlHelper.conditionToQuery(cond);
@@ -391,7 +391,7 @@ export class SqlFindOp<T> extends EntityDefTreeWorker implements IFindOp<T> {
         }
       }
       if (keys(sort).length > 0) {
-        keys(sort).forEach(k => {
+         Object.keys(sort).forEach(k => {
           queryBuilder.addOrderBy(k, sort[k]);
         });
       }

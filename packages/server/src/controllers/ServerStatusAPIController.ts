@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+
 import { CurrentUser, ForbiddenError, Get, JsonController, Param } from 'routing-controllers';
 import {
   _API_CTRL_SERVER_CONFIG,

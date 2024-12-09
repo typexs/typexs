@@ -1,5 +1,5 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Config, Injector, ITypexsOptions} from '@typexs/base';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { Bootstrap, Config, Injector, ITypexsOptions } from '@typexs/base';
 import {
   API_CTRL_REGISTRY_DATA,
   API_CTRL_REGISTRY_NAMESPACES,
@@ -8,18 +8,19 @@ import {
   K_ROUTE_CONTROLLER,
   PERMISSION_ALLOW_ACCESS_REGISTRY_ENTITY_REFS_BY_NAMESPACE
 } from '../../../src/libs/Constants';
-import {expect} from 'chai';
-import * as _ from 'lodash';
-import {TEST_STORAGE_OPTIONS} from '../config';
-import {HttpFactory, IHttp} from '@allgemein/http';
-import {RandomData} from '../../../../storage/test/functional/controllers/fake_app_storage/entities/RandomData';
-import {Server} from '../../../src/libs/server/Server';
-import {Action} from 'routing-controllers';
-import {IRole, IRolesHolder} from '@typexs/roles-api/index';
-import {BasicPermission} from '@typexs/roles-api';
-import {join} from 'path';
-import {CONFIG_SCHEMA} from '../../../src/config.schema';
+import { expect } from 'chai';
+
+import { TEST_STORAGE_OPTIONS } from '../config';
+import { HttpFactory, IHttp } from '@allgemein/http';
+import { RandomData } from '../../../../storage/test/functional/controllers/fake_app_storage/entities/RandomData';
+import { Server } from '../../../src/libs/server/Server';
+import { Action } from 'routing-controllers';
+import { IRole, IRolesHolder } from '@typexs/roles-api/index';
+import { BasicPermission } from '@typexs/roles-api';
+import { join } from 'path';
+import { CONFIG_SCHEMA } from '../../../src/config.schema';
 import { TestHelper } from '../TestHelper';
+import { clone, cloneDeep, snakeCase } from '@typexs/generic';
 
 
 let permissionsCheck = false;
@@ -84,7 +85,7 @@ const settingsTemplate: ITypexsOptions & any = {
                   permissions: [
                     new BasicPermission(
                       PERMISSION_ALLOW_ACCESS_REGISTRY_ENTITY_REFS_BY_NAMESPACE
-                        .replace(':namespace', _.snakeCase(RandomData.name))
+                        .replace(':namespace', snakeCase(RandomData.name))
                     )
                   ],
                 }
@@ -118,7 +119,7 @@ class Storage_api_controllerSpec {
 
   static async before() {
     Bootstrap.reset();
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     http = HttpFactory.create();
 
     bootstrap = Bootstrap
@@ -168,12 +169,12 @@ class Storage_api_controllerSpec {
       passBody: true
     }) as any;
     expect(res).to.not.be.null;
-    expect(_.keys(res.definitions)).to.include.members(['App', 'Server']);
+    expect( Object.keys(res.definitions)).to.include.members(['App', 'Server']);
     expect(res.anyOf.map((x: any) => x.$ref)).to.include.members([
       '#/definitions/App',
       '#/definitions/Server'
     ]);
-    const ref = _.cloneDeep(CONFIG_SCHEMA);
+    const ref = cloneDeep(CONFIG_SCHEMA);
     delete ref['$schema'];
     expect(res.definitions.Server).to.be.deep.eq(ref.properties['server']);
   }

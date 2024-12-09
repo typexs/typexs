@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { get, isBoolean, isEmpty, set } from '@typexs/generic';
+
+
 import { DataContainer } from '@allgemein/schema-api';
 import { EntityRegistry } from '@typexs/entity/libs/EntityRegistry';
 
@@ -29,9 +31,9 @@ export class AuthDataContainer<T> extends DataContainer<T> {
     super.applyState();
 
     ['isAuthenticated', 'success', 'method', 'token', 'user', 'data'].forEach(k => {
-      const value = _.get(this, k, null);
-      if (_.isBoolean(value) || !_.isEmpty(value)) {
-        _.set(<any>this.instance, [STATE_KEY, k].join('.'), value);
+      const value = get(this, k, null);
+      if (isBoolean(value) || !isEmpty(value)) {
+        set(<any>this.instance, [STATE_KEY, k].join('.'), value);
       }
     });
 

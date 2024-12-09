@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { Config } from '@allgemein/config';
 
 import { TaskRef } from './TaskRef';
@@ -16,7 +15,23 @@ import { IWorkerInfo } from '../worker/IWorkerInfo';
 import { System } from '../system/System';
 import { Injector } from '../di/Injector';
 import { DateUtils } from '../utils/DateUtils';
-import { assign, clone, defaults, has, isString } from 'lodash';
+import {
+  assign,
+  clone,
+  defaults,
+  get,
+  has,
+  isArray,
+  isEmpty,
+  isFunction,
+  max,
+  min,
+  isString,
+  isUndefined,
+  remove,
+  values,
+  snakeCase, uniq
+} from 'lodash';
 
 
 export class TasksHelper {
@@ -29,7 +44,7 @@ export class TasksHelper {
       });
       if (!withoutPassThrough) {
         t.getOutgoings().map(x => {
-          _.remove(incoming, i => i.storingName === x.storingName);
+          remove(incoming, i => i.storingName === x.storingName);
         });
       }
     });
@@ -41,7 +56,7 @@ export class TasksHelper {
     const klasses = loader.getClasses(K_CLS_TASKS);
     for (const klass of klasses) {
       const task = Reflect.construct(klass, []);
-      if (!('name' in task) || !_.isFunction(task['exec'])) {
+      if (!('name' in task) || !isFunction(task['exec'])) {
         throw new Error('task ' + klass + ' has no name');
       }
       tasks.addTask(klass, null, { worker: hasWorker });
@@ -53,7 +68,7 @@ export class TasksHelper {
     const klazzes = await ClassLoader.importClassesFromDirectoriesAsync([dir]);
     for (const klass of klazzes) {
       const task = Reflect.construct(klass, []);
-      if (!('name' in task) || !_.isFunction(task['exec'])) {
+      if (!('name' in task) || !isFunction(task['exec'])) {
         throw new Error('task ' + klass + ' has no name');
       }
       tasks.addTask(klass);
@@ -65,7 +80,7 @@ export class TasksHelper {
 
     const getTaskName = (def: any) => {
       let taskName = null;
-      if (_.isString(def)) {
+      if (isString(def)) {
         taskName = def;
       } else if (def.name) {
         taskName = def.name;
@@ -75,7 +90,7 @@ export class TasksHelper {
       return taskName;
     };
 
-    if (_.isArray(name)) {
+    if (isArray(name)) {
       const names = [];
       for (let i = 0; i < name.length; i++) {
         const def = name[i];
@@ -146,7 +161,7 @@ export class TasksHelper {
    * @param taskSpec
    */
   static getTaskNames(taskSpec: TASK_RUNNER_SPEC[]) {
-    return taskSpec.map(x => _.isString(x) ? x : x.name);
+    return taskSpec.map(x => isString(x) ? x : x.name);
   }
 
 
@@ -171,7 +186,7 @@ export class TasksHelper {
 
     const options = {};
     keys.map(x => {
-      if (!_.isUndefined(argv[x])) {
+      if (!isUndefined(argv[x])) {
         options[x] = argv[x];
         delete argv[x];
       }
@@ -205,7 +220,7 @@ export class TasksHelper {
    */
   static async exec(taskSpec: TASK_RUNNER_SPEC[], argv: ITaskExectorOptions) {
     // check nodes for tasks
-    if (!_.isArray(taskSpec) || _.isEmpty(taskSpec)) {
+    if (!isArray(taskSpec) || isEmpty(taskSpec)) {
       throw new Error('no task definition found');
     }
 
@@ -213,20 +228,20 @@ export class TasksHelper {
     const taskNames = this.getTaskNames(taskSpec);
     const tasksReg: Tasks = Injector.get(Tasks.NAME);
     const tasks = tasksReg.getTasksByNames(taskNames);
-    const targetId = _.get(options, 'targetId', null);
-    let isLocal = _.get(options, 'isLocal', true);
-    const isRemote = _.get(options, 'remote', false);
-    const skipTargetCheck = _.get(options, 'skipTargetCheck', false);
+    const targetId = get(options, 'targetId', null);
+    let isLocal = get(options, 'isLocal', true);
+    const isRemote = get(options, 'remote', false);
+    const skipTargetCheck = get(options, 'skipTargetCheck', false);
 
     // check if concurrency is restricted
     if (options.executionConcurrency) {
       if (options.executionConcurrency !== 0) {
         const registry = Injector.get(CL_TASK_RUNNER_REGISTRY) as any;
         const counts = registry.getLocalTaskCounts(taskNames);
-        if (!_.isEmpty(counts)) {
-          const max = _.max(_.values(counts));
-          if (max >= options.executionConcurrency) {
-            Log.warn(`task command: maximal concurrent process of ${taskNames} reached (${max} < ${options.executionConcurrency}). `);
+        if (!isEmpty(counts)) {
+          const _max = max(values(counts));
+          if (_max >= options.executionConcurrency) {
+            Log.warn(`task command: maximal concurrent process of ${taskNames} reached (${_max} < ${options.executionConcurrency}). `);
             return null;
           }
         }
@@ -239,7 +254,7 @@ export class TasksHelper {
       isLocal = false;
     }
 
-    const localPossible = _.uniq(taskNames).length === tasks.length;
+    const localPossible = uniq(taskNames).length === tasks.length;
     if (!isLocal) {
       Log.debug('task command: before request fire');
       const execReq = Injector.get(TaskRequestFactory).executeRequest();
@@ -257,7 +272,7 @@ export class TasksHelper {
       if (localPossible) {
         const runnerOptions: ITaskRunnerOptions = {
           parallel: 5,
-          dryMode: _.get(argv, 'dry-outputMode', _.get(argv, 'dryMode', false)),
+          dryMode: get(argv, 'dry-outputMode', get(argv, 'dryMode', false)),
           local: true
         };
 
@@ -272,11 +287,11 @@ export class TasksHelper {
           const props = TasksHelper.getIncomingParameters([taskRef]);
           if (props.length > 0) {
             for (const p of props) {
-              if (!_.has(taskParams, p.storingName) && !_.has(taskParams, p.name)) {
+              if (!has(taskParams, p.storingName) && !has(taskParams, p.name)) {
                 if (p.isOptional()) {
                   Log.warn('task command: optional parameter "' + p.name + '" for ' + JSON.stringify(_taskSpec) + ' not found');
                 } else {
-                  if (_.has(argv, 'skipRequiredThrow') && argv.skipRequiredThrow) {
+                  if (has(argv, 'skipRequiredThrow') && argv.skipRequiredThrow) {
                     Log.warn('task command: required parameter "' + p.name + '" for ' + JSON.stringify(_taskSpec) + ' not found.');
                   } else {
                     throw new Error('The required value is not passed');
@@ -305,10 +320,10 @@ export class TasksHelper {
 
 
   static getWorkerNodes(system: System) {
-    return _.concat([], [system.node], system.nodes)
+    return [].concat([system.node], system.nodes)
       .filter(n => {
-        const x = _.find(n.contexts, c => c.context === 'workers');
-        return _.get(x, 'workers', []).find((y: IWorkerInfo) => y.className === CL_TASK_QUEUE_WORKER);
+        const x = n.contexts.find(c => c.context === 'workers');
+        return get(x, 'workers', []).find((y: IWorkerInfo) => y.className === CL_TASK_QUEUE_WORKER);
       }).map(x => x.nodeId);
 
   }
@@ -316,9 +331,9 @@ export class TasksHelper {
 
   static getTaskParameters(argv: any = {}) {
     const parameters: any = {};
-    _.keys(argv).map(k => {
+    Object.keys(argv).map(k => {
       if (!/^_/.test(k)) {
-        parameters[_.snakeCase(k)] = argv[k];
+        parameters[snakeCase(k)] = argv[k];
       }
     });
     return parameters;

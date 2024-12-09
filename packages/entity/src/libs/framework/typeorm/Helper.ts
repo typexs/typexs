@@ -1,7 +1,7 @@
 import { IPropertyRef } from '@allgemein/schema-api';
-import { first, isArray, isEmpty, isNull } from 'lodash';
 import { PROP_KEY_LOOKUP } from './Constants';
-import * as _ from 'lodash';
+import { first, has, isArray, isEmpty, isNull } from '@typexs/generic';
+
 
 export function setTargetValueForProperty(propertyRef: IPropertyRef, target: any, newObject: any, seqNr: number = null) {
   if (propertyRef.isCollection()) {
@@ -46,7 +46,7 @@ export function collectLookupConditions(propertyRef: IPropertyRef, sources: any[
   const lookupConditions: any[] = [];
   const LOOKUP_KEY = lookupKey(propertyRef);
   for (const source of sources) {
-    if (_.has(source, LOOKUP_KEY)) {
+    if (has(source, LOOKUP_KEY)) {
       const lookup = source[LOOKUP_KEY];
       lookupConditions.push(lookup);
       delete source[LOOKUP_KEY];

@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { defaults, find, get, isArray, isEmpty, isString, set, snakeCase, sum } from '@typexs/generic';
 import { EventBus, subscribe } from '@allgemein/eventbus';
 import { __CLASS__, __NODE_ID__, __REGISTRY__, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base/libs/Constants';
 import { Bootstrap } from '@typexs/base/Bootstrap';
@@ -14,10 +14,7 @@ import { Log } from '@typexs/base/libs/logging/Log';
 import { IFindOptions } from '@typexs/base/libs/storage/framework/IFindOptions';
 import { IDistributedQueryWorkerOptions } from '..//lib/IDistributedQueryWorkerOptions';
 import { ILoggerApi } from '@typexs/base/libs/logging/ILoggerApi';
-import {
-  __DISTRIBUTED_ID__,
-  DS_OPERATION
-} from './../lib/Constants';
+import { __DISTRIBUTED_ID__, DS_OPERATION } from './../lib/Constants';
 import { EntityControllerRegistry } from '@typexs/base/libs/storage/EntityControllerRegistry';
 import { NotSupportedError } from '@allgemein/base';
 import { IUpdateOptions } from '@typexs/base/libs/storage/framework/IUpdateOptions';
@@ -55,18 +52,18 @@ export interface IQueryWorkload extends IQueueWorkload {
    * Received event
    */
   event:
-  DistributedFindRequest |
-  DistributedSaveRequest |
-  DistributedAggregateRequest |
-  DistributedUpdateRequest |
-  DistributedRemoveRequest;
+    DistributedFindRequest |
+    DistributedSaveRequest |
+    DistributedAggregateRequest |
+    DistributedUpdateRequest |
+    DistributedRemoveRequest;
 
   response:
-  DistributedFindResponse |
-  DistributedSaveResponse |
-  DistributedUpdateResponse |
-  DistributedAggregateResponse |
-  DistributedRemoveResponse;
+    DistributedFindResponse |
+    DistributedSaveResponse |
+    DistributedUpdateResponse |
+    DistributedAggregateResponse |
+    DistributedRemoveResponse;
 
 }
 
@@ -97,8 +94,8 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
     name: 'queryworkerqueue',
     concurrent: 100
   }) {
-    this.options = _.defaults(options, { onlyRemote: false, allowed: {} });
-    this.logger = _.get(this.options, 'logger', Log.getLoggerFor(DistributedQueryWorker));
+    this.options = defaults(options, { onlyRemote: false, allowed: {} });
+    this.logger = get(this.options, 'logger', Log.getLoggerFor(DistributedQueryWorker));
     this.nodeId = Bootstrap.getNodeId();
     this.queue = new AsyncWorkerQueue<IQueryWorkload>(this, { ...options, logger: this.logger });
     await EventBus.register(this);
@@ -111,7 +108,7 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
       return false;
     }
 
-    if (_.isEmpty(this.options.allowed)) {
+    if (isEmpty(this.options.allowed)) {
       return true;
     }
 
@@ -120,11 +117,11 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
       if (type === '*' || type === null) {
         return true;
       } else {
-        const _type = _.snakeCase(type);
-        if (_.isString(this.options.allowed[sourceId])) {
-          return _.snakeCase(this.options.allowed[sourceId] as string) === _type;
-        } else if (_.isArray(this.options.allowed[sourceId])) {
-          return !!_.find(this.options.allowed[sourceId], x => _.snakeCase(x) === _type);
+        const _type = snakeCase(type);
+        if (isString(this.options.allowed[sourceId])) {
+          return snakeCase(this.options.allowed[sourceId] as string) === _type;
+        } else if (isArray(this.options.allowed[sourceId])) {
+          return !!find(this.options.allowed[sourceId], x => snakeCase(x) === _type);
         }
 
       }
@@ -248,10 +245,10 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
 
     // clear references
     this.handleError(workLoad.response);
-    _.set(workLoad.event, 'entityRef', null);
-    _.set(workLoad.event, 'entityRefs', null);
-    _.set(workLoad.event, 'entityController', null);
-    _.set(workLoad.event, 'entityControllers', null);
+    set(workLoad.event, 'entityRef', null);
+    set(workLoad.event, 'entityRefs', null);
+    set(workLoad.event, 'entityController', null);
+    set(workLoad.event, 'entityControllers', null);
     return EventBus.postAndForget(workLoad.response);
   }
 
@@ -263,7 +260,7 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
       return;
     }
 
-    const controller = this.entityControllerRegistry.getControllerForClass(event.entityType, _.get(event.options, 'controllerHint', null));
+    const controller = this.entityControllerRegistry.getControllerForClass(event.entityType, get(event.options, 'controllerHint', null));
     if (!controller) {
       response.error = new Error('no entity controller defined to handle type "' + event.entityType + '"');
       response.results = [];
@@ -284,7 +281,7 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
 
 
   onSaveRequest(event: DistributedSaveRequest, response: DistributedSaveResponse) {
-    const entityTypes = _.keys(event.objects);
+    const entityTypes = Object.keys(event.objects);
     const failed = entityTypes.map(type => this.isAllowed(event.nodeId, type)).filter(x => !x);
     if (failed.length > 0) {
       response.skipping = true;
@@ -296,7 +293,7 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
     const entityControllers = {};
     for (const entityType of entityTypes) {
       entityControllers[entityType] = this.entityControllerRegistry
-        .getControllerForClass(entityType, _.get(event.options, 'controllerHint', null));
+        .getControllerForClass(entityType, get(event.options, 'controllerHint', null));
 
       if (!entityControllers[entityType]) {
         response.error = new Error('no entity controller defined to handle type "' + entityType + '"');
@@ -319,7 +316,7 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
 
 
   onAggregateRequest(event: DistributedAggregateRequest, response: DistributedAggregateResponse) {
-    if (_.isEmpty(event.pipeline)) {
+    if (isEmpty(event.pipeline)) {
       // no entity ref
       response.error = new Error('pipeline is empty');
       response.results = [];
@@ -332,7 +329,7 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
       return;
     }
 
-    const controller = this.entityControllerRegistry.getControllerForClass(event.entityType, _.get(event.options, 'controllerHint', null));
+    const controller = this.entityControllerRegistry.getControllerForClass(event.entityType, get(event.options, 'controllerHint', null));
     if (!controller) {
       response.error = new Error('no entity controller defined to handle type "' + event.entityType + '"');
       response.results = [];
@@ -363,7 +360,7 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
 
       const controller = this.entityControllerRegistry
         .getControllerForClass(event.entityType,
-          _.get(event.options, 'controllerHint', null));
+          get(event.options, 'controllerHint', null));
       if (!controller) {
         response.error = new Error('no entity controller defined to handle type "' + event.entityType + '"');
         response.results = [];
@@ -384,7 +381,7 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
       event.entityControllers[event.entityType] = controller;
 
     } else if (event.removable) {
-      const entityTypes = _.keys(event.removable);
+      const entityTypes = Object.keys(event.removable);
       const failed = entityTypes.map(type => this
         .isAllowed(event.nodeId, type)).filter(x => !x);
       if (failed.length > 0) {
@@ -398,7 +395,7 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
       for (const entityType of entityTypes) {
         entityControllers[entityType] = this.entityControllerRegistry
           .getControllerForClass(entityType,
-            _.get(event.options, 'controllerHint', null));
+            get(event.options, 'controllerHint', null));
 
         if (!entityControllers[entityType]) {
           response.error = new Error('no entity controller defined to handle type "' + entityType + '"');
@@ -433,8 +430,8 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
         response.results[o.entityType] = await entityController
           .remove(classRef.getClass(), o.condition, o.options);
       } else {
-        for (const entityType of _.keys(o.entityRefs)) {
-          if (_.isEmpty(o.removable[entityType])) {
+        for (const entityType of Object.keys(o.entityRefs)) {
+          if (isEmpty(o.removable[entityType])) {
             continue;
           }
 
@@ -444,9 +441,9 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
           const build = o.removable[entityType].map(x => classRef.build(x, {
             afterBuild: (entityRef, from, to) => {
               // keep the remote id
-              _.set(to, __DISTRIBUTED_ID__, _.get(from, __DISTRIBUTED_ID__));
-              _.set(to, __CLASS__, classRef.name);
-              _.set(to, __REGISTRY__, classRef.getNamespace());
+              set(to, __DISTRIBUTED_ID__, get(from, __DISTRIBUTED_ID__));
+              set(to, __CLASS__, classRef.name);
+              set(to, __REGISTRY__, classRef.getNamespace());
             }
           }));
           response.results[entityType] = await entityController.remove(build, o.options);
@@ -454,7 +451,7 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
             '[qId: ' + response.reqEventId + ']');
         }
       }
-      response.affected = _.sum(_.keys(response.results).map(x => response.results[x]));
+      response.affected = sum(Object.keys(response.results).map(x => response.results[x]));
     } catch (err) {
       response.error = err;
       this.logger.error(err);
@@ -471,7 +468,7 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
 
     const controller = this.entityControllerRegistry
       .getControllerForClass(event.entityType,
-        _.get(event.options, 'controllerHint', null));
+        get(event.options, 'controllerHint', null));
     if (!controller) {
       response.error = new Error('no entity controller defined to handle type "' + event.entityType + '"');
       response.affected = -1;
@@ -485,7 +482,7 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
       return;
     }
 
-    if (_.isEmpty(event.conditions) || _.isEmpty(event.update)) {
+    if (isEmpty(event.conditions) || isEmpty(event.update)) {
       // no entity ref
       response.error = new Error('no conditions or update order is missing');
       response.affected = -1;
@@ -536,9 +533,9 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
       );
 
       response.results.forEach(x => {
-        _.set(x, __CLASS__, classRef.name);
-        _.set(x, __REGISTRY__, classRef.getNamespace());
-        _.set(x, __NODE_ID__, this.nodeId);
+        set(x, __CLASS__, classRef.name);
+        set(x, __REGISTRY__, classRef.getNamespace());
+        set(x, __NODE_ID__, this.nodeId);
       });
 
       response.count = response.results[XS_P_$COUNT];
@@ -555,8 +552,8 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
   async doSave(response: DistributedSaveResponse, o: DistributedSaveRequest) {
     response.results = {};
     try {
-      for (const entityType of _.keys(o.entityRefs)) {
-        if (_.isEmpty(o.objects[entityType])) {
+      for (const entityType of Object.keys(o.entityRefs)) {
+        if (isEmpty(o.objects[entityType])) {
           continue;
         }
         const ref = o.entityRefs[entityType];
@@ -565,9 +562,9 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
         const build = o.objects[entityType].map(x => classRef.build(x, {
           afterBuild: (entityRef, from, to) => {
             // keep the remote id
-            _.set(to, __DISTRIBUTED_ID__, _.get(from, __DISTRIBUTED_ID__));
-            _.set(to, __CLASS__, classRef.name);
-            _.set(to, __REGISTRY__, classRef.getNamespace());
+            set(to, __DISTRIBUTED_ID__, get(from, __DISTRIBUTED_ID__));
+            set(to, __CLASS__, classRef.name);
+            set(to, __REGISTRY__, classRef.getNamespace());
           }
         }));
         response.results[entityType] = await entityController.save(build, o.options);
@@ -592,9 +589,9 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
       response.results = await entityController.aggregate(classRef.getClass(), o.pipeline, o.options);
 
       response.results.forEach(x => {
-        _.set(x, __CLASS__, classRef.name);
-        _.set(x, __REGISTRY__, classRef.getNamespace());
-        _.set(x, __NODE_ID__, this.nodeId);
+        set(x, __CLASS__, classRef.name);
+        set(x, __REGISTRY__, classRef.getNamespace());
+        set(x, __NODE_ID__, this.nodeId);
       });
 
       response.count = response.results[XS_P_$COUNT];

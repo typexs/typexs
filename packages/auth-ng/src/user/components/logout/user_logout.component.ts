@@ -30,7 +30,7 @@ export class UserLogoutComponent implements OnInit {
       } else {
         // TODO how to handle errors
         /*
-        if (_.isArray(logout.$state.errors)) {
+        if (isArray(logout.$state.errors)) {
           this.validation.errors.messages.push({type: 'error', content: JSON.stringify(logout.errors)})
         } else {
           this.validation.errors.messages.push({type: 'error', content: 'UNKNOWN'})

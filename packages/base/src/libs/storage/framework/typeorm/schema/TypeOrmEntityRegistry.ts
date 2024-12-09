@@ -350,7 +350,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
           this.metadatastore.tables.push(typeOrmOptions);
         }
       } else {
-        const _keys = keys(options);
+        const _keys =  Object.keys(options);
         // entry was reset, metadata are passed but everything other from MetadataRegistry is missing (meaning the annotations)
         if (_keys.length === 1 && _keys.includes(C_METADATA) && target) {
           const entry = MetadataRegistry.$().getByContextAndTarget(METATYPE_ENTITY, target).shift();
@@ -513,7 +513,7 @@ export class TypeOrmEntityRegistry extends DefaultNamespacedRegistry implements 
             };
 
             // translate keys over MAP_PROP_KEYS to column args
-            for (const x of keys(MAP_PROP_KEYS)) {
+            for (const x of  Object.keys(MAP_PROP_KEYS)) {
               if (has(options, x)) {
                 columnMetadataArgs.options[MAP_PROP_KEYS[x]] = options[x];
               }

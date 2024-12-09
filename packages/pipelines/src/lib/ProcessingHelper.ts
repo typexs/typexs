@@ -1,9 +1,9 @@
-import * as _ from 'lodash';
+import { isFunction, isObject } from '@typexs/generic';
 
 
 export class ProcessingHelper {
   static isPromise(obj: any) {
-    if (_.isObject(obj) && obj['then'] && _.isFunction(obj['then'])) {
+    if (isObject(obj) && obj['then'] && isFunction(obj['then'])) {
       return true;
     }
     return false;

@@ -1,13 +1,14 @@
-import {suite, test} from '@testdeck/mocha';
-import * as _ from 'lodash';
+import { suite, test } from '@testdeck/mocha';
+
 import * as path from 'path';
-import {expect} from 'chai';
-import {Bootstrap} from '../../../../src/Bootstrap';
-import {Config} from '@allgemein/config';
-import {TestHelper} from '@typexs/testing';
-import {SpawnHandle} from '@typexs/testing';
-import {Injector} from '../../../../src/libs/di/Injector';
-import {ConfigExchange} from '../../../../src/adapters/exchange/config/ConfigExchange';
+import { expect } from 'chai';
+import { Bootstrap } from '../../../../src/Bootstrap';
+import { Config } from '@allgemein/config';
+import { SpawnHandle, TestHelper } from '@typexs/testing';
+import { Injector } from '../../../../src/libs/di/Injector';
+import { ConfigExchange } from '../../../../src/adapters/exchange/config/ConfigExchange';
+import { values } from '@typexs/generic';
+
 
 const LOG_EVENT = TestHelper.logEnable(false);
 
@@ -65,8 +66,8 @@ class MessagingSpec {
     const exchange = Injector.get(ConfigExchange);
     const results = await exchange.key('app', {outputMode: 'map'});
 
-    expect(_.keys(results)).to.be.deep.eq(['fake_app:0', 'remote_fakeapp01:0']);
-    expect(_.values(results)).to.be.deep.eq([
+    expect( Object.keys(results)).to.be.deep.eq(['fake_app:0', 'remote_fakeapp01:0']);
+    expect(values(results)).to.be.deep.eq([
       {
         'name': 'fake_app',
         'nodeId': 'fake_app',
@@ -85,8 +86,8 @@ class MessagingSpec {
   async 'config message exchange remote'() {
     const exchange = Injector.get(ConfigExchange);
     const results = await exchange.key('app', {outputMode: 'map', skipLocal: true});
-    expect(_.keys(results)).to.be.deep.eq(['remote_fakeapp01:0']);
-    expect(_.values(results)).to.be.deep.eq([
+    expect( Object.keys(results)).to.be.deep.eq(['remote_fakeapp01:0']);
+    expect(values(results)).to.be.deep.eq([
       {
         'name': 'fakeapp01',
         'nodeId': 'remote_fakeapp01',

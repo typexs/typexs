@@ -1,11 +1,11 @@
 /* eslint-disable */
-import * as _ from 'lodash';
-import { get } from 'lodash';
+
 import { EventEmitter } from 'events';
 import { Log } from '@typexs/base';
 import { FINISHED, WAITING } from './queue/Constants';
 import { IPullableQueueOptions } from './queue/IPullableQueueOptions';
 import { ERROR_FUNCTION } from './Constants';
+import { get, isArray, isFunction } from '@typexs/generic';
 
 
 // TODO Work in progress!!!
@@ -103,14 +103,14 @@ export class PullingQueue extends EventEmitter {
 
 
   onCatch(pipe: ERROR_FUNCTION) {
-    if (_.isFunction(pipe)) {
+    if (isFunction(pipe)) {
       this.$onCatch = pipe;
     }
     return this;
   }
 
   pullOn(pullable: any) {
-    if (_.isFunction(pullable.hasNext) && _.isFunction(pullable.doFetch)) {
+    if (isFunction(pullable.hasNext) && isFunction(pullable.doFetch)) {
       this.$pullable = pullable;
     } else {
       throw new Error('function is not of Pullable');
@@ -148,7 +148,7 @@ export class PullingQueue extends EventEmitter {
     if (!self.$__fn) {
       self.$__fn = function(_data: any) {
         self.$iterations++;
-        const size = _.isArray(_data) ? _data.length : 1;
+        const size = isArray(_data) ? _data.length : 1;
         let $p: Promise<any> = new Promise(function(resolve, reject) {
           resolve(_data);
         });
@@ -188,8 +188,8 @@ export class PullingQueue extends EventEmitter {
 
     // if(this.$pre_enqueue)
 
-    const size = _.isArray(data) ? data.length : 1;
-    if (_.isArray(data) && !get(this.$options, 'passArray', false)) {
+    const size = isArray(data) ? data.length : 1;
+    if (isArray(data) && !get(this.$options, 'passArray', false)) {
       this.$enqueued += size;
       this.$queue = this.$queue.concat(data);
     } else {

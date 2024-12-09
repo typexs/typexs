@@ -1,19 +1,18 @@
-import {IEntityRef, METATYPE_ENTITY} from '@allgemein/schema-api';
-import {K_CLS_WORKERS} from './Constants';
-import {ClassUtils} from '@allgemein/base';
-import {IWorkerRefOptions, WorkerRef} from './WorkerRef';
-import {IWorkerConfig} from './IWorkerConfig';
-import * as _ from 'lodash';
-import {IWorker} from './IWorker';
-import {IWorkerInfo} from './IWorkerInfo';
-import {MatchUtils} from '../utils/MatchUtils';
-import {RuntimeLoader} from '../../base/RuntimeLoader';
-import {Injector} from '../di/Injector';
-import {Log} from '../logging/Log';
-import {AbstractRegistry} from '@allgemein/schema-api';
+import { AbstractRegistry, IEntityRef, METATYPE_ENTITY } from '@allgemein/schema-api';
+import { K_CLS_WORKERS } from './Constants';
+import { ClassUtils } from '@allgemein/base';
+import { IWorkerRefOptions, WorkerRef } from './WorkerRef';
+import { IWorkerConfig } from './IWorkerConfig';
+import { IWorker } from './IWorker';
+import { IWorkerInfo } from './IWorkerInfo';
+import { MatchUtils } from '../utils/MatchUtils';
+import { RuntimeLoader } from '../../base/RuntimeLoader';
+import { Injector } from '../di/Injector';
+import { Log } from '../logging/Log';
+import { get, has, isBoolean, isUndefined, map, snakeCase } from '@typexs/generic';
 
 
-const DEFAULT_OPTIONS: IWorkerConfig = {access: [{access: 'deny', name: '*'}]};
+const DEFAULT_OPTIONS: IWorkerConfig = { access: [{ access: 'deny', name: '*' }] };
 
 
 export class Workers extends AbstractRegistry {
@@ -43,7 +42,7 @@ export class Workers extends AbstractRegistry {
     this.config = config;
     // deny all, it must be explizit allowed!
     if (this.config.access.length === 0 || (this.config.access[0].name !== '*' && this.config.access[0].access !== 'deny')) {
-      this.config.access.unshift({access: 'deny', name: '*'});
+      this.config.access.unshift({ access: 'deny', name: '*' });
     }
   }
 
@@ -52,8 +51,8 @@ export class Workers extends AbstractRegistry {
   }
 
   get(name: string) {
-    const snakeCase = _.snakeCase(name);
-    return this.find(METATYPE_ENTITY, (w: WorkerRef) => w.name === name || _.snakeCase(w.name) === snakeCase);
+    const _snakeCase = snakeCase(name);
+    return this.find(METATYPE_ENTITY, (w: WorkerRef) => w.name === name || snakeCase(w.name) === _snakeCase);
   }
 
 
@@ -63,7 +62,7 @@ export class Workers extends AbstractRegistry {
       Log.debug('worker name ' + ref.name);
       try {
         const workerInstance = <IWorker>Injector.get(ref.getClass());
-        const config = _.get(this.config, 'config.' + ref.name, _.get(this.config, 'config.' + workerInstance.name, null));
+        const config = get(this.config, 'config.' + ref.name, get(this.config, 'config.' + workerInstance.name, null));
         if (config) {
           await workerInstance.prepare(config);
         } else {
@@ -78,16 +77,16 @@ export class Workers extends AbstractRegistry {
 
 
   metadata() {
-    return _.map(this.getEntities(), (x: IWorker) => {
+    return map(this.getEntities(), (x: IWorker) => {
       return <IWorkerInfo>{
-        name: x.name,
+        name: x.name
       };
     });
   }
 
 
   infos(): IWorkerInfo[] {
-    return _.map(this.workers, (x: IWorker) => {
+    return map(this.workers, (x: IWorker) => {
       return <IWorkerInfo>{
         name: x.name,
         className: x.constructor.name,
@@ -111,19 +110,19 @@ export class Workers extends AbstractRegistry {
 
 
   access(name: string) {
-    if (_.has(this.config, 'access')) {
+    if (has(this.config, 'access')) {
       // if access empty then
       let allow = this.config.access.length > 0 ? false : true;
       let count = 0;
       for (const a of this.config.access) {
-        if (_.isUndefined(a.match)) {
+        if (isUndefined(a.match)) {
           if (/\+|\.|\(|\\||\)|\*/.test(a.name)) {
             a.match = a.name;
           } else {
             a.match = false;
           }
         }
-        if (_.isBoolean(a.match)) {
+        if (isBoolean(a.match)) {
           if (a.name === name) {
             count++;
             allow = a.access === 'allow';
@@ -154,7 +153,7 @@ export class Workers extends AbstractRegistry {
         exists = this.create(METATYPE_ENTITY, <IWorkerRefOptions>{
           metaType: METATYPE_ENTITY,
           namespace: this.namespace,
-          target: fn,
+          target: fn
         });
       }
       return exists;

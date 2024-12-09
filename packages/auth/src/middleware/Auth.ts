@@ -1,6 +1,6 @@
-import * as _ from 'lodash';
+import { assign, capitalize, clone, first, get, has, isEmpty, isString, random, values } from '@typexs/generic';
 import * as bcrypt from 'bcrypt';
-import { Inject, Invoker, Log } from '@typexs/base';
+import { Inject, Injector, Invoker, IStorageRef, Log } from '@typexs/base';
 import { IApplication, IMiddleware, IRoutingController, K_ROUTE_CONTROLLER, RoutePermissionsHelper } from '@typexs/server';
 import { Action, InternalServerError } from 'routing-controllers';
 import { AuthLifeCycle } from '../libs/Constants';
@@ -26,7 +26,7 @@ import { UserNotFoundError } from '../libs/exceptions/UserNotFoundError';
 import { RestrictedAccessError } from '../libs/exceptions/RestrictedAccessError';
 import { IEntityRef, IPropertyRef } from '@allgemein/schema-api';
 import { Access } from '@typexs/roles/libs/Access';
-import { Injector, IStorageRef } from '@typexs/base/browser';
+
 
 export class Auth implements IMiddleware {
 
@@ -102,16 +102,16 @@ export class Auth implements IMiddleware {
 
 
   getRemoteAddress(req: any): string {
-    if (_.has(req, 'connection.remoteAddress')) {
-      return _.get(req, 'connection.remoteAddress');
+    if (has(req, 'connection.remoteAddress')) {
+      return get(req, 'connection.remoteAddress');
     } else {
       return '127.0.0.2';
     }
   }
 
   getUsedAuthMethods(): IAuthOptions[] {
-    if (!_.isEmpty(this.getAuthConfig())) {
-      return _.values(this.getAuthConfig().methods);
+    if (!isEmpty(this.getAuthConfig())) {
+      return values(this.getAuthConfig().methods);
     }
     return [];
   }
@@ -141,12 +141,12 @@ export class Auth implements IMiddleware {
 
     for (const method of this.getUsedAuthMethods()) {
       const methodInfo: IAuthMethodInfo = {
-        label: method.label ? method.label : _.capitalize(method.authId),
+        label: method.label ? method.label : capitalize(method.authId),
         authId: method.authId,
         type: method.type
       };
 
-      if (_.has(method, 'passKeys')) {
+      if (has(method, 'passKeys')) {
         method.passKeys.forEach(k => {
           methodInfo[k] = method[k];
         });
@@ -159,7 +159,7 @@ export class Auth implements IMiddleware {
 
 
   config(): IAuthConfig {
-    return _.clone(this.getAuthConfig());
+    return clone(this.getAuthConfig());
   }
 
   private getInstanceFor(stage: AuthLifeCycle, authId: string = 'default', values: any = null): any {
@@ -168,7 +168,7 @@ export class Auth implements IMiddleware {
       const clazz = adapter.getModelFor(stage);
       const signup = Reflect.construct(clazz, []);
       if (values) {
-        _.assign(signup, values);
+        assign(signup, values);
       }
       signup.authId = authId;
       return signup;
@@ -193,19 +193,19 @@ export class Auth implements IMiddleware {
 
 
   private getAuthIdFromObject(data: AbstractUserLogin | AbstractUserSignup) {
-    return _.get(data, 'authId', 'default');
+    return get(data, 'authId', 'default');
   }
 
 
   private canSignup(adapter: IAuthAdapter) {
-    return adapter.canSignup() && _.get(this.getAuthConfig(), 'allowSignup', false);
+    return adapter.canSignup() && get(this.getAuthConfig(), 'allowSignup', false);
   }
 
 
   async doSignup<T extends AbstractUserSignup>(signup: T, req: any, res: any): Promise<AuthDataContainer<T>> {
     // check if data is present
     let dataContainer: AuthDataContainer<any> = null;
-    if (!_.isEmpty(signup)) {
+    if (!isEmpty(signup)) {
 
       // check if signup is allowed
       const id = this.getAuthIdFromObject(signup);
@@ -239,7 +239,7 @@ export class Auth implements IMiddleware {
         ]);
 
         // exist method or user with the given identifier then set error
-        if (_.isEmpty(method) && _.isEmpty(user)) {
+        if (isEmpty(method) && isEmpty(user)) {
           // for signup none entry in authuser or authmethod should exists
           // create method first then user
 
@@ -292,7 +292,7 @@ export class Auth implements IMiddleware {
 
 
   async createToken(session: AuthSession) {
-    const magicNumber = _.random(100000, 999999, true);
+    const magicNumber = random(100000, 999999, true);
     const v: string = await bcrypt.hash([new Date().getTime(), magicNumber, session.ip].join('-'), 5);
     return v.replace('$', '');
   }
@@ -315,7 +315,7 @@ export class Auth implements IMiddleware {
       container.isAuthenticated = isAuthenticated;
       login.resetSecret();
     } else {
-      if (!_.isEmpty(login)) {
+      if (!isEmpty(login)) {
         const authIdsChain = this.authChain();
         for (const authId of authIdsChain) {
           container = await this.doLoginForAdapter(authId, login);
@@ -364,12 +364,12 @@ export class Auth implements IMiddleware {
     let user: User = null;
 
     // TODO this s
-    if (_.isEmpty(method)) {
+    if (isEmpty(method)) {
       // empty method => no account exists
       if (adapter.canCreateOnLogin()) {
         // create method and user
         user = await this.getUserByUsername(loginInstance.getIdentifier());
-        if (_.isEmpty(user)) {
+        if (isEmpty(user)) {
           // user with name does not exists
           try {
             if (adapter.createOnLogin(dataContainer)) {
@@ -497,11 +497,11 @@ export class Auth implements IMiddleware {
 
 
   private authChain(): string[] {
-    if (this.getAuthConfig().chain && !_.isEmpty(this.getAuthConfig().chain)) {
+    if (this.getAuthConfig().chain && !isEmpty(this.getAuthConfig().chain)) {
       return this.getAuthConfig().chain;
     } else {
-      const first = _.first(this.getAdapters());
-      return [first.authId];
+      const _first = first(this.getAdapters());
+      return [_first.authId];
     }
   }
 
@@ -533,9 +533,9 @@ export class Auth implements IMiddleware {
     const token = this.getToken(req);
     container.success = false;
 
-    if (!_.isEmpty(token)) {
+    if (!isEmpty(token)) {
       const session = await this.getSessionByToken(token);
-      if (!_.isEmpty(session) && session.userId === user.id) {
+      if (!isEmpty(session) && session.userId === user.id) {
         // const repo = this.getStorageEntityController().remove()
         // entityController.remove();
         // connection.for(AuthSession);
@@ -570,7 +570,7 @@ export class Auth implements IMiddleware {
 
 
   getToken(req: any) {
-    return req.headers && _.get(req.headers, this.getHttpAuthKey());
+    return req.headers && get(req.headers, this.getHttpAuthKey());
   }
 
 
@@ -578,9 +578,9 @@ export class Auth implements IMiddleware {
     if (this.isEnabled()) {
       const token = this.getToken(req);
 
-      if (!_.isEmpty(token)) {
+      if (!isEmpty(token)) {
         const session = await this.getSessionByToken(token);
-        if (!_.isEmpty(session)) {
+        if (!isEmpty(session)) {
           // TODO check roles
           const user = await this.getUser(session.userId);
 
@@ -649,9 +649,9 @@ export class Auth implements IMiddleware {
 
   async getUserByRequest(request: any) {
     const token = this.getToken(request);
-    if (token && !_.isEmpty(token)) {
+    if (token && !isEmpty(token)) {
       const session = await this.getSessionByToken(token);
-      if (!_.isEmpty(session)) {
+      if (!isEmpty(session)) {
         return this.getUser(session.userId);
       }
     }
@@ -661,7 +661,7 @@ export class Auth implements IMiddleware {
 
   getUser(id_or_username: number | string, mail?: string): Promise<User> {
     let cond = {};
-    if (_.isString(id_or_username)) {
+    if (isString(id_or_username)) {
       cond['username'] = id_or_username;
     } else {
       cond['id'] = id_or_username;

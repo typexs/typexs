@@ -1,4 +1,4 @@
-// import * as _ from 'lodash';
+//
 // import {UseAPI} from "@typexs/base/decorators/UseAPI";
 // import {IUserAuthApi, UserAuthApi} from "../../../api/UserAuth.api";
 // import {IAuthAdapter} from "../../../libs/adapter/IAuthAdapter";
@@ -17,21 +17,21 @@
 //   async onLoginMethod(method: AuthMethod, adapter: IAuthAdapter,
 //   dataContainer: AuthDataContainer<AbstractUserSignup | AbstractUserLogin>): Promise<void> {
 //     if (adapter instanceof OAuth2Adapter) {
-//       let user = _.get(dataContainer, '_user');
-//       let info = _.get(dataContainer, '_info');
+//       let user = get(dataContainer, '_user');
+//       let info = get(dataContainer, '_info');
 //       if (!method.mail) {
 //         method.mail = user.mail;
 //       }
 //       if (!method.data) {
 //         method.data = {}
 //       }
-//       method.data = _.merge(method.data, info);
+//       method.data = merge(method.data, info);
 //     }
 //   }
 //
 //   async onUserCreate(user: IAuthUser, adapter: IAuthAdapter, dataContainer: AuthDataContainer<AbstractUserSignup | AbstractUserLogin>): Promise<void> {
 //     if (adapter instanceof OAuth2Adapter) {
-//       let _user = _.get(dataContainer, '_user');
+//       let _user = get(dataContainer, '_user');
 //       (<any>user).displayName = _user.displayName;
 //       user.mail = _user.mail;
 //     }

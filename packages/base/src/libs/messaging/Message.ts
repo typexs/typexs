@@ -1,9 +1,11 @@
-import * as _ from 'lodash';
-import {AbstractEvent} from './AbstractEvent';
-import {AbstractExchange} from './AbstractExchange';
-import {IMessageOptions} from './IMessageOptions';
-import {AbstractMessage} from './AbstractMessage';
-import {K_INST_ID, K_NODE_ID} from './Constants';
+import { get, isEmpty, isUndefined, remove } from '@typexs/generic';
+
+
+import { AbstractEvent } from './AbstractEvent';
+import { AbstractExchange } from './AbstractExchange';
+import { IMessageOptions } from './IMessageOptions';
+import { AbstractMessage } from './AbstractMessage';
+import { K_INST_ID, K_NODE_ID } from './Constants';
 
 
 export class Message<REQ extends AbstractEvent, RES extends AbstractEvent>
@@ -19,16 +21,16 @@ export class Message<REQ extends AbstractEvent, RES extends AbstractEvent>
   }
 
   async beforeSend(req: REQ) {
-    if (_.isUndefined(this.options.skipLocal) ||
-      !_.get(this.options, 'skipLocal', false)) {
-      if (!this.detectTargets && !_.isEmpty(this.targetIds) && !this.targetIds.includes(this.getLocalNodeId())) {
+    if (isUndefined(this.options.skipLocal) ||
+      !get(this.options, 'skipLocal', false)) {
+      if (!this.detectTargets && !isEmpty(this.targetIds) && !this.targetIds.includes(this.getLocalNodeId())) {
         // concrete targets are given, were the local node aren't part of it
         return;
       }
       const localResponse = await this.factory.getResponse(req);
       this.responses.push(localResponse);
       // self already done remove from target list
-      _.remove(this.targetIds, x => x === this.getLocalNodeId());
+      remove(this.targetIds, x => x === this.getLocalNodeId());
     }
   }
 

@@ -1,8 +1,10 @@
-import * as _ from 'lodash';
-import {ICacheAdapter} from '../../libs/cache/ICacheAdapter';
-import {ICacheBinConfig} from '../../libs/cache/ICacheBinConfig';
-import {ICacheGetOptions, ICacheSetOptions} from '../../libs/cache/ICacheOptions';
-import {CryptUtils} from '@allgemein/base';
+import { get, isNull, set } from '@typexs/generic';
+
+
+import { ICacheAdapter } from '../../libs/cache/ICacheAdapter';
+import { ICacheBinConfig } from '../../libs/cache/ICacheBinConfig';
+import { ICacheGetOptions, ICacheSetOptions } from '../../libs/cache/ICacheOptions';
+import { CryptUtils } from '@allgemein/base';
 
 
 export class MemoryCacheAdapter implements ICacheAdapter {
@@ -28,16 +30,16 @@ export class MemoryCacheAdapter implements ICacheAdapter {
 
   get(key: string, bin: string, options?: ICacheGetOptions): any {
     const xkey = CryptUtils.shorthash(key);
-    return _.get(this.data, [bin, xkey].join('.'), null);
+    return get(this.data, [bin, xkey].join('.'), null);
   }
 
   set(key: string, value: any, bin: string, options?: ICacheSetOptions): any {
     const xkey = CryptUtils.shorthash(key);
-    if (_.isNull(value)) {
+    if (isNull(value)) {
       delete this.data[bin][xkey];
     } else {
       const k = [bin, xkey].join('.');
-      _.set(this.data, k, value);
+      set(this.data, k, value);
       if (this.timer[k]) {
         clearTimeout(this.timer[k]);
         delete this.timer[k];
@@ -59,7 +61,7 @@ export class MemoryCacheAdapter implements ICacheAdapter {
   }
 
   shutdown(): void {
-    _.keys(this.timer).forEach(k => {
+     Object.keys(this.timer).forEach(k => {
       clearTimeout(this.timer[k]);
       delete this.timer[k];
     });

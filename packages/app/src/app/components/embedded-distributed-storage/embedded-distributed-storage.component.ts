@@ -1,4 +1,4 @@
-import {isEmpty, set} from 'lodash';
+import {isEmpty, set} from '@typexs/generic';
 import {AfterViewInit, ChangeDetectorRef, Component, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {IQueryParams} from '@typexs/base-ng';
 import {Like, Value} from '@allgemein/expressions';

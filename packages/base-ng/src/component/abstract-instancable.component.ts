@@ -129,7 +129,7 @@ export class AbstractInstancableComponent<T> extends AbstractComponent implement
 
 
       const passthrough = this.getPassthrough();
-      for (const prop of keys(passthrough)) {
+      for (const prop of  Object.keys(passthrough)) {
         Object.defineProperty(instance, prop, { value: passthrough[prop] });
       }
 
@@ -150,7 +150,7 @@ export class AbstractInstancableComponent<T> extends AbstractComponent implement
         const refs = instance.build(content);
 
         if (metadata) {
-          for (const key of keys(metadata)) {
+          for (const key of  Object.keys(metadata)) {
             const v = metadata[key];
             if (!isEmpty(v)) {
 

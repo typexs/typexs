@@ -4,21 +4,24 @@ import {
   API_CTRL_SERVER_CONFIG,
   API_CTRL_SERVER_CONFIG_KEY,
   API_CTRL_SERVER_PING,
-  API_CTRL_SERVER_ROUTES, API_CTRL_SYSTEM_RUNTIME_REMOTE_INFOS,
+  API_CTRL_SERVER_ROUTES,
+  API_CTRL_SYSTEM_RUNTIME_REMOTE_INFOS,
   C_API,
   DEFAULT_ANONYMOUS,
   K_CONFIG_ANONYMOUS_ALLOW,
   K_CONFIG_PERMISSIONS,
-  K_ROUTE_CONTROLLER, PERMISSION_ALLOW_RUNTIME_REMOTE_INFOS_VIEW
+  K_ROUTE_CONTROLLER,
+  PERMISSION_ALLOW_RUNTIME_REMOTE_INFOS_VIEW
 } from '../../../src/libs/Constants';
 import { WebServer } from '../../../src/libs/web/WebServer';
-import * as _ from 'lodash';
+
 import { TestHelper } from '../TestHelper';
 import { TEST_STORAGE_OPTIONS } from '../config';
 import { HttpFactory, IHttp } from '@allgemein/http';
 import { expect } from 'chai';
 import { Action } from 'routing-controllers/types/Action';
 import { IRole, IRolesHolder } from '@typexs/roles-api/index';
+import { clone, filter, find } from '@typexs/generic';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -83,7 +86,7 @@ class ServerStatusControllerSpec {
 
   static async before() {
     Bootstrap.reset();
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     http = HttpFactory.create();
 
     bootstrap = Bootstrap
@@ -316,8 +319,8 @@ class ServerStatusControllerSpec {
     const res = await http.get(url + API_CTRL_SERVER_ROUTES, { responseType: 'json', passBody: true });
     expect(res).to.not.be.null;
     expect(res).to.have.length(5);
-    expect(_.filter(res, { authorized: false })).to.have.length(5);
-    expect(_.find(res, { route: '/api/ping' })).to.deep.eq({
+    expect(filter(res, { authorized: false })).to.have.length(5);
+    expect(find(res, { route: '/api/ping' })).to.deep.eq({
       context: 'api',
       route: '/' + C_API + API_CTRL_SERVER_PING,
       method: 'get',
@@ -327,7 +330,7 @@ class ServerStatusControllerSpec {
       permissions: null,
       authorized: false
     });
-    expect(_.find(res, { controllerMethod: 'getStorageEntities' })).to.be.undefined;
+    expect(find(res, { controllerMethod: 'getStorageEntities' })).to.be.undefined;
 
   }
 
@@ -345,8 +348,8 @@ class ServerStatusControllerSpec {
     const res = await http.get(url + API_CTRL_SERVER_ROUTES, { responseType: 'json', passBody: true });
     expect(res).to.not.be.null;
     expect(res).to.have.length(6);
-    expect(_.filter(res, { authorized: false })).to.have.length(5);
-    expect(_.find(res, { route: '/api/ping' })).to.deep.eq({
+    expect(filter(res, { authorized: false })).to.have.length(5);
+    expect(find(res, { route: '/api/ping' })).to.deep.eq({
       context: 'api',
       route: '/' + C_API + API_CTRL_SERVER_PING,
       method: 'get',
@@ -356,7 +359,7 @@ class ServerStatusControllerSpec {
       permissions: null,
       authorized: false
     });
-    expect(_.find(res, { controllerMethod: 'nodesInfo' })).to.be.deep.eq({
+    expect(find(res, { controllerMethod: 'nodesInfo' })).to.be.deep.eq({
       context: 'api',
       route: '/' + C_API + API_CTRL_SYSTEM_RUNTIME_REMOTE_INFOS,
       method: 'get',

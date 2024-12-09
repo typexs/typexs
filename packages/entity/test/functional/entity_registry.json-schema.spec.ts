@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-escape */
 import '../../src/libs/decorators/register';
 import { suite, test } from '@testdeck/mocha';
-import * as _ from 'lodash';
+
 import { EntityRegistry } from '../../src/libs/EntityRegistry';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
@@ -10,6 +10,8 @@ import { expect } from 'chai';
 import { Car } from './schemas/direct_property/Car';
 import { EntityRef } from '../../src';
 import { EntityPassName } from './schemas/registry/EntityPassName';
+import { cloneDeep } from '@typexs/generic';
+
 
 let registry: EntityRegistry;
 
@@ -130,13 +132,13 @@ class EntityRegistryJsonSchemaSpec {
       '$ref': '#/definitions/Car'
     });
 
-    data_x.definitions['Car2'] = _.cloneDeep(data_x.definitions['Car']);
+    data_x.definitions['Car2'] = cloneDeep(data_x.definitions['Car']);
     delete data_x.definitions['Car'];
     data_x.definitions['Car2'].title = 'Car2';
     data_x.definitions['Car2'].$id = '#Car2';
     data_x.$ref = '#/definitions/Car2';
 
-    const entityDef2 = await registry.fromJsonSchema(_.cloneDeep(data_x)) as EntityRef;
+    const entityDef2 = await registry.fromJsonSchema(cloneDeep(data_x)) as EntityRef;
     expect(entityDef2.getPropertyRefs()).to.have.length(4);
     let data2 = entityDef2.toJsonSchema();
     data2 = JSON.parse(JSON.stringify(data2));

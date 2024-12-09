@@ -1,18 +1,20 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Config, Injector, StorageRef} from '@typexs/base';
-import * as _ from 'lodash';
-import {getMetadataArgsStorage} from 'typeorm';
-import {expect} from 'chai';
-import {DefaultUserLogin} from '../../../src/libs/models/DefaultUserLogin';
-import {MockResponse} from '../../helper/MockResponse';
-import {MockRequest} from '../../helper/MockRequest';
-import {User} from '../../../src/entities/User';
-import {TestHelper} from '../TestHelper';
-import {LDAP_CONFIG} from './ldap_config';
+import { suite, test } from '@testdeck/mocha';
+import { Bootstrap, Config, Injector, StorageRef } from '@typexs/base';
+
+import { getMetadataArgsStorage } from 'typeorm';
+import { expect } from 'chai';
+import { DefaultUserLogin } from '../../../src/libs/models/DefaultUserLogin';
+import { MockResponse } from '../../helper/MockResponse';
+import { MockRequest } from '../../helper/MockRequest';
+import { User } from '../../../src/entities/User';
+import { TestHelper } from '../TestHelper';
+import { LDAP_CONFIG } from './ldap_config';
 import { LOGGING, postgres_auth_host, postgres_auth_port } from '../config';
-import {Role} from '@typexs/roles/entities/Role';
-import {Permission, RBelongsTo} from '@typexs/roles';
-import {AuthMethod, AuthSession} from '../../../src';
+import { Role } from '@typexs/roles/entities/Role';
+import { Permission, RBelongsTo } from '@typexs/roles';
+import { AuthMethod, AuthSession } from '../../../src';
+import { clone, range, remove } from '@typexs/generic';
+
 
 const inc = 0;
 
@@ -49,10 +51,10 @@ let bootstrap: Bootstrap = null;
 class AuthLdapLifecycleSpec {
 
   static async before() {
-    _.remove(getMetadataArgsStorage().tables, x => [
+    remove(getMetadataArgsStorage().tables, x => [
       User, Role, Permission, RBelongsTo, AuthSession, AuthMethod
     ].includes(x.target as any));
-    _.remove(getMetadataArgsStorage().columns, x => [
+    remove(getMetadataArgsStorage().columns, x => [
       User, Role, Permission, RBelongsTo, AuthSession, AuthMethod
     ].includes(x.target as any));
     Bootstrap.reset();
@@ -63,10 +65,10 @@ class AuthLdapLifecycleSpec {
   static async after() {
     // await web.stop();
     Bootstrap.reset();
-    _.remove(getMetadataArgsStorage().tables, x => [
+    remove(getMetadataArgsStorage().tables, x => [
       User, Role, Permission, RBelongsTo, AuthSession, AuthMethod
     ].includes(x.target as any));
-    _.remove(getMetadataArgsStorage().columns, x => [
+    remove(getMetadataArgsStorage().columns, x => [
       User, Role, Permission, RBelongsTo, AuthSession, AuthMethod
     ].includes(x.target as any));
   }
@@ -83,7 +85,7 @@ class AuthLdapLifecycleSpec {
 
   @test
   async 'do 10 logins after an other'() {
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     // settings.logging.enable = true;
     // settings.auth.methods.default.timeout = 5000;
     // settings.auth.methods.default.idleTimeout = 50;
@@ -96,7 +98,7 @@ class AuthLdapLifecycleSpec {
 
     let doingLogin = null;
     let login: DefaultUserLogin = null;
-    const r = _.range(0, 10);
+    const r = range(0, 10);
     let auths = 0;
     for (const _r of r) {
       const res = new MockResponse();
@@ -124,7 +126,7 @@ class AuthLdapLifecycleSpec {
 
   @test
   async 'do parallel logins'() {
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     // settings.logging.enable = true;
     // settings.auth.methods.default.idleTimeout = 50;
     // settings.auth.methods.default.timeout = 5000;

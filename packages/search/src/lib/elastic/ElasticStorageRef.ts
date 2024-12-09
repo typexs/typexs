@@ -253,7 +253,7 @@ export class ElasticStorageRef extends StorageRef implements IIndexStorageRef {
     const entityRefs = this.getIndexTypes(indexName);
     for (const ref of entityRefs) {
       const properties = ElasticUtils.buildMappingPropertiesTree(ref);
-      keys(properties).map(x => {
+       Object.keys(properties).map(x => {
         mapping.add(x, properties[x]);
       });
     }

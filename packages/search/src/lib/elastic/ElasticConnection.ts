@@ -82,7 +82,7 @@ export class ElasticConnection implements IConnection {
   }
 
   // get lock() {
-  //   if (!_.has(ElasticConnection._LOCK, this.name)) {
+  //   if (!has(ElasticConnection._LOCK, this.name)) {
   //     ElasticConnection._LOCK[this.name] = LockFactory.$().semaphore(1);
   //   }
   //   return ElasticConnection._LOCK[this.name];

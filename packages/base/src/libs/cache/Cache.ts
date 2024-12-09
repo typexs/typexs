@@ -13,7 +13,7 @@
  *
  *
  */
-import { defaultsDeep, isPlainObject, keys } from 'lodash';
+import { defaultsDeep, isPlainObject, keys } from '@typexs/generic';
 import { ICacheAdapter } from './ICacheAdapter';
 import { ClassType } from '@allgemein/schema-api';
 import { ICacheConfig } from './ICacheConfig';
@@ -150,7 +150,7 @@ export class Cache implements ICache {
 
   shutdown() {
     const p = [];
-    for (const k of keys(this.adapters)) {
+    for (const k of Object.keys(this.adapters)) {
       p.push(this.adapters[k].shutdown());
     }
     return Promise.all(p);

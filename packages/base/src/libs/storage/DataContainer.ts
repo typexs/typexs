@@ -19,7 +19,7 @@
 //
 //   constructor(instance: T, registry: ILookupRegistry | IEntityRef) {
 //     this.instance = instance;
-//     const entityDef: IEntityRef = _.isFunction((<ILookupRegistry>registry).getEntityRefFor) ?
+//     const entityDef: IEntityRef = isFunction((<ILookupRegistry>registry).getEntityRefFor) ?
 //       (<ILookupRegistry>registry).getEntityRefFor(instance) : registry as IEntityRef;
 //     if (!entityDef) {
 //       throw new Error('none definition found for instance ' + JSON.stringify(instance));
@@ -36,7 +36,7 @@
 //
 //
 //   addError(e: IValidationError) {
-//     if (!_.has(e, 'type')) {
+//     if (!has(e, 'type')) {
 //       e.type = 'error';
 //     }
 //     this.errors.push(e);
@@ -89,7 +89,7 @@
 //
 //   async validate(): Promise<boolean> {
 //     this.isValidated = true;
-//     _.remove(this.errors, error => error.type === 'validate');
+//     remove(this.errors, error => error.type === 'validate');
 //     let results: IValidationError[] = [];
 //     try {
 // //      const validator = await import('class-validator');
@@ -106,10 +106,10 @@
 //       type: 'validate'
 //     }));
 //     this.isSuccessValidated = true;
-//     _.keys(this.validation).forEach(key => {
+//      Object.keys(this.validation).forEach(key => {
 //       if (this.validation[key]) {
 //         const valid = this.validation[key];
-//         const found = _.find(this.errors, {property: key});
+//         const found = find(this.errors, {property: key});
 //         valid.messages = [];
 //         if (found) {
 //           valid.valid = false;
@@ -132,14 +132,14 @@
 //   applyState() {
 //     const $state: any = {};
 //     DataContainer.keys.forEach(k => {
-//       const value = _.get(this, k, null);
+//       const value = get(this, k, null);
 //
-//       if (_.isBoolean(value) || !_.isEmpty(value)) {
-//         _.set($state, k, value);
+//       if (isBoolean(value) || !isEmpty(value)) {
+//         set($state, k, value);
 //       }
 //     });
 //
-//     _.set(<any>this.instance, STATE_KEY, $state);
+//     set(<any>this.instance, STATE_KEY, $state);
 //   }
 //
 //

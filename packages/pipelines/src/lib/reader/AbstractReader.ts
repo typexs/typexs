@@ -81,7 +81,7 @@ export abstract class AbstractReader implements IReader {
   getFilteredOptions() {
     const opts = this.getOptions();
     const selectedValues: any = {};
-    keys(opts).filter(k => isNumber(opts[k]) || isString(opts[k]) || isBoolean(opts[k])).map(k => selectedValues[k] = clone(opts[k]));
+     Object.keys(opts).filter(k => isNumber(opts[k]) || isString(opts[k]) || isBoolean(opts[k])).map(k => selectedValues[k] = clone(opts[k]));
     if (opts?.passOptions && isArray(opts.passOptions)) {
       opts.passOptions.filter(x => isString(x)).map(k => {
         if (!isUndefined(opts[k])) {

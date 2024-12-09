@@ -1,15 +1,5 @@
-import * as _ from 'lodash';
-import {
-  AfterInsert,
-  AfterLoad,
-  AfterUpdate,
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  Index,
-  PrimaryGeneratedColumn
-} from 'typeorm';
+import { AfterInsert, AfterLoad, AfterUpdate, BeforeInsert, BeforeUpdate, Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { isString } from '@typexs/generic';
 
 
 @Entity()
@@ -100,7 +90,7 @@ export class TaskLog {
 
   @AfterInsert()
   ai() {
-    if (_.isString(this.data)) {
+    if (isString(this.data)) {
       this.data = JSON.parse(this.data);
     }
   }
@@ -108,7 +98,7 @@ export class TaskLog {
 
   @AfterUpdate()
   au() {
-    if (_.isString(this.data)) {
+    if (isString(this.data)) {
       this.data = JSON.parse(this.data);
     }
   }
@@ -116,7 +106,7 @@ export class TaskLog {
 
   @AfterLoad()
   al() {
-    if (_.isString(this.data)) {
+    if (isString(this.data)) {
       this.data = JSON.parse(this.data);
     }
   }

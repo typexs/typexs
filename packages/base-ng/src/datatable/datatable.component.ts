@@ -165,7 +165,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     } else {
       if (this.ref() && this.getGridComponent()) {
         const instance = this.getGridComponent();
-        for (const key of keys(changes)) {
+        for (const key of  Object.keys(changes)) {
           instance[key] = changes[key].currentValue;
           if (instance[key + 'Change'] && instance[key + 'Change'] instanceof EventEmitter) {
             instance[key + 'Change'].emit(changes[key].currentValue);

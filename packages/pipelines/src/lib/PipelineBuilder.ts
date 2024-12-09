@@ -1,10 +1,12 @@
-import {PipelineRef} from './PipelineRef';
-import {ClassType} from '@allgemein/schema-api';
-import {Processor} from './Processor';
-import * as _ from 'lodash';
-import {Log} from '@typexs/base';
-import {Reader} from './reader/Reader';
-import {IReader} from './reader/IReader';
+import { PipelineRef } from './PipelineRef';
+import { ClassType } from '@allgemein/schema-api';
+import { Processor } from './Processor';
+
+import { Log } from '@typexs/base';
+import { Reader } from './reader/Reader';
+import { IReader } from './reader/IReader';
+import { findIndex, isNumber, isString, merge, snakeCase } from '@typexs/generic';
+
 
 export class PipelineBuilder {
 
@@ -43,17 +45,17 @@ export class PipelineBuilder {
 
 
   addOption(nr: string | number, opts: any) {
-    if (_.isNumber(nr)) {
-      this.pipe[nr].ots = _.merge(this.pipe[nr].ots, opts);
-    } else if (_.isString(nr)) {
-      const idx = _.findIndex(this.pipe, p => p.proc.name === nr || _.snakeCase(p.proc.name) === nr);
+    if (isNumber(nr)) {
+      this.pipe[nr].ots = merge(this.pipe[nr].ots, opts);
+    } else if (isString(nr)) {
+      const idx = findIndex(this.pipe, p => p.proc.name === nr || snakeCase(p.proc.name) === nr);
       this.addOption(idx, opts);
     }
     return this;
   }
 
   addReaderOption(opts: any) {
-    this.readerOpts = _.merge(this.readerOpts, opts);
+    this.readerOpts = merge(this.readerOpts, opts);
     return this;
   }
 

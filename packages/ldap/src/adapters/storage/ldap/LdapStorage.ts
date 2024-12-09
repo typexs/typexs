@@ -41,7 +41,7 @@ export class LdapStorage implements IStorage {
   }
 
   shutdown() {
-    const registryKeys = keys(RegistryFactory.$handles).filter(x => x.startsWith(C_LDAP));
+    const registryKeys =  Object.keys(RegistryFactory.$handles).filter(x => x.startsWith(C_LDAP));
     registryKeys.map(x => RegistryFactory.get(x).reset());
   }
 

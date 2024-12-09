@@ -15,8 +15,8 @@ import { IStorageRefMetadata } from '../lib/storage_api/IStorageRefMetadata';
  * @Api(StorageAPIControllerApi)
  * export class MyStorageAPIControllerApiExtension implements IStorageAPIController {
  *   postProcessResults(state: STORAGE_API_CONTROLLER_STATE, entityRef: IEntityRef, results: any | any[], callOptions?: any): void {
- *      if(state === 'get' && entityRef.name === 'MyEntity' && !_.isEmpty(results)){
- *          if(_.isArray(results)){
+ *      if(state === 'get' && entityRef.name === 'MyEntity' && !isEmpty(results)){
+ *          if(isArray(results)){
  *              results.forEach(r => {r.isMine = true})
  *          }else{
  *              results.isMine = true;

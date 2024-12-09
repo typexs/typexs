@@ -14,7 +14,7 @@ import {
   remove,
   set,
   snakeCase
-} from 'lodash';
+} from '@typexs/generic';
 import { C_DEFAULT, NotYetImplementedError, PlatformUtils, TodoException } from '@allgemein/base';
 import { Config } from '@allgemein/config';
 import { K_WORKDIR } from '../../../Constants';

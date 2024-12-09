@@ -3,7 +3,7 @@ import {expect} from 'chai';
 import * as path from 'path';
 import {Bootstrap} from '../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
-import * as _ from 'lodash';
+
 import { TestHelper } from '@typexs/testing';
 
 @suite('functional/commands/general')

@@ -1,7 +1,7 @@
-import * as _ from 'lodash';
-import {IPermissionDef, IPermissions} from '@typexs/roles-api';
-import {Permission} from '../entities/Permission';
-import {Log} from '@typexs/base';
+import { concat, has, isEmpty, isString } from '@typexs/generic';
+import { IPermissionDef, IPermissions } from '@typexs/roles-api';
+import { Permission } from '../entities/Permission';
+import { Log } from '@typexs/base';
 
 
 const MODULE_NAME = '__MODULNAME__';
@@ -43,13 +43,10 @@ export class PermissionsRegistry {
     for (const activator of impls) {
       const ipermissions: IPermissions = (<IPermissions>(<any>activator));
       if (ipermissions.permissions) {
-        // if methods
-
         const _module = PermissionsRegistry.getModulName((<any>ipermissions).__proto__.constructor);
-        const modul_permissions = (await ipermissions.permissions()).filter(x => !_.isEmpty(x));
-
+        const modul_permissions = (await ipermissions.permissions()).filter(x => !isEmpty(x));
         const loadedPermissions = await this.loadDefs(modul_permissions, _module);
-        permissions = _.concat(permissions, loadedPermissions);
+        permissions = concat(permissions, loadedPermissions);
       }
     }
     return permissions;
@@ -69,10 +66,10 @@ export class PermissionsRegistry {
 
       let permissionName: string = null;
       const permission = new Permission();
-      if (_.isString(p)) {
+      if (isString(p)) {
         // deprecated only permission name
         permissionName = p;
-      } else if (_.has(p, 'permission')) {
+      } else if (has(p, 'permission')) {
         permissionName = p.permission;
       }
 
@@ -87,7 +84,7 @@ export class PermissionsRegistry {
         continue;
       }
 
-      if (_.isString(p)) {
+      if (isString(p)) {
         // deprecated only permission name
         permission.permission = permissionName;
         permission.module = _module || 'default';
@@ -133,7 +130,7 @@ export class PermissionsRegistry {
   find(permission: string): Permission;
   find(permission: string[]): Permission[];
   find(permission: string | string[]): Permission | Permission[] {
-    if (_.isString(permission)) {
+    if (isString(permission)) {
       return this.permissions.find(x => x.permission === permission);
     }
     return this.permissions.filter(x => permission.includes(x.permission));

@@ -2,13 +2,15 @@
 import { suite, test, timeout } from '@testdeck/mocha';
 import { Bootstrap, Injector, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
 import { K_ROUTE_CONTROLLER, Server, XS_P_$URL } from '@typexs/server';
-import * as _ from 'lodash';
+
 import { expect } from 'chai';
 import { TestHelper } from '../TestHelper';
 import { TEST_STORAGE_OPTIONS } from '../config';
 import { HttpFactory, IHttp } from '@allgemein/http';
 import { API_CTRL_ENTITY_FIND_ENTITY, API_CTRL_ENTITY_GET_ENTITY, API_CTRL_ENTITY_SAVE_ENTITY } from '../../../src/libs/Constants';
 import { RegistryFactory } from '@allgemein/schema-api';
+import { clone, map } from '@typexs/generic';
+
 
 const settingsTemplate: any = {
   storage: {
@@ -87,7 +89,7 @@ class ApiserverSpec {
     TestHelper.resetTypeorm();
     // Bootstrap.reset();
 
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     http = await HttpFactory.create();
     bootstrap = Bootstrap
       .setConfigSources([{ type: 'system' }])
@@ -155,19 +157,19 @@ class ApiserverSpec {
     ];
 
     res = await http.post(saveUrl, { json: arrData, responseType: 'json', passBody: true });
-    expect(_.map(res, r => r.id)).to.deep.eq([2, 3]);
+    expect(map(res, r => r.id)).to.deep.eq([2, 3]);
 
     res = await http.get(url + '/api' + API_CTRL_ENTITY_GET_ENTITY.replace(':name', 'book3').replace(':id', '1,2,3'), {
       responseType: 'json',
       passBody: true
     });
     expect(res[XS_P_$COUNT]).to.eq(3);
-    expect(_.map(res.entities, r => r.id)).to.deep.eq([1, 2, 3]);
+    expect(map(res.entities, r => r.id)).to.deep.eq([1, 2, 3]);
 
     res = await http.get(url + '/api' + API_CTRL_ENTITY_FIND_ENTITY.replace(':name', 'book3')
       + `?query=${JSON.stringify({ id: 1 })}`, { responseType: 'json', passBody: true });
     expect(res[XS_P_$COUNT]).to.eq(1);
-    expect(_.map(res.entities, r => r.id)).to.deep.eq([1]);
+    expect(map(res.entities, r => r.id)).to.deep.eq([1]);
 
     res = await http.get(url + '/api' + API_CTRL_ENTITY_FIND_ENTITY.replace(':name', 'book3') +
       `?query=${JSON.stringify({ label: { $like: 'Odyssee' } })}`, {
@@ -175,7 +177,7 @@ class ApiserverSpec {
       passBody: true
     });
     expect(res[XS_P_$COUNT]).to.eq(1);
-    expect(_.map(res.entities, r => r.id)).to.deep.eq([3]);
+    expect(map(res.entities, r => r.id)).to.deep.eq([3]);
 
     res = await http.get(url + '/api' + API_CTRL_ENTITY_FIND_ENTITY.replace(':name', 'book3') +
       `?sort=${JSON.stringify({ id: 'desc' })}&limit=2`, {
@@ -184,7 +186,7 @@ class ApiserverSpec {
     });
     expect(res[XS_P_$COUNT]).to.eq(3);
     expect(res[XS_P_$LIMIT]).to.eq(2);
-    expect(_.map(res.entities, r => r.id)).to.deep.eq([3, 2]);
+    expect(map(res.entities, r => r.id)).to.deep.eq([3, 2]);
 
     res = await http.get(url + '/api' + API_CTRL_ENTITY_FIND_ENTITY.replace(':name', 'book3') +
       `?sort=${JSON.stringify({ id: 'desc' })}&limit=2&offset=1`, {
@@ -196,7 +198,7 @@ class ApiserverSpec {
     expect(res[XS_P_$LIMIT]).to.eq(2);
     expect(res[XS_P_$OFFSET]).to.eq(1);
     expect(res.entities).to.have.length(2);
-    expect(_.map(res.entities, r => r.id)).to.deep.eq([2, 1]);
+    expect(map(res.entities, r => r.id)).to.deep.eq([2, 1]);
   }
 
   @test @timeout(300000)

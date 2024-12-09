@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { last, range } from '@typexs/generic';
+
+
 import { suite, test, timeout } from '@testdeck/mocha';
 import { Bootstrap, Counters, IEntityController, Injector } from '@typexs/base';
 import * as path from 'path';
@@ -6,7 +8,6 @@ import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
 import { ElasticEntityController } from '../../src/lib/elastic/ElasticEntityController';
 import { Client } from '@elastic/elasticsearch';
 import { ES_host, ES_port } from './config';
-import { lorem, lorem2 } from './testdata';
 import { TaskExecutor } from '@typexs/base/libs/tasks/TaskExecutor';
 import { __ID__, __TYPE__, C_ELASTIC_SEARCH, C_SEARCH_INDEX, TN_INDEX } from '../../src/lib/Constants';
 import { ITaskRunnerResult } from '@typexs/base/libs/tasks/ITaskRunnerResult';
@@ -104,7 +105,7 @@ class TypexsSearchEntityController {
     const Driver = require('./scenarios/app_with_schema_entities/entities/Driver').Driver;
 
     const entities = [];
-    for (const i of _.range(60, 90)) {
+    for (const i of range(60, 90)) {
       const idxReset = i - 60;
       const d = new Car();
       d[__ID__] = i + '';
@@ -162,7 +163,7 @@ class TypexsSearchEntityController {
 
 
     expect(data.tasks).to.have.length(1);
-    const res = _.last(data.results);
+    const res = last(data.results);
     expect((<Counters>res['counters']).asObject()).to.deep.eq({
       'class': {
         'Car': 30
@@ -194,7 +195,7 @@ class TypexsSearchEntityController {
     // console.log(inspect(data, false, 10));
     await Injector.get(IndexProcessingQueue).await();
     expect(data.tasks).to.have.length(1);
-    const res = _.last(data.results);
+    const res = last(data.results);
     expect((<Counters>res['counters']).asObject()).to.deep.eq({
       'class': {
         'Car': 30

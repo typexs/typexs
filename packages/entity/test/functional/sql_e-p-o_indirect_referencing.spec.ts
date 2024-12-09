@@ -651,7 +651,7 @@ class SqlIndirectReferencingSpec {
 
   // @test
   // async 'entity lifecycle for integrated property'() {
-  //   const options = _.clone(TEST_STORAGE_OPTIONS);
+  //   const options = clone(TEST_STORAGE_OPTIONS);
   //   //    (<any>options).name = 'direct_property';
   //
   //
@@ -723,7 +723,7 @@ class SqlIndirectReferencingSpec {
   //
   // @test
   // async 'entity lifecycle for integrated property with multiple references'() {
-  //   const options = _.clone(TEST_STORAGE_OPTIONS);
+  //   const options = clone(TEST_STORAGE_OPTIONS);
   //   (<any>options).name = 'integrated_property';
   //
   //

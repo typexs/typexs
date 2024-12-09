@@ -30,7 +30,7 @@ export class AuthSession {
 
   // @BeforeInsert()
   // bin() {
-  //   if (!_.isString(this.data)) {
+  //   if (!isString(this.data)) {
   //     this.data = JSON.stringify(this.data);
   //   }
   // }
@@ -43,7 +43,7 @@ export class AuthSession {
   //
   // @AfterLoad()
   // load() {
-  //   if (_.isString(this.data)) {
+  //   if (isString(this.data)) {
   //     this.data = JSON.parse(this.data);
   //   }
   // }

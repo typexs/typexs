@@ -1,11 +1,13 @@
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import * as _ from 'lodash';
-import {EntityRegistry} from '../../src/libs/EntityRegistry';
-import {RegistryFactory} from '@allgemein/schema-api';
-import {NAMESPACE_BUILT_ENTITY} from '../../src/libs/Constants';
-import {EntityRef} from '../../src/libs/registry/EntityRef';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+
+import { EntityRegistry } from '../../src/libs/EntityRegistry';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
+import { EntityRef } from '../../src/libs/registry/EntityRef';
+import { has } from '@typexs/generic';
+
 
 let registry: EntityRegistry;
 
@@ -31,12 +33,12 @@ class EntityIdHandlingSpec {
     const entityDef = registry.getEntityRefByName('author') as EntityRef;
 
     let conditions = entityDef.createLookupConditions('1');
-    expect(_.has(conditions, 'id')).to.be.true;
+    expect(has(conditions, 'id')).to.be.true;
     expect(conditions['id']).to.be.eq(1);
 
 
     // conditions = entityDef.createLookupConditions('id=1');
-    // expect(_.has(conditions, 'id')).to.be.true;
+    // expect(has(conditions, 'id')).to.be.true;
     // expect(conditions['id']).to.be.eq(1);
     //
     // conditions = entityDef.createLookupConditions('(id=1),(id=2)');

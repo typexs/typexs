@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { NotYetImplementedError } from '@allgemein/base';
 import { RelationMetadataArgs } from 'typeorm/metadata-args/RelationMetadataArgs';
 import { IConditionJoin } from '../IConditionJoin';
@@ -9,6 +8,7 @@ import { DateUtils } from 'typeorm/util/DateUtils';
 import { AbstractSchemaHandler } from '../../AbstractSchemaHandler';
 import { AbstractCompare, And, IMangoWalker, MangoExpression, MultiArgs, Not, Or, PAst, PValue } from '@allgemein/mango-expressions';
 import { TypeOrmStorageRef } from './TypeOrmStorageRef';
+import { assign, capitalize, isArray, isEmpty, isUndefined, last, snakeCase, values } from '@typexs/generic';
 
 
 export interface ISqlParam {
@@ -148,7 +148,7 @@ export class TypeOrmSqlConditionsBuilder<T> implements IMangoWalker {
               if (reverseFieldMatch && reverseFieldMatch[1]) {
                 const reverseField = reverseFieldMatch[1];
                 const sourceIdKey = sourceIdKeyProps[0].name;
-                const targetIdKey = reverseField + _.capitalize(targetIdKeyProps[0].name);
+                const targetIdKey = reverseField + capitalize(targetIdKeyProps[0].name);
                 conditions.push([join.alias + '.' + targetIdKey, rootAlias + '.' + sourceIdKey].join(' = '));
               } else {
                 throw new NotYetImplementedError();
@@ -161,7 +161,7 @@ export class TypeOrmSqlConditionsBuilder<T> implements IMangoWalker {
             const targetIdKeyProps = tmp.getPropertyRefs().filter(f => f.isIdentifier());
             if (sourceIdKeyProps.length === 1 && targetIdKeyProps.length === 1) {
               const targetIdKey = targetIdKeyProps[0].name;
-              const sourceIdKey = prop.storingName + '' + _.capitalize(sourceIdKeyProps[0].name);
+              const sourceIdKey = prop.storingName + '' + capitalize(sourceIdKeyProps[0].name);
               conditions.push([join.alias + '.' + targetIdKey, rootAlias + '.' + sourceIdKey].join(' = '));
             } else {
               throw new NotYetImplementedError();
@@ -193,12 +193,12 @@ export class TypeOrmSqlConditionsBuilder<T> implements IMangoWalker {
 
 
   private buildMango(condition: PAst, apply: boolean = true): ISqlParam {
-    if (_.isEmpty(condition)) {
+    if (isEmpty(condition)) {
       return null;
     }
     let brackets = condition.visit(this);
 
-    if (_.isArray(brackets)) {
+    if (isArray(brackets)) {
       if (brackets.length > 1) {
         brackets = this.buildQueryObject(brackets, 'AND');
       } else {
@@ -206,7 +206,7 @@ export class TypeOrmSqlConditionsBuilder<T> implements IMangoWalker {
       }
     }
 
-    if (_.isEmpty(brackets)) {
+    if (isEmpty(brackets)) {
       return null;
     }
 
@@ -223,7 +223,7 @@ export class TypeOrmSqlConditionsBuilder<T> implements IMangoWalker {
 
 
   build(condition: any, k: string = null): ISqlParam {
-    if (_.isEmpty(condition)) {
+    if (isEmpty(condition)) {
       return null;
     }
 
@@ -236,7 +236,7 @@ export class TypeOrmSqlConditionsBuilder<T> implements IMangoWalker {
 
 
   protected createAlias(tmp: IClassRef) {
-    let name = _.snakeCase(tmp.storingName);
+    let name = snakeCase(tmp.storingName);
     name += '_' + (this.inc++);
     return name;
   }
@@ -246,9 +246,9 @@ export class TypeOrmSqlConditionsBuilder<T> implements IMangoWalker {
     const handle = this.handler.getOperationHandle(op.toLowerCase());
     const vhandle = this.handler.getValueHandle(op.toLowerCase());
     const _key = this.lookupKeys(key);
-    if (!_.isUndefined(value)) {
+    if (!isUndefined(value)) {
       const p = this.paramName();
-      if (_.isArray(value)) {
+      if (isArray(value)) {
         return {
           q: handle(_key, ':...' + p), // `${_key} ${op} (:...${p})`,
           p: this.paramValue(p, value, _key, vhandle)
@@ -257,7 +257,7 @@ export class TypeOrmSqlConditionsBuilder<T> implements IMangoWalker {
         const paramNames = value.args.map(x => this.paramName());
         const p = {};
         for (let i = 0; i < value.args.length; i++) {
-          _.assign(p, this.paramValue(paramNames[i], value.args[i], _key, vhandle));
+          assign(p, this.paramValue(paramNames[i], value.args[i], _key, vhandle));
         }
         return {
           q: handle(_key, ...paramNames.map(x => ':' + x)),
@@ -291,7 +291,7 @@ export class TypeOrmSqlConditionsBuilder<T> implements IMangoWalker {
     if (v instanceof Date) {
       let ref = this.entityRef;
       if (this.joins.length > 0) {
-        ref = _.last(this.joins).ref;
+        ref = last(this.joins).ref;
       }
       if (ref && this.mode === 'where') {
         const _columnName = columnName.split('.').pop();
@@ -325,7 +325,7 @@ export class TypeOrmSqlConditionsBuilder<T> implements IMangoWalker {
 
 
   leaveObject(res: any, ast: PAst) {
-    return this.buildQueryObject(_.values(res), 'AND');
+    return this.buildQueryObject(values(res), 'AND');
   }
 
 
@@ -367,7 +367,7 @@ export class TypeOrmSqlConditionsBuilder<T> implements IMangoWalker {
     res.map((x: any) => {
       parts.push(x.q);
       if (x.p) {
-        _.assign(param, x.p);
+        assign(param, x.p);
       }
     });
     if (parts.length > 1) {

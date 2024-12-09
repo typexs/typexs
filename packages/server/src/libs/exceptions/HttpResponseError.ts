@@ -1,5 +1,7 @@
-import * as _ from 'lodash';
-import {InternalServerError} from 'routing-controllers';
+import { isArray } from '@typexs/generic';
+
+
+import { InternalServerError } from 'routing-controllers';
 
 export class HttpResponseError extends InternalServerError {
 
@@ -10,7 +12,7 @@ export class HttpResponseError extends InternalServerError {
   constructor(ctxt: string | string[], msg: string, ...data: any[]) {
     super(msg);
     Object.setPrototypeOf(this, HttpResponseError.prototype);
-    this.context = _.isArray(ctxt) ? ctxt : [ctxt];
+    this.context = isArray(ctxt) ? ctxt : [ctxt];
     this.objects = data;
   }
 

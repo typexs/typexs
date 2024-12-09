@@ -92,7 +92,7 @@ export interface IRequest /* extends http.IncomingMessage */ {
   stale: boolean;
 
   /**
-   * Check if the request was an _XMLHttpRequest_.
+   * Check if the request was an _XMLHttpRequest
    */
   xhr: boolean;
 

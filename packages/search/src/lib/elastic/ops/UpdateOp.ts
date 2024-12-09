@@ -1,5 +1,4 @@
 import { ClassType } from '@allgemein/schema-api';
-import * as _ from 'lodash';
 import { IUpdateOp } from '@typexs/base/libs/storage/framework/IUpdateOp';
 import { ElasticEntityController } from '../ElasticEntityController';
 import { IElasticUpdateOptions } from './IElasticUpdateOptions';
@@ -9,6 +8,7 @@ import { IndexEntityRef } from '../../registry/IndexEntityRef';
 import { IElasticFieldDef } from '../IElasticFieldDef';
 import { ElasticMangoWalker } from '../ElasticMangoWalker';
 import { C_SEARCH_INDEX } from '../../Constants';
+import { get, isArray, uniq, uniqBy } from '@typexs/generic';
 
 
 export class UpdateOp<T> implements IUpdateOp<T> {
@@ -69,7 +69,7 @@ export class UpdateOp<T> implements IUpdateOp<T> {
       throw new Error('update is empty');
     }
 
-    this.entityTypes = _.isArray(entityType) ? entityType : [entityType];
+    this.entityTypes = isArray(entityType) ? entityType : [entityType];
     this.condition = condition;
     this.update = update;
     await this.controller.getInvoker().use(IndexElasticApi).onOptions('update', options);
@@ -103,12 +103,12 @@ export class UpdateOp<T> implements IUpdateOp<T> {
           .filter(x => x.indexName === i.getAliasName() && x.typeName === i.getTypeName()));
       }
 
-      indexNames = _.uniq(indexNames);
-      fields = _.uniqBy(fields, x => JSON.stringify(x));
+      indexNames = uniq(indexNames);
+      fields = uniqBy(fields, x => JSON.stringify(x));
       const opts: any = {
         index: indexNames,
         // type: typeNames.join(','),
-        body: _.get(this.options, 'body', {})
+        body: get(this.options, 'body', {})
       };
 
 
@@ -123,13 +123,13 @@ export class UpdateOp<T> implements IUpdateOp<T> {
       // let recordCount = 0;
       // let maxScore = 0;
       const { body } = await client.updateByQuery(opts);
-      // if (_.has(body, 'hits')) {
+      // if (has(body, 'hits')) {
       //   const hits = body.hits;
       //   maxScore = hits.max_score;
-      //   if (_.has(hits, 'total.value')) {
+      //   if (has(hits, 'total.value')) {
       //     recordCount = hits.total.value;
       //   }
-      //   if (_.has(hits, 'hits')) {
+      //   if (has(hits, 'hits')) {
       //     for (const hit of hits.hits) {
       //       const _source = hit._source;
       //       const _type = _source.__type;
@@ -155,18 +155,18 @@ export class UpdateOp<T> implements IUpdateOp<T> {
       //   }
       // }
       //
-      // if (_.has(body, 'aggregations')) {
+      // if (has(body, 'aggregations')) {
       //   if (aggsMode === 'facets') {
       //     results[XS_P_$FACETS] = [];
-      //     _.keys(body.aggregations).forEach(name => {
+      //      Object.keys(body.aggregations).forEach(name => {
       //       const facet = {
       //         name: name,
-      //         values: _.get(body.aggregations, name + '.buckets', [])
+      //         values: get(body.aggregations, name + '.buckets', [])
       //       };
       //       results[XS_P_$FACETS].push(facet);
       //     });
       //   } else {
-      //     results[XS_P_$AGGREGATION] = _.get(body, 'aggregations', null);
+      //     results[XS_P_$AGGREGATION] = get(body, 'aggregations', null);
       //   }
       // }
       // results[XS_P_$MAX_SCORE] = maxScore;
@@ -208,10 +208,10 @@ export class UpdateOp<T> implements IUpdateOp<T> {
   //     // TODO make this better currently Hacki hacki
   //     let hasUpdate = false;
   //     let updateData = null;
-  //     if (_.has(this.update, '$set')) {
+  //     if (has(this.update, '$set')) {
   //       updateData = this.update['$set'];
   //       hasUpdate = true;
-  //     } else if (!_.isEmpty(this.update)) {
+  //     } else if (!isEmpty(this.update)) {
   //       updateData = this.update;
   //       hasUpdate = true;
   //     }
@@ -224,11 +224,11 @@ export class UpdateOp<T> implements IUpdateOp<T> {
   //       }
   //       qb.set(updateData);
   //
-  //       if (_.has(this.options, 'limit')) {
+  //       if (has(this.options, 'limit')) {
   //         qb.limit(this.options['limit']);
   //       }
   //       const r = await qb.execute();
-  //       affected = _.get(r, 'affected', -2);
+  //       affected = get(r, 'affected', -2);
   //     }
   //   } catch (e) {
   //     this.error = e;
@@ -248,7 +248,7 @@ export class UpdateOp<T> implements IUpdateOp<T> {
   //
   //     if (this.condition) {
   //       TreeUtils.walk(this.condition, x => {
-  //         if (x.key && _.isString(x.key)) {
+  //         if (x.key && isString(x.key)) {
   //           if (x.key === '$like') {
   //             x.parent['$regex'] = x.parent[x.key].replace('%%', '#$#').replace('%', '.*').replace('#$#', '%%');
   //           }

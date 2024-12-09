@@ -1,19 +1,20 @@
-import {DistributedStorageEntityController} from '../DistributedStorageEntityController';
-import {System} from '@typexs/base/libs/system/System';
-import {ClassType} from '@allgemein/schema-api';
-import {AbstractMessage} from '@typexs/base/libs/messaging/AbstractMessage';
-import {EntityControllerRegistry} from '@typexs/base/libs/storage/EntityControllerRegistry';
-import {DistributedRemoveRequest} from './DistributedRemoveRequest';
-import {DistributedRemoveResponse} from './DistributedRemoveResponse';
-import {IDistributedRemoveOptions} from './IDistributedRemoveOptions';
-import {IDeleteOp} from '@typexs/base/libs/storage/framework/IDeleteOp';
-import * as _ from 'lodash';
-import {IWorkerInfo} from '@typexs/base/libs/worker/IWorkerInfo';
-import {DistributedQueryWorker} from '../../workers/DistributedQueryWorker';
-import {__DISTRIBUTED_ID__} from '../Constants';
-import {ClassUtils} from '@allgemein/base';
-import {C_WORKERS} from '@typexs/base/libs/worker/Constants';
-import {BaseUtils} from '@typexs/base/libs/utils/BaseUtils';
+import { DistributedStorageEntityController } from '../DistributedStorageEntityController';
+import { System } from '@typexs/base/libs/system/System';
+import { ClassType } from '@allgemein/schema-api';
+import { AbstractMessage } from '@typexs/base/libs/messaging/AbstractMessage';
+import { EntityControllerRegistry } from '@typexs/base/libs/storage/EntityControllerRegistry';
+import { DistributedRemoveRequest } from './DistributedRemoveRequest';
+import { DistributedRemoveResponse } from './DistributedRemoveResponse';
+import { IDistributedRemoveOptions } from './IDistributedRemoveOptions';
+import { IDeleteOp } from '@typexs/base/libs/storage/framework/IDeleteOp';
+
+import { IWorkerInfo } from '@typexs/base/libs/worker/IWorkerInfo';
+import { DistributedQueryWorker } from '../../workers/DistributedQueryWorker';
+import { __DISTRIBUTED_ID__ } from '../Constants';
+import { ClassUtils } from '@allgemein/base';
+import { C_WORKERS } from '@typexs/base/libs/worker/Constants';
+import { BaseUtils } from '@typexs/base/libs/utils/BaseUtils';
+import { defaults, intersection, isArray, isFunction, isUndefined, remove, set } from '@typexs/generic';
 
 
 export class DistributedRemoveOp<T>
@@ -67,23 +68,23 @@ export class DistributedRemoveOp<T>
     this.options = options || {};
     this.removable = object;
 
-    if (_.isFunction(object)) {
+    if (isFunction(object)) {
       // delete by conditions
       this.entityType = object;
       this.conditions = conditions;
     } else {
       // delete by id
-      this.isArray = _.isArray(object);
+      this.isArray = isArray(object);
 
       let inc = 0;
-      const objects = _.isArray(object) ? object : [<T>object];
+      const objects = isArray(object) ? object : [<T>object];
       objects.forEach((o: any) => {
-        _.set(o, __DISTRIBUTED_ID__, inc++);
+        set(o, __DISTRIBUTED_ID__, inc++);
       });
       this.options = conditions || {};
     }
 
-    _.defaults(this.options, {
+    defaults(this.options, {
       timeout: 10000
     });
     this.timeout = this.options.timeout;
@@ -92,7 +93,7 @@ export class DistributedRemoveOp<T>
     const req = new DistributedRemoveRequest();
     req.condition = this.conditions;
     req.options = this.options;
-    if (_.isUndefined(this.entityType)) {
+    if (isUndefined(this.entityType)) {
       req.removable = BaseUtils.resolveByClassName(
         this.isArray ? <T[]>this.removable : [this.removable]
       );
@@ -108,11 +109,11 @@ export class DistributedRemoveOp<T>
       .map(n => n.nodeId);
 
     if (this.options.targetIds) {
-      this.targetIds = _.intersection(this.targetIds, this.options.targetIds);
+      this.targetIds = intersection(this.targetIds, this.options.targetIds);
     }
 
     if (this.options.skipLocal) {
-      _.remove(this.targetIds, x => x === this.getSystem().getNodeId());
+      remove(this.targetIds, x => x === this.getSystem().getNodeId());
     }
 
     if (this.targetIds.length === 0) {

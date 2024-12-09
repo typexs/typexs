@@ -1,6 +1,7 @@
 import { AbstractSchemaHandler } from '../../../libs/storage/AbstractSchemaHandler';
-import * as _ from 'lodash';
+
 import { NotYetImplementedError } from '@allgemein/base';
+import { isRegExp, isString, map } from '@typexs/generic';
 
 
 export class SqliteSchemaHandler extends AbstractSchemaHandler {
@@ -18,9 +19,9 @@ export class SqliteSchemaHandler extends AbstractSchemaHandler {
       date: (field: string) => 'strftime(\'%Y-%m-%d\', ' + field + ', \'localtime\')',
       timestamp: (field: string) => 'cast(strftime(\'%s\', ' + field + ', \'localtime\') as integer)',
       regex: (k: string, field: string | RegExp, options: string) => {
-        if (_.isString(field)) {
+        if (isString(field)) {
           return k + ' REGEXP ' + field;
-        } else if (_.isRegExp(field)) {
+        } else if (isRegExp(field)) {
           return k + ' REGEXP ' + field.source;
         } else {
           throw new NotYetImplementedError('regex for ' + k + ' with value ' + field);
@@ -32,7 +33,7 @@ export class SqliteSchemaHandler extends AbstractSchemaHandler {
           'strftime(\'' + format + '\', ' + field + ', \'localtime\')',
     };
 
-    _.keys(fn).forEach(x => {
+     Object.keys(fn).forEach(x => {
       this.registerOperationHandle(x, fn[x]);
     });
 
@@ -41,7 +42,7 @@ export class SqliteSchemaHandler extends AbstractSchemaHandler {
   async getCollectionNames(): Promise<string[]> {
     const c = await this.storageRef.connect();
     const q = await c.query('SELECT name FROM sqlite_master WHERE type=\'table\';');
-    return _.map(q, x => x.name);
+    return map(q, x => x.name);
   }
 
 

@@ -1,6 +1,8 @@
-import * as _ from 'lodash';
+import { first } from '@typexs/generic';
+
+
 import { expect } from 'chai';
-import { Bootstrap, C_STORAGE_DEFAULT, Config, Injector, ITypexsOptions, LogEvent, StorageRef } from '@typexs/base';
+import { Bootstrap, C_STORAGE_DEFAULT, Config, Injector, ITypexsOptions, StorageRef } from '@typexs/base';
 import { suite, test } from '@testdeck/mocha';
 import { TEST_STORAGE_OPTIONS } from './config';
 import { Permission, RBelongsTo } from '../../src';
@@ -155,7 +157,7 @@ class StoringSpec {
     const entityController = <EntityController>Injector.get('EntityController.default');
     const roles = await entityController.find(Role, null, { limit: 0, subLimit: 0 }) as Role[];
 
-    const role = _.first(roles);
+    const role = first(roles);
     expect(role.role).to.be.eq('demo_role');
     expect(role.label).to.be.eq('Demo role');
     const roleNames = role.permissions.map(x => x.permission);

@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { assign, defaults, get, isArray, isEmpty, isFunction, uniq, uniqBy } from '@typexs/generic';
+
+
 import { ClassType } from '@allgemein/schema-api';
 import { IDeleteOp } from '@typexs/base/libs/storage/framework/IDeleteOp';
 import { ElasticEntityController } from '../ElasticEntityController';
@@ -57,7 +59,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
     options: IElasticDeleteOptions = {}): Promise<number> {
     this.removable = object;
     this.conditions = conditions;
-    _.defaults(options, {
+    defaults(options, {
       refresh: true
     });
     await this.controller.getInvoker().use(IndexElasticApi).onOptions('remove', options);
@@ -66,7 +68,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
     await this.controller.getInvoker().use(IndexElasticApi).doBeforeRemove(this);
 
     let results: number = null;
-    if (_.isFunction(object)) {
+    if (isFunction(object)) {
       results = await this.removeByCondition(<ClassType<T>>object, conditions, options);
     } else {
       results = await this.remove(<T | T[]>object, options);
@@ -102,19 +104,19 @@ export class DeleteOp<T> implements IDeleteOp<T> {
           .filter(x => x.indexName === i.getAliasName() && x.typeName === i.getTypeName()));
       }
 
-      indexNames = _.uniq(indexNames);
-      fields = _.uniqBy(fields, x => JSON.stringify(x));
+      indexNames = uniq(indexNames);
+      fields = uniqBy(fields, x => JSON.stringify(x));
       const opts: any = {
         index: indexNames,
-        body: _.get(this.options, 'body', {})
+        body: get(this.options, 'body', {})
       };
 
       if (this.options.rawQuery) {
         opts.body.query = condition;
       } else {
-        if (!_.isEmpty(condition)) {
+        if (!isEmpty(condition)) {
           const builder = new ElasticMangoWalker(fields);
-          opts.body = _.assign(opts.body, builder.build(condition));
+          opts.body = assign(opts.body, builder.build(condition));
         } else {
           opts.body.query = {
             match_all: {}
@@ -123,9 +125,9 @@ export class DeleteOp<T> implements IDeleteOp<T> {
       }
 
       const results = await client.deleteByQuery(opts);
-      count = _.get(results, 'body.deleted', 0);
+      count = get(results, 'body.deleted', 0);
       if (this.options.refresh) {
-        await client.indices.refresh({ index: _.uniq(indices) });
+        await client.indices.refresh({ index: uniq(indices) });
       }
 
     } catch (e) {
@@ -139,7 +141,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
   }
 
   private async remove(object: T[] | T, options: IElasticDeleteOptions = {}) {
-    const isArray = _.isArray(object);
+    const _isArray = isArray(object);
     const connection = await this.controller.connect();
     // let promiseResults: any[][] = null;
     let affected = -1;
@@ -149,7 +151,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
       const client = connection.getClient();
       this.objects = this.prepare(object);
       const resolvedEntities = ElasticUtils.resolveByClassName(this.objects);
-      const indexTypes = OpsHelper.getIndexTypes(this.controller, _.keys(resolvedEntities));
+      const indexTypes = OpsHelper.getIndexTypes(this.controller,  Object.keys(resolvedEntities));
       const promises = [];
       for (const e of this.objects) {
         const className = ClassUtils.getClassName(e);
@@ -166,7 +168,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
       affected = results.map(x => x.body).reduce((p, c) => c.result === 'deleted' ? ++p : p, 0);
 
       if (this.options.refresh) {
-        await client.indices.refresh({ index: _.uniq(indices) });
+        await client.indices.refresh({ index: uniq(indices) });
       }
 
       // TODO refresh?
@@ -177,7 +179,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
       await connection.close();
     }
 
-    if (!isArray) {
+    if (!_isArray) {
       return this.objects.shift();
     }
 
@@ -188,7 +190,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
 
   private prepare(object: T | T[]): T[] {
     let objs: T[] = [];
-    if (_.isArray(object)) {
+    if (isArray(object)) {
       objs = object;
     } else {
       objs.push(object);

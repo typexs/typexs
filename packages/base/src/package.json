@@ -37,6 +37,7 @@
     "@allgemein/mango-expressions": "~1.1.1",
     "@allgemein/moduls": "~1.7.1",
     "@allgemein/schema-api": "~1.6.1",
+    "@typexs/generic": "2.3.0",
     "@cezaryrk/minimatch": "~3.0.4",
     "ajv": "^8.17.1",
     "glob": "^11.0.0",

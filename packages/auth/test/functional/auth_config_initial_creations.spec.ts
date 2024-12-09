@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { concat } from '@typexs/generic';
+
+
 import { suite, test } from '@testdeck/mocha';
 import { Bootstrap, Injector, Invoker } from '@typexs/base';
 import { expect } from 'chai';
@@ -113,7 +115,7 @@ class AuthConfigInitialCreationSpec {
       }
     });
 
-    const perms = _.concat([], ...user.getRoles().map(role => role.permissions));
+    const perms = concat([], ...user.getRoles().map(role => role.permissions));
     expect(perms).to.have.length(1);
     expect(perms.map(x => x.permission)).to.be.deep.eq(['*']);
 

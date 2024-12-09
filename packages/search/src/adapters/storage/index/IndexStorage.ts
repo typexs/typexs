@@ -49,7 +49,7 @@ export class IndexStorage implements IStorage {
   shutdown() {
     // RegistryFactory.get(C_SEARCH_INDEX).reset();
     // TODO create cleanup method in registry
-    const registryKeys = keys(RegistryFactory.$handles).filter(x => x.startsWith(C_SEARCH_INDEX));
+    const registryKeys =  Object.keys(RegistryFactory.$handles).filter(x => x.startsWith(C_SEARCH_INDEX));
     registryKeys.map(x => RegistryFactory.get(x).reset());
   }
 

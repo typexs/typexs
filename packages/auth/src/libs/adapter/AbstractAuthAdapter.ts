@@ -1,12 +1,13 @@
-import {IAuthAdapter} from './IAuthAdapter';
-import {AuthLifeCycle} from '../Constants';
-import {DefaultUserLogin} from '../models/DefaultUserLogin';
-import {DefaultUserSignup} from '../models/DefaultUserSignup';
-import {IAuthOptions} from '../auth/IAuthOptions';
-import * as _ from 'lodash';
-import {DefaultUserLogout} from '../models/DefaultUserLogout';
-import {AuthDataContainer} from '../auth/AuthDataContainer';
-import {AbstractUserLogin} from '../models/AbstractUserLogin';
+import { IAuthAdapter } from './IAuthAdapter';
+import { AuthLifeCycle } from '../Constants';
+import { DefaultUserLogin } from '../models/DefaultUserLogin';
+import { DefaultUserSignup } from '../models/DefaultUserSignup';
+import { IAuthOptions } from '../auth/IAuthOptions';
+import { DefaultUserLogout } from '../models/DefaultUserLogout';
+import { AuthDataContainer } from '../auth/AuthDataContainer';
+import { AbstractUserLogin } from '../models/AbstractUserLogin';
+import { defaultsDeep, get, isFunction } from '@typexs/generic';
+
 
 const DEFAULT_AUTH_OPTIONS: IAuthOptions = {
   type: 'none',
@@ -29,7 +30,7 @@ export abstract class AbstractAuthAdapter implements IAuthAdapter {
 
   prepare(authOptions: IAuthOptions): void {
     this.options = authOptions;
-    _.defaultsDeep(this.options, DEFAULT_AUTH_OPTIONS);
+    defaultsDeep(this.options, DEFAULT_AUTH_OPTIONS);
   }
 
 
@@ -54,12 +55,12 @@ export abstract class AbstractAuthAdapter implements IAuthAdapter {
   */
 
   canCreateOnLogin(): boolean {
-    return _.get(this.options, 'createOnLogin', false) && _.isFunction(this['createOnLogin']);
+    return get(this.options, 'createOnLogin', false) && isFunction(this['createOnLogin']);
   }
 
 
   canSignup(): boolean {
-    const res = _.get(this.options, 'allowSignup', false) && _.isFunction(this['signup']);
+    const res = get(this.options, 'allowSignup', false) && isFunction(this['signup']);
     return res;
   }
 

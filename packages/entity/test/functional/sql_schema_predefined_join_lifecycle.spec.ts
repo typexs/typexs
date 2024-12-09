@@ -1,12 +1,13 @@
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
-import {TestHelper} from './TestHelper';
-import * as _ from 'lodash';
-import {expect} from 'chai';
-import {TEST_STORAGE_OPTIONS} from './config';
-import {EntityRegistry} from '../../src/libs/EntityRegistry';
-import {RegistryFactory} from '@allgemein/schema-api';
-import {NAMESPACE_BUILT_ENTITY} from '../../src/libs/Constants';
+import { suite, test } from '@testdeck/mocha';
+import { TestHelper } from './TestHelper';
+
+import { expect } from 'chai';
+import { TEST_STORAGE_OPTIONS } from './config';
+import { EntityRegistry } from '../../src/libs/EntityRegistry';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
+import { clone, concat, map } from '@typexs/generic';
 
 
 let registry: EntityRegistry;
@@ -44,7 +45,7 @@ class SqlSchemaPredefinedJoinLifecycleSpec {
 
     registry.reload([Lecture, RBelongsTo, Teacher]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'join';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -105,7 +106,7 @@ class SqlSchemaPredefinedJoinLifecycleSpec {
     courses_found = await xsem.find(Lecture, {$or: [{veranstid: 1}, {veranstid: 2}, {veranstid: 3}]});
     // console.log(inspect(courses_found,false,10));
     expect(courses_found).to.have.length(3);
-    expect(_.concat([], ..._.map(courses_found, f => f['persons']))).to.have.length(5);
+    expect(concat([], ...map(courses_found, f => f['persons']))).to.have.length(5);
 
 
   }

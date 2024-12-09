@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { assign, concat, get, isNull, isString, isUndefined } from '@typexs/generic';
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Route } from '@angular/router';
 import {
@@ -37,7 +37,7 @@ function parseUser(user: any) {
     return user;
   }
   const _user = new User();
-  _.assign(_user, user);
+  assign(_user, user);
   return _user;
 }
 
@@ -99,7 +99,7 @@ export class UserAuthService implements IAuthServiceProvider {
     const subject = new Subject();
     const config = this.backendClientService.callApi(API_USER_CONFIG);
     config.subscribe(obj => {
-      _.assign(this._config, obj);
+      assign(this._config, obj);
       subject.next(true);
     }, error => {
       subject.error(error);
@@ -157,7 +157,7 @@ export class UserAuthService implements IAuthServiceProvider {
     this.backendClientService.callApi<boolean>(API_USER_IS_AUTHENTICATED)
       .subscribe(
         value => {
-          if (_.isString(value)) {
+          if (isString(value)) {
             if (value === 'true') {
               value = true;
             } else {
@@ -188,13 +188,13 @@ export class UserAuthService implements IAuthServiceProvider {
 
 
   public getTokenKey() {
-    return _.get(this._config, 'authKey', null);
+    return get(this._config, 'authKey', null);
   }
 
 
   public getStoredToken(): string {
     const token = localStorage.getItem('token.' + this.getTokenKey());
-    return _.isUndefined(token) ? null : token;
+    return isUndefined(token) ? null : token;
   }
 
 
@@ -262,18 +262,18 @@ export class UserAuthService implements IAuthServiceProvider {
       } else {
         this.loading = true;
         this.backendClientService.callApi<User>(API_USER).subscribe(x => {
-          this.setUser(x);
-          this.loading = true;
-          subject.next(this.cacheUser);
-        }, error => {
-          this.resetUser();
-          this.loading = true;
-          subject.next(null);
-        },
-        () => {
-          this.loading = false;
-          subject.complete();
-        });
+            this.setUser(x);
+            this.loading = true;
+            subject.next(this.cacheUser);
+          }, error => {
+            this.resetUser();
+            this.loading = true;
+            subject.next(null);
+          },
+          () => {
+            this.loading = false;
+            subject.complete();
+          });
       }
     } else {
       subject.next(null);
@@ -330,7 +330,7 @@ export class UserAuthService implements IAuthServiceProvider {
       .subscribe(
         (user: AbstractUserLogin) => {
           this.loading = false;
-          const isAuthenticated = _.get(user, '$state.isAuthenticated', false);
+          const isAuthenticated = get(user, '$state.isAuthenticated', false);
           this.connected = true;
           if (isAuthenticated) {
             this.saveStoredToken(user.$state.token);
@@ -416,13 +416,13 @@ export class UserAuthService implements IAuthServiceProvider {
 
 
   getPermissions(reload: boolean = false): Observable<string[]> {
-    if (_.isUndefined(this.permissions) || reload) {
+    if (isUndefined(this.permissions) || reload) {
       const subject = new Subject<string[]>();
       this.getUser().subscribe(x => {
         // TODO cache
         if (x && x.roles) {
-          const permissions = _.concat([], ...x.roles.map((y: any) => y.permissions));
-          this.permissions = permissions.map(p => _.isString(p) ? p : p.permission);
+          const permissions = concat([], ...x.roles.map((y: any) => y.permissions));
+          this.permissions = permissions.map(p => isString(p) ? p : p.permission);
         } else {
           this.permissions = [];
         }
@@ -445,7 +445,7 @@ export class UserAuthService implements IAuthServiceProvider {
 
 
   hasPermissionsFor(object: ISecuredResource): Observable<boolean> {
-    const permissions = object.getPermissions().map(p => _.isString(p) ? p : p.permission);
+    const permissions = object.getPermissions().map(p => isString(p) ? p : p.permission);
     return this.getPermissions()
       .pipe(
         mergeMap(async userPermissions => await PermissionHelper.checkOnePermission(userPermissions, permissions)));
@@ -453,7 +453,7 @@ export class UserAuthService implements IAuthServiceProvider {
 
 
   getRoles(): Observable<string[]> {
-    return this.getUser().pipe(map(x => x && x.roles ? _.map(x.roles, r => r.rolename) : []));
+    return this.getUser().pipe(map(x => x && x.roles ? x.roles.map(r => r.rolename) : []));
   }
 
 
@@ -469,7 +469,7 @@ export class UserAuthService implements IAuthServiceProvider {
 
   hasRoutePermissions(route: ActivatedRouteSnapshot | Route): Observable<boolean> {
     const permissions = UserAuthHelper.getRoutePermissions(route);
-    if (_.isNull(permissions)) {
+    if (isNull(permissions)) {
       // no permissions to check
       return new BehaviorSubject(true);
     }

@@ -1,10 +1,12 @@
-import * as _ from 'lodash';
-import {StringOrFunction, Injector, Inject} from '@typexs/base';
-import {ServerFactory} from './ServerFactory';
-import {IServer} from './IServer';
-import {IServerInstanceOptions} from './IServerInstanceOptions';
-import {ServerTypeIsNotSetError} from '../exceptions/ServerTypeIsNotSetError';
-import {ServerUtils} from './ServerUtils';
+import { find, map } from '@typexs/generic';
+
+
+import { Injector } from '@typexs/base';
+import { ServerFactory } from './ServerFactory';
+import { IServer } from './IServer';
+import { IServerInstanceOptions } from './IServerInstanceOptions';
+import { ServerTypeIsNotSetError } from '../exceptions/ServerTypeIsNotSetError';
+import { ServerUtils } from './ServerUtils';
 
 
 export class ServerRegistry {
@@ -48,14 +50,14 @@ export class ServerRegistry {
 
 
   getInstanceNames(): string[] {
-    return _.map(this.registry, (x) => {
+    return map(this.registry, (x) => {
       return x.name;
     });
   }
 
 
   get(name: string): IServer {
-    return _.find(this.registry, {name: name});
+    return find(this.registry, {name: name});
   }
 
 }

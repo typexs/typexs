@@ -1,7 +1,7 @@
 // process.env.LOG = '1';
 import { suite, test } from '@testdeck/mocha';
 import { Bootstrap, Injector, StorageRef } from '@typexs/base';
-import * as _ from 'lodash';
+
 import { Auth } from '../../../src/middleware/Auth';
 import { DefaultUserSignup } from '../../../src/libs/models/DefaultUserSignup';
 import { AuthMethod } from '../../../src/entities/AuthMethod';
@@ -17,6 +17,8 @@ import { TESTDB_SETTING, TestHelper } from '../TestHelper';
 import { AuthDataContainer } from '../../../src/libs/auth/AuthDataContainer';
 import { LOGGING } from '../config';
 import { TypeOrmConnectionWrapper } from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { get } from '@typexs/generic';
+
 
 let bootstrap: Bootstrap = null;
 let auth: Auth = null;
@@ -148,8 +150,8 @@ class AuthDatabaseLifecycleDefaultSpec {
         'value': undefined
       }
     ]);
-    // expect(_.get(doingSignup.errors, '0.constraints.allowedString')).to.exist;
-    // expect(_.get(doingSignup.errors, '0.constraints.equalWith')).to.exist;
+    // expect(get(doingSignup.errors, '0.constraints.allowedString')).to.exist;
+    // expect(get(doingSignup.errors, '0.constraints.equalWith')).to.exist;
 
     // signup per db
     signUp = auth.getInstanceForSignup('default');
@@ -230,7 +232,7 @@ class AuthDatabaseLifecycleDefaultSpec {
     expect(doingLogin.success).to.be.false;
     expect(doingLogin.isAuthenticated).to.be.false;
     expect(doingLogin.errors).to.have.length(1);
-    expect(_.get(doingLogin.errors, '0.constraints.exists')).to.exist;
+    expect(get(doingLogin.errors, '0.constraints.exists')).to.exist;
   }
 
 
@@ -260,7 +262,7 @@ class AuthDatabaseLifecycleDefaultSpec {
         'type': 'validate'
       }
     ]);
-    // expect(_.get(doingLogin.errors, '1.constraints.allowedString')).to.exist;
+    // expect(get(doingLogin.errors, '1.constraints.allowedString')).to.exist;
 
   }
 
@@ -280,7 +282,7 @@ class AuthDatabaseLifecycleDefaultSpec {
     expect(doingLogin.success).to.be.false;
     expect(doingLogin.isAuthenticated).to.be.false;
     expect(doingLogin.errors).to.have.length(1);
-    expect(_.get(doingLogin.errors, '0.constraints.exists')).to.exist;
+    expect(get(doingLogin.errors, '0.constraints.exists')).to.exist;
   }
 
   @test
@@ -403,7 +405,7 @@ class AuthDatabaseLifecycleDefaultSpec {
     let doingLogout = await auth.doLogout(user, req2, res2);
     expect(doingLogout.success).to.be.false;
     expect(doingLogout.errors).to.have.length(1);
-    expect(_.get(doingLogout.errors, '0.constraints.token_error')).to.exist;
+    expect(get(doingLogout.errors, '0.constraints.token_error')).to.exist;
 
 
     req2 = new MockRequest();
@@ -415,7 +417,7 @@ class AuthDatabaseLifecycleDefaultSpec {
     doingLogout = await auth.doLogout(user, req2, res2);
     expect(doingLogout.success).to.be.false;
     expect(doingLogout.errors).to.have.length(1);
-    expect(_.get(doingLogout.errors, '0.constraints.session_error')).to.exist;
+    expect(get(doingLogout.errors, '0.constraints.session_error')).to.exist;
 
     // normal logout
     user = await auth.getUserByRequest(req);

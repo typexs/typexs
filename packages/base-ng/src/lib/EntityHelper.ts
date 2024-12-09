@@ -54,13 +54,13 @@ export class EntityHelper {
 
 
   private static _beforeBuild(entityDef: IEntityRef, from: any, to: any) {
-    keys(from).filter(k => k.startsWith('$')).forEach(k => {
+     Object.keys(from).filter(k => k.startsWith('$')).forEach(k => {
       to[k] = from[k];
     });
   }
 
   private static _beforeBuildRaw(entityDef: IEntityRef, from: any, to: any) {
-    keys(from).filter(k => !k.startsWith('$')).forEach(k => {
+     Object.keys(from).filter(k => !k.startsWith('$')).forEach(k => {
       to[k] = from[k];
     });
   }

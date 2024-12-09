@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { cloneDeep, find } from '@typexs/generic';
+
+
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Bootstrap } from '../../../src/Bootstrap';
@@ -72,7 +74,7 @@ class TasksWorkerSpec {
       @subscribe(TaskProposeEvent)
       @subscribe(TaskEvent) on(e: TaskEvent) {
         // console.log(e)
-        const _e = _.cloneDeep(e);
+        const _e = cloneDeep(e);
         if (_e.topic === 'data') {
           events.push(_e);
         }
@@ -100,7 +102,7 @@ class TasksWorkerSpec {
     res = res.shift();
     expect(res).to.have.length(2);
 
-    const work = _.find(res, (x: any) => x && x.nodeId === NODEID) as TaskEvent;
+    const work = find(res, (x: any) => x && x.nodeId === NODEID) as TaskEvent;
     expect(work.nodeId).to.be.eq(NODEID);
     expect(work.respId).to.be.eq(NODEID);
     expect(work.state).to.be.eq(TASK_STATE_ENQUEUE);
@@ -124,7 +126,7 @@ class TasksWorkerSpec {
     taskEvent2.nodeId = NODEID;
     taskEvent2.taskSpec = { name: ref.name, incomings: { data: 'pass test' } };
     const res2 = await EventBus.post(taskEvent2);
-    const work2 = _.find(res2[0], (x: any) => x && x.nodeId === NODEID);
+    const work2 = find(res2[0], (x: any) => x && x.nodeId === NODEID);
     expect(work2.nodeId).to.be.eq(NODEID);
     expect(work2.respId).to.be.eq(NODEID);
     expect(work2.state).to.be.eq(TASK_STATE_ENQUEUE);
@@ -193,7 +195,7 @@ class TasksWorkerSpec {
         if (e.topic !== 'data') {
           return;
         }
-        const _e = _.cloneDeep(e);
+        const _e = cloneDeep(e);
         events.push(_e);
       }
     }
@@ -258,7 +260,7 @@ class TasksWorkerSpec {
         if (e.topic !== 'data') {
           return;
         }
-        const _e = _.cloneDeep(e);
+        const _e = cloneDeep(e);
         events.push(_e);
       }
     }
@@ -334,7 +336,7 @@ class TasksWorkerSpec {
         if (e.topic !== 'data') {
           return;
         }
-        const _e = _.cloneDeep(e);
+        const _e = cloneDeep(e);
         events.push(_e);
       }
     }
@@ -403,7 +405,7 @@ class TasksWorkerSpec {
         if (e.topic !== 'data') {
           return;
         }
-        const _e = _.cloneDeep(e);
+        const _e = cloneDeep(e);
         events.push(_e);
       }
     }
@@ -505,7 +507,7 @@ class TasksWorkerSpec {
     const command = Injector.get(TaskCommand);
     // expect(commands.length).to.be.gt(0);
 
-    // let command: TaskCommand = _.find(commands, e => e.command == 'task');
+    // let command: TaskCommand = find(commands, e => e.command == 'task');
     Config.set('argv.remote', true, 'system');
     Config.set('argv.someValue', 'value', 'system');
     process.argv = ['typexs', 'task', 'test'];
@@ -517,7 +519,7 @@ class TasksWorkerSpec {
       @subscribe(TaskProposeEvent)
       @subscribe(TaskEvent)
       on(e: TaskEvent) {
-        const _e = _.cloneDeep(e);
+        const _e = cloneDeep(e);
         events.push(_e);
       }
     }
@@ -564,7 +566,7 @@ class TasksWorkerSpec {
     class T2 {
       @subscribe(TaskEvent)
       on(e: TaskEvent) {
-        const _e = _.cloneDeep(e);
+        const _e = cloneDeep(e);
         events.push(_e);
       }
     }

@@ -2,17 +2,19 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
 // process.env.SQL_LOG = '1';
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Config, Injector} from '@typexs/base';
-import {API_CTRL_TASK_GET_METADATA_VALUE, K_ROUTE_CONTROLLER} from '../../../src/libs/Constants';
-import {expect} from 'chai';
-import * as _ from 'lodash';
-import {TestHelper} from '../TestHelper';
+import { suite, test } from '@testdeck/mocha';
+import { Bootstrap, Config, Injector } from '@typexs/base';
+import { API_CTRL_TASK_GET_METADATA_VALUE, K_ROUTE_CONTROLLER } from '../../../src/libs/Constants';
+import { expect } from 'chai';
+
+import { TestHelper } from '../TestHelper';
 import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
-import {IEventBusConfiguration} from '@allgemein/eventbus';
-import {HttpFactory, IHttp} from '@allgemein/http';
-import {WebServer} from '../../../src/libs/web/WebServer';
-import {Helper} from '../../../src/libs/Helper';
+import { IEventBusConfiguration } from '@allgemein/eventbus';
+import { HttpFactory, IHttp } from '@allgemein/http';
+import { WebServer } from '../../../src/libs/web/WebServer';
+import { Helper } from '../../../src/libs/Helper';
+import { clone, range } from '@typexs/generic';
+
 
 const LOG_EVENT = TestHelper.logEnable(false);
 
@@ -76,7 +78,7 @@ class TasksControllerSpec {
 
 
   static async before() {
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     request = HttpFactory.create();
     bootstrap = Bootstrap
       .setConfigSources([{type: 'system'}])
@@ -225,7 +227,7 @@ class TasksControllerSpec {
   async 'tail file content'() {
     const tmpdir = os.tmpdir();
     let content = '';
-    for (const x of _.range(1, 500)) {
+    for (const x of range(1, 500)) {
       content += x + '\n';
     }
     const file = path.join(tmpdir, 'tail_test_file');
@@ -248,7 +250,7 @@ class TasksControllerSpec {
   //
   //   class T02 {
   //     @subscribe(TaskEvent) on(e: TaskEvent) {
-  //       const _e = _.cloneDeep(e);
+  //       const _e = cloneDeep(e);
   //       events.push(_e);
   //     }
   //   }
@@ -376,7 +378,7 @@ class TasksControllerSpec {
   //
   //   class T02 {
   //     @subscribe(TaskEvent) on(e: TaskEvent) {
-  //       const _e = _.cloneDeep(e);
+  //       const _e = cloneDeep(e);
   //       events.push(_e);
   //     }
   //   }
@@ -449,7 +451,7 @@ class TasksControllerSpec {
   //
   //   class T02 {
   //     @subscribe(TaskEvent) on(e: TaskEvent) {
-  //       const _e = _.cloneDeep(e);
+  //       const _e = cloneDeep(e);
   //       events.push(_e);
   //     }
   //   }

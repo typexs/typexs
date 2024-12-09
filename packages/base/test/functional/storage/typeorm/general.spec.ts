@@ -1,22 +1,23 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as _ from 'lodash';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {Invoker} from '../../../../src/base/Invoker';
-import {IStorageRefOptions} from '../../../../src/libs/storage/IStorageRefOptions';
-import {Bootstrap} from '../../../../src/Bootstrap';
-import {Config} from '@allgemein/config';
-import {BeforeInsert, Column, PrimaryColumn} from 'typeorm';
-import {X1} from './../entities/X1';
-import {Y1} from './../entities/Y1';
-import {TEST_STORAGE_OPTIONS} from '../../config';
-import {ClassRef} from '@allgemein/schema-api';
-import {TypeOrmStorageRef} from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
-import {BaseConnectionOptions} from 'typeorm/connection/BaseConnectionOptions';
-import {C_DEFAULT} from '@allgemein/base';
-import {Injector} from '../../../../src/libs/di/Injector';
+
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { Invoker } from '../../../../src/base/Invoker';
+import { IStorageRefOptions } from '../../../../src/libs/storage/IStorageRefOptions';
+import { Bootstrap } from '../../../../src/Bootstrap';
+import { Config } from '@allgemein/config';
+import { BeforeInsert, Column, PrimaryColumn } from 'typeorm';
+import { X1 } from './../entities/X1';
+import { Y1 } from './../entities/Y1';
+import { TEST_STORAGE_OPTIONS } from '../../config';
+import { ClassRef } from '@allgemein/schema-api';
+import { TypeOrmStorageRef } from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
+import { BaseConnectionOptions } from 'typeorm/connection/BaseConnectionOptions';
+import { C_DEFAULT } from '@allgemein/base';
+import { Injector } from '../../../../src/libs/di/Injector';
 import { TestHelper } from '@typexs/testing';
+import { clone, cloneDeep, map, merge } from '@typexs/generic';
 
 
 let bootstrap: Bootstrap;
@@ -29,7 +30,7 @@ class StorageGeneralSpec {
   before() {
     Bootstrap.reset();
     Config.clear();
-    storageOptions = _.cloneDeep(TEST_STORAGE_OPTIONS) as IStorageRefOptions & BaseConnectionOptions;
+    storageOptions = cloneDeep(TEST_STORAGE_OPTIONS) as IStorageRefOptions & BaseConnectionOptions;
   }
 
 
@@ -51,7 +52,7 @@ class StorageGeneralSpec {
     const opt2: IStorageRefOptions & BaseConnectionOptions = {
       name: 'default2', type: 'postgres', connectOnStartup: true
     };
-    const options: IStorageRefOptions = _.merge(opt1, opt2);
+    const options: IStorageRefOptions = merge(opt1, opt2);
     expect(options).to.be.deep.eq({
       name: 'default2', type: 'postgres',
       entityPrefix: 'test', connectOnStartup: true
@@ -117,7 +118,7 @@ class StorageGeneralSpec {
 
     const properties = entityRef_1.getPropertyRefs();
     expect(properties).to.have.length(2);
-    expect(_.map(properties, p => p.name)).to.deep.eq(['id', 'name']);
+    expect(map(properties, p => p.name)).to.deep.eq(['id', 'name']);
 
 
   }
@@ -157,7 +158,7 @@ class StorageGeneralSpec {
     }
 
     const dbfile = path.join(__dirname, '/tmp/testdb01.sqlite');
-    const opts = _.merge(_.clone(storageOptions), {database: dbfile});
+    const opts = merge(clone(storageOptions), {database: dbfile});
 
 
     const invoker = new Invoker();
@@ -237,7 +238,7 @@ class StorageGeneralSpec {
 
   @test
   async 'typeorm detect listener on fixed added class'() {
-    const opts = _.merge(_.clone(storageOptions), {entities: [X1, Y1]});
+    const opts = merge(clone(storageOptions), {entities: [X1, Y1]});
 
     const invoker = new Invoker();
     Injector.set(Invoker.NAME, invoker);

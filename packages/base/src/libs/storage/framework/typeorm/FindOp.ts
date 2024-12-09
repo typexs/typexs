@@ -1,5 +1,4 @@
-import * as _ from 'lodash';
-import { assign } from 'lodash';
+import { assign, defaults, isEmpty, isNull, isNumber, isString } from '@typexs/generic';
 import { IFindOp } from '../IFindOp';
 import { IFindOptions } from '../IFindOptions';
 import { XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '../../../Constants';
@@ -69,7 +68,7 @@ export class FindOp<T> implements IFindOp<T> {
     let cache: Cache = null;
     let results: T[] = null;
 
-    _.defaults(options, {
+    defaults(options, {
       limit: 50,
       offset: null,
       sort: null,
@@ -94,7 +93,7 @@ export class FindOp<T> implements IFindOp<T> {
     }
 
     this.entityRef = this.controller.getStorageRef().getRegistry().getEntityRefFor(entityType);
-    if (_.isNull(results)) {
+    if (isNull(results)) {
       if (this.controller.storageRef.dbType === 'mongodb') {
         results = await this.findMongo(entityType, findConditions);
       } else {
@@ -131,7 +130,7 @@ export class FindOp<T> implements IFindOp<T> {
       let qb: SelectQueryBuilder<T> = null;
       // connect only when type is already loaded
       connection = await this.controller.connect();
-      if (findConditions && !_.isEmpty(findConditions)) {
+      if (findConditions && !isEmpty(findConditions)) {
         const builder = new TypeOrmSqlConditionsBuilder<T>(
           connection.getEntityManager(), this.entityRef, this.controller.getStorageRef(), 'select');
         builder.build(findConditions);
@@ -170,21 +169,21 @@ export class FindOp<T> implements IFindOp<T> {
 
       const recordCount = await qb.getCount();
 
-      if (!_.isNull(this.options.limit) && _.isNumber(this.options.limit)) {
+      if (!isNull(this.options.limit) && isNumber(this.options.limit)) {
         qb.limit(this.options.limit);
       }
 
-      if (!_.isNull(this.options.offset) && _.isNumber(this.options.offset)) {
+      if (!isNull(this.options.offset) && isNumber(this.options.offset)) {
         qb.offset(this.options.offset);
       }
 
 
-      if (_.isNull(this.options.sort)) {
+      if (isNull(this.options.sort)) {
         this.entityRef.getPropertyRefs().filter(x => x.isIdentifier()).forEach(x => {
           qb.addOrderBy(TypeOrmUtils.aliasKey(qb, [x.name, x.storingName]), 'ASC');
         });
       } else {
-        _.keys(this.options.sort).forEach(sortKey => {
+         Object.keys(this.options.sort).forEach(sortKey => {
           const v: string = this.options.sort[sortKey];
           qb.addOrderBy(TypeOrmUtils.aliasKey(qb, sortKey), <'ASC' | 'DESC'>v.toUpperCase());
         });
@@ -215,7 +214,7 @@ export class FindOp<T> implements IFindOp<T> {
 
       if (findConditions) {
         TreeUtils.walk(findConditions, x => {
-          if (x.key && _.isString(x.key)) {
+          if (x.key && isString(x.key)) {
             if (x.key === '$like') {
               x.parent['$regex'] = x.parent[x.key].replace('%%', '#$#').replace('%', '.*').replace('#$#', '%%');
             }
@@ -228,17 +227,17 @@ export class FindOp<T> implements IFindOp<T> {
       const mongoRepo = repo.getRepository() as MongoRepository<any>;
       const qb = this.options.raw ? mongoRepo.createCursor(findConditions) : mongoRepo.createEntityCursor(findConditions);
 
-      if (!_.isNull(this.options.limit) && _.isNumber(this.options.limit)) {
+      if (!isNull(this.options.limit) && isNumber(this.options.limit)) {
         qb.limit(this.options.limit);
       }
 
-      if (!_.isNull(this.options.offset) && _.isNumber(this.options.offset)) {
+      if (!isNull(this.options.offset) && isNumber(this.options.offset)) {
         qb.skip(this.options.offset);
       }
 
-      if (!_.isNull(this.options.sort)) {
+      if (!isNull(this.options.sort)) {
         const s: any[] = [];
-        _.keys(this.options.sort).forEach(sortKey => {
+         Object.keys(this.options.sort).forEach(sortKey => {
           const v: string = this.options.sort[sortKey];
           s.push([sortKey, v === 'asc' ? 1 : -1]);
         });

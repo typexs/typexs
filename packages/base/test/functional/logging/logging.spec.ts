@@ -1,11 +1,13 @@
-import * as _ from 'lodash';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {TestHelper} from '@typexs/testing';
+import { has } from '@typexs/generic';
+
+
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { TestHelper } from '@typexs/testing';
 import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
-import {Log} from '../../../src/libs/logging/Log';
+import { Log } from '../../../src/libs/logging/Log';
 
 const stdMocks = require('std-mocks');
 
@@ -112,7 +114,7 @@ class LoggingSpec {
     expect(data_tasklog).to.contain('test_tasklog');
 
     Log._().removeLogger('tasklog-hallo');
-    expect(_.has(Log._()['loggers'], 'tasklog-hallo')).to.be.false;
+    expect(has(Log._()['loggers'], 'tasklog-hallo')).to.be.false;
   }
 
 

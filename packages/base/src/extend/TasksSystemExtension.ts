@@ -62,7 +62,7 @@ export class TasksSystemExtension implements ISystemApi {
     if (x && has(x, 'contexts') && has(x, 'nodeId')) {
       const found = x.contexts.find(x => x.context === C_TASKS);
       if (found) {
-        const names = keys(found[C_TASKS].definitions);
+        const names =  Object.keys(found[C_TASKS].definitions);
         names.forEach(name => {
           if (this.tasks.contains(name)) {
             const task = this.tasks.get(name);

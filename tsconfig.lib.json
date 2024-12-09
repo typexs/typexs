@@ -50,6 +50,12 @@
       "@typexs/forms/*": [
         "./packages/forms/src/*"
       ],
+      "@typexs/generic": [
+        "./packages/generic/src/browser"
+      ],
+      "@typexs/generic/*": [
+        "./packages/generic/src/*"
+      ],
       "@typexs/ng": [
         "./packages/ng/src/browser"
       ],

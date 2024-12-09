@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as _ from 'lodash';
+
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Bootstrap } from '../../../src/Bootstrap';
@@ -10,6 +10,7 @@ import { TypeOrmStorageRef } from '../../../src/libs/storage/framework/typeorm/T
 import { getMetadataArgsStorage } from 'typeorm';
 import { TypeOrmEntityRegistry } from '../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
 import { TestHelper } from '@typexs/testing';
+import { remove } from '@typexs/generic';
 
 
 let bootstrap: Bootstrap;
@@ -25,7 +26,7 @@ let controller: TypeOrmEntityController = null;
 class StorageControllerMongoSpec {
 
   static after() {
-    _.remove(getMetadataArgsStorage().columns, x => x.mode === 'objectId' || x.propertyName === '_id');
+    remove(getMetadataArgsStorage().columns, x => x.mode === 'objectId' || x.propertyName === '_id');
   }
 
 
@@ -215,7 +216,7 @@ class StorageControllerMongoSpec {
 
     const removeCount = await controller.remove(car_by_driver);
     expect(removeCount).to.eq(1);
-    // expect(_.map(removeCount, (d: any) => d.id)).to.deep.eq([undefined]);
+    // expect(map(removeCount, (d: any) => d.id)).to.deep.eq([undefined]);
 
     const car_by_driver_empty = await controller.find(MdbCar, { 'driver.id': car1.id });
     expect(car_by_driver_empty).to.have.length(0);

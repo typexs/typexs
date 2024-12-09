@@ -8,13 +8,14 @@ import { TestHelper } from '@typexs/testing';
 
 import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
 import { DataRow } from './fake_app_mongo/entities/DataRow';
-import * as _ from 'lodash';
+
 import { Injector } from '@typexs/base/libs/di/Injector';
 import { __NODE_ID__, C_STORAGE_DEFAULT } from '@typexs/base/libs/Constants';
 import { StorageRef } from '@typexs/base/libs/storage/StorageRef';
 import { generateMongoDataRows } from './helper';
 import { getMetadataArgsStorage } from 'typeorm';
 import { DistributedStorageEntityController } from '../../src/lib/DistributedStorageEntityController';
+import { range, remove, set, uniq } from '@typexs/generic';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -32,7 +33,7 @@ class DistributedStorageSaveSpec {
     Bootstrap.reset();
     Config.clear();
     const DB_OPTIONS = TEST_MONGO_STORAGE_OPTIONS;
-    _.set(DB_OPTIONS, 'database', 'typexs_local');
+    set(DB_OPTIONS, 'database', 'typexs_local');
     const config = <ITypexsOptions & any>{
       app: { name: 'test', nodeId: 'system', path: __dirname + '/fake_app' },
       logging: { enable: LOG_EVENT, level: 'debug' },
@@ -58,7 +59,7 @@ class DistributedStorageSaveSpec {
   static async after() {
     if (bootstrap) {
       await bootstrap.shutdown();
-      _.remove(getMetadataArgsStorage().columns, x => x.mode === 'objectId' || x.propertyName === '_id');
+      remove(getMetadataArgsStorage().columns, x => x.mode === 'objectId' || x.propertyName === '_id');
     }
   }
 
@@ -68,8 +69,8 @@ class DistributedStorageSaveSpec {
     const controller = Injector.get(DistributedStorageEntityController);
     const results = await controller.aggregate(DataRow, [{ $match: { someBool: true } }]);
     const evenIds = results.map(x => x.id);
-    expect(evenIds).to.be.deep.eq(_.range(1, 11).map(x => x * 2));
-    const nodeIds = _.uniq(results.map(x => x[__NODE_ID__]));
+    expect(evenIds).to.be.deep.eq(range(1, 11).map(x => x * 2));
+    const nodeIds = uniq(results.map(x => x[__NODE_ID__]));
     expect(nodeIds).to.be.deep.eq(['system']);
   }
 

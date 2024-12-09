@@ -1,20 +1,21 @@
 import * as bcrypt from 'bcrypt';
-import * as _ from 'lodash';
-import {Inject, Invoker, NestedException} from '@typexs/base';
-import {IStorageRef} from '@typexs/base/libs/storage/IStorageRef';
-import {AuthMethod} from '../../../entities/AuthMethod';
-import {UserNotFoundError} from '../../../libs/exceptions/UserNotFoundError';
-import {PasswordIsWrongError} from '../../../libs/exceptions/PasswordIsWrongError';
-import {DefaultUserLogin} from '../../../libs/models/DefaultUserLogin';
-import {IDatabaseAuthOptions} from './IDatabaseAuthOptions';
-import {AbstractAuthAdapter} from '../../../libs/adapter/AbstractAuthAdapter';
-import {User} from '../../../entities/User';
-import {EntityController} from '@typexs/entity';
-import {AuthDataContainer} from '../../../libs/auth/AuthDataContainer';
-import {AbstractUserSignup} from '../../../libs/models/AbstractUserSignup';
-import {UserAuthApi} from '../../../api/UserAuth.api';
-import {DatabaseUserAuthExtenstion} from './DatabaseUserAuthExtenstion';
-import {IEntityRef, IPropertyRef} from '@allgemein/schema-api';
+
+import { Inject, Invoker, NestedException } from '@typexs/base';
+import { IStorageRef } from '@typexs/base/libs/storage/IStorageRef';
+import { AuthMethod } from '../../../entities/AuthMethod';
+import { UserNotFoundError } from '../../../libs/exceptions/UserNotFoundError';
+import { PasswordIsWrongError } from '../../../libs/exceptions/PasswordIsWrongError';
+import { DefaultUserLogin } from '../../../libs/models/DefaultUserLogin';
+import { IDatabaseAuthOptions } from './IDatabaseAuthOptions';
+import { AbstractAuthAdapter } from '../../../libs/adapter/AbstractAuthAdapter';
+import { User } from '../../../entities/User';
+import { EntityController } from '@typexs/entity';
+import { AuthDataContainer } from '../../../libs/auth/AuthDataContainer';
+import { AbstractUserSignup } from '../../../libs/models/AbstractUserSignup';
+import { UserAuthApi } from '../../../api/UserAuth.api';
+import { DatabaseUserAuthExtenstion } from './DatabaseUserAuthExtenstion';
+import { IEntityRef, IPropertyRef } from '@allgemein/schema-api';
+import { defaults } from '@typexs/generic';
 
 
 export const K_AUTH_DATABASE = 'database';
@@ -63,7 +64,7 @@ export class DatabaseAdapter extends AbstractAuthAdapter {
 
 
   async prepare(opts: IDatabaseAuthOptions) {
-    _.defaults(opts, DEFAULTS);
+    defaults(opts, DEFAULTS);
     super.prepare(opts);
     this.invoker.register(UserAuthApi, DatabaseUserAuthExtenstion);
     // this.connection = await this.storage.connect() as TypeOrmConnectionWrapper;

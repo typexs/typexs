@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { last, range } from '@typexs/generic';
+
+
 import { suite, test, timeout } from '@testdeck/mocha';
 import { Bootstrap, Counters, Injector, StorageRef } from '@typexs/base';
 import * as path from 'path';
@@ -95,7 +97,7 @@ class TypexsSearchEntityController {
     const dbController = dbStorageRef.getController();
 
     const entities = [];
-    for (const i of _.range(60, 90)) {
+    for (const i of range(60, 90)) {
       const idxReset = i - 60;
       const d = new SearchDataEntity();
       d[__ID__] = i + '';
@@ -190,7 +192,7 @@ class TypexsSearchEntityController {
 
 
     expect(data.tasks).to.have.length(1);
-    const res = _.last(data.results);
+    const res = last(data.results);
     expect((<Counters>res['counters']).asObject()).to.deep.eq({
       'class': {
         'SearchDataEntity': 30,
@@ -224,7 +226,7 @@ class TypexsSearchEntityController {
     // console.log(inspect(data, false, 10));
     await Injector.get(IndexProcessingQueue).await();
     expect(data.tasks).to.have.length(1);
-    const res = _.last(data.results);
+    const res = last(data.results);
     expect((<Counters>res['counters']).asObject()).to.deep.eq({
       'class': {
         'SomeSearchEntity': 30

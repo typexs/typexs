@@ -1,6 +1,6 @@
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-import * as _ from 'lodash';
+
 import { Bootstrap } from '../../../src/Bootstrap';
 import { Config } from '@allgemein/config';
 import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';

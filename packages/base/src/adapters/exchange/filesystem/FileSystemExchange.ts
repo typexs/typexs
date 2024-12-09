@@ -1,17 +1,16 @@
-import * as _ from 'lodash';
+import { get, isEmpty, isString, isUndefined } from '@typexs/generic';
 import * as fs from 'fs';
-import {join, resolve} from 'path';
+import { join, resolve } from 'path';
 import { FileUtils, Glob } from '@allgemein/base';
-import {AbstractExchange} from '../../../libs/messaging/AbstractExchange';
-import {FileSystemRequest} from './FileSystemRequest';
-import {FileSystemResponse} from './FileSystemResponse';
-import {IFileOptions} from './IFileOptions';
-import {FileReadUtils} from '../../../libs/filesystem/FileReadUtils';
-import {Config} from '@allgemein/config';
-import {CFG_KEY_APP_PATH, CFG_KEY_FILESYSTEM} from '../../../libs/filesystem/Constants';
-import {IFileSystemConfig} from '../../../libs/filesystem/IFileSystemConfig';
-import {MatchUtils} from '../../../libs/utils/MatchUtils';
-import { isUndefined } from 'lodash';
+import { AbstractExchange } from '../../../libs/messaging/AbstractExchange';
+import { FileSystemRequest } from './FileSystemRequest';
+import { FileSystemResponse } from './FileSystemResponse';
+import { IFileOptions } from './IFileOptions';
+import { FileReadUtils } from '../../../libs/filesystem/FileReadUtils';
+import { Config } from '@allgemein/config';
+import { CFG_KEY_APP_PATH, CFG_KEY_FILESYSTEM } from '../../../libs/filesystem/Constants';
+import { IFileSystemConfig } from '../../../libs/filesystem/IFileSystemConfig';
+import { MatchUtils } from '../../../libs/utils/MatchUtils';
 
 
 export class FileSystemExchange extends AbstractExchange<FileSystemRequest, FileSystemResponse> {
@@ -37,11 +36,11 @@ export class FileSystemExchange extends AbstractExchange<FileSystemRequest, File
 
       this.allowedPaths = this.config.paths
         .map(
-          x => _.isString(x) && !_.isEmpty(x) ?
+          x => isString(x) && !isEmpty(x) ?
             // todo check blob
             resolve(this.basePath, x) : null
         )
-        .filter(x => !_.isEmpty(x))
+        .filter(x => !isEmpty(x))
         .map(x => {
           return {
             path: x,
@@ -120,12 +119,12 @@ export class FileSystemExchange extends AbstractExchange<FileSystemRequest, File
 
 
   async handleRequest(request: FileSystemRequest, res: FileSystemResponse) {
-    if (_.isEmpty(this.allowedPaths)) {
+    if (isEmpty(this.allowedPaths)) {
       res.error = new Error('access to path not allowed [0]');
       return;
     }
     res.options = request.options;
-    if (_.isEmpty(request) || _.isEmpty(_.get(request, 'options.path', null))) {
+    if (isEmpty(request) || isEmpty(get(request, 'options.path', null))) {
       res.error = new Error('no path in request');
       return;
     }

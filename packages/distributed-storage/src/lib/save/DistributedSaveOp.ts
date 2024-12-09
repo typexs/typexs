@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { defaults, first, get, intersection, isArray, isEmpty, remove, set } from '@typexs/generic';
+
+
 import { DistributedStorageEntityController } from '../DistributedStorageEntityController';
 import { System } from '@typexs/base/libs/system/System';
 import { ClassRef } from '@allgemein/schema-api';
@@ -60,16 +62,16 @@ export class DistributedSaveOp<T>
   }
 
   async run(objects: T | T[], options?: IDistributedSaveOptions): Promise<T[]> {
-    this.options = _.defaults(options, { timeout: 10000 });
+    this.options = defaults(options, { timeout: 10000 });
     this.timeout = this.options.timeout;
 
     let inc = 0;
-    this.isArray = _.isArray(objects);
-    this.objects = _.isArray(objects) ? objects : [objects];
+    this.isArray = isArray(objects);
+    this.objects = isArray(objects) ? objects : [objects];
 
     // mark objects
     this.objects.forEach((o: any) => {
-      _.set(o, __DISTRIBUTED_ID__, inc++);
+      set(o, __DISTRIBUTED_ID__, inc++);
     });
 
     // create request event
@@ -77,7 +79,7 @@ export class DistributedSaveOp<T>
     req.objects = BaseUtils.resolveByClassName(this.objects);
     req.options = this.options;
 
-    // _.keys(req.objects).map(entityType => {
+    //  Object.keys(req.objects).map(entityType => {
     //   this.entityRefs[entityType] = TypeOrmEntityRegistry.$().getEntityRefFor(entityType);
     // });
 
@@ -90,11 +92,11 @@ export class DistributedSaveOp<T>
       .map(n => n.nodeId);
 
     if (this.options.targetIds) {
-      this.targetIds = _.intersection(this.targetIds, this.options.targetIds);
+      this.targetIds = intersection(this.targetIds, this.options.targetIds);
     }
 
     if (this.options.skipLocal) {
-      _.remove(this.targetIds, x => x === this.getSystem().getNodeId());
+      remove(this.targetIds, x => x === this.getSystem().getNodeId());
     }
 
     if (this.targetIds.length === 0) {
@@ -117,13 +119,13 @@ export class DistributedSaveOp<T>
     let saved = 0;
     let errored = 0;
     for (const event of responses) {
-      if (!_.isEmpty(event.error)) {
+      if (!isEmpty(event.error)) {
         errors.push(event.nodeId + ': ' + event.error.message);
         errored++;
         continue;
       }
-      _.keys(event.results).map(entityType => {
-        const obj = _.first(event.results[entityType]);
+       Object.keys(event.results).map(entityType => {
+        const obj = first(event.results[entityType]);
         if (!obj) {
           return;
         }
@@ -131,12 +133,12 @@ export class DistributedSaveOp<T>
         const ids = ref.getPropertyRefs().filter(p => p.isIdentifier());
 
         for (const entry of event.results[entityType]) {
-          const distributedId = _.get(entry, __DISTRIBUTED_ID__);
+          const distributedId = get(entry, __DISTRIBUTED_ID__);
           const id = {};
           ids.forEach(_id => {
             id[_id.name] = _id.get(entry);
           });
-          const localObject = this.objects.find(x => _.get(x, __DISTRIBUTED_ID__) === distributedId);
+          const localObject = this.objects.find(x => get(x, __DISTRIBUTED_ID__) === distributedId);
           if (!localObject[__REMOTE_IDS__]) {
             localObject[__REMOTE_IDS__] = {};
           }

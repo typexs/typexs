@@ -1,5 +1,5 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Config, Injector} from '@typexs/base';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { Bootstrap, Config, Injector } from '@typexs/base';
 import {
   API_CTRL_SYSTEM_MODULES,
   API_CTRL_SYSTEM_RUNTIME_INFO,
@@ -9,13 +9,14 @@ import {
   C_API,
   K_ROUTE_CONTROLLER
 } from '../../../src/libs/Constants';
-import {expect} from 'chai';
+import { expect } from 'chai';
 
-import * as _ from 'lodash';
-import {TestHelper} from '../TestHelper';
-import {TEST_STORAGE_OPTIONS} from '../config';
-import {HttpFactory, IHttp} from '@allgemein/http';
-import {WebServer} from '../../../src/libs/web/WebServer';
+
+import { TestHelper } from '../TestHelper';
+import { TEST_STORAGE_OPTIONS } from '../config';
+import { HttpFactory, IHttp } from '@allgemein/http';
+import { WebServer } from '../../../src/libs/web/WebServer';
+import { clone, map } from '@typexs/generic';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -74,7 +75,7 @@ class RuntimeInfoControllerSpec {
 
 
   static async before() {
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     http = HttpFactory.create();
 
     bootstrap = Bootstrap
@@ -109,7 +110,7 @@ class RuntimeInfoControllerSpec {
     expect(res).to.not.be.null;
     res = res.body;
     expect(res.networks).to.not.be.null;
-    expect(_.keys(res.networks)).to.have.length.gt(0);
+    expect( Object.keys(res.networks)).to.have.length.gt(0);
     expect(res.cpus).to.not.be.null;
     expect(res.cpus).to.have.length.gt(0);
     expect(res.uptime).to.be.gt(0);
@@ -152,7 +153,7 @@ class RuntimeInfoControllerSpec {
     let res = await http.get(url + API_CTRL_SYSTEM_MODULES, {responseType: 'json'});
     expect(res).to.not.be.null;
     res = res.body;
-    expect(_.map(res, r => r.name)).to.deep.include.members([
+    expect(map(res, r => r.name)).to.deep.include.members([
       '@typexs/server', '@typexs/base']);
   }
 

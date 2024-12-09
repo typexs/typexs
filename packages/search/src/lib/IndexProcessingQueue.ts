@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { uniq, uniqBy } from '@typexs/generic';
+
+
 import { LockFactory, Semaphore } from '@allgemein/base';
 import { AsyncWorkerQueue, ILoggerApi, Inject, Invoker, IQueueProcessor, Log, Storage } from '@typexs/base';
 import { IndexRuntimeStatus } from './IndexRuntimeStatus';
@@ -122,7 +124,7 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
   async refresh() {
     try {
       const indexNames: { [ref: string]: string[] } = {};
-      const refreshFor = _.uniqBy(this.refreshIndexRef, x => JSON.stringify(x));
+      const refreshFor = uniqBy(this.refreshIndexRef, x => JSON.stringify(x));
       this.refreshIndexRef = [];
       refreshFor.forEach(x => {
         const ref = (this.storage.get(x.ref) as IIndexStorageRef);
@@ -136,8 +138,8 @@ export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {
         indexNames[x.ref].push(indexType.getAliasName());
       });
 
-      for (const refKey of _.keys(indexNames)) {
-        const indicies = _.uniq(indexNames[refKey]);
+      for (const refKey of  Object.keys(indexNames)) {
+        const indicies = uniq(indexNames[refKey]);
         this.queue.getLogger().debug('refresh indicies of storage ref ' + refKey + ' ' + JSON.stringify(indicies));
         await (this.storage.get(refKey) as IIndexStorageRef).refresh(indicies);
       }

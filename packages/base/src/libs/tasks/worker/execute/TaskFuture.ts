@@ -1,16 +1,17 @@
 /**
  * TODO: Future object which waits till a task is done
  */
-import * as _ from 'lodash';
-import {EventEmitter} from 'events';
-import {subscribe, unsubscribe} from '@allgemein/eventbus/browser';
-import {EventBus} from '@allgemein/eventbus';
-import {ITaskFutureOptions} from './ITaskFutureOptions';
-import {ITaskRunnerResult} from '../../ITaskRunnerResult';
+
+import { EventEmitter } from 'events';
+import { subscribe, unsubscribe } from '@allgemein/eventbus/browser';
+import { EventBus } from '@allgemein/eventbus';
+import { ITaskFutureOptions } from './ITaskFutureOptions';
+import { ITaskRunnerResult } from '../../ITaskRunnerResult';
 import { TaskEvent } from '../../event/TaskEvent';
 import { TaskProposeEvent } from '../../event/TaskProposeEvent';
 import { AbstractTaskEvent } from '../../event/AbstractTaskEvent';
 import { TASK_STATE_ERRORED, TASK_STATE_REQUEST_ERROR, TASK_STATE_STOPPED } from '../../Constants';
+import { values } from '@typexs/generic';
 
 
 const future_finished = 'future_finished';
@@ -92,8 +93,8 @@ export class TaskFuture extends EventEmitter {
 
   await(timeout: number = 0): Promise<ITaskRunnerResult[]> {
     if (this.finished) {
-      const values = _.values(this.targetResults);
-      return Promise.resolve(values);
+      const _values = values(this.targetResults);
+      return Promise.resolve(_values);
     }
 
     return new Promise<ITaskRunnerResult[]>((resolve, reject) => {
@@ -104,8 +105,8 @@ export class TaskFuture extends EventEmitter {
 
       this.once(future_finished, () => {
         clearTimeout(t);
-        const values = _.values(this.targetResults);
-        resolve(values);
+        const _values = values(this.targetResults);
+        resolve(_values);
       });
     });
   }
@@ -113,7 +114,7 @@ export class TaskFuture extends EventEmitter {
 
   isFinished() {
     let yes = true;
-    for (const k of _.keys(this.targetState)) {
+    for (const k of  Object.keys(this.targetState)) {
       if (![TASK_STATE_STOPPED, TASK_STATE_REQUEST_ERROR, TASK_STATE_ERRORED].includes(this.targetState[k])) {
         yes = false;
         break;

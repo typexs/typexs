@@ -1,6 +1,5 @@
 import { ClassType, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
 import { NotSupportedError, TreeUtils } from '@allgemein/base';
-import * as _ from 'lodash';
 import { IAggregateOp } from '../IAggregateOp';
 import { IAggregateOptions } from '../IAggregateOptions';
 import { MongoRepository, SelectQueryBuilder } from 'typeorm';
@@ -30,8 +29,7 @@ import { IMangoWalkerControl } from '@allgemein/mango-expressions/IMangoWalker';
 import { GROUP_ID } from '@allgemein/mango-expressions/operators/stage/Group';
 import { EntityControllerApi } from '../../../../api/EntityController.api';
 import { REGISTRY_TYPEORM } from './Constants';
-import { clone } from 'lodash';
-import { IEntityController } from '../../IEntityController';
+import { clone, get, has, isArray, isEmpty, isNull, isNumber, isString } from 'lodash';
 import { RepositoryWrapper } from './RepositoryWrapper';
 
 
@@ -101,13 +99,13 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
   }
 
   async run(cls: Function | string | ClassType<any>, pipeline: any[], options: IAggregateOptions = {}): Promise<any[]> {
-    if (_.isEmpty(pipeline) || !_.isArray(pipeline)) {
+    if (isEmpty(pipeline) || !isArray(pipeline)) {
       throw new Error('aggregate: pipeline is not an array or is empty');
     }
 
     this.limit = 0;
     this.offset = 0;
-    this.sort = _.get(options, 'sort', {});
+    this.sort = get(options, 'sort', {});
 
 
     this.entityType = cls;
@@ -158,7 +156,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
 
       if (pipeline) {
         TreeUtils.walk(pipeline, x => {
-          if (x.key && _.isString(x.key)) {
+          if (x.key && isString(x.key)) {
             if (x.key === '$like') {
               x.parent['$regex'] = x.parent[x.key].replace('%%', '#$#').replace('%', '.*').replace('#$#', '%%');
             }
@@ -175,7 +173,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
       // const countQb = qb.clone().select('COUNT( DISTINCT ' + cacheFields.map(x => x.name).join(', ') + ')');
       // TODO try catch
       let count = -1;
-      if (!_.get(options, 'disableCount', false)) {
+      if (!get(options, 'disableCount', false)) {
         try {
           const sql = this.queryBuilder.getQueryAndParameters();
           const countQb = await repo.query(
@@ -207,7 +205,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
       if (this.sort) {
         const nullSupport = this.controller.storageRef.getSchemaHandler().supportsSortNull();
         // const alias = this.queryBuilder.alias;
-        _.keys(this.sort).forEach(k => {
+         Object.keys(this.sort).forEach(k => {
           const _k = TypeOrmUtils.aliasKey(this.queryBuilder, k);
           if (nullSupport) {
             this.queryBuilder.addOrderBy(_k, this.sort[k] === 'asc' ? 'ASC' : 'DESC',
@@ -219,21 +217,21 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
         });
       }
 
-      if (this.countName && _.isString(this.countName)) {
+      if (this.countName && isString(this.countName)) {
         results = {} as any;
         results[this.countName] = count;
       } else {
         const _results = await this.queryBuilder.getRawMany();
         // remove aliases
-        const autoParseNumbers = _.get(this.options, 'autoParseNumbers', false);
+        const autoParseNumbers = get(this.options, 'autoParseNumbers', false);
         for (const res of _results) {
           const newRes: any = {};
-          _.keys(res).forEach(k => {
+           Object.keys(res).forEach(k => {
             const newKey = k.replace(this.alias + '_', '');
             let v = res[k];
 
             if (autoParseNumbers) {
-              if (_.isString(v)) {
+              if (isString(v)) {
                 if (/^\d+$/.test(v)) {
                   v = parseInt(v, 10);
                 } else if (/^\d+\.\d+$/.test(v)) {
@@ -272,7 +270,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
       const clonePipeline = clone(pipeline);
       if (clonePipeline) {
         TreeUtils.walk(clonePipeline, x => {
-          if (x.key && _.isString(x.key)) {
+          if (x.key && isString(x.key)) {
             if (x.key === '$like') {
               x.parent['$regex'] = x.parent[x.key].replace('%%', '#$#').replace('%', '.*').replace('#$#', '%%');
             }
@@ -280,9 +278,9 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
         });
       }
 
-      if (!_.isEmpty(this.sort)) {
+      if (!isEmpty(this.sort)) {
         const sort = {};
-        _.keys(this.sort).forEach(x => {
+         Object.keys(this.sort).forEach(x => {
           sort[x] = this.sort[x] === 'asc' ? 1 : -1;
         });
         clonePipeline.push({ $sort: sort });
@@ -291,12 +289,12 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
       const _repo = connection.for(entityDef.getClassRef().getClass()) as unknown as RepositoryWrapper<unknown>;
       const repo = _repo.getRepository() as MongoRepository<any>;
 
-      const countPipeline = _.clone(clonePipeline);
+      const countPipeline = clone(clonePipeline);
       countPipeline.push({ $count: 'count' });
       let count = -1;
       try {
         const countAll = await repo.aggregate(countPipeline).next();
-        count = _.get(countAll, 'count', count);
+        count = get(countAll, 'count', count);
       } catch (e) {
 
       }
@@ -371,7 +369,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
       if (!inOperator && ast instanceof ValueRef) {
         const alias = ast['key'];
         const field = ast.value;
-        return this.addSelectField(field, _.isString(alias) ? alias : null, 'select');
+        return this.addSelectField(field, isString(alias) ? alias : null, 'select');
       } else if (ast instanceof ValueRef) {
         return this.alias + '.' + ast.value;
       } else if (ast instanceof Value) {
@@ -385,7 +383,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
         }
 
         // if in an operator then return value
-        if (_.isString(ast.value)) {
+        if (isString(ast.value)) {
           /**
            * $group: {_id: '$someField'}
            *
@@ -394,10 +392,10 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
            * $group: {_id: ['$someField']}
            */
           const _groupBy = ast.value;
-          const op = this.addSelectField(_groupBy, _.isString(ast['key']) && ast['key'] !== '_id' ? ast['key'] : null, 'group');
+          const op = this.addSelectField(_groupBy, isString(ast['key']) && ast['key'] !== '_id' ? ast['key'] : null, 'group');
           this.queryBuilder.addGroupBy(this.alias + '.' + _groupBy);
           return op;
-        } else if (_.isNull(ast.value) && ast['key'] === '_id') {
+        } else if (isNull(ast.value) && ast['key'] === '_id') {
           return null;
         }
       }
@@ -420,21 +418,21 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
         !(ast['parent'] instanceof Project);
       const handler = this.controller.storageRef.getSchemaHandler();
       if (!insideOperator) {
-        if (_.isString(valueRes)) {
+        if (isString(valueRes)) {
           const fn = handler.getOperationHandle(ast.name);
-          return this.addSelectField(fn(valueRes), _.isString(ast['key']) ? ast['key'] : null, 'operation');
-        } else if (_.has(valueRes, 'q')) {
+          return this.addSelectField(fn(valueRes), isString(ast['key']) ? ast['key'] : null, 'operation');
+        } else if (has(valueRes, 'q')) {
           // initial operator
           const fn = handler.getOperationHandle(ast.name);
-          return this.addSelectField(fn(valueRes.q), _.isString(ast['key']) ? ast['key'] : null, 'operation');
+          return this.addSelectField(fn(valueRes.q), isString(ast['key']) ? ast['key'] : null, 'operation');
         } else if ((valueRes as any) instanceof Value) {
           const fn = handler.getOperationHandle(ast.name);
-          return this.addSelectField(fn(handler.escape((valueRes as any).value)), _.isString(ast['key']) ? ast['key'] : null, 'operation');
+          return this.addSelectField(fn(handler.escape((valueRes as any).value)), isString(ast['key']) ? ast['key'] : null, 'operation');
         }
       } else {
         // inside an operator return
         const fn = handler.getOperationHandle(ast.name);
-        if (_.has(valueRes, 'q')) {
+        if (has(valueRes, 'q')) {
           return { q: fn(valueRes.q) };
         } else {
           return { q: fn(valueRes) };
@@ -445,21 +443,21 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
       const handler = this.controller.storageRef.getSchemaHandler();
       const insideOperator = ast['parent'] instanceof AbstractOperator && !(ast['parent'] instanceof Group);
       if (!inId) {
-        if (_.isString(valueRes)) {
+        if (isString(valueRes)) {
           const fn = handler.getOperationHandle(ast.name);
-          return this.addSelectField(fn(valueRes), _.isString(ast['key']) ? ast['key'] : null, 'operation');
+          return this.addSelectField(fn(valueRes), isString(ast['key']) ? ast['key'] : null, 'operation');
         } else if (valueRes instanceof Value) {
           const fn = handler.getOperationHandle(ast.name);
-          return this.addSelectField(fn(handler.escape(valueRes.value)), _.isString(ast['key']) ? ast['key'] : null, 'operation');
+          return this.addSelectField(fn(handler.escape(valueRes.value)), isString(ast['key']) ? ast['key'] : null, 'operation');
         } else if (valueRes instanceof ValueRef) {
           const fn = handler.getOperationHandle(ast.name);
-          return this.addSelectField(fn(this.alias + '.' + valueRes.value), _.isString(ast['key']) ? ast['key'] : null, 'operation');
+          return this.addSelectField(fn(this.alias + '.' + valueRes.value), isString(ast['key']) ? ast['key'] : null, 'operation');
         }
       } else {
         // is inside $group._id
         let syntax = null;
         const fn = handler.getOperationHandle(ast.name);
-        if (_.isString(valueRes)) {
+        if (isString(valueRes)) {
           syntax = fn(this.alias + '.' + valueRes);
         } else if (valueRes instanceof Value) {
           syntax = fn(handler.escape(valueRes.value));
@@ -472,7 +470,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
         if (insideOperator) {
           return <ISqlParam>{ q: syntax };
         } else {
-          const op = this.addSelectField(syntax, _.isString(ast['key']) ? ast['key'] : null, 'operation');
+          const op = this.addSelectField(syntax, isString(ast['key']) ? ast['key'] : null, 'operation');
           this.queryBuilder.addGroupBy(syntax);
           return op;
         }
@@ -481,7 +479,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
       if (ast.value instanceof PObject) {
         this.sort = {};
         ast.value.getValues().forEach((x: any) => {
-          if (_.isNumber(x.value) && (x.value === 1 || x.value === -1)) {
+          if (isNumber(x.value) && (x.value === 1 || x.value === -1)) {
             this.sort[this.alias + '.' + x.key] = x.value === 1 ? 'asc' : 'desc';
           } else {
             throw new Error('sort has wrong value ' + x.key + ' => ' + x.value);
@@ -489,19 +487,19 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
         });
       }
     } else if (ast instanceof Skip) {
-      if (_.isNumber(valueRes)) {
+      if (isNumber(valueRes)) {
         this.offset = valueRes;
       } else {
         throw new Error('offset has wrong value ' + valueRes);
       }
     } else if (ast instanceof Limit) {
-      if (_.isNumber(valueRes)) {
+      if (isNumber(valueRes)) {
         this.limit = valueRes;
       } else {
         throw new Error('limit has wrong value ' + valueRes);
       }
     } else if (ast instanceof Count) {
-      if (_.isString(valueRes)) {
+      if (isString(valueRes)) {
         this.countName = valueRes;
       } else {
         throw new Error('limit has wrong value ' + valueRes);
@@ -553,7 +551,7 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
   addSelectField(value: string | string[], alias?: string, mode: 'select' | 'group' | 'operation' = 'select') {
 
     let values: any = null;
-    if (_.isArray(value)) {
+    if (isArray(value)) {
       values = value.map(x => this.alias + '.' + x);
     } else if (mode === 'operation') {
       values = value;
@@ -562,15 +560,15 @@ export class AggregateOp<T> implements IAggregateOp, IMangoWalker {
     }
 
     if (!this.firstSelect) {
-      alias && _.isString(alias) ? this.queryBuilder.select(values, alias) : this.queryBuilder.select(values);
+      alias && isString(alias) ? this.queryBuilder.select(values, alias) : this.queryBuilder.select(values);
       this.firstSelect = true;
     } else {
-      alias && _.isString(alias) ? this.queryBuilder.addSelect(values, alias) : this.queryBuilder.addSelect(values);
+      alias && isString(alias) ? this.queryBuilder.addSelect(values, alias) : this.queryBuilder.addSelect(values);
     }
 
 
     let op: any;
-    if (_.isArray(value)) {
+    if (isArray(value)) {
       op = [];
       value.forEach(x => {
         const _op: any = { name: x, alias: null, type: mode };

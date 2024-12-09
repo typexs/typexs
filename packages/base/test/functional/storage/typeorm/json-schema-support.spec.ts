@@ -1,6 +1,6 @@
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-import * as _ from 'lodash';
+
 import { Car } from './entities/Car';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { TypeOrmEntityRegistry } from '../../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
@@ -13,6 +13,7 @@ import { TEST_STORAGE_OPTIONS } from '../../config';
 import { IStorageRefOptions } from '../../../../src/libs/storage/IStorageRefOptions';
 import { BaseConnectionOptions } from 'typeorm/connection/BaseConnectionOptions';
 import { TreeUtils } from '@allgemein/base';
+import { cloneDeep } from '@typexs/generic';
 
 
 let registry: TypeOrmEntityRegistry = null;
@@ -36,7 +37,7 @@ class JsonSchemaSupportSpec {
   }
 
   before() {
-    storageOptions = _.cloneDeep(TEST_STORAGE_OPTIONS) as IStorageRefOptions & BaseConnectionOptions;
+    storageOptions = cloneDeep(TEST_STORAGE_OPTIONS) as IStorageRefOptions & BaseConnectionOptions;
   }
 
 
@@ -195,13 +196,13 @@ class JsonSchemaSupportSpec {
       '$ref': '#/definitions/Car'
     });
 
-    data_x.definitions['Car2'] = _.cloneDeep(data_x.definitions['Car']);
+    data_x.definitions['Car2'] = cloneDeep(data_x.definitions['Car']);
     data_x.definitions['Car2'].title = 'Car2';
     data_x.definitions['Car2'].$id = '#Car2';
     data_x.definitions['Car2'].metadata.name = 'Car2';
     data_x.$ref = '#/definitions/Car2';
 
-    const entityDef2 = await registry.fromJsonSchema(_.cloneDeep(data_x)) as TypeOrmEntityRef;
+    const entityDef2 = await registry.fromJsonSchema(cloneDeep(data_x)) as TypeOrmEntityRef;
     expect(entityDef2.getPropertyRefs()).to.have.length(3);
     let data2 = entityDef2.toJsonSchema();
     data2 = JSON.parse(JSON.stringify(data2));

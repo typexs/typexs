@@ -1,6 +1,6 @@
 import { TypeOrmEntityRef } from './schema/TypeOrmEntityRef';
 import { ColumnType, QueryBuilder } from 'typeorm';
-import * as _ from 'lodash';
+
 import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
 import { JS_DATA_TYPES } from '@allgemein/schema-api';
 import { first, isArray, last } from 'lodash';

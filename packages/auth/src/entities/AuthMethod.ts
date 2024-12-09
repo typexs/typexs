@@ -58,7 +58,7 @@ export class AuthMethod implements IAuthMethod {
   //
   // @BeforeInsert()
   // bin() {
-  //   if (this.data && !_.isString(this.data)) {
+  //   if (this.data && !isString(this.data)) {
   //     this.data = JSON.stringify(this.data);
   //   }
   // }
@@ -71,7 +71,7 @@ export class AuthMethod implements IAuthMethod {
   //
   // @AfterLoad()
   // load() {
-  //   if (this.data && _.isString(this.data)) {
+  //   if (this.data && isString(this.data)) {
   //     this.data = JSON.parse(this.data);
   //   }
   // }

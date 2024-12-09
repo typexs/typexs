@@ -270,7 +270,7 @@ export abstract class AbstractQueryService implements IQueringService {
           fn: function(key: string, data: any, options: IParseOptions) {
             // passing all properties
             const r = {};
-            keys(data)
+             Object.keys(data)
               .filter(k => !(['type', 'metaType', 'propertyName', 'properties'].includes(k) || k.startsWith('$')))
               .map(x => r[x] = data[x]);
             return r;

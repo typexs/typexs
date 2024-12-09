@@ -1,25 +1,25 @@
-import {Action} from 'routing-controllers';
-import {MetaArgs} from '@typexs/base';
-import {K_META_PERMISSIONS_ARGS, K_ROUTE_CACHE} from './Constants';
-import * as _ from 'lodash';
+import { Action } from 'routing-controllers';
+import { MetaArgs } from '@typexs/base';
+import { K_META_PERMISSIONS_ARGS, K_ROUTE_CACHE } from './Constants';
+import { concat, isArray, isEmpty, snakeCase } from '@typexs/generic';
 
 
 export class RoutePermissionsHelper {
 
 
   static getPermissionsForAction(action: Action,
-                                 paramNorm: (x: string) => string = (x) => !/\*/.test(x + '') ? _.snakeCase(x + '') : x + ''): string[] {
+                                 paramNorm: (x: string) => string = (x) => !/\*/.test(x + '') ? snakeCase(x + '') : x + ''): string[] {
     const actions = MetaArgs.key(K_ROUTE_CACHE);
 
     const actionMetadatas = actions.filter(
       x => x.method === action.request.method.toLowerCase() &&
         x.route === action.request.route.path);
 
-    if (!_.isEmpty(actionMetadatas)) {
+    if (!isEmpty(actionMetadatas)) {
       const params = action.request.params;
       let permissions: string[] = [];
-      actionMetadatas.map(p => p.permissions && _.isArray(p.permissions) ? permissions = permissions.concat(p.permissions) : null);
-      if (!_.isEmpty(permissions)) {
+      actionMetadatas.map(p => p.permissions && isArray(p.permissions) ? permissions = permissions.concat(p.permissions) : null);
+      if (!isEmpty(permissions)) {
 
         const parameterizePermissions = [];
         for (const right of permissions) {
@@ -29,8 +29,8 @@ export class RoutePermissionsHelper {
             for (const match of hasMatches) {
               let paramName = match.replace(':', '');
 
-              if (!params[paramName] && params[_.snakeCase(paramName)]) {
-                paramName = _.snakeCase(paramName);
+              if (!params[paramName] && params[snakeCase(paramName)]) {
+                paramName = snakeCase(paramName);
               }
 
               if (params[paramName]) {
@@ -40,7 +40,7 @@ export class RoutePermissionsHelper {
                     const paramValue = paramNorm(y);
                     return rights.map(z => z.replace(match, paramValue));
                   });
-                  rights = _.concat([], ...multipliedRights);
+                  rights = concat([], ...multipliedRights);
                 } else {
                   const paramValue = paramNorm(params[paramName]);
                   rights = rights.map(z => z.replace(match, paramValue));

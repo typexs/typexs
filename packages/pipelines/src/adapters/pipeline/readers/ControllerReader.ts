@@ -1,9 +1,11 @@
-import * as _ from 'lodash';
+import { get, isUndefined } from '@typexs/generic';
+
+
 import { C_RAW, EntityControllerRegistry, IEntityController, IFindOptions, Injector, XS_P_$COUNT, XS_P_$OFFSET } from '@typexs/base';
 import { ClassType } from '@allgemein/schema-api';
 import { Reader } from '../../../lib/reader/Reader';
 import { IControllerReaderOptions } from '../../../lib/reader/IControllerReaderOptions';
-import { isBoolean, isNumber, isString, keys } from 'lodash';
+import { isBoolean, isNumber, isString } from 'lodash';
 
 
 export class ControllerReader<T> extends Reader {
@@ -62,7 +64,7 @@ export class ControllerReader<T> extends Reader {
   }
 
   getRaw() {
-    return _.get(this.getOptions(), C_RAW, false);
+    return get(this.getOptions(), C_RAW, false);
   }
 
   async find() {
@@ -81,13 +83,13 @@ export class ControllerReader<T> extends Reader {
       }
     }
 
-    this._hasNext = _.isUndefined(this.count) ? true : this.size < this.count;
+    this._hasNext = isUndefined(this.count) ? true : this.size < this.count;
 
     if (limit > 0 && this._hasNext) {
       const conditions = await this.getConditions();
       const opts = this.getOptions();
       const selectedValues: any = {};
-      keys(opts).filter(k => isNumber(opts[k]) || isString(opts[k]) || isBoolean(opts[k])).map(k => selectedValues[k] = opts[k]);
+       Object.keys(opts).filter(k => isNumber(opts[k]) || isString(opts[k]) || isBoolean(opts[k])).map(k => selectedValues[k] = opts[k]);
 
       const findOptions: IFindOptions = {
         ...selectedValues,

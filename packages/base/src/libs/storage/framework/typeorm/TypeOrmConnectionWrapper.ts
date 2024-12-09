@@ -1,15 +1,13 @@
-import { Connection, EntityManager } from 'typeorm';
-import * as _ from 'lodash';
+import { Connection } from 'typeorm';
 import { IConnection } from '../../IConnection';
 import { TypeOrmStorageRef } from './TypeOrmStorageRef';
 import { Log } from '../../../logging/Log';
 import { EVENT_STORAGE_REF_PREPARED } from './Constants';
 import { LockFactory, Semaphore } from '@allgemein/base';
-import { ClassType } from '@allgemein/schema-api';
 import { IObjectHandle } from '../IObjectHandle';
 import { RepositoryWrapper } from './RepositoryWrapper';
 import { EntityType } from '../Constants';
-import { isNumber } from 'lodash';
+import { has, isNumber } from '@typexs/generic';
 
 
 export class TypeOrmConnectionWrapper implements IConnection {
@@ -120,7 +118,7 @@ export class TypeOrmConnectionWrapper implements IConnection {
 
 
   get lock() {
-    if (!_.has(TypeOrmConnectionWrapper._LOCK, this.name)) {
+    if (!has(TypeOrmConnectionWrapper._LOCK, this.name)) {
       TypeOrmConnectionWrapper._LOCK[this.name] = LockFactory.$().semaphore(1);
     }
     return TypeOrmConnectionWrapper._LOCK[this.name];

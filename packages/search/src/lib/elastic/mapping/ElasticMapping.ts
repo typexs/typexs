@@ -118,11 +118,11 @@ export class ElasticMapping {
 
   merge(mapping: ElasticMapping, detectChanges: boolean = true) {
     const properties = mapping.getProperties();
-    for (const k of keys(properties)) {
+    for (const k of  Object.keys(properties)) {
       this.add(k, properties[k], detectChanges);
     }
     for (const entry of mapping.dynamicTemplates) {
-      const k = keys(entry);
+      const k =  Object.keys(entry);
       const found = this.dynamicTemplates.find((x: any) => isEqual(keys(x), k));
       if (!found) {
         this.changed = true;

@@ -7,12 +7,13 @@ import { DistributedAggregateRequest } from './DistributedAggregateRequest';
 import { DistributedAggregateResponse } from './DistributedAggregateResponse';
 import { IDistributedAggregateOptions } from './IDistributedAggregateOptions';
 import { IAggregateOp } from '@typexs/base/libs/storage/framework/IAggregateOp';
-import * as _ from 'lodash';
+
 import { IWorkerInfo } from '@typexs/base/libs/worker/IWorkerInfo';
 import { DistributedQueryWorker } from '../../workers/DistributedQueryWorker';
 import { ClassUtils } from '@allgemein/base';
 import { C_WORKERS } from '@typexs/base/libs/worker/Constants';
 import { __NODE_ID__, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base/libs/Constants';
+import { defaults, intersection, remove, set } from '@typexs/generic';
 
 
 export class DistributedAggregateOp
@@ -51,7 +52,7 @@ export class DistributedAggregateOp
     this.entityType = ClassUtils.getClassName(entryType);
     this.pipeline = pipeline;
     options = options || {};
-    _.defaults(options, {
+    defaults(options, {
       limit: 50,
       offset: null,
       sort: null,
@@ -74,11 +75,11 @@ export class DistributedAggregateOp
       .map(n => n.nodeId);
 
     if (this.options.targetIds) {
-      this.targetIds = _.intersection(this.targetIds, this.options.targetIds);
+      this.targetIds = intersection(this.targetIds, this.options.targetIds);
     }
 
     if (this.options.skipLocal) {
-      _.remove(this.targetIds, x => x === this.getSystem().getNodeId());
+      remove(this.targetIds, x => x === this.getSystem().getNodeId());
     }
 
 
@@ -113,7 +114,7 @@ export class DistributedAggregateOp
     const results = [];
     for (const res of responses) {
       for (const r of res.results) {
-        _.set(r, __NODE_ID__, res.nodeId);
+        set(r, __NODE_ID__, res.nodeId);
         results.push(r);
       }
     }

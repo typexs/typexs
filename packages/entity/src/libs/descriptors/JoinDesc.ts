@@ -1,11 +1,13 @@
 import { NotYetImplementedError } from '@typexs/base';
 import { PropertyRef } from '../registry/PropertyRef';
-import * as _ from 'lodash';
+
 import { OrderDesc } from './OrderDesc';
 import { ConditionValidationError } from '../exceptions/ConditionValidationError';
 import { And, ExprDesc, IExpr } from '@allgemein/expressions';
 import { IClassRef, METATYPE_CLASS_REF, RegistryFactory } from '@allgemein/schema-api';
 import { NAMESPACE_BUILT_ENTITY } from '../Constants';
+import { find, isArray, isString } from '@typexs/generic';
+
 
 export type KeyMapType = 'from' | 'to';
 
@@ -32,14 +34,14 @@ export class JoinDesc implements IExpr {
   readonly order: OrderDesc[] = [];
 
   constructor(base: string | Function, keyMaps: KeyMapDesc[], conditions?: ExprDesc, order?: OrderDesc | OrderDesc[]) {
-    if (_.isString(base)) {
+    if (isString(base)) {
       throw new NotYetImplementedError();
     }
     this.base = base;
     this.keyMaps = keyMaps;
     this.condition = conditions;
     if (order) {
-      this.order = !_.isArray(order) ? [order] : order;
+      this.order = !isArray(order) ? [order] : order;
     }
   }
 
@@ -49,11 +51,11 @@ export class JoinDesc implements IExpr {
   }
 
   getFrom() {
-    return _.find(this.keyMaps, k => k.type === 'from');
+    return find(this.keyMaps, k => k.type === 'from');
   }
 
   getTo() {
-    return _.find(this.keyMaps, k => k.type === 'to');
+    return find(this.keyMaps, k => k.type === 'to');
   }
 
   validate(sourceDef: IClassRef, propertyDef: PropertyRef, targetDef: IClassRef, throwing: boolean = true) {

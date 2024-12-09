@@ -410,7 +410,7 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
       this.rebuild(control);
     } else if (control.event === K_OPTIONS) {
       if (control.data) {
-        const k = keys(control.data);
+        const k =  Object.keys(control.data);
         if (k.includes('maxRows')) {
           this.rebuild(control);
         }

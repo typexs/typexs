@@ -40,7 +40,7 @@ export class SystemNodesComponent implements OnInit {
 
 
   networks() {
-    return keys(this.getInfoService().getRuntimeInfoValue().networks);
+    return  Object.keys(this.getInfoService().getRuntimeInfoValue().networks);
   }
 
 

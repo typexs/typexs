@@ -73,7 +73,7 @@ export class Startup implements IBootstrap, IShutdown {
     if (bus) {
       const classes = this.loader.getClasses(K_CLS_EVENTBUS_ADAPTER);
       classes.map(x => EventBus.registerAdapter(x));
-      for (const name of keys(bus)) {
+      for (const name of  Object.keys(bus)) {
         const busCfg: IEventBusConfiguration = bus[name];
         busCfg.name = name;
         const x = EventBus.$().addConfiguration(busCfg);

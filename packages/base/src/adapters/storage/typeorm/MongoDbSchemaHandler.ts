@@ -1,5 +1,5 @@
 import { AbstractSchemaHandler } from '../../../libs/storage/AbstractSchemaHandler';
-import * as _ from 'lodash';
+
 import { MongoQueryRunner } from 'typeorm/driver/mongodb/MongoQueryRunner';
 import { ICollection } from '../../../libs/storage/ICollection';
 import { ICollectionProperty } from '../../../libs/storage/ICollectionProperty';
@@ -61,7 +61,7 @@ export class MongoDbSchemaHandler extends AbstractSchemaHandler {
         properties: props
       };
 
-      _.keys(cursor).filter(x => x !== 'columns').map(k => {
+       Object.keys(cursor).filter(x => x !== 'columns').map(k => {
         _c[k] = cursor[k];
       });
 

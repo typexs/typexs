@@ -1,18 +1,20 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Injector, Log, StorageRef} from '@typexs/base';
-import {Auth} from '../../../src/middleware/Auth';
-import {DefaultUserSignup} from '../../../src/libs/models/DefaultUserSignup';
-import {expect} from 'chai';
-import {DefaultUserLogin} from '../../../src/libs/models/DefaultUserLogin';
-import {MockResponse} from '../../helper/MockResponse';
-import {MockRequest} from '../../helper/MockRequest';
-import {ITypexsOptions} from '@typexs/base/libs/ITypexsOptions';
-import {TESTDB_SETTING, TestHelper} from '../TestHelper';
-import {IDatabaseAuthOptions} from '../../../src/adapters/auth/db/IDatabaseAuthOptions';
-import {User} from '../../../src/entities/User';
-import * as _ from 'lodash';
-import {UserNotFoundError} from '../../../src/libs/exceptions/UserNotFoundError';
-import {TypeOrmConnectionWrapper} from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { Bootstrap, Injector, Log, StorageRef } from '@typexs/base';
+import { Auth } from '../../../src/middleware/Auth';
+import { DefaultUserSignup } from '../../../src/libs/models/DefaultUserSignup';
+import { expect } from 'chai';
+import { DefaultUserLogin } from '../../../src/libs/models/DefaultUserLogin';
+import { MockResponse } from '../../helper/MockResponse';
+import { MockRequest } from '../../helper/MockRequest';
+import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
+import { TESTDB_SETTING, TestHelper } from '../TestHelper';
+import { IDatabaseAuthOptions } from '../../../src/adapters/auth/db/IDatabaseAuthOptions';
+import { User } from '../../../src/entities/User';
+
+import { UserNotFoundError } from '../../../src/libs/exceptions/UserNotFoundError';
+import { TypeOrmConnectionWrapper } from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { get } from '@typexs/generic';
+
 
 let bootstrap: Bootstrap = null;
 let auth: Auth = null;
@@ -107,7 +109,7 @@ class AuthDatabaseLifecycleWithAutoapproveSpec {
     expect(doingLogin.success).to.be.true;
     expect(doingLogin.isAuthenticated).to.be.false;
     expect(doingLogin.hasErrors()).to.be.true;
-    expect(_.get(doingLogin.errors, '0.constraints.user_is_not_approved')).to.exist;
+    expect(get(doingLogin.errors, '0.constraints.user_is_not_approved')).to.exist;
 
     req = res;
 

@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { get, has, isEmpty, isString, snakeCase } from '@typexs/generic';
+
+
 import { ElasticEntityController } from '../ElasticEntityController';
 import { ClassType } from '@allgemein/schema-api';
 import { IndexEntityRef } from '../../registry/IndexEntityRef';
@@ -10,9 +12,9 @@ export class OpsHelper {
 
   static getId(entityRef: IndexEntityRef, entity: any, typed: boolean = false) {
     let id = null;
-    if (_.has(entity, ES_IDFIELD)) {
+    if (has(entity, ES_IDFIELD)) {
       id = entity[ES_IDFIELD];
-    } else if (_.has(entity, __ID__)) {
+    } else if (has(entity, __ID__)) {
       id = entity[__ID__];
     } else {
       const idPropertyRefs = entityRef.getPropertyRefs().filter(p => p.isIdentifier());
@@ -20,9 +22,9 @@ export class OpsHelper {
         throw new Error('no id property found for ' + entityRef.name);
       }
 
-      id = idPropertyRefs.map(x => _.get(entity, x.name) + '').join('--') + '';
+      id = idPropertyRefs.map(x => get(entity, x.name) + '').join('--') + '';
     }
-    if (_.isEmpty(id)) {
+    if (isEmpty(id)) {
       throw new Error(
         'no id could be generate for ' + entityRef.name);
     }
@@ -41,9 +43,9 @@ export class OpsHelper {
   static getIndexTypes(controller: ElasticEntityController, entityTypes: (Function | string | ClassType<any>)[]): IndexEntityRef[] {
     const indexEntityRefs = [];
     for (const entityType of entityTypes) {
-      if (_.isString(entityType) && entityType === '*') {
+      if (isString(entityType) && entityType === '*') {
         indexEntityRefs.push(...controller.getStorageRef().getEntityRefs());
-      } else if (_.isString(entityType) && entityType === '*') {
+      } else if (isString(entityType) && entityType === '*') {
         indexEntityRefs.push(...controller.getStorageRef().getEntityRefs());
       } else {
         const find = controller.forIndexType(entityType);
@@ -55,7 +57,7 @@ export class OpsHelper {
       }
     }
 
-    if (_.isEmpty(indexEntityRefs)) {
+    if (isEmpty(indexEntityRefs)) {
       throw new Error('no index entity refs found');
     }
     return indexEntityRefs;
@@ -64,18 +66,18 @@ export class OpsHelper {
 
 
   static hasEntityRefByPattern(cls: string, indexTypes: IndexEntityRef[]) {
-    if (_.isString(cls)) {
+    if (isString(cls)) {
       // if comma or wildcard
       const refLists = cls.split(',')
-        .filter(x => !_.isEmpty(x)).map(x => x.trim());
+        .filter(x => !isEmpty(x)).map(x => x.trim());
       const refs = [];
       for (const ref of indexTypes) {
         for (const pattern of refLists) {
           if (/\*/.test(pattern) && (
             MatchUtils.miniMatch(pattern, ref.name) ||
-            MatchUtils.miniMatch(pattern, _.snakeCase(ref.name)))) {
+            MatchUtils.miniMatch(pattern, snakeCase(ref.name)))) {
             return true;
-          } else if (_.snakeCase(pattern) === _.snakeCase(ref.name)) {
+          } else if (snakeCase(pattern) === snakeCase(ref.name)) {
             return true;
           } else if (pattern === ref.name) {
             return true;
@@ -89,19 +91,19 @@ export class OpsHelper {
 
   static getEntityRefByPattern(cls: string, indexTypes: IndexEntityRef[], byIndexedType: boolean = false) {
     const refs = [];
-    if (_.isString(cls)) {
+    if (isString(cls)) {
       // if comma or wildcard
       const refLists = cls.split(',')
-        .filter(x => !_.isEmpty(x)).map(x => x.trim());
+        .filter(x => !isEmpty(x)).map(x => x.trim());
 
       for (const ref of indexTypes) {
         for (const pattern of refLists) {
           const name = ref.name;
-          const snakeName = _.snakeCase(name);
-          const snakePattern = _.snakeCase(pattern);
+          const snakeName = snakeCase(name);
+          const snakePattern = snakeCase(pattern);
           if (byIndexedType) {
             const refName = ref.getEntityRef().name;
-            const snakeRefName = _.snakeCase(refName);
+            const snakeRefName = snakeCase(refName);
             if (/\*/.test(pattern) && (
               MatchUtils.miniMatch(pattern, name) ||
               MatchUtils.miniMatch(pattern, snakeName) ||

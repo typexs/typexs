@@ -1,6 +1,6 @@
-import { suite, test, timeout } from '@testdeck/mocha';
-import { Bootstrap, Config, Injector, Log } from '@typexs/base';
-import * as _ from 'lodash';
+import { suite, test } from '@testdeck/mocha';
+import { Bootstrap, Config, Injector } from '@typexs/base';
+
 import { DefaultUserLogin } from '../../../src/libs/models/DefaultUserLogin';
 import { LdapAdapter } from '../../../src/adapters/auth/ldap/LdapAdapter';
 import { expect } from 'chai';
@@ -9,6 +9,7 @@ import { AuthDataContainer } from '../../../src/libs/auth/AuthDataContainer';
 import { LDAP_CONFIG } from './ldap_config';
 import { ldap_host, ldap_port, LOGGING } from '../config';
 import { ILdapAuthOptions } from '../../../src/adapters/auth/ldap/ILdapAuthOptions';
+import { clone } from '@typexs/generic';
 
 
 process.setMaxListeners(1000);
@@ -54,8 +55,8 @@ class AuthLdapAdapterSpec {
 
   @test
   async 'authenticate by user search through admin bind'() {
-    const settings = _.clone(settingsTemplate);
-    settings.auth.methods.default = _.clone(LDAP_CONFIG);
+    const settings = clone(settingsTemplate);
+    settings.auth.methods.default = clone(LDAP_CONFIG);
 
     const ref = await TestHelper.bootstrap_auth('default', settings);
     bootstrap = ref.bootstrap;

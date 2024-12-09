@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 /**
  *
  * Define and control schedules
@@ -33,9 +32,9 @@ import * as _ from 'lodash';
  *        ...
  *
  */
-import {Schedule} from './Schedule';
-import {IScheduleFactory} from './IScheduleFactory';
-import {IScheduleDef} from './IScheduleDef';
+import { Schedule } from './Schedule';
+import { IScheduleFactory } from './IScheduleFactory';
+import { IScheduleDef } from './IScheduleDef';
 
 
 export class Scheduler {
@@ -58,7 +57,7 @@ export class Scheduler {
 
 
   async register(schedule: IScheduleDef) {
-    const exists = _.find(this.schedules, s => s.name === schedule.name);
+    const exists = this.schedules.find(s => s.name === schedule.name);
     if (exists) {
       throw new Error('schedule with name ' + schedule.name + ' already exists');
     }

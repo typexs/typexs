@@ -1,12 +1,13 @@
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { has } from '@typexs/generic';
 
-import * as _ from 'lodash';
-import {Car} from './entities/Car';
 
-import {ComplexIdsKeys} from './entities/ComplexIdsKeys';
-import {Expressions} from '@allgemein/expressions';
-import {TypeOrmEntityRegistry} from '../../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
+import { Car } from './entities/Car';
+
+import { ComplexIdsKeys } from './entities/ComplexIdsKeys';
+import { Expressions } from '@allgemein/expressions';
+import { TypeOrmEntityRegistry } from '../../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
 
 
 @suite('functional/storage/typeorm/entity_id_handling')
@@ -20,12 +21,12 @@ class EntityIdHandlingSpec {
     const entityDef = registry.getEntityRefFor(Car);
 
     let conditions = Expressions.parseLookupConditions(entityDef, '1');
-    expect(_.has(conditions, 'id')).to.be.true;
+    expect(has(conditions, 'id')).to.be.true;
     expect(conditions['id']).to.be.eq(1);
 
     // TODO move to Expressions
     // conditions = Expressions.parseLookupConditions(entityDef, 'id=1');
-    // expect(_.has(conditions, 'id')).to.be.true;
+    // expect(has(conditions, 'id')).to.be.true;
     // expect(conditions['id']).to.be.eq(1);
     //
     // conditions = Expressions.parseLookupConditions(entityDef, '(id=1),(id=2)');

@@ -1,13 +1,14 @@
-import {System} from '../system/System';
-import {SystemInfoRequestEvent} from './SystemInfoRequestEvent';
-import {EventEmitter} from 'events';
+import { System } from '../system/System';
+import { SystemInfoRequestEvent } from './SystemInfoRequestEvent';
+import { EventEmitter } from 'events';
 
-import * as _ from 'lodash';
 
-import {EventBus, subscribe} from '@allgemein/eventbus';
-import {NodeRuntimeInfo} from './NodeRuntimeInfo';
-import {SystemInfoResponse} from './SystemInfoResponse';
-import {K_NODE_ID} from '../messaging/Constants';
+import { EventBus, subscribe } from '@allgemein/eventbus';
+import { NodeRuntimeInfo } from './NodeRuntimeInfo';
+import { SystemInfoResponse } from './SystemInfoResponse';
+import { K_NODE_ID } from '../messaging/Constants';
+import { assign, remove } from '@typexs/generic';
+
 
 export class SystemInfoRequest extends EventEmitter {
 
@@ -58,7 +59,7 @@ export class SystemInfoRequest extends EventEmitter {
   }
 
   postProcess(err: Error) {
-    this.results = this.responses.map(x => _.assign(new NodeRuntimeInfo(), x.info));
+    this.results = this.responses.map(x => assign(new NodeRuntimeInfo(), x.info));
     this.emit('finished', err, this.results);
   }
 
@@ -83,7 +84,7 @@ export class SystemInfoRequest extends EventEmitter {
     if (this.targetIds.indexOf(event.nodeId) === -1) {
       return;
     }
-    _.remove(this.targetIds, x => x === event.nodeId);
+    remove(this.targetIds, x => x === event.nodeId);
 
     event.info[K_NODE_ID] = event.nodeId;
     this.responses.push(event);

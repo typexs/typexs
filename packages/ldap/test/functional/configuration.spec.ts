@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Bootstrap, Injector, Storage } from '@typexs/base';
@@ -39,7 +39,7 @@ class TypexsLdapConnection {
       }
     }));
     const storage = Injector.get<Storage>(Storage.NAME);
-    const storageFrameworks = _.keys(storage.storageFramework);
+    const storageFrameworks =  Object.keys(storage.storageFramework);
     expect(storageFrameworks).to.include(C_LDAP);
   }
 
@@ -103,7 +103,7 @@ class TypexsLdapConnection {
   // async 'check if dynamic index name creation works'() {
   //   await beforeCall(testConfig[2]);
   //   const storage = Injector.get<Storage>(Storage.NAME);
-  //   const storageFrameworks = _.keys(storage.storageFramework);
+  //   const storageFrameworks =  Object.keys(storage.storageFramework);
   //   expect(storageFrameworks).to.include(C_SEARCH_INDEX);
   //
   //   const elasticRef = storage.get(C_ELASTIC_SEARCH);
@@ -126,7 +126,7 @@ class TypexsLdapConnection {
   // async 'check if dynamic index name creation works - for schema entities'() {
   //   await beforeCall(testConfig[5]);
   //   const storage = Injector.get<Storage>(Storage.NAME);
-  //   const storageFrameworks = _.keys(storage.storageFramework);
+  //   const storageFrameworks =  Object.keys(storage.storageFramework);
   //   expect(storageFrameworks).to.include(C_SEARCH_INDEX);
   //
   //   const elasticRef = storage.get(C_ELASTIC_SEARCH);

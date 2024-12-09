@@ -1,9 +1,11 @@
-import * as _ from 'lodash';
-import {Bootstrap, Config, IBootstrap, Inject} from '@typexs/base';
-import {PermissionsRegistry} from './libs/PermissionsRegistry';
-import {PermissionsRegistryLoader} from './libs/PermissionsRegistryLoader';
-import {BasicPermission, IPermissionDef, IRole} from '@typexs/roles-api';
-import {RolesHelper} from './libs/RolesHelper';
+import { assign, isArray, isEmpty, isString } from '@typexs/generic';
+
+
+import { Bootstrap, Config, IBootstrap, Inject } from '@typexs/base';
+import { PermissionsRegistry } from './libs/PermissionsRegistry';
+import { PermissionsRegistryLoader } from './libs/PermissionsRegistryLoader';
+import { BasicPermission, IPermissionDef, IRole } from '@typexs/roles-api';
+import { RolesHelper } from './libs/RolesHelper';
 
 export class Startup implements IBootstrap {
 
@@ -28,20 +30,20 @@ export class Startup implements IBootstrap {
 
     const localPermissionDefs: IPermissionDef[] = [];
     const cfgPermissions = Config.get('initialise.permissions', []);
-    if (_.isArray(cfgPermissions)) {
+    if (isArray(cfgPermissions)) {
       for (const _p of cfgPermissions) {
-        if (_.isString(_p)) {
+        if (isString(_p)) {
           localPermissionDefs.push(new BasicPermission(_p));
         } else {
           if (_p.permission) {
             const p = new BasicPermission(_p.permission);
             localPermissionDefs.push(p);
-            _.assign(p, _p);
+            assign(p, _p);
           }
         }
       }
 
-      if (!_.isEmpty(localPermissionDefs)) {
+      if (!isEmpty(localPermissionDefs)) {
         permissions = await this.registry.loadDefs(localPermissionDefs);
         await this.loader.savePermissions(permissions);
       }

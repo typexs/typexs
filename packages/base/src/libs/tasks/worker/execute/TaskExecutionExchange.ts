@@ -92,7 +92,7 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
 
     this.event = new TaskProposeEvent();
     this.event.taskSpec = taskSpec;
-    for (const k of keys(parameters)) {
+    for (const k of  Object.keys(parameters)) {
       if (!/^_/.test(k)) {
         this.event.addParameter(k, get(parameters, k));
       }

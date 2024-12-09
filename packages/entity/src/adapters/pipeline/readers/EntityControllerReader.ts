@@ -68,7 +68,7 @@ export class EntityControllerReader<T> extends Reader {
 
     this.entityController = Injector.get('EntityController.' + this.schemaName);
 
-    // keys(options).forEach(k => {
+    //  Object.keys(options).forEach(k => {
     //   if (!['entityType', 'storageName', 'conditions', 'maxLimit',
     //     'pipe_handler', 'logger', 'size', 'finishCallback', 'finishCallback'].includes(k)) {
     //     this.findOptions[k] = options[k];

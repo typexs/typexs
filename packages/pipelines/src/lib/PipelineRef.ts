@@ -1,6 +1,4 @@
 import { IPipelineSpecification } from './IPipelineSpecification';
-import * as _ from 'lodash';
-import { isEmpty, last } from 'lodash';
 import { ClassRef, ClassType } from '@allgemein/schema-api';
 import { TreeUtils } from '@allgemein/base';
 import { IOptionsOverride } from './IOptionsOverride';
@@ -8,6 +6,8 @@ import { IPipelineProcessor } from './IPipelineProcessor';
 import { PipelineRegistry } from './PipelineRegistry';
 import { PipelineBuilder } from './PipelineBuilder';
 import { Reader } from './reader/Reader';
+import { clone, has, isEmpty, isString, last, merge, set, snakeCase } from '@typexs/generic';
+
 
 export class PipelineRef {
 
@@ -34,14 +34,14 @@ export class PipelineRef {
 
 
   createOptions(opts: any) {
-    const readerOpts = _.clone(opts);
+    const readerOpts = clone(opts);
     TreeUtils.walk(readerOpts, x => {
       if (x.key === '$clazz') {
         const clazz = this.findEntityClazz(x.value);
         if (clazz) {
-          const loc = _.clone(x.location);
+          const loc = clone(x.location);
           loc.pop();
-          _.set(readerOpts, loc.join('.'), clazz);
+          set(readerOpts, loc.join('.'), clazz);
         } else {
           throw new Error('cant find classRef for ' + x.value);
         }
@@ -59,17 +59,17 @@ export class PipelineRef {
     overrideOpts = overrideOpts || [];
 
     let readerClass: ClassType<Reader> = null;
-    if (_.isString(this.specification.reader.name)) {
+    if (isString(this.specification.reader.name)) {
       readerClass = this.registry.getReaderClass(this.specification.reader.name);
     } else {
       readerClass = this.specification.reader.name;
     }
 
 
-    let opts = _.clone(this.specification.reader.options);
-    const overrideReaderOpts = overrideOpts.find(x => x && _.snakeCase(x.name) === _.snakeCase(readerClass.name));
+    let opts = clone(this.specification.reader.options);
+    const overrideReaderOpts = overrideOpts.find(x => x && snakeCase(x.name) === snakeCase(readerClass.name));
     if (overrideReaderOpts) {
-      opts = _.merge(opts, overrideReaderOpts);
+      opts = merge(opts, overrideReaderOpts);
     }
 
     const readerOpts = this.createOptions(opts);
@@ -78,21 +78,21 @@ export class PipelineRef {
 
     // const reader: Reader = Reflect.construct(readerClass, [readerOpts]);
     for (const p of this.specification.pipe) {
-      if (_.has(p, 'processor')) {
+      if (has(p, 'processor')) {
         const processorEntry = (<IPipelineProcessor>p).processor;
         let processorClass: any = null;
-        if (_.isString(processorEntry.name)) {
+        if (isString(processorEntry.name)) {
           processorClass = this.registry.getProcessorClass(processorEntry.name);
         } else {
           processorClass = processorEntry.name;
         }
         const overrideProcessorOpts = overrideOpts.find(x =>
           x &&
-          _.snakeCase(x.name) === _.snakeCase(processorClass.name)
+          snakeCase(x.name) === snakeCase(processorClass.name)
         );
-        let opts = _.clone(processorEntry.options);
+        let opts = clone(processorEntry.options);
         if (overrideProcessorOpts) {
-          opts = _.merge(opts, overrideProcessorOpts);
+          opts = merge(opts, overrideProcessorOpts);
         }
         const popts = this.createOptions(opts);
 

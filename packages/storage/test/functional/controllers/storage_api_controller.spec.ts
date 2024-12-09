@@ -17,7 +17,7 @@ import {
 } from '../../../src/lib/Constants';
 import { DEFAULT_ANONYMOUS, K_ROUTE_CONTROLLER, Server } from '@typexs/server';
 import { expect } from 'chai';
-import * as _ from 'lodash';
+
 import { Driver } from './fake_app_storage/entities/Driver';
 import { TEST_STORAGE_OPTIONS } from '../config';
 import { HttpFactory, IHttp } from '@allgemein/http';
@@ -29,6 +29,7 @@ import { BasicPermission, IRole, IRolesHolder } from '@typexs/roles-api';
 import { IStorageRefMetadata } from '../../../src/lib/storage_api/IStorageRefMetadata';
 import { IJsonSchema7 } from '@allgemein/schema-api';
 import { TestHelper } from '@typexs/testing';
+import { clone, snakeCase } from '@typexs/generic';
 
 
 let permissionsCheck = false;
@@ -93,7 +94,7 @@ const settingsTemplate: ITypexsOptions & any = {
               return <IRole[]>[
                 <IRole>{
                   permissions: [
-                    new BasicPermission(PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY_PATTERN.replace(':name', _.snakeCase(RandomData.name)))
+                    new BasicPermission(PERMISSION_ALLOW_ACCESS_STORAGE_ENTITY_PATTERN.replace(':name', snakeCase(RandomData.name)))
                   ]
                 }
               ];
@@ -124,7 +125,7 @@ class Storage_api_controllerSpec {
 
   static async before() {
     Bootstrap.reset();
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     http = HttpFactory.create();
 
     bootstrap = Bootstrap
@@ -215,11 +216,11 @@ class Storage_api_controllerSpec {
     expect(res).to.not.be.null;
     res = res.body as IStorageRefMetadata[];
     expect(res).to.have.length(1);
-    const keyNames = _.keys(res[0].schema.definitions);
+    const keyNames =  Object.keys(res[0].schema.definitions);
     expect(keyNames).to.have.length(6);
     expect(keyNames).to.contain.members(['Driver', 'Car']);
     const driver = res[0].schema.definitions.Driver;
-    const propertyNames = _.keys(driver.properties);
+    const propertyNames =  Object.keys(driver.properties);
     expect(propertyNames).to.have.length(4);
     expect(propertyNames).to.be.deep.eq(['id', 'firstName', 'lastName', 'car']);
   }
@@ -235,11 +236,11 @@ class Storage_api_controllerSpec {
     res = res.body as IStorageRefMetadata;
     expect(res).to.exist;
     expect(res.name).to.be.eq('default');
-    expect(_.keys(res.schema.definitions)).to.have.length(6);
-    expect(_.keys(res.schema.definitions)).to.contain.members(['Driver', 'Car']);
+    expect( Object.keys(res.schema.definitions)).to.have.length(6);
+    expect( Object.keys(res.schema.definitions)).to.contain.members(['Driver', 'Car']);
     const driver = res.schema.definitions.Driver;
-    expect(_.keys(driver.properties)).to.have.length(4);
-    expect(_.keys(driver.properties)).to.be.deep.eq(['id', 'firstName', 'lastName', 'car']);
+    expect( Object.keys(driver.properties)).to.have.length(4);
+    expect( Object.keys(driver.properties)).to.be.deep.eq(['id', 'firstName', 'lastName', 'car']);
   }
 
 
@@ -251,12 +252,12 @@ class Storage_api_controllerSpec {
     expect(res).to.not.be.null;
     res = res.body as IJsonSchema7[];
     expect(res).to.have.length(1);
-    const classNames = _.keys(res[0].definitions);
+    const classNames =  Object.keys(res[0].definitions);
     expect(classNames).to.have.length(6);
     expect(classNames.map(x => res[0].definitions[x]).map(x => x.storage)).to.contain.members(['default']);
     expect(classNames.map(x => res[0].definitions[x]).map(x => x.title)).to.contain.members(['Driver', 'Car', 'RandomData']);
     const driver = res[0].definitions.Driver;
-    const propertyNames = _.keys(driver.properties);
+    const propertyNames =  Object.keys(driver.properties);
     expect(propertyNames).to.have.length(4);
     expect(propertyNames).to.be.deep.eq(['id', 'firstName', 'lastName', 'car']);
   }
@@ -271,7 +272,7 @@ class Storage_api_controllerSpec {
     expect(res).to.exist;
     expect(res.definitions.Driver.storage).to.be.eq('default');
     expect(res.definitions.Driver.title).to.be.eq('Driver');
-    const propertyNames = _.keys(res.definitions.Driver.properties);
+    const propertyNames =  Object.keys(res.definitions.Driver.properties);
     expect(propertyNames).to.have.length(4);
     expect(propertyNames).to.be.deep.eq(['id', 'firstName', 'lastName', 'car']);
   }
@@ -312,7 +313,7 @@ class Storage_api_controllerSpec {
     // save one driver
     let res: any = await http.post(URL + '/api' +
 
-      API_CTRL_STORAGE_SAVE_ENTITY.replace(':name', _.snakeCase(RandomData.name)),
+      API_CTRL_STORAGE_SAVE_ENTITY.replace(':name', snakeCase(RandomData.name)),
     {
       json: d,
       responseType: 'json'
@@ -359,7 +360,7 @@ class Storage_api_controllerSpec {
     // save multiple driver
     let res: any = await http.post(URL + '/api' +
 
-      API_CTRL_STORAGE_SAVE_ENTITY.replace(':name', _.snakeCase(RandomData.name)),
+      API_CTRL_STORAGE_SAVE_ENTITY.replace(':name', snakeCase(RandomData.name)),
     {
       json: [d1, d2],
       responseType: 'json'
@@ -658,7 +659,7 @@ class Storage_api_controllerSpec {
     // save multiple driver
     let res: any = await http.put(URL + '/api' +
 
-      API_CTRL_STORAGE_UPDATE_ENTITIES_BY_CONDITION.replace(':name', _.snakeCase(RandomData.name)) +
+      API_CTRL_STORAGE_UPDATE_ENTITIES_BY_CONDITION.replace(':name', snakeCase(RandomData.name)) +
       '?query=' + JSON.stringify({ $and: [{ id: { $gte: 100 } }, { id: { $lte: 110 } }] }),
       <any>{
         json: {

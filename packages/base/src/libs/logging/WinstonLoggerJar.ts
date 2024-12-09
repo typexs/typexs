@@ -1,16 +1,17 @@
-import {C_DEFAULT, ILogLevel, TodoException} from '@allgemein/base';
+import { C_DEFAULT, ILogLevel, TodoException } from '@allgemein/base';
 import * as winston from 'winston';
-import {createLogger, Logger, LoggerOptions} from 'winston';
-import {ILoggerOptions} from './ILoggerOptions';
-import {Log} from '../../libs/logging/Log';
-import {BaseUtils} from '../../libs/utils/BaseUtils';
-import * as _ from 'lodash';
-import {ConsoleTransportOptions} from 'winston/lib/winston/transports';
-import {DefaultFormat} from './DefaultFormat';
-import {LogEvent} from './LogEvent';
-import {ILoggerApi} from './ILoggerApi';
-import {DefaultJsonFormat} from './DefaultJsonFormat';
-import {isLogEntry} from './ILogEntry';
+import { createLogger, Logger, LoggerOptions } from 'winston';
+import { ILoggerOptions } from './ILoggerOptions';
+import { Log } from '../../libs/logging/Log';
+import { BaseUtils } from '../../libs/utils/BaseUtils';
+
+import { ConsoleTransportOptions } from 'winston/lib/winston/transports';
+import { DefaultFormat } from './DefaultFormat';
+import { LogEvent } from './LogEvent';
+import { ILoggerApi } from './ILoggerApi';
+import { DefaultJsonFormat } from './DefaultJsonFormat';
+import { isLogEntry } from './ILogEntry';
+import { defaults, get, has, isBoolean, isFunction, isString } from '@typexs/generic';
 
 
 const DEFAULT_TRANSPORT_OPTIONS: ConsoleTransportOptions = {};
@@ -76,7 +77,7 @@ export class WinstonLoggerJar implements ILoggerApi {
       this.options = options;
     }
 
-    this.enabled = _.get(options, 'enable', true);
+    this.enabled = get(options, 'enable', true);
 
     if (options.prefix) {
       this.prefix = options.prefix;
@@ -90,11 +91,11 @@ export class WinstonLoggerJar implements ILoggerApi {
     this.detectFormat(options, opts);
 
     const t: any[] = [];
-    if (_.has(options, 'transports')) {
+    if (has(options, 'transports')) {
       for (const opt of options.transports) {
-        const k = _.keys(opt).shift();
-        const transportOptions: any = _.defaults(opt[k], DEFAULT_TRANSPORT_OPTIONS);
-        if (_.has(WinstonLoggerJar.transportTypes, k)) {
+        const k =  Object.keys(opt).shift();
+        const transportOptions: any = defaults(opt[k], DEFAULT_TRANSPORT_OPTIONS);
+        if (has(WinstonLoggerJar.transportTypes, k)) {
           t.push(Reflect.construct(WinstonLoggerJar.transportTypes[k], [transportOptions]));
         } else {
           throw new TodoException('log: transport type ' + k + ' not found.');
@@ -112,16 +113,16 @@ export class WinstonLoggerJar implements ILoggerApi {
 
 
   detectFormat(options: ILoggerOptions, opts: LoggerOptions) {
-    if (!_.has(options, 'format')) {
+    if (!has(options, 'format')) {
       opts.format = new DefaultFormat();
     } else {
-      if (_.isFunction(options.format)) {
+      if (isFunction(options.format)) {
         opts.format = <any>options.format;
-      } else if (_.isString(options.format)) {
-        if (!_.has(WinstonLoggerJar.formats, options.format)) {
+      } else if (isString(options.format)) {
+        if (!has(WinstonLoggerJar.formats, options.format)) {
           throw new Error('can\'t find log format ' + options.format);
         }
-        opts.format = Reflect.construct(_.get(WinstonLoggerJar.formats, options.format), []);
+        opts.format = Reflect.construct(get(WinstonLoggerJar.formats, options.format), []);
       } else {
         opts.format = options.format;
       }
@@ -130,10 +131,10 @@ export class WinstonLoggerJar implements ILoggerApi {
 
 
   isEnabled(set?: boolean): boolean {
-    if (_.isBoolean(set)) {
+    if (isBoolean(set)) {
       this.enabled = set;
     }
-    if (_.get(this.options, 'force', false)) {
+    if (get(this.options, 'force', false)) {
       return this.enabled;
     }
     return this.enabled && Log.enable;

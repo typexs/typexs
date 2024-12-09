@@ -1,13 +1,12 @@
-import * as _ from 'lodash';
+import { range } from '@typexs/generic';
+
+
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Config } from '@allgemein/config';
 import { Bootstrap } from '../../../../src/Bootstrap';
 import { TypeOrmStorageRef } from '../../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
-import {
-  EVENT_STORAGE_REF_PREPARED,
-  EVENT_STORAGE_REF_SHUTDOWN
-} from '../../../../src/libs/storage/framework/typeorm/Constants';
+import { EVENT_STORAGE_REF_PREPARED, EVENT_STORAGE_REF_SHUTDOWN } from '../../../../src/libs/storage/framework/typeorm/Constants';
 import { postgres_host, postgres_port } from '../../config';
 import { TestHelper } from '../../../../../testing/src';
 
@@ -60,7 +59,7 @@ class StorageGeneralSpec {
     const storage: TypeOrmStorageRef = storageManager.get();
 
     const connections = [];
-    for (const i of _.range(0, 1001)) {
+    for (const i of range(0, 1001)) {
       const c = await storage.connect();
       // console.log(i + ' ' + storage.listenerCount(EVENT_STORAGE_REF_PREPARED) + ' ' + storage.listenerCount(EVENT_STORAGE_REF_SHUTDOWN));
       connections.push(c);

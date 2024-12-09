@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+
 import {EventBus, IEventDef} from '@allgemein/eventbus';
 import EventBusMeta from '@allgemein/eventbus/bus/EventBusMeta';
 import {FSWatcher} from 'fs';
@@ -6,6 +6,7 @@ import {TasksHelper} from '../tasks/TasksHelper';
 import {AbstractWatcherConfig} from './AbstractWatcherConfig';
 import {hasEvent, hasTask, isWatcherConfig} from './WatcherConfig';
 import {InvalidWatcherConfig} from './WatcherErrors';
+import { assign, isArray, isEmpty, isUndefined } from 'lodash';
 
 /**
  * An abstract watcher
@@ -79,12 +80,12 @@ export abstract class AbstractWatcher {
    * @param params
    */
   protected async emitEvent(params: any) {
-    if (_.isUndefined(this.eventDef)) {
+    if (this.eventDef === undefined) {
       return;
     }
 
     const instance = Reflect.construct(this.eventDef.clazz, []);
-    _.assign(instance, {
+    assign(instance, {
       $watcher: params,
     });
 
@@ -95,7 +96,7 @@ export abstract class AbstractWatcher {
    * Execute tasks
    */
   protected async executeTasks(params: any) {
-    if (_.isArray(this.taskNames) && !_.isEmpty(this.taskNames)) {
+    if (isArray(this.taskNames) && !isEmpty(this.taskNames)) {
       await TasksHelper.exec(this.taskNames, {
         ...this.taskParams,
         $watcher: params,

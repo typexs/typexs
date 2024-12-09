@@ -1,7 +1,9 @@
-import {Permission, Role} from '..';
-import * as _ from 'lodash';
-import {BasicPermission, IPermissionDef, IRole} from '@typexs/roles-api';
-import {PermissionsRegistryLoader} from './PermissionsRegistryLoader';
+import { Permission, Role } from '..';
+
+import { BasicPermission, IPermissionDef, IRole } from '@typexs/roles-api';
+import { PermissionsRegistryLoader } from './PermissionsRegistryLoader';
+import { get, isEmpty, isString } from '@typexs/generic';
+
 
 export class RolesHelper {
   static async initRoles(loader: PermissionsRegistryLoader, cfgRoles: IRole[]) {
@@ -11,19 +13,19 @@ export class RolesHelper {
     for (const cfgRole of cfgRoles) {
 
 
-      const rolePermissions = _.get(cfgRole, 'permissions', []);
+      const rolePermissions = get(cfgRole, 'permissions', []);
       let rolePermissionToSave: Permission[] = [];
-      if (!_.isEmpty(rolePermissions)) {
+      if (!isEmpty(rolePermissions)) {
         const rolePermissionSave: IPermissionDef[] = [];
         for (const rolePermission of rolePermissions) {
-          if (_.isString(rolePermission)) {
+          if (isString(rolePermission)) {
             rolePermissionSave.push(new BasicPermission(rolePermission));
           } else {
             rolePermissionSave.push(rolePermission);
           }
         }
 
-        if (!_.isEmpty(rolePermissionSave)) {
+        if (!isEmpty(rolePermissionSave)) {
           rolePermissionToSave = await loader.getRegistry().loadDefs(rolePermissionSave);
           await loader.savePermissions(rolePermissionToSave);
         }
@@ -45,7 +47,7 @@ export class RolesHelper {
       localRoles.push(role);
     }
 
-    if (!_.isEmpty(localRoles)) {
+    if (!isEmpty(localRoles)) {
       await loader.saveRoles(localRoles);
     }
   }

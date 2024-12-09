@@ -1,9 +1,10 @@
-import {IAuthConfiguration} from '../../../libs/adapter/IAuthConfiguration';
-import {IOAuth2Options} from './IOAuth2Options';
-import * as _ from 'lodash';
-import {OAuth2Adapter} from './OAuth2Adapter';
-import {IAuthMethod} from '../../../libs/models/IAuthMethod';
-import {IAuthAdapter} from '../../../libs/adapter/IAuthAdapter';
+import { IAuthConfiguration } from '../../../libs/adapter/IAuthConfiguration';
+import { IOAuth2Options } from './IOAuth2Options';
+
+import { OAuth2Adapter } from './OAuth2Adapter';
+import { IAuthMethod } from '../../../libs/models/IAuthMethod';
+import { IAuthAdapter } from '../../../libs/adapter/IAuthAdapter';
+import { has, isArray, set } from '@typexs/generic';
 
 
 const AUTH_URL = 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize';
@@ -22,11 +23,11 @@ export class MicrosoftConfiguration implements IAuthConfiguration {
     options.tokenURL = options.tokenURL ?
       options.tokenURL : TOKEN_URL;
 
-    if (_.has(options, 'scope')) {
-      if(_.isArray(options['scope'])){
-        _.set(options, 'scope', options.scope.join(','));
+    if (has(options, 'scope')) {
+      if(isArray(options['scope'])){
+        set(options, 'scope', options.scope.join(','));
       }else{
-        _.set(options, 'scope', options.scope);
+        set(options, 'scope', options.scope);
       }
 
     } else {

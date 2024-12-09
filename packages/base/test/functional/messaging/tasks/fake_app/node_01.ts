@@ -48,7 +48,7 @@ import { TestHelper } from '@typexs/testing';
   /*
   let commands = bootstrap.getCommands();
   expect(commands.length).to.be.gt(0);
-  let command = _.find(commands, e => e.command == 'worker');
+  let command = find(commands, e => e.command == 'worker');
   command.handler({});
   */
 

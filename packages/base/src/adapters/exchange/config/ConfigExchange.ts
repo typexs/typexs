@@ -1,9 +1,9 @@
-import * as _ from 'lodash';
-import {AbstractExchange} from '../../../libs/messaging/AbstractExchange';
-import {ConfigRequest} from './ConfigRequest';
-import {ConfigResponse} from './ConfigResponse';
-import {IMessageOptions} from '../../../libs/messaging/IMessageOptions';
-import {ConfigUtils} from '../../../libs/utils/ConfigUtils';
+import { AbstractExchange } from '../../../libs/messaging/AbstractExchange';
+import { ConfigRequest } from './ConfigRequest';
+import { ConfigResponse } from './ConfigResponse';
+import { IMessageOptions } from '../../../libs/messaging/IMessageOptions';
+import { ConfigUtils } from '../../../libs/utils/ConfigUtils';
+import { isEmpty } from '@typexs/generic';
 
 
 export class ConfigExchange extends AbstractExchange<ConfigRequest, ConfigResponse> {
@@ -23,7 +23,7 @@ export class ConfigExchange extends AbstractExchange<ConfigRequest, ConfigRespon
 
   handleRequest(request: ConfigRequest, res: ConfigResponse) {
     let _orgCfg: any = {};
-    if (!_.isEmpty(request) && !_.isEmpty(request.key)) {
+    if (!isEmpty(request) && !isEmpty(request.key)) {
       _orgCfg = ConfigUtils.clone(request.key);
     } else {
       _orgCfg = ConfigUtils.clone();

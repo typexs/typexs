@@ -1,12 +1,13 @@
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import * as _ from 'lodash';
-import {TestHelper} from './TestHelper';
-import {TEST_STORAGE_OPTIONS} from './config';
-import {RegistryFactory} from '@allgemein/schema-api';
-import {NAMESPACE_BUILT_ENTITY} from '../../src/libs/Constants';
-import {EntityRegistry} from '../../src/libs/EntityRegistry';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+
+import { TestHelper } from './TestHelper';
+import { TEST_STORAGE_OPTIONS } from './config';
+import { RegistryFactory } from '@allgemein/schema-api';
+import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
+import { EntityRegistry } from '../../src/libs/EntityRegistry';
+import { clone, map } from '@typexs/generic';
 
 
 let registry: EntityRegistry;
@@ -35,7 +36,7 @@ class SqlSchemaPredefinedJoinGenerateSpec {
     const Teacher = require('./schemas/join/Teacher').Teacher;
     registry.reload([Lecture, RBelongsTo, Teacher]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'join';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -43,10 +44,10 @@ class SqlSchemaPredefinedJoinGenerateSpec {
     const c = await ref.connect();
 
     const tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\' and tbl_name not like \'%sqlite%\';');
-    expect(_.map(tables, t => t.name)).to.have.include.members(['personal', 'veranstaltung', 'r_belongsto']);
+    expect(map(tables, t => t.name)).to.have.include.members(['personal', 'veranstaltung', 'r_belongsto']);
 
     const cols = await c.connection.query('PRAGMA table_info(\'r_belongsto\')');
-    expect(_.map(cols, t => t.name)).to.have.members(['beltoid', 'ownertab', 'ownerid', 'tabelle', 'tabpk', 'sortierung', 'zeitstempel']);
+    expect(map(cols, t => t.name)).to.have.members(['beltoid', 'ownertab', 'ownerid', 'tabelle', 'tabpk', 'sortierung', 'zeitstempel']);
 
     await c.close();
   }
@@ -60,7 +61,7 @@ class SqlSchemaPredefinedJoinGenerateSpec {
     registry.reload([ContentHolder, Content, ContentRef]);
 
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'join';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -70,10 +71,10 @@ class SqlSchemaPredefinedJoinGenerateSpec {
     const tables: any[] = await c.connection.query(
       'SELECT * FROM sqlite_master WHERE type=\'table\' and tbl_name not like \'%sqlite%\';'
     );
-    expect(_.map(tables, t => t.name)).to.have.include.members(['r_blobs', 'blobs', 'content_holder']);
+    expect(map(tables, t => t.name)).to.have.include.members(['r_blobs', 'blobs', 'content_holder']);
 
     const cols = await c.connection.query('PRAGMA table_info(\'r_blobs\')');
-    expect(_.map(cols, t => t.name)).to.have.members(['rblobid', 'table_name', 'table_id', 'blobid']);
+    expect(map(cols, t => t.name)).to.have.members(['rblobid', 'table_name', 'table_id', 'blobid']);
 
     await c.close();
 

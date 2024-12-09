@@ -1,9 +1,11 @@
-import * as _ from 'lodash';
-import {C_STORAGE_DEFAULT, Inject, Injector, StorageRef} from '@typexs/base';
-import {Permission} from '../entities/Permission';
-import {PermissionsRegistry} from './PermissionsRegistry';
-import {Role} from '../entities/Role';
-import {EntityController} from '@typexs/entity';
+import { isEmpty } from '@typexs/generic';
+
+
+import { C_STORAGE_DEFAULT, Inject, Injector, StorageRef } from '@typexs/base';
+import { Permission } from '../entities/Permission';
+import { PermissionsRegistry } from './PermissionsRegistry';
+import { Role } from '../entities/Role';
+import { EntityController } from '@typexs/entity';
 
 export class PermissionsRegistryLoader {
 
@@ -38,7 +40,7 @@ export class PermissionsRegistryLoader {
 
 
   async savePermissions(p: Permission[]) {
-    if (!_.isEmpty(p)) {
+    if (!isEmpty(p)) {
       const names = p.map(x => x.permission);
       const save: Permission[] = [];
       const exists = await this.getStorageRef().getController().find(Permission, {permission: {$in: names}}, {limit: 0}) as Permission[];
@@ -54,7 +56,7 @@ export class PermissionsRegistryLoader {
         save.push(perm);
       }
 
-      if (!_.isEmpty(save)) {
+      if (!isEmpty(save)) {
         await this.getStorageRef().getController().save(save);
       }
 
@@ -69,7 +71,7 @@ export class PermissionsRegistryLoader {
 
 
   async saveRoles(p: Role[]) {
-    if (!_.isEmpty(p)) {
+    if (!isEmpty(p)) {
       await this.getEntityController().save(p);
     }
     return p;

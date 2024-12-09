@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { get, isArray, isBoolean, isNull } from '@typexs/generic';
+
+
 import { ActivatedRouteSnapshot, Route } from '@angular/router';
 import { K_ANONYM_VIEW, K_IS_AUTHENTICATED, K_PERMISSIONS } from './Constants';
 
@@ -6,8 +8,8 @@ export class UserAuthHelper {
 
 
   static getRoutePermissions(route: ActivatedRouteSnapshot | Route, replaceParams: boolean = true) {
-    let perms = _.get(route, 'data.' + K_PERMISSIONS, null);
-    if (perms && _.isArray(perms) && replaceParams && route instanceof ActivatedRouteSnapshot) {
+    let perms = get(route, 'data.' + K_PERMISSIONS, null);
+    if (perms && isArray(perms) && replaceParams && route instanceof ActivatedRouteSnapshot) {
       perms = perms.map((x: string) => {
         let y = x;
         route.paramMap.keys.forEach(k => {
@@ -22,11 +24,11 @@ export class UserAuthHelper {
 
 
   static getRouteAuthenticationCheck(route: ActivatedRouteSnapshot | Route) {
-    return _.get(route, 'data.' + K_IS_AUTHENTICATED, null);
+    return get(route, 'data.' + K_IS_AUTHENTICATED, null);
   }
 
   static getRouteDisallowViewMode(route: ActivatedRouteSnapshot | Route): 'hide' | 'disable' {
-    return _.get(route, 'data.' + K_ANONYM_VIEW, 'hide');
+    return get(route, 'data.' + K_ANONYM_VIEW, 'hide');
   }
 
   /**
@@ -35,12 +37,12 @@ export class UserAuthHelper {
    */
   static checkIfAuthRequired(route: ActivatedRouteSnapshot | Route) {
     const hasAuth = this.getRouteAuthenticationCheck(route);
-    if (_.isBoolean(hasAuth)) {
+    if (isBoolean(hasAuth)) {
       return hasAuth;
     }
 
     const hasPermis = this.getRoutePermissions(route);
-    if (!_.isNull(hasPermis)) {
+    if (!isNull(hasPermis)) {
       return true;
     }
     return null;
@@ -48,11 +50,11 @@ export class UserAuthHelper {
 
   static hasRouteAuthCheck(route: ActivatedRouteSnapshot | Route) {
     const hasAuth = this.getRouteAuthenticationCheck(route);
-    if (!_.isNull(hasAuth)) {
+    if (!isNull(hasAuth)) {
       return true;
     }
     const hasPermissions = this.getRoutePermissions(route);
-    if (!_.isNull(hasPermissions)) {
+    if (!isNull(hasPermissions)) {
       return true;
     }
     return false;

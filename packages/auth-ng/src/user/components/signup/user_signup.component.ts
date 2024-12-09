@@ -5,8 +5,9 @@ import { Router } from '@angular/router';
 import { UserAuthService } from './../../user-auth.service';
 import { AuthService, IMessage, LogMessage, MessageChannel, MessageService, MessageType } from '@typexs/base-ng';
 import { NavigatorService } from '@typexs/ng-router-menu';
-import * as _ from 'lodash';
+
 import { mergeMap } from 'rxjs/operators';
+import { isArray, isString } from '@typexs/generic';
 
 
 @Component({
@@ -66,14 +67,14 @@ export class UserSignupComponent implements OnInit, OnDestroy {
 
 
   redirectOnSuccess() {
-    if (_.isString(this.successUrl)) {
+    if (isString(this.successUrl)) {
       const nav = this.navigatorService.entries.find(e => e.path && e.path.includes(<string>this.successUrl));
       if (nav) {
         return this.router.navigate([nav.getFullPath()]);
       } else {
         return this.router.navigate([this.successUrl]);
       }
-    } else if (_.isArray(this.successUrl)) {
+    } else if (isArray(this.successUrl)) {
       return this.router.navigate(this.successUrl);
     }
     return null;
@@ -91,7 +92,7 @@ export class UserSignupComponent implements OnInit, OnDestroy {
               this.redirectOnSuccess();
             } else {
               for (const error of state.errors) {
-                _.keys(error.constraints).forEach(k => {
+                 Object.keys(error.constraints).forEach(k => {
                   this.formMessage.publish({
                     type: <any>MessageType[error.type.toUpperCase()],
                     content: error.constraints[k],
@@ -120,7 +121,7 @@ export class UserSignupComponent implements OnInit, OnDestroy {
       Object.keys(this.validation).forEach(key => {
         if (this.validation[key]) {
           let valid = this.validation[key];
-          let found = _.find(results, {property: key});
+          let found = find(results, {property: key});
           valid.messages = [];
           if (found) {
             valid.valid = false;
@@ -151,7 +152,7 @@ export class UserSignupComponent implements OnInit, OnDestroy {
         if (signup.success) {
           await this.router.navigateByUrl('/user/login');
         } else {
-          if (_.isArray(signup.errors)) {
+          if (isArray(signup.errors)) {
             this.validation.errors.messages.push({type: 'error', content: JSON.stringify(signup.errors)})
           } else {
             this.validation.errors.messages.push({type: 'error', content: 'UNKNOWN'})

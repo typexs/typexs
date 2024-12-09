@@ -1,15 +1,15 @@
 /**
  * Registers all running tasks in the local node
  */
-import * as _ from 'lodash';
-import { isEmpty, keys, remove, values } from 'lodash';
+
 import { Inject } from 'typedi';
 import { EventBus, subscribe } from '@allgemein/eventbus';
 import { TaskRunner } from './TaskRunner';
 import {
   CL_TASK_RUNNER_REGISTRY,
   TASK_RUNNER_SPEC,
-  TASK_STATE_ERRORED, TASK_STATE_REQUEST_ERROR,
+  TASK_STATE_ERRORED,
+  TASK_STATE_REQUEST_ERROR,
   TASK_STATE_STOPPED,
   TASKRUN_STATE_FINISH_PROMISE
 } from './Constants';
@@ -24,6 +24,8 @@ import { DefaultArray } from '../queue/DefaultArray';
 import { Cache } from '../cache/Cache';
 import { IQueueArray } from '../queue/IQueueArray';
 import { Injector } from '../di/Injector';
+import { concat, intersection, isEmpty, isString, remove, values } from '@typexs/generic';
+
 
 /**
  * Node specific registry for TaskRunner which is initalized as singleton in Activator.
@@ -89,7 +91,7 @@ export class TaskRunnerRegistry {
     }
     // 4 hours
     const longestTask = 4 * 60 * 60 * 1000;
-    remove = keys(this.taskNames).filter(k => longestTask < Date.now() - this.taskNames[k].ts);
+    remove =  Object.keys(this.taskNames).filter(k => longestTask < Date.now() - this.taskNames[k].ts);
     if (!isEmpty(remove)) {
       await Promise.all(remove.map((x: string) => this.removeTaskStatus(x)));
     }
@@ -158,10 +160,10 @@ export class TaskRunnerRegistry {
    * Check if tasks with name or names are running
    */
   hasRunnerForTasks(taskNames: string | string[]) {
-    if (_.isString(taskNames)) {
+    if (isString(taskNames)) {
       taskNames = [taskNames];
     }
-    const intersect = _.intersection(taskNames, _.concat([], ...this.localTaskRunner.map(x => x.getTaskNames())));
+    const intersect = intersection(taskNames, concat([], ...this.localTaskRunner.map(x => x.getTaskNames())));
     return intersect.length === taskNames.length;
   }
 
@@ -170,10 +172,10 @@ export class TaskRunnerRegistry {
    * Check if tasks with name or names are running
    */
   hasRunningTasks(taskNames: string | string[]) {
-    if (_.isString(taskNames)) {
+    if (isString(taskNames)) {
       taskNames = [taskNames];
     }
-    const intersect = _.intersection(taskNames, _.concat([], ...(values(this.taskNames)).map(x => x.taskNames)));
+    const intersect = intersection(taskNames, concat([], ...(values(this.taskNames)).map(x => x.taskNames)));
     return intersect.length === taskNames.length;
   }
 
@@ -192,7 +194,7 @@ export class TaskRunnerRegistry {
    * @param taskNames
    */
   getLocalTaskCounts(taskNames: string | string[]) {
-    if (_.isString(taskNames)) {
+    if (isString(taskNames)) {
       taskNames = [taskNames];
     }
     const counters = new Counters();
@@ -208,7 +210,7 @@ export class TaskRunnerRegistry {
    * @param taskNames
    */
   getGlobalTaskCounts(taskNames: string | string[]) {
-    if (_.isString(taskNames)) {
+    if (isString(taskNames)) {
       taskNames = [taskNames];
     }
     const counters = new Counters();

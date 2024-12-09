@@ -84,9 +84,9 @@ class DataContainerSpec {
     // TreeUtils.walk(data_x, (v: WalkValues) => {
     //   if (v.value === 'ValidPerson') {
     //     v.parent[v.key] = 'ValidPerson2';
-    //   } else if (_.isString(v.value) && /valid_person/.test(v.value)) {
+    //   } else if (isString(v.value) && /valid_person/.test(v.value)) {
     //     v.parent[v.key] = v.value.replace('valid_person', 'valid_person_2');
-    //   } else if (_.isFunction(v.value)) {
+    //   } else if (isFunction(v.value)) {
     //   }
     // });
     // data_x.machineName = 'valid_person_2';

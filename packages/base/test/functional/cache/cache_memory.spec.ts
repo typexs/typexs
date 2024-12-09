@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 
@@ -55,15 +54,15 @@ class CacheMemorySpec {
 
     const adapterClasses = cache.getAdapterClasses();
     expect(adapterClasses).to.have.length(2);
-    expect(_.map(adapterClasses, c => c.type).sort()).to.deep.eq(['memory', 'redis']);
+    expect(adapterClasses.map(c => c.type).sort()).to.deep.eq(['memory', 'redis']);
 
     const adapters = cache.getAdapters();
-    const instances = _.keys(adapters);
+    const instances = Object.keys(adapters);
     expect(instances).to.be.deep.eq([C_DEFAULT]);
     expect(adapters[C_DEFAULT]).to.be.instanceOf(MemoryCacheAdapter);
 
     const bins = cache.getBins();
-    const binKeys = _.keys(bins);
+    const binKeys = Object.keys(bins);
     expect(binKeys).to.be.deep.eq([C_DEFAULT]);
     expect(bins[C_DEFAULT].name).to.be.eq(C_DEFAULT);
 
@@ -125,7 +124,7 @@ class CacheMemorySpec {
     expect(adapterClasses.map(c => c.type).sort()).to.deep.eq(['memory', 'redis']);
 
     const adapters = cache.getAdapters();
-    const instances = _.keys(adapters);
+    const instances = Object.keys(adapters);
     expect(instances).to.be.deep.eq(['mem1', 'default', 'mem2']);
 
     expect(adapters[C_DEFAULT]).to.be.eq(adapters['mem1']);
@@ -133,7 +132,7 @@ class CacheMemorySpec {
     expect(adapters['mem2']).to.be.instanceOf(MemoryCacheAdapter);
 
     const bins = cache.getBins();
-    const binKeys = _.keys(bins);
+    const binKeys = Object.keys(bins);
 
     expect(binKeys).to.be.deep.eq([C_DEFAULT, 'test']);
     expect(bins[C_DEFAULT].store.name).to.be.eq('mem1');

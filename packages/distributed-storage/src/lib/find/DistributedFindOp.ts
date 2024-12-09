@@ -166,7 +166,7 @@ export class DistributedFindOp<T>
           const ref = classRefs[key];
           try {
             return ref.build(r, {
-              afterBuild: (c: any, f: any, t: any) => keys(f)
+              afterBuild: (c: any, f: any, t: any) =>  Object.keys(f)
                 .filter(k => k.startsWith('__') && isUndefined(t[k]))
                 .map(k => t[k] = f[k])
             });
@@ -182,7 +182,7 @@ export class DistributedFindOp<T>
     if (get(this.request.options, 'sort', false)) {
       const arr: string[][] = [];
       // order after concat
-      keys(this.request.options.sort).forEach(k => {
+       Object.keys(this.request.options.sort).forEach(k => {
         arr.push([k, this.request.options.sort[k].toUpperCase() === 'ASC' ? 'asc' : 'desc']);
       });
       orderBy(results, ...arr);

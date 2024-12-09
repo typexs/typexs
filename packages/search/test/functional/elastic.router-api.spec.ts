@@ -5,7 +5,7 @@ import * as path from 'path';
 import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
 import { ES_host, ES_port } from './config';
 import { Client } from '@elastic/elasticsearch';
-import * as _ from 'lodash';
+
 import { DataEntity } from './fake_app_controller/entities/DataEntity';
 import { SearchEntity } from './fake_app_controller/entities/SearchEntity';
 import { ElasticEntityController } from '../../src/lib/elastic/ElasticEntityController';
@@ -19,6 +19,8 @@ import { __NS__ } from '@allgemein/schema-api';
 import { ElasticUtils } from '../../src/lib/elastic/ElasticUtils';
 import { ElasticMappingUpdater } from '../../src/lib/elastic/mapping/ElasticMappingUpdater';
 import { clear } from './testdata';
+import { range } from '@typexs/generic';
+
 
 const lorem = 'lorem ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod ' +
   'tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero ' +
@@ -133,7 +135,7 @@ class TypexsSearchRouterApi {
     controller = storageRef.getController();
 
     const promises = [];
-    for (const i of _.range(0, 40)) {
+    for (const i of range(0, 40)) {
       const d = new DataEntity();
       d[__ID__] = i + '';
       d[__TYPE__] = 'data_entity';

@@ -83,7 +83,7 @@ export class Storage {
     }
 
     // keys starting with undercore or dollar are reserved for generic configuration
-    const storageNames = keys(config).filter(x => !/^(_|\$)/.test(x));
+    const storageNames =  Object.keys(config).filter(x => !/^(_|\$)/.test(x));
 
     // const storageRefs = [];
     // iterate over storage configurations
@@ -217,7 +217,7 @@ export class Storage {
     }
 
 
-    keys(replace).map(k => {
+     Object.keys(replace).map(k => {
       const index = declaredEntities.findIndex(v => v === k);
       declaredEntities.splice(index, 1);
       if (isArray(replace[k])) {
@@ -258,7 +258,7 @@ export class Storage {
       } else if (/\.(t|j)s$/.test(path)) {
         const mod = await import(path.replace(/\.(t|j)s$/, ''));
         object = [];
-        keys(mod).map(x => {
+         Object.keys(mod).map(x => {
           const value = mod[x];
           Object.defineProperty(value, __SOURCE__, { value: path });
           if (isFunction(value)) {
@@ -313,7 +313,7 @@ export class Storage {
 
 
   getNames() {
-    return keys(this.storageRefs);
+    return  Object.keys(this.storageRefs);
   }
 
 

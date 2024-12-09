@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import * as _ from 'lodash';
+
 import { AuthService } from '@typexs/base-ng';
 import { UserAuthService } from './user-auth.service';
+import { isEmpty, isString } from '@typexs/generic';
+
 
 @Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {
@@ -16,7 +18,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
     if (this.auth instanceof UserAuthService && this.auth.isEnabled()) {
       const provider = <UserAuthService>this.auth;
       const token = provider.getStoredToken();
-      if (token && _.isString(token) && !_.isEmpty(token)) {
+      if (token && isString(token) && !isEmpty(token)) {
         const tokenKey = provider.getTokenKey();
         const setHeaders = {};
         setHeaders[tokenKey] = token;

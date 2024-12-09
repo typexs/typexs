@@ -281,7 +281,7 @@ export class HttpBackendService implements IBackendClientService {
 
       if (options.query) {
         const queryParts: string[] = [];
-        for (const q of keys(options.query)) {
+        for (const q of  Object.keys(options.query)) {
           const value = options.query[q];
           if (isNumber(value) || isString(value) || isBoolean(value)) {
             queryParts.push(q + '=' + value);

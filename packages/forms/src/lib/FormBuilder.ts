@@ -213,7 +213,7 @@ export class FormBuilder {
 
     const options = property.getOptions();
     if (options) {
-      keys(options).forEach(opt => {
+       Object.keys(options).forEach(opt => {
         if (/^(source|target|property|name)/.test(opt)) {
           return;
         }

@@ -3,7 +3,7 @@ import { AuthDataContainer } from './AuthDataContainer';
 import { AbstractUserSignup } from '../models/AbstractUserSignup';
 import { AbstractUserLogin } from '../models/AbstractUserLogin';
 import { AuthMethod } from '../../entities/AuthMethod';
-import * as _ from 'lodash';
+
 import { User } from '../../entities/User';
 import { Invoker } from '@typexs/base';
 import { IConfigUser } from '../models/IConfigUser';
@@ -13,6 +13,8 @@ import { UserAuthApi } from '../../api/UserAuth.api';
 import { Role } from '@typexs/roles/entities/Role';
 // import {TypeOrmConnectionWrapper} from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
 import { IEntityController } from '@typexs/base/browser';
+import { assign, get, has, isArray, map, remove } from '@typexs/generic';
+
 
 export class AuthHelper {
 
@@ -22,7 +24,7 @@ export class AuthHelper {
   //   if (user && user.roles && user.roles.length > 0) {
   //     // todo cache this for roles
   //     // TODO Cache.getOrCreate(key,() => {....})
-  //     _.map(user.roles, (r: Role) => r.permissions.map(_per => {
+  //     map(user.roles, (r: Role) => r.permissions.map(_per => {
   //       p.push(_per.permission.replace('*', '(\\w|\\d|\\s)*'));
   //     }));
   //
@@ -46,8 +48,8 @@ export class AuthHelper {
     method.authId = adapter.authId;
     method.type = adapter.type;
 
-    if (_.has(dataContainer, 'data')) {
-      method.data = _.get(dataContainer, 'data');
+    if (has(dataContainer, 'data')) {
+      method.data = get(dataContainer, 'data');
     }
 
     await invoker.use(UserAuthApi).onLoginMethod(method, adapter, dataContainer);
@@ -57,8 +59,8 @@ export class AuthHelper {
         method.mail = signup.getMail();
       } else if (signup instanceof AbstractUserLogin) {
         // mail could be passed by freestyle data object
-        if (_.has(dataContainer, 'data.mail')) {
-          method.mail = _.get(dataContainer, 'data.mail') as string;
+        if (has(dataContainer, 'data.mail')) {
+          method.mail = get(dataContainer, 'data.mail') as string;
         }
       }
     }
@@ -93,8 +95,8 @@ export class AuthHelper {
         user.mail = signup.getMail();
       } else if (signup instanceof AbstractUserLogin) {
         // mail could be passed by freestyle data object
-        if (_.has(dataContainer, 'data.mail')) {
-          user.mail = _.get(dataContainer, 'data.mail') as string;
+        if (has(dataContainer, 'data.mail')) {
+          user.mail = get(dataContainer, 'data.mail') as string;
         }
       }
     }
@@ -175,24 +177,24 @@ export class AuthHelper {
     }
     // const c = await entityController.storageRef.connect() as TypeOrmConnectionWrapper;
     const exists_users = await entityController.find(User, this.buildOrWhere(
-      _.map(users, user => user.username),
+      map(users, user => user.username),
       'username'));
 
 
     // remove already created users
-    exists_users.map(u => _.remove(users, _u => _u.username === u.username));
+    exists_users.map(u => remove(users, _u => _u.username === u.username));
 
     if (users.length === 0) {
       return [];
     }
 
     let rolenames: string[] = [];
-    _.map(users, u => u.roles && _.isArray(u.roles) ? rolenames = rolenames.concat(u.roles) : null);
+    map(users, u => u.roles && isArray(u.roles) ? rolenames = rolenames.concat(u.roles) : null);
 
     let existing_roles: Role[] = [];
     if (rolenames.length > 0) {
       existing_roles = await entityController.find(Role, this.buildOrWhere(rolenames, 'rolename'));
-      existing_roles.map(r => _.remove(rolenames, _r => _r === r.rolename));
+      existing_roles.map(r => remove(rolenames, _r => _r === r.rolename));
     }
     // let existing_roles = await c.manager.find(Role, {where: {rolename: In(rolenames)}});
 
@@ -214,7 +216,7 @@ export class AuthHelper {
         }
 
         const signup: DefaultUserSignup = Reflect.construct(adapter.getModelFor('signup'), []);
-        _.assign(signup, user);
+        assign(signup, user);
         signup.passwordConfirm = signup.password;
 
         const saved = await this.createUserAndMethod(invoker, entityController, adapter, new AuthDataContainer(signup));

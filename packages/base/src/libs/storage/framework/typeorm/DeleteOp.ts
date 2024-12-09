@@ -1,5 +1,4 @@
-import * as _ from 'lodash';
-
+import { isArray, isFunction } from '@typexs/generic';
 import { IDeleteOp } from '../IDeleteOp';
 import { TypeOrmUtils } from './TypeOrmUtils';
 import { ClassType, RegistryFactory } from '@allgemein/schema-api';
@@ -70,7 +69,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
     await this.controller.invoker.use(EntityControllerApi).doBeforeRemove(this);
 
     let results: number | T[];
-    if (_.isFunction(object)) {
+    if (isFunction(object)) {
       results = await this.removeByCondition(<ClassType<T>>object, conditions, options);
     } else {
       results = await this.remove(<T | T[]>object, options);
@@ -132,7 +131,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
   }
 
   private async remove(object: T[] | T, options: IDeleteOptions = {}) {
-    const isArray = _.isArray(object);
+    // const _isArray = isArray(object);
     const connection = await this.controller.connect();
     let promiseResults: any[][] = null;
     let affected = -1;
@@ -140,7 +139,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
       this.objects = this.prepare(object);
 
       const resolveByEntityDef = TypeOrmUtils.resolveByEntityRef(this.objects);
-      const entityNames = _.keys(resolveByEntityDef);
+      const entityNames = Object.keys(resolveByEntityDef);
 
       if (this.isMongoDB()) {
         const promises = [];
@@ -198,7 +197,7 @@ export class DeleteOp<T> implements IDeleteOp<T> {
 
   private prepare(object: T | T[]): T[] {
     let objs: T[] = [];
-    if (_.isArray(object)) {
+    if (isArray(object)) {
       objs = object;
     } else {
       objs.push(object);

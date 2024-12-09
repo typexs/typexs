@@ -1,13 +1,15 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Config,  Injector} from '@typexs/base';
-import {API_CTRL_FILESYSTEM_READ, K_ROUTE_CONTROLLER} from '../../../src/libs/Constants';
-import * as _ from 'lodash';
-import {TestHelper} from '../TestHelper';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { Bootstrap, Config, Injector } from '@typexs/base';
+import { API_CTRL_FILESYSTEM_READ, K_ROUTE_CONTROLLER } from '../../../src/libs/Constants';
+
+import { TestHelper } from '../TestHelper';
 import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
-import {IEventBusConfiguration} from '@allgemein/eventbus';
-import {HttpFactory, IHttp} from '@allgemein/http';
-import {expect} from 'chai';
-import {WebServer} from '../../../src/libs/web/WebServer';
+import { IEventBusConfiguration } from '@allgemein/eventbus';
+import { HttpFactory, IHttp } from '@allgemein/http';
+import { expect } from 'chai';
+import { WebServer } from '../../../src/libs/web/WebServer';
+import { clone } from '@typexs/generic';
+
 
 const LOG_EVENT = TestHelper.logEnable(false);
 
@@ -84,7 +86,7 @@ class FileSystemApiControllerSpec {
 
   static async before() {
     Bootstrap.reset();
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     http = HttpFactory.create();
 
     bootstrap = Bootstrap

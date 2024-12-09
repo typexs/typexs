@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import { AbstractExchange } from '../../../libs/messaging/AbstractExchange';
 import { TasksRequest } from './TasksRequest';
 import { TasksResponse } from './TasksResponse';
@@ -17,6 +16,7 @@ import { Injector } from '../../../libs/di/Injector';
 import { C_STORAGE_DEFAULT } from '../../../libs/Constants';
 import { StorageRef } from '../../../libs/storage/StorageRef';
 import { TaskLog } from '../../../entities/TaskLog';
+import { clone, get } from 'lodash';
 
 
 export class TasksExchange extends AbstractExchange<TasksRequest, TasksResponse> {
@@ -39,7 +39,7 @@ export class TasksExchange extends AbstractExchange<TasksRequest, TasksResponse>
     const req = new TasksRequest();
     req.op = 'logfile_path';
     req.runnerId = runnerId;
-    req.relative = _.get(opts, 'relative', false);
+    req.relative = get(opts, 'relative', false);
     const msg = this.create(opts);
     return msg.send(req);
   }
@@ -140,7 +140,7 @@ export class TasksExchange extends AbstractExchange<TasksRequest, TasksResponse>
           logFilePath2 = TasksHelper.getTaskLogFile(request.runnerId, this.getSystem().node.nodeId, true);
           // use fs exchange
           fsExchange = Injector.get(FileSystemExchange);
-          opts = _.clone(request.fileOptions) as IFileOptions;
+          opts = clone(request.fileOptions) as IFileOptions;
           opts.path = logFilePath2;
           req = new FileSystemRequest(opts);
           res = new FileSystemResponse();
@@ -186,13 +186,13 @@ export class TasksExchange extends AbstractExchange<TasksRequest, TasksResponse>
           break;
 
         case 'start':
-          throw  new NotYetImplementedError();
+          throw new NotYetImplementedError();
 
         case 'stop':
-          throw  new NotYetImplementedError();
+          throw new NotYetImplementedError();
 
         default:
-          throw  new NotYetImplementedError();
+          throw new NotYetImplementedError();
 
       }
     } catch (e) {

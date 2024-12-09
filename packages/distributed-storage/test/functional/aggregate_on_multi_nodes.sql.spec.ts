@@ -5,18 +5,18 @@ import { Config } from '@allgemein/config';
 import { TEST_STORAGE_OPTIONS } from '../../../base/test/functional/config';
 import { IEventBusConfiguration } from '@allgemein/eventbus';
 import { Container } from 'typedi';
-import { TestHelper } from '@typexs/testing';
+import { SpawnHandle, TestHelper } from '@typexs/testing';
 import { DistributedStorageEntityController } from '../../src/lib/DistributedStorageEntityController';
 import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
 import { DataRow } from './fake_app/entities/DataRow';
-import * as _ from 'lodash';
+
 import { Injector } from '@typexs/base/libs/di/Injector';
 import { __NODE_ID__, __REGISTRY__, C_STORAGE_DEFAULT } from '@typexs/base/libs/Constants';
 import { StorageRef } from '@typexs/base/libs/storage/StorageRef';
-import { SpawnHandle } from '@typexs/testing';
 import { generateSqlDataRows } from './helper';
 import { __CLASS__ } from '@allgemein/schema-api';
 import { MODUL_CONFIG, redis_host, redis_port } from './config';
+import { concat, orderBy, range, uniq } from '@typexs/generic';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -35,7 +35,7 @@ class DistributedStorageSaveSpec {
     Bootstrap.reset();
     Config.clear();
     const DB_OPTIONS = TEST_STORAGE_OPTIONS;
-    // _.set(DB_OPTIONS, 'database', 'typexs_local');
+    // set(DB_OPTIONS, 'database', 'typexs_local');
     bootstrap = Bootstrap
       .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
@@ -84,12 +84,12 @@ class DistributedStorageSaveSpec {
     const controller = Container.get(DistributedStorageEntityController);
     let results = await controller.aggregate(DataRow, [{ $match: { someBool: true } }]);
     expect(results).to.have.length(30);
-    results = _.orderBy(results, [__NODE_ID__]) as any;
+    results = orderBy(results, [__NODE_ID__]) as any;
     // console.log(results);
     const evenIds = results.map(x => x.id);
 
-    expect(evenIds).to.be.deep.eq(_.concat(_.range(1, 11).map(x => x * 2), _.range(1, 11).map(x => x * 2), _.range(1, 11).map(x => x * 2)));
-    const nodeIds = _.uniq(results.map(x => x[__NODE_ID__]));
+    expect(evenIds).to.be.deep.eq(concat(range(1, 11).map(x => x * 2), range(1, 11).map(x => x * 2), range(1, 11).map(x => x * 2)));
+    const nodeIds = uniq(results.map(x => x[__NODE_ID__]));
     expect(nodeIds).to.be.deep.eq(['remote01', 'remote02', 'system']);
 
   }
@@ -105,7 +105,7 @@ class DistributedStorageSaveSpec {
 
 
     expect(results).to.have.length(3);
-    results = _.orderBy(results, [__NODE_ID__]);
+    results = orderBy(results, [__NODE_ID__]);
     expect(results[0]).to.be.deep.eq({
       sum: 10,
       [__NODE_ID__]: 'remote01',
@@ -125,7 +125,7 @@ class DistributedStorageSaveSpec {
       [__REGISTRY__]: 'typeorm'
     });
 
-    const nodeIds = _.uniq(results.map(x => x[__NODE_ID__]));
+    const nodeIds = uniq(results.map(x => x[__NODE_ID__]));
     expect(nodeIds).to.be.deep.eq(['remote01', 'remote02', 'system']);
 
   }
@@ -141,7 +141,7 @@ class DistributedStorageSaveSpec {
 
 
     expect(results).to.have.length(1);
-    results = _.orderBy(results, [__NODE_ID__]);
+    results = orderBy(results, [__NODE_ID__]);
     expect(results[0]).to.be.deep.eq({
       sum: 10,
       [__NODE_ID__]: 'remote02',
@@ -149,7 +149,7 @@ class DistributedStorageSaveSpec {
       [__REGISTRY__]: 'typeorm'
     });
 
-    const nodeIds = _.uniq(results.map(x => x[__NODE_ID__]));
+    const nodeIds = uniq(results.map(x => x[__NODE_ID__]));
     expect(nodeIds).to.be.deep.eq(['remote02']);
   }
 
@@ -162,7 +162,7 @@ class DistributedStorageSaveSpec {
     ]) as any[];
 
     expect(results).to.have.length(9);
-    results = _.orderBy(results, [__NODE_ID__, 'someFlag']);
+    results = orderBy(results, [__NODE_ID__, 'someFlag']);
     expect(results).to.be.deep.eq([
       {
         someFlag: '0', sum: 3,
@@ -220,7 +220,7 @@ class DistributedStorageSaveSpec {
       }
     ]);
 
-    const nodeIds = _.uniq(results.map(x => x[__NODE_ID__]));
+    const nodeIds = uniq(results.map(x => x[__NODE_ID__]));
     expect(nodeIds).to.be.deep.eq(['remote01', 'remote02', 'system']);
   }
 
@@ -233,7 +233,7 @@ class DistributedStorageSaveSpec {
       { $skip: 1 },
       { $limit: 1 }
     ]) as any[];
-    results = _.orderBy(results, [__NODE_ID__, 'someFlag']);
+    results = orderBy(results, [__NODE_ID__, 'someFlag']);
     expect(results).to.have.length(3);
     expect(results[0]).to.be.deep.eq({
       someFlag: '10', sum: 7,
@@ -242,7 +242,7 @@ class DistributedStorageSaveSpec {
       [__REGISTRY__]: 'typeorm'
     });
 
-    const nodeIds = _.uniq(results.map(x => x[__NODE_ID__]));
+    const nodeIds = uniq(results.map(x => x[__NODE_ID__]));
     expect(nodeIds).to.be.deep.eq(['remote01', 'remote02', 'system']);
   }
 

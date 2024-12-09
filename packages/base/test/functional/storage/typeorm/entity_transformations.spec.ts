@@ -1,6 +1,6 @@
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-import * as _ from 'lodash';
+
 import { Driver } from './entities/Driver';
 import { Car } from './entities/Car';
 import { Truth } from './entities/Truth';
@@ -8,7 +8,7 @@ import { __CLASS__, RegistryFactory } from '@allgemein/schema-api';
 import { TypeOrmEntityRegistry } from '../../../../src/libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
 import { __REGISTRY__ } from '../../../../src/libs/Constants';
 import { REGISTRY_TYPEORM } from '../../../../src/libs/storage/framework/typeorm/Constants';
-import { clone } from 'lodash';
+import { clone, isArray, isBoolean } from '@typexs/generic';
 
 
 @suite('functional/storage/typeorm/entity_transformations')
@@ -51,7 +51,7 @@ class EntityTransformationsSpec {
     const registry = TypeOrmEntityRegistry.$();
     const entityDef = registry.getEntityRefFor(Car);
     const permission: any = entityDef.build(p);
-    expect(_.isArray(permission.driver)).to.be.true;
+    expect(isArray(permission.driver)).to.be.true;
     expect(permission.driver).to.have.length(2);
   }
 
@@ -64,7 +64,7 @@ class EntityTransformationsSpec {
     const registry = TypeOrmEntityRegistry.$();
     const entityDef = registry.getEntityRefFor('Truth');
     let permission: any = entityDef.build(p);
-    expect(_.isBoolean(permission.isTrue)).to.be.true;
+    expect(isBoolean(permission.isTrue)).to.be.true;
     expect(permission.isTrue).to.be.false;
 
 
@@ -73,7 +73,7 @@ class EntityTransformationsSpec {
     p.isTrue = true;
 
     permission = entityDef.build(p);
-    expect(_.isBoolean(permission.isTrue)).to.be.true;
+    expect(isBoolean(permission.isTrue)).to.be.true;
     expect(permission.isTrue).to.be.true;
 
   }

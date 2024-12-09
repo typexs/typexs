@@ -1,13 +1,50 @@
-import * as _ from 'lodash';
 import {ILoggerOptions} from './ILoggerOptions';
 import {C_DEFAULT, ClassUtils} from '@allgemein/base';
-// import {WinstonLoggerJar} from './WinstonLoggerJar';
 import {BaseUtils} from '../../libs/utils/BaseUtils';
 import {InterpolationSupport} from '@allgemein/config/supports/InterpolationSupport';
 import {ILoggerApi} from './ILoggerApi';
 import {MatchUtils} from '../utils/MatchUtils';
 import {ClassType} from '@allgemein/schema-api';
 import {ConsoleLogger} from './ConsoleLogger';
+import {
+  isString,
+  isNumber,
+  isArray,
+  isUndefined,
+  isBuffer,
+  isNull,
+  isObjectLike,
+  isObject,
+  isPlainObject,
+  isDate,
+  isFunction,
+  isEmpty,
+  uniq,
+  clone,
+  defaults,
+  defaultsDeep,
+  has,
+  assign,
+  set,
+  get,
+  last,
+  first,
+  remove,
+  filter,
+  cloneDeep,
+  map,
+  find,
+  findIndex,
+  concat,
+  isBoolean,
+  cloneDeepWith,
+  mergeWith,
+  capitalize,
+  snakeCase,
+  intersection
+} from '@typexs/generic';
+
+
 
 
 export class Log {
@@ -123,7 +160,7 @@ export class Log {
 
 
   getLogger(name: string = C_DEFAULT): ILoggerApi {
-    if (_.has(this.loggers, name)) {
+    if (has(this.loggers, name)) {
       return this.loggers[name];
     }
     return null;
@@ -131,16 +168,16 @@ export class Log {
 
 
   getLoggerOptionsFor(name: string) {
-    if (_.has(this.globalOptions, 'loggers')) {
+    if (has(this.globalOptions, 'loggers')) {
       for (const a of this.globalOptions.loggers) {
-        if (_.isUndefined(a.match)) {
+        if (isUndefined(a.match)) {
           if (/\+|\.|\(|\\||\)|\*/.test(a.name)) {
             a.match = a.name;
           } else {
             a.match = false;
           }
         }
-        if (_.isBoolean(a.match)) {
+        if (isBoolean(a.match)) {
           if (a.name === name) {
             return a;
           }
@@ -173,14 +210,14 @@ export class Log {
       defaultOptions = Log.DEFAULT_OPTIONS;
       defaultOptions.name = 'logger_' + Log.inc++;
     } else {
-      _.defaults(defaultOptions, Log.DEFAULT_OPTIONS);
+      defaults(defaultOptions, Log.DEFAULT_OPTIONS);
     }
 
 
-    const optsClone = _.cloneDeep(defaultOptions);
+    const optsClone = cloneDeep(defaultOptions);
     // apply additional options
-    if (options && !_.isEmpty(options)) {
-      _.assign(optsClone, options);
+    if (options && !isEmpty(options)) {
+      assign(optsClone, options);
     }
 
     if (params.prefix) {
@@ -206,7 +243,7 @@ export class Log {
     if (append && this.globalOptions) {
       options = BaseUtils.merge(this.globalOptions, options);
     }
-    this.globalOptions = _.defaults(options, Log.DEFAULT_OPTIONS);
+    this.globalOptions = defaults(options, Log.DEFAULT_OPTIONS);
     Log.enable = this.globalOptions.enable;
     //  Log.enableEvents = this.globalOptions.events;
     this.initial = true;

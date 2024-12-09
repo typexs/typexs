@@ -2,7 +2,7 @@
 import '../../src/libs/decorators/register';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-import * as _ from 'lodash';
+
 import { StorageRef, TypeOrmEntityRegistry } from '@typexs/base';
 import { EntityController } from '../../src/libs/EntityController';
 import { TestHelper } from './TestHelper';
@@ -10,6 +10,7 @@ import { TEST_STORAGE_OPTIONS } from './config';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
 import { EntityRegistry } from '../../src';
+import { clone, find, map } from '@typexs/generic';
 
 
 const FINDOPT = {
@@ -44,7 +45,7 @@ class SqlDirectReferencingSpec {
 
   @test
   async 'entity referencing property E-P-E over property table'() {
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     //    (<any>options).name = 'direct_property';
 
     const Author = require('./schemas/default/Author').Author;
@@ -103,7 +104,7 @@ class SqlDirectReferencingSpec {
 
   @test
   async 'entity referencing through embedded mode E-P-E (test embed and idKey)'() {
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     //    (<any>options).name = 'direct_property';
 
     const Course = require('./schemas/default/Course').Course;
@@ -134,7 +135,7 @@ class SqlDirectReferencingSpec {
 
   @test
   async 'entity referencing through embedded mode E-P-O'() {
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     //    (<any>options).name = 'direct_property';
 
     const Course2 = require('./schemas/default/Course2').Course2;
@@ -162,7 +163,7 @@ class SqlDirectReferencingSpec {
 
   @test
   async 'entity referencing through embedded mode E-P-O-P-O'() {
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     //    (<any>options).name = 'direct_property';
 
     const EDR = require('./schemas/default/EDR').EDR;
@@ -194,7 +195,7 @@ class SqlDirectReferencingSpec {
 
   @test
   async 'entity referencing property E-P-E[]'() {
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
 
     const Author = require('./schemas/default/Author').Author;
     const Book2 = require('./schemas/default/Book2').Book2;
@@ -228,8 +229,8 @@ class SqlDirectReferencingSpec {
     // console.log(book_save_1);
     expect(book_save_1.id).to.be.eq(1);
     expect(book_save_1.authors).to.have.length(2);
-    expect(_.find(book_save_1.authors, { lastName: 'Bania', id: 2 })).to.deep.include({ lastName: 'Bania', id: 2 });
-    expect(_.find(book_save_1.authors, { lastName: 'Kania', id: 1 })).to.deep.include({ lastName: 'Kania', id: 1 });
+    expect(find(book_save_1.authors, { lastName: 'Bania', id: 2 })).to.deep.include({ lastName: 'Bania', id: 2 });
+    expect(find(book_save_1.authors, { lastName: 'Kania', id: 1 })).to.deep.include({ lastName: 'Kania', id: 1 });
 
     const connection = await storageRef.connect(); // getController().find(Author, {$and: [{id: 1}, {id: 2}]});
     const authorsFound = await connection.for(Author).find([{ id: 1 }, { id: 2 }]);
@@ -243,8 +244,8 @@ class SqlDirectReferencingSpec {
     const book_find_1 = books.shift();
     expect(book_find_1.id).to.be.eq(1);
     expect(book_find_1.authors).to.have.length(2);
-    expect(_.find(book_find_1.authors, { lastName: 'Bania', id: 2 })).to.deep.include({ lastName: 'Bania', id: 2 });
-    expect(_.find(book_find_1.authors, { lastName: 'Kania', id: 1 })).to.deep.include({ lastName: 'Kania', id: 1 });
+    expect(find(book_find_1.authors, { lastName: 'Bania', id: 2 })).to.deep.include({ lastName: 'Bania', id: 2 });
+    expect(find(book_find_1.authors, { lastName: 'Kania', id: 1 })).to.deep.include({ lastName: 'Kania', id: 1 });
 
     let book_save_2 = new Book2();
     book_save_2.content = 'Robi tobi und das Fliwatüt';
@@ -253,7 +254,7 @@ class SqlDirectReferencingSpec {
     // console.log(book_save_2);
     expect(book_save_2.id).to.be.eq(2);
     expect(book_save_2.authors).to.have.length(1);
-    expect(_.find(book_save_2.authors, { lastName: 'Kania', id: 1 })).to.deep.include({ lastName: 'Kania', id: 1 });
+    expect(find(book_save_2.authors, { lastName: 'Kania', id: 1 })).to.deep.include({ lastName: 'Kania', id: 1 });
 
     books = await entityController.find(Book2, { id: 2 }, FINDOPT);
     // console.log(books);
@@ -261,7 +262,7 @@ class SqlDirectReferencingSpec {
     const book_find_3 = books.shift();
     expect(book_find_3.id).to.be.eq(2);
     expect(book_find_3.authors).to.have.length(1);
-    expect(_.find(book_find_3.authors, { lastName: 'Kania', id: 1 })).to.deep.include({ lastName: 'Kania', id: 1 });
+    expect(find(book_find_3.authors, { lastName: 'Kania', id: 1 })).to.deep.include({ lastName: 'Kania', id: 1 });
 
     // save multiple books
 
@@ -319,7 +320,7 @@ class SqlDirectReferencingSpec {
   @test
   async 'referencing property E-P-SP-E'() {
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'direct_property';
 
     const Car = require('./schemas/direct_property/Car').Car;
@@ -338,7 +339,7 @@ class SqlDirectReferencingSpec {
 
     const tables: any[] = await c.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
     expect(tables).to.have.length(5);
-    expect(_.map(tables, table => table.name)).to.have.include.members(['car', 'skil', 'p_car_driver', 'p_car_drivers']);
+    expect(map(tables, table => table.name)).to.have.include.members(['car', 'skil', 'p_car_driver', 'p_car_drivers']);
 
     let car_save_1 = new Car();
     car_save_1.producer = 'Volvo';
@@ -366,7 +367,7 @@ class SqlDirectReferencingSpec {
 
   @test
   async 'referencing property E-P-SP[]-E'() {
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'direct_property';
 
     const Car = require('./schemas/direct_property/Car').Car;
@@ -413,7 +414,7 @@ class SqlDirectReferencingSpec {
 
   @test
   async 'saving multiple entities with and without refrences'() {
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
 
     const Author = require('./schemas/default/Author').Author;
     const Book = require('./schemas/default/Book').Book;
@@ -455,7 +456,7 @@ class SqlDirectReferencingSpec {
 
   @test
   async 'saving multiple entities with shared entity refrences'() {
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
 
     const Author = require('./schemas/default/Author').Author;
     const Book = require('./schemas/default/Book').Book;
@@ -493,7 +494,7 @@ class SqlDirectReferencingSpec {
 
   @test
   async 'find multiple entities with limit, offset, sort'() {
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
 
     const Author = require('./schemas/default/Author').Author;
     const Book = require('./schemas/default/Book').Book;
@@ -537,20 +538,20 @@ class SqlDirectReferencingSpec {
     expect(booksFound['$count']).to.eq(11);
     expect(booksFound['$offset']).to.eq(7);
     expect(booksFound['$limit']).to.eq(5);
-    expect(_.map(booksFound, (b: any) => b.label)).to.deep.eq(['Book16', 'Book17', 'Book18', 'Book19']);
+    expect(map(booksFound, (b: any) => b.label)).to.deep.eq(['Book16', 'Book17', 'Book18', 'Book19']);
 
     booksFound = await xsem.find(Book, { label: { $like: 'Book1%' } }, { limit: 5, offset: 7, sort: { id: 'desc' }, ...FINDOPT });
     expect(booksFound).to.have.length(4);
     expect(booksFound['$count']).to.eq(11);
     expect(booksFound['$offset']).to.eq(7);
     expect(booksFound['$limit']).to.eq(5);
-    expect(_.map(booksFound, (b: any) => b.label)).to.deep.eq(['Book12', 'Book11', 'Book10', 'Book1']);
+    expect(map(booksFound, (b: any) => b.label)).to.deep.eq(['Book12', 'Book11', 'Book10', 'Book1']);
 
 
     booksFound = await xsem.find(Book, { 'author.lastName': 'Kania5' }, { limit: 5, sort: { id: 'desc' }, ...FINDOPT });
     expect(booksFound).to.have.length(1);
     expect(booksFound['$count']).to.eq(1);
-    expect(_.map(booksFound, (b: any) => b.label)).to.deep.eq(['Book5']);
+    expect(map(booksFound, (b: any) => b.label)).to.deep.eq(['Book5']);
 
 
     booksFound = await xsem.find(Book, { $or: [{ label: 'Book5' }, { label: 'Book10' }] }, {
@@ -566,7 +567,7 @@ class SqlDirectReferencingSpec {
 
     });
     expect(booksFound).to.have.length(2);
-    expect(_.map(booksFound, (b: any) => b['$fullname'])).to.deep.eq(['Robert Kania5', 'Robert Kania10']);
+    expect(map(booksFound, (b: any) => b['$fullname'])).to.deep.eq(['Robert Kania5', 'Robert Kania10']);
 
 
     await c.close();

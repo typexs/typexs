@@ -1,5 +1,5 @@
 import * as path from 'path';
-import * as _ from 'lodash';
+
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 
@@ -11,6 +11,52 @@ import { K_CLS_API, K_CLS_BOOTSTRAP, K_CLS_STORAGE_SCHEMAHANDLER, K_CLS_STORAGE_
 import { K_CLS_TASKS } from '../../../src/libs/tasks/Constants';
 import { TestHelper } from '@typexs/testing';
 import { PlatformUtils } from '@allgemein/base';
+import {
+  isString,
+  isNumber,
+  isArray,
+  isUndefined,
+  isBuffer,
+  isNull,
+  isObjectLike,
+  isObject,
+  isPlainObject,
+  isDate,
+  isFunction,
+  isEmpty,
+  isRegExp,
+  uniq,
+  clone,
+  defaults,
+  defaultsDeep,
+  has,
+  assign,
+  set,
+  get,
+  last,
+  first,
+  filter,
+  remove,
+  cloneDeep,
+  map,
+  find,
+  findIndex,
+  concat,
+  isBoolean,
+  cloneDeepWith,
+  mergeWith,
+  capitalize,
+  snakeCase,
+  intersection,
+  max,
+  min,
+  values,
+  random,
+  merge
+
+} from '@typexs/generic';
+
+
 
 
 @suite('functional/bootstrap/general')
@@ -70,8 +116,8 @@ class BootstrapGeneralSpec {
     await loader.rebuild();
     const modules = loader.registry.getModules();
     expect(modules).to.have.length(3);
-    expect(_.find(modules, { name: 'module1' })).to.exist;
-    expect(_.find(modules, { name: 'module2' })).to.not.exist;
+    expect(find(modules, { name: 'module1' })).to.exist;
+    expect(find(modules, { name: 'module2' })).to.not.exist;
 
     const activators = loader.classesLoader.getClasses('activator.js');
     expect(activators).to.have.length(2);

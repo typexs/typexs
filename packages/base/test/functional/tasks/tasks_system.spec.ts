@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { cloneDeep } from '@typexs/generic';
+
+
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Bootstrap } from '../../../src/Bootstrap';
@@ -6,8 +8,7 @@ import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
 import { EventBus, IEventBusConfiguration, RedisEventBusAdapter } from '@allgemein/eventbus';
 import { System } from '../../../src/libs/system/System';
 import { C_TASKS } from '../../../src/libs/tasks/Constants';
-import { TestHelper } from '@typexs/testing';
-import { SpawnHandle } from '@typexs/testing';
+import { SpawnHandle, TestHelper } from '@typexs/testing';
 import { ITypexsOptions } from '../../../src/libs/ITypexsOptions';
 import { Tasks } from '../../../src/libs/tasks/Tasks';
 import { Injector } from '../../../src/libs/di/Injector';
@@ -59,7 +60,7 @@ class TasksSystemSpec {
     bootstrap = await bootstrap.startup();
 
     const system: System = Injector.get(System.NAME);
-    const n = _.cloneDeep(system.node);
+    const n = cloneDeep(system.node);
 
     await bootstrap.shutdown();
 

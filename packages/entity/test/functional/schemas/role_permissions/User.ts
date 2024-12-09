@@ -1,11 +1,13 @@
-import * as _ from 'lodash';
-import {RBelongsTo2} from './RBelongsTo2';
-import {And, Eq, Key, Value} from '@allgemein/expressions';
-import {Role} from './Role';
-import {Entity} from '../../../../src/libs/decorators/Entity';
-import {Property} from '../../../../src/libs/decorators/Property';
-import {From, Join, To} from '../../../../src/libs/descriptors/JoinDesc';
-import {Asc} from '../../../../src/libs/descriptors/OrderDesc';
+import { isBoolean, isString } from '@typexs/generic';
+
+
+import { RBelongsTo2 } from './RBelongsTo2';
+import { And, Eq, Key, Value } from '@allgemein/expressions';
+import { Role } from './Role';
+import { Entity } from '../../../../src/libs/decorators/Entity';
+import { Property } from '../../../../src/libs/decorators/Property';
+import { From, Join, To } from '../../../../src/libs/descriptors/JoinDesc';
+import { Asc } from '../../../../src/libs/descriptors/OrderDesc';
 
 
 @Entity()
@@ -51,8 +53,8 @@ export class User {
   updated_at: Date;
 
   isApproved(): boolean {
-    if (!_.isBoolean(this.approved)) {
-      if (_.isString(this.approved)) {
+    if (!isBoolean(this.approved)) {
+      if (isString(this.approved)) {
         if (this.approved === '0' || this.approved === 'false') {
           this.approved = false;
         } else if (this.approved === '1' || this.approved === 'true') {
@@ -66,8 +68,8 @@ export class User {
   }
 
   isDisabled(): boolean {
-    if (!_.isBoolean(this.disabled)) {
-      if (_.isString(this.disabled)) {
+    if (!isBoolean(this.disabled)) {
+      if (isString(this.disabled)) {
         if (this.disabled === '0' || this.disabled === 'false') {
           this.disabled = false;
         } else if (this.disabled === '1' || this.disabled === 'true') {

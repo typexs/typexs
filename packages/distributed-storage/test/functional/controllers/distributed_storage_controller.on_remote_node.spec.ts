@@ -1,14 +1,5 @@
 import { suite, test } from '@testdeck/mocha';
-import {
-  __CLASS__,
-  __NODE_ID__,
-  __REGISTRY__,
-  Bootstrap,
-  Config,
-  Injector,
-  Log,
-  XS_P_$COUNT
-} from '@typexs/base';
+import { __CLASS__, __NODE_ID__, __REGISTRY__, Bootstrap, Config, Injector, Log, XS_P_$COUNT } from '@typexs/base';
 import {
   API_CTRL_DISTRIBUTED_STORAGE_DELETE_ENTITIES_BY_CONDITION,
   API_CTRL_DISTRIBUTED_STORAGE_DELETE_ENTITY,
@@ -19,7 +10,7 @@ import {
   API_CTRL_DISTRIBUTED_STORAGE_UPDATE_ENTITY
 } from '../../../src/lib/Constants';
 import { expect } from 'chai';
-import * as _ from 'lodash';
+
 import { SpawnHandle } from '@typexs/testing';
 import { TestHelper } from '../../../../server/test/functional/TestHelper';
 import { TEST_STORAGE_OPTIONS } from '../../../../server/test/functional/config';
@@ -31,6 +22,8 @@ import { WebServer } from '@typexs/server/libs/web/WebServer';
 import { K_ROUTE_CONTROLLER } from '@typexs/server';
 import { DistributedStorageEntityController } from '../../../src/lib/DistributedStorageEntityController';
 import { redis_host, redis_port } from '../config';
+import { clone, range, snakeCase } from '@typexs/generic';
+
 
 const LOG_EVENT = TestHelper.logEnable(false);
 const carList = [
@@ -97,7 +90,7 @@ class DistributedStorageControllerSpec {
   static async before() {
     Bootstrap.reset();
     http = HttpFactory.create();
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
 
 
     bootstrap = Bootstrap
@@ -159,7 +152,7 @@ class DistributedStorageControllerSpec {
     let res: any = await http.post(URL + '/api' +
       API_CTRL_DISTRIBUTED_STORAGE_SAVE_ENTITY
         .replace(':nodeId', 'fake_app_node')
-        .replace(':name', _.snakeCase(DistributedRandomData.name)),
+        .replace(':name', snakeCase(DistributedRandomData.name)),
       {
         json: d,
         responseType: 'json'
@@ -194,7 +187,7 @@ class DistributedStorageControllerSpec {
 
         API_CTRL_DISTRIBUTED_STORAGE_SAVE_ENTITY
           .replace(':nodeId', 'fake_app_node_not')
-          .replace(':name', _.snakeCase(DistributedRandomData.name)),
+          .replace(':name', snakeCase(DistributedRandomData.name)),
         {
           json: {},
           responseType: 'json'
@@ -239,7 +232,7 @@ class DistributedStorageControllerSpec {
 
       API_CTRL_DISTRIBUTED_STORAGE_SAVE_ENTITY
         .replace(':nodeId', 'fake_app_node')
-        .replace(':name', _.snakeCase(DistributedRandomData.name)),
+        .replace(':name', snakeCase(DistributedRandomData.name)),
       {
         json: [d1, d2],
         responseType: 'json'
@@ -270,7 +263,7 @@ class DistributedStorageControllerSpec {
 
       API_CTRL_DISTRIBUTED_STORAGE_GET_ENTITY
         .replace(':nodeId', 'fake_app_node')
-        .replace(':name', _.snakeCase(DistributedRandomData.name))
+        .replace(':name', snakeCase(DistributedRandomData.name))
         .replace(':id', '1'), { responseType: 'json' }
     );
 
@@ -303,7 +296,7 @@ class DistributedStorageControllerSpec {
 
       API_CTRL_DISTRIBUTED_STORAGE_GET_ENTITY
         .replace(':nodeId', 'fake_app_node')
-        .replace(':name', _.snakeCase(DistributedRandomData.name))
+        .replace(':name', snakeCase(DistributedRandomData.name))
         .replace(':id', '1,2'), { responseType: 'json' }
     );
 
@@ -357,7 +350,7 @@ class DistributedStorageControllerSpec {
     const res: any = await http.get(_url, { responseType: 'json', passBody: true });
     expect(res).to.not.be.null;
     expect(res.entities).to.have.length(10);
-    expect(res.entities.map((x: any) => x.id)).to.deep.eq(_.range(1, 11));
+    expect(res.entities.map((x: any) => x.id)).to.deep.eq(range(1, 11));
   }
 
 
@@ -468,7 +461,7 @@ class DistributedStorageControllerSpec {
     });
     expect(res.entities[1]).to.be.deep.eq({
       'bool': 1,
-      'sum': 25.003999999999998,
+      'sum': 25.004,
       [__CLASS__]: 'DistributedRandomData',
       [__NODE_ID__]: 'fake_app_node',
       [__REGISTRY__]: 'typeorm'
@@ -499,7 +492,7 @@ class DistributedStorageControllerSpec {
 
       API_CTRL_DISTRIBUTED_STORAGE_UPDATE_ENTITY
         .replace(':nodeId', 'fake_app_node')
-        .replace(':name', _.snakeCase(DistributedRandomData.name))
+        .replace(':name', snakeCase(DistributedRandomData.name))
         .replace(':id', id), { json: d2, responseType: 'json' }
     ) as any;
 
@@ -554,7 +547,7 @@ class DistributedStorageControllerSpec {
 
       API_CTRL_DISTRIBUTED_STORAGE_UPDATE_ENTITIES_BY_CONDITION
         .replace(':nodeId', 'fake_app_node')
-        .replace(':name', _.snakeCase(DistributedRandomData.name))
+        .replace(':name', snakeCase(DistributedRandomData.name))
       +
       '?query=' + JSON.stringify({ $and: [{ id: { $gte: 100 } }, { id: { $lte: 110 } }] }),
       <any>{
@@ -618,7 +611,7 @@ class DistributedStorageControllerSpec {
 
       API_CTRL_DISTRIBUTED_STORAGE_DELETE_ENTITY
         .replace(':nodeId', 'fake_app_node')
-        .replace(':name', _.snakeCase(DistributedRandomData.name))
+        .replace(':name', snakeCase(DistributedRandomData.name))
         .replace(':id', '101'), { responseType: 'json' }
     );
     expect(res).to.not.be.null;
@@ -632,7 +625,7 @@ class DistributedStorageControllerSpec {
 
       API_CTRL_DISTRIBUTED_STORAGE_DELETE_ENTITY
         .replace(':nodeId', 'fake_app_node')
-        .replace(':name', _.snakeCase(DistributedRandomData.name))
+        .replace(':name', snakeCase(DistributedRandomData.name))
         .replace(':id', '102,103,104'), { responseType: 'json' }
     );
     expect(res).to.not.be.null;
@@ -671,7 +664,7 @@ class DistributedStorageControllerSpec {
 
       API_CTRL_DISTRIBUTED_STORAGE_DELETE_ENTITIES_BY_CONDITION
         .replace(':nodeId', 'fake_app_node')
-        .replace(':name', _.snakeCase(DistributedRandomData.name)) +
+        .replace(':name', snakeCase(DistributedRandomData.name)) +
       '?query=' + JSON.stringify(
         { $and: [{ long: 'test delete' }, { id: { $gte: 105 } }] }),
       { responseType: 'json' }

@@ -91,7 +91,7 @@ export class ElasticUtils {
         }
         done.push(ref);
         const refProperties = this.buildMappingPropertiesTree(ref, _prefix, done);
-        if (refProperties && keys(refProperties).length > 0) {
+        if (refProperties &&  Object.keys(refProperties).length > 0) {
           properties[prop.name] = {
             properties: refProperties
           };

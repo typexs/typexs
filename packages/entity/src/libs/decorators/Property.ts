@@ -23,16 +23,16 @@ export function Property(typeOrOptions: IProperty | Function | string = null) {
     // let options: IProperty = {};
     // // source = ClassUtils.getFunction(source);
     //
-    // if (_.isString(typeOrOptions)) {
+    // if (isString(typeOrOptions)) {
     //   options.type = <JS_DATA_TYPES>typeOrOptions;
-    // } else if (_.isFunction(typeOrOptions)) {
+    // } else if (isFunction(typeOrOptions)) {
     //   const name = ClassUtils.getClassName(typeOrOptions);
     //   if (name === '' || name === 'Function') {
     //     options.type = typeOrOptions();
     //   } else {
     //     options.type = typeOrOptions;
     //   }
-    // } else if (!_.isEmpty(typeOrOptions)) {
+    // } else if (!isEmpty(typeOrOptions)) {
     //   options = <IProperty>typeOrOptions;
     // }
     //

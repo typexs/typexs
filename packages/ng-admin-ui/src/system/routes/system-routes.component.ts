@@ -25,7 +25,7 @@ export class SystemRoutesComponent implements OnInit {
   }
 
   objectKeys(obj: any) {
-    return keys(obj);
+    return  Object.keys(obj);
   }
 
   ngOnInit() {

@@ -46,7 +46,7 @@ export interface IElasticHighlight {
 
   /**
    *   Specifies the fields to retrieve highlights for. You can use wildcards to specify fields.
-   *   For example, you could specify comment_* to get highlights for all text and keyword fields that start with comment_.
+   *   For example, you could specify comment_* to get highlights for all text and keyword fields that start with comment
 
    Only text and keyword fields are highlighted when you use wildcards. If you use a custom mapper
    and want to highlight on a field anyway, you must explicitly specify that field name.

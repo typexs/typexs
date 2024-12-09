@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as _ from 'lodash';
+
 import { suite, test, timeout } from '@testdeck/mocha';
 import { Bootstrap, C_STORAGE_DEFAULT, Injector } from '@typexs/base';
 import * as path from 'path';
@@ -15,6 +15,8 @@ import { C_ELASTIC_SEARCH, C_SEARCH_INDEX } from '../../src/lib/Constants';
 import { IElasticStorageRefOptions } from '../../src';
 import { clear } from './testdata';
 import { ElasticMappingUpdater } from '../../src/lib/elastic/mapping/ElasticMappingUpdater';
+import { range } from '@typexs/generic';
+
 
 const lorem = 'lorem ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod ' +
   'tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero ' +
@@ -155,7 +157,7 @@ class ElasticStorageExtensionSpec {
 
     const inc = indexProcessingWorker.queue.queue.getInc();
     const entities = [];
-    for (const i of _.range(5, 15)) {
+    for (const i of range(5, 15)) {
       const d = new DataEntity();
       d.id = i;
       d.date = new Date(2020, i % 12, i % 30);
@@ -234,7 +236,7 @@ class ElasticStorageExtensionSpec {
     const dbController = dbStorageRef.getController();
     const inc = indexProcessingWorker.queue.queue.getInc();
     const entities = [];
-    for (const i of _.range(50, 65)) {
+    for (const i of range(50, 65)) {
       const d = new DataEntity();
       d.id = i;
       d.date = new Date(2020, i % 12, i % 30);

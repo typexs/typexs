@@ -1,19 +1,21 @@
-import * as _ from 'lodash';
-import {DEFAULT_ANONYMOUS} from '../Constants';
+import { has, isFunction, isNull, isString, isUndefined } from '@typexs/generic';
+
+
+import { DEFAULT_ANONYMOUS } from '../Constants';
 
 
 export class ServerUtils {
 
   static checkIfTypeIsSet(options: any) {
-    return _.has(options, 'type') && (_.isString(options.type) || _.isFunction(options.type));
+    return has(options, 'type') && (isString(options.type) || isFunction(options.type));
   }
 
   static isAnonymous(user: any) {
-    return !user || (_.isString(user) && user === DEFAULT_ANONYMOUS);
+    return !user || (isString(user) && user === DEFAULT_ANONYMOUS);
   }
 
   static hasPermissionCheck(user: any) {
-    return !ServerUtils.isAnonymous(user) || _.isNull(user) || _.isUndefined(user);
+    return !ServerUtils.isAnonymous(user) || isNull(user) || isUndefined(user);
   }
 
 }

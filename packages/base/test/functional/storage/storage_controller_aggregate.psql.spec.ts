@@ -1,8 +1,8 @@
 // process.env.SQL_LOG = '1';
 
-import {suite} from '@testdeck/mocha';
-import {StorageAcontrollerAggregateSqlTemplate} from './storage_controller_aggregate.sql.template';
-import {TypeOrmStorageRef} from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
+import { suite } from '@testdeck/mocha';
+import { StorageAcontrollerAggregateSqlTemplate } from './storage_controller_aggregate.sql.template';
+import { TypeOrmStorageRef } from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
 import { postgres_host, postgres_port } from '../config';
 
 // let bootstrap: Bootstrap;
@@ -31,8 +31,8 @@ class StorageControllerAggregatePostgresSpec extends StorageAcontrollerAggregate
               host: postgres_host,
               port: postgres_port
 
-            // logging: 'all',
-            // logger: 'simple-logger'
+              // logging: 'all',
+              // logger: 'simple-logger'
             }
           }
         });

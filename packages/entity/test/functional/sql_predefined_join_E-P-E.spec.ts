@@ -1,7 +1,7 @@
 import '../../src/libs/decorators/register';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-import * as _ from 'lodash';
+
 import { TestHelper } from './TestHelper';
 import { TEST_STORAGE_OPTIONS } from './config';
 import { EntityController } from '../../src/libs/EntityController';
@@ -9,6 +9,8 @@ import { TypeOrmConnectionWrapper } from '@typexs/base';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
 import { EntityRegistry } from '../../src/libs/EntityRegistry';
+import { clone, get, map } from '@typexs/generic';
+
 
 let c: TypeOrmConnectionWrapper;
 let entityController: EntityController;
@@ -38,7 +40,7 @@ class SqlPredefinedJoinEPESpec {
 
     registry.reload();
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'join';
     const connect = await TestHelper.connect(options);
     entityController = connect.controller;
@@ -57,14 +59,14 @@ class SqlPredefinedJoinEPESpec {
   async 'create E-P-E schema with predefined join tables'() {
 
     const tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\' and tbl_name not like \'%sqlite%\';');
-    expect(_.map(tables, t => t.name)).to.have.include.members([
+    expect(map(tables, t => t.name)).to.have.include.members([
       'personal',
       'simple_course',
       'r_belongsto'
     ]);
 
     const cols = await c.connection.query('PRAGMA table_info(\'r_belongsto\')');
-    expect(_.map(cols, t => t.name)).to.have.members([
+    expect(map(cols, t => t.name)).to.have.members([
       'zeitstempel',
       'beltoid',
       'ownertab',
@@ -283,7 +285,7 @@ class SqlPredefinedJoinEPESpec {
 
     lectures = await entityController.find(SimpleLecture) as any[];
     expect(lectures).to.have.length(4);
-    expect(lectures.map(x => [x.veranstid, _.get(x, 'person.pid')])).to.deep.eq([
+    expect(lectures.map(x => [x.veranstid, get(x, 'person.pid')])).to.deep.eq([
       [
         0, 0
       ],
@@ -356,7 +358,7 @@ class SqlPredefinedJoinEPESpec {
 
     lectures = await entityController.find(SimpleLecture) as any[];
     expect(lectures).to.have.length(4);
-    expect(lectures.map(x => [x.veranstid, _.get(x, 'person.pid')])).to.deep.eq([
+    expect(lectures.map(x => [x.veranstid, get(x, 'person.pid')])).to.deep.eq([
       [
         0, 0
       ],

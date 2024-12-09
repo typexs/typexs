@@ -1,17 +1,19 @@
-import * as _ from 'lodash';
-import {DefaultUserLogin} from '../../../libs/models/DefaultUserLogin';
-import {AbstractAuthAdapter} from '../../../libs/adapter/AbstractAuthAdapter';
+import { defaults } from '@typexs/generic';
 
 
-import {Inject, Log} from '@typexs/base';
-import {IOAuth2Options} from './IOAuth2Options';
-import {IApplication, IRequest, IResponse} from '@typexs/server';
-import {T_AUTH_ADAPTER_STAGE} from '../../../libs/adapter/IAuthAdapter';
+import { DefaultUserLogin } from '../../../libs/models/DefaultUserLogin';
+import { AbstractAuthAdapter } from '../../../libs/adapter/AbstractAuthAdapter';
 
-import {IAuthConfiguration} from '../../../libs/adapter/IAuthConfiguration';
-import {IAuthMethod} from '../../../libs/models/IAuthMethod';
-import {Auth} from '../../../middleware/Auth';
-import {AuthDataContainer} from '../../../libs/auth/AuthDataContainer';
+
+import { Inject, Log } from '@typexs/base';
+import { IOAuth2Options } from './IOAuth2Options';
+import { IApplication, IRequest, IResponse } from '@typexs/server';
+import { T_AUTH_ADAPTER_STAGE } from '../../../libs/adapter/IAuthAdapter';
+
+import { IAuthConfiguration } from '../../../libs/adapter/IAuthConfiguration';
+import { IAuthMethod } from '../../../libs/models/IAuthMethod';
+import { Auth } from '../../../middleware/Auth';
+import { AuthDataContainer } from '../../../libs/auth/AuthDataContainer';
 
 export const K_AUTH_OAUTH2 = 'oauth2';
 
@@ -56,7 +58,7 @@ export class OAuth2Adapter extends AbstractAuthAdapter {
 
 
   async prepare(opts: IOAuth2Options) {
-    _.defaults(opts, DEFAULTS);
+    defaults(opts, DEFAULTS);
     super.prepare(opts);
 
     if (this.options.configuration) {

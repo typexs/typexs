@@ -1,4 +1,5 @@
-import * as _ from 'lodash';
+import { concat, get, isArray, isEmpty, isFunction, snakeCase } from '@typexs/generic';
+
 
 import { Get, HttpError, InternalServerError, JsonController, Param, QueryParam } from 'routing-controllers';
 import {
@@ -102,9 +103,9 @@ export class TasksAPIController {
     if (!this.tasks.contains(taskName)) {
       throw new HttpError(404, 'No task with this name found');
     }
-    const snakeCaseIncoming = _.snakeCase(incomingName);
+    const snakeCaseIncoming = snakeCase(incomingName);
     const taskRef = this.tasks.get(taskName);
-    const taskIncomingRef = taskRef.getIncomings().find(x => _.snakeCase(x.name) === snakeCaseIncoming);
+    const taskIncomingRef = taskRef.getIncomings().find(x => snakeCase(x.name) === snakeCaseIncoming);
 
     if (!taskIncomingRef) {
       throw new HttpError(404, 'No task incoming parameter with this name found');
@@ -115,7 +116,7 @@ export class TasksAPIController {
       throw new HttpError(404, 'No value provider defined for task incoming parameter');
     }
 
-    if (_.isFunction(valueProvider)) {
+    if (isFunction(valueProvider)) {
       if (valueProvider.prototype && valueProvider.prototype.constructor) {
         // is a class
         const providerInstance = <IValueProvider<any>>Injector.get(<any>valueProvider);
@@ -146,12 +147,12 @@ export class TasksAPIController {
     @QueryParam('options') options: ITaskExectorOptions = {}) {
     // arguments
     // const execReq = this.taskFactory.executeRequest();
-    options = _.defaults(options, <ITaskExectorOptions>{
+    options = defaults(options, <ITaskExectorOptions>{
       waitForRemoteResults: false,
       skipTargetCheck: false
     });
 
-    if (targetIds && _.isArray(targetIds) && targetIds.length > 0) {
+    if (targetIds && isArray(targetIds) && targetIds.length > 0) {
       options.targetIds = targetIds;
     }
 
@@ -166,14 +167,14 @@ export class TasksAPIController {
         .run() as any[];
 
       // check if error happened
-      if (!_.get(options, 'skipThrow', false)) {
-        if (taskEvent && _.isArray(taskEvent)) {
+      if (!get(options, 'skipThrow', false)) {
+        if (taskEvent && isArray(taskEvent)) {
 
           let errors: IError[] = [];
-          if (!_.get(options, 'waitForRemoteResults', false)) {
-            errors = _.concat([], ...taskEvent.map(x => _.get(x, 'errors', [])));
+          if (!get(options, 'waitForRemoteResults', false)) {
+            errors = concat([], ...taskEvent.map(x => get(x, 'errors', [])));
           } else {
-            errors = _.concat([], ...taskEvent.map(x => _.get(x, 'results', []).map((y: any) => y.error))).filter(x => !!x);
+            errors = concat([], ...taskEvent.map(x => get(x, 'results', []).map((y: any) => y.error))).filter(x => !!x);
           }
 
           if (errors.length > 0) {
@@ -267,14 +268,14 @@ export class TasksAPIController {
     @QueryParam('options') options: IMessageOptions = {}
   ) {
     let _opts = options || {};
-    _opts = _.defaults(_opts, <IMessageOptions>{
+    _opts = defaults(_opts, <IMessageOptions>{
       filterErrors: true,
       outputMode: 'only_value'
     });
     try {
       const status = await this.taskExchange.getStatus(runnerId, _opts);
       Helper.convertError(status);
-      if (_.isArray(status) && _opts.outputMode === 'only_value') {
+      if (isArray(status) && _opts.outputMode === 'only_value') {
         return status.filter(x => !!x);
       }
       return status;
@@ -296,7 +297,7 @@ export class TasksAPIController {
     @QueryParam('options') options: IMessageOptions = {}) {
 
     let _opts = options || {};
-    _opts = _.defaults(_opts, <IMessageOptions>{
+    _opts = defaults(_opts, <IMessageOptions>{
       filterErrors: true,
       outputMode: 'only_value',
       targetIds: [nodeId]
@@ -315,15 +316,15 @@ export class TasksAPIController {
   async getRunningTasks(@QueryParam('options') options: IMessageOptions = {}) {
 
     let _opts = options || {};
-    _opts = _.defaults(_opts, <IMessageOptions>{
+    _opts = defaults(_opts, <IMessageOptions>{
       filterErrors: true,
       outputMode: 'only_value'
     });
     try {
       const results = await this.taskExchange.getRunningTasks(_opts);
       Helper.convertError(results);
-      if (_.isArray(results) && _opts.outputMode === 'only_value') {
-        return _.concat([], ...results.filter(x => x && !_.isEmpty(x)));
+      if (isArray(results) && _opts.outputMode === 'only_value') {
+        return concat([], ...results.filter(x => x && !isEmpty(x)));
       }
       return results;
     } catch (e) {
@@ -342,15 +343,15 @@ export class TasksAPIController {
   async getRunners(@QueryParam('options') options: IMessageOptions = {}) {
 
     let _opts = options || {};
-    _opts = _.defaults(_opts, <IMessageOptions>{
+    _opts = defaults(_opts, <IMessageOptions>{
       filterErrors: true,
       outputMode: 'only_value'
     });
     try {
       const results = await this.taskExchange.getRunners(_opts);
       Helper.convertError(results);
-      if (_.isArray(results) && _opts.outputMode === 'only_value') {
-        return _.concat([], ...results.filter(x => x && !_.isEmpty(x)));
+      if (isArray(results) && _opts.outputMode === 'only_value') {
+        return concat([], ...results.filter(x => x && !isEmpty(x)));
       }
       return results;
     } catch (e) {

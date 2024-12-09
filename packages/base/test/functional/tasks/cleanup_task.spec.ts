@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { snakeCase } from '@typexs/generic';
+
+
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { TestHelper } from '@typexs/testing';
@@ -12,7 +14,7 @@ import { StorageRef } from '../../../src/libs/storage/StorageRef';
 import { TaskLog } from '../../../src/entities/TaskLog';
 import { C_STORAGE_DEFAULT } from '../../../src/libs/Constants';
 import { DateUtils } from '../../../src/libs/utils/DateUtils';
-import { TN_TASKS_CLEANUP, TASK_STATE_STOPPED } from '../../../src/libs/tasks/Constants';
+import { TASK_STATE_STOPPED, TN_TASKS_CLEANUP } from '../../../src/libs/tasks/Constants';
 import { TaskState } from '../../../src/libs/tasks/TaskState';
 
 // process.env.SQL_LOG = '1';
@@ -108,8 +110,8 @@ class CleanupTaskSpec {
     const oddDate = (new Date()) <= dateNow ? 7 : 8 ;
     expect(data.results).to.not.be.empty;
     const x = data.results.find(
-      (x: any) => x.name === _.snakeCase('TasksCleanup'));
-    expect(x.name).to.be.eq(_.snakeCase('TasksCleanup'));
+      (x: any) => x.name === snakeCase('TasksCleanup'));
+    expect(x.name).to.be.eq(snakeCase('TasksCleanup'));
     expect((x as TaskState).counters.asObject()).to.be.deep.eq({
       // 'remove': oddDate === 0 ? 7 : 8
       'remove': oddDate

@@ -32,7 +32,7 @@ export class StorageBackendsComponent implements OnInit {
       if (backends) {
         for (const backend of backends) {
           const e: IStorageBackend = backend as IStorageBackend;
-          e.entitiesCount = keys(backend.schema.definitions).length;
+          e.entitiesCount =  Object.keys(backend.schema.definitions).length;
           this.backends.push(e);
         }
       }

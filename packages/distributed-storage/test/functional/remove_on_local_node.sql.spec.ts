@@ -30,7 +30,7 @@ class DistributedStorageSaveSpec {
     Bootstrap.reset();
     Config.clear();
     const DB_OPTIONS = TEST_STORAGE_OPTIONS;
-    // _.set(DB_OPTIONS, 'database', 'typexs_local');
+    // set(DB_OPTIONS, 'database', 'typexs_local');
     bootstrap = Bootstrap
       .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{

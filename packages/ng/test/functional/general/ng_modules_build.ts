@@ -1,6 +1,6 @@
 // import {suite, test} from '@testdeck/mocha';
 // import {expect} from 'chai';
-// import * as _ from 'lodash';
+//
 // import {Bootstrap, ClassesLoader, Config, Injector, PlatformUtils} from '@typexs/base';
 //
 // @suite('functional/general/ng_modules_build')
@@ -38,7 +38,7 @@
 //
 //     const ngms = ngmd.modules;
 //     expect(ngms).to.have.length(3);
-//     expect(_.map(ngms, n => n.name)).to.deep.eq(['AppModule', 'ContactModule', 'TodoModule']);
+//     expect(map(ngms, n => n.name)).to.deep.eq(['AppModule', 'ContactModule', 'TodoModule']);
 //   }
 //
 //

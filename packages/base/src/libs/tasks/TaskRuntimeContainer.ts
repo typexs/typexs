@@ -1,10 +1,10 @@
-import * as _ from 'lodash';
-import {TaskRun} from './TaskRun';
-import {ITaskRuntimeContainer} from './ITaskRuntimeContainer';
-import {TaskRuntimeLogger} from './TaskRuntimeLogger';
-import {TaskRunner} from './TaskRunner';
-import {ILoggerApi} from '../logging/ILoggerApi';
-import {TaskState} from './TaskState';
+import { TaskRun } from './TaskRun';
+import { ITaskRuntimeContainer } from './ITaskRuntimeContainer';
+import { TaskRuntimeLogger } from './TaskRuntimeLogger';
+import { TaskRunner } from './TaskRunner';
+import { ILoggerApi } from '../logging/ILoggerApi';
+import { TaskState } from './TaskState';
+import { assign } from 'lodash';
 
 
 export class TaskRuntimeContainer implements ITaskRuntimeContainer {
@@ -62,7 +62,7 @@ export class TaskRuntimeContainer implements ITaskRuntimeContainer {
   /**
    * Impl. of interface ITaskRuntimeContainer
    */
-  getIncomingsOfRunner(){
+  getIncomingsOfRunner() {
     return this.$_run_.getRunner().getIncomings();
   }
 
@@ -70,14 +70,14 @@ export class TaskRuntimeContainer implements ITaskRuntimeContainer {
   /**
    * Impl. of interface ITaskRuntimeContainer
    */
-  getIncomings(){
+  getIncomings() {
     return this.$_run_.getIncomings();
   }
 
   /**
    * Impl. of interface ITaskRuntimeContainer
    */
-  getOutgoings(){
+  getOutgoings() {
     return this.$_run_.getOutgoings();
   }
 
@@ -126,7 +126,7 @@ export class TaskRuntimeContainer implements ITaskRuntimeContainer {
 
   stats() {
     const obj = this.$_run_.status.counters.asObject();
-    _.assign(obj, {
+    assign(obj, {
       progress: this.$progress,
       total: this.$total
     });

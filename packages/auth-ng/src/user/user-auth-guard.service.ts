@@ -3,13 +3,14 @@ import { IMenuLinkGuard, NavEntry } from '@typexs/ng-router-menu';
 import { ActivatedRouteSnapshot, Route, RouterStateSnapshot } from '@angular/router';
 import { BehaviorSubject, Observable, of, Subject, Subscription } from 'rxjs';
 import { Injectable } from '@angular/core';
-import * as _ from 'lodash';
-import { filter, mergeMap, tap } from 'rxjs/operators';
+
+import { mergeMap, tap } from 'rxjs/operators';
 import { PermissionHelper } from '@typexs/roles-api';
 import { UserAuthHelper } from './lib/UserAuthHelper';
 // import { Route } from '@angular/compiler/src/core';
 //
 // import {Log} from '@typexs/ng-base/modules/base/lib/log/Log';
+import { filter, isBoolean, isNull } from '@typexs/generic';
 
 
 /**
@@ -77,7 +78,7 @@ export class UserAuthGuardService implements IAuthGuardProvider, IMenuLinkGuard 
         }
       }))
       .subscribe(async permissions => {
-        if (permissions && !_.isBoolean(permissions)) {
+        if (permissions && !isBoolean(permissions)) {
           this.hasPermissions.next(permissions);
         } else {
           this.hasPermissions.next([]);
@@ -116,7 +117,7 @@ export class UserAuthGuardService implements IAuthGuardProvider, IMenuLinkGuard 
    */
   isDisabled(entry: NavEntry): Observable<boolean> {
     const check = UserAuthHelper.checkIfAuthRequired(entry.route);
-    if (_.isNull(check)) {
+    if (isNull(check)) {
       return new BehaviorSubject(false);
     }
     const status = UserAuthHelper.getRouteDisallowViewMode(entry.route);
@@ -134,7 +135,7 @@ export class UserAuthGuardService implements IAuthGuardProvider, IMenuLinkGuard 
    */
   isShown(entry: NavEntry): Observable<boolean> {
     const check = UserAuthHelper.checkIfAuthRequired(entry.route);
-    if (_.isNull(check)) {
+    if (isNull(check)) {
       return new BehaviorSubject(true);
     }
     const status = UserAuthHelper.getRouteDisallowViewMode(entry.route);
@@ -147,7 +148,7 @@ export class UserAuthGuardService implements IAuthGuardProvider, IMenuLinkGuard 
 
   private checkAccess(route: ActivatedRouteSnapshot | Route, subscribe: boolean = true): Observable<boolean> {
     const hasAuth = UserAuthHelper.checkIfAuthRequired(route);
-    if (_.isBoolean(hasAuth)) {
+    if (isBoolean(hasAuth)) {
       if (this.isReady.getValue() === true) {
         return this.validateAccess(hasAuth, route, subscribe);
       } else {
@@ -161,7 +162,7 @@ export class UserAuthGuardService implements IAuthGuardProvider, IMenuLinkGuard 
 
   private validateAccess(hasAuth: boolean, route: ActivatedRouteSnapshot | Route, subscribe: boolean = true): Observable<boolean> {
     const permissions = UserAuthHelper.getRoutePermissions(route);
-    if (_.isNull(permissions)) {
+    if (isNull(permissions)) {
       // no special permissions needed
       if (hasAuth) {
         return this.isAuthenticated;

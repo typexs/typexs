@@ -1,7 +1,7 @@
 // import {ClassType, IEntityRef} from '@allgemein/schema-api';
 // import {TypeOrmEntityRegistry} from './schema/TypeOrmEntityRegistry';
 // import {NotSupportedError, TreeUtils} from '@allgemein/base';
-// import * as _ from 'lodash';
+//
 // import {IAggregateOp} from '../IAggregateOp';
 // import {IAggregateOptions} from '../IAggregateOptions';
 // import {EntityControllerApi} from '../../../../api/Storage.api';
@@ -87,13 +87,13 @@
 //
 //
 //   async run(cls: Function | string | ClassType<any>, pipeline: any[], options: IAggregateOptions = {}): Promise<any[]> {
-//     if (_.isEmpty(pipeline) || !_.isArray(pipeline)) {
+//     if (isEmpty(pipeline) || !isArray(pipeline)) {
 //       throw new Error('aggregate: pipeline is not an array or is empty');
 //     }
 //
 //     this.limit = 0;
 //     this.offset = 0;
-//     this.sort = _.get(options, 'sort', {});
+//     this.sort = get(options, 'sort', {});
 //
 //
 //     this.entityType = cls;
@@ -147,7 +147,7 @@
 //
 //       if (pipeline) {
 //         TreeUtils.walk(pipeline, x => {
-//           if (x.key && _.isString(x.key)) {
+//           if (x.key && isString(x.key)) {
 //             if (x.key === '$like') {
 //               x.parent['$regex'] = x.parent[x.key].replace('%%', '#$#').replace('%', '.*').replace('#$#', '%%');
 //             }
@@ -164,7 +164,7 @@
 //       // const countQb = qb.clone().select('COUNT( DISTINCT ' + cacheFields.map(x => x.name).join(', ') + ')');
 //       // TODO try catch
 //       let count = -1;
-//       if (!_.get(options, 'disableCount', false)) {
+//       if (!get(options, 'disableCount', false)) {
 //         try {
 //           const sql = this.queryBuilder.getQueryAndParameters();
 //           const countQb = await repo.query(
@@ -196,7 +196,7 @@
 //       if (this.sort) {
 //         const nullSupport = this.controller.storageRef.getSchemaHandler().supportsSortNull();
 //         // const alias = this.queryBuilder.alias;
-//         _.keys(this.sort).forEach(k => {
+//          Object.keys(this.sort).forEach(k => {
 //           const _k = TypeOrmUtils.aliasKey(this.queryBuilder, k);
 //           if (nullSupport) {
 //             this.queryBuilder.addOrderBy(_k, this.sort[k] === 'asc' ? 'ASC' : 'DESC',
@@ -208,21 +208,21 @@
 //         });
 //       }
 //
-//       if (this.countName && _.isString(this.countName)) {
+//       if (this.countName && isString(this.countName)) {
 //         results = {} as any;
 //         results[this.countName] = count;
 //       } else {
 //         const _results = await this.queryBuilder.getRawMany();
 //         // remove aliases
-//         const autoParseNumbers = _.get(this.options, 'autoParseNumbers', false);
+//         const autoParseNumbers = get(this.options, 'autoParseNumbers', false);
 //         for (const res of _results) {
 //           const newRes: any = {};
-//           _.keys(res).forEach(k => {
+//            Object.keys(res).forEach(k => {
 //             const newKey = k.replace(this.alias + '_', '');
 //             let v = res[k];
 //
 //             if (autoParseNumbers) {
-//               if (_.isString(v)) {
+//               if (isString(v)) {
 //                 if (/^\d+$/.test(v)) {
 //                   v = parseInt(v, 0);
 //                 } else if (/^\d+\.\d+$/.test(v)) {
@@ -262,7 +262,7 @@
 //
 //       if (pipeline) {
 //         TreeUtils.walk(pipeline, x => {
-//           if (x.key && _.isString(x.key)) {
+//           if (x.key && isString(x.key)) {
 //             if (x.key === '$like') {
 //               x.parent['$regex'] = x.parent[x.key].replace('%%', '#$#').replace('%', '.*').replace('#$#', '%%');
 //             }
@@ -270,20 +270,20 @@
 //         });
 //       }
 //
-//       if (!_.isEmpty(this.sort)) {
+//       if (!isEmpty(this.sort)) {
 //         const sort = {};
-//         _.keys(this.sort).forEach(x => {
+//          Object.keys(this.sort).forEach(x => {
 //           sort[x] = this.sort[x] === 'asc' ? 1 : -1;
 //         });
 //         pipeline.push({$sort: sort});
 //       }
 //
-//       const countPipeline = _.clone(pipeline);
+//       const countPipeline = clone(pipeline);
 //       countPipeline.push({$count: 'count'});
 //       let count = -1;
 //       try {
 //         const countAll = await repo.aggregate(countPipeline).next();
-//         count = _.get(countAll, 'count', count);
+//         count = get(countAll, 'count', count);
 //       } catch (e) {
 //
 //       }
@@ -358,7 +358,7 @@
 //       if (!inOperator && ast instanceof ValueRef) {
 //         const alias = ast.key;
 //         const field = ast.value;
-//         return this.addSelectField(field, _.isString(alias) ? alias : null, 'select');
+//         return this.addSelectField(field, isString(alias) ? alias : null, 'select');
 //       } else if (ast instanceof ValueRef) {
 //         return this.alias + '.' + ast.value;
 //       } else if (ast instanceof Value) {
@@ -372,7 +372,7 @@
 //         }
 //
 //         // if in an operator then return value
-//         if (_.isString(ast.value)) {
+//         if (isString(ast.value)) {
 //           /**
 //            * $group: {_id: '$someField'}
 //            *
@@ -381,10 +381,10 @@
 //            * $group: {_id: ['$someField']}
 //            */
 //           const _groupBy = ast.value;
-//           const op = this.addSelectField(_groupBy, _.isString(ast.key) && ast.key !== '_id' ? ast.key : null, 'group');
+//           const op = this.addSelectField(_groupBy, isString(ast.key) && ast.key !== '_id' ? ast.key : null, 'group');
 //           this.queryBuilder.addGroupBy(this.alias + '.' + _groupBy);
 //           return op;
-//         } else if (_.isNull(ast.value) && ast.key === '_id') {
+//         } else if (isNull(ast.value) && ast.key === '_id') {
 //           return null;
 //         }
 //       }
@@ -407,21 +407,21 @@
 //         !(ast.parent instanceof Project);
 //       const handler = this.controller.storageRef.getSchemaHandler();
 //       if (!insideOperator) {
-//         if (_.isString(valueRes)) {
+//         if (isString(valueRes)) {
 //           const fn = handler.getOperationHandle(ast.name);
-//           return this.addSelectField(fn(valueRes), _.isString(ast.key) ? ast.key : null, 'operation');
-//         } else if (_.has(valueRes, 'q')) {
+//           return this.addSelectField(fn(valueRes), isString(ast.key) ? ast.key : null, 'operation');
+//         } else if (has(valueRes, 'q')) {
 //           // initial operator
 //           const fn = handler.getOperationHandle(ast.name);
-//           return this.addSelectField(fn(valueRes.q), _.isString(ast.key) ? ast.key : null, 'operation');
+//           return this.addSelectField(fn(valueRes.q), isString(ast.key) ? ast.key : null, 'operation');
 //         } else if (valueRes instanceof Value) {
 //           const fn = handler.getOperationHandle(ast.name);
-//           return this.addSelectField(fn(handler.escape(valueRes.value)), _.isString(ast.key) ? ast.key : null, 'operation');
+//           return this.addSelectField(fn(handler.escape(valueRes.value)), isString(ast.key) ? ast.key : null, 'operation');
 //         }
 //       } else {
 //         // inside an operator return
 //         const fn = handler.getOperationHandle(ast.name);
-//         if (_.has(valueRes, 'q')) {
+//         if (has(valueRes, 'q')) {
 //           return {q: fn(valueRes.q)};
 //         } else {
 //           return {q: fn(valueRes)};
@@ -432,21 +432,21 @@
 //       const handler = this.controller.storageRef.getSchemaHandler();
 //       const insideOperator = ast.parent instanceof AbstractOperator && !(ast.parent instanceof Group);
 //       if (!inId) {
-//         if (_.isString(valueRes)) {
+//         if (isString(valueRes)) {
 //           const fn = handler.getOperationHandle(ast.name);
-//           return this.addSelectField(fn(valueRes), _.isString(ast.key) ? ast.key : null, 'operation');
+//           return this.addSelectField(fn(valueRes), isString(ast.key) ? ast.key : null, 'operation');
 //         } else if (valueRes instanceof Value) {
 //           const fn = handler.getOperationHandle(ast.name);
-//           return this.addSelectField(fn(handler.escape(valueRes.value)), _.isString(ast.key) ? ast.key : null, 'operation');
+//           return this.addSelectField(fn(handler.escape(valueRes.value)), isString(ast.key) ? ast.key : null, 'operation');
 //         } else if (valueRes instanceof ValueRef) {
 //           const fn = handler.getOperationHandle(ast.name);
-//           return this.addSelectField(fn(this.alias + '.' + valueRes.value), _.isString(ast.key) ? ast.key : null, 'operation');
+//           return this.addSelectField(fn(this.alias + '.' + valueRes.value), isString(ast.key) ? ast.key : null, 'operation');
 //         }
 //       } else {
 //         // is inside $group._id
 //         let syntax = null;
 //         const fn = handler.getOperationHandle(ast.name);
-//         if (_.isString(valueRes)) {
+//         if (isString(valueRes)) {
 //           syntax = fn(this.alias + '.' + valueRes);
 //         } else if (valueRes instanceof Value) {
 //           syntax = fn(handler.escape(valueRes.value));
@@ -459,7 +459,7 @@
 //         if (insideOperator) {
 //           return <ISqlParam>{q: syntax};
 //         } else {
-//           const op = this.addSelectField(syntax, _.isString(ast.key) ? ast.key : null, 'operation');
+//           const op = this.addSelectField(syntax, isString(ast.key) ? ast.key : null, 'operation');
 //           this.queryBuilder.addGroupBy(syntax);
 //           return op;
 //         }
@@ -468,7 +468,7 @@
 //       if (ast.value instanceof PObject) {
 //         this.sort = {};
 //         ast.value.getValues().forEach((x: any) => {
-//           if (_.isNumber(x.value) && (x.value === 1 || x.value === -1)) {
+//           if (isNumber(x.value) && (x.value === 1 || x.value === -1)) {
 //             this.sort[this.alias + '.' + x.key] = x.value === 1 ? 'asc' : 'desc';
 //           } else {
 //             throw new Error('sort has wrong value ' + x.key + ' => ' + x.value);
@@ -476,19 +476,19 @@
 //         });
 //       }
 //     } else if (ast instanceof Skip) {
-//       if (_.isNumber(valueRes)) {
+//       if (isNumber(valueRes)) {
 //         this.offset = valueRes;
 //       } else {
 //         throw new Error('offset has wrong value ' + valueRes);
 //       }
 //     } else if (ast instanceof Limit) {
-//       if (_.isNumber(valueRes)) {
+//       if (isNumber(valueRes)) {
 //         this.limit = valueRes;
 //       } else {
 //         throw new Error('limit has wrong value ' + valueRes);
 //       }
 //     } else if (ast instanceof Count) {
-//       if (_.isString(valueRes)) {
+//       if (isString(valueRes)) {
 //         this.countName = valueRes;
 //       } else {
 //         throw new Error('limit has wrong value ' + valueRes);
@@ -540,7 +540,7 @@
 //   addSelectField(value: string | string[], alias?: string, mode: 'select' | 'group' | 'operation' = 'select') {
 //
 //     let values: any = null;
-//     if (_.isArray(value)) {
+//     if (isArray(value)) {
 //       values = value.map(x => this.alias + '.' + x);
 //     } else if (mode === 'operation') {
 //       values = value;
@@ -549,15 +549,15 @@
 //     }
 //
 //     if (!this.firstSelect) {
-//       alias && _.isString(alias) ? this.queryBuilder.select(values, alias) : this.queryBuilder.select(values);
+//       alias && isString(alias) ? this.queryBuilder.select(values, alias) : this.queryBuilder.select(values);
 //       this.firstSelect = true;
 //     } else {
-//       alias && _.isString(alias) ? this.queryBuilder.addSelect(values, alias) : this.queryBuilder.addSelect(values);
+//       alias && isString(alias) ? this.queryBuilder.addSelect(values, alias) : this.queryBuilder.addSelect(values);
 //     }
 //
 //
 //     let op: any;
-//     if (_.isArray(value)) {
+//     if (isArray(value)) {
 //       op = [];
 //       value.forEach(x => {
 //         const _op: any = {name: x, alias: null, type: mode};

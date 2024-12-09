@@ -1,5 +1,5 @@
 import * as http from 'http';
-import * as _ from 'lodash';
+
 import { ClassLoader, Inject, Injector, Log, MatchUtils, MetaArgs, RuntimeLoader, TodoException } from '@typexs/base';
 import { Action, getMetadataArgsStorage, useContainer } from 'routing-controllers';
 import { Server } from './../server/Server';
@@ -13,6 +13,7 @@ import { IWebServerInstanceOptions } from './IWebServerInstanceOptions';
 import { IServer } from '../server/IServer';
 import { IMiddleware } from '../server/IMiddleware';
 import { IRoute } from '../server/IRoute';
+import { clone, defaults, has, isBoolean, isEmpty, isString, isUndefined } from '@typexs/generic';
 
 
 useContainer(Injector.getContainer());
@@ -32,7 +33,7 @@ export class WebServer extends Server implements IServer {
 
 
   initialize(options: IWebServerInstanceOptions) {
-    _.defaults(options, { routes: [] });
+    defaults(options, { routes: [] });
     super.initialize(options);
     this.loadMiddleware();
   }
@@ -49,19 +50,19 @@ export class WebServer extends Server implements IServer {
 
 
   access(cfg: IRoutingController & any, name: string) {
-    if (_.has(cfg, 'access')) {
+    if (has(cfg, 'access')) {
       // if access empty then
       let allow = cfg.access.length > 0 ? false : true;
       let count = 0;
       for (const a of cfg.access) {
-        if (_.isUndefined(a.match)) {
+        if (isUndefined(a.match)) {
           if (/\+|\.|\(|\\||\)|\*/.test(a.name)) {
             a.match = a.name;
           } else {
             a.match = false;
           }
         }
-        if (_.isBoolean(a.match)) {
+        if (isBoolean(a.match)) {
           if (a.name === name) {
             count++;
             allow = a.access === 'allow';
@@ -115,12 +116,12 @@ export class WebServer extends Server implements IServer {
         }
 
         let controllerClasses: Function[] = [];
-        if (_.has(classesByGroup, routeContext)) {
+        if (has(classesByGroup, routeContext)) {
           controllerClasses = classesByGroup[routeContext];
         }
 
-        if (!_.isEmpty(routing.controllers)) {
-          if (_.isString(routing.controllers[0])) {
+        if (!isEmpty(routing.controllers)) {
+          if (isString(routing.controllers[0])) {
             const clz = ClassLoader.importClassesFromAny(routing.controllers);
             controllerClasses = controllerClasses.concat(clz);
           }
@@ -130,7 +131,7 @@ export class WebServer extends Server implements IServer {
 
         routing.controllers = controllerClasses;
         routing.middlewares = getMetadataArgsStorage().middlewares.map(x => x.target);
-        if (!_.isEmpty(controllerClasses)) {
+        if (!isEmpty(controllerClasses)) {
           controllerClasses.map(x => Log.debug('server: enable controller ' + x.name));
           await this.extendOptionsForMiddleware(routing);
           this.applyDefaultOptionsIfNotGiven(routing);
@@ -158,12 +159,12 @@ export class WebServer extends Server implements IServer {
    * @param options
    */
   private applyDefaultOptionsIfNotGiven(options: IRoutingController) {
-    if (!_.has(options, 'authorizationChecker')) {
+    if (!has(options, 'authorizationChecker')) {
       options.authorizationChecker = (action: Action, roles: any[]) => {
         return true;
       };
     }
-    if (!_.has(options, 'currentUserChecker')) {
+    if (!has(options, 'currentUserChecker')) {
       options.currentUserChecker = (action: Action) => {
         return DEFAULT_ANONYMOUS;
       };
@@ -192,7 +193,7 @@ export class WebServer extends Server implements IServer {
       if (!skip) {
         try {
           const instance = <IMiddleware>Injector.get(cls);
-          if (instance['validate'] && instance.validate(_.clone(this.options()))) {
+          if (instance['validate'] && instance.validate(clone(this.options()))) {
             this._middlewares.push(instance);
           }
         } catch (e) {

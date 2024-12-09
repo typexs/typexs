@@ -1,5 +1,5 @@
-import * as _ from 'lodash';
-import {Counter} from './Counter';
+import { remove, set } from '@typexs/generic';
+import { Counter } from './Counter';
 
 /**
  * Collection of counting objects
@@ -20,14 +20,14 @@ export class Counters {
 
 
   remove(key: string) {
-    return _.remove(this.counter, x => x.key === key).shift();
+    return remove(this.counter, x => x.key === key).shift();
   }
 
 
   asObject() {
     const obj: any = {};
     for (const c of this.counter) {
-      _.set(obj, c.key, c.value);
+      set(obj, c.key, c.value);
     }
     return obj;
   }

@@ -1,4 +1,5 @@
-import * as _ from 'lodash';
+import { isBoolean, isString } from '@typexs/generic';
+
 
 import { NAMESPACE_BUILT_ENTITY } from '@typexs/entity/libs/Constants';
 import { And, Eq, Key, Value } from '@allgemein/expressions';
@@ -59,8 +60,8 @@ export class User implements IAuthUser, IRolesHolder {
   updated_at: Date;
 
   isApproved(): boolean {
-    if (!_.isBoolean(this.approved)) {
-      if (_.isString(this.approved)) {
+    if (!isBoolean(this.approved)) {
+      if (isString(this.approved)) {
         if (this.approved === '0' || this.approved === 'false') {
           this.approved = false;
         } else if (this.approved === '1' || this.approved === 'true') {
@@ -74,8 +75,8 @@ export class User implements IAuthUser, IRolesHolder {
   }
 
   isDisabled(): boolean {
-    if (!_.isBoolean(this.disabled)) {
-      if (_.isString(this.disabled)) {
+    if (!isBoolean(this.disabled)) {
+      if (isString(this.disabled)) {
         if (this.disabled === '0' || this.disabled === 'false') {
           this.disabled = false;
         } else if (this.disabled === '1' || this.disabled === 'true') {

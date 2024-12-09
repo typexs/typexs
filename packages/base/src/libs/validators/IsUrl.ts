@@ -11,7 +11,7 @@
 //       constraints: [],
 //       validator: {
 //         validate(value: any, args: ValidationArguments) {
-//           return value && REGEX_.test(value);
+//           return value && REGEXtest(value);
 //         }
 //       }
 //     });

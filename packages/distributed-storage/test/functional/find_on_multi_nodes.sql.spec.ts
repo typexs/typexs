@@ -1,18 +1,17 @@
 // process.env.SQL_LOG = '1'
-import * as _ from 'lodash';
+
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Bootstrap } from '@typexs/base/Bootstrap';
 import { Config } from '@allgemein/config';
 import { TEST_STORAGE_OPTIONS } from '../../../base/test/functional/config';
 import { IEventBusConfiguration } from '@allgemein/eventbus';
-import { TestHelper } from '@typexs/testing';
+import { SpawnHandle, TestHelper } from '@typexs/testing';
 import { DistributedStorageEntityController } from '../../src/lib/DistributedStorageEntityController';
 import { DistributedQueryWorker } from '../../src/workers/DistributedQueryWorker';
 import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
 import { DataRow } from './fake_app/entities/DataRow';
 import { IEntityController } from '@typexs/base/libs/storage/IEntityController';
-import { SpawnHandle } from '@typexs/testing';
 import { generateSqlDataRows } from './helper';
 import { Injector } from '@typexs/base/libs/di/Injector';
 import { __NODE_ID__, __REGISTRY__, C_STORAGE_DEFAULT, XS_P_$COUNT } from '@typexs/base/libs/Constants';
@@ -20,6 +19,7 @@ import { StorageRef } from '@typexs/base/libs/storage/StorageRef';
 import { SystemNodeInfo } from '@typexs/base/entities/SystemNodeInfo';
 import { __CLASS__ } from '@allgemein/schema-api';
 import { MODUL_CONFIG, redis_host, redis_port } from './config';
+import { map, orderBy, uniq } from '@typexs/generic';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -130,7 +130,7 @@ class DistributedQuerySpec {
     expect(entities).to.have.length(3);
     expect(entities[XS_P_$COUNT]).to.be.eq(3);
 
-    expect(_.orderBy(entities, [__NODE_ID__])).to.deep.eq([
+    expect(orderBy(entities, [__NODE_ID__])).to.deep.eq([
 
       {
         [__NODE_ID__]: 'remote01',
@@ -224,7 +224,7 @@ class DistributedQuerySpec {
     const controller = Injector.get(DistributedStorageEntityController);
     const entities = await controller.find(DataRow, { id: { $gt: 10 } }, { skipLocal: true });
     expect(entities).to.have.length(20);
-    expect(_.uniq(entities.map(x => x[__NODE_ID__])).sort()).to.be.deep.eq(['remote01', 'remote02']);
+    expect(uniq(entities.map(x => x[__NODE_ID__])).sort()).to.be.deep.eq(['remote01', 'remote02']);
   }
 
 
@@ -311,7 +311,7 @@ class DistributedQuerySpec {
     const controller = Injector.get(DistributedStorageEntityController);
     const entities = await controller.find(DataRow, { someBool: true }, { outputMode: 'embed_nodeId' });
     expect(entities).to.be.have.length(30);
-    expect(_.uniq(entities.map(x => x[__NODE_ID__])).sort()).to.be.deep.eq(['remote01', 'remote02', 'system']);
+    expect(uniq(entities.map(x => x[__NODE_ID__])).sort()).to.be.deep.eq(['remote01', 'remote02', 'system']);
   }
 
 
@@ -361,7 +361,7 @@ class DistributedQuerySpec {
     const results = await controller.find(SystemNodeInfo, { nodeId: 'system' });
     expect(results).to.have.length(3);
     expect(results[XS_P_$COUNT]).to.be.eq(3);
-    expect(_.uniq(results.map((x: any) => x.nodeId))).to.be.deep.eq(['system']);
+    expect(uniq(results.map((x: any) => x.nodeId))).to.be.deep.eq(['system']);
     expect(results[0]).to.be.instanceOf(SystemNodeInfo);
   }
 
@@ -371,10 +371,10 @@ class DistributedQuerySpec {
     const controller = Injector.get(DistributedStorageEntityController);
     const results1 = await controller.find(SystemNodeInfo, { nodeId: 'system' });
     expect(results1).to.have.length(3);
-    expect(_.map(results1, (x: any) => x.nodeId)).to.contain.members(['system']);
+    expect(map(results1, (x: any) => x.nodeId)).to.contain.members(['system']);
     const results2 = await controller.find(SystemNodeInfo, { nodeId: 'remote01' });
     expect(results2).to.have.length(3);
-    expect(_.map(results2, (x: any) => x.nodeId)).to.contain.members(['remote01']);
+    expect(map(results2, (x: any) => x.nodeId)).to.contain.members(['remote01']);
   }
 
 

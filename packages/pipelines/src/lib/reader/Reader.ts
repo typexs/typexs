@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as _ from 'lodash';
+
 import { IReaderOptions } from './IReaderOptions';
 import { IPullable } from '../IPullable';
 import { PullingQueue } from '../PullingQueue';

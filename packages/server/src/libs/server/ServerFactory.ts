@@ -1,10 +1,12 @@
-import * as _ from 'lodash';
-import {ClassLoader, Injector, Log, StringOrFunction} from '@typexs/base';
-import {ClassType} from '@allgemein/schema-api';
+import { get, has, intersection, isEmpty, isFunction, isString } from '@typexs/generic';
 
-import {WebServer} from '../web/WebServer';
-import {IServer} from './IServer';
-import {Helper} from '../Helper';
+
+import { ClassLoader, Injector, Log, StringOrFunction } from '@typexs/base';
+import { ClassType } from '@allgemein/schema-api';
+
+import { WebServer } from '../web/WebServer';
+import { IServer } from './IServer';
+import { Helper } from '../Helper';
 
 
 export class ServerFactory {
@@ -20,9 +22,9 @@ export class ServerFactory {
   }
 
   static checkFunction(fn: Function) {
-    if (_.isFunction(fn)) {
+    if (isFunction(fn)) {
       const names = Object.getOwnPropertyNames(fn.prototype);
-      if (_.intersection(names, ['constructor', 'initialize', 'prepare', 'start', 'stop']).length === 5) {
+      if (intersection(names, ['constructor', 'initialize', 'prepare', 'start', 'stop']).length === 5) {
         return true;
       }
     }
@@ -61,12 +63,12 @@ export class ServerFactory {
 
   static getServerClass(name: StringOrFunction): Function {
     let clazz = null;
-    if (_.isString(name)) {
-      if (_.has(ServerFactory.types, name)) {
-        clazz = _.get(ServerFactory.types, name);
+    if (isString(name)) {
+      if (has(ServerFactory.types, name)) {
+        clazz = get(ServerFactory.types, name);
       } else if (Helper.FILEPATH_PATTERN.test(name)) {
         const cls = ClassLoader.importClassesFromAny([name + '*']);
-        if (!_.isEmpty(cls)) {
+        if (!isEmpty(cls)) {
           clazz = cls.shift();
         }
       }

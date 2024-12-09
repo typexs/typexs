@@ -1,23 +1,22 @@
-// import { AsyncWorkerQueue, Bootstrap, ILoggerApi, IQueueProcessor, IWorker, Log, System} from '../..';
+import { AbstractEvent } from './../libs/messaging/AbstractEvent';
 
-import {AbstractEvent} from './../libs/messaging/AbstractEvent';
+import { Inject } from 'typedi';
+import { AbstractExchange } from './../libs/messaging/AbstractExchange';
 
-import {Inject} from 'typedi';
-import {AbstractExchange} from './../libs/messaging/AbstractExchange';
-import * as _ from 'lodash';
-import {EventBus, subscribe, unsubscribe} from '@allgemein/eventbus';
-import {IWorkerStatisitic} from './../libs/worker/IWorkerStatisitic';
+import { EventBus, subscribe, unsubscribe } from '@allgemein/eventbus';
+import { IWorkerStatisitic } from './../libs/worker/IWorkerStatisitic';
 
-import {IWorker} from './../libs/worker/IWorker';
-import {IQueueProcessor} from '../libs/queue/IQueueProcessor';
-import {System} from '../libs/system/System';
-import {AsyncWorkerQueue} from '../libs/queue/AsyncWorkerQueue';
-import {ILoggerApi} from '../libs/logging/ILoggerApi';
-import {Bootstrap} from '../Bootstrap';
-import {Log} from '../libs/logging/Log';
-import {IMessageWorkload} from '../libs/messaging/IMessageWorkload';
-import {ExchangeMessageRegistry} from '../libs/messaging/ExchangeMessageRegistry';
-import {ClassUtils} from '@allgemein/base';
+import { IWorker } from './../libs/worker/IWorker';
+import { IQueueProcessor } from '../libs/queue/IQueueProcessor';
+import { System } from '../libs/system/System';
+import { AsyncWorkerQueue } from '../libs/queue/AsyncWorkerQueue';
+import { ILoggerApi } from '../libs/logging/ILoggerApi';
+import { Bootstrap } from '../Bootstrap';
+import { Log } from '../libs/logging/Log';
+import { IMessageWorkload } from '../libs/messaging/IMessageWorkload';
+import { ExchangeMessageRegistry } from '../libs/messaging/ExchangeMessageRegistry';
+import { ClassUtils } from '@allgemein/base';
+import { defaults, get } from '@typexs/generic';
 
 
 export class ExchangeMessageWorker implements IQueueProcessor<IMessageWorkload>, IWorker {
@@ -39,8 +38,8 @@ export class ExchangeMessageWorker implements IQueueProcessor<IMessageWorkload>,
   private options: any;
 
   async prepare(options: any = {name: 'message_worker_queue'}) {
-    this.options = _.defaults(options, {onlyRemote: false, allowed: {}});
-    this.logger = _.get(this.options, 'logger', Log.getLoggerFor(ExchangeMessageWorker));
+    this.options = defaults(options, {onlyRemote: false, allowed: {}});
+    this.logger = get(this.options, 'logger', Log.getLoggerFor(ExchangeMessageWorker));
     this.nodeId = Bootstrap.getNodeId();
     this.queue = new AsyncWorkerQueue<IMessageWorkload>(this, {...options, logger: this.logger});
     for (const messageRef of this.messageRegistry.getEntities()) {

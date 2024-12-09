@@ -3,12 +3,13 @@ import { CryptUtils } from '@allgemein/base';
 
 import { K_LIB_AUTH_ADAPTERS, K_LIB_AUTH_CONFIGURATIONS } from '../Constants';
 import { IAuthConfiguration } from '../adapter/IAuthConfiguration';
-import * as _ from 'lodash';
+
 import { IAuthConfigurationDef } from './IAuthConfigurationDef';
 import { IAuthConfig } from './IAuthConfig';
 import { User } from '../../entities/User';
 import { IAuthAdapter } from '../adapter/IAuthAdapter';
 import { IAdapterDef } from '../adapter/IAdapterDef';
+import { defaultsDeep, find, isEmpty, keys } from '@typexs/generic';
 
 
 const DEFAULT_CONFIG_OPTIONS: IAuthConfig = {
@@ -49,9 +50,9 @@ export class AuthManager {
     Injector.set('AuthManager', this);
     const x = Config.get('auth', {});
     this.authConfig = <IAuthConfig>x;
-    _.defaultsDeep(this.authConfig, DEFAULT_CONFIG_OPTIONS);
+    defaultsDeep(this.authConfig, DEFAULT_CONFIG_OPTIONS);
 
-    this.enabled = !_.isEmpty(this.authConfig) && _.keys(this.authConfig.methods).length > 0;
+    this.enabled = !isEmpty(this.authConfig) && keys(this.authConfig.methods).length > 0;
   }
 
   async prepare() {
@@ -98,7 +99,7 @@ export class AuthManager {
           name: authAdapter.type
         };
 
-        if (!_.isEmpty(this.authConfig) && !_.isEmpty(this.authConfig.methods)) {
+        if (!isEmpty(this.authConfig) && !isEmpty(this.authConfig.methods)) {
           for (const authId in this.authConfig.methods) {
             // eslint-disable-next-line no-prototype-builtins
             if (this.authConfig.methods.hasOwnProperty(authId)) {
@@ -127,7 +128,7 @@ export class AuthManager {
 
 
   getAdapter(authId: string) {
-    return _.find(this.adapters, a => a.authId === authId);
+    return find(this.adapters, a => a.authId === authId);
   }
 
   getAdapters() {
@@ -141,7 +142,7 @@ export class AuthManager {
 
 
   getConfiguration(id: string) {
-    const cfg = _.find(this.configurations, { id: id });
+    const cfg = find(this.configurations, { id: id });
     if (cfg) {
       return <IAuthConfiguration>Injector.get(cfg.cls);
     }

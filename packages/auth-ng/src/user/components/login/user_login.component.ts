@@ -87,30 +87,30 @@ export class UserLoginComponent implements OnInit, OnDestroy {
   onSubmit($event: any) {
     if ($event.data.isSuccessValidated) {
       this.getUserAuthService().authenticate(this.user).subscribe(user => {
-        let state: any = null;
-        if (user) {
-          state = (user as any).$state;
-          if (state && state.isAuthenticated) {
-            // is login successfull
-            this.redirectOnSuccess();
-          } else {
-            for (const error of state.errors) {
-              keys(error.constraints).forEach(k => {
-                this.formMessage.publish({
-                  type: <any>MessageType[error.type.toUpperCase()],
-                  content: error.constraints[k],
-                  topic: null
+          let state: any = null;
+          if (user) {
+            state = (user as any).$state;
+            if (state && state.isAuthenticated) {
+              // is login successfull
+              this.redirectOnSuccess();
+            } else {
+              for (const error of state.errors) {
+                keys(error.constraints).forEach(k => {
+                  this.formMessage.publish({
+                    type: <any>MessageType[error.type.toUpperCase()],
+                    content: error.constraints[k],
+                    topic: null
+                  });
                 });
-              });
+              }
             }
+          } else {
+            throw new Error('No user object.');
           }
-        } else {
-          throw new Error('No user object.');
-        }
-      },
-      error => {
-        this.logChannel.publish(LogMessage.error(error, this, 'onSubmit'));
-      });
+        },
+        error => {
+          this.logChannel.publish(LogMessage.error(error, this, 'onSubmit'));
+        });
     }
   }
 

@@ -386,7 +386,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
   applyParams(api: IGridApi, filterQuery: any[]) {
     if (!isEmpty(api?.params?.filters)) {
-      keys(api.params.filters).map(k => {
+       Object.keys(api.params.filters).map(k => {
         try {
           const d = {};
           d[k] = api.params.filters[k];

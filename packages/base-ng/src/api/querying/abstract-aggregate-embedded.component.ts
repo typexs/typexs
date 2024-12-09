@@ -124,7 +124,7 @@ export class AbstractAggregateEmbeddedComponent implements OnInit {
   rebuildColumns(data: any[]) {
     const _first = first(data);
     const columns = [];
-    for (const k of keys(_first)) {
+    for (const k of  Object.keys(_first)) {
       const column: IGridColumn = {
         label: k,
         field: k,

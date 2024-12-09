@@ -1,10 +1,11 @@
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import * as _ from 'lodash';
-import {TestHelper} from './TestHelper';
-import {TEST_STORAGE_OPTIONS} from './config';
-import {XS_P_ABORTED} from '../../src/libs/Constants';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+
+import { TestHelper } from './TestHelper';
+import { TEST_STORAGE_OPTIONS } from './config';
+import { XS_P_ABORTED } from '../../src/libs/Constants';
+import { clone } from '@typexs/generic';
 
 
 const FINDOPT = {
@@ -36,7 +37,7 @@ class SqlSchemaEntityRefEntitySpec {
 
     // let classRefs = EntityRegistry.$().listClassRefs();
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'default';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -101,7 +102,7 @@ class SqlSchemaEntityRefEntitySpec {
     const Training = require('./schemas/default/Training').Training;
     const Address = require('./schemas/default/Address').Address;
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'default';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;

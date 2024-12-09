@@ -1,11 +1,13 @@
-import * as _ from 'lodash';
-import {DefaultUserLogin} from '../../../libs/models/DefaultUserLogin';
-import {AbstractAuthAdapter} from '../../../libs/adapter/AbstractAuthAdapter';
-import {Log} from '@typexs/base';
-import {IOAuthOptions} from './IOAuthOptions';
-import {IApplication} from '@typexs/server';
-import {T_AUTH_ADAPTER_STAGE} from '../../../libs/adapter/IAuthAdapter';
-import {AuthDataContainer} from '../../../libs/auth/AuthDataContainer';
+import { defaults } from '@typexs/generic';
+
+
+import { DefaultUserLogin } from '../../../libs/models/DefaultUserLogin';
+import { AbstractAuthAdapter } from '../../../libs/adapter/AbstractAuthAdapter';
+import { Log } from '@typexs/base';
+import { IOAuthOptions } from './IOAuthOptions';
+import { IApplication } from '@typexs/server';
+import { T_AUTH_ADAPTER_STAGE } from '../../../libs/adapter/IAuthAdapter';
+import { AuthDataContainer } from '../../../libs/auth/AuthDataContainer';
 
 export const K_AUTH_OAUTH = 'oauth';
 
@@ -51,7 +53,7 @@ export class OAuthAdapter extends AbstractAuthAdapter {
 
 
   async prepare(opts: IOAuthOptions) {
-    _.defaults(opts, DEFAULTS);
+    defaults(opts, DEFAULTS);
     super.prepare(opts);
 
     const passport = OAuthAdapter.passport;

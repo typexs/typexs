@@ -1,14 +1,14 @@
 import '../../src/libs/decorators/register';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-import * as _ from 'lodash';
+
 import { TestHelper } from './TestHelper';
 import { TEST_STORAGE_OPTIONS } from './config';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
 import { EntityRegistry } from '../../src/libs/EntityRegistry';
-import { Person } from './schemas/complex_entity/Person';
 import { getMetadataArgsStorage } from 'typeorm';
+import { clone, find, map } from '@typexs/generic';
 
 
 let registry: EntityRegistry;
@@ -36,7 +36,7 @@ class SqlSchemaBasicGenerationsSpec {
 
     registry.reload([Author]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'default';
     const connect = await TestHelper.connect(options);
     // const xsem = connect.controller;
@@ -48,7 +48,7 @@ class SqlSchemaBasicGenerationsSpec {
     expect(tableNames).to.contain('author');
     const data = await c.connection.query('PRAGMA table_info(\'author\')');
     expect(data).to.have.length(3);
-    expect(_.find(data, { name: 'last_name' })).to.deep.include({ name: 'last_name', type: 'varchar' });
+    expect(find(data, { name: 'last_name' })).to.deep.include({ name: 'last_name', type: 'varchar' });
     await c.close();
 
     const props = [];
@@ -72,7 +72,7 @@ class SqlSchemaBasicGenerationsSpec {
 
     registry.reload([ObjectWithJson]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'default';
     const connect = await TestHelper.connect(options);
     // const xsem = connect.controller;
@@ -84,7 +84,7 @@ class SqlSchemaBasicGenerationsSpec {
     expect(tableNames).to.contain('object_with_json');
     const data = await c.connection.query('PRAGMA table_info(\'object_with_json\')');
     expect(data).to.have.length(2);
-    expect(_.find(data, { name: 'json' })).to.deep.include({ name: 'json', type: 'varchar' });
+    expect(find(data, { name: 'json' })).to.deep.include({ name: 'json', type: 'varchar' });
     await c.close();
 
     const props = [];
@@ -108,7 +108,7 @@ class SqlSchemaBasicGenerationsSpec {
     const AuthorRename = require('./schemas/default/AuthorRename').AuthorRename;
     registry.reload([AuthorRename]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'default';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -122,7 +122,7 @@ class SqlSchemaBasicGenerationsSpec {
     const data = await c.connection.query('PRAGMA table_info(\'author_with_new_name\')');
     expect(data).to.have.length(3);
 
-    expect(_.find(data, { name: 'id_new_name' })).to.deep.include({ type: 'INTEGER', pk: 1 });
+    expect(find(data, { name: 'id_new_name' })).to.deep.include({ type: 'INTEGER', pk: 1 });
     await c.close();
 
   }
@@ -136,7 +136,7 @@ class SqlSchemaBasicGenerationsSpec {
 
     registry.reload([Author, Book]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'default';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -165,7 +165,7 @@ class SqlSchemaBasicGenerationsSpec {
     const Course = require('./schemas/default/Course').Course;
     const Periode = require('./schemas/default/Periode').Periode;
     registry.reload([Course, Periode]);
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'default';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -177,7 +177,7 @@ class SqlSchemaBasicGenerationsSpec {
     expect(tableNames).to.have.include.members(['course', 'periode']);
 
     const data_course = await c.connection.query('PRAGMA table_info(\'course\')');
-    expect(_.map(data_course, c => c.name)).to.have.include.members(['periode_perid', 'periode_otherid']);
+    expect(map(data_course, c => c.name)).to.have.include.members(['periode_perid', 'periode_otherid']);
 
     await c.close();
 
@@ -191,7 +191,7 @@ class SqlSchemaBasicGenerationsSpec {
     const Literatur = require('./schemas/default/Literatur').Literatur;
     registry.reload([Course2, Literatur]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'default';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -205,10 +205,10 @@ class SqlSchemaBasicGenerationsSpec {
     expect(tableNames).to.have.include.members(['course_2', 'o_literatur']);
 
     const data_course = await c.connection.query('PRAGMA table_info(\'course_2\')');
-    expect(_.map(data_course, c => c.name)).to.have.include.members(['literatur_titelid']);
+    expect(map(data_course, c => c.name)).to.have.include.members(['literatur_titelid']);
 
     const cols_literatur = await c.connection.query('PRAGMA table_info(\'o_literatur\')');
-    expect(_.map(cols_literatur, c => c.name)).to.have.include.members(['titel', 'titelid']);
+    expect(map(cols_literatur, c => c.name)).to.have.include.members(['titel', 'titelid']);
 
     await c.close();
 
@@ -223,7 +223,7 @@ class SqlSchemaBasicGenerationsSpec {
 
     registry.reload([EDR, EDR_Object_DR, EDR_Object]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'default';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -237,10 +237,10 @@ class SqlSchemaBasicGenerationsSpec {
     expect(tableNames).to.have.include.members(['level_one', 'object_level_two', 'object_level_three']);
 
     const cols_level_one = await c.connection.query('PRAGMA table_info(\'level_one\')');
-    expect(_.map(cols_level_one, c => c.name)).to.have.include.members(['object_id']);
+    expect(map(cols_level_one, c => c.name)).to.have.include.members(['object_id']);
 
     const cols_obj_level_two = await c.connection.query('PRAGMA table_info(\'object_level_two\')');
-    expect(_.map(cols_obj_level_two, c => c.name)).to.have.include.members(['object_id']);
+    expect(map(cols_obj_level_two, c => c.name)).to.have.include.members(['object_id']);
 
 
     await c.close();
@@ -256,7 +256,7 @@ class SqlSchemaBasicGenerationsSpec {
 
     registry.reload([EntityWithEmbedded, EmbeddedObject, EmbeddedSubObject]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'embedded';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -274,10 +274,10 @@ class SqlSchemaBasicGenerationsSpec {
     );
 
     const cols_level_one = await c.connection.query('PRAGMA table_info(\'entity_with_embedded\')');
-    expect(_.map(cols_level_one, c => c.name)).to.have.include.members(['id']);
+    expect(map(cols_level_one, c => c.name)).to.have.include.members(['id']);
 
     const cols_obj_level_two = await c.connection.query('PRAGMA table_info(\'p_entity_with_embedded_obj\')');
-    expect(_.map(cols_obj_level_two, c => c.name)).to.have.include.members([
+    expect(map(cols_obj_level_two, c => c.name)).to.have.include.members([
       'id',
       'source_type',
       'source_id',
@@ -301,7 +301,7 @@ class SqlSchemaBasicGenerationsSpec {
 
     registry.reload([Author, Book, Summary]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'default';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -333,7 +333,7 @@ class SqlSchemaBasicGenerationsSpec {
     const PathFeatureCollection = require('./schemas/features/PathFeatureCollection').PathFeatureCollection;
     registry.reload([PathFeatureCollection]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'default';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -341,7 +341,7 @@ class SqlSchemaBasicGenerationsSpec {
     const c = await ref.connect();
 
     const tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
-    expect(_.map(tables, t => t.name)).to.have.include.members(['path_feature_collection', 'p_path_feature_collection_features']);
+    expect(map(tables, t => t.name)).to.have.include.members(['path_feature_collection', 'p_path_feature_collection_features']);
     // console.log(tables);
 
     await c.close();
@@ -354,7 +354,7 @@ class SqlSchemaBasicGenerationsSpec {
     const Person = require('./schemas/complex_entity/Person').Person;
     registry.reload([Person]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'complex_entity';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -363,7 +363,7 @@ class SqlSchemaBasicGenerationsSpec {
 
     const tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
 
-    expect(_.map(tables, t => t.name)).to.have.include.members(['person', 'p_person_jobs', 'i_job_languages']);
+    expect(map(tables, t => t.name)).to.have.include.members(['person', 'p_person_jobs', 'i_job_languages']);
 
     await c.close();
 
@@ -374,7 +374,7 @@ class SqlSchemaBasicGenerationsSpec {
     const EntityWithOrmDbSchema = require('./schemas/registry/EntityWithOrmDbSchema').EntityWithOrmDbSchema;
     registry.reload([EntityWithOrmDbSchema]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'registry';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -382,7 +382,7 @@ class SqlSchemaBasicGenerationsSpec {
     const c = await ref.connect();
 
     const tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\';');
-    expect(_.map(tables, t => t.name)).to.have.include.members(['entity_with_orm_db_schema']);
+    expect(map(tables, t => t.name)).to.have.include.members(['entity_with_orm_db_schema']);
     await c.close();
     const tableData = getMetadataArgsStorage().tables.find(x => x.target === EntityWithOrmDbSchema);
     expect(tableData).to.deep.include({

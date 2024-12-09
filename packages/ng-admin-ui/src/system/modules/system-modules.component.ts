@@ -17,7 +17,7 @@ export class SystemModulesComponent implements OnInit {
   }
 
   objectKeys(obj: any) {
-    return keys(obj);
+    return  Object.keys(obj);
   }
 
 

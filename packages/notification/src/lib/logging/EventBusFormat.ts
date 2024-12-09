@@ -16,7 +16,7 @@ export class EventBusFormat {
         prefix.push(info['event'].prefix);
       }
     }
-    info['prefix'] = prefix.filter(x => !_.isEmpty(x)).join(':');
+    info['prefix'] = prefix.filter(x => !isEmpty(x)).join(':');
     // Return string will be passed to logger.
     info[triple_beam_1.MESSAGE] = stringify.default(info, opts.replacer || replacer, opts.space);
     return info;

@@ -34,12 +34,12 @@ export class ElasticMappingUpdater {
     const indices = (await this.client.indices.getMapping(q));
     if (has(indices, K_INDICES_BODY)) {
       const mappings = get(indices, K_INDICES_BODY);
-      for (const k of keys(mappings)) {
+      for (const k of  Object.keys(mappings)) {
         this.mappings[k] = new ElasticMapping(k, { skipGenerated: true });
         this.mappings[k].parse(mappings[k]);
       }
     }
-    return keys(this.mappings);
+    return  Object.keys(this.mappings);
   }
 
 
@@ -53,7 +53,7 @@ export class ElasticMappingUpdater {
 
 
   getBy(name: string, mode: 'alias' | 'name' | 'both' = 'both'): ElasticMapping {
-    for (const k of keys(this.mappings)) {
+    for (const k of  Object.keys(this.mappings)) {
       if ((mode === 'both' && (this.mappings[k].aliasName === name || this.mappings[k].indexName === name))) {
         return this.mappings[k];
       } else if ((mode === 'name' && this.mappings[k].indexName === name)) {

@@ -1,6 +1,6 @@
 import { suite, test } from '@testdeck/mocha';
 import { Bootstrap, Config, Injector, StorageRef } from '@typexs/base';
-import * as _ from 'lodash';
+
 import { expect } from 'chai';
 import { DefaultUserLogin } from '../../../src/libs/models/DefaultUserLogin';
 import { MockResponse } from '../../helper/MockResponse';
@@ -15,6 +15,7 @@ import { IDatabaseAuthOptions } from '../../../src/adapters/auth/db/IDatabaseAut
 import { Auth } from '../../../src/middleware/Auth';
 import { TypeOrmConnectionWrapper } from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
 import { LOGGING } from '../config';
+import { clone, first, map } from '@typexs/generic';
 
 
 const settingsTemplate = {
@@ -85,7 +86,7 @@ class AuthLdapLifecycleSpec {
 
   @test
   async 'do login by user search through admin bind'() {
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
 
     bootstrap = await TestHelper.bootstrap_basic(settings);
     const auth = <Auth>Injector.get(Auth.NAME);
@@ -124,7 +125,7 @@ class AuthLdapLifecycleSpec {
 
     let sessionList = await c.for(AuthSession).find();
     expect(sessionList).to.have.length(1);
-    expect(_.first(sessionList)).to.deep.include({ authId: 'database' });
+    expect(first(sessionList)).to.deep.include({ authId: 'database' });
 
     req = res;
     const doLogout = await auth.doLogout(doingLogin.user, req, res);
@@ -145,7 +146,7 @@ class AuthLdapLifecycleSpec {
 
     sessionList = await c.for(AuthSession).find();
     expect(sessionList).to.have.length(1);
-    expect(_.first(sessionList)).to.deep.include({ authId: 'default' });
+    expect(first(sessionList)).to.deep.include({ authId: 'default' });
 
     req = res;
     await auth.doLogout(doingLogin.user, req, res);
@@ -154,7 +155,7 @@ class AuthLdapLifecycleSpec {
     expect(sessionList).to.have.length(0);
 
     userList = await c.for(User).find();
-    expect(_.map(userList, u => u.username)).to.be.deep.eq(['admin', 'billy']);
+    expect(map(userList, u => u.username)).to.be.deep.eq(['admin', 'billy']);
     methodList = await c.for(AuthMethod).find();
 
     expect(userList).to.have.length(2);
@@ -164,7 +165,7 @@ class AuthLdapLifecycleSpec {
 
   @test
   async 'do login by database user cause ldap server not reachable'() {
-    const settings: any = _.clone(settingsTemplate);
+    const settings: any = clone(settingsTemplate);
     settings.auth.methods.default.url = 'ldap://0.0.0.0:388';
 
     bootstrap = await TestHelper.bootstrap_basic(settings);
@@ -200,7 +201,7 @@ class AuthLdapLifecycleSpec {
 
     let sessionList = await c.for(AuthSession).find();
     expect(sessionList).to.have.length(1);
-    expect(_.first(sessionList)).to.deep.include({ authId: 'database' });
+    expect(first(sessionList)).to.deep.include({ authId: 'database' });
 
     req = res;
     const doLogout = await auth.doLogout(doingLogin.user, req, res);

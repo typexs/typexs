@@ -1,5 +1,7 @@
 // process.env.SQL_LOG = '1'
-import * as _ from 'lodash';
+import { orderBy, uniq } from '@typexs/generic';
+
+
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { Bootstrap } from '@typexs/base/Bootstrap';
@@ -7,13 +9,12 @@ import { Config } from '@allgemein/config';
 import { TEST_STORAGE_OPTIONS } from '../../../base/test/functional/config';
 import { IEventBusConfiguration } from '@allgemein/eventbus';
 import { Container } from 'typedi';
-import { TestHelper } from '@typexs/testing';
+import { SpawnHandle, TestHelper } from '@typexs/testing';
 
 import { DistributedStorageEntityController } from '../../src/lib/DistributedStorageEntityController';
 import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
 import { DataRow } from './fake_app/entities/DataRow';
 import { IEntityController } from '@typexs/base/libs/storage/IEntityController';
-import { SpawnHandle } from '@typexs/testing';
 import { generateSqlDataRows } from './helper';
 import { Injector } from '@typexs/base/libs/di/Injector';
 import { __NODE_ID__, __REGISTRY__, C_STORAGE_DEFAULT, XS_P_$COUNT } from '@typexs/base/libs/Constants';
@@ -125,7 +126,7 @@ class DistributedQuerySpec {
     const entities = await controller.find(DataRow, { id: 10 }, { limit: 1 });
     expect(entities).to.have.length(1);
     expect(entities[XS_P_$COUNT]).to.be.eq(1);
-    expect(_.orderBy(entities, [__NODE_ID__])).to.deep.eq([
+    expect(orderBy(entities, [__NODE_ID__])).to.deep.eq([
       {
         [__NODE_ID__]: 'remote01',
         [__CLASS__]: 'DataRow',
@@ -270,7 +271,7 @@ class DistributedQuerySpec {
     const controller = Container.get(DistributedStorageEntityController);
     const entities = await controller.find(DataRow, { someBool: true }, { outputMode: 'embed_nodeId' });
     expect(entities).to.be.have.length(10);
-    expect(_.uniq(entities.map(x => x[__NODE_ID__])).sort()).to.be.deep.eq(['remote01']);
+    expect(uniq(entities.map(x => x[__NODE_ID__])).sort()).to.be.deep.eq(['remote01']);
   }
 
 

@@ -1,7 +1,7 @@
 import { AbstractSchemaHandler } from '../../../libs/storage/AbstractSchemaHandler';
-import * as _ from 'lodash';
-import { NotYetImplementedError } from '@allgemein/base';
 
+import { NotYetImplementedError } from '@allgemein/base';
+import { isRegExp, isString, map } from '@typexs/generic';
 
 export class PostgresSchemaHandler extends AbstractSchemaHandler {
 
@@ -27,9 +27,9 @@ export class PostgresSchemaHandler extends AbstractSchemaHandler {
       date: (field: string) => 'TO_CHAR(' + field + ', \'YYYY-MM-DD\')',
       timestamp: (field: string) => 'EXTRACT(EPOCH FROM ' + field + ')',
       regex: (k: string, field: string | RegExp, options: string) => {
-        if (_.isString(field)) {
+        if (isString(field)) {
           return k + ' ~ ' + field;
-        } else if (_.isRegExp(field)) {
+        } else if (isRegExp(field)) {
           return k + ' ~ ' + field.source;
         } else {
           throw new NotYetImplementedError('regex for ' + k + ' with value ' + field);
@@ -40,7 +40,7 @@ export class PostgresSchemaHandler extends AbstractSchemaHandler {
           'strftime(\'' + format + '\', ' + field + ')'
     };
 
-    _.keys(fn).forEach(x => {
+     Object.keys(fn).forEach(x => {
       this.registerOperationHandle(x, fn[x]);
     });
 
@@ -60,7 +60,7 @@ export class PostgresSchemaHandler extends AbstractSchemaHandler {
   async getCollectionNames(): Promise<string[]> {
     const c = await this.storageRef.connect();
     const q = await c.query('SELECT table_name as name FROM information_schema.tables WHERE table_type=\'BASE TABLE\';');
-    return _.map(q, x => x.name);
+    return map(q, x => x.name);
   }
 
 

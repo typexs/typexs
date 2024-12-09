@@ -1,12 +1,30 @@
 import { PropertyRef } from '../../registry/PropertyRef';
 import { INameResolver } from '../INameResolver';
-import * as _ from 'lodash';
+import {
+  chunk,
+  concat,
+  get,
+  isArray,
+  isBoolean,
+  isDate,
+  isEmpty,
+  isNull,
+  isNumber,
+  isObjectLike,
+  isString,
+  map,
+  merge,
+  orderBy
+} from '@typexs/generic';
+
+
 import { SqlConditionsBuilder } from './SqlConditionsBuilder';
 import { TypeOrmConnectionWrapper, XS_P_$COUNT, XS_P_$LIMIT, XS_P_$OFFSET } from '@typexs/base';
 import { EntityRef } from '../../../libs/registry/EntityRef';
 import { IFindOptions } from '../IFindOptions';
 import { __CLASS__, __NS__, IClassRef } from '@allgemein/schema-api';
 import { OrderDesc } from '../../descriptors/OrderDesc';
+
 
 const ignoreKeys = [__NS__, __CLASS__].map(x => x.toLowerCase());
 
@@ -45,9 +63,9 @@ export class SqlHelper {
     const sortBy = opts.sort;
     const mode = opts.mode ? opts.mode : 'select';
 
-    if (!_.isEmpty(conditions)) {
-      if (_.isArray(conditions)) {
-        queue = _.chunk(conditions, opts.maxConditionSplitingLimit);
+    if (!isEmpty(conditions)) {
+      if (isArray(conditions)) {
+        queue = chunk(conditions, opts.maxConditionSplitingLimit);
       } else {
         queue.push(conditions);
       }
@@ -67,7 +85,7 @@ export class SqlHelper {
       let qb: any = null;
       if (cond) {
         const builder = new SqlConditionsBuilder<T>(connection.getEntityManager(), entityRef, connection.getStorageRef(), mode);
-        builder.build(opts.orSupport && _.isArray(cond) ? { $or: cond } : cond);
+        builder.build(opts.orSupport && isArray(cond) ? { $or: cond } : cond);
         qb = builder.getQueryBuilder() as any;
       } else {
         qb = connection.getEntityManager().getRepository(entityRef.getClass()).createQueryBuilder();
@@ -79,26 +97,26 @@ export class SqlHelper {
       }
 
       if (!multipart && mode !== 'delete') {
-        if (!_.isNull(limit) && _.isNumber(limit)) {
+        if (!isNull(limit) && isNumber(limit)) {
           qb.limit(limit);
         }
 
-        if (!_.isNull(offset) && _.isNumber(offset)) {
+        if (!isNull(offset) && isNumber(offset)) {
           qb.offset(offset);
         }
 
-        if (_.isNull(sortBy)) {
+        if (isNull(sortBy)) {
           entityRef.getPropertyRefs().filter(x => !!x.isIdentifier()).forEach(x => {
             qb.addOrderBy(qb.alias + '.' + x.storingName, 'ASC');
           });
         } else if (propertyRef && propertyRef.hasOrder()) {
           const mapping = this.getTargetKeyMap(entityRef);
           propertyRef.getOrder().forEach((o: OrderDesc) => {
-            qb.addOrderBy(_.get(mapping, o.key.key, o.key.key), o.asc ? 'ASC' : 'DESC');
+            qb.addOrderBy(get(mapping, o.key.key, o.key.key), o.asc ? 'ASC' : 'DESC');
           });
         } else {
-          if (_.isObjectLike(sortBy) && !_.isEmpty(sortBy)) {
-            _.keys(sortBy).forEach(sortKey => {
+          if (isObjectLike(sortBy) && !isEmpty(sortBy)) {
+             Object.keys(sortBy).forEach(sortKey => {
               qb.addOrderBy(qb.alias + '.' + sortKey, sortBy[sortKey].toUpperCase());
             });
           }
@@ -113,7 +131,7 @@ export class SqlHelper {
         promises.push(qb.execute());
       } else {
         const _results = await qb.getMany();
-        queryResults = _.concat(queryResults, _results);
+        queryResults = concat(queryResults, _results);
       }
     }
 
@@ -129,11 +147,11 @@ export class SqlHelper {
       if (results.length > 0 && sortBy) {
         const iteree: any = [];
         const orders: any = [];
-        for (const k of _.keys(sortBy)) {
+        for (const k of  Object.keys(sortBy)) {
           iteree.push(k);
           orders.push(sortBy[k].toLowerCase());
         }
-        results = _.orderBy(results, iteree, orders);
+        results = orderBy(results, iteree, orders);
       }
     }
 
@@ -149,7 +167,7 @@ export class SqlHelper {
   static getTargetKeyMap(targetRef: EntityRef | IClassRef) {
     const props: PropertyRef[] = targetRef instanceof EntityRef ?
       targetRef.getPropertyRefs() : targetRef.getRegistry().getPropertyRefsFor(targetRef) as PropertyRef[];
-    return _.merge({}, ..._.map(props, p => {
+    return merge({}, ...map(props, p => {
       const c = {};
       // c[p.name] = p.storingName;
       c[p.name] = p.name;
@@ -159,15 +177,15 @@ export class SqlHelper {
 
 
   static conditionToQuery(condition: any): string {
-    return _.keys(condition).map(k => `${k} = '${condition[k]}'`).join(' AND ');
+    return  Object.keys(condition).map(k => `${k} = '${condition[k]}'`).join(' AND ');
   }
 
   static extractKeyableValues(data: any[]) {
     return data.map(obj => {
       const id: any = {};
-      _.keys(obj)
+       Object.keys(obj)
         .filter(k => !ignoreKeys.includes(k.toLowerCase()))
-        .filter(k => _.isString(obj[k]) || _.isNumber(obj[k]) || _.isDate(obj[k]) || _.isBoolean(obj[k]))
+        .filter(k => isString(obj[k]) || isNumber(obj[k]) || isDate(obj[k]) || isBoolean(obj[k]))
         .map(k => id[k] = obj[k]);
       return id;
     });

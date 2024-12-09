@@ -305,7 +305,7 @@ export class TaskRunner extends EventEmitter {
    */
   async setIncomings(parameters: any) {
     if (parameters) {
-      const paramNames = keys(parameters);
+      const paramNames =  Object.keys(parameters);
       for (const paramName of paramNames) {
         await this.setIncoming(paramName, parameters[paramName]);
       }

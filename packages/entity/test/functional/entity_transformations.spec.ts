@@ -1,10 +1,12 @@
 import '../../src/libs/decorators/register';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-import * as _ from 'lodash';
+
 import { EntityRegistry } from '../../src/libs/EntityRegistry';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
+import { isArray, isBoolean } from '@typexs/generic';
+
 
 let registry: EntityRegistry;
 
@@ -44,7 +46,7 @@ class EntityTransformationsSpec {
     p.roles = [{ id: 1, rolename: 'role1' }, { id: 2, rolename: 'role2' }];
     const entityDef = registry.getEntityRefByName('Permission');
     const permission: any = entityDef.build(p);
-    expect(_.isArray(permission.roles)).to.be.true;
+    expect(isArray(permission.roles)).to.be.true;
     expect(permission.roles).to.have.length(2);
   }
 
@@ -62,7 +64,7 @@ class EntityTransformationsSpec {
     p.roles = [{ id: 1, rolename: 'role1' }, { id: 2, rolename: 'role2' }];
     const entityDef = registry.getEntityRefByName('Permission');
     let permission: any = entityDef.build(p);
-    expect(_.isBoolean(permission.disabled)).to.be.true;
+    expect(isBoolean(permission.disabled)).to.be.true;
     expect(permission.disabled).to.be.false;
 
     p = new Permission();
@@ -72,7 +74,7 @@ class EntityTransformationsSpec {
     p.roles = [{ id: 1, rolename: 'role1' }, { id: 2, rolename: 'role2' }];
 
     permission = entityDef.build(p);
-    expect(_.isBoolean(permission.disabled)).to.be.true;
+    expect(isBoolean(permission.disabled)).to.be.true;
     expect(permission.disabled).to.be.true;
 
   }

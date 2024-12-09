@@ -3,11 +3,12 @@ import * as tls from 'tls';
 import * as https from 'https';
 import * as net from 'net';
 import * as fs from 'fs';
-import * as _ from 'lodash';
+
 import { ILoggerApi, Log, TodoException } from '@typexs/base';
 
 import { DEFAULT_SERVER_OPTIONS, IServerOptions } from './IServerOptions';
 import { Exceptions } from './Exceptions';
+import { defaultsDeep, get } from '@typexs/generic';
 
 
 export interface IServerApi {
@@ -43,8 +44,8 @@ export class Server {
 
 
   initialize(options: IServerOptions, wrapper: IServerApi = null) {
-    this._options = _.defaultsDeep(options, DEFAULT_SERVER_OPTIONS);
-    this.logger = _.get(options, 'logger', Log.getLoggerFor(Server)) as any;
+    this._options = defaultsDeep(options, DEFAULT_SERVER_OPTIONS);
+    this.logger = get(options, 'logger', Log.getLoggerFor(Server)) as any;
     this._secured = /^https/.test(this._options.protocol);
 
     if (this._options.cert_file) {
@@ -261,7 +262,7 @@ export class Server {
     const p = new Promise<boolean>((resolve) => {
 
       // destroy and unref socket connections
-      this.debug('server-stop: ' + this.url() + ' ' + _.keys(this.$connections).length);
+      this.debug('server-stop: ' + this.url() + ' ' +  Object.keys(this.$connections).length);
       for (const conn in this.$connections) {
         // eslint-disable-next-line no-prototype-builtins
         if (this.$connections.hasOwnProperty(conn)) {

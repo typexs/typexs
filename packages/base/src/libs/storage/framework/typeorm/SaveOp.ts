@@ -84,7 +84,7 @@ export class SaveOp<T> implements ISaveOp<T> {
     if (objectsValid) {
       const promises: Promise<any>[] = [];
       const resolveByEntityRef = TypeOrmUtils.resolveByEntityRef(this.objects);
-      const entityNames = keys(resolveByEntityRef);
+      const entityNames =  Object.keys(resolveByEntityRef);
 
       // load before connect
       const refs: { [k: string]: IEntityRef } = {};
@@ -119,7 +119,7 @@ export class SaveOp<T> implements ISaveOp<T> {
                     ' with properties ' + idPropertyRefs.map(x => x.name).join(', '));
                 }
               }
-              keys(entity).filter(x => /^$/.test(x)).map(x => delete entity[x]);
+               Object.keys(entity).filter(x => /^$/.test(x)).map(x => delete entity[x]);
             });
 
             const repo = connection.for(entityName);

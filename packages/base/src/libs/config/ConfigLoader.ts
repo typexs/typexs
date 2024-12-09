@@ -248,11 +248,11 @@ export class ConfigLoader {
         additionalData = c;
       }
 
-      if (!isEmpty(additionalData) && keys(additionalData).length > 0) {
+      if (!isEmpty(additionalData) &&  Object.keys(additionalData).length > 0) {
         InterpolationSupport.exec(this.configOptions, additionalData);
       }
 
-      if (!isEmpty(this.passedConfiguration) && keys(this.passedConfiguration).length > 0) {
+      if (!isEmpty(this.passedConfiguration) &&  Object.keys(this.passedConfiguration).length > 0) {
         InterpolationSupport.exec(this.configOptions, this.passedConfiguration);
       }
 

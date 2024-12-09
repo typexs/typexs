@@ -9,12 +9,11 @@ import {
   METATYPE_PROPERTY,
   RegistryFactory
 } from '@allgemein/schema-api';
-import {C_TASKS, K_EXCHANGE_REF_TYPE, TASK_PROPERTY_TYPE} from './Constants';
-import {NotYetImplementedError} from '@allgemein/base';
-import {ITaskPropertyRefOptions} from './ITaskPropertyRefOptions';
-import * as _ from 'lodash';
-import {get} from 'lodash';
-import {isClassRef} from '@allgemein/schema-api/api/IClassRef';
+import { C_TASKS, K_EXCHANGE_REF_TYPE, TASK_PROPERTY_TYPE } from './Constants';
+import { NotYetImplementedError } from '@allgemein/base';
+import { ITaskPropertyRefOptions } from './ITaskPropertyRefOptions';
+import { isClassRef } from '@allgemein/schema-api/api/IClassRef';
+import { defaults, get, has, isFunction, isNumber } from '@typexs/generic';
 
 
 export class TaskExchangeRef extends AbstractRef implements IPropertyRef {
@@ -25,13 +24,13 @@ export class TaskExchangeRef extends AbstractRef implements IPropertyRef {
 
   constructor(desc: ITaskPropertyRefOptions) {
     super(METATYPE_PROPERTY, desc.propertyName, desc.target, get(desc, 'namespace', C_TASKS));
-    this.setOptions(_.defaults(desc || {}, {type: 'object'}));
+    this.setOptions(defaults(desc || {}, {type: 'object'}));
     // if (desc.propertyType) {
     //   this.setOption(K_EXCHANGE_REF_TYPE, desc.propertyType);
     // }
 
     let ret = this.getType();
-    if (_.isFunction(ret)) {
+    if (isFunction(ret)) {
       ret = ClassRef.getClassName(ret);
     }
 
@@ -39,7 +38,7 @@ export class TaskExchangeRef extends AbstractRef implements IPropertyRef {
       this.targetRef = this.getClassRefFor(this.getType(), METATYPE_PROPERTY);
     }
 
-    this.cardinality = _.has(desc, 'cardinality') ? desc.cardinality : 1;
+    this.cardinality = has(desc, 'cardinality') ? desc.cardinality : 1;
 
   }
 
@@ -64,7 +63,7 @@ export class TaskExchangeRef extends AbstractRef implements IPropertyRef {
    */
   hasOption(name: string) {
     const opts = this.getOptions();
-    return _.has(opts, name);
+    return has(opts, name);
   }
 
   /**
@@ -108,7 +107,7 @@ export class TaskExchangeRef extends AbstractRef implements IPropertyRef {
 
   isCollection(): boolean {
     const cardinality = this.getOptions('cardinality');
-    return _.isNumber(cardinality) && (cardinality === 0 || cardinality > 1);
+    return isNumber(cardinality) && (cardinality === 0 || cardinality > 1);
   }
 
 

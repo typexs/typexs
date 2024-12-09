@@ -2,7 +2,7 @@
 import '../../src/libs/decorators/register';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-import * as _ from 'lodash';
+
 import { TestHelper } from './TestHelper';
 import { TEST_STORAGE_OPTIONS } from './config';
 import { TypeOrmConnectionWrapper } from '@typexs/base';
@@ -10,6 +10,8 @@ import { RegistryFactory } from '@allgemein/schema-api';
 import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
 import { EntityRegistry } from '../../src/libs/EntityRegistry';
 import { getMetadataArgsStorage } from 'typeorm';
+import { clone, map, range, uniq } from '@typexs/generic';
+
 
 let registry: EntityRegistry;
 
@@ -41,7 +43,7 @@ class SqlSchemaPredefinedJoinBidirectSpec {
 
     registry.reload([Role, Permission]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'role_permissions';
 
     const connect = await TestHelper.connect(options);
@@ -52,14 +54,14 @@ class SqlSchemaPredefinedJoinBidirectSpec {
     const tables: any[] = await c.connection.query(
       'SELECT * FROM sqlite_master WHERE type=\'table\' and tbl_name not like \'%sqlite%\';'
     );
-    expect(_.map(tables, t => t.name)).to.have.include.members([
+    expect(map(tables, t => t.name)).to.have.include.members([
       'role',
       'r_belongsto_2',
       'permission'
     ]);
 
     const cols = await c.connection.query('PRAGMA table_info(\'r_belongsto_2\')');
-    expect(_.map(cols, t => t.name)).to.have.members(['id',
+    expect(map(cols, t => t.name)).to.have.members(['id',
       'ownertab', 'ownerid',
       'reftab',
       'refid',
@@ -113,7 +115,7 @@ class SqlSchemaPredefinedJoinBidirectSpec {
     const Permission = require('./schemas/role_permissions/Permission').Permission;
     registry.reload([Role, Permission]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'role_permissions';
 
     // let schema = EntityRegistry.$().getSchemaDefByName(options.name);
@@ -151,7 +153,7 @@ class SqlSchemaPredefinedJoinBidirectSpec {
     const Permission = require('./schemas/role_permissions/Permission').Permission;
     registry.reload([Role, Permission]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'role_permissions';
 
     // let schema = EntityRegistry.$().getSchemaDefByName(options.name);
@@ -200,7 +202,7 @@ class SqlSchemaPredefinedJoinBidirectSpec {
     const Permission = require('./schemas/role_permissions/Permission').Permission;
     registry.reload([Role, Permission]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'role_permissions';
 
 
@@ -296,7 +298,7 @@ class SqlSchemaPredefinedJoinBidirectSpec {
 
     registry.reload([ContentHolder, Content, ContentRef]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'join';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -304,10 +306,10 @@ class SqlSchemaPredefinedJoinBidirectSpec {
     const c = await ref.connect();
 
     const tables: any[] = await c.connection.query('SELECT * FROM sqlite_master WHERE type=\'table\' and tbl_name not like \'%sqlite%\';');
-    expect(_.map(tables, t => t.name)).to.have.include.members(['r_blobs', 'blobs', 'content_holder']);
+    expect(map(tables, t => t.name)).to.have.include.members(['r_blobs', 'blobs', 'content_holder']);
 
     const cols = await c.connection.query('PRAGMA table_info(\'r_blobs\')');
-    expect(_.map(cols, t => t.name)).to.have.members(['rblobid', 'table_name', 'table_id', 'blobid']);
+    expect(map(cols, t => t.name)).to.have.members(['rblobid', 'table_name', 'table_id', 'blobid']);
 
 
     const ch01 = new ContentHolder();
@@ -356,7 +358,7 @@ class SqlSchemaPredefinedJoinBidirectSpec {
     const Permission = require('./schemas/role_permissions/Permission').Permission;
     registry.reload([Role, Permission]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'role_permissions';
 
     const connect = await TestHelper.connect(options);
@@ -365,7 +367,7 @@ class SqlSchemaPredefinedJoinBidirectSpec {
     const connectionWrapper = await storageRef.connect();
 
     const perms = [];
-    for (const p of _.range(0, 1000)) {
+    for (const p of range(0, 1000)) {
       const perm01 = new Permission();
       perm01.type = 'single ';
       perm01.module = 'duo';
@@ -395,7 +397,7 @@ class SqlSchemaPredefinedJoinBidirectSpec {
       // @ts-ignore
       return (<any[]>x.roles).length;
     })).to.have.length(1000);
-    expect(_.uniq(ids)).to.have.length(1);
+    expect(uniq(ids)).to.have.length(1);
     for (const r of permissions) {
       // @ts-ignore
       expect(r.roles[0].id).to.be.eq(role.id);
@@ -409,7 +411,7 @@ class SqlSchemaPredefinedJoinBidirectSpec {
     const Permission = require('./schemas/role_permissions/Permission').Permission;
     registry.reload([Role, Permission]);
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'role_permissions';
 
     const connect = await TestHelper.connect(options);
@@ -418,7 +420,7 @@ class SqlSchemaPredefinedJoinBidirectSpec {
     const connectionWrapper = await storageRef.connect();
 
     const roles = [];
-    for (const p of _.range(0, 1000)) {
+    for (const p of range(0, 1000)) {
       const perms = [];
       const perm01 = new Permission();
       perm01.type = 'single ';

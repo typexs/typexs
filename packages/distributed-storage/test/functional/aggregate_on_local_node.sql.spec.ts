@@ -1,21 +1,22 @@
-import {expect} from 'chai';
-import {suite, test} from '@testdeck/mocha';
-import {Bootstrap} from '@typexs/base/Bootstrap';
-import {Config} from '@allgemein/config';
-import {TEST_STORAGE_OPTIONS} from '../../../base/test/functional/config';
-import {IEventBusConfiguration} from '@allgemein/eventbus';
-import {TestHelper} from '@typexs/testing';
+import { expect } from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { Bootstrap } from '@typexs/base/Bootstrap';
+import { Config } from '@allgemein/config';
+import { TEST_STORAGE_OPTIONS } from '../../../base/test/functional/config';
+import { IEventBusConfiguration } from '@allgemein/eventbus';
+import { TestHelper } from '@typexs/testing';
 
-import {ITypexsOptions} from '@typexs/base/libs/ITypexsOptions';
-import {DataRow} from './fake_app_mongo/entities/DataRow';
-import * as _ from 'lodash';
-import {Injector} from '@typexs/base/libs/di/Injector';
-import {__NODE_ID__, __REGISTRY__, C_STORAGE_DEFAULT} from '@typexs/base/libs/Constants';
-import {StorageRef} from '@typexs/base/libs/storage/StorageRef';
-import {generateSqlDataRows} from './helper';
-import {__CLASS__} from '@allgemein/schema-api';
+import { ITypexsOptions } from '@typexs/base/libs/ITypexsOptions';
+import { DataRow } from './fake_app_mongo/entities/DataRow';
+
+import { Injector } from '@typexs/base/libs/di/Injector';
+import { __NODE_ID__, __REGISTRY__, C_STORAGE_DEFAULT } from '@typexs/base/libs/Constants';
+import { StorageRef } from '@typexs/base/libs/storage/StorageRef';
+import { generateSqlDataRows } from './helper';
+import { __CLASS__ } from '@allgemein/schema-api';
 import { DistributedStorageEntityController } from '../../src/lib/DistributedStorageEntityController';
 import { MODUL_CONFIG, redis_host, redis_port } from './config';
+import { orderBy, range, uniq } from '@typexs/generic';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -33,7 +34,7 @@ class DistributedStorageSaveSpec {
     Bootstrap.reset();
     Config.clear();
     const DB_OPTIONS = TEST_STORAGE_OPTIONS;
-    // _.set(DB_OPTIONS, 'database', 'typexs_local');
+    // set(DB_OPTIONS, 'database', 'typexs_local');
     bootstrap = Bootstrap
       .setConfigSources([{type: 'system'}])
       .configure(<ITypexsOptions & any>{
@@ -72,8 +73,8 @@ class DistributedStorageSaveSpec {
     // console.log(results);
     const evenIds = results.map(x => x.id);
 
-    expect(evenIds).to.be.deep.eq(_.range(1, 11).map(x => x * 2));
-    const nodeIds = _.uniq(results.map(x => x[__NODE_ID__]));
+    expect(evenIds).to.be.deep.eq(range(1, 11).map(x => x * 2));
+    const nodeIds = uniq(results.map(x => x[__NODE_ID__]));
     expect(nodeIds).to.be.deep.eq(['system']);
 
   }
@@ -96,7 +97,7 @@ class DistributedStorageSaveSpec {
       [__REGISTRY__]: 'typeorm'
     });
 
-    const nodeIds = _.uniq(results.map(x => x[__NODE_ID__]));
+    const nodeIds = uniq(results.map(x => x[__NODE_ID__]));
     expect(nodeIds).to.be.deep.eq(['system']);
   }
 
@@ -110,7 +111,7 @@ class DistributedStorageSaveSpec {
     ]) as any[];
 
     expect(results).to.have.length(3);
-    results = _.orderBy(results, [__NODE_ID__, 'someFlag']);
+    results = orderBy(results, [__NODE_ID__, 'someFlag']);
     expect(results).to.be.deep.eq([
       {
         someFlag: '0', sum: 3,
@@ -132,7 +133,7 @@ class DistributedStorageSaveSpec {
       }
     ]);
 
-    const nodeIds = _.uniq(results.map(x => x[__NODE_ID__]));
+    const nodeIds = uniq(results.map(x => x[__NODE_ID__]));
     expect(nodeIds).to.be.deep.eq(['system']);
   }
 
@@ -155,7 +156,7 @@ class DistributedStorageSaveSpec {
       [__REGISTRY__]: 'typeorm'
     });
 
-    const nodeIds = _.uniq(results.map(x => x[__NODE_ID__]));
+    const nodeIds = uniq(results.map(x => x[__NODE_ID__]));
     expect(nodeIds).to.be.deep.eq(['system']);
   }
 

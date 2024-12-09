@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { assign, clone, has, isFunction, merge } from '@typexs/generic';
+
+
 import { TaskRef } from './TaskRef';
 import { TaskRuntimeContainer } from './TaskRuntimeContainer';
 import { TaskRunner } from './TaskRunner';
@@ -109,7 +111,7 @@ export class TaskRun {
     const props = this.taskRef().getIncomings();
     if (props.length > 0) {
       for (const p of props) {
-        if (!_.has(this.getIncomings(), p.storingName) && !_.has(this.getIncomings(), p.name)) {
+        if (!has(this.getIncomings(), p.storingName) && !has(this.getIncomings(), p.name)) {
 
           if (p.isOptional()) {
             const msg = this.taskRef().name + ' optional parameter "' + p.name + '" not found.';
@@ -131,9 +133,9 @@ export class TaskRun {
 
   async start(done: (err: Error, res: any) => void, incoming: { [k: string]: any }) {
     // parameter for tasks will be passed by value
-    incoming = _.clone(incoming) || {};
-    _.assign(incoming, this.getIncomings()); // Overwrite with initial incomings
-    this.setIncomings(_.clone(incoming));
+    incoming = clone(incoming) || {};
+    assign(incoming, this.getIncomings()); // Overwrite with initial incomings
+    this.setIncomings(clone(incoming));
 
     try {
       this.validateRequiredParameters();
@@ -145,7 +147,7 @@ export class TaskRun {
     this.status.running = true;
     this.status.start = new Date();
     this.$runner.api().onStart(this);
-    // this.status.incoming = _.clone(incoming);
+    // this.status.incoming = clone(incoming);
 
     if (this.$runner.$dry_mode) {
       this.$wrapper.logger().debug('dry taskRef start: ' + this.taskRef().name);
@@ -164,7 +166,7 @@ export class TaskRun {
       }
 
       const [fn, instance] = this.taskRef().executable(incoming);
-      if (_.isFunction(fn)) {
+      if (isFunction(fn)) {
         if (fn.length === 0) {
           try {
             const res = await fn.call(this.$wrapper);
@@ -258,7 +260,7 @@ export class TaskRun {
 
 
   stats(): ITaskRunResult {
-    const stats: ITaskRunResult = _.clone(this.status);
+    const stats: ITaskRunResult = clone(this.status);
     if (stats.error) {
       if (stats.error instanceof Error) {
         const stacks = stats.error.stack ? stats.error.stack.split('\n') : [];
@@ -271,7 +273,7 @@ export class TaskRun {
         };
       }
     }
-    return _.merge(stats, this.$wrapper.stats());
+    return merge(stats, this.$wrapper.stats());
   }
 
 }

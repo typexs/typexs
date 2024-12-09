@@ -1,4 +1,6 @@
-import * as _ from 'lodash';
+import { clone, find, map, orderBy } from '@typexs/generic';
+
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService, IMessage, MessageChannel, MessageService, MessageType } from '@typexs/base-ng';
 import { Role } from '@typexs/roles/entities/Role';
@@ -7,7 +9,7 @@ import { Entity, Property } from '@allgemein/schema-api';
 import { Checkbox, Grid, ISelectOption, Label } from '@typexs/forms';
 import { EntityService } from '@typexs/entity-ng';
 import { K_STORABLE } from '@typexs/entity/libs/Constants';
-import { mergeMap, filter } from 'rxjs/operators';
+import { filter, mergeMap } from 'rxjs/operators';
 
 
 @Entity({ [K_STORABLE]: false })
@@ -88,11 +90,11 @@ export class PermissionsRolesComponent implements OnInit, OnDestroy {
             this.permissions.forEach((p: Permission) => {
               const per = new PermissionData();
               per.permission = p.permission;
-              per.roles = _.map(p.roles, r => r.rolename);
-              per.roleNames = _.clone(roleNames);
+              per.roles = map(p.roles, r => r.rolename);
+              per.roleNames = clone(roleNames);
               permissionsMatrix.permissions.push(per);
             });
-            permissionsMatrix.permissions = _.orderBy(permissionsMatrix.permissions, ['permission']);
+            permissionsMatrix.permissions = orderBy(permissionsMatrix.permissions, ['permission']);
             this.permissionsMatrix = permissionsMatrix;
             this.matrixReady = true;
           }
@@ -113,8 +115,8 @@ export class PermissionsRolesComponent implements OnInit, OnDestroy {
       const tosave: Permission[] = [];
 
       instance.permissions.forEach(p => {
-        const permission: Permission = _.find(this.permissions, _p => _p.permission === p.permission);
-        permission.roles = _.filter(this.roles, _r => p.roles.indexOf(_r.rolename) !== -1);
+        const permission: Permission = find(this.permissions, _p => _p.permission === p.permission);
+        permission.roles = this.roles.filter(_r => p.roles.indexOf(_r.rolename) !== -1);
         tosave.push(permission);
       });
 

@@ -1,10 +1,12 @@
-import * as _ from 'lodash';
-import {Storage} from '../libs/storage/Storage';
-import {Log} from '../libs/logging/Log';
-import {Inject} from 'typedi';
-import {ICommand} from '../libs/commands/ICommand';
-import {System} from '../libs/system/System';
-import {TypeOrmStorageRef} from '../libs/storage/framework/typeorm/TypeOrmStorageRef';
+import { clone } from '@typexs/generic';
+
+
+import { Storage } from '../libs/storage/Storage';
+import { Log } from '../libs/logging/Log';
+import { Inject } from 'typedi';
+import { ICommand } from '../libs/commands/ICommand';
+import { System } from '../libs/system/System';
+import { TypeOrmStorageRef } from '../libs/storage/framework/typeorm/TypeOrmStorageRef';
 
 export class StorageCommand implements ICommand {
 
@@ -28,7 +30,7 @@ export class StorageCommand implements ICommand {
   }
 
   async handler(argv: any) {
-    let parts = _.clone(argv._);
+    let parts = clone(argv._);
     if (!parts) {
       parts = [];
     }

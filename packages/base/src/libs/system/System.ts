@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { assign, cloneDeep, find, isArray, isBoolean, isEmpty, max, remove } from '@typexs/generic';
 import { EventBus, subscribe } from '@allgemein/eventbus';
 import { Log } from '../logging/Log';
 import { APP_SYSTEM_DISTRIBUTED, APP_SYSTEM_UPDATE_INTERVAL, C_KEY_SEPARATOR, C_STORAGE_DEFAULT, TYPEXS_NAME } from '../Constants';
@@ -18,6 +18,7 @@ import { SystemInfoResponse } from './SystemInfoResponse';
 import { ILoggerApi } from '../logging/ILoggerApi';
 import { IEntityController } from '../storage/IEntityController';
 import { LockFactory } from '@allgemein/base';
+
 
 export class System {
 
@@ -69,7 +70,7 @@ export class System {
 
   static isDistributionEnabled() {
     const e = Config.get(APP_SYSTEM_DISTRIBUTED);
-    if (_.isBoolean(e)) {
+    if (isBoolean(e)) {
       return e;
     }
     return this.enabled;
@@ -102,8 +103,8 @@ export class System {
             { state: { $ne: 'startup' } }]
         }, { limit: 0 });
       const filtered = nodes.filter(c => c.nodeId === nodeId && !['unregister', 'offline', 'startup'].includes(c.state));
-      if (!_.isEmpty(filtered)) {
-        instNr = _.max(filtered.map(x => x.instNr)) + 1;
+      if (!isEmpty(filtered)) {
+        instNr = max(filtered.map(x => x.instNr)) + 1;
       }
     }
 
@@ -141,7 +142,7 @@ export class System {
     // clear local info
     delete nodeInfo.isBackend;
 
-    const node = _.find(this.nodes, n => n.eqNode(nodeInfo));
+    const node = find(this.nodes, n => n.eqNode(nodeInfo));
     this.logger.debug(`system node: ${nodeInfo.hostname}:${nodeInfo.nodeId}-${nodeInfo.instNr} ` +
       `state=${nodeInfo.state} [${this.node.nodeId}] already exists=${!!node}`);
     if ((nodeInfo.state === 'register' || (nodeInfo.state === 'idle' && !node))) {
@@ -157,7 +158,7 @@ export class System {
       }
       await this.save(nodeInfo);
     } else if (nodeInfo.state === 'unregister') {
-      const nodes = _.remove(this.nodes, n => n.eqNode(nodeInfo));
+      const nodes = remove(this.nodes, n => n.eqNode(nodeInfo));
       this.logger.debug(`remove remote node ${nodeInfo.hostname}:${nodeInfo.nodeId}--${nodeInfo.instNr}`);
       try {
         await this.invoker.use(SystemApi).onNodeUnregister(nodeInfo);
@@ -195,14 +196,14 @@ export class System {
 
   async gatherCurrentNodeInfos() {
     const infos: INodeInfo | INodeInfo[] = await this.invoker.use(SystemApi).getNodeInfos();
-    if (_.isArray(infos)) {
+    if (isArray(infos)) {
       for (const info of infos) {
-        if (!_.isEmpty(info)) {
+        if (!isEmpty(info)) {
           this.node.contexts.push(info);
         }
       }
     } else {
-      if (!_.isEmpty(infos)) {
+      if (!isEmpty(infos)) {
         this.node.contexts.push(infos);
       }
     }
@@ -251,7 +252,7 @@ export class System {
       response.of(this.node);
       response.targetIds = [event.nodeId];
       response.respId = this.node.nodeId;
-      response.info = _.cloneDeep(this.info);
+      response.info = cloneDeep(this.info);
       return EventBus.postAndForget(response);
     }
     return Promise.resolve();
@@ -314,7 +315,7 @@ export class System {
       try {
         let r = await this.controller.findOne(SystemNodeInfo, { key: node.key });
         if (r) {
-          _.assign(r, node);
+          assign(r, node);
         } else {
           r = node;
         }

@@ -1,9 +1,11 @@
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
-import * as _ from 'lodash';
-import {TestHelper} from './TestHelper';
-import {expect} from 'chai';
-import {TEST_STORAGE_OPTIONS} from './config';
+import { suite, test } from '@testdeck/mocha';
+
+import { TestHelper } from './TestHelper';
+import { expect } from 'chai';
+import { TEST_STORAGE_OPTIONS } from './config';
+import { clone } from '@typexs/generic';
+
 
 @suite('functional/scenario_06_conditions')
 class Scenario06Conditions {
@@ -22,7 +24,7 @@ class Scenario06Conditions {
     const ConditionHolder = require('./schemas/default/ConditionHolder').ConditionHolder;
     const ConditionKeeper = require('./schemas/default/ConditionKeeper').ConditionKeeper;
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
 
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -58,7 +60,7 @@ class Scenario06Conditions {
     const ConditionObjectHolder = require('./schemas/default/ConditionObjectHolder').ConditionObjectHolder;
     const ConditionObjectKeeper = require('./schemas/default/ConditionObjectKeeper').ConditionObjectKeeper;
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
 
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;
@@ -89,7 +91,7 @@ class Scenario06Conditions {
     const CondEntityHolder = require('./schemas/conditions/CondEntityHolder').CondEntityHolder;
     const CondObjectContent = require('./schemas/conditions/CondObjectContent').CondObjectContent;
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'conditions';
 
     const connect = await TestHelper.connect(options);
@@ -149,7 +151,7 @@ class Scenario06Conditions {
     const ConditionObjKeeper = require('./schemas/default/ConditionObjKeeper').ConditionObjKeeper;
     const conditionObjectHolder = require('./schemas/default/ConditionObjectHolder').ConditionObjectHolder;
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
 
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;

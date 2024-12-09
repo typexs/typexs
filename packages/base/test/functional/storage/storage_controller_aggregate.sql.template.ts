@@ -1,5 +1,7 @@
 // process.env.SQL_LOG = '1';
-import * as _ from 'lodash';
+import { merge, orderBy } from '@typexs/generic';
+
+
 import * as path from 'path';
 import { test } from '@testdeck/mocha';
 import { expect } from 'chai';
@@ -33,7 +35,7 @@ export class StorageAcontrollerAggregateSqlTemplate {
     CarParam = require('./fake_app_sql/entities/CarParam').CarParam;
     const appdir = path.join(__dirname, 'fake_app_sql');
 
-    const _cfg = _.merge({
+    const _cfg = merge({
       app: {
         path: appdir
       },
@@ -386,7 +388,7 @@ export class StorageAcontrollerAggregateSqlTemplate {
       }
     }], { autoParseNumbers: true });
     // console.log(aggr);
-    aggr = _.orderBy(aggr, ['avgPS']);
+    aggr = orderBy(aggr, ['avgPS']);
     expect(aggr).to.have.length(3);
     expect(aggr).to.be.deep.eq([
       {
@@ -554,7 +556,7 @@ export class StorageAcontrollerAggregateSqlTemplate {
     expect(aggr).to.have.length(5);
     expect(aggr[XS_P_$LIMIT]).to.be.eq(0);
     expect(aggr[XS_P_$COUNT]).to.be.eq(5);
-    aggr = _.orderBy(aggr, ['date']);
+    aggr = orderBy(aggr, ['date']);
     expect(aggr).to.be.deep.eq([
       { date: '1979-12-05' },
       { date: '1980-03-02' },
@@ -573,7 +575,7 @@ export class StorageAcontrollerAggregateSqlTemplate {
     expect(aggr).to.have.length(5);
     expect(aggr[XS_P_$LIMIT]).to.be.eq(0);
     expect(aggr[XS_P_$COUNT]).to.be.eq(5);
-    aggr = _.orderBy(aggr, ['month']);
+    aggr = orderBy(aggr, ['month']);
     expect(aggr).to.be.deep.eq([
       { month: 2 },
       { month: 3 },
@@ -600,7 +602,7 @@ export class StorageAcontrollerAggregateSqlTemplate {
     expect(aggr).to.have.length(3);
     expect(aggr[XS_P_$LIMIT]).to.be.eq(0);
     expect(aggr[XS_P_$COUNT]).to.be.eq(3);
-    aggr = _.orderBy(aggr, ['month']);
+    aggr = orderBy(aggr, ['month']);
     expect(aggr).to.be.deep.eq([
       { month: 2 },
       { month: 3 },

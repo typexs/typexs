@@ -1,10 +1,11 @@
+import { setTimeout } from 'timers';
+import { Schedule } from '../../libs/schedule/Schedule';
 
-import {setTimeout} from 'timers';
-import {Schedule} from '../../libs/schedule/Schedule';
-import * as _ from 'lodash';
-import {IScheduleDef} from '../../libs/schedule/IScheduleDef';
-import {IScheduleFactory} from '../../libs/schedule/IScheduleFactory';
-import {Log} from '../../libs/logging/Log';
+import { IScheduleDef } from '../../libs/schedule/IScheduleDef';
+import { IScheduleFactory } from '../../libs/schedule/IScheduleFactory';
+import { Log } from '../../libs/logging/Log';
+import { get, has } from '@typexs/generic';
+
 
 export class CronScheduleFactory implements IScheduleFactory {
 
@@ -26,7 +27,7 @@ export class CronScheduleFactory implements IScheduleFactory {
 
 
   async attach(schedule: Schedule): Promise<boolean> {
-    const cronPattern = _.get(schedule.options, 'cron', null);
+    const cronPattern = get(schedule.options, 'cron', null);
     if (cronPattern) {
       schedule.reschedule = this.create(cronPattern);
       return true;
@@ -36,7 +37,7 @@ export class CronScheduleFactory implements IScheduleFactory {
 
 
   async detect(opts: IScheduleDef) {
-    return _.has(opts, 'cron');
+    return has(opts, 'cron');
   }
 
 

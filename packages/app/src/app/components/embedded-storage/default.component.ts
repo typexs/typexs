@@ -1,4 +1,4 @@
-import { isEmpty, set } from 'lodash';
+import { isEmpty, set } from '@typexs/generic';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { IDatatableOptions, IQueryParams } from '@typexs/base-ng';
 import { Like, Value } from '@allgemein/expressions';

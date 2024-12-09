@@ -1,11 +1,11 @@
 import { suite, test } from '@testdeck/mocha';
 import { Bootstrap, Injector, XS_P_$COUNT, XS_P_$LIMIT } from '@typexs/base';
 import * as path from 'path';
-import * as _ from 'lodash';
+
 import { ElasticStorageRef } from '../../src/lib/elastic/ElasticStorageRef';
 import { GreatEntity } from './fake_app_controller/entities/GreatEntity';
 import { IndexEntityRef } from '../../src/lib/registry/IndexEntityRef';
-import { expect, use } from 'chai';
+import { expect } from 'chai';
 // import chaiAsPromised from 'chai-as-promised';
 import { ElasticEntityController } from '../../src/lib/elastic/ElasticEntityController';
 import { Client } from '@elastic/elasticsearch';
@@ -26,6 +26,7 @@ import { ES_host, ES_port } from './config';
 import { TestHelper } from './TestHelper';
 import { ElasticMappingUpdater } from '../../src/lib/elastic/mapping/ElasticMappingUpdater';
 import { C_CORE_INDEX, C_DATA_INDEX, C_SEARCH_INDEX_2, clear } from './testdata';
+import { orderBy, range, uniq } from '@typexs/generic';
 
 
 const lorem = 'lorem ipsum carusus dolor varius sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod ' +
@@ -114,7 +115,7 @@ class ElasticControllerSpec {
     controller = storageRef.getController();
 
     const promises = [];
-    for (const i of _.range(0, 40)) {
+    for (const i of range(0, 40)) {
       const d = new DataEntity();
       d[__ID__] = i + '';
       d[__TYPE__] = 'data_entity';
@@ -260,8 +261,8 @@ class ElasticControllerSpec {
     expect(results.body.hits.total.value).to.be.eq(2);
     expect(results.body.hits.hits).to.have.length(2);
     let sources = results.body.hits.hits.map((hit: any) => entityRef.build(hit._source, { skipClassNamespaceInfo: true }));
-    sources = _.orderBy(sources, x => JSON.stringify(x));
-    g = _.orderBy(g, x => JSON.stringify(x));
+    sources = orderBy(sources, x => JSON.stringify(x));
+    g = orderBy(g, x => JSON.stringify(x));
     expect(sources).to.be.deep.eq(g);
   }
 
@@ -289,7 +290,7 @@ class ElasticControllerSpec {
     expect(queryResults[XS_P_$MAX_SCORE]).to.be.eq(null);
     expect(queryResults[XS_P_$COUNT]).to.be.eq(40);
     expect(queryResults[XS_P_$LIMIT]).to.be.eq(10);
-    const classTypes = _.uniq(queryResults.map((x: any) => ClassUtils.getClassName(x))).sort();
+    const classTypes = uniq(queryResults.map((x: any) => ClassUtils.getClassName(x))).sort();
     expect(classTypes).to.have.length(1);
     expect(classTypes).to.be.deep.eq(['DataEntity']);
   }
@@ -307,7 +308,7 @@ class ElasticControllerSpec {
     expect(queryResults[XS_P_$MAX_SCORE]).to.be.eq(null);
     expect(queryResults[XS_P_$COUNT]).to.be.eq(80);
     expect(queryResults[XS_P_$LIMIT]).to.be.eq(10);
-    const classTypes = _.uniq(queryResults.map((x: any) => ClassUtils.getClassName(x))).sort();
+    const classTypes = uniq(queryResults.map((x: any) => ClassUtils.getClassName(x))).sort();
     expect(classTypes).to.have.length(2);
     expect(classTypes).to.be.deep.eq(['DataEntity', 'SearchEntity']);
   }
@@ -320,7 +321,7 @@ class ElasticControllerSpec {
     expect(queryResults[XS_P_$MAX_SCORE]).to.be.eq(null);
     expect(queryResults[XS_P_$COUNT]).to.be.eq(80);
     expect(queryResults[XS_P_$LIMIT]).to.be.eq(10);
-    const classTypes = _.uniq(queryResults.map((x: any) => ClassUtils.getClassName(x))).sort();
+    const classTypes = uniq(queryResults.map((x: any) => ClassUtils.getClassName(x))).sort();
     expect(classTypes).to.have.length(2);
     expect(classTypes).to.be.deep.eq(['DataEntity', 'SearchEntity']);
   }
@@ -333,7 +334,7 @@ class ElasticControllerSpec {
     expect(queryResults[XS_P_$MAX_SCORE]).to.be.eq(null);
     expect(queryResults[XS_P_$COUNT]).to.be.eq(7);
     expect(queryResults[XS_P_$LIMIT]).to.be.eq(10);
-    const classTypes = _.uniq(queryResults.map((x: any) => ClassUtils.getClassName(x))).sort();
+    const classTypes = uniq(queryResults.map((x: any) => ClassUtils.getClassName(x))).sort();
     expect(classTypes).to.have.length(2);
     expect(classTypes).to.be.deep.eq(['DataEntity', 'SearchEntity']);
   }
@@ -347,7 +348,7 @@ class ElasticControllerSpec {
     expect(queryResults[XS_P_$MAX_SCORE]).to.be.eq(null);
     expect(queryResults[XS_P_$COUNT]).to.be.eq(0);
     expect(queryResults[XS_P_$LIMIT]).to.be.eq(10);
-    // const classTypes = _.uniq(queryResults.map((x: any) => ClassUtils.getClassName(x))).sort();
+    // const classTypes = uniq(queryResults.map((x: any) => ClassUtils.getClassName(x))).sort();
     // expect(classTypes).to.have.length(2);
     // expect(classTypes).to.be.deep.eq(['DataEntity', 'SearchEntity']);
   }
@@ -459,8 +460,8 @@ class ElasticControllerSpec {
     expect(queryResults[XS_P_$MAX_SCORE]).to.be.eq(null);
     expect(queryResults[XS_P_$COUNT]).to.be.eq(80);
     expect(queryResults[XS_P_$LIMIT]).to.be.eq(10);
-    expect(_.keys(queryResults[XS_P_$AGGREGATION])).to.have.length(1);
-    expect(_.keys(queryResults[XS_P_$AGGREGATION])).to.be.deep.eq(['enabled-entries']);
+    expect( Object.keys(queryResults[XS_P_$AGGREGATION])).to.have.length(1);
+    expect( Object.keys(queryResults[XS_P_$AGGREGATION])).to.be.deep.eq(['enabled-entries']);
     expect(queryResults[XS_P_$AGGREGATION]).to.deep.eq({
       'enabled-entries': {
         'buckets': [
@@ -505,8 +506,8 @@ class ElasticControllerSpec {
     expect(queryResults).to.have.length(0);
     expect(queryResults[XS_P_$COUNT]).to.be.eq(80);
     expect(queryResults[XS_P_$LIMIT]).to.be.eq(10);
-    expect(_.keys(queryResults[XS_P_$AGGREGATION])).to.have.length(1);
-    expect(_.keys(queryResults[XS_P_$AGGREGATION])).to.be.deep.eq(['enabled-entries']);
+    expect( Object.keys(queryResults[XS_P_$AGGREGATION])).to.have.length(1);
+    expect( Object.keys(queryResults[XS_P_$AGGREGATION])).to.be.deep.eq(['enabled-entries']);
     expect(queryResults[XS_P_$AGGREGATION]).to.deep.eq({
       'enabled-entries': {
         'buckets': [

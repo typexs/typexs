@@ -1,12 +1,14 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Injector, RuntimeLoader} from '@typexs/base';
-import {WebServer} from '../../../src/libs/web/WebServer';
-import {C_DEFAULT, K_ROUTE_CONTROLLER} from '../../../src/libs/Constants';
-import  request from 'supertest';
-import {expect} from 'chai';
-import * as _ from 'lodash';
-import {CryptUtils} from '@allgemein/base';
-import {IWebServerInstanceOptions} from '../../../src/libs/web/IWebServerInstanceOptions';
+import { suite, test } from '@testdeck/mocha';
+import { Bootstrap, Injector, RuntimeLoader } from '@typexs/base';
+import { WebServer } from '../../../src/libs/web/WebServer';
+import { C_DEFAULT, K_ROUTE_CONTROLLER } from '../../../src/libs/Constants';
+import request from 'supertest';
+import { expect } from 'chai';
+
+import { CryptUtils } from '@allgemein/base';
+import { IWebServerInstanceOptions } from '../../../src/libs/web/IWebServerInstanceOptions';
+import { range } from '@typexs/generic';
+
 
 process.setMaxListeners(1000);
 Bootstrap._().activateErrorHandling();
@@ -62,7 +64,7 @@ class BodyParserSettingsSpec {
     const started = await web.start();
 
     let data: any = {dummy: []};
-    _.range(0, 100, 1).map(n => {
+    range(0, 100, 1).map(n => {
       data.dummy.push(CryptUtils.random(32));
     });
 
@@ -75,7 +77,7 @@ class BodyParserSettingsSpec {
 
 
     data = {dummy: []};
-    _.range(0, 10, 1).map(n => {
+    range(0, 10, 1).map(n => {
       data.dummy.push(CryptUtils.random(32));
     });
     const length = JSON.stringify(data).length;
@@ -131,7 +133,7 @@ class BodyParserSettingsSpec {
     expect(started).to.be.true;
 
     let data: any = {dummy: []};
-    _.range(0, 400000, 1).map(n => {
+    range(0, 400000, 1).map(n => {
       data.dummy.push(CryptUtils.random(32));
     });
 
@@ -145,7 +147,7 @@ class BodyParserSettingsSpec {
 
 
     data = {dummy: []};
-    _.range(0, 100000, 1).map(n => {
+    range(0, 100000, 1).map(n => {
       data.dummy.push(CryptUtils.random(32));
     });
     length = JSON.stringify(data).length;

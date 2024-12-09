@@ -1,11 +1,12 @@
 /* eslint-disable */
 import { EventEmitter } from 'events';
-import * as _ from 'lodash';
+
 import { ProcessingHelper } from './ProcessingHelper';
 import { ILoggerApi, Log } from '@typexs/base';
 import { IProcessor } from './processor/IProcessor';
 import { IProcessorOptions } from './processor/IProcessorOptions';
 import { PipeHandle } from './pipeline/PipeHandle';
+import { get } from '@typexs/generic';
 
 
 const handleCallResults = function(res: any, cb: any, data: any) {
@@ -42,7 +43,7 @@ export abstract class Processor extends EventEmitter implements IProcessor {
     super();
 
     this.$options = options || {};
-    this.logger = _.get(options, 'logger', Log.getLogger());
+    this.logger = get(options, 'logger', Log.getLogger());
     // this.$_name_ = options['_name_'] || 'unknown'
 
     // TODO

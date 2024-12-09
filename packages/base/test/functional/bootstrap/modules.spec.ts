@@ -1,12 +1,13 @@
 import * as path from 'path';
-import * as _ from 'lodash';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
 
-import {Bootstrap} from '../../../src/Bootstrap';
-import {Config} from '@allgemein/config';
-import {RuntimeLoader} from '../../../src/base/RuntimeLoader';
-import {TestHelper} from '@typexs/testing';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+
+import { Bootstrap } from '../../../src/Bootstrap';
+import { Config } from '@allgemein/config';
+import { RuntimeLoader } from '../../../src/base/RuntimeLoader';
+import { TestHelper } from '@typexs/testing';
+import { find } from '@typexs/generic';
 
 
 @suite('functional/bootstrap/modules')
@@ -32,8 +33,8 @@ class BootstrapGeneralSpec {
     await loader.rebuild();
     const modules = loader.registry.getModules();
     expect(modules).to.have.length(3);
-    expect(_.find(modules, {name: 'module1'})).to.exist;
-    expect(_.find(modules, {name: 'module2'})).to.not.exist;
+    expect(find(modules, {name: 'module1'})).to.exist;
+    expect(find(modules, {name: 'module2'})).to.not.exist;
 
     const activators = loader.classesLoader.getClasses('activator.js');
     expect(activators).to.have.length(2);
@@ -68,7 +69,7 @@ class BootstrapGeneralSpec {
     await loader.rebuild();
     const modules = loader.registry.getModules();
     expect(modules).to.have.length(2);
-    expect(_.find(modules, {name: 'module1'})).to.not.exist;
+    expect(find(modules, {name: 'module1'})).to.not.exist;
     expect(modules.map(x => x.name)).to.be.deep.eq(['module3', 'fake_app']);
 
 

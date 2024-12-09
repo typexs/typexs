@@ -2,7 +2,7 @@ import '../../src/libs/decorators/register';
 import { EntityAPIController } from '../../src/controllers/EntityAPIController';
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-import * as _ from 'lodash';
+
 import { Bootstrap, Injector, IRuntimeLoaderOptions, TypeOrmEntityRegistry } from '@typexs/base';
 import { TestHelper } from './TestHelper';
 import { K_ROUTE_CONTROLLER, Server } from '@typexs/server';
@@ -12,6 +12,7 @@ import { RBelongsTo2 } from './schemas/role_permissions/RBelongsTo2';
 import { TEST_STORAGE_OPTIONS } from './config';
 import { RegistryFactory } from '@allgemein/schema-api';
 import { EntityRegistry, NAMESPACE_BUILT_ENTITY, REGISTRY_TXS_SCHEMA } from '../../src';
+import { clone } from '@typexs/generic';
 
 
 const settingsTemplate: any = {
@@ -85,7 +86,7 @@ class SqlSchemaPredefinedJoinBidirectOverApiSpec {
 
   static async before() {
     TestHelper.resetTypeorm();
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     Bootstrap.reset();
     (RegistryFactory.get(NAMESPACE_BUILT_ENTITY) as EntityRegistry).reload([Permission, Role, RBelongsTo2]);
 

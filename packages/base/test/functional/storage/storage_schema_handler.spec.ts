@@ -1,11 +1,13 @@
 import * as path from 'path';
-import * as _ from 'lodash';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { map } from '@typexs/generic';
 
-import {Bootstrap} from '../../../src/Bootstrap';
-import {Config} from '@allgemein/config';
-import {TypeOrmStorageRef} from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
+
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+
+import { Bootstrap } from '../../../src/Bootstrap';
+import { Config } from '@allgemein/config';
+import { TypeOrmStorageRef } from '../../../src/libs/storage/framework/typeorm/TypeOrmStorageRef';
 import { TestHelper } from '@typexs/testing';
 
 
@@ -50,11 +52,11 @@ class GeneralSpec {
     const schemaHandler = storageRef.getSchemaHandler();
     const tableNames = await schemaHandler.getCollectionNames();
     expect(tableNames).to.have.length(6);
-    expect(tableNames).to.have.members(_.map(q, _q => _q.name));
+    expect(tableNames).to.have.members(map(q, _q => _q.name));
 
     const tables = await schemaHandler.getCollections(tableNames);
     expect(tables).to.have.length(6);
-    expect(tableNames).to.have.members(_.map(tables, _q => _q.name));
+    expect(tableNames).to.have.members(map(tables, _q => _q.name));
 
     await bootstrap.shutdown();
     await bootstrap.getStorage().shutdown();

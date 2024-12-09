@@ -18,7 +18,6 @@ import {
   API_CTRL_TASK_GET_METADATA,
   API_CTRL_TASK_LOG,
   API_CTRL_TASK_STATUS,
-  // API_CTRL_TASKS_LIST,
   API_CTRL_TASKS_METADATA,
   API_CTRL_TASKS_RUNNERS_INFO,
   API_CTRL_TASKS_RUNNING,
@@ -26,11 +25,13 @@ import {
   K_ROUTE_CONTROLLER
 } from '../../../src/libs/Constants';
 import { expect } from 'chai';
-import * as _ from 'lodash';
+
 import { SpawnHandle } from '@typexs/testing';
 import { TestHelper } from '../TestHelper';
 import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
 import { WebServer } from '../../../src/libs/web/WebServer';
+import { clone, cloneDeep } from '@typexs/generic';
+
 
 const LOG_EVENT = TestHelper.logEnable(false);
 
@@ -104,7 +105,7 @@ class TasksControllerSpec {
 
 
   static async before() {
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     request = HttpFactory.create();
     bootstrap = Bootstrap
       .setConfigSources([{ type: 'system' }])
@@ -161,7 +162,7 @@ class TasksControllerSpec {
     expect(rTaskRemote).to.not.be.null;
     rTaskRemote = rTaskRemote.body;
 
-    const rTasksNames = _.keys(rTasks.definitions);
+    const rTasksNames =  Object.keys(rTasks.definitions);
     expect(rTasksNames).to.have.length(7);
     expect(rTaskLocal).to.deep.include(
       {
@@ -313,13 +314,13 @@ class TasksControllerSpec {
 
     class T02 {
       @subscribe(TaskEvent) on(e: TaskEvent) {
-        const _e = _.cloneDeep(e);
+        const _e = cloneDeep(e);
         console.log('event: ' + e);
         events.push(_e);
       }
 
       @subscribe(TaskRunnerEvent) onRunerEvent(e: TaskRunnerEvent) {
-        const _e2 = _.cloneDeep(e);
+        const _e2 = cloneDeep(e);
         console.log('event-runner: ' + e);
         eventRunnert.push(_e2);
       }

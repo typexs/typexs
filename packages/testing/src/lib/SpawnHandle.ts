@@ -1,5 +1,7 @@
-import * as _ from 'lodash';
-import {ChildProcess, spawn} from 'child_process';
+import { isEmpty } from '@typexs/generic';
+
+
+import { ChildProcess, spawn } from 'child_process';
 
 /**
  * Spawn new process with given command
@@ -9,7 +11,7 @@ export class SpawnHandle {
 
   constructor(file: string, ...args: any[]) {
     this.file = file;
-    this.args = _.isEmpty(args) ? [] : args;
+    this.args = isEmpty(args) ? [] : args;
   }
 
   file: string;

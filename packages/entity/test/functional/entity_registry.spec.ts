@@ -71,12 +71,12 @@ class EntityRegistrySpec {
     // });
     //
     // expect(eJson.properties).to.have.length(3);
-    // expect(_.map(eJson.properties, x => x.machineName)).to.deep.eq(['id', 'first_name', 'last_name']);
+    // expect(map(eJson.properties, x => x.machineName)).to.deep.eq(['id', 'first_name', 'last_name']);
     //
     // props = entity.getPropertyRefs();
     // expect(props).to.have.length(3);
     //
-    // // TODO const pJsons = _.map(props, p => p.toJson());
+    // // TODO const pJsons = map(props, p => p.toJson());
     // const pJsons = [];
     // expect(pJsons).to.have.length(3);
   }

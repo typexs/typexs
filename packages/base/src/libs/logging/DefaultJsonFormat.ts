@@ -1,10 +1,12 @@
-import {TransformableInfo} from 'logform';
+import { TransformableInfo } from 'logform';
 
-import {Log} from './Log';
+import { Log } from './Log';
 import * as stringify from 'fast-safe-stringify';
-import {LogEvent} from './LogEvent';
-import * as _ from 'lodash';
-import {MESSAGE} from 'triple-beam';
+import { LogEvent } from './LogEvent';
+
+import { MESSAGE } from 'triple-beam';
+import { isEmpty } from '@typexs/generic';
+
 
 function replacer(key: any, value: any) {
   return value instanceof Buffer
@@ -33,7 +35,7 @@ export class DefaultJsonFormat {
       }
     }
 
-    info['prefix'] = prefix.filter(x => !_.isEmpty(x)).join(':');
+    info['prefix'] = prefix.filter(x => !isEmpty(x)).join(':');
 
     // Return string will be passed to logger.
     // @ts-ignore

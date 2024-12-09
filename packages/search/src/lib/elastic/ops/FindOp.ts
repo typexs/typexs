@@ -183,7 +183,7 @@ export class FindOp<T> implements IFindOp<T> {
 
         if (!isNull(this.options.sort)) {
           const s: any[] = [];
-          keys(this.options.sort).forEach(sortKey => {
+           Object.keys(this.options.sort).forEach(sortKey => {
             const _sort = {};
             const v = this.options.sort[sortKey];
             _sort[sortKey] = v.toLocaleLowerCase();
@@ -212,7 +212,7 @@ export class FindOp<T> implements IFindOp<T> {
         aggsMode = 'facets';
         opts.body.aggs = {};
 
-        keys(this.options.facets).forEach(key => {
+         Object.keys(this.options.facets).forEach(key => {
           let aggInc = 0;
           const list = this.options.facets[key];
           for (const entry of list) {
@@ -285,7 +285,7 @@ export class FindOp<T> implements IFindOp<T> {
       if (has(body, 'aggregations')) {
         if (aggsMode === 'facets') {
           results[XS_P_$FACETS] = [];
-          keys(body.aggregations).forEach(name => {
+           Object.keys(body.aggregations).forEach(name => {
             const facet = {
               name: name,
               values: get(body.aggregations, name + '.buckets', [])

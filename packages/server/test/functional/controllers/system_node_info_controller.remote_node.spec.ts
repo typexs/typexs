@@ -1,14 +1,16 @@
-import {suite, test, timeout} from '@testdeck/mocha';
-import {Bootstrap, Config, Injector} from '@typexs/base';
-import {API_CTRL_SYSTEM_RUNTIME_NODES, C_API, K_ROUTE_CONTROLLER} from '../../../src/libs/Constants';
-import {expect} from 'chai';
-import * as _ from 'lodash';
-import {SpawnHandle} from '@typexs/testing';
-import {TestHelper} from '../TestHelper';
+import { suite, test, timeout } from '@testdeck/mocha';
+import { Bootstrap, Config, Injector } from '@typexs/base';
+import { API_CTRL_SYSTEM_RUNTIME_NODES, C_API, K_ROUTE_CONTROLLER } from '../../../src/libs/Constants';
+import { expect } from 'chai';
+
+import { SpawnHandle } from '@typexs/testing';
+import { TestHelper } from '../TestHelper';
 import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
-import {IEventBusConfiguration} from '@allgemein/eventbus';
-import {HttpFactory, IHttp} from '@allgemein/http';
-import {WebServer} from '../../../src/libs/web/WebServer';
+import { IEventBusConfiguration } from '@allgemein/eventbus';
+import { HttpFactory, IHttp } from '@allgemein/http';
+import { WebServer } from '../../../src/libs/web/WebServer';
+import { clone } from '@typexs/generic';
+
 
 const LOG_EVENT = TestHelper.logEnable(false);
 
@@ -67,7 +69,7 @@ class RuntimeInfoControllerSpec {
 
 
   static async before() {
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     http = HttpFactory.create();
 
     bootstrap = Bootstrap

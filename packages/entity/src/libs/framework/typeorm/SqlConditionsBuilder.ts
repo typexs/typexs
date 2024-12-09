@@ -58,7 +58,7 @@ export class SqlConditionsBuilder<T> extends TypeOrmSqlConditionsBuilder<T> {
           const conditions: string[] = [];
 
           const map = _condition.getMap();
-          keys(map).forEach(targetKey => {
+           Object.keys(map).forEach(targetKey => {
             // let c =
             const sourceKey = /\'/.test(map[targetKey]) ? map[targetKey] : rootAlias + '.' + map[targetKey];
             // this.baseQueryBuilder.escape()

@@ -1,4 +1,4 @@
-import { isEmpty, set } from 'lodash';
+import { isEmpty, set } from '@typexs/generic';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Like, Value } from '@allgemein/expressions';
 import { StorageQueryEmbeddedComponent, StorageService } from '@typexs/storage-ng';

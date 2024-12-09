@@ -1,10 +1,12 @@
-import * as _ from 'lodash';
-import {distinctUntilChanged, debounceTime} from 'rxjs/operators';
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {ExprDesc, Expressions} from '@allgemein/expressions';
-import {QueryAction} from './QueryAction';
-import {Log} from '@typexs/base-ng';
-import {Subject, Subscription} from 'rxjs';
+import { isArray, isEmpty } from '@typexs/generic';
+
+
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ExprDesc, Expressions } from '@allgemein/expressions';
+import { QueryAction } from './QueryAction';
+import { Log } from '@typexs/base-ng';
+import { Subject, Subscription } from 'rxjs';
 
 
 @Component({
@@ -69,7 +71,7 @@ export class SearchQueryFormComponent implements OnInit, OnDestroy {
     try {
       const value = localStorage.getItem('txs.query.history');
       this.history = JSON.parse(value);
-      if (!this.history || !_.isArray(this.history)) {
+      if (!this.history || !isArray(this.history)) {
         this.history = [];
       }
 
@@ -136,7 +138,7 @@ export class SearchQueryFormComponent implements OnInit, OnDestroy {
 
   build() {
     this.queryError = [];
-    if (!_.isEmpty(this.query)) {
+    if (!isEmpty(this.query)) {
       const errors: string[] = [];
       if (this.mode === 'query') {
         if (/>=|<=|<>|<|>|in|IN|like|LIKE|\s(AND|OR|or|and)\s/.test(this.query)) {
@@ -163,7 +165,7 @@ export class SearchQueryFormComponent implements OnInit, OnDestroy {
         }
 
         this.queryError = errors;
-        if (_.isEmpty(this.jsonQuery)) {
+        if (isEmpty(this.jsonQuery)) {
           this.queryError.push('Object or array is empty.');
         }
       }

@@ -1,16 +1,17 @@
-import {IStorage} from '../../../libs/storage/IStorage';
-import {useContainer} from 'typeorm';
-import {DefaultSchemaHandler} from './DefaultSchemaHandler';
-import {__DEFAULT__, K_CLS_STORAGE_SCHEMAHANDLER} from '../../../libs/Constants';
-import {IStorageRefOptions} from '../../../libs/storage/IStorageRefOptions';
-import {AbstractSchemaHandler} from '../../../libs/storage/AbstractSchemaHandler';
-import * as _ from 'lodash';
-import {TypeOrmStorageRef} from '../../../libs/storage/framework/typeorm/TypeOrmStorageRef';
-import {Injector} from '../../../libs/di/Injector';
-import {TypeOrmEntityRegistry} from '../../../libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
-import {IRuntimeLoader} from '../../../libs/core/IRuntimeLoader';
-import {ClassType, RegistryFactory} from '@allgemein/schema-api';
-import {REGISTRY_TYPEORM} from '../../../libs/storage/framework/typeorm/Constants';
+import { IStorage } from '../../../libs/storage/IStorage';
+import { useContainer } from 'typeorm';
+import { DefaultSchemaHandler } from './DefaultSchemaHandler';
+import { __DEFAULT__, K_CLS_STORAGE_SCHEMAHANDLER } from '../../../libs/Constants';
+import { IStorageRefOptions } from '../../../libs/storage/IStorageRefOptions';
+import { AbstractSchemaHandler } from '../../../libs/storage/AbstractSchemaHandler';
+import { TypeOrmStorageRef } from '../../../libs/storage/framework/typeorm/TypeOrmStorageRef';
+import { Injector } from '../../../libs/di/Injector';
+import { TypeOrmEntityRegistry } from '../../../libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';
+import { IRuntimeLoader } from '../../../libs/core/IRuntimeLoader';
+import { ClassType, RegistryFactory } from '@allgemein/schema-api';
+import { REGISTRY_TYPEORM } from '../../../libs/storage/framework/typeorm/Constants';
+import { has } from '@typexs/generic';
+
 
 useContainer(Injector.getContainer());
 
@@ -31,7 +32,7 @@ export class TypeOrmStorage implements IStorage {
   create(name: string, options: IStorageRefOptions & any) {
     const ref = new TypeOrmStorageRef(options);
     let type = __DEFAULT__;
-    if (_.has(this.schemaHandler, options.type)) {
+    if (has(this.schemaHandler, options.type)) {
       type = options.type;
     }
     const schemaHandler: AbstractSchemaHandler = Reflect.construct(this.schemaHandler[type], [ref]);

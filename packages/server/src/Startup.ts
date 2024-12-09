@@ -1,7 +1,8 @@
-import {Config, IBootstrap, Inject} from '@typexs/base';
-import * as _ from 'lodash';
-import {C_SERVER} from './libs/Constants';
-import {ServerRegistry} from './libs/server/ServerRegistry';
+import { Config, IBootstrap, Inject } from '@typexs/base';
+
+import { C_SERVER } from './libs/Constants';
+import { ServerRegistry } from './libs/server/ServerRegistry';
+import { isEmpty } from '@typexs/generic';
 
 
 export class Startup implements IBootstrap {
@@ -13,7 +14,7 @@ export class Startup implements IBootstrap {
   async bootstrap(): Promise<void> {
     const data = Config.get(C_SERVER, {});
 
-    if (!_.isEmpty(data)) {
+    if (!isEmpty(data)) {
       await this.serverRegistry.load(data);
     }
   }

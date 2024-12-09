@@ -1,11 +1,13 @@
-import {IEntityRef, METATYPE_ENTITY} from '@allgemein/schema-api';
-import {ClassUtils} from '@allgemein/base';
-import {WorkerRef} from '../worker/WorkerRef';
-import * as _ from 'lodash';
-import {MatchUtils} from '../utils/MatchUtils';
-import {IExchangeMessageConfig} from './IExchangeMessageConfig';
-import {ExchangeMessageRef, IExchangeMessageRefOptions} from './ExchangeMessageRef';
-import {AbstractRegistry} from '@allgemein/schema-api/lib/registry/AbstractRegistry';
+import { METATYPE_ENTITY } from '@allgemein/schema-api';
+import { ClassUtils } from '@allgemein/base';
+import { WorkerRef } from '../worker/WorkerRef';
+
+import { MatchUtils } from '../utils/MatchUtils';
+import { IExchangeMessageConfig } from './IExchangeMessageConfig';
+import { ExchangeMessageRef, IExchangeMessageRefOptions } from './ExchangeMessageRef';
+import { AbstractRegistry } from '@allgemein/schema-api/lib/registry/AbstractRegistry';
+import { has, isBoolean, isUndefined } from '@typexs/generic';
+
 
 const DEFAULT_OPTIONS: IExchangeMessageConfig = {access: []};
 
@@ -50,19 +52,19 @@ export class ExchangeMessageRegistry extends AbstractRegistry {
   }
 
   access(name: string) {
-    if (_.has(this.config, 'access')) {
+    if (has(this.config, 'access')) {
       // if access empty then
       let allow = this.config.access.length > 0 ? false : true;
       let count = 0;
       for (const a of this.config.access) {
-        if (_.isUndefined(a.match)) {
+        if (isUndefined(a.match)) {
           if (/\+|\.|\(|\\||\)|\*/.test(a.name)) {
             a.match = a.name;
           } else {
             a.match = false;
           }
         }
-        if (_.isBoolean(a.match)) {
+        if (isBoolean(a.match)) {
           if (a.name === name) {
             count++;
             allow = a.access === 'allow';

@@ -1,13 +1,14 @@
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import * as _ from 'lodash';
-import {StorageRef} from '@typexs/base';
-import {EntityController} from '../../src/libs/EntityController';
-import {TestHelper} from './TestHelper';
-import {TEST_STORAGE_OPTIONS} from './config';
-import {NAMESPACE_BUILT_ENTITY, XS_P_PREV_ID} from '../../src/libs/Constants';
-import {ILookupRegistry, RegistryFactory} from '@allgemein/schema-api';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+
+import { StorageRef } from '@typexs/base';
+import { EntityController } from '../../src/libs/EntityController';
+import { TestHelper } from './TestHelper';
+import { TEST_STORAGE_OPTIONS } from './config';
+import { NAMESPACE_BUILT_ENTITY, XS_P_PREV_ID } from '../../src/libs/Constants';
+import { ILookupRegistry, RegistryFactory } from '@allgemein/schema-api';
+import { clone } from '@typexs/generic';
 
 
 let registry: ILookupRegistry;
@@ -34,7 +35,7 @@ class SqlPlainEntitySpec {
 
   @test
   async 'lifecycle for plain entity'() {
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
 
     const Author = require('./schemas/default/Author').Author;
     const authorRef = registry.getEntityRefFor(Author);

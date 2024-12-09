@@ -1,11 +1,13 @@
 import '../../src/libs/decorators/register';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import * as _ from 'lodash';
-import {TestHelper} from './TestHelper';
-import {TEST_STORAGE_OPTIONS} from './config';
-import {ILookupRegistry, RegistryFactory} from '@allgemein/schema-api';
-import {NAMESPACE_BUILT_ENTITY} from '../../src/libs/Constants';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+
+import { TestHelper } from './TestHelper';
+import { TEST_STORAGE_OPTIONS } from './config';
+import { ILookupRegistry, RegistryFactory } from '@allgemein/schema-api';
+import { NAMESPACE_BUILT_ENTITY } from '../../src/libs/Constants';
+import { clone } from '@typexs/generic';
+
 
 let registry: ILookupRegistry;
 
@@ -39,7 +41,7 @@ class SqlScenarioComplexEntitySpec {
     const Job = require('./schemas/complex_entity/Job').Job;
     const Language = require('./schemas/complex_entity/Language').Language;
 
-    const options = _.clone(TEST_STORAGE_OPTIONS);
+    const options = clone(TEST_STORAGE_OPTIONS);
     (<any>options).name = 'complex_entity';
     const connect = await TestHelper.connect(options);
     const xsem = connect.controller;

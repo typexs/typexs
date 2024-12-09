@@ -1,7 +1,7 @@
 import { AbstractSchemaHandler } from '../../../libs/storage/AbstractSchemaHandler';
-import * as _ from 'lodash';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { NotYetImplementedError } from '@allgemein/base';
+import { isRegExp, isString, map } from '@typexs/generic';
 
 
 export class MysqlSchemaHandler extends AbstractSchemaHandler {
@@ -13,9 +13,9 @@ export class MysqlSchemaHandler extends AbstractSchemaHandler {
 
     const fn = {
       regex: (k: string, field: string | RegExp, options: string) => {
-        if (_.isString(field)) {
+        if (isString(field)) {
           return k + ' REGEXP ' + field;
-        } else if (_.isRegExp(field)) {
+        } else if (isRegExp(field)) {
           return k + ' REGEXP ' + field.source;
         } else {
           throw new NotYetImplementedError('regex for ' + k + ' with value ' + field);
@@ -28,7 +28,7 @@ export class MysqlSchemaHandler extends AbstractSchemaHandler {
           'strftime(\'' + format + '\', ' + field + ')',
     };
 
-    _.keys(fn).forEach(x => {
+     Object.keys(fn).forEach(x => {
       this.registerOperationHandle(x, fn[x]);
     });
 
@@ -39,7 +39,7 @@ export class MysqlSchemaHandler extends AbstractSchemaHandler {
     const c = await this.storageRef.connect();
     const database = (<MysqlConnectionOptions>this.storageRef.getOptions()).database;
     const q = await c.query('SELECT table_name FROM information_schema.tables WHERE table_schema=\'' + database + '\';');
-    return _.map(q, x => x.table_name);
+    return map(q, x => x.table_name);
   }
 
 

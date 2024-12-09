@@ -2,7 +2,7 @@ import { ClassType, IEntityRef, RegistryFactory } from '@allgemein/schema-api';
 import { IUpdateOp } from '../IUpdateOp';
 import { TypeOrmEntityRegistry } from './schema/TypeOrmEntityRegistry';
 import { TreeUtils } from '@allgemein/base';
-import * as _ from 'lodash';
+
 import { IUpdateOptions } from '../IUpdateOptions';
 import { TypeOrmSqlConditionsBuilder } from './TypeOrmSqlConditionsBuilder';
 import { UpdateQueryBuilder } from 'typeorm';
@@ -119,10 +119,10 @@ export class UpdateOp<T> implements IUpdateOp<T> {
   //     // TODO make this better currently Hacki hacki
   //     let hasUpdate = false;
   //     let updateData = null;
-  //     if (_.has(this.update, '$set')) {
+  //     if (has(this.update, '$set')) {
   //       updateData = this.update['$set'];
   //       hasUpdate = true;
-  //     } else if (!_.isEmpty(this.update)) {
+  //     } else if (!isEmpty(this.update)) {
   //       updateData = this.update;
   //       hasUpdate = true;
   //     }
@@ -135,11 +135,11 @@ export class UpdateOp<T> implements IUpdateOp<T> {
   //       }
   //       qb.set(updateData);
   //
-  //       if (_.has(this.options, 'limit')) {
+  //       if (has(this.options, 'limit')) {
   //         qb.limit(this.options['limit']);
   //       }
   //       const r = await qb.execute();
-  //       affected = _.get(r, 'affected', -2);
+  //       affected = get(r, 'affected', -2);
   //     }
   //   } catch (e) {
   //     this.error = e;
@@ -158,7 +158,7 @@ export class UpdateOp<T> implements IUpdateOp<T> {
   //
   //     if (this.condition) {
   //       TreeUtils.walk(this.condition, x => {
-  //         if (x.key && _.isString(x.key)) {
+  //         if (x.key && isString(x.key)) {
   //           if (x.key === '$like') {
   //             x.parent['$regex'] = x.parent[x.key].replace('%%', '#$#').replace('%', '.*').replace('#$#', '%%');
   //           }

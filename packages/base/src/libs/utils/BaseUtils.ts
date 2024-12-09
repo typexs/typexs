@@ -1,9 +1,8 @@
-import * as _ from 'lodash';
-import {Utils} from '@allgemein/config';
-import {InterpolationSupport} from '@allgemein/config/supports/InterpolationSupport';
-import {TreeUtils} from '@allgemein/base';
-import {ClassUtils} from '@allgemein/base';
-import {WalkValues} from '@allgemein/base/utils/TreeUtils';
+import { Utils } from '@allgemein/config';
+import { InterpolationSupport } from '@allgemein/config/supports/InterpolationSupport';
+import { ClassUtils, TreeUtils } from '@allgemein/base';
+import { WalkValues } from '@allgemein/base/utils/TreeUtils';
+import { clone, isPlainObject, uniq } from '@typexs/generic';
 
 
 export class BaseUtils {
@@ -25,14 +24,14 @@ export class BaseUtils {
 
   static wait(time: number): Promise<any> {
     return new Promise(resolve => {
-      setTimeout(function () {
+      setTimeout(function() {
         resolve(null);
       }, time);
     });
   }
 
   static interpolate(msg: string, parameter: { [k: string]: string }): string {
-    const data = {msg: msg};
+    const data = { msg: msg };
     try {
       InterpolationSupport.exec(data, parameter);
     } catch (e) {
@@ -60,7 +59,7 @@ export class BaseUtils {
    * @returns {any[]}
    */
   static unique_array(arr: any[]): any[] {
-    return _.uniq(arr);
+    return uniq(arr);
     // return arr.filter((v, i, a) => a.indexOf(v) === i);
   }
 
@@ -69,7 +68,7 @@ export class BaseUtils {
   }
 
   static clone(obj: any) {
-    return _.clone(obj);
+    return clone(obj);
   }
 
 
@@ -113,7 +112,7 @@ export class BaseUtils {
   static splitTyped(arr: string, sep: string = '.'): any[] {
     const paths = arr.split('.');
     const normPaths: any[] = [];
-    paths.forEach(function (_x) {
+    paths.forEach(function(_x) {
       if (typeof _x === 'string' && /\d+/.test(_x)) {
         normPaths.push(parseInt(_x, 0));
       } else {
@@ -179,7 +178,7 @@ export class BaseUtils {
 
 
   static isObject(o: any) {
-    return _.isPlainObject(o);
+    return isPlainObject(o);
   }
 
 

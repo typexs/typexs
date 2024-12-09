@@ -1,9 +1,9 @@
-import * as _ from 'lodash';
+import { has, isFunction, isString } from '@typexs/generic';
 
 
 export class WebServerUtils {
 
   static checkIfFrameworkIsSet(options: any) {
-    return _.has(options, 'framework') && (_.isString(options.framework) || _.isFunction(options.framework));
+    return has(options, 'framework') && (isString(options.framework) || isFunction(options.framework));
   }
 }

@@ -3,7 +3,7 @@ import { Tasks } from './Tasks';
 import { TaskRunnerRegistry } from './TaskRunnerRegistry';
 import { TASK_RUNNER_SPEC, TASK_STATE_REQUEST_ERROR } from './Constants';
 import { ITaskExectorOptions } from './ITaskExectorOptions';
-import * as _ from 'lodash';
+
 import { ILoggerApi } from '../../libs/logging/ILoggerApi';
 import { Log } from '../../libs/logging/Log';
 import { TaskRequestFactory } from './worker/TaskRequestFactory';
@@ -16,6 +16,8 @@ import { ITaskRunnerResult } from './ITaskRunnerResult';
 import { IError } from '../exceptions/IError';
 import { Bootstrap } from '../../Bootstrap';
 import { TaskEvent } from './event/TaskEvent';
+import { clone, defaults, get, isArray, isEmpty, isUndefined, uniq, values, max } from '@typexs/generic';
+
 
 /**
  * Class controlling local or remote tasks execution.
@@ -81,9 +83,9 @@ export class TaskExecutor extends EventEmitter {
 
   setOptions(options: ITaskExectorOptions) {
     const _opts = options || { skipTargetCheck: false };
-    this.passedOptions = _.clone(_opts);
+    this.passedOptions = clone(_opts);
     this.options = _opts;
-    _.defaults(this.options, DEFAULT_TASK_EXEC);
+    defaults(this.options, DEFAULT_TASK_EXEC);
   }
 
   /**
@@ -101,7 +103,7 @@ export class TaskExecutor extends EventEmitter {
    */
   create(taskSpec: TASK_RUNNER_SPEC[], param: any = {}, _argv: ITaskExectorOptions) {
     // check nodes for tasks
-    if (!_.isArray(taskSpec) || _.isEmpty(taskSpec)) {
+    if (!isArray(taskSpec) || isEmpty(taskSpec)) {
       throw new Error('no task definition found');
     }
     this.params = param;
@@ -126,7 +128,7 @@ export class TaskExecutor extends EventEmitter {
 
       const nodeId = Bootstrap.getNodeId();
       const tasks = this.tasks.getTasksByNames(this.taskNames);
-      if (_.isUndefined(this.passedOptions.isLocal)) {
+      if (isUndefined(this.passedOptions.isLocal)) {
         // when isLocal is not set manuell
         this.options.remote = false;
         this.options.isLocal = true;
@@ -158,12 +160,12 @@ export class TaskExecutor extends EventEmitter {
           this.taskRunnerRegistry.getLocalTaskCounts(this.taskNames) :
           this.taskRunnerRegistry.getGlobalTaskCounts(this.taskNames)
         ;
-        if (!_.isEmpty(counts)) {
-          const max = _.max(_.values(counts));
-          if (max >= this.options.executionConcurrency) {
+        if (!isEmpty(counts)) {
+          const _max = max(values(counts));
+          if (_max >= this.options.executionConcurrency) {
             this.logger.warn(
               'task command: ' +
-              `maximal concurrent process of ${this.taskNames} reached (${max} < ${this.options.executionConcurrency}).`);
+              `maximal concurrent process of ${this.taskNames} reached (${_max} < ${this.options.executionConcurrency}).`);
             this.executeable = false;
           }
         }
@@ -203,12 +205,12 @@ export class TaskExecutor extends EventEmitter {
    */
   async executeLocally() {
     const tasks = this.tasks.getTasksByNames(this.taskNames);
-    const localPossible = _.uniq(this.taskNames).length === tasks.length;
+    const localPossible = uniq(this.taskNames).length === tasks.length;
 
     if (localPossible) {
       const options: ITaskRunnerOptions = {
         parallel: 5,
-        dryMode: _.get(this.options, 'dry-outputMode', false),
+        dryMode: get(this.options, 'dry-outputMode', false),
         local: true
       };
 
@@ -226,7 +228,7 @@ export class TaskExecutor extends EventEmitter {
   async executeOnWorker(asFuture: boolean = false) {
     this.logger.debug(this.taskNames + ' before request fire');
     let executeRequest = this.requestFactory.executeRequest();
-    const options = _.clone(this.options);
+    const options = clone(this.options);
     if (this.targetIds) {
       options.targetIds = this.targetIds;
     }
@@ -254,7 +256,7 @@ export class TaskExecutor extends EventEmitter {
       }
     } else if (enqueueEvents && enqueueEvents.length > 0) {
       if (enqueueEvents[0].state === TASK_STATE_REQUEST_ERROR) {
-        if (_.isArray(enqueueEvents[0].errors) && enqueueEvents[0].errors.length > 0) {
+        if (isArray(enqueueEvents[0].errors) && enqueueEvents[0].errors.length > 0) {
           if (future) {
             await future.close();
           }

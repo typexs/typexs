@@ -1,6 +1,6 @@
 // @ts-ignore
 import express from 'express';
-import * as _ from 'lodash';
+
 import * as http from 'http';
 import { createExpressServer, getMetadataArgsStorage } from 'routing-controllers';
 import { IStaticFiles } from '../../IStaticFiles';
@@ -15,6 +15,7 @@ import { PlatformUtils } from '@allgemein/base';
 import { IApplication } from '../../../server/IApplication';
 import { ActionType } from 'routing-controllers/types/metadata/types/ActionType';
 import { ActionMetadataArgs } from 'routing-controllers/types/metadata/args/ActionMetadataArgs';
+import { clone, defaults, filter, find, isEmpty } from '@typexs/generic';
 
 
 interface ActionResolved {
@@ -46,7 +47,7 @@ export class Express implements IFrameworkSupport {
 
 
   useRouteController(options: IRoutingController) {
-    _.defaults(options, DEFAULT_ROUTE_OPTIONS);
+    defaults(options, DEFAULT_ROUTE_OPTIONS);
     const app = createExpressServer(options);
     app.disable('x-powered-by');
     // TODO create settings
@@ -90,7 +91,7 @@ export class Express implements IFrameworkSupport {
     const authHandlers = metadataStore.responseHandlers.filter(r => r.type === 'authorized');
 
     metadataStore.controllers.forEach(controller => {
-      const controllerActions = _.filter(metadataStore.actions, a => a.target === controller.target);
+      const controllerActions = filter(metadataStore.actions, a => a.target === controller.target);
       controllerActions.forEach(action => {
         let route = action.route instanceof RegExp ? action.route.source : action.route;
         if (controller.route) {
@@ -102,7 +103,7 @@ export class Express implements IFrameworkSupport {
 
         // TODO handle regex
         const permissions = RoutePermissionsHelper.getPermissionFor(action.target, action.method);
-        const authorized = !!_.find(authHandlers, a => a.target === action.target && a.method === action.method);
+        const authorized = !!find(authHandlers, a => a.target === action.target && a.method === action.method);
         const entry: ActionResolved = {
           route: route,
           type: action.type,
@@ -134,7 +135,7 @@ export class Express implements IFrameworkSupport {
             if (entry.route) {
               const r = entry.route;
               let method = 'unknown';
-              const params = _.clone(entry.params);
+              const params = clone(entry.params);
 
               for (const handle of r.stack) {
                 if (handle.name !== 'routeHandler') {
@@ -142,7 +143,7 @@ export class Express implements IFrameworkSupport {
                 }
                 method = handle.method;
 
-                const action = _.find(actions, a =>
+                const action = find(actions, a =>
                   (prefix ? '/' + prefix + a.route === r.path : a.route === r.path) &&
                   a.type.toLowerCase() === method.toLowerCase()
                 );
@@ -165,7 +166,7 @@ export class Express implements IFrameworkSupport {
                     context: options.context ? options.context : C_DEFAULT,
                     route: r.path,
                     method: method,
-                    params: !_.isEmpty(params) ? params : null,
+                    params: !isEmpty(params) ? params : null,
                     authorized: false
                   });
 
@@ -185,10 +186,10 @@ export class Express implements IFrameworkSupport {
           });
         }
       }
-      // this._routes = _.uniq(this._routes);
+      // this._routes = uniq(this._routes);
     }
 
-    return _.clone(this._routes);
+    return clone(this._routes);
   }
 
 

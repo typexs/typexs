@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+
 import {ICommand} from '../libs/commands/ICommand';
 import {Log} from '../libs/logging/Log';
 import {Inject} from 'typedi';
@@ -42,7 +42,7 @@ export class CacheCommand implements ICommand {
           console.log('cache bin with name ' + argv.bin + ' not found.');
         }
       } else {
-        for (const k of _.keys(bins)) {
+        for (const k of  Object.keys(bins)) {
           console.log('clear bin ' + k);
           await bins[k].store.clearBin(k);
         }
@@ -50,7 +50,7 @@ export class CacheCommand implements ICommand {
     } else if (argv.command === 'bins') {
       const bins = this.cache.getBins();
       console.log('Active bins:');
-      for (const k of _.keys(bins)) {
+      for (const k of  Object.keys(bins)) {
         console.log('\t- ' + k);
         await bins[k].store.clearBin(k);
       }

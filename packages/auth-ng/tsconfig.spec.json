@@ -5,51 +5,7 @@
     "outDir": "../../out-tsc/spec",
     "types": [
       "jasmine"
-    ],
-    "paths": {
-      "@typexs/auth": [
-        "./packages/auth/src/browser"
-      ],
-      "@typexs/auth/*": [
-        "./packages/auth/src/*"
-      ],
-      "@typexs/server": [
-        "./packages/server/src/browser"
-      ],
-      "@typexs/server/*": [
-        "./packages/server/src/*"
-      ],
-      "@typexs/base": [
-        "./packages/base/src/browser"
-      ],
-      "@typexs/base/*": [
-        "./packages/base/src/*"
-      ],
-      "@typexs/entity": [
-        "./packages/entity/src/browser"
-      ],
-      "@typexs/entity/*": [
-        "./packages/entity/src/*"
-      ],
-      "@typexs/base-ng": [
-        "./packages/base-ng/src/public_api"
-      ],
-      "@typexs/base-ng/*": [
-        "./packages/base-ng/src/*"
-      ],
-      "@typexs/forms": [
-        "./packages/forms/src/browser"
-      ],
-      "@typexs/forms/*": [
-        "./packages/forms/src/*"
-      ],
-      "@typexs/forms-ng": [
-        "./packages/forms-ng/src/public_api"
-      ],
-      "@typexs/forms-ng/*": [
-        "./packages/forms-ng/src/*"
-      ]
-    }
+    ]
   },
   "files": [
     "src/test.ts",

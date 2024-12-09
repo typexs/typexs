@@ -10,13 +10,14 @@ import {
   K_ROUTE_CONTROLLER,
   PERMISSION_ALLOW_RUNTIME_REMOTE_INFOS_VIEW
 } from '../../../src/libs/Constants';
-import * as _ from 'lodash';
+
 import { TestHelper } from '../TestHelper';
 import { TEST_STORAGE_OPTIONS } from '../config';
 import { HttpFactory, IHttp } from '@allgemein/http';
 
 import { expect } from 'chai';
 import { WebServer } from '../../../src/libs/web/WebServer';
+import { clone, find } from '@typexs/generic';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -75,7 +76,7 @@ class ServerStatusControllerSpec {
 
   static async before() {
     Bootstrap.reset();
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
     http = HttpFactory.create();
 
     bootstrap = Bootstrap
@@ -111,7 +112,7 @@ class ServerStatusControllerSpec {
     expect(Config.get(K_CONFIG_ANONYMOUS_ALLOW)).to.be.true;
 
     const baseConfig = await http.get(url + API_CTRL_SERVER_CONFIG, { responseType: 'json', passBody: true }) as any;
-    const compare = _.clone(settingsTemplate);
+    const compare = clone(settingsTemplate);
 
     compare.storage.default.name = 'default';
 
@@ -227,7 +228,7 @@ class ServerStatusControllerSpec {
     expect(response).to.not.be.null;
 
     expect(response).to.have.length.greaterThan(4);
-    expect(_.find(response, { controllerMethod: 'listRoutes' })).to.deep.eq({
+    expect(find(response, { controllerMethod: 'listRoutes' })).to.deep.eq({
       context: 'api',
       route: '/' + C_API + API_CTRL_SERVER_ROUTES,
       method: 'get',
@@ -241,7 +242,7 @@ class ServerStatusControllerSpec {
       authorized: false
     });
 
-    expect(_.find(response, { controllerMethod: 'nodesInfo' })).to.deep.eq({
+    expect(find(response, { controllerMethod: 'nodesInfo' })).to.deep.eq({
       context: 'api',
       route: '/' + C_API + API_CTRL_SYSTEM_RUNTIME_REMOTE_INFOS,
       method: 'get',

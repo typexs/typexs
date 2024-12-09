@@ -1,17 +1,19 @@
-import {suite, test} from '@testdeck/mocha';
-import {Bootstrap, Config, Injector, StorageRef} from '@typexs/base';
-import * as _ from 'lodash';
-import {expect} from 'chai';
-import {DefaultUserLogin} from '../../../src/libs/models/DefaultUserLogin';
-import {MockResponse} from '../../helper/MockResponse';
-import {MockRequest} from '../../helper/MockRequest';
+import { suite, test } from '@testdeck/mocha';
+import { Bootstrap, Config, Injector, StorageRef } from '@typexs/base';
 
-import {AuthMethod} from '../../../src/entities/AuthMethod';
-import {AuthSession} from '../../../src/entities/AuthSession';
-import {User} from '../../../src/entities/User';
-import {TESTDB_SETTING, TestHelper} from '../TestHelper';
-import {LDAP_CONFIG} from './ldap_config';
-import {TypeOrmConnectionWrapper} from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { expect } from 'chai';
+import { DefaultUserLogin } from '../../../src/libs/models/DefaultUserLogin';
+import { MockResponse } from '../../helper/MockResponse';
+import { MockRequest } from '../../helper/MockRequest';
+
+import { AuthMethod } from '../../../src/entities/AuthMethod';
+import { AuthSession } from '../../../src/entities/AuthSession';
+import { User } from '../../../src/entities/User';
+import { TESTDB_SETTING, TestHelper } from '../TestHelper';
+import { LDAP_CONFIG } from './ldap_config';
+import { TypeOrmConnectionWrapper } from '@typexs/base/libs/storage/framework/typeorm/TypeOrmConnectionWrapper';
+import { clone, get } from '@typexs/generic';
+
 
 const inc = 0;
 
@@ -52,7 +54,7 @@ class AuthLdapLifecycleSpec {
 
   @test
   async 'do login by user search through admin bind'() {
-    const settings = _.clone(settingsTemplate);
+    const settings = clone(settingsTemplate);
 
     const refs = await TestHelper.bootstrap_auth('default', settings);
     bootstrap = refs.bootstrap;
@@ -79,7 +81,7 @@ class AuthLdapLifecycleSpec {
     expect(doingLogin.success).to.be.false;
     expect(doingLogin.isAuthenticated).to.be.false;
     expect(doingLogin.errors).to.have.length(1);
-    expect(_.get(doingLogin.errors, '0.constraints.exists')).to.exist;
+    expect(get(doingLogin.errors, '0.constraints.exists')).to.exist;
 
 
     let userList = await c.for(User).find();

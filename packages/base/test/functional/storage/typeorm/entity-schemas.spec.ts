@@ -1,5 +1,7 @@
 import * as path from 'path';
-import * as _ from 'lodash';
+import { cloneDeep } from '@typexs/generic';
+
+
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 import { IStorageRefOptions } from '../../../../src/libs/storage/IStorageRefOptions';
@@ -21,7 +23,7 @@ class StorageGeneralSpec {
   before() {
     Bootstrap.reset();
     Config.clear();
-    storageOptions = _.cloneDeep(TEST_STORAGE_OPTIONS) as IStorageRefOptions & BaseConnectionOptions;
+    storageOptions = cloneDeep(TEST_STORAGE_OPTIONS) as IStorageRefOptions & BaseConnectionOptions;
   }
 
 
