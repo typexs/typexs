@@ -1,6 +1,6 @@
 {
   "name": "@typexs/base",
-  "version": "2.3.9",
+  "version": "2.4.0",
   "description": "",
   "main": "index",
   "browser": "browser",
@@ -37,11 +37,11 @@
     "@allgemein/mango-expressions": "~1.1.1",
     "@allgemein/moduls": "~1.7.1",
     "@allgemein/schema-api": "~1.6.1",
-    "@typexs/generic": "2.3.0",
     "@cezaryrk/minimatch": "~3.0.4",
+    "@typexs/generic": "^2.4.0",
     "ajv": "^8.17.1",
-    "glob": "^11.0.0",
     "fast-safe-stringify": "2.1.1",
+    "glob": "^11.0.0",
     "js-yaml": "4.1.0",
     "lodash": "^4.17.21",
     "luxon": "^3.2.1",
@@ -49,7 +49,7 @@
     "typedi": "0.8.0"
   },
   "devDependencies": {
-    "@typexs/testing": "^2.3.9",
+    "@typexs/testing": "^2.4.0",
     "typeorm": "0.2.34",
     "winston": "3.3.3",
     "yargonaut": "^1.1.4",

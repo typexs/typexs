@@ -1,6 +1,6 @@
 {
   "name": "@typexs/generic",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "Forms for typexs",
   "main": "index",
   "browser": "browser",
