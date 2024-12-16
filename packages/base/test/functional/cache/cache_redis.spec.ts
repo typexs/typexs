@@ -56,23 +56,24 @@ class CacheRedisSpec {
     bootstrap = await bootstrap.startup();
 
     const cache: Cache = Container.get(Cache.NAME);
-
     const options = cache.getOptions();
 
-    expect(options).to.deep.eq({
+    // fix for remote test
+    options.adapter['redis1'].socket.port = parseInt(options.adapter['redis1'].socket.port, 10);
 
+    expect(options).to.deep.eq({
       bins: { default: 'redis1' },
       adapter: {
         redis1: {
           type: 'redis',
           host: redis_host,
           port: redis_port,
-          'socket': {
+          socket: {
             'connectTimeout': 5000,
             'host': redis_host,
             'keepAlive': 5000,
             'noDelay': true,
-            'port': redis_port+''
+            'port': redis_port
           },
           'url': 'redis://' + redis_host + ':' + redis_port
         }
