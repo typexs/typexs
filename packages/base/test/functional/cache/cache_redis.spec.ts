@@ -1,4 +1,3 @@
-
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
 
@@ -38,8 +37,14 @@ class CacheRedisSpec {
         },
         storage: { default: TEST_STORAGE_OPTIONS },
         cache: {
-          bins: { default: 'redis1' },
-          adapter: { redis1: { type: 'redis', host: redis_host, port: redis_port } }
+          bins: {
+            default: 'redis1'
+          },
+          adapter: {
+            redis1: {
+              type: 'redis', host: redis_host, port: redis_port
+            }
+          }
         }
       });
     bootstrap.activateLogger();
@@ -58,15 +63,16 @@ class CacheRedisSpec {
       adapter: {
         redis1: {
           type: 'redis',
-          host: redis_host, port: redis_port,
+          host: redis_host,
+          port: redis_port,
           'socket': {
             'connectTimeout': 5000,
-            'host': 'localhost',
+            'host': redis_host,
             'keepAlive': 5000,
             'noDelay': true,
-            'port': 6379
+            'port': redis_port
           },
-          'url': 'redis://localhost:6379'
+          'url': 'redis://' + redis_host + ':' + redis_port
         }
       }
     });
@@ -76,7 +82,7 @@ class CacheRedisSpec {
     expect(adapterClasses.map(c => c.type).sort()).to.deep.eq(['memory', 'redis']);
 
     const adapters = cache.getAdapters();
-    const instances =  Object.keys(adapters);
+    const instances = Object.keys(adapters);
     expect(instances).to.be.deep.eq(['redis1', 'default']);
 
     expect(adapters[C_DEFAULT]).to.be.eq(adapters['redis1']);
@@ -84,7 +90,7 @@ class CacheRedisSpec {
 
 
     const bins = cache.getBins();
-    const binKeys =  Object.keys(bins);
+    const binKeys = Object.keys(bins);
 
     expect(binKeys).to.be.deep.eq([C_DEFAULT]);
     expect(bins[C_DEFAULT].store.name).to.be.eq('redis1');
