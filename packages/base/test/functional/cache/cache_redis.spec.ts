@@ -70,7 +70,7 @@ class CacheRedisSpec {
             'host': redis_host,
             'keepAlive': 5000,
             'noDelay': true,
-            'port': redis_port
+            'port': redis_port + ''
           },
           'url': 'redis://' + redis_host + ':' + redis_port
         }
