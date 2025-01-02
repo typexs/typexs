@@ -1,4 +1,4 @@
-import {ILoggerApi as _ILoggerApi} from '@allgemein/base';
+import {ILoggerApi as _ILoggerApi} from '@allgemein/logging';
 import {ILoggerOptions} from './ILoggerOptions';
 
 

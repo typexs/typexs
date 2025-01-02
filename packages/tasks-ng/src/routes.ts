@@ -6,7 +6,7 @@ import {
   PERMISSION_ALLOW_TASK_LOG,
   PERMISSION_ALLOW_TASK_STATUS,
   PERMISSION_ALLOW_TASK_GET_METADATA
-} from '@typexs/server/libs/Constants';
+} from '@typexs/tasks';
 import {AuthGuardService} from '@typexs/base-ng';
 import {TasksLogsComponent} from './components/logs-list/tasks-logs.component';
 import {TasksExecutionComponent} from './components/execution/tasks-execution.component';

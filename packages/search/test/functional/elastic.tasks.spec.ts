@@ -9,9 +9,9 @@ import { ElasticEntityController } from '../../src/lib/elastic/ElasticEntityCont
 import { Client } from '@elastic/elasticsearch';
 import { ES_host, ES_port } from './config';
 import { clear, lorem, lorem2 } from './testdata';
-import { TaskExecutor } from '@typexs/base/libs/tasks/TaskExecutor';
+import { TaskExecutor } from '@typexs/tasks';
 import { __ID__, __TYPE__, C_ELASTIC_SEARCH, C_SEARCH_INDEX, TN_INDEX } from '../../src/lib/Constants';
-import { ITaskRunnerResult } from '@typexs/base/libs/tasks/ITaskRunnerResult';
+import { ITaskRunnerResult } from '@typexs/tasks';
 import { SomeSearchEntity } from './fake_app_tasks/entities/SomeSearchEntity';
 import { SearchDataEntity } from './fake_app_tasks/entities/SearchDataEntity';
 import { IndexProcessingQueue } from '../../src/lib/IndexProcessingQueue';

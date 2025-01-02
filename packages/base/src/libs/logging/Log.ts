@@ -1,50 +1,12 @@
-import {ILoggerOptions} from './ILoggerOptions';
-import {C_DEFAULT, ClassUtils} from '@allgemein/base';
-import {BaseUtils} from '../../libs/utils/BaseUtils';
-import {InterpolationSupport} from '@allgemein/config/supports/InterpolationSupport';
-import {ILoggerApi} from './ILoggerApi';
-import {MatchUtils} from '../utils/MatchUtils';
-import {ClassType} from '@allgemein/schema-api';
-import {ConsoleLogger} from './ConsoleLogger';
-import {
-  isString,
-  isNumber,
-  isArray,
-  isUndefined,
-  isBuffer,
-  isNull,
-  isObjectLike,
-  isObject,
-  isPlainObject,
-  isDate,
-  isFunction,
-  isEmpty,
-  uniq,
-  clone,
-  defaults,
-  defaultsDeep,
-  has,
-  assign,
-  set,
-  get,
-  last,
-  first,
-  remove,
-  filter,
-  cloneDeep,
-  map,
-  find,
-  findIndex,
-  concat,
-  isBoolean,
-  cloneDeepWith,
-  mergeWith,
-  capitalize,
-  snakeCase,
-  intersection
-} from '@typexs/generic';
-
-
+import { ILoggerOptions } from './ILoggerOptions';
+import { C_DEFAULT, ClassUtils } from '@allgemein/base';
+import { BaseUtils } from '../../libs/utils/BaseUtils';
+import { InterpolationSupport } from '@allgemein/config/supports/InterpolationSupport';
+import { ILoggerApi } from './ILoggerApi';
+import { MatchUtils } from '../utils/MatchUtils';
+import { ClassType } from '@allgemein/schema-api';
+import { ConsoleLogger } from './ConsoleLogger';
+import { assign, cloneDeep, defaults, has, isBoolean, isEmpty, isUndefined } from '@typexs/generic';
 
 
 export class Log {

@@ -1,4 +1,4 @@
-import {ITask, ITaskRuntimeContainer, TaskRuntime} from '@typexs/base';
+import { ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/tasks';
 
 export class SimpleTask implements ITask {
 
@@ -11,6 +11,6 @@ export class SimpleTask implements ITask {
     let l = this.r.logger();
     l.info('just do it ;)');
 
-    return {test: 'data'};
+    return { test: 'data' };
   }
 }

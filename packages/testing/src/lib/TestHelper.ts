@@ -31,12 +31,12 @@ export class TestHelper {
 
   }
 
-  static includePaths(module = 'base') {
+  static includePaths(module: string | string[] = 'base') {
     const root = this.root();
-    return [
-      join(root, 'packages', module, 'src'),
-      join(root, 'node_modules', '@allgemein')
-    ];
+    return [join(root, 'node_modules', '@allgemein')]
+      .concat(
+        (Array.isArray(module) ? module : [module]).map(x => join(root, 'packages', x, 'src'))
+      );
   }
 
   static async clearCache() {
@@ -58,12 +58,12 @@ export class TestHelper {
 
   static typeOrmRestore() {
     require('@typexs/base/entities/SystemNodeInfo');
-    require('@typexs/base/entities/TaskLog');
+    require('packages/tasks/src/entities/TaskLog');
   }
 
   static typeOrmReset() {
     const e: string[] = ['SystemNodeInfo', 'TaskLog'];
-     Object.keys(getMetadataArgsStorage()).forEach(x => {
+    Object.keys(getMetadataArgsStorage()).forEach(x => {
       remove(getMetadataArgsStorage()[x], y => y['target'] && e.indexOf(y['target'].name) === -1);
     });
   }

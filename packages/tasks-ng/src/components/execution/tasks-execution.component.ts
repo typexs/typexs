@@ -1,9 +1,8 @@
 import { isNull, isNumber, isString, keys } from 'lodash';
 import { Component, OnInit } from '@angular/core';
-import { TaskExchangeRef, TaskRef } from '@typexs/base';
+import { TaskExchangeRef, TaskRef, TaskEvent } from '@typexs/tasks';
 import { ActivatedRoute } from '@angular/router';
 import { BackendTasksService } from '../../services/backend-tasks.service';
-import { TaskEvent } from '@typexs/base/libs/tasks/event/TaskEvent';
 
 /**
  * Executes a selected task

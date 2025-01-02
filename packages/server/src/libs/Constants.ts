@@ -97,53 +97,6 @@ export const API_CTRL_SYSTEM_WORKERS = _API_CTRL_SYSTEM + _API_CTRL_SYSTEM_WORKE
 export const XS_P_$URL = '$url';
 export const XS_P_$LABEL = '$label';
 
-/**
- * TasksController constants
- */
-export const _API_CTRL_TASKS = '/tasks';
-
-// export const _API_CTRL_TASKS_LIST = '/list';
-// export const API_CTRL_TASKS_LIST = _API_CTRL_TASKS + _API_CTRL_TASKS_LIST;
-// export const PERMISSION_ALLOW_TASKS_LIST = 'tasks list view';
-
-export const _API_CTRL_TASKS_METADATA = '/metadata';
-export const API_CTRL_TASKS_METADATA = _API_CTRL_TASKS + _API_CTRL_TASKS_METADATA;
-export const PERMISSION_ALLOW_TASKS_METADATA = 'task metadata view';
-
-export const _API_CTRL_TASK_GET_METADATA = '/metadata/:taskName';
-export const _API_CTRL_TASK_GET_METADATA_VALUE = '/metadata/:taskName/provider/:incomingName';
-export const API_CTRL_TASK_GET_METADATA = _API_CTRL_TASKS + _API_CTRL_TASK_GET_METADATA;
-export const API_CTRL_TASK_GET_METADATA_VALUE = _API_CTRL_TASKS + _API_CTRL_TASK_GET_METADATA_VALUE;
-export const PERMISSION_ALLOW_TASK_GET_METADATA = PERMISSION_ALLOW_TASKS_METADATA;
-export const PERMISSION_ALLOW_TASK_GET_METADATA_PATTERN = 'task :taskName metadata view';
-
-export const _API_CTRL_TASK_EXEC = '/exec/:taskName';
-export const API_CTRL_TASK_EXEC = _API_CTRL_TASKS + _API_CTRL_TASK_EXEC;
-export const PERMISSION_ALLOW_TASK_EXEC = 'task execute';
-export const PERMISSION_ALLOW_TASK_EXEC_PATTERN = 'task :taskName execute';
-
-export const _API_CTRL_TASK_LOG = '/log/:nodeId/:runnerId';
-export const API_CTRL_TASK_LOG = _API_CTRL_TASKS + _API_CTRL_TASK_LOG;
-export const PERMISSION_ALLOW_TASK_LOG = 'task log view';
-
-export const _API_CTRL_TASK_STATUS = '/status/:runnerId';
-export const API_CTRL_TASK_STATUS = _API_CTRL_TASKS + _API_CTRL_TASK_STATUS;
-export const PERMISSION_ALLOW_TASK_STATUS = 'task status view';
-
-export const _API_CTRL_TASK_RUNNING = '/running/:nodeId';
-export const API_CTRL_TASK_RUNNING = _API_CTRL_TASKS + _API_CTRL_TASK_RUNNING;
-export const PERMISSION_ALLOW_TASK_RUNNING = 'task running view';
-
-export const _API_CTRL_TASKS_RUNNING = '/running';
-export const API_CTRL_TASKS_RUNNING = _API_CTRL_TASKS + _API_CTRL_TASKS_RUNNING;
-
-export const PERMISSION_ALLOW_TASK_RUNNER_INFO_VIEW = 'task runners view';
-export const _API_CTRL_TASKS_RUNNERS_INFO = '/runners';
-export const API_CTRL_TASKS_RUNNERS_INFO = _API_CTRL_TASKS + _API_CTRL_TASKS_RUNNERS_INFO;
-
-export const _API_CTRL_TASKS_RUNNING_ON_NODE = '/running_tasks/:nodeId';
-export const API_CTRL_TASKS_RUNNING_ON_NODE = _API_CTRL_TASKS + _API_CTRL_TASKS_RUNNING_ON_NODE;
-export const PERMISSION_ALLOW_TASKS_RUNNING = 'task running_tasks view';
 
 
 /**

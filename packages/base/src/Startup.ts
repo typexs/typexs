@@ -1,4 +1,4 @@
-import { isArray, keys } from 'lodash';
+import { isArray } from 'lodash';
 import { Config } from '@allgemein/config';
 import { EventBus, IEventBusConfiguration } from '@allgemein/eventbus';
 import { Inject } from 'typedi';
@@ -20,23 +20,20 @@ import { Log } from './libs/logging/Log';
 import { IScheduleDef } from './libs/schedule/IScheduleDef';
 import { Scheduler } from './libs/schedule/Scheduler';
 import { System } from './libs/system/System';
-import { Tasks } from './libs/tasks/Tasks';
-import { TasksHelper } from './libs/tasks/TasksHelper';
-import { WatcherRegistry } from './libs/watchers/WatcherRegistry';
+// import { WatcherRegistry } from './libs/watchers/WatcherRegistry';
 import { Workers } from './libs/worker/Workers';
 import { ExchangeMessageRegistry } from './libs/messaging/ExchangeMessageRegistry';
 import { ConfigUtils } from './libs/utils/ConfigUtils';
-import { TaskRunnerRegistry } from './libs/tasks/TaskRunnerRegistry';
 import { Injector } from './libs/di/Injector';
 
 
 export class Startup implements IBootstrap, IShutdown {
 
-  @Inject(Tasks.NAME)
-  tasks: Tasks;
-
-  @Inject(TaskRunnerRegistry.NAME)
-  taskRunnerRegistry: TaskRunnerRegistry;
+  // @Inject(Tasks.NAME)
+  // tasks: Tasks;
+  //
+  // @Inject(TaskRunnerRegistry.NAME)
+  // taskRunnerRegistry: TaskRunnerRegistry;
 
   @Inject(Cache.NAME)
   cache: Cache;
@@ -53,8 +50,8 @@ export class Startup implements IBootstrap, IShutdown {
   @Inject(Workers.NAME)
   workers: Workers;
 
-  @Inject(WatcherRegistry.NAME)
-  watcherRegistry: WatcherRegistry;
+  // @Inject(WatcherRegistry.NAME)
+  // watcherRegistry: WatcherRegistry;
 
 
   private async schedule() {
@@ -88,8 +85,8 @@ export class Startup implements IBootstrap, IShutdown {
     this.eventbus();
 
     await this.workers.onStartup(this.loader);
-    TasksHelper.prepare(this.tasks, this.loader, this.workers.contains('TaskQueueWorker'));
-    await this.taskRunnerRegistry.onStartup();
+    // TasksHelper.prepare(this.tasks, this.loader, this.workers.contains('TaskQueueWorker'));
+    // await this.taskRunnerRegistry.onStartup();
 
 
     for (const cls of this.loader.getClasses(K_CLS_CACHE_ADAPTER)) {
@@ -104,8 +101,8 @@ export class Startup implements IBootstrap, IShutdown {
       await this.exchangeMessages.addExchangeMessage(<any>cls);
     }
 
-    await this.watcherRegistry.init();
-    await this.watcherRegistry.startAll();
+    // await this.watcherRegistry.init();
+    // await this.watcherRegistry.startAll();
   }
 
 
@@ -140,7 +137,7 @@ export class Startup implements IBootstrap, IShutdown {
    * - watchers
    */
   async shutdown() {
-    await this.taskRunnerRegistry.onShutdown();
+    // await this.taskRunnerRegistry.onShutdown();
     const nodes = this.system
       .getAllNodes()
       .filter(x => x.nodeId === this.system.node.nodeId);
@@ -157,9 +154,9 @@ export class Startup implements IBootstrap, IShutdown {
       await this.system.offline();
     }
     await EventBus.$().shutdown();
-    this.tasks.reset();
+    // this.tasks.reset();
     await this.workers.shutdown();
-    await this.watcherRegistry.stopAll();
+    // await this.watcherRegistry.stopAll();
 
   }
 

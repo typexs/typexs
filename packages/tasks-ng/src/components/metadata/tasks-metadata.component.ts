@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {TaskRef, Tasks} from '@typexs/base';
+import {TaskRef, Tasks} from '@typexs/tasks';
 import {BackendTasksService} from '../../services/backend-tasks.service';
 import {SystemInfoService} from '@typexs/base-ng';
 import {Log} from '@typexs/base-ng';

@@ -1,4 +1,4 @@
-import {ITask, ITaskRuntimeContainer, TaskRuntime, Incoming, Outgoing} from '@typexs/base';
+import {ITask, ITaskRuntimeContainer, TaskRuntime, Incoming, Outgoing} from '@typexs/tasks';
 import {TestHelper} from '../../../TestHelper';
 
 

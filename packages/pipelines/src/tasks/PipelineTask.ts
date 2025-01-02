@@ -1,5 +1,6 @@
 import { isEmpty, isString, isUndefined } from 'lodash';
-import { Incoming, Inject, Injector, ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/base';
+import { Incoming, ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/tasks';
+import { Inject, Injector } from '@typexs/base';
 import { ClassUtils } from '@allgemein/base';
 import { MatchUtils } from '@typexs/base/libs/utils/MatchUtils';
 import { PipelineTypes } from '../lib/PipelineTypes';

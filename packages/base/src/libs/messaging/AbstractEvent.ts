@@ -1,5 +1,5 @@
 import { CryptUtils } from '@allgemein/base';
-import { IdObject } from '../queue/IdObject';
+import { IdObject } from '@allgemein/queue';
 
 
 export abstract class AbstractEvent implements IdObject {

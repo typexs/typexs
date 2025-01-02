@@ -1,9 +1,8 @@
-import {PipelineRegistry} from './PipelineRegistry';
-import {Inject} from '@typexs/base';
-import {IValueProvider} from '@typexs/base/libs/tasks/decorators/IValueProvider';
-import {IPropertyRef} from '@allgemein/schema-api';
-import {ExprDesc} from '@allgemein/expressions';
-
+import { PipelineRegistry } from './PipelineRegistry';
+import { Inject } from '@typexs/base';
+import { IValueProvider } from '@typexs/tasks/lib/decorators/IValueProvider';
+import { IPropertyRef } from '@allgemein/schema-api';
+import { ExprDesc } from '@allgemein/expressions';
 
 
 export class PipelineTypes implements IValueProvider<string[]> {

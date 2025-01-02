@@ -1,7 +1,7 @@
 import { isArray, isEmpty } from 'lodash';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BackendTasksService } from '../../services/backend-tasks.service';
-import { TaskLog } from '@typexs/base/entities/TaskLog';
+import { TaskLog } from '@typexs/tasks';
 import { Subscription } from 'rxjs';
 import { Log } from '@typexs/base-ng';
 

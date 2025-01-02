@@ -5,9 +5,15 @@ import {
   API_CTRL_TASK_GET_METADATA_VALUE,
   API_CTRL_TASK_LOG,
   API_CTRL_TASK_STATUS,
-  API_CTRL_TASKS_METADATA
-} from '@typexs/server';
-import { C_TASKS, C_WORKERS, IMessageOptions, ITaskExectorOptions, SystemNodeInfo, TaskEvent, TaskLog, TaskRef, Tasks } from '@typexs/base';
+  API_CTRL_TASKS_METADATA,
+  C_TASKS,
+  ITaskExectorOptions,
+  TaskEvent,
+  TaskLog,
+  TaskRef,
+  Tasks
+} from '@typexs/tasks';
+import { C_WORKERS, IMessageOptions, SystemNodeInfo } from '@typexs/base';
 import { combineLatest, Observable, Subject, timer } from 'rxjs';
 import { AbstractQueryService, AppService, BackendService, IApiCallOptions, Log, SystemInfoService } from '@typexs/base-ng';
 import { ExprDesc } from '@allgemein/expressions';

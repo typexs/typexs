@@ -7,7 +7,7 @@ import {EventBus, subscribe} from '@allgemein/eventbus';
 import {ILoggerApi} from '../../libs/logging/ILoggerApi';
 import {Log} from '../../libs/logging/Log';
 import {IMessageOptions} from './IMessageOptions';
-import { isEmpty } from 'lodash';
+import { isEmpty } from '@typexs/generic';
 
 
 export abstract class AbstractExchange<REQ extends AbstractEvent, RES extends AbstractEvent> {

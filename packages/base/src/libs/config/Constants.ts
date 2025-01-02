@@ -14,7 +14,7 @@ import {
   K_CLS_USE_API
 } from '../Constants';
 import { IRuntimeLoaderOptions } from '../../base/IRuntimeLoaderOptions';
-import { K_CLS_TASKS } from '../tasks/Constants';
+// import { K_CLS_TASKS } from '../../../../tasks/src/lib/Constants';
 import { K_CLS_WORKERS } from '../worker/Constants';
 import { IStorageRefOptions } from '../storage/IStorageRefOptions';
 import { ITypexsOptions } from '../ITypexsOptions';
@@ -202,12 +202,6 @@ export const DEFAULT_RUNTIME_OPTIONS: IRuntimeLoaderOptions = {
       refs: [
         'entities', 'src/entities',
         'shared/entities', 'src/shared/entities'
-      ]
-    },
-    {
-      topic: K_CLS_TASKS,
-      refs: [
-        'tasks', 'tasks/*/*', 'src/tasks', 'src/tasks/*/*'
       ]
     },
     {

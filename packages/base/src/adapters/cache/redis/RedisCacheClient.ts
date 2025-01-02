@@ -1,4 +1,4 @@
-import { isBuffer, isEmpty, isNull, isUndefined } from 'lodash';
+import { isBuffer, isEmpty, isNull, isUndefined } from '@typexs/generic';
 import { createClient, RedisClientType, SetOptions } from 'redis';
 import { IRedisCacheClient } from './IRedisCacheClient';
 import { ICacheGetOptions, ICacheSetOptions } from '../../../libs/cache/ICacheOptions';

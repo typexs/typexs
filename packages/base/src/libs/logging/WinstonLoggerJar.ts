@@ -1,10 +1,9 @@
-import { C_DEFAULT, ILogLevel, TodoException } from '@allgemein/base';
+import { C_DEFAULT, TodoException } from '@allgemein/base';
 import * as winston from 'winston';
 import { createLogger, Logger, LoggerOptions } from 'winston';
 import { ILoggerOptions } from './ILoggerOptions';
 import { Log } from '../../libs/logging/Log';
 import { BaseUtils } from '../../libs/utils/BaseUtils';
-
 import { ConsoleTransportOptions } from 'winston/lib/winston/transports';
 import { DefaultFormat } from './DefaultFormat';
 import { LogEvent } from './LogEvent';
@@ -12,6 +11,7 @@ import { ILoggerApi } from './ILoggerApi';
 import { DefaultJsonFormat } from './DefaultJsonFormat';
 import { isLogEntry } from './ILogEntry';
 import { defaults, get, has, isBoolean, isFunction, isString } from '@typexs/generic';
+import { ILogLevel } from '@allgemein/logging';
 
 
 const DEFAULT_TRANSPORT_OPTIONS: ConsoleTransportOptions = {};

@@ -1,4 +1,4 @@
-import {ITask} from '@typexs/base';
+import {ITask} from '@typexs/tasks';
 
 
 export class SimpleTaskWithError implements ITask {

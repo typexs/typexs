@@ -1,10 +1,10 @@
 import { set } from 'lodash';
 import { Component, OnInit } from '@angular/core';
-import { TaskRef } from '@typexs/base';
+import { TaskRef } from '@typexs/tasks';
 import { BackendTasksService } from '../../services/backend-tasks.service';
 import { C_URL_HANDLER, C_URL_TITLE, CC_GRID_CELL_ROUTER_LINK, IDatatableOptions, IGridColumn, SystemInfoService } from '@typexs/base-ng';
 import { StorageService } from '@typexs/storage-ng';
-import { TaskLog } from '@typexs/base/entities/TaskLog';
+import { TaskLog } from '@typexs/tasks';
 
 /**
  * Show tasks list which should be filtered for running tasks, runned task
