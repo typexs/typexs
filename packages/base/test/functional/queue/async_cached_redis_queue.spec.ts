@@ -1,8 +1,6 @@
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-import { IQueueWorkload } from '../../../src/libs/queue/IQueueWorkload';
-import { IQueueProcessor } from '../../../src/libs/queue/IQueueProcessor';
-import { AsyncWorkerQueue } from '../../../src/libs/queue/AsyncWorkerQueue';
+import { AsyncWorkerQueue, IQueueProcessor, IQueueWorkload } from '@allgemein/queue';
 import { Cache } from '../../../src/libs/cache/Cache';
 import { RedisCacheAdapter } from '../../../src';
 import { TestHelper } from '@typexs/testing';

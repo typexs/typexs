@@ -1,5 +1,4 @@
-import { Incoming, ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/base';
-import { VProvider } from '../libs/VProvider';
+import { Incoming, ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/tasks';
 
 export class TaskWithRequiredParameters implements ITask {
 

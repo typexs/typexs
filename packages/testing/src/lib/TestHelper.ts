@@ -31,12 +31,33 @@ export class TestHelper {
 
   }
 
-  static includePaths(module = 'base') {
+  static includePaths(module: string | string[] = 'base') {
     const root = this.root();
     return [
-      join(root, 'packages', module, 'src'),
       join(root, 'node_modules', '@allgemein')
-    ];
+    ]
+      .concat(
+        (Array.isArray(module) ? module : [module]).map(x => join(root, 'packages', x, 'src'))
+      );
+  }
+
+  /**
+   * Generate modul setting for the concrete given modules,
+   * Default value is 'base' for main module.
+   *
+   * @param module : string | string[]
+   */
+  static modulSettings(module: string | string[] = 'base') {
+    module = Array.isArray(module) ? module : [module];
+    return {
+      paths: this.includePaths(module),
+      disableCache: true,
+      include: [
+        '**/@allgemein{,**/}*',
+        '**/@typexs*',
+        ...module.map(x => '**/@typexs/' + x + '*')
+      ]
+    };
   }
 
   static async clearCache() {
@@ -58,12 +79,12 @@ export class TestHelper {
 
   static typeOrmRestore() {
     require('@typexs/base/entities/SystemNodeInfo');
-    require('@typexs/base/entities/TaskLog');
+    require('packages/tasks/src/entities/TaskLog');
   }
 
   static typeOrmReset() {
     const e: string[] = ['SystemNodeInfo', 'TaskLog'];
-     Object.keys(getMetadataArgsStorage()).forEach(x => {
+    Object.keys(getMetadataArgsStorage()).forEach(x => {
       remove(getMetadataArgsStorage()[x], y => y['target'] && e.indexOf(y['target'].name) === -1);
     });
   }

@@ -88,7 +88,9 @@ class StorageGeneralSpec {
       entityNames.push((<Function>fn).prototype.constructor.name);
     }
     expect(entityNames.sort()).to.be.deep.eq([
-      'SystemNodeInfo', 'TaskLog', 'ModuleEntity', 'TestEntity'
+      'SystemNodeInfo',
+      'ModuleEntity',
+      'TestEntity'
     ].sort());
 
     let storageRef: TypeOrmStorageRef = storageManager.forClass('module_entity');
@@ -158,7 +160,7 @@ class StorageGeneralSpec {
     }
 
     const dbfile = path.join(__dirname, '/tmp/testdb01.sqlite');
-    const opts = merge(clone(storageOptions), {database: dbfile});
+    const opts = merge(clone(storageOptions), { database: dbfile });
 
 
     const invoker = new Invoker();
@@ -238,7 +240,7 @@ class StorageGeneralSpec {
 
   @test
   async 'typeorm detect listener on fixed added class'() {
-    const opts = merge(clone(storageOptions), {entities: [X1, Y1]});
+    const opts = merge(clone(storageOptions), { entities: [X1, Y1] });
 
     const invoker = new Invoker();
     Injector.set(Invoker.NAME, invoker);

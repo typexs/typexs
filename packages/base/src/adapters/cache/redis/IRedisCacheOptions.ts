@@ -6,4 +6,6 @@ export interface IRedisCacheOptions extends RedisClientOptions {
 
   port: number;
 
+  unref?: boolean;
+
 }

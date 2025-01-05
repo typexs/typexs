@@ -51,11 +51,11 @@ class GeneralSpec {
 
     const schemaHandler = storageRef.getSchemaHandler();
     const tableNames = await schemaHandler.getCollectionNames();
-    expect(tableNames).to.have.length(6);
+    expect(tableNames).to.have.length(5);
     expect(tableNames).to.have.members(map(q, _q => _q.name));
 
     const tables = await schemaHandler.getCollections(tableNames);
-    expect(tables).to.have.length(6);
+    expect(tables).to.have.length(5);
     expect(tableNames).to.have.members(map(tables, _q => _q.name));
 
     await bootstrap.shutdown();

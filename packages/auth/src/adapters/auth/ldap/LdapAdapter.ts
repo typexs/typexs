@@ -1,12 +1,9 @@
 import { defaults, get, has, isNull, set } from '@typexs/generic';
-
-
 import { DefaultUserLogin } from '../../../libs/models/DefaultUserLogin';
 import { AbstractAuthAdapter } from '../../../libs/adapter/AbstractAuthAdapter';
-
 import { ILdapAuthOptions } from './ILdapAuthOptions';
-
-import { AsyncWorkerQueue, IQueueProcessor, NestedException } from '@typexs/base';
+import { NestedException } from '@typexs/base';
+import { AsyncWorkerQueue, IQueueProcessor } from '@allgemein/queue';
 import { AuthDataContainer } from '../../../libs/auth/AuthDataContainer';
 import { UserNotFoundError } from '../../../libs/exceptions/UserNotFoundError';
 import { constants } from 'os';

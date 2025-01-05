@@ -18,25 +18,22 @@ import {
 } from 'lodash';
 import sha1 from 'sha1';
 import {
-  AsyncWorkerQueue,
   IConnection,
   IEntityController,
   Injector,
-  IQueueProcessor,
   ISaveOptions,
   NotYetImplementedError,
   Storage,
   StorageRef,
-  TypeOrmConnectionWrapper,
   TypeOrmEntityRegistry
 } from '@typexs/base';
 import { ClassRef, ClassType, IEntityRef, IPropertyRef } from '@allgemein/schema-api';
+import { AsyncWorkerQueue, IQueueProcessor, QueueJobRef } from '@allgemein/queue';
 import { LockFactory, TreeUtils } from '@allgemein/base';
 import { Processor } from '../../../lib/Processor';
 import { XS_ID_SEP, XS_STATE_KEY } from '../../../lib/Constants';
 import { IRevisionSupport } from '../../../lib/IRevisionSupport';
 import { IProcessorOptions } from '../../../lib/processor/IProcessorOptions';
-import { QueueJobRef } from '@typexs/base/libs/queue/QueueJobRef';
 
 
 export interface IStorageControllerProcessorOptions<T> extends IProcessorOptions, ISaveOptions {

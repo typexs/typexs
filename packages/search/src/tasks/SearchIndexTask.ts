@@ -1,4 +1,5 @@
-import { EntityControllerRegistry, Incoming, Inject, Injector, ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/base';
+import { EntityControllerRegistry, Inject, Injector } from '@typexs/base';
+import { Incoming, ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/tasks';
 import { IndexRuntimeStatus } from '../lib/IndexRuntimeStatus';
 import { IndexProcessingQueue } from '../lib/IndexProcessingQueue';
 import { TN_INDEX } from '../lib/Constants';

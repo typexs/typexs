@@ -47,6 +47,8 @@ export {
   orderBy,
   uniqBy,
   upperFirst,
-  keys
+  keys,
+  shuffle,
+  isError
 } from 'lodash';
 

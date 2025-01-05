@@ -1,6 +1,6 @@
 import { TASK_ROUTES } from './routes';
 import { RegistryFactory } from '@allgemein/schema-api';
-import { C_TASKS, Tasks } from '@typexs/base';
+import { C_TASKS, Tasks } from '@typexs/tasks';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@typexs/forms-ng';
 import { BaseModule } from '@typexs/base-ng';

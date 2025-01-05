@@ -28,7 +28,7 @@
     "@typexs/base-ng": ">=13.0.0",
     "@typexs/forms-ng": ">=13.0.0",
     "@typexs/server": ">=2.3.0",
-    "@typexs/storage-ng": ">=13.0.0"
+    "@typexs/tasks": ">=2.3.0"
   },
   "devDependencies": {
     "@angular/common": "v13-lts",
@@ -39,7 +39,7 @@
     "@typexs/base-ng": "^13.1.0",
     "@typexs/forms-ng": "^13.1.0",
     "@typexs/server": "^2.4.0",
-    "@typexs/storage-ng": "^13.1.0",
+    "@typexs/tasks": "^2.4.0",
     "rxjs": "~7.5.0"
   },
   "publishConfig": {

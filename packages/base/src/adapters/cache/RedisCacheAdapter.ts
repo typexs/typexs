@@ -1,9 +1,9 @@
-import {ICacheAdapter} from '../../libs/cache/ICacheAdapter';
-import {CryptUtils, PlatformUtils} from '@allgemein/base';
-import {ICacheBinConfig} from '../../libs/cache/ICacheBinConfig';
-import {ICacheSetOptions} from '../../libs/cache/ICacheOptions';
-import {IRedisCacheClient} from './redis/IRedisCacheClient';
-import {Log} from '../../libs/logging/Log';
+import { ICacheAdapter } from '../../libs/cache/ICacheAdapter';
+import { CryptUtils, PlatformUtils } from '@allgemein/base';
+import { ICacheBinConfig } from '../../libs/cache/ICacheBinConfig';
+import { ICacheSetOptions } from '../../libs/cache/ICacheOptions';
+import { IRedisCacheClient } from './redis/IRedisCacheClient';
+import { Log } from '../../libs/logging/Log';
 
 export class RedisCacheAdapter implements ICacheAdapter {
 
@@ -29,8 +29,8 @@ export class RedisCacheAdapter implements ICacheAdapter {
 
   async hasRequirements(): Promise<boolean> {
     try {
-      PlatformUtils.load('redis');
-      RedisCacheAdapter.REDIS = await import('./redis/RedisCacheClient').then(x => x.RedisCacheClient);
+      await PlatformUtils.loadAsync('redis');
+      RedisCacheAdapter.REDIS = await (import('./redis/RedisCacheClient').then(x => x.RedisCacheClient));
       return true;
     } catch (e) {
       Log.debug('Can\'t load redis cache adapter cause redis npm package isn\'t present. ');

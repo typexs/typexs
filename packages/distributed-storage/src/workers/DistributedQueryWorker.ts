@@ -7,9 +7,6 @@ import { System } from '@typexs/base/libs/system/System';
 import { IEntityRef } from '@allgemein/schema-api';
 import { IWorker } from '@typexs/base/libs/worker/IWorker';
 import { IWorkerStatisitic } from '@typexs/base/libs/worker/IWorkerStatisitic';
-import { IQueueWorkload } from '@typexs/base/libs/queue/IQueueWorkload';
-import { IQueueProcessor } from '@typexs/base/libs/queue/IQueueProcessor';
-import { AsyncWorkerQueue } from '@typexs/base/libs/queue/AsyncWorkerQueue';
 import { Log } from '@typexs/base/libs/logging/Log';
 import { IFindOptions } from '@typexs/base/libs/storage/framework/IFindOptions';
 import { IDistributedQueryWorkerOptions } from '..//lib/IDistributedQueryWorkerOptions';
@@ -29,6 +26,7 @@ import { DistributedSaveResponse } from '../lib/save/DistributedSaveResponse';
 import { DistributedUpdateResponse } from '../lib/update/DistributedUpdateResponse';
 import { DistributedAggregateResponse } from '../lib/aggregate/DistributedAggregateResponse';
 import { DistributedRemoveResponse } from '../lib/remove/DistributedRemoveResponse';
+import { AsyncWorkerQueue, IQueueProcessor, IQueueWorkload } from '@allgemein/queue';
 
 
 export interface IQueryWorkload extends IQueueWorkload {
@@ -95,7 +93,7 @@ export class DistributedQueryWorker implements IQueueProcessor<IQueryWorkload>, 
     concurrent: 100
   }) {
     this.options = defaults(options, { onlyRemote: false, allowed: {} });
-    this.logger = get(this.options, 'logger', Log.getLoggerFor(DistributedQueryWorker));
+    this.logger = get(this.options, 'logger', Log.getLoggerFor(DistributedQueryWorker)) as ILoggerApi;
     this.nodeId = Bootstrap.getNodeId();
     this.queue = new AsyncWorkerQueue<IQueryWorkload>(this, { ...options, logger: this.logger });
     await EventBus.register(this);

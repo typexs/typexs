@@ -7,7 +7,7 @@ export async function callMethod(
   const _objects = filter(objects, a => isFunction(a[methodName]));
 
   for (const activator of _objects) {
-    Log.trace(methodName + ' ' + ClassesLoader.getModulName(activator.constructor));
+    Log.debug(activator.constructor.name + '->' + methodName + ' (' + ClassesLoader.getModulName(activator.constructor) + ')');
     try {
       await activator[methodName]();
     } catch (e) {

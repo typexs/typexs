@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TaskLog } from '@typexs/base/entities/TaskLog';
+import { TaskLog } from '@typexs/tasks';
 import { ActivatedRoute } from '@angular/router';
 import { BackendTasksService } from '../../services/backend-tasks.service';
 
