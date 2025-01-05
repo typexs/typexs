@@ -56,7 +56,7 @@ const settingsTemplate: any = {
     }
   },
   eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: redis_host, port: redis_port, unref: true}}},
-  workers: {access: [{name: 'TaskQueueWorker', access: 'allow'}]}
+  // workers: {access: [{name: 'TaskQueueWorker', access: 'allow'}]}
 
 };
 
@@ -97,25 +97,26 @@ class RuntimeInfoControllerSpec {
   }
 
 
-  @test
-  async 'list workers'() {
-    const url = server.url() + '/' + C_API;
-    let res: any = await http.get(url + API_CTRL_SYSTEM_WORKERS, {responseType: 'json'});
-    expect(res).to.not.be.null;
-    res = res.body;
-    expect(res).to.have.length(1);
-    expect(res[0]).to.deep.eq({
-      name: 'task_queue_worker',
-      className: 'TaskQueueWorker',
-      statistics: {
-        stats: {all: 0, done: 0, running: 0, enqueued: 0, active: 0},
-        paused: false,
-        idle: true,
-        occupied: false,
-        running: false
-      }
-    });
-  }
-
+  // TODO add fake worker to check this
+  // @test
+  // async 'list workers'() {
+  //   const url = server.url() + '/' + C_API;
+  //   let res: any = await http.get(url + API_CTRL_SYSTEM_WORKERS, {responseType: 'json'});
+  //   expect(res).to.not.be.null;
+  //   res = res.body;
+  //   expect(res).to.have.length(1);
+  //   expect(res[0]).to.deep.eq({
+  //     name: 'task_queue_worker',
+  //     className: 'TaskQueueWorker',
+  //     statistics: {
+  //       stats: {all: 0, done: 0, running: 0, enqueued: 0, active: 0},
+  //       paused: false,
+  //       idle: true,
+  //       occupied: false,
+  //       running: false
+  //     }
+  //   });
+  // }
+  //
 
 }

@@ -25,6 +25,7 @@ import { Workers } from './libs/worker/Workers';
 import { ExchangeMessageRegistry } from './libs/messaging/ExchangeMessageRegistry';
 import { ConfigUtils } from './libs/utils/ConfigUtils';
 import { Injector } from './libs/di/Injector';
+import { ClassUtils } from '@allgemein/base';
 
 
 export class Startup implements IBootstrap, IShutdown {
@@ -68,11 +69,13 @@ export class Startup implements IBootstrap, IShutdown {
   private eventbus() {
     const bus: { [name: string]: IEventBusConfiguration } = Config.get(C_EVENTBUS, false);
     if (bus) {
+      Log.debug('initialize eventbus');
       const classes = this.loader.getClasses(K_CLS_EVENTBUS_ADAPTER);
       classes.map(x => EventBus.registerAdapter(x));
-      for (const name of  Object.keys(bus)) {
+      for (const name of Object.keys(bus)) {
         const busCfg: IEventBusConfiguration = bus[name];
         busCfg.name = name;
+        Log.debug('eventbus: ' + name + ' of class ' + ClassUtils.getClassName(busCfg.adapter));
         const x = EventBus.$().addConfiguration(busCfg);
       }
     }
@@ -85,29 +88,29 @@ export class Startup implements IBootstrap, IShutdown {
     this.eventbus();
 
     await this.workers.onStartup(this.loader);
-    // TasksHelper.prepare(this.tasks, this.loader, this.workers.contains('TaskQueueWorker'));
-    // await this.taskRunnerRegistry.onStartup();
 
 
-    for (const cls of this.loader.getClasses(K_CLS_CACHE_ADAPTER)) {
-      await this.cache.register(<any>cls);
+    const cacheAdapters = this.loader.getClasses(K_CLS_CACHE_ADAPTER);
+    if (cacheAdapters.length > 0) {
+      Log.debug('initialize cache adapter');
+      for (const cls of cacheAdapters) {
+        Log.debug('cache adapter class ' + ClassUtils.getClassName(cls));
+        await this.cache.register(<any>cls);
+      }
     }
+
     const cache: ICacheConfig = Config.get('cache', {});
     await this.cache.configure(this.system.node.nodeId, cache);
-    await this.cache.set([C_CONFIG, this.system.node.nodeId].join(C_KEY_SEPARATOR), ConfigUtils.clone());
-
+    // TODO waiting for this promise causes unknown halt in an additionally spawned node
+    this.cache.set([C_CONFIG, this.system.node.nodeId].join(C_KEY_SEPARATOR), ConfigUtils.clone());
 
     for (const cls of this.loader.getClasses(K_CLS_EXCHANGE_MESSAGE)) {
       await this.exchangeMessages.addExchangeMessage(<any>cls);
     }
-
-    // await this.watcherRegistry.init();
-    // await this.watcherRegistry.startAll();
   }
 
 
   async ready() {
-
     await this.workers.startup();
 
     // TODO start schedules only on a worker node!

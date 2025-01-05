@@ -83,14 +83,23 @@ export * from './libs/worker/Constants';
 export { Workers } from './libs/worker/Workers';
 export { WorkerRef } from './libs/worker/WorkerRef';
 
+/**
+ * Utils
+ */
 export { BaseUtils } from './libs/utils/BaseUtils';
 export { DomainUtils } from './libs/utils/DomainUtils';
 export { ConfigUtils } from './libs/utils/ConfigUtils';
 export { MatchUtils } from './libs/utils/MatchUtils';
 export { DateUtils } from './libs/utils/DateUtils';
 
+/**
+ * Bootstrap
+ */
 export { Bootstrap } from './Bootstrap';
 
+/**
+ * TypeOrm schema
+ */
 export { TypeOrmEntityRef } from './libs/storage/framework/typeorm/schema/TypeOrmEntityRef';
 export { TypeOrmPropertyRef } from './libs/storage/framework/typeorm/schema/TypeOrmPropertyRef';
 export { TypeOrmEntityRegistry } from './libs/storage/framework/typeorm/schema/TypeOrmEntityRegistry';

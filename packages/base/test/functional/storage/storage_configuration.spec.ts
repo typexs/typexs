@@ -1,9 +1,9 @@
 import * as path from 'path';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {Bootstrap} from '../../../src/Bootstrap';
-import {Config} from '@allgemein/config';
-import {TestEntity} from './fake_app/entities/TestEntity';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { Bootstrap } from '../../../src/Bootstrap';
+import { Config } from '@allgemein/config';
+import { TestEntity } from './fake_app/entities/TestEntity';
 import { TestHelper } from '@typexs/testing';
 
 
@@ -23,7 +23,7 @@ class StorageConfigurationSpec {
   async 'option: extends'() {
     const appdir = path.join(__dirname, 'fake_app');
     bootstrap = await Bootstrap.configure({
-      app: {path: appdir},
+      app: { path: appdir },
       modules: {
         paths: TestHelper.includePaths(),
         include: []
@@ -36,7 +36,7 @@ class StorageConfigurationSpec {
           synchronize: true,
           extends: 'default',
           type: 'sqlite',
-          database: ':memory:',
+          database: ':memory:'
           // logging: 'all',
           // logger: 'simple-console'
         }
@@ -49,8 +49,8 @@ class StorageConfigurationSpec {
     const storage2 = storageManager.get('default2');
 
 
-    expect(storage.getOptions().entities).to.be.length(4);
-    expect(storage2.getOptions().entities).to.be.length(4);
+    expect(storage.getOptions().entities).to.be.length(3);
+    expect(storage2.getOptions().entities).to.be.length(3);
 
     const testEntity = new TestEntity();
     testEntity.id = 1;

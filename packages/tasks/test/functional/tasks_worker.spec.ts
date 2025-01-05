@@ -56,7 +56,7 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: NODEID },
         logging: { enable: LOG_EVENT, level: 'debug' },
-        modules: { paths: TestHelper.includePaths(), disableCache: true },
+        modules: TestHelper.modulSettings(['base', 'tasks']),
         storage: { default: TEST_STORAGE_OPTIONS },
         eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
         // workers: {access: [{name: 'TaskMonitorWorker', access: 'allow'}]}
@@ -156,7 +156,7 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: 'worker' },
         logging: { enable: LOG_EVENT, level: 'debug' },
-        modules: { paths: TestHelper.includePaths(), disableCache: true },
+        modules: TestHelper.modulSettings(['base', 'tasks']),
         storage: { default: TEST_STORAGE_OPTIONS },
         eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } },
         workers: { access: [{ name: 'TaskQueueWorker', access: 'allow' }] }
@@ -238,7 +238,7 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: 'system', path: __dirname + '/fake_app' },
         logging: { enable: LOG_EVENT, level: 'debug' },
-        modules: { paths: TestHelper.includePaths(), disableCache: true },
+        modules: TestHelper.modulSettings(['base', 'tasks']),
         storage: { default: TEST_STORAGE_OPTIONS },
         eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
       });
@@ -315,7 +315,7 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: 'system', path: __dirname + '/fake_app' },
         logging: { enable: LOG_EVENT, level: 'debug' },
-        modules: { paths: TestHelper.includePaths(), disableCache: true },
+        modules: TestHelper.modulSettings(['base', 'tasks']),
         storage: { default: TEST_STORAGE_OPTIONS },
         eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
       });
@@ -385,7 +385,7 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: 'system', path: __dirname + '/fake_app' },
         logging: { enable: LOG_EVENT, level: 'debug' },
-        modules: { paths: TestHelper.includePaths(), disableCache: true },
+        modules: TestHelper.modulSettings(['base', 'tasks']),
         storage: { default: TEST_STORAGE_OPTIONS },
         eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
       });
@@ -492,7 +492,7 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: 'event', path: __dirname + '/fake_app' },
         logging: { enable: LOG_EVENT, level: 'debug', loggers: [{ name: '*', level: 'debug' }] },
-        modules: { paths: TestHelper.includePaths(), disableCache: true },
+        modules: TestHelper.modulSettings(['base', 'tasks']),
         storage: { default: TEST_STORAGE_OPTIONS },
         // cache: {bins: {default: 'redis1'}, adapter: {redis1: {type: 'redis', host: redis_host, port: redis_port}}},
         eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
@@ -549,7 +549,7 @@ class TasksWorkerSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: 'worker' },
         logging: { enable: LOG_EVENT, level: 'debug' },
-        modules: { paths: TestHelper.includePaths(), disableCache: true },
+        modules: TestHelper.modulSettings(['base', 'tasks']),
         storage: { default: TEST_STORAGE_OPTIONS },
         eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } },
         workers: { access: [{ name: 'Task*Worker', access: 'allow' }] }

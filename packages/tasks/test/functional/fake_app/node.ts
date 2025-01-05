@@ -9,10 +9,7 @@ new TypeXsInstance('fakeapp01')
     app: {
       path: __dirname
     },
-    modules: {
-      paths: TestHelper.includePaths(),
-      disableCache: true
-    },
+    modules: TestHelper.modulSettings(['base', 'tasks']),
     storage: {
       default: TEST_STORAGE_OPTIONS
     },

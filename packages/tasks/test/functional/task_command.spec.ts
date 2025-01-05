@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import * as path from 'path';
 import { Bootstrap, C_STORAGE_DEFAULT, StorageRef } from '@typexs/base';
 import { Config } from '@allgemein/config';
-import { TaskCommand } from '../../src/command/TaskCommand';
+import { TaskCommand } from '../../src/commands/TaskCommand';
 import { TEST_STORAGE_OPTIONS } from '../../../base/test/functional/config';
 import { Container } from 'typedi';
 import { TaskLog } from '../../src/entities/TaskLog';
@@ -25,30 +25,34 @@ class Task_commandSpec {
     Config.clear();
 
 
-    const appdir = path.join(__dirname, 'fake_app');
-    bootstrap = await Bootstrap.setConfigSources([{ type: 'system' }]).configure({
-      // logging: {
-      //   level: 'debug', enable: true,
-      //   transports: [{console: {}}],
-      //   loggers: [{name: '*', level: 'debug'}]
-      // },
-      app: { path: appdir },
-      storage: { default: TEST_STORAGE_OPTIONS },
-      modules: { paths: TestHelper.includePaths(), disableCache: true }
-      // workers: {access: [{name: 'TaskMonitorWorker', access: 'allow'}]}
-    });
+    const appdir = path.join(__dirname, 'commands/app');
+    bootstrap = await Bootstrap
+      .setConfigSources([{ type: 'system' }])
+      .configure({
+        // logging: {
+        //   level: 'debug', enable: true,
+        //   transports: [{console: {}}],
+        //   loggers: [{name: '*', level: 'debug'}]
+        // },
+        app: { path: appdir },
+        storage: { default: TEST_STORAGE_OPTIONS },
+        modules: TestHelper.modulSettings(['base', 'tasks'])// && { paths: [TestHelper.root()] }
+        // workers: {access: [{name: 'TaskMonitorWorker', access: 'allow'}]}
+      });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
     await bootstrap.prepareRuntime();
     await bootstrap.activateStorage();
     await bootstrap.startup();
-
-
   }
+
 
   static async after() {
-    await bootstrap.shutdown();
+    if (bootstrap) {
+      await bootstrap.shutdown();
+    }
   }
+
 
   @test
   async 'task command registered'() {
@@ -56,8 +60,8 @@ class Task_commandSpec {
     const command = commands.find(x => x instanceof TaskCommand);
     expect(command).to.exist;
     expect((<TaskCommand>command).command).to.eq('task');
-
   }
+
 
   @test
   async 'list tasks'() {
@@ -78,7 +82,7 @@ class Task_commandSpec {
     Config.set('argv.local', true, 'system');
     const commands = bootstrap.getCommands();
     const command = commands.find(x => x instanceof TaskCommand);
-    process.argv = ['blabla', 'task', 'test'];
+    process.argv = ['blabla', 'task', 'test', '--someValue=test'];
     stdMocks.use();
     await command.handler({});
     stdMocks.restore();
@@ -91,7 +95,6 @@ class Task_commandSpec {
     const res = await ref.getController().find(TaskLog);
     expect(res).to.have.length(1);
     expect((<any>res[0]).state).to.eq('stopped');
-
   }
 
 }

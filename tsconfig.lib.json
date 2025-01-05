@@ -100,6 +100,18 @@
       ],
       "@typexs/ng-router-menu/*": [
         "./packages/ng-router-menu/src/*"
+      ],
+      "@typexs/tasks": [
+        "./packages/tasks/src/browser"
+      ],
+      "@typexs/tasks/*": [
+        "./packages/tasks/src/*"
+      ],
+      "@typexs/tasks-ng/*": [
+        "./packages/tasks-ng/src/*"
+      ],
+      "@typexs/tasks-ng": [
+        "./packages/tasks-ng/src/public_api"
       ]
     }
   }

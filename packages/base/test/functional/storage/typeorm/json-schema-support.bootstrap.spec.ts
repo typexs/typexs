@@ -77,20 +77,19 @@ class JsonSchemaSupportSpec {
       './schema-files/simple.json'
     ]);
 
-    expect(storage.getOptions().entities).to.be.length(3);
-    expect(storage.getEntityRefs()).to.be.length(3);
+    expect(storage.getOptions().entities).to.be.length(2);
+    expect(storage.getEntityRefs()).to.be.length(2);
 
     const c = await storage.connect() as TypeOrmConnectionWrapper;
     const q = await c.query('SELECT * FROM sqlite_master WHERE type = \'table\' AND name NOT LIKE \'sqlite%\';');
-    expect(q).to.have.length(3);
+    expect(q).to.have.length(2);
     expect(q.map((x: any) => x.name)).to.deep.eq([
       'system_node_info',
-      'task_log',
       'Osoba'
     ]);
     expect(q.find((x: any) => x.name === 'Osoba')).to.deep.eq({
       'name': 'Osoba',
-      'rootpage': 18,
+      'rootpage': 8,
       'sql': 'CREATE TABLE "Osoba" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "first_name" varchar NOT NULL, "last_name" varchar NOT NULL)',
       'tbl_name': 'Osoba',
       'type': 'table'
@@ -116,8 +115,8 @@ class JsonSchemaSupportSpec {
       './schema-files/simple.json'
     ]);
 
-    expect(storage.getOptions().entities).to.be.length(3);
-    expect(storage.getEntityRefs()).to.be.length(3);
+    expect(storage.getOptions().entities).to.be.length(2);
+    expect(storage.getEntityRefs()).to.be.length(2);
     const entry = storage.getRegistry().getEntityRefFor('Osoba');
     const c = await storage.connect() as TypeOrmConnectionWrapper;
 
@@ -161,29 +160,28 @@ class JsonSchemaSupportSpec {
       './schema-files/one-to-one-relation.json'
     ]);
 
-    expect(storage.getOptions().entities).to.be.length(4);
-    expect(storage.getEntityRefs()).to.be.length(4);
+    expect(storage.getOptions().entities).to.be.length(3);
+    expect(storage.getEntityRefs()).to.be.length(3);
 
     const c = await storage.connect() as TypeOrmConnectionWrapper;
     const q = await c.query('SELECT * FROM sqlite_master WHERE type = \'table\' AND name NOT LIKE \'sqlite%\';');
-    expect(q).to.have.length(4);
+    expect(q).to.have.length(3);
     expect(q.map((x: any) => x.name)).to.deep.eq([
       'system_node_info',
-      'task_log',
       'Author',
       'Book'
     ]);
     expect(q.filter((x: any) => ['Book', 'Author'].includes(x.name))).to.deep.eq([
       {
         'name': 'Author',
-        'rootpage': 20,
+        'rootpage': 11,
         'sql': 'CREATE TABLE "Author" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "first_name" varchar NOT NULL, "last_name" varchar NOT NULL)',
         'tbl_name': 'Author',
         'type': 'table'
       },
       {
         'name': 'Book',
-        'rootpage': 21,
+        'rootpage': 12,
         'sql': 'CREATE TABLE "Book" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "label" varchar NOT NULL, "autor_id" integer, CONSTRAINT "REL_592a174ffef66ceccb8fdc5d4c" UNIQUE ("autor_id"), CONSTRAINT "FK_592a174ffef66ceccb8fdc5d4c6" FOREIGN KEY ("autor_id") REFERENCES "Author" ("id") ON DELETE NO ACTION ON UPDATE NO ACTION)',
         'tbl_name': 'Book',
         'type': 'table'
@@ -344,12 +342,12 @@ class JsonSchemaSupportSpec {
       './schema-files/one-to-many-relation.json'
     ]);
 
-    expect(storage.getOptions().entities).to.be.length(4);
-    expect(storage.getEntityRefs()).to.be.length(4);
+    expect(storage.getOptions().entities).to.be.length(3);
+    expect(storage.getEntityRefs()).to.be.length(3);
 
     const c = await storage.connect() as TypeOrmConnectionWrapper;
     const q = await c.query('SELECT * FROM sqlite_master WHERE type = \'table\' AND name NOT LIKE \'sqlite%\';');
-    expect(q).to.have.length(5);
+    expect(q).to.have.length(4);
     expect(q.map((x: any) => x.name)).to.include.members([
       'Dealer',
       'Product',
@@ -359,21 +357,21 @@ class JsonSchemaSupportSpec {
       [
         {
           'name': 'Product',
-          'rootpage': 18,
+          'rootpage': 8,
           'sql': 'CREATE TABLE "Product" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL)',
           'tbl_name': 'Product',
           'type': 'table'
         },
         {
           'name': 'Dealer',
-          'rootpage': 19,
+          'rootpage': 10,
           'sql': 'CREATE TABLE "Dealer" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "label" varchar NOT NULL)',
           'tbl_name': 'Dealer',
           'type': 'table'
         },
         {
           'name': 'product_dealers',
-          'rootpage': 23,
+          'rootpage': 14,
           'sql': 'CREATE TABLE "product_dealers" ("productId" integer NOT NULL, "dealerId" integer NOT NULL, CONSTRAINT "FK_386ad987e614cd494739e814ff9" FOREIGN KEY ("productId") REFERENCES "Product" ("id") ON DELETE CASCADE ON UPDATE CASCADE, CONSTRAINT "FK_994714d513d1082f4636b4b9205" FOREIGN KEY ("dealerId") REFERENCES "Dealer" ("id") ON DELETE CASCADE ON UPDATE CASCADE, PRIMARY KEY ("productId", "dealerId"))',
           'tbl_name': 'product_dealers',
           'type': 'table'
@@ -700,7 +698,7 @@ class JsonSchemaSupportSpec {
     const processType = storage.getRegistry().getEntityRefFor('Process');
     const lawyerType = storage.getRegistry().getEntityRefFor('Lawyer');
 
-    expect(storage.getRegistry().getEntityRefs()).to.have.length(4);
+    expect(storage.getRegistry().getEntityRefs()).to.have.length(3);
     expect(processType.getPropertyRef('autor').getTargetRef().getClass()).to.be.eq(lawyerType.getClassRef().getClass());
 
   }

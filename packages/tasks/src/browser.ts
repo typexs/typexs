@@ -71,10 +71,7 @@ export { ITaskPropertyRefOptions } from './lib/ITaskPropertyRefOptions';
 export { IValueProvider } from './lib/decorators/IValueProvider';
 export { IIncomingOptions } from './lib/decorators/IIncomingOptions';
 export { IOutgoingOptions } from './lib/decorators/IOutgoingOptions';
-
 export { TaskEvent } from './lib/event/TaskEvent';
 export { TaskRunnerEvent } from './lib/TaskRunnerEvent';
-
-
 export { ITaskRunnerResult } from './lib/ITaskRunnerResult';
 export { ITaskExectorOptions } from './lib/ITaskExectorOptions';

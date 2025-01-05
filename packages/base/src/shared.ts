@@ -38,10 +38,11 @@ export { IError } from './libs/exceptions/IError';
 export { SystemNodeInfo } from './entities/SystemNodeInfo';
 
 /**
- * Messages
+ * Export messaging libs
  */
 export { K_INST_ID, K_NODE_ID, C_EXCHANGE_MESSAGE } from './libs/messaging/Constants';
 export { IMessageOptions } from './libs/messaging/IMessageOptions';
+export { AbstractEvent } from './libs/messaging/AbstractEvent';
 
 
 export { C_WORKERS } from './libs/worker/Constants';
@@ -133,9 +134,6 @@ export { IWorkerInfo } from './libs/worker/IWorkerInfo';
 export { IWorkerConfig } from './libs/worker/IWorkerConfig';
 export { IWorkerStatisitic } from './libs/worker/IWorkerStatisitic';
 
-export { DateUtils } from './libs/utils/DateUtils';
-export { LabelHelper } from './libs/utils/LabelHelper';
-
 
 /**
  * temporary Bindings location (moved from ng)
@@ -168,3 +166,10 @@ export { AnonymusUser, ANONYMUS_USER } from './libs/auth/AnonymusUser';
  * Logging
  */
 export { LOG_EVENT_NAME } from './libs/logging/Constants';
+
+/**
+ * Utils
+ */
+export { MatchUtils } from './libs/utils/MatchUtils';
+export { DateUtils } from './libs/utils/DateUtils';
+export { LabelHelper } from './libs/utils/LabelHelper';

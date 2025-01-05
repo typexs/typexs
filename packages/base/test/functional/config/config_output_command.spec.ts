@@ -34,7 +34,7 @@ class ConfigOutputCommandSpec {
       app: { path: appdir },
       modules: <any>{
         disableCache: true,
-        paths: TestHelper.includePaths()
+        paths: TestHelper.includePaths(['base'])
       }
     });
     await bootstrap.prepareRuntime();

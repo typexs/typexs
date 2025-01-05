@@ -217,7 +217,7 @@ class Storage_api_controllerSpec {
     res = res.body as IStorageRefMetadata[];
     expect(res).to.have.length(1);
     const keyNames =  Object.keys(res[0].schema.definitions);
-    expect(keyNames).to.have.length(6);
+    expect(keyNames).to.have.length(5);
     expect(keyNames).to.contain.members(['Driver', 'Car']);
     const driver = res[0].schema.definitions.Driver;
     const propertyNames =  Object.keys(driver.properties);
@@ -236,7 +236,7 @@ class Storage_api_controllerSpec {
     res = res.body as IStorageRefMetadata;
     expect(res).to.exist;
     expect(res.name).to.be.eq('default');
-    expect( Object.keys(res.schema.definitions)).to.have.length(6);
+    expect( Object.keys(res.schema.definitions)).to.have.length(5);
     expect( Object.keys(res.schema.definitions)).to.contain.members(['Driver', 'Car']);
     const driver = res.schema.definitions.Driver;
     expect( Object.keys(driver.properties)).to.have.length(4);
@@ -253,7 +253,7 @@ class Storage_api_controllerSpec {
     res = res.body as IJsonSchema7[];
     expect(res).to.have.length(1);
     const classNames =  Object.keys(res[0].definitions);
-    expect(classNames).to.have.length(6);
+    expect(classNames).to.have.length(5);
     expect(classNames.map(x => res[0].definitions[x]).map(x => x.storage)).to.contain.members(['default']);
     expect(classNames.map(x => res[0].definitions[x]).map(x => x.title)).to.contain.members(['Driver', 'Car', 'RandomData']);
     const driver = res[0].definitions.Driver;

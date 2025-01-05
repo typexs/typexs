@@ -43,13 +43,7 @@ class CleanupTaskSpec {
           path: TestHelper.root()
         },
         logging: { enable: LOG_EVENT, level: 'debug', loggers: [{ name: '*', level: 'debug' }] },
-        modules: {
-          disableCache: true,
-          paths: TestHelper.includePaths(),
-          include: [
-            '**/@typexs{,/base,/tasks}',
-          ]
-        },
+        modules: TestHelper.modulSettings(['base', 'tasks']),
         storage: { default: TEST_STORAGE_OPTIONS }
       });
     bootstrap.activateLogger();

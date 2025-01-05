@@ -33,10 +33,31 @@ export class TestHelper {
 
   static includePaths(module: string | string[] = 'base') {
     const root = this.root();
-    return [join(root, 'node_modules', '@allgemein')]
+    return [
+      join(root, 'node_modules', '@allgemein')
+    ]
       .concat(
         (Array.isArray(module) ? module : [module]).map(x => join(root, 'packages', x, 'src'))
       );
+  }
+
+  /**
+   * Generate modul setting for the concrete given modules,
+   * Default value is 'base' for main module.
+   *
+   * @param module : string | string[]
+   */
+  static modulSettings(module: string | string[] = 'base') {
+    module = Array.isArray(module) ? module : [module];
+    return {
+      paths: this.includePaths(module),
+      disableCache: true,
+      include: [
+        '**/@allgemein{,**/}*',
+        '**/@typexs*',
+        ...module.map(x => '**/@typexs/' + x + '*')
+      ]
+    };
   }
 
   static async clearCache() {

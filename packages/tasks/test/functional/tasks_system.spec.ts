@@ -1,4 +1,4 @@
-import { cloneDeep } from'@typexs/generic';
+import { cloneDeep } from '@typexs/generic';
 
 
 import { suite, test } from '@testdeck/mocha';
@@ -41,15 +41,18 @@ class TasksSystemSpec {
         logging: {
           enable: LOG_EVENT, level: 'debug'
         },
-        modules: {
-          paths: TestHelper.includePaths(), disableCache: true
-        },
+        modules: TestHelper.modulSettings(['base', 'tasks']),
         storage: {
           default: TEST_STORAGE_OPTIONS
         },
         eventbus: {
           default: <IEventBusConfiguration>{
-            adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true }
+            adapter: 'redis',
+            extra: {
+              host: redis_host,
+              port: redis_port,
+              unref: true
+            }
           }
         }
       });
@@ -66,9 +69,10 @@ class TasksSystemSpec {
 
     expect(n.nodeId).to.eq(nodeId);
     expect(n.contexts).to.have.length.gt(0);
-    expect(n.contexts[1].context).to.eq(C_TASKS);
+    const taskContext = n.contexts.find(x => x.context === C_TASKS);
+    expect(taskContext.context).to.eq(C_TASKS);
 
-    expect(n.contexts[1].tasks).to.deep.include({
+    expect(taskContext.tasks).to.deep.include({
       '$schema': 'http://json-schema.org/draft-07/schema#',
       'anyOf': [
         {
@@ -79,7 +83,7 @@ class TasksSystemSpec {
         }
       ]
     });
-    expect(n.contexts[1].tasks.definitions.test).to.deep.eq({
+    expect(taskContext.tasks.definitions.test).to.deep.eq({
       '$id': '#test',
       'description': 'Hallo welt',
       'groups': [],
@@ -114,7 +118,7 @@ class TasksSystemSpec {
       .configure(<ITypexsOptions & any>{
         app: { name: 'test', nodeId: nodeId, path: __dirname + '/fake_app' },
         logging: { enable: LOG_EVENT, level: 'debug' },
-        modules: { paths: TestHelper.includePaths(), disableCache: true },
+        modules: TestHelper.modulSettings(['base', 'tasks']),
         storage: { default: TEST_STORAGE_OPTIONS },
         eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
       });
@@ -223,10 +227,7 @@ class TasksSystemSpec {
         logging: {
           enable: LOG_EVENT, level: 'debug'
         },
-        modules: {
-          paths: TestHelper.includePaths(),
-          disableCache: true
-        },
+        modules: TestHelper.modulSettings(['base', 'tasks']),
         storage: {
           default: TEST_STORAGE_OPTIONS
         },

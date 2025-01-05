@@ -17,11 +17,7 @@ import { TestHelper } from '@typexs/testing';
         transports: [{console: {}}],
         loggers: [{name: '*', level: 'debug', transports: [{console: {}}]}]
       },
-
-      modules: {
-        paths:  TestHelper.includePaths(['base', 'tasks']),
-        disableCache: true
-      },
+      modules: TestHelper.modulSettings(['base', 'tasks']),
       storage: {default: TEST_STORAGE_OPTIONS},
       eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {host: redis_host, port: redis_port, unref: true}}},
       workers: {

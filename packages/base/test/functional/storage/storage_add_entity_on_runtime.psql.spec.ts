@@ -74,7 +74,6 @@ class StorageAddEntityOnRuntimeSpec {
     expect(entityNames).to.be.deep.eq([
       'ModuleEntity',
       'SystemNodeInfo',
-      'TaskLog',
       'TestEntity'
     ]);
 
@@ -90,18 +89,17 @@ class StorageAddEntityOnRuntimeSpec {
 
     // now add new entity
     entityNames = storageRef.getEntityNames();
-    expect(entityNames).to.have.length(5);
+    expect(entityNames).to.have.length(4);
     entityNames.sort();
     expect(entityNames).to.be.deep.eq([
       'ModuleEntity',
       'SystemNodeInfo',
-      'TaskLog',
       'TestClass',
       'TestEntity'
     ]);
 
-    let enttityMetadata = connection.connection.entityMetadatas;
-    expect(enttityMetadata).to.have.length(4);
+    let entityMetadata = connection.connection.entityMetadatas;
+    expect(entityMetadata).to.have.length(3);
 
     // check if it can be queried
     let results = await connection.for('SystemNodeInfo').find();
@@ -119,9 +117,9 @@ class StorageAddEntityOnRuntimeSpec {
     await connection.close();
     connection = await storageRef.connect() as TypeOrmConnectionWrapper;
 
-    enttityMetadata = connection._connection.entityMetadatas;
-    expect(enttityMetadata).to.have.length(5);
-    expect(enttityMetadata.map(x => x.name)).to.contain('TestClass');
+    entityMetadata = connection._connection.entityMetadatas;
+    expect(entityMetadata).to.have.length(4);
+    expect(entityMetadata.map(x => x.name)).to.contain('TestClass');
 
     // check if it can be queried
     results = await connection.for('SystemNodeInfo').find();
@@ -145,7 +143,6 @@ class StorageAddEntityOnRuntimeSpec {
     expect(entityNames).to.be.deep.eq([
       'ModuleEntity',
       'SystemNodeInfo',
-      'TaskLog',
       'TestEntity'
     ]);
 
@@ -161,18 +158,17 @@ class StorageAddEntityOnRuntimeSpec {
 
     // now add new entity
     entityNames = storageRef.getEntityNames();
-    expect(entityNames).to.have.length(5);
+    expect(entityNames).to.have.length(4);
     entityNames.sort();
     expect(entityNames).to.be.deep.eq([
       'ModuleEntity',
       'SystemNodeInfo',
-      'TaskLog',
       'TestClass',
       'TestEntity'
     ]);
 
     let enttityMetadata = connection.connection.entityMetadatas;
-    expect(enttityMetadata).to.have.length(4);
+    expect(enttityMetadata).to.have.length(3);
 
     // check if it can be queried
     let results = await connection.for('SystemNodeInfo').find();
@@ -190,7 +186,7 @@ class StorageAddEntityOnRuntimeSpec {
     const connection2 = await storageRef.connect() as TypeOrmConnectionWrapper;
 
     enttityMetadata = connection2._connection.entityMetadatas;
-    expect(enttityMetadata).to.have.length(5);
+    expect(enttityMetadata).to.have.length(4);
     expect(enttityMetadata.map(x => x.name)).to.contain('TestClass');
 
     // check if it can be queried

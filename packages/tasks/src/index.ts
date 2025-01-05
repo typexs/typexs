@@ -41,4 +41,4 @@ export { TasksHelper } from './lib/TasksHelper';
 /**
  * Command
  */
-export { TaskCommand } from './command/TaskCommand';
+export { TaskCommand } from './commands/TaskCommand';

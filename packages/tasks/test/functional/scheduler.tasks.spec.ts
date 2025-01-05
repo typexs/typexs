@@ -35,7 +35,10 @@ class SchedulerSpec {
     Log.options({ enable: false, level: 'debug' });
     Config.clear();
     loader = new RuntimeLoader({
-      appdir: __dirname + '/../../../src',
+      appdir: __dirname + '/../../src',
+      paths: [
+        // __dirname + '/../../../base/src'
+      ],
       libs: [{
         topic: K_CLS_SCHEDULE_ADAPTER_FACTORIES,
         refs: [

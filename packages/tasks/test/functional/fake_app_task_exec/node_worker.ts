@@ -28,9 +28,7 @@ import { TestHelper } from '@typexs/testing';
           name: '*', level: 'debug', transports: [{console: {}}]
         }]
       },
-      modules: {
-        paths: TestHelper.includePaths(),
-        disableCache: true},
+      modules: TestHelper.modulSettings(['base', 'tasks']),
       storage: {default: TEST_STORAGE_OPTIONS},
       eventbus: {
         default: <IEventBusConfiguration>{

@@ -4,6 +4,7 @@ import { IRedisCacheClient } from './IRedisCacheClient';
 import { ICacheGetOptions, ICacheSetOptions } from '../../../libs/cache/ICacheOptions';
 import { Serializer } from '@allgemein/base';
 import { IRedisCacheOptions } from './IRedisCacheOptions';
+import { Log } from '../../../libs/logging/Log';
 
 
 export class RedisCacheClient implements IRedisCacheClient {
@@ -16,7 +17,7 @@ export class RedisCacheClient implements IRedisCacheClient {
 
 
   constructor(options: IRedisCacheOptions) {
-    this.options = options;
+    this.options = options || { host: 'localhost', port: 6379 };
 
     let url = this.options.url;
     if (!url) {
@@ -64,9 +65,12 @@ export class RedisCacheClient implements IRedisCacheClient {
     }
 
     this.client = createClient(this.options) as RedisClientType;
+    this.client.on('error', err => Log.error('Redis Client Error', err));
     try {
       this.client = await this.client.connect();
-      this.client.unref();
+      if (this.options.unref !== false) {
+        this.client.unref();
+      }
       this.connected = true;
       return this;
     } catch (e) {
@@ -110,6 +114,7 @@ export class RedisCacheClient implements IRedisCacheClient {
       return this.client.del(key);
     } else {
       const _value = this.serialize(value);
+      let ret = null;
       if (options && options.ttl) {
         const setOptions: SetOptions = {};
         if (options.ttl % 1000 === 0) {
@@ -117,10 +122,11 @@ export class RedisCacheClient implements IRedisCacheClient {
         } else {
           setOptions.PX = options.ttl;
         }
-        return this.client.set(key, _value, setOptions);
+        ret = this.client.set(key, _value, setOptions);
       } else {
-        return this.client.set(key, _value);
+        ret = this.client.set(key, _value);
       }
+      return ret;
     }
   }
 
@@ -162,9 +168,9 @@ export class RedisCacheClient implements IRedisCacheClient {
     return null;
   }
 
-  private _reset(){
+  private _reset() {
     this.connected = false;
-    if(this.client){
+    if (this.client) {
       this.client.removeAllListeners();
       this.client = null;
     }

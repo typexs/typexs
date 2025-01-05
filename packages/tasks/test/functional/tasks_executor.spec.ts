@@ -1,4 +1,4 @@
-import { snakeCase } from'@typexs/generic';
+import { snakeCase } from '@typexs/generic';
 
 
 import { suite, test } from '@testdeck/mocha';
@@ -44,10 +44,8 @@ class TasksSpec {
           path: __dirname + '/fake_app_task_exec'
         },
         logging: { enable: LOG_EVENT, level: 'debug', loggers: [{ name: '*', level: 'debug' }] },
-        modules: {
-          disableCache: true,
-          paths: TestHelper.includePaths()
-        },
+
+        modules: TestHelper.modulSettings(['base', 'tasks']),
         storage: { default: TEST_STORAGE_OPTIONS },
         eventbus: {
           default: <IEventBusConfiguration>{

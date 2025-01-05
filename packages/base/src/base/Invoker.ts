@@ -1,4 +1,4 @@
-import { find, isArray, isEmpty, isFunction, isUndefined } from 'lodash';
+import { isArray, isEmpty, isFunction, isUndefined } from 'lodash';
 import { IAPIDef } from '../libs/api/IAPIDef';
 import { ClassType } from '@allgemein/schema-api';
 import { Injector } from '../libs/di/Injector';
@@ -14,7 +14,7 @@ export class Invoker {
 
 
   register(api: Function, impl: Function | Function[]) {
-    let def = find(this.apiImpls, x => x.api === api);
+    let def = this.apiImpls.find(x => x.api === api);
     if (!def) {
       const invoker = this;
       const obj = {};
@@ -48,7 +48,7 @@ export class Invoker {
 
 
   private execute(api: Function, method: string, ...args: any[]) {
-    const def = find(this.apiImpls, apiImpl => apiImpl.api === api);
+    const def = this.apiImpls.find(apiImpl => apiImpl.api === api);
     const instances = def.impl.map(impl => Injector.get(impl));
     const results = [];
     let isPromised = false;
@@ -67,19 +67,19 @@ export class Invoker {
 
 
   has(api: Function) {
-    const c = find(this.apiImpls, apiImpl => apiImpl.api === api);
+    const c = this.apiImpls.find(apiImpl => apiImpl.api === api);
     return !!c;
   }
 
 
   hasImpl(api: Function) {
-    const c = find(this.apiImpls, apiImpl => apiImpl.api === api);
+    const c = this.apiImpls.find(apiImpl => apiImpl.api === api);
     return !isEmpty(c.impl);
   }
 
 
   use<API>(api: ClassType<API>): API {
-    const def = find(this.apiImpls, apiImpl => apiImpl.api === api);
+    const def = this.apiImpls.find(apiImpl => apiImpl.api === api);
     if (!def) {
       throw new Error('no api implementation found');
     }
