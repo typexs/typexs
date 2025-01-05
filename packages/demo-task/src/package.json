@@ -4,6 +4,7 @@
   "dependencies": {
     "@typexs/base": "*",
     "@typexs/entity": "*",
+    "@typexs/tasks": "*",
     "@typexs/forms": "*",
     "@typexs/search": "*"
   },

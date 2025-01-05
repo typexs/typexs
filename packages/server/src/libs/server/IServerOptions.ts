@@ -1,4 +1,4 @@
-import { ILoggerApi } from '@allgemein/base';
+import { ILoggerApi } from '@allgemein/logging';
 import * as buffer from 'buffer';
 
 export interface IServerOptions {

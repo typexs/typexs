@@ -132,7 +132,7 @@ export class Bootstrap {
   static prepareInvoker(i: Invoker, loader: IRuntimeLoader) {
     // lade klassen mit erweiterung, jedoch welche erweiterung implementieren diese
     const apiClasses = loader.getClasses(K_CLS_API);
-    loader.getClasses(K_CLS_USE_API);
+    const useApiClasses = loader.getClasses(K_CLS_USE_API);
     const apis = MetaArgs.key(K_CLS_USE_API);
     apiClasses.forEach(api => {
       i.register(api, apis.filter(x => x.api === api).map(x => x.target));
@@ -346,7 +346,7 @@ export class Bootstrap {
    * @param command
    */
   async activate(command: ICommand = null) {
-    Log.debug('startup ...');
+    Log.debug('activate ...');
     if (command && command.beforeStartup) {
       await command.beforeStartup();
     }
@@ -355,6 +355,7 @@ export class Bootstrap {
 
     const activators = this.getActivators();
     await callMethod(activators, 'startup');
+    Log.debug('activation finished.');
   }
 
 
@@ -439,7 +440,8 @@ export class Bootstrap {
 
   getCommands(withInject: boolean = true): ICommand[] {
     const commands = [];
-    for (const clz of this.runtimeLoader.getClasses(K_CLS_COMMANDS)) {
+    const commandClasses = this.runtimeLoader.getClasses(K_CLS_COMMANDS);
+    for (const clz of commandClasses) {
       if (withInject) {
         commands.push(Injector.get(clz));
       } else {

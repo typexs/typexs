@@ -8,7 +8,7 @@ import { Config } from '@allgemein/config';
 import { RuntimeLoader } from '../../../src/base/RuntimeLoader';
 import { K_CLS_WORKERS } from '../../../src/libs/worker/Constants';
 import { K_CLS_API, K_CLS_BOOTSTRAP, K_CLS_STORAGE_SCHEMAHANDLER, K_CLS_STORAGE_TYPES, K_CLS_USE_API } from '../../../src/libs/Constants';
-import { K_CLS_TASKS } from '../../../src/libs/tasks/Constants';
+// import { K_CLS_TASKS } from '../../../../tasks/src/lib/Constants';
 import { TestHelper } from '@typexs/testing';
 import { PlatformUtils } from '@allgemein/base';
 import {
@@ -243,15 +243,15 @@ class BootstrapGeneralSpec {
                 'src/adapters/storage/*/*Storage.*'
               ]
             },
-            {
-              topic: K_CLS_TASKS,
-              refs: [
-                'tasks',
-                'tasks/*/*',
-                'src/tasks',
-                'src/tasks/*/*'
-              ]
-            },
+            // {
+            //   topic: K_CLS_TASKS,
+            //   refs: [
+            //     'tasks',
+            //     'tasks/*/*',
+            //     'src/tasks',
+            //     'src/tasks/*/*'
+            //   ]
+            // },
             {
               topic: K_CLS_USE_API,
               refs: ['extend/*', 'src/extend/*']

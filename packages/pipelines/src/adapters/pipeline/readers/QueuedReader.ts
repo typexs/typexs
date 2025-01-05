@@ -1,7 +1,7 @@
-import {AsyncWorkerQueue, IQueueProcessor} from '@typexs/base';
-import {AbstractReader} from '../../../lib/reader/AbstractReader';
-import {IQueuedReaderOptions} from '../../../lib/reader/IQueuedReaderOptions';
-import {IReader} from '../../../lib/reader/IReader';
+import { AsyncWorkerQueue, IQueueProcessor } from '@allgemein/queue';
+import { AbstractReader } from '../../../lib/reader/AbstractReader';
+import { IQueuedReaderOptions } from '../../../lib/reader/IQueuedReaderOptions';
+import { IReader } from '../../../lib/reader/IReader';
 
 /**
  * Queued reader listens for data

@@ -1,8 +1,8 @@
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
 import * as path from 'path';
-import {Bootstrap} from '../../../src/Bootstrap';
-import {Config} from '@allgemein/config';
+import { Bootstrap } from '../../../src/Bootstrap';
+import { Config } from '@allgemein/config';
 
 import { TestHelper } from '@typexs/testing';
 
@@ -20,11 +20,8 @@ class GeneralSpec {
   async 'load dummy command'() {
     const appdir = path.join(__dirname, 'fake_app');
     const bootstrap = await Bootstrap.configure({
-      app: {path: appdir},
-      modules: <any>{
-        disableCache: true,
-        paths: TestHelper.includePaths()
-      }
+      app: { path: appdir },
+      modules: TestHelper.modulSettings()
     });
     await bootstrap.prepareRuntime();
     await bootstrap.activateStorage();

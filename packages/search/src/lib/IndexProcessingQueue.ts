@@ -2,12 +2,13 @@ import { uniq, uniqBy } from '@typexs/generic';
 
 
 import { LockFactory, Semaphore } from '@allgemein/base';
-import { AsyncWorkerQueue, ILoggerApi, Inject, Invoker, IQueueProcessor, Log, Storage } from '@typexs/base';
+import { ILoggerApi, Inject, Invoker, Log, Storage } from '@typexs/base';
 import { IndexRuntimeStatus } from './IndexRuntimeStatus';
 import { IIndexData } from './events/IIndexData';
 import { IIndexStorageRef } from './IIndexStorageRef';
 import { IndexEvent } from './events/IndexEvent';
 import { ClassRef } from '@allgemein/schema-api';
+import { AsyncWorkerQueue, IQueueProcessor } from '@allgemein/queue';
 
 
 export class IndexProcessingQueue implements IQueueProcessor<IIndexData> {

@@ -1,5 +1,5 @@
 import {defaults} from 'lodash';
-import {ILogLevel} from '@allgemein/base';
+import {ILogLevel} from '@allgemein/logging';
 import {ILoggerOptions} from './ILoggerOptions';
 
 

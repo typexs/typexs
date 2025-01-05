@@ -1,19 +1,19 @@
 // process.env.SQL_LOG = '1';
-import {suite, test} from '@testdeck/mocha';
-import {expect} from 'chai';
-import {Bootstrap} from '../../../src/Bootstrap';
+import { suite, test } from '@testdeck/mocha';
+import { expect } from 'chai';
+import { Bootstrap } from '../../../src/Bootstrap';
 import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
-import {IEventBusConfiguration} from '@allgemein/eventbus/browser';
-import {System} from '../../../src/libs/system/System';
-import {SystemApi} from '../../../src/api/System.api';
-import {ISystemApi} from '../../../src/api/ISystemApi';
-import {INodeInfo} from '../../../src/libs/system/INodeInfo';
-import {TestHelper} from '@typexs/testing';
-import {SpawnHandle} from '@typexs/testing';
-import {SystemNodeInfo} from '../../../src/entities/SystemNodeInfo';
-import {ITypexsOptions} from '../../../src/libs/ITypexsOptions';
-import {Invoker} from '../../../src/base/Invoker';
-import {Injector} from '../../../src/libs/di/Injector';
+import { IEventBusConfiguration } from '@allgemein/eventbus/browser';
+import { System } from '../../../src/libs/system/System';
+import { SystemApi } from '../../../src/api/System.api';
+import { ISystemApi } from '../../../src/api/ISystemApi';
+import { INodeInfo } from '../../../src/libs/system/INodeInfo';
+import { TestHelper } from '@typexs/testing';
+import { SpawnHandle } from '@typexs/testing';
+import { SystemNodeInfo } from '../../../src/entities/SystemNodeInfo';
+import { ITypexsOptions } from '../../../src/libs/ITypexsOptions';
+import { Invoker } from '../../../src/base/Invoker';
+import { Injector } from '../../../src/libs/di/Injector';
 
 
 const LOG_EVENT = TestHelper.logEnable(false);
@@ -28,14 +28,31 @@ class SystemRedisConnectedSpec {
     await TestHelper.clearCache();
 
     bootstrap = Bootstrap
-      .setConfigSources([{type: 'system'}])
+      .setConfigSources([{ type: 'system' }])
       .configure(<ITypexsOptions & any>{
-        app: {name: 'test', nodeId: 'system', path: __dirname + '/fake_app'},
-        logging: {enable: LOG_EVENT, level: 'debug', loggers: [{name: '*', level: 'debug'}]},
-        modules: {paths:TestHelper.includePaths()},
-        storage: {default: TEST_STORAGE_OPTIONS},
-        eventbus: {default: <IEventBusConfiguration>{adapter: 'redis', extra: {
-          host: redis_host, port: redis_port, unref: true}}}
+        app: {
+          name: 'test',
+          nodeId: 'system',
+          path: __dirname + '/fake_app'
+        },
+        logging: {
+          enable: LOG_EVENT,
+          level: 'debug',
+          loggers: [
+            { name: '*', level: 'debug' }
+          ]
+        },
+        modules: {
+          paths: TestHelper.includePaths()
+        },
+        storage: { default: TEST_STORAGE_OPTIONS },
+        eventbus: {
+          default: <IEventBusConfiguration>{
+            adapter: 'redis', extra: {
+              host: redis_host, port: redis_port, unref: true
+            }
+          }
+        }
       });
     bootstrap.activateLogger();
     bootstrap.activateErrorHandling();
@@ -65,7 +82,10 @@ class SystemRedisConnectedSpec {
     expect(system.node.nodeId).to.eq('system');
     expect(system.node.state).to.eq('unregister');
     expect(system.node.contexts).to.have.length.gt(0);
-    expect(system.node.contexts.map(x => x.context).sort()).to.deep.eq(['config', 'tasks', 'workers']);
+    expect(system.node.contexts.map(x => x.context).sort()).to.deep.eq([
+      'config',
+      'workers'
+    ]);
 
     const nodes = system.getNodesWith('workers');
     expect(nodes).to.have.length(1);
@@ -103,11 +123,17 @@ class SystemRedisConnectedSpec {
     expect(remoteNode.nodeId).to.be.eq('fakeapp01');
     expect(remoteNode.state).to.be.eq('register');
     expect(remoteNode.contexts).to.have.length.gt(0);
-    expect(remoteNode.contexts.map(x => x.context).sort()).to.deep.eq(['config', 'tasks', 'workers']);
+    expect(remoteNode.contexts.map(x => x.context).sort()).to.deep.eq([
+      'config',
+      'workers'
+    ]);
 
     expect(system.nodes).to.have.length(1);
     expect(system.nodes[0].nodeId).to.be.eq('fakeapp01');
-    expect(system.nodes[0].contexts.map(x => x.context).sort()).to.deep.eq(['config', 'tasks', 'workers']);
+    expect(system.nodes[0].contexts.map(x => x.context).sort()).to.deep.eq([
+      'config',
+      'workers'
+    ]);
 
     let nodeInfos = await bootstrap.getStorage().get().getController().find(SystemNodeInfo);
     expect(nodeInfos).to.have.length(2);
@@ -124,7 +150,7 @@ class SystemRedisConnectedSpec {
     nodeInfos = await bootstrap.getStorage().get().getController().find(SystemNodeInfo);
     expect(nodeInfos).to.have.length(1);
     expect(nodeInfos.map((x: any) => {
-      return {isBackend: x.isBackend, nodeId: x.nodeId};
+      return { isBackend: x.isBackend, nodeId: x.nodeId };
     })).to.deep.eq(
       [{
         isBackend: true, nodeId: 'system'

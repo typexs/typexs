@@ -32,11 +32,10 @@ class CacheMemorySpec {
     bootstrap = Bootstrap
       .setConfigSources([{ type: 'system' }])
       .configure({
-        app: { name: 'test' },
-        modules: {
-          paths: TestHelper.includePaths(),
-          disableCache: true
+        app: {
+          name: 'test'
         },
+        modules: TestHelper.modulSettings(),
         storage: { default: TEST_STORAGE_OPTIONS }
       });
     bootstrap.activateLogger();

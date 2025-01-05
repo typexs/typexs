@@ -1,15 +1,10 @@
-import { defaults } from 'lodash';
 import { Config } from '@allgemein/config';
 import { IActivator } from './api/IActivator';
-import { Bootstrap } from './Bootstrap';
 import { Cache } from './libs/cache/Cache';
 import { Scheduler } from './libs/schedule/Scheduler';
-import { C_TASKS } from './libs/tasks/Constants';
-import { Tasks } from './libs/tasks/Tasks';
-import { WatcherRegistry } from './libs/watchers/WatcherRegistry';
+// import { WatcherRegistry } from './libs/watchers/WatcherRegistry';
 import { C_WORKERS } from './libs/worker/Constants';
 import { Workers } from './libs/worker/Workers';
-import { TaskRunnerRegistry } from './libs/tasks/TaskRunnerRegistry';
 import { ExchangeMessageRegistry } from './libs/messaging/ExchangeMessageRegistry';
 import { C_EXCHANGE_MESSAGE } from './libs/messaging/Constants';
 import { Injector } from './libs/di/Injector';
@@ -29,19 +24,19 @@ export class Activator implements IActivator {
     Injector.set(Cache.NAME, cache);
 
 
-    /**
-     * Initialize task registry
-     */
-    RegistryFactory.register(new RegExp('^' + C_TASKS + '.*'), Tasks);
-    const tasks = RegistryFactory.get(C_TASKS) as Tasks;
-    let cfg = Config.get(C_TASKS, {});
-    defaults(cfg, { nodeId: Bootstrap.getNodeId() });
-    if (cfg) {
-      tasks.setConfig(cfg);
-    }
-    Injector.set(Tasks.NAME, tasks);
-    const taskRunnerRegistry = Injector.create(TaskRunnerRegistry);
-    Injector.set(TaskRunnerRegistry.NAME, taskRunnerRegistry);
+    // /**
+    //  * Initialize task registry
+    //  */
+    // RegistryFactory.register(new RegExp('^' + C_TASKS + '.*'), Tasks);
+    // const tasks = RegistryFactory.get(C_TASKS) as Tasks;
+    // let cfg = Config.get(C_TASKS, {});
+    // defaults(cfg, { nodeId: Bootstrap.getNodeId() });
+    // if (cfg) {
+    //   tasks.setConfig(cfg);
+    // }
+    // Injector.set(Tasks.NAME, tasks);
+    // const taskRunnerRegistry = Injector.create(TaskRunnerRegistry);
+    // Injector.set(TaskRunnerRegistry.NAME, taskRunnerRegistry);
 
 
     // Schedule init
@@ -53,7 +48,7 @@ export class Activator implements IActivator {
      */
     RegistryFactory.register(C_WORKERS, Workers);
     const workers = RegistryFactory.get(C_WORKERS) as Workers;
-    cfg = Config.get(C_WORKERS, null);
+    let cfg = Config.get(C_WORKERS, null);
     if (cfg) {
       workers.setConfig(cfg);
     }
@@ -72,10 +67,10 @@ export class Activator implements IActivator {
 
 
     // TODO only fix watcher defined
-    /**
-     * Initialize watcher registry
-     */
-    Injector.set(WatcherRegistry.NAME, new WatcherRegistry());
+    // /**
+    //  * Initialize watcher registry
+    //  */
+    // Injector.set(WatcherRegistry.NAME, new WatcherRegistry());
   }
 
 }

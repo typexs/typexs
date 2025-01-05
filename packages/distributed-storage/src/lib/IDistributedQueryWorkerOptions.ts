@@ -1,4 +1,4 @@
-import {IAsyncQueueOptions} from '@typexs/base/libs/queue/IAsyncQueueOptions';
+import { IAsyncQueueOptions } from '@allgemein/queue';
 
 export interface IDistributedQueryWorkerOptions extends IAsyncQueueOptions {
 

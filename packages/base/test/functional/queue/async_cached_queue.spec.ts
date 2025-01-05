@@ -1,11 +1,8 @@
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-import { IQueueWorkload } from '../../../src/libs/queue/IQueueWorkload';
-import { IQueueProcessor } from '../../../src/libs/queue/IQueueProcessor';
-import { AsyncWorkerQueue } from '../../../src/libs/queue/AsyncWorkerQueue';
-import { QueueJob } from '../../../src/libs/queue/QueueJob';
 import { Cache } from '../../../src/libs/cache/Cache';
-import { MemoryCacheAdapter } from '../../../src';
+import { MemoryCacheAdapter } from '../../../src/adapters/cache/MemoryCacheAdapter';
+import { AsyncWorkerQueue, IQueueProcessor, IQueueWorkload } from '@allgemein/queue';
 import { TestHelper } from '@typexs/testing';
 
 class Workload implements IQueueWorkload {

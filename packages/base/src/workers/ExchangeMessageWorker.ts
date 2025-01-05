@@ -1,15 +1,11 @@
 import { AbstractEvent } from './../libs/messaging/AbstractEvent';
-
 import { Inject } from 'typedi';
 import { AbstractExchange } from './../libs/messaging/AbstractExchange';
-
 import { EventBus, subscribe, unsubscribe } from '@allgemein/eventbus';
 import { IWorkerStatisitic } from './../libs/worker/IWorkerStatisitic';
-
 import { IWorker } from './../libs/worker/IWorker';
-import { IQueueProcessor } from '../libs/queue/IQueueProcessor';
+import { AsyncWorkerQueue, IQueueProcessor } from '@allgemein/queue';
 import { System } from '../libs/system/System';
-import { AsyncWorkerQueue } from '../libs/queue/AsyncWorkerQueue';
 import { ILoggerApi } from '../libs/logging/ILoggerApi';
 import { Bootstrap } from '../Bootstrap';
 import { Log } from '../libs/logging/Log';

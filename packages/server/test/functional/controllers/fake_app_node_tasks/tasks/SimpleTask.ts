@@ -1,5 +1,5 @@
-import {ITask, ITaskRuntimeContainer, TaskRuntime} from '@typexs/base';
-import {TestHelper} from '../../../TestHelper';
+import { ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/tasks';
+import { TestHelper } from '../../../TestHelper';
 
 
 export class SimpleTask implements ITask {

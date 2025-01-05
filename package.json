@@ -34,7 +34,7 @@
     "typexs"
   ],
   "devDependencies": {
-    "@allgemein/http": "~1.3.1",
+    "@allgemein/http": "~1.4.1",
     "@angular-devkit/build-angular": "v13-lts",
     "@angular-devkit/core": "v13-lts",
     "@angular-devkit/schematics": "v13-lts",

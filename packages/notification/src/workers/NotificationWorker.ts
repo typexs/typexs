@@ -1,4 +1,5 @@
-import {AsyncWorkerQueue, IQueueProcessor, IWorker} from '@typexs/base';
+import { IWorker} from '@typexs/base';
+import {AsyncWorkerQueue, IQueueProcessor} from '@allgemein/queue';
 
 export interface IEventTrigger {
   adapter: string;

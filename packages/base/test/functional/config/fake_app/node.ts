@@ -1,23 +1,32 @@
-import { redis_host, redis_port, SPAWN_TIMEOUT, TEST_STORAGE_OPTIONS } from '../../config';
-import { IEventBusConfiguration } from '@allgemein/eventbus';
+import { SPAWN_TIMEOUT, TEST_STORAGE_OPTIONS } from '../../config';
 import { Config } from '@allgemein/config';
+import { TestHelper } from '@typexs/testing';
 import { Bootstrap } from '../../../../src/Bootstrap';
 import { ITypexsOptions } from '../../../../src/libs/ITypexsOptions';
-import { TestHelper } from '@typexs/testing';
+import { CACHE_CONFIG, EVENTBUS_CONFIG } from '../config';
+
 
 (async function() {
-  const LOG_EVENT = false; //
+  const LOG_EVENT = false;
   let bootstrap = Bootstrap
     .setConfigSources([{ type: 'system' }])
     .configure(<ITypexsOptions & any>{
-      app: { name: 'fakeapp01', nodeId: 'fakeapp01', path: __dirname },
-      logging: { enable: LOG_EVENT, level: 'debug' },
+      app: {
+        name: 'fakeapp01',
+        nodeId: 'fakeapp01',
+        path: __dirname
+      },
+      logging: {
+        enable: LOG_EVENT,
+        level: 'debug'
+      },
       modules: {
-        paths: TestHelper.includePaths(), disableCache: true
+        paths: TestHelper.includePaths(),
+        disableCache: true
       },
       storage: { default: TEST_STORAGE_OPTIONS },
-      cache: { bins: { default: 'redis1' }, adapter: { redis1: { type: 'redis', host: redis_host, port: redis_port, unref: true } } },
-      eventbus: { default: <IEventBusConfiguration>{ adapter: 'redis', extra: { host: redis_host, port: redis_port, unref: true } } }
+      cache: CACHE_CONFIG,
+      eventbus: EVENTBUS_CONFIG
     });
   bootstrap.activateLogger();
   bootstrap.activateErrorHandling();

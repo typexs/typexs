@@ -1,4 +1,4 @@
-import {IAsyncQueueStats} from "../queue/IAsyncQueueStats";
+import { IAsyncQueueStats } from '@allgemein/queue';
 
 export interface IWorkerStatisitic {
 

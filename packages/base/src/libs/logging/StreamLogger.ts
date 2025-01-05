@@ -1,6 +1,6 @@
 import { ILoggerApi } from './ILoggerApi';
 import { ILoggerOptions } from './ILoggerOptions';
-import { ILogLevel } from '@allgemein/base';
+import { ILogLevel } from '@allgemein/logging';
 import { ILogEntry } from './ILogEntry';
 import { EventEmitter } from 'events';
 import { LOG_EVENT_NAME } from './Constants';

@@ -1,5 +1,4 @@
-import {ITask, ITaskRuntimeContainer, TaskRuntime} from '@typexs/base';
-import {Incoming} from '@typexs/base/index';
+import { Incoming, ITask, ITaskRuntimeContainer, TaskRuntime } from '@typexs/tasks';
 
 export class LongRunningTask implements ITask {
 

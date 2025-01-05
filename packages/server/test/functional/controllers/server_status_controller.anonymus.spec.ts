@@ -138,12 +138,10 @@ class ServerStatusControllerSpec {
             'classTransformer': false,
             'context': 'api',
             'controllers': [
-              // 'DistributedStorageAPIController',
               'FileSystemAPIController',
               'RegistryAPIController',
               'ServerStatusAPIController',
-              'SystemNodeInfoAPIController',
-              'TasksAPIController'
+              'SystemNodeInfoAPIController'
             ],
             'currentUserChecker': '',
             'limit': '10mb',
@@ -205,8 +203,7 @@ class ServerStatusControllerSpec {
             'FileSystemAPIController',
             'RegistryAPIController',
             'ServerStatusAPIController',
-            'SystemNodeInfoAPIController',
-            'TasksAPIController'
+            'SystemNodeInfoAPIController'
           ],
           'currentUserChecker': '',
           'limit': '10mb',
