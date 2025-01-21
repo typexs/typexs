@@ -1,6 +1,6 @@
 {
   "name": "@typexs/roles-api",
-  "version": "2.4.0",
+  "version": "3.0.0",
   "main": "index",
   "scripts": {
     "clean": "npm run clean:build && npm run clean:modules",
@@ -28,6 +28,6 @@
     "name": "roles-api"
   },
   "publishConfig": {
-    "tag": "v2.4"
+    "tag": "v3-lts"
   }
 }

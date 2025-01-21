@@ -36,7 +36,7 @@
     "@angular/router": "v13-lts",
     "@typexs/base-ng": "^13.1.0",
     "@typexs/forms-ng": "^13.1.0",
-    "@typexs/search": "^2.4.0",
+    "@typexs/search": "^3.0.0",
     "@typexs/storage-ng": "^13.1.0",
     "lodash": "4.17.21",
     "rxjs": "~7.5.0"

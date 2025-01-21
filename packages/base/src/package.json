@@ -1,6 +1,6 @@
 {
   "name": "@typexs/base",
-  "version": "2.4.0",
+  "version": "3.0.0",
   "description": "",
   "main": "index",
   "browser": "browser",
@@ -40,7 +40,7 @@
     "@allgemein/moduls": "~1.8.1",
     "@allgemein/schema-api": "~1.7.1",
     "@cezaryrk/minimatch": "~3.0.4",
-    "@typexs/generic": "^2.4.0",
+    "@typexs/generic": "^3.0.0",
     "ajv": "^8.17.1",
     "fast-safe-stringify": "2.1.1",
     "glob": "^11.0.0",
@@ -51,7 +51,7 @@
     "typedi": "0.8.0"
   },
   "devDependencies": {
-    "@typexs/testing": "^2.4.0",
+    "@typexs/testing": "^3.0.0",
     "typeorm": "0.2.34",
     "winston": "3.3.3",
     "yargonaut": "^1.1.4",
@@ -81,7 +81,7 @@
     "name": "base"
   },
   "publishConfig": {
-    "tag": "v2.4"
+    "tag": "v3-lts"
   },
   "gitHead": "fa0ea8d60470bb9f72960742a07891628b66f0c1"
 }

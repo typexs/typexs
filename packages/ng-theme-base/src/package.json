@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.0.0",
-    "@typexs/base": "^2.4.0",
+    "@typexs/base": "^3.0.0",
     "@typexs/base-ng": "^13.1.0",
     "@typexs/forms-ng": "^13.1.0",
     "@typexs/ng-router-menu": "^13.0.2",

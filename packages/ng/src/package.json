@@ -34,10 +34,10 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs#readme",
   "dependencies": {
-    "@typexs/roles-api": "^2.4.0"
+    "@typexs/roles-api": "^3.0.0"
   },
   "devDependencies": {
-    "@typexs/base": "^2.4.0"
+    "@typexs/base": "^3.0.0"
   },
   "peerDependencies": {
     "@typexs/base": ">=2.3.0"

@@ -35,11 +35,11 @@
     "@angular/core": "v13-lts",
     "@angular/forms": "v13-lts",
     "@angular/router": "v13-lts",
-    "@typexs/base": "^2.4.0",
+    "@typexs/base": "^3.0.0",
     "@typexs/base-ng": "^13.1.0",
     "@typexs/forms-ng": "^13.1.0",
-    "@typexs/server": "^2.4.0",
-    "@typexs/tasks": "^2.4.0",
+    "@typexs/server": "^3.0.0",
+    "@typexs/tasks": "^3.0.0",
     "rxjs": "~7.5.0"
   },
   "publishConfig": {
