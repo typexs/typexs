@@ -1,6 +1,6 @@
 {
   "name": "@typexs/entity",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Schema for typexs",
   "main": "index",
   "browser": "browser",
@@ -33,15 +33,15 @@
   },
   "homepage": "https://gitlab.com/typexs/entity",
   "dependencies": {
-    "@typexs/roles-api": "^3.0.0"
+    "@typexs/roles-api": "^3.0.1"
   },
   "devDependencies": {
-    "@typexs/base": "^3.0.0",
-    "@typexs/forms": "^3.0.0",
-    "@typexs/pipelines": "^3.0.0",
-    "@typexs/server": "^3.0.0",
-    "@typexs/storage": "^3.0.0",
-    "@typexs/testing": "^3.0.0"
+    "@typexs/base": "^3.0.1",
+    "@typexs/forms": "^3.0.1",
+    "@typexs/pipelines": "^3.0.1",
+    "@typexs/server": "^3.0.1",
+    "@typexs/storage": "^3.0.1",
+    "@typexs/testing": "^3.0.1"
   },
   "peerDependencies": {
     "@typexs/base": ">=2.3.0",

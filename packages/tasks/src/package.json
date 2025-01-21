@@ -1,6 +1,6 @@
 {
   "name": "@typexs/tasks",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Tasks for typexs",
   "main": "index",
   "browser": "browser",
@@ -35,10 +35,10 @@
     "@allgemein/queue": "^1.1.1"
   },
   "devDependencies": {
-    "@typexs/base": "^3.0.0",
-    "@typexs/testing": "^3.0.0",
-    "@typexs/server": "^3.0.0",
-    "@typexs/generic": "^3.0.0"
+    "@typexs/base": "^3.0.1",
+    "@typexs/generic": "^3.0.1",
+    "@typexs/server": "^3.0.1",
+    "@typexs/testing": "^3.0.1"
   },
   "peerDependencies": {
     "@typexs/base": ">=2.4.0",

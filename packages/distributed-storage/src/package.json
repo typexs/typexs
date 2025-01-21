@@ -1,6 +1,6 @@
 {
   "name": "@typexs/distributed-storage",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "",
   "main": "index",
   "browser": "browser",
@@ -27,13 +27,13 @@
   "author": "Robert Kania",
   "license": "MIT",
   "dependencies": {
-    "@typexs/roles-api": "^3.0.0"
+    "@typexs/roles-api": "^3.0.1"
   },
   "devDependencies": {
-    "@typexs/base": "^3.0.0",
-    "@typexs/pipelines": "^3.0.0",
-    "@typexs/server": "^3.0.0",
-    "@typexs/testing": "^3.0.0"
+    "@typexs/base": "^3.0.1",
+    "@typexs/pipelines": "^3.0.1",
+    "@typexs/server": "^3.0.1",
+    "@typexs/testing": "^3.0.1"
   },
   "peerDependencies": {
     "@typexs/base": ">=2.3.0",
