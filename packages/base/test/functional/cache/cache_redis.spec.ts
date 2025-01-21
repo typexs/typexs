@@ -1,6 +1,5 @@
 import { suite, test } from '@testdeck/mocha';
 import { expect } from 'chai';
-
 import { Bootstrap } from '../../../src/Bootstrap';
 import { Config } from '@allgemein/config';
 import { redis_host, redis_port, TEST_STORAGE_OPTIONS } from '../config';
@@ -62,13 +61,13 @@ class CacheRedisSpec {
     options.adapter['redis1'].socket.port = parseInt(options.adapter['redis1'].socket.port, 10);
     expect(options.bins).to.deep.eq({
       default: 'redis1'
-    })
+    });
     expect(options.adapter.redis1).to.deep.include({
       type: 'redis',
       host: redis_host,
       port: redis_port,
-      'url': 'redis://' + redis_host + ':' + redis_port
-    })
+      url: 'redis://' + redis_host + ':' + redis_port
+    });
 
     // expect(options).to.deep.eq({
     //   bins: { default: 'redis1' },
