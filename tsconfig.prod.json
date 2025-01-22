@@ -31,52 +31,70 @@
     "baseUrl": "./",
     "paths": {
       "@typexs/base": [
-        "./packages/base/build/package/*",
-        "./packages/base/build/package"
+        "./packages/base/build/package/browser"
       ],
       "@typexs/base/*": [
-        "./packages/base/build/package/*",
-        "./packages/base/build/package"
+        "./packages/base/build/package/*"
       ],
       "@typexs/base-ng": [
-        "./packages/base-ng/build/package/*",
         "./packages/base-ng/build/package"
       ],
       "@typexs/base-ng/*": [
-        "./packages/base-ng/build/package/*",
-        "./packages/base-ng/build/package"
+        "./packages/base-ng/build/package/*"
+      ],
+      "@typexs/entity": [
+        "./packages/entity/build/package/browser"
+      ],
+      "@typexs/entity/*": [
+        "./packages/entity/build/package/*"
       ],
       "@typexs/entity-ng": [
-        "./packages/entity-ng/build/package/*",
         "./packages/entity-ng/build/package"
       ],
       "@typexs/entity-ng/*": [
-        "./packages/entity-ng/build/package/*",
-        "./packages/entity-ng/build/package"
+        "./packages/entity-ng/build/package/*"
+      ],
+      "@typexs/auth": [
+        "./packages/auth/build/package/browser"
+      ],
+      "@typexs/auth/*": [
+        "./packages/auth/build/package/*"
       ],
       "@typexs/auth-ng": [
-        "./packages/auth-ng/build/package/*",
         "./packages/auth-ng/build/package"
       ],
       "@typexs/auth-ng/*": [
-        "./packages/auth-ng/build/package/*",
-        "./packages/auth-ng/build/package"
+        "./packages/auth-ng/build/package/*"
       ],
-      "@typexs/forms-ng/*": [
-        "./packages/forms-ng/build/package/*",
-        "./packages/forms-ng/build/package"
+      "@typexs/distributed-storage": [
+        "./packages/distributed-storage/build/package/browser"
+      ],
+      "@typexs/distributed-storage/*": [
+        "./packages/distributed-storage/build/package/*"
+      ],
+      "@typexs/forms": [
+        "./packages/forms/build/package/browser"
+      ],
+      "@typexs/forms/*": [
+        "./packages/forms/build/package/*"
       ],
       "@typexs/forms-ng": [
-        "./packages/forms-ng/build/package/*",
         "./packages/forms-ng/build/package"
       ],
-      "@typexs/storage-ng/*": [
-        "./packages/storage-ng/build/package/*",
-        "./packages/storage-ng/build/package"
+      "@typexs/forms-ng/*": [
+        "./packages/forms-ng/build/package/*"
+      ],
+      "@typexs/storage": [
+        "./packages/storage/build/package/browser"
+      ],
+      "@typexs/storage/*": [
+        "./packages/storage/build/package/*"
       ],
       "@typexs/storage-ng": [
-        "./packages/storage-ng/build/package/*",
         "./packages/storage-ng/build/package"
+      ],
+      "@typexs/storage-ng/*": [
+        "./packages/storage-ng/build/package/*"
       ],
       "@typexs/ng-router-menu/*": [
         "./packages/ng-router-menu/build/package/*",
@@ -94,14 +112,30 @@
         "./packages/ng-theme-base/build/package/*",
         "./packages/ng-theme-base/build/package"
       ],
+      "@typexs/tasks": [
+        "./packages/tasks/build/package/browser"
+      ],
+      "@typexs/tasks/*": [
+        "./packages/tasks/build/package/*"
+      ],
       "@typexs/tasks-ng": [
-        "./packages/tasks-ng/build/package/*",
         "./packages/tasks-ng/build/package"
       ],
       "@typexs/tasks-ng/*": [
-        "./packages/tasks-ng/build/package/*",
-        "./packages/tasks-ng/build/package"
-      ]
+        "./packages/tasks-ng/build/package/*"
+      ],
+      "@typexs/search": [
+        "./packages/search/build/package/browser"
+      ],
+      "@typexs/search/*": [
+        "./packages/search/build/package/*"
+      ],
+//      "@typexs/tasks-ng/*": [
+//        "./packages/tasks-ng/src/*"
+//      ],
+//      "@typexs/tasks-ng": [
+//        "./packages/tasks-ng/src/public_api"
+//      ]
     }
   },
   "exclude": [
