@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/base-ng",
-  "version": "13.1.0",
+  "version": "14.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -33,21 +33,21 @@
   "homepage": "https://gitlab.com/typexs/typexs#readme",
   "peerDependencies": {
     "@typexs/base": ">=2.3.0",
-    "@typexs/ng": ">=13.0.0",
+    "@typexs/ng": ">=14.0.0",
     "@typexs/server": ">=2.3.0"
   },
   "devDependencies": {
-    "@angular/common": "v13-lts",
-    "@angular/core": "v13-lts",
-    "@angular/forms": "v13-lts",
-    "@angular/router": "v13-lts",
+    "@angular/common": "v14-lts",
+    "@angular/core": "v14-lts",
+    "@angular/forms": "v14-lts",
+    "@angular/router": "v14-lts",
     "@typexs/base": "^3.0.0",
-    "@typexs/ng": "^13.1.0",
+    "@typexs/ng": "^14.0.0",
     "@typexs/server": "^3.0.0",
     "rxjs": "~7.5.0"
   },
   "publishConfig": {
-    "tag": "v13-lts"
+    "tag": "v14-lts"
   },
   "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

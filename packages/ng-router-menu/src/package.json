@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-router-menu",
-  "version": "13.0.2",
+  "version": "14.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -32,15 +32,15 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "devDependencies": {
-    "@angular/common": "v13-lts",
-    "@angular/core": "v13-lts",
-    "@angular/platform-browser": "v13-lts",
-    "@angular/router": "v13-lts",
+    "@angular/common": "v14-lts",
+    "@angular/core": "v14-lts",
+    "@angular/platform-browser": "v14-lts",
+    "@angular/router": "v14-lts",
     "lodash": "4.17.21",
     "rxjs": "~7.5.0"
   },
   "publishConfig": {
-    "tag": "v13-lts"
+    "tag": "v14-lts"
   },
   "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

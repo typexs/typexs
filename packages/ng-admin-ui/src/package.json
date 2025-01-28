@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-admin-ui",
-  "version": "13.1.0",
+  "version": "14.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -33,32 +33,32 @@
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
     "@typexs/base": ">=2.3.0",
-    "@typexs/base-ng": ">=13.0.0",
-    "@typexs/forms-ng": ">=13.0.0",
-    "@typexs/ng": ">=13.0.0",
-    "@typexs/ng-router-menu": ">=13.0.0",
-    "@typexs/ng-theme-base": ">=13.0.0",
+    "@typexs/base-ng": ">=14.0.0",
+    "@typexs/forms-ng": ">=14.0.0",
+    "@typexs/ng": ">=14.0.0",
+    "@typexs/ng-router-menu": ">=14.0.0",
+    "@typexs/ng-theme-base": ">=14.0.0",
     "@typexs/server": ">=2.3.0",
-    "@typexs/storage-ng": ">=13.0.0",
-    "@typexs/tasks-ng": ">=13.0.0"
+    "@typexs/storage-ng": ">=14.0.0",
+    "@typexs/tasks-ng": ">=14.0.0"
   },
   "devDependencies": {
-    "@angular/common": "v13-lts",
-    "@angular/core": "v13-lts",
-    "@angular/router": "v13-lts",
+    "@angular/common": "v14-lts",
+    "@angular/core": "v14-lts",
+    "@angular/router": "v14-lts",
     "@typexs/base": "^3.0.0",
-    "@typexs/base-ng": "^13.1.0",
-    "@typexs/forms-ng": "^13.1.0",
-    "@typexs/ng": "^13.1.0",
-    "@typexs/ng-router-menu": "^13.0.2",
-    "@typexs/ng-theme-base": "^13.1.0",
+    "@typexs/base-ng": "^14.0.0",
+    "@typexs/forms-ng": "^14.0.0",
+    "@typexs/ng": "^14.0.0",
+    "@typexs/ng-router-menu": "^14.0.0",
+    "@typexs/ng-theme-base": "^14.0.0",
     "@typexs/server": "^3.0.0",
-    "@typexs/storage-ng": "^13.1.0",
-    "@typexs/tasks-ng": "^13.1.0",
+    "@typexs/storage-ng": "^14.0.0",
+    "@typexs/tasks-ng": "^14.0.0",
     "rxjs": "~7.5.0"
   },
   "publishConfig": {
-    "tag": "v13-lts"
+    "tag": "v14-lts"
   },
   "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }
