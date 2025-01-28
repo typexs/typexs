@@ -1,8 +1,8 @@
 import { IObjectHandle } from '../IObjectHandle';
 import { TypeOrmConnectionWrapper } from './TypeOrmConnectionWrapper';
 import { EntityType } from '../Constants';
-import { MongoRepository, UpdateQueryBuilder } from 'typeorm';
-import { NotSupportedError, NotYetImplementedError } from '@allgemein/base';
+import { DeepPartial, MongoRepository, UpdateQueryBuilder } from 'typeorm';
+import { NotYetImplementedError } from '@allgemein/base';
 import { get, has, isArray, isEmpty } from 'lodash';
 import { TypeOrmSqlConditionsBuilder } from './TypeOrmSqlConditionsBuilder';
 import { convertPropertyValueJsonToString } from './Helper';
@@ -69,8 +69,9 @@ export class RepositoryWrapper<T> implements IObjectHandle<T> {
   async save(obj: T | T[], opts?: any): Promise<T | T[]> {
     const _isArr = isArray(obj);
     await this.connection.acquire('write');
+    // @ts-ignore
     return this.getRepository()
-      .save((_isArr ? obj : [obj]) as T[], opts)
+      .save((_isArr ? obj : [obj]) as DeepPartial<T>[], opts)
       .then(x => _isArr ? x : x.shift())
       .finally(() => {
         this.connection.release('write');
