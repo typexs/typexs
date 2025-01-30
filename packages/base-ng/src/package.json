@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "npm run clean:build && npm run clean:modules",
     "clean:build": "rm -rf ../build",
-    "clean:modules": "rm -rf node_modules ../node_modules",
+    "clean:modules": "rm -rf node_modules ../node_modules ../.angular",
     "test": "ng test --code-coverage=true --watch=false",
     "build": "ng build"
   },

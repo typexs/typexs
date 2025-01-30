@@ -34,9 +34,10 @@
   "homepage": "https://gitlab.com/typexs/typexs",
   "dependencies": {
     "@typexs/roles-api": "^3.0.0",
-    "ldapjs": "~3.0.7"
+    "ldapjs": "~2.3.3"
   },
   "devDependencies": {
+    "@types/ldapjs": "~2.2.5",
     "@typexs/base": "^3.0.0",
     "@typexs/pipelines": "^3.0.0",
     "@typexs/testing": "^3.0.0"

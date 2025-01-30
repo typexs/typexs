@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "npm run clean:build && npm run clean:modules",
     "clean:build": "rm -rf ../build",
-    "clean:modules": "rm -rf node_modules ../node_modules",
+    "clean:modules": "rm -rf node_modules ../node_modules ../.angular",
     "test": "ng test --code-coverage=true --watch=false",
     "build": "ng build"
   },
@@ -50,7 +50,6 @@
     "@typexs/forms": "^3.0.0",
     "@typexs/forms-ng": "^14.0.0",
     "@typexs/ng": "^14.0.0",
-    "chai": "4.3.4",
     "rxjs": "~7.5.0"
   },
   "publishConfig": {

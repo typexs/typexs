@@ -363,7 +363,7 @@ class ServerStatusControllerSpec {
         {
           'index': 0,
           'name': 'nodeIds',
-          'parse': false
+          // 'parse': false
           // 'required': true
         }
       ],

@@ -315,7 +315,7 @@ class TasksControllerRemoteSpec {
     });
   }
 
-  @test.only
+  @test
   async 'execute remote task with parameters'() {
     const events: TaskEvent[] = [];
     const eventRunnert: TaskRunnerEvent[] = [];
@@ -340,7 +340,7 @@ class TasksControllerRemoteSpec {
     const _url = URL + '/api' + API_CTRL_TASK_EXEC
         .replace(':taskName', 'simple_task_with_params') + '?params=' +
       JSON.stringify({ need_this: { really: { important: 'data' } } }) + '&targetIds=' +
-      JSON.stringify(['node_tasks']);
+      ['node_tasks'].join('&targetIds=');
     const taskEvents: TaskEvent[] = await request.get(_url, { passBody: true, responseType: 'json' }) as any;
     expect(taskEvents).to.not.be.null;
     expect(taskEvents.length).to.be.gt(0);
@@ -399,7 +399,7 @@ class TasksControllerRemoteSpec {
   async 'execute remote task without necessary parameters'() {
     const _url = URL + '/api' + API_CTRL_TASK_EXEC
         .replace(':taskName', 'simple_task_with_params') + '?targetIds=' +
-      JSON.stringify(['node_tasks']);
+      ['node_tasks'].join('&targetIds=');
     try {
       const taskEvents: TaskEvent[] = await request.get(_url, { passBody: true, responseType: 'json' }) as any;
       expect(true).to.be.eq(false);
@@ -414,7 +414,7 @@ class TasksControllerRemoteSpec {
   async 'execute remote task without necessary parameters (skip throwing)'() {
     const _url = URL + '/api' + API_CTRL_TASK_EXEC
         .replace(':taskName', 'simple_task_with_params') + '?targetIds=' +
-      JSON.stringify(['node_tasks']) +
+      ['node_tasks'].join('&targetIds=') +
       '&options=' + JSON.stringify(<ITaskExectorOptions>{ skipThrow: true });
     const taskEvents: TaskEvent[] = await request.get(_url, { passBody: true, responseType: 'json' }) as any;
     expect(taskEvents).to.have.length(1);
