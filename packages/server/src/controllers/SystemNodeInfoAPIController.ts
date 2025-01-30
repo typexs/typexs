@@ -78,7 +78,7 @@ export class SystemNodeInfoAPIController {
 
   @Access(PERMISSION_ALLOW_RUNTIME_REMOTE_INFOS_VIEW)
   @Get(_API_CTRL_SYSTEM_RUNTIME_REMOTE_INFOS)
-  nodesInfo(@QueryParam('nodeIds') nodeIds: string[] = []): any {
+  nodesInfo(@QueryParam('nodeIds', {isArray: true}) nodeIds: string[] = []): any {
     return this.system.getNodeInfos(nodeIds);
   }
 

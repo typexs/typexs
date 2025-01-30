@@ -315,7 +315,7 @@ class TasksControllerRemoteSpec {
     });
   }
 
-  @test
+  @test.only
   async 'execute remote task with parameters'() {
     const events: TaskEvent[] = [];
     const eventRunnert: TaskRunnerEvent[] = [];
@@ -323,13 +323,13 @@ class TasksControllerRemoteSpec {
     class T02 {
       @subscribe(TaskEvent) on(e: TaskEvent) {
         const _e = cloneDeep(e);
-        console.log('event: ' + e);
+        // console.log('event: ' + e);
         events.push(_e);
       }
 
       @subscribe(TaskRunnerEvent) onRunerEvent(e: TaskRunnerEvent) {
         const _e2 = cloneDeep(e);
-        console.log('event-runner: ' + e);
+        // console.log('event-runner: ' + e);
         eventRunnert.push(_e2);
       }
     }

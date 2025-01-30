@@ -130,7 +130,7 @@ export class TasksAPIController {
   @Get(_API_CTRL_TASK_EXEC)
   async executeTask(@Param('taskName') taskName: string,
     @QueryParam('params') parameters: any = {},
-    @QueryParam('targetIds') targetIds: string[] = [],
+    @QueryParam('targetIds', { isArray: true}) targetIds: string[] = [],
     @QueryParam('options') options: ITaskExectorOptions = {}) {
     // arguments
     // const execReq = this.taskFactory.executeRequest();

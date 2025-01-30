@@ -58,6 +58,7 @@ export class NavigatorService {
   onRouterEvent(event: any) {
     if (event instanceof RouteConfigLoadEnd) {
       const entry = this.router.config.find(x => x.path === event.route['path']);
+      // TODO this will not work is true
       if (entry && !has(entry, '_loadedConfig')) {
         this.reload = true;
       }
