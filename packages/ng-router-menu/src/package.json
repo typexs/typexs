@@ -1,5 +1,4 @@
 {
-  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-router-menu",
   "version": "14.0.0",
   "description": "Angular for typexs",
@@ -36,7 +35,6 @@
     "@angular/core": "v14-lts",
     "@angular/platform-browser": "v14-lts",
     "@angular/router": "v14-lts",
-    "lodash": "4.17.21",
     "rxjs": "~7.5.0"
   },
   "publishConfig": {

@@ -3,7 +3,7 @@
   "name": "@typexs/search-ng",
   "version": "14.0.0",
   "description": "Angular for typexs",
-  "main": "public_api.ts",
+  "main": "public_api",
   "scripts": {
     "clean": "npm run clean:build && npm run clean:modules",
     "clean:build": "rm -rf ../build",
@@ -26,8 +26,13 @@
   "peerDependencies": {
     "@typexs/base-ng": ">=14.0.0",
     "@typexs/forms-ng": ">=14.0.0",
-    "@typexs/search": ">=2.3.0",
+    "@typexs/ng-theme-base": ">=14.0.0",
+    "@typexs/search": ">=3.0.0",
     "@typexs/storage-ng": ">=14.0.0"
+  },
+  "dependencies": {
+    "@typexs/base-ng": ">=14.0.0",
+    "@typexs/ng-theme-base": ">=14.0.0"
   },
   "devDependencies": {
     "@angular/common": "v14-lts",
@@ -38,7 +43,7 @@
     "@typexs/forms-ng": "^14.0.0",
     "@typexs/search": "^3.0.0",
     "@typexs/storage-ng": "^14.0.0",
-    "lodash": "4.17.21",
+    "@typexs/ng-theme-base": ">=14.0.0",
     "rxjs": "~7.5.0"
   },
   "publishConfig": {

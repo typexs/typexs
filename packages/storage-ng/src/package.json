@@ -3,7 +3,7 @@
   "name": "@typexs/storage-ng",
   "version": "14.0.0",
   "description": "Angular for typexs",
-  "main": "public_api.ts",
+  "main": "public_api",
   "scripts": {
     "clean": "npm run clean:build && npm run clean:modules",
     "clean:build": "rm -rf ../build",
@@ -32,12 +32,12 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@typexs/base": ">=2.3.0",
+    "@typexs/base": ">=3.0.0",
     "@typexs/base-ng": ">=14.0.0",
-    "@typexs/forms": ">=2.3.0",
+    "@typexs/forms": ">=3.0.0",
     "@typexs/forms-ng": ">=14.0.0",
     "@typexs/ng": ">=14.0.0",
-    "@typexs/storage": ">=2.3.0"
+    "@typexs/storage": ">=3.0.0"
   },
   "devDependencies": {
     "@angular/common": "v14-lts",

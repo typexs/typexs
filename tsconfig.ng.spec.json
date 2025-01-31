@@ -1,0 +1,187 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "es2020",
+    "lib": [
+      "es2020",
+      "dom"
+    ],
+    "paths": {
+      "@typexs/auth": [
+        "packages/auth/src/browser"
+      ],
+      "@typexs/auth/*": [
+        "packages/auth/src/*"
+      ],
+      "@typexs/auth-ng": [
+        "packages/auth-ng/src/public_api"
+      ],
+      "@typexs/auth-ng/*": [
+        "packages/auth-ng/src/*"
+      ],
+      "@typexs/base": [
+        "packages/base/src/browser"
+      ],
+      "@typexs/base/*": [
+        "packages/base/src/*"
+      ],
+      "@typexs/base-ng": [
+        "packages/base-ng/src/public_api"
+      ],
+      "@typexs/base-ng/*": [
+        "packages/base-ng/src/*"
+      ],
+      "demo-task": [
+        "packages/demo-task/src/browser"
+      ],
+      "demo-task/*": [
+        "packages/demo-task/src/*"
+      ],
+      "@typexs/distributed-storage": [
+        "packages/distributed-storage/src/browser"
+      ],
+      "@typexs/distributed-storage/*": [
+        "packages/distributed-storage/src/*"
+      ],
+      "@typexs/distributed-storage-ng": [
+        "packages/distributed-storage-ng/src/public_api"
+      ],
+      "@typexs/distributed-storage-ng/*": [
+        "packages/distributed-storage-ng/src/*"
+      ],
+      "@typexs/entity": [
+        "packages/entity/src/browser"
+      ],
+      "@typexs/entity/*": [
+        "packages/entity/src/*"
+      ],
+      "@typexs/entity-ng": [
+        "packages/entity-ng/src/public_api"
+      ],
+      "@typexs/entity-ng/*": [
+        "packages/entity-ng/src/*"
+      ],
+      "@typexs/forms": [
+        "packages/forms/src/browser"
+      ],
+      "@typexs/forms/*": [
+        "packages/forms/src/*"
+      ],
+      "@typexs/forms-ng": [
+        "packages/forms-ng/src/public_api"
+      ],
+      "@typexs/forms-ng/*": [
+        "packages/forms-ng/src/*"
+      ],
+      "@typexs/generic": [
+        "packages/generic/src/browser"
+      ],
+      "@typexs/generic/*": [
+        "packages/generic/src/*"
+      ],
+      "@typexs/ldap": [
+        "packages/ldap/src/browser"
+      ],
+      "@typexs/ldap/*": [
+        "packages/ldap/src/*"
+      ],
+      "@typexs/ng": [
+        "packages/ng/src/browser"
+      ],
+      "@typexs/ng/*": [
+        "packages/ng/src/*"
+      ],
+      "@typexs/ng-admin-ui": [
+        "packages/ng-admin-ui/src/public_api"
+      ],
+      "@typexs/ng-admin-ui/*": [
+        "packages/ng-admin-ui/src/*"
+      ],
+      "@typexs/ng-router-menu": [
+        "packages/ng-router-menu/src/public_api"
+      ],
+      "@typexs/ng-router-menu/*": [
+        "packages/ng-router-menu/src/*"
+      ],
+      "@typexs/ng-theme-base": [
+        "packages/ng-theme-base/src/public_api"
+      ],
+      "@typexs/ng-theme-base/*": [
+        "packages/ng-theme-base/src/*"
+      ],
+      "@typexs/notification": [
+        "packages/notification/src/browser"
+      ],
+      "@typexs/notification/*": [
+        "packages/notification/src/*"
+      ],
+      "@typexs/pipelines": [
+        "packages/pipelines/src/browser"
+      ],
+      "@typexs/pipelines/*": [
+        "packages/pipelines/src/*"
+      ],
+      "@typexs/roles": [
+        "packages/roles/src/browser"
+      ],
+      "@typexs/roles/*": [
+        "packages/roles/src/*"
+      ],
+      "@typexs/roles-api": [
+        "packages/roles-api/src/browser"
+      ],
+      "@typexs/roles-api/*": [
+        "packages/roles-api/src/*"
+      ],
+      "@typexs/search": [
+        "packages/search/src/browser"
+      ],
+      "@typexs/search/*": [
+        "packages/search/src/*"
+      ],
+      "@typexs/search-ng": [
+        "packages/search-ng/src/public_api"
+      ],
+      "@typexs/search-ng/*": [
+        "packages/search-ng/src/*"
+      ],
+      "@typexs/server": [
+        "packages/server/src/browser"
+      ],
+      "@typexs/server/*": [
+        "packages/server/src/*"
+      ],
+      "@typexs/storage": [
+        "packages/storage/src/browser"
+      ],
+      "@typexs/storage/*": [
+        "packages/storage/src/*"
+      ],
+      "@typexs/storage-ng": [
+        "packages/storage-ng/src/public_api"
+      ],
+      "@typexs/storage-ng/*": [
+        "packages/storage-ng/src/*"
+      ],
+      "@typexs/tasks": [
+        "packages/tasks/src/browser"
+      ],
+      "@typexs/tasks/*": [
+        "packages/tasks/src/*"
+      ],
+      "@typexs/tasks-ng": [
+        "packages/tasks-ng/src/public_api"
+      ],
+      "@typexs/tasks-ng/*": [
+        "packages/tasks-ng/src/*"
+      ],
+      "@typexs/testing": [
+        "packages/testing/src/browser"
+      ],
+      "@typexs/testing/*": [
+        "packages/testing/src/*"
+      ]
+    }
+  }
+}

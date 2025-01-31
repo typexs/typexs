@@ -3,7 +3,7 @@
   "name": "@typexs/auth-ng",
   "version": "14.0.0",
   "description": "Angular for typexs",
-  "main": "../../base-ng/src/public_api.ts",
+  "main": "public_api",
   "scripts": {
     "clean": "npm run clean:build && npm run clean:modules",
     "clean:build": "rm -rf ../build",
@@ -32,15 +32,18 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs#readme",
   "peerDependencies": {
-    "@typexs/auth": ">=2.3.0",
+    "@typexs/auth": ">=3.0.0",
     "@typexs/base-ng": ">=14.0.0",
-    "@typexs/entity": ">=2.3.0",
     "@typexs/entity-ng": ">=14.0.0",
-    "@typexs/forms": ">=2.3.0",
+    "@typexs/generic": ">=3.0.0",
     "@typexs/forms-ng": ">=14.0.0",
     "@typexs/ng": ">=14.0.0",
     "@typexs/ng-theme-base": ">=14.0.0",
-    "@typexs/roles-api": ">=2.3.0"
+    "@typexs/roles-api": ">=3.0.0"
+  },
+  "dependencies": {
+    "@typexs/base-ng": "^14.0.0",
+    "@typexs/ng-theme-base": "^14.0.0"
   },
   "devDependencies": {
     "@angular/common": "v14-lts",
@@ -49,9 +52,7 @@
     "@angular/router": "v14-lts",
     "@typexs/auth": "^3.0.0",
     "@typexs/base-ng": "^14.0.0",
-    "@typexs/entity": "^3.0.0",
     "@typexs/entity-ng": "^14.0.0",
-    "@typexs/forms": "^3.0.0",
     "@typexs/forms-ng": "^14.0.0",
     "@typexs/ng": "^14.0.0",
     "@typexs/ng-theme-base": "^14.0.0",

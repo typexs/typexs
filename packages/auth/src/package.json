@@ -37,7 +37,7 @@
     "@typexs/testing": "^3.0.0"
   },
   "peerDependencies": {
-    "@typexs/server": ">=2.3.0"
+    "@typexs/server": ">=3.0.0"
   },
   "typexs": {
     "name": "auth",

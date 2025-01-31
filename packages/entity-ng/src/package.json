@@ -32,12 +32,16 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@typexs/base": ">=2.3.0",
+    "@typexs/base": ">=3.0.0",
     "@typexs/base-ng": ">=14.0.0",
-    "@typexs/entity": ">=2.3.0",
-    "@typexs/forms": ">=2.3.0",
+    "@typexs/entity": ">=3.0.0",
+    "@typexs/forms": ">=3.0.0",
     "@typexs/forms-ng": ">=14.0.0",
     "@typexs/ng": ">=14.0.0"
+  },
+  "dependencies": {
+    "@typexs/base-ng": "^14.0.0",
+    "@typexs/ng-theme-base": "^14.0.0"
   },
   "devDependencies": {
     "@angular/common": "v14-lts",

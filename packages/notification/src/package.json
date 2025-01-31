@@ -23,7 +23,7 @@
     "winston-transport": "^4.4.0"
   },
   "peerDependencies": {
-    "@typexs/base": ">=2.3.0",
+    "@typexs/base": ">=3.0.0",
     "winston-transport": "^4.4.0"
   },
   "publishConfig": {

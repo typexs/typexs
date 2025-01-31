@@ -3,7 +3,7 @@
   "name": "@typexs/forms-ng",
   "version": "14.0.0",
   "description": "Angular for typexs",
-  "main": "public_api.ts",
+  "main": "public_api",
   "scripts": {
     "clean": "npm run clean:build && npm run clean:modules",
     "clean:build": "rm -rf ../build",
@@ -32,9 +32,11 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@typexs/base": ">=2.3.0",
+    "@angular/core": "v14-lts",
+    "@angular/forms": "v14-lts",
+    "@angular/router": "v14-lts",
     "@typexs/base-ng": ">=14.0.0",
-    "@typexs/forms": ">=2.3.0"
+    "@typexs/forms": ">=3.0.0"
   },
   "devDependencies": {
     "@angular/common": "v14-lts",
@@ -43,7 +45,6 @@
     "@angular/router": "v14-lts",
     "@typexs/base": "^3.0.0",
     "@typexs/base-ng": "^14.0.0",
-    "@typexs/entity": "^3.0.0",
     "@typexs/forms": "^3.0.0",
     "rxjs": "~7.5.0"
   },

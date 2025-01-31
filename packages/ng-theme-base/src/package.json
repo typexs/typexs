@@ -1,5 +1,4 @@
 {
-  "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/ng-theme-base",
   "version": "14.0.0",
   "description": "Angular for typexs",
@@ -33,9 +32,6 @@
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
     "@fortawesome/fontawesome-free": "^5.0.0",
-    "@typexs/base": ">=2.3.0",
-    "@typexs/base-ng": ">=14.0.0",
-    "@typexs/forms-ng": ">=14.0.0",
     "@typexs/ng-router-menu": ">=14.0.0",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.0.0",
@@ -43,7 +39,6 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.0.0",
-    "@typexs/base": "^3.0.0",
     "@typexs/base-ng": "^14.0.0",
     "@typexs/forms-ng": "^14.0.0",
     "@typexs/ng-router-menu": "^14.0.0",
