@@ -69,6 +69,7 @@ export class Pager {
     if (this.queryListenerSubscription) {
       return;
     }
+    // @ts-ignore
     this.queryListenerSubscription = this.activatedRoute.queryParamMap.subscribe(value => {
       if (value.has(this.name)) {
         const _value = value.get(this.name);
