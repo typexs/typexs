@@ -1,6 +1,6 @@
 {
   "name": "@typexs/roles-api",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "index",
   "scripts": {
     "clean": "npm run clean:build && npm run clean:modules",

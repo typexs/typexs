@@ -1,3 +1,17 @@
+## [3.0.1](https://gitlab.com/typexs/typexs/compare/v2.4.0...v3.0.1) (2025-01-21)
+
+
+### Bug Fixes
+
+* wrongly handled cache ([0234b98](https://gitlab.com/typexs/typexs/commit/0234b98b14f304c9329f244aa8c3fbdde175402d))
+
+
+### Features
+
+* spin-off task in @typexs/tasks modul ([a425020](https://gitlab.com/typexs/typexs/commit/a42502064ac6666136645bfc1e48e1e6a90968c1))
+
+
+
 # [2.4.0](https://gitlab.com/typexs/typexs/compare/v2.3.13...v2.4.0) (2024-12-09)
 
 

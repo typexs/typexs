@@ -88,6 +88,7 @@ export class RedisCacheClient implements IRedisCacheClient {
     return this.unserialize(reply);
   }
 
+
   serialize(v: any) {
     try {
       return Serializer.serialize(v);
@@ -96,14 +97,15 @@ export class RedisCacheClient implements IRedisCacheClient {
     }
   }
 
+
   unserialize(v: any) {
     try {
       return Serializer.deserialize(v);
     } catch (e) {
       return null;
     }
-
   }
+
 
   set(key: string, value: any, options?: ICacheSetOptions) {
     if (!this.client || !this.connected) {
@@ -167,6 +169,7 @@ export class RedisCacheClient implements IRedisCacheClient {
     }
     return null;
   }
+
 
   private _reset() {
     this.connected = false;

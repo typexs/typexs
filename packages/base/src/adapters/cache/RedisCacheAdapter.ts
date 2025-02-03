@@ -39,12 +39,21 @@ export class RedisCacheAdapter implements ICacheAdapter {
   }
 
 
-  cacheKey(bin: string, key: string) {
+  private cacheKey(bin: string, key: string) {
     const hash = CryptUtils.shorthash(key);
-    return [this.nodeId, 'bin:' + bin, key, hash].join('--').replace(/[^\w\d\-:]/, '');
+    return [this.nodeId, 'bin:' + bin, key, hash]
+      .join('--')
+      .replace(/[^\w\d\-:]/, '');
   }
 
 
+  /**
+   * Get cached value from bin
+   *
+   * @param key
+   * @param bin
+   * @param options
+   */
   async get(key: string, bin: string, options: ICacheSetOptions): Promise<any> {
     await this.client.connect();
     const _key = this.cacheKey(bin, key);
@@ -55,8 +64,7 @@ export class RedisCacheAdapter implements ICacheAdapter {
   async set(key: string, value: any, bin: string, options: ICacheSetOptions): Promise<any> {
     await this.client.connect();
     const _key = this.cacheKey(bin, key);
-    await this.client.set(_key, value, options);
-    return value;
+    return this.client.set(_key, value, options);
   }
 
 
