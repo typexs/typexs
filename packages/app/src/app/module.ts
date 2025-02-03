@@ -9,7 +9,7 @@ import { MenuDemoComponent } from './menu-demo/menu-demo.component';
 import { MenuAccessService } from './menu-demo/MenuAccessService';
 import { DummyComponent } from './dummy/dummy.component';
 import { OptionsService } from './services/OptionsService';
-import { PagerDemoComponent } from './pager-demo/pager-demo.component';
+import { PagerDemoComponent } from './components/pager/pager-demo.component';
 import { EmbeddedContentComponent } from './embedded-content/embedded-content.component';
 import { EmbeddedContentDemoComponent } from './embedded-content/embedded-content-demo.component';
 import { EmbeddedContentDirective } from './embedded-content/embedded-content.directive';

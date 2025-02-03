@@ -6,7 +6,7 @@ import { CheckboxMatrixDemoComponent } from './checkbox-matrix-demo/checkbox-mat
 import { MenuDemoComponent } from './menu-demo/menu-demo.component';
 import { DummyComponent } from './dummy/dummy.component';
 import { MenuAccessService } from './menu-demo/MenuAccessService';
-import { PagerDemoComponent } from './pager-demo/pager-demo.component';
+import { PagerDemoComponent } from './components/pager/pager-demo.component';
 import { LogoutComponent } from './dummy/logout/logout.component';
 import { ProfileComponent } from './dummy/profile/profile.component';
 import { NotificationDemoComponent } from './components/notification/notification-demo.component';
