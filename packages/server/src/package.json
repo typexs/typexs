@@ -1,6 +1,6 @@
 {
   "name": "@typexs/server",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Servers for typexs",
   "main": "index",
   "browser": "browser",
@@ -34,11 +34,11 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs#readme",
   "dependencies": {
-    "@typexs/base": "^3.0.0",
-    "@typexs/roles-api": "^3.0.0"
+    "@typexs/base": "^3.0.1",
+    "@typexs/roles-api": "^3.0.1"
   },
   "devDependencies": {
-    "@typexs/testing": "^3.0.0"
+    "@typexs/testing": "^3.0.1"
   },
   "peerDependencies": {
     "@typexs/base": ">=3.0.0",

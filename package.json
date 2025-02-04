@@ -1,6 +1,6 @@
 {
   "name": "@typexs/typexs",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "index.js",
   "browser": "browser.js",
   "scripts": {
@@ -135,5 +135,8 @@
   "private": true,
   "typexs": {
     "name": "typexs"
+  },
+  "overrides": {
+    "rxjs": "~7.5.0"
   }
 }

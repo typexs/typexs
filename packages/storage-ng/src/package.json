@@ -44,14 +44,12 @@
     "@angular/core": "v14-lts",
     "@angular/forms": "v14-lts",
     "@angular/router": "v14-lts",
-    "@typexs/base": "^3.0.0",
+    "@typexs/base": "^3.0.1",
     "@typexs/base-ng": "^14.0.0",
-    "@typexs/forms": "^3.0.0",
+    "@typexs/forms": "^3.0.1",
     "@typexs/forms-ng": "^14.0.0",
     "@typexs/ng": "^14.0.0",
-    "@typexs/storage": "^3.0.0",
-    "lodash": "4.17.21",
-    "rxjs": "~7.5.0"
+    "@typexs/storage": "^3.0.1"
   },
   "publishConfig": {
     "tag": "v14-lts"

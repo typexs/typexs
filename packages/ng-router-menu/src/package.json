@@ -30,6 +30,13 @@
     "url": "https://gitlab.com/typexs/ng/issues"
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
+  "peerDependencies": {
+    "@angular/common": "v14-lts",
+    "@angular/core": "v14-lts",
+    "@angular/platform-browser": "v14-lts",
+    "@angular/router": "v14-lts",
+    "rxjs": "~7.5.0"
+  },
   "devDependencies": {
     "@angular/common": "v14-lts",
     "@angular/core": "v14-lts",
