@@ -1,6 +1,6 @@
 {
   "name": "@typexs/ldap",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "LDAP storage for typexs",
   "main": "index",
   "browser": "browser",
@@ -38,9 +38,9 @@
   },
   "devDependencies": {
     "@types/ldapjs": "~2.2.5",
-    "@typexs/base": "^3.0.1",
-    "@typexs/pipelines": "^3.0.1",
-    "@typexs/testing": "^3.0.1"
+    "@typexs/base": "^3.0.2",
+    "@typexs/pipelines": "^3.0.2",
+    "@typexs/testing": "^3.0.2"
   },
   "peerDependencies": {
     "@typexs/base": ">=3.0.0",

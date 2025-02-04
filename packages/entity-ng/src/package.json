@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/entity-ng",
-  "version": "14.0.0",
+  "version": "14.0.1",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -44,16 +44,16 @@
     "@typexs/ng": ">=14.0.0"
   },
   "dependencies": {
-    "@typexs/base-ng": "^14.0.0",
+    "@typexs/base-ng": "^14.0.1",
     "@typexs/ng-theme-base": "^14.0.0"
   },
   "devDependencies": {
-    "@typexs/base": "^3.0.1",
+    "@typexs/base": "^3.0.2",
     "@typexs/base-ng": "^14.0.0",
-    "@typexs/entity": "^3.0.1",
-    "@typexs/forms": "^3.0.1",
-    "@typexs/forms-ng": "^14.0.0",
-    "@typexs/ng": "^14.0.0"
+    "@typexs/entity": "^3.0.2",
+    "@typexs/forms": "^3.0.2",
+    "@typexs/forms-ng": "^14.0.1",
+    "@typexs/ng": "^14.0.1"
   },
   "publishConfig": {
     "tag": "v14-lts"

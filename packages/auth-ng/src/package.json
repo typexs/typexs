@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/auth-ng",
-  "version": "14.0.0",
+  "version": "14.0.1",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -39,26 +39,26 @@
     "@typexs/auth": ">=3.0.0",
     "@typexs/base-ng": ">=14.0.0",
     "@typexs/entity-ng": ">=14.0.0",
-    "@typexs/generic": ">=3.0.0",
     "@typexs/forms-ng": ">=14.0.0",
+    "@typexs/generic": ">=3.0.0",
     "@typexs/ng": ">=14.0.0",
     "@typexs/ng-theme-base": ">=14.0.0",
     "@typexs/roles-api": ">=3.0.0"
   },
   "dependencies": {
-    "@typexs/base-ng": "^14.0.0",
+    "@typexs/base-ng": "^14.0.1",
     "@typexs/ng-theme-base": "^14.0.0"
   },
   "devDependencies": {
-    "@typexs/auth": "^3.0.1",
+    "@typexs/auth": "^3.0.2",
     "@typexs/base-ng": "^14.0.0",
-    "@typexs/entity-ng": "^14.0.0",
-    "@typexs/forms-ng": "^14.0.0",
-    "@typexs/ng": "^14.0.0",
+    "@typexs/entity-ng": "^14.0.1",
+    "@typexs/forms-ng": "^14.0.1",
+    "@typexs/ng": "^14.0.1",
     "@typexs/ng-theme-base": "^14.0.0",
-    "@typexs/roles": "^3.0.1",
+    "@typexs/roles": "^3.0.2",
     "@typexs/roles-api": "^3.0.1",
-    "@typexs/server": "^3.0.1"
+    "@typexs/server": "^3.0.2"
   },
   "publishConfig": {
     "tag": "v14-lts"

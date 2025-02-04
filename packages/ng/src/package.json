@@ -1,6 +1,6 @@
 {
   "name": "@typexs/ng",
-  "version": "14.0.0",
+  "version": "14.0.1",
   "description": "Angular for typexs",
   "main": "index",
   "browser": "browser",
@@ -37,7 +37,7 @@
     "@typexs/roles-api": "^3.0.1"
   },
   "devDependencies": {
-    "@typexs/base": "^3.0.1"
+    "@typexs/base": "^3.0.2"
   },
   "peerDependencies": {
     "@typexs/base": ">=3.0.0"

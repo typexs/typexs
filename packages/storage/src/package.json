@@ -1,6 +1,6 @@
 {
   "name": "@typexs/storage",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Storage for typexs",
   "main": "index",
   "browser": "browser",
@@ -35,10 +35,10 @@
     "@typexs/roles-api": "^3.0.1"
   },
   "devDependencies": {
-    "@typexs/base": "^3.0.1",
-    "@typexs/forms": "^3.0.1",
-    "@typexs/server": "^3.0.1",
-    "@typexs/testing": "^3.0.1"
+    "@typexs/base": "^3.0.2",
+    "@typexs/forms": "^3.0.2",
+    "@typexs/server": "^3.0.2",
+    "@typexs/testing": "^3.0.2"
   },
   "peerDependencies": {
     "@typexs/base": ">=3.0.0",
