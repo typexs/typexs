@@ -26,6 +26,19 @@ export class NavigatorService {
     this.rebuild();
   }
 
+  /**
+   * Return children or _loadedRoutes
+   *
+   * @param entry
+   */
+  getLazyLoadedRoutesFromEntry(entry: any) {
+    if (entry['_loadedRoutes'] !== undefined) {
+      return entry['_loadedRoutes'];
+    }
+    return null;
+  }
+
+
   rebuild() {
     this.read(this.router.config);
     const routes = this.rebuildRoutes();
@@ -58,7 +71,8 @@ export class NavigatorService {
   onRouterEvent(event: any) {
     if (event instanceof RouteConfigLoadEnd) {
       const entry = this.router.config.find(x => x.path === event.route['path']);
-      if (entry && !has(entry, '_loadedConfig')) {
+      // TODO this will not work is true
+      if (entry && !has(entry, '_loadedRoutes')) {
         this.reload = true;
       }
     } else if (event instanceof RoutesRecognized && this.reload) {
@@ -102,8 +116,8 @@ export class NavigatorService {
 
       if (route.children && !isEmpty(route.children)) {
         this.readRoutes(route.children, entry);
-      } else if (route.loadChildren && has(route, '_loadedConfig.routes')) {
-        const routes = get(route, '_loadedConfig.routes', []) as any;
+      } else if (route.loadChildren && has(route, '_loadedRoutes')) {
+        const routes = get(route, '_loadedRoutes', []) as any;
         if (!isEmpty(routes)) {
           this.readRoutes(routes, entry);
         }

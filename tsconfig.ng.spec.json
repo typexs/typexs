@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.ng.paths",
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "es2020",
+    "lib": [
+      "es2020",
+      "dom"
+    ]
+  }
+}

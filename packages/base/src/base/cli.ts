@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 
-import { set } from 'lodash';
+import {set} from 'lodash';
 
-import { Bootstrap } from './../Bootstrap';
-import { ConfigHandler } from '@allgemein/config';
-import { ICommand } from '../libs/commands/ICommand';
+import {Bootstrap} from './../Bootstrap';
+import {ConfigHandler} from '@allgemein/config';
+import {ICommand} from '../libs/commands/ICommand';
 import * as yargs from 'yargs';
-import { CommandModule } from 'yargs';
+import {CommandModule} from 'yargs';
 
 
 export async function cli(): Promise<Bootstrap> {
@@ -45,16 +45,20 @@ export async function cli(): Promise<Bootstrap> {
   if (idx.length > 0) {
     for (const _idx of idx) {
       if (_idx > -1) {
-        const key = process.argv[_idx].replace('-D', '');
+        let key = process.argv[_idx].replace('-D', '');
         let next = null;
-        if (process.argv.length > (_idx + 1)) {
-          const value = process.argv[_idx + 1];
-          if (!value.startsWith('-')) {
-            next = value;
-            process.argv.splice(_idx, 2);
-          }
+        if (/=/.test(key)) {
+          [key, next] = key.split('=', 2);
         } else {
-          process.argv.splice(_idx, 1);
+          if (process.argv.length > (_idx + 1)) {
+            const value = process.argv[_idx + 1];
+            if (!value.startsWith('-')) {
+              next = value;
+              process.argv.splice(_idx, 2);
+            }
+          } else {
+            process.argv.splice(_idx, 1);
+          }
         }
         set(cfg, key, next ? next : true);
       }

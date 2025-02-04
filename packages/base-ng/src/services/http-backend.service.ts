@@ -1,4 +1,4 @@
-import { defaults, get, has, isArrayLike, isBoolean, isEmpty, isNumber, isObjectLike, isString, isUndefined, keys } from 'lodash';
+import { defaults, get, has, isArray, isArrayLike, isBoolean, isEmpty, isNumber, isObjectLike, isString, isUndefined, keys } from 'lodash';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
@@ -257,86 +257,88 @@ export class HttpBackendService implements IBackendClientService {
 
     // @ts-ignore
     const sub = this.areRoutesLoaded().pipe(filter(x => x)).pipe(first()).subscribe(__x => {
-      const apiContext = this.apiUrl(context);
-      const route = this.getRoute(apiContext, _method);
-      if (!route) {
-        ret.error('Route "' + apiContext + '" not found, skipping.');
-        ret.complete();
-        this.dec();
-        return null;
-      }
-
-      const method = route.method;
-      const opts: IHttpRequestOptions = get(options, 'options', {});
-      defaults(opts, {
-        url: 'TODO',
-        retry: 0
-      });
-
-      if (options.params) {
-        opts.url = UrlHelper.replace(route.route as string, options.params);
-      } else {
-        opts.url = apiContext;
-      }
-
-      if (options.query) {
-        const queryParts: string[] = [];
-        for (const q of  Object.keys(options.query)) {
-          const value = options.query[q];
-          if (isNumber(value) || isString(value) || isBoolean(value)) {
-            queryParts.push(q + '=' + value);
-          } else if (isObjectLike(value) || isArrayLike(value)) {
-            queryParts.push(q + '=' + JSON.stringify(value));
-          } else {
-            queryParts.push(q + '=' + value);
-          }
-        }
-        if (!isEmpty(queryParts)) {
-          opts.url += '?' + queryParts.join('&');
-        }
-      }
-
-      if (options.content) {
-        opts.body = options.content;
-      }
-
-      if (options.handle) {
-        opts.callback = options.handle;
-      }
-
-      if (isBoolean(options.surpressErrors)) {
-        opts['surpressErrors'] = options.surpressErrors;
-      }
-
-      (this[method](opts) as Observable<T>).subscribe(
-        x => {
-          ret.next(x);
-        },
-        error => {
-          ret.error(error);
-          this.dec();
-          if (cacheKey) {
-            delete this.requestCache[cacheKey];
-          }
-        },
-        () => {
+        const apiContext = this.apiUrl(context);
+        const route = this.getRoute(apiContext, _method);
+        if (!route) {
+          ret.error('Route "' + apiContext + '" not found, skipping.');
           ret.complete();
           this.dec();
-          if (cacheKey) {
-            delete this.requestCache[cacheKey];
+          return null;
+        }
+
+        const method = route.method;
+        const opts: IHttpRequestOptions = get(options, 'options', {});
+        defaults(opts, {
+          url: 'TODO',
+          retry: 0
+        });
+
+        if (options.params) {
+          opts.url = UrlHelper.replace(route.route as string, options.params);
+        } else {
+          opts.url = apiContext;
+        }
+
+        if (options.query) {
+          const queryParts: string[] = [];
+          for (const q of Object.keys(options.query)) {
+            const value = options.query[q];
+            if (isNumber(value) || isString(value) || isBoolean(value)) {
+              queryParts.push(q + '=' + value);
+            } else if (isArrayLike(value) || isArray(value)) {
+              queryParts.push(q + '=' + value.join('&' + q + '='));
+            } else if (isObjectLike(value)) {
+              queryParts.push(q + '=' + JSON.stringify(value));
+            } else {
+              queryParts.push(q + '=' + value);
+            }
+          }
+          if (!isEmpty(queryParts)) {
+            opts.url += '?' + queryParts.join('&');
           }
         }
-      );
-    },
-    error => {
-      Log.error(error);
-      ret.error(error);
-      ret.complete();
-      this.dec();
-      if (cacheKey) {
-        delete this.requestCache[cacheKey];
-      }
-    });
+
+        if (options.content) {
+          opts.body = options.content;
+        }
+
+        if (options.handle) {
+          opts.callback = options.handle;
+        }
+
+        if (isBoolean(options.surpressErrors)) {
+          opts['surpressErrors'] = options.surpressErrors;
+        }
+
+        (this[method](opts) as Observable<T>).subscribe(
+          x => {
+            ret.next(x);
+          },
+          error => {
+            ret.error(error);
+            this.dec();
+            if (cacheKey) {
+              delete this.requestCache[cacheKey];
+            }
+          },
+          () => {
+            ret.complete();
+            this.dec();
+            if (cacheKey) {
+              delete this.requestCache[cacheKey];
+            }
+          }
+        );
+      },
+      error => {
+        Log.error(error);
+        ret.error(error);
+        ret.complete();
+        this.dec();
+        if (cacheKey) {
+          delete this.requestCache[cacheKey];
+        }
+      });
     return ret.asObservable() as any;
   }
 

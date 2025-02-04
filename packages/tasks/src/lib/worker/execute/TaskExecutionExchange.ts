@@ -80,7 +80,7 @@ export class TaskExecutionExchange extends AbstractMessage<TaskEvent, TaskEvent>
       }
 
       if (this.targetIds.length === 0) {
-        throw new Error('not target intersection found for tasks: ' + taskSpec.join(', '));
+        throw new Error('No target intersection found for tasks: ' + taskSpec.join(', '));
       }
 
     } else {

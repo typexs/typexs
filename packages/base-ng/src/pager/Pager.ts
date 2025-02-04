@@ -1,10 +1,10 @@
-import { range } from 'lodash';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PagerAction } from './PagerAction';
-import { Location } from '@angular/common';
-import { EventEmitter as ngEventEmitter } from '@angular/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { Log } from '../lib/log/Log';
+import {range} from 'lodash';
+import {ActivatedRoute, Router} from '@angular/router';
+import {PagerAction} from './PagerAction';
+import {Location} from '@angular/common';
+import {EventEmitter as ngEventEmitter} from '@angular/core';
+import {BehaviorSubject, Subscription} from 'rxjs';
+import {Log} from '../lib/log/Log';
 
 export class Pager {
 
@@ -60,7 +60,7 @@ export class Pager {
   register(eventName: string, emitter: ngEventEmitter<PagerAction>) {
     const _exists = this.emitter.find(x => x.event === eventName && (x.emitter === emitter));
     if (!_exists) {
-      this.emitter.push({ event: eventName, emitter: emitter });
+      this.emitter.push({event: eventName, emitter: emitter});
       this.listenForQueryParam();
     }
   }
@@ -69,6 +69,7 @@ export class Pager {
     if (this.queryListenerSubscription) {
       return;
     }
+    // @ts-ignore
     this.queryListenerSubscription = this.activatedRoute.queryParamMap.subscribe(value => {
       if (value.has(this.name)) {
         const _value = value.get(this.name);
@@ -78,6 +79,8 @@ export class Pager {
             this.setPage(nr);
           }
         }
+      } else {
+        this.setPage(1);
       }
     });
   }

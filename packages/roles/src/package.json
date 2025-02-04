@@ -25,7 +25,7 @@
   "dependencies": {
     "@cezaryrk/minimatch": "^3.0.4",
     "@typexs/roles-api": "^3.0.1",
-    "lodash": "^4.17.21"
+    "@typexs/generic": "^3.0.1"
   },
   "devDependencies": {
     "@typexs/base": "^3.0.1",
@@ -33,8 +33,8 @@
     "@typexs/testing": "^3.0.1"
   },
   "peerDependencies": {
-    "@typexs/base": ">=2.3.0",
-    "@typexs/entity": ">=2.3.0"
+    "@typexs/base": ">=3.0.0",
+    "@typexs/entity": ">=3.0.0"
   },
   "typexs": {
     "name": "roles"
@@ -42,5 +42,5 @@
   "publishConfig": {
     "tag": "v3-lts"
   },
-  "gitHead": "77ecada49f5f4f90b2a5da373d7277b10c7b6fb6"
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

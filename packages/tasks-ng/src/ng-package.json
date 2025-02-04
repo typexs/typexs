@@ -1,6 +1,9 @@
 {
-  "$schema": "../../../../node_modules/ng-packagr/ng-package.schema.json",
+  "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../build/package",
+  "allowedNonPeerDependencies": [
+    "@typexs/base-ng"
+  ],
   "lib": {
     "entryFile": "public_api.ts"
   }

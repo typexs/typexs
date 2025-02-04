@@ -1,6 +1,6 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "extends": "../../tsconfig.prod.json",
+  "extends": "../../tsconfig.ng.lib.json",
   "compilerOptions": {
     "target": "es2015",
     "module": "esnext",

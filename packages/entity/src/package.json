@@ -44,11 +44,11 @@
     "@typexs/testing": "^3.0.1"
   },
   "peerDependencies": {
-    "@typexs/base": ">=2.3.0",
-    "@typexs/forms": ">=2.3.0",
-    "@typexs/pipelines": ">=2.3.0",
-    "@typexs/server": ">=2.3.0",
-    "@typexs/storage": ">=2.3.0"
+    "@typexs/base": ">=3.0.0",
+    "@typexs/forms": ">=3.0.0",
+    "@typexs/pipelines": ">=3.0.0",
+    "@typexs/server": ">=3.0.0",
+    "@typexs/storage": ">=3.0.0"
   },
   "typexs": {
     "name": "typexs-entity"

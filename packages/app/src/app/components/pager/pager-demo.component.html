@@ -2,7 +2,7 @@
   <h4>Simple pager for 10 items</h4>
 
   <txs-pager
-    totalPages="10"
+    [totalPages]="10"
     (pageChange)="onPageChange($event)">
   </txs-pager>
 
@@ -10,13 +10,13 @@
 
   <txs-pager
     name="pager2"
-    totalPages="20"
+    [totalPages]="20"
     (pageChange)="onPageChange($event)">
   </txs-pager>
 
   <txs-pager
     name="pager2"
-    totalPages="20"
+    [totalPages]="20"
     (pageChange)="onPageChange($event)">
   </txs-pager>
 
@@ -30,7 +30,7 @@
   <txs-pager
     name="pager3"
     [currentPage]="currentPage_3"
-    totalPages="10"
+    [totalPages]="10"
     (pageChange)="onPageChange($event)">
   </txs-pager>
 
@@ -39,10 +39,9 @@
   <txs-pager
     name="pager4"
     [currentPage]="currentPage_3"
-    frameSize="5"
-    totalPages="100"
+    [frameSize]="5"
+    [totalPages]="100"
     (pageChange)="onPageChange($event)">
   </txs-pager>
-
 
 </bat-card>

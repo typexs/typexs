@@ -2,7 +2,6 @@ import { Config } from '@allgemein/config';
 import { IActivator } from './api/IActivator';
 import { Cache } from './libs/cache/Cache';
 import { Scheduler } from './libs/schedule/Scheduler';
-// import { WatcherRegistry } from './libs/watchers/WatcherRegistry';
 import { C_WORKERS } from './libs/worker/Constants';
 import { Workers } from './libs/worker/Workers';
 import { ExchangeMessageRegistry } from './libs/messaging/ExchangeMessageRegistry';

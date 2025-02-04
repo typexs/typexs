@@ -1,13 +1,13 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/search-ng",
-  "version": "13.1.1",
+  "version": "14.0.0",
   "description": "Angular for typexs",
-  "main": "public_api.ts",
+  "main": "public_api",
   "scripts": {
     "clean": "npm run clean:build && npm run clean:modules",
     "clean:build": "rm -rf ../build",
-    "clean:modules": "rm -rf node_modules ../node_modules",
+    "clean:modules": "rm -rf node_modules ../node_modules ../.angular",
     "test": "ng test --code-coverage=true --watch=false",
     "build": "ng build"
   },
@@ -24,25 +24,29 @@
     "typexs"
   ],
   "peerDependencies": {
-    "@typexs/base-ng": ">=13.0.0",
-    "@typexs/forms-ng": ">=13.0.0",
-    "@typexs/search": ">=2.3.0",
-    "@typexs/storage-ng": ">=13.0.0"
+    "@angular/common": "v14-lts",
+    "@angular/core": "v14-lts",
+    "@angular/forms": "v14-lts",
+    "@angular/router": "v14-lts",
+    "@typexs/base-ng": ">=14.0.0",
+    "@typexs/forms-ng": ">=14.0.0",
+    "@typexs/ng-theme-base": ">=14.0.0",
+    "@typexs/search": ">=3.0.0",
+    "@typexs/storage-ng": ">=14.0.0"
+  },
+  "dependencies": {
+    "@typexs/base-ng": ">=14.0.0",
+    "@typexs/ng-theme-base": ">=14.0.0"
   },
   "devDependencies": {
-    "@angular/common": "v13-lts",
-    "@angular/core": "v13-lts",
-    "@angular/forms": "v13-lts",
-    "@angular/router": "v13-lts",
-    "@typexs/base-ng": "^13.1.1",
-    "@typexs/forms-ng": "^13.1.1",
+    "@typexs/base-ng": "^14.0.0",
+    "@typexs/forms-ng": "^14.0.0",
     "@typexs/search": "^3.0.1",
-    "@typexs/storage-ng": "^13.1.1",
-    "lodash": "4.17.21",
-    "rxjs": "~7.5.0"
+    "@typexs/storage-ng": "^14.0.0",
+    "@typexs/ng-theme-base": ">=14.0.0"
   },
   "publishConfig": {
-    "tag": "v13-lts"
+    "tag": "v14-lts"
   },
-  "gitHead": "77ecada49f5f4f90b2a5da373d7277b10c7b6fb6"
+  "gitHead": "00d1140a17b92fc98d1a7914810478380c16ee35"
 }

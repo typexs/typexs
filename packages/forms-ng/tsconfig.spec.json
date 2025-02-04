@@ -1,43 +1,11 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "extends": "../../tsconfig.lib.json",
+  "extends": "../../tsconfig.ng.spec",
   "compilerOptions": {
     "outDir": "../../out-tsc/spec",
     "types": [
       "jasmine"
-    ],
-    "paths": {
-      "@typexs/forms/*": [
-        "./packages/forms/src/*"
-      ],
-      "@typexs/forms": [
-        "./packages/forms/src/browser"
-      ],
-      "@typexs/base": [
-        "./packages/base/src/browser"
-      ],
-      "@typexs/base/*": [
-        "./packages/base/src/*"
-      ],
-      "@typexs/base-ng": [
-        "./packages/base-ng/src/public_api"
-      ],
-      "@typexs/base-ng/*": [
-        "./packages/base-ng/src/*"
-      ],
-      "@typexs/entity": [
-        "./packages/entity/src/browser"
-      ],
-      "@typexs/entity/*": [
-        "./packages/entity/src/*"
-      ],
-      "@typexs/server": [
-        "./packages/server/src/browser"
-      ],
-      "@typexs/server/*": [
-        "./packages/server/src/*"
-      ]
-    }
+    ]
   },
   "files": [
     "src/test.ts"
