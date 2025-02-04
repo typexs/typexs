@@ -1,3 +1,14 @@
+## [3.0.2](https://gitlab.com/typexs/typexs/compare/v3.0.1...v3.0.2) (2025-02-04)
+
+
+### Bug Fixes
+
+* lazy loading get routes ([8e39679](https://gitlab.com/typexs/typexs/commit/8e396792d630389ff267d4183d2cd0a241d0add1))
+* passing args by -D{var} can now be passed by -D{var}={val} as also -D{var} {val} ([fc8ef6b](https://gitlab.com/typexs/typexs/commit/fc8ef6b22780c36a7316da72e654fc6a790c49a2))
+* show pager demo again ([092ca87](https://gitlab.com/typexs/typexs/commit/092ca87140e022ecd197e1ee4a724559e62357f5))
+
+
+
 ## [3.0.1](https://gitlab.com/typexs/typexs/compare/v2.4.0...v3.0.1) (2025-01-21)
 
 
