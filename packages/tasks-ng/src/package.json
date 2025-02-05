@@ -35,10 +35,10 @@
     "@typexs/base-ng": "^14.0.1"
   },
   "devDependencies": {
-    "@angular/common": "v14-lts",
-    "@angular/core": "v14-lts",
-    "@angular/forms": "v14-lts",
-    "@angular/router": "v14-lts",
+    "@angular/common": "v15-lts",
+    "@angular/core": "v15-lts",
+    "@angular/forms": "v15-lts",
+    "@angular/router": "v15-lts",
     "@typexs/base": "^3.0.2",
     "@typexs/base-ng": "^14.0.0",
     "@typexs/forms-ng": "^14.0.1",
@@ -47,7 +47,7 @@
     "rxjs": "~7.5.0"
   },
   "publishConfig": {
-    "tag": "v14-lts"
+    "tag": "v15-lts"
   },
   "gitHead": "a845caa5b33bf3e91c285565671b774d1f61fa4a"
 }

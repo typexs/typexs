@@ -47,7 +47,7 @@
     "perfect-scrollbar": "^1.5.1"
   },
   "publishConfig": {
-    "tag": "v14-lts"
+    "tag": "v15-lts"
   },
   "exports": {
     "./styles/theme-admin": {

@@ -31,21 +31,21 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@angular/common": "v14-lts",
-    "@angular/core": "v14-lts",
-    "@angular/platform-browser": "v14-lts",
-    "@angular/router": "v14-lts",
+    "@angular/common": "v15-lts",
+    "@angular/core": "v15-lts",
+    "@angular/platform-browser": "v15-lts",
+    "@angular/router": "v15-lts",
     "rxjs": "~7.5.0"
   },
   "devDependencies": {
-    "@angular/common": "v14-lts",
-    "@angular/core": "v14-lts",
-    "@angular/platform-browser": "v14-lts",
-    "@angular/router": "v14-lts",
+    "@angular/common": "v15-lts",
+    "@angular/core": "v15-lts",
+    "@angular/platform-browser": "v15-lts",
+    "@angular/router": "v15-lts",
     "rxjs": "~7.5.0"
   },
   "publishConfig": {
-    "tag": "v14-lts"
+    "tag": "v15-lts"
   },
   "gitHead": "a845caa5b33bf3e91c285565671b774d1f61fa4a"
 }
