@@ -32,7 +32,7 @@
               "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.config.js",
+            "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss"
           }
         }
