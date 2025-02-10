@@ -1,3 +1,7 @@
+## [3.0.3](https://gitlab.com/typexs/typexs/compare/v3.0.2...v3.0.3) (2025-02-10)
+
+
+
 ## [3.0.2](https://gitlab.com/typexs/typexs/compare/v3.0.1...v3.0.2) (2025-02-04)
 
 
