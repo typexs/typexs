@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/distributed-storage-ng",
-  "version": "15.0.0-rc1",
+  "version": "15.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -43,15 +43,15 @@
     "@typexs/storage-ng": ">=15.0.0-rc1"
   },
   "dependencies": {
-    "@typexs/base-ng": "^15.0.0-rc1",
-    "@typexs/ng-theme-base": "^15.0.0-rc1"
+    "@typexs/base-ng": "^15.0.0",
+    "@typexs/ng-theme-base": "^15.0.0"
   },
   "devDependencies": {
-    "@typexs/base": "^3.0.2",
+    "@typexs/base": "^3.0.3",
     "@typexs/base-ng": "^15.0.0-rc1",
-    "@typexs/distributed-storage": "^3.0.2",
-    "@typexs/forms-ng": "^15.0.0-rc1",
-    "@typexs/ng": "^15.0.0-rc1"
+    "@typexs/distributed-storage": "^3.0.3",
+    "@typexs/forms-ng": "^15.0.0",
+    "@typexs/ng": "^15.0.0"
   },
   "publishConfig": {
     "tag": "v15-lts"

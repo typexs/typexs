@@ -1,6 +1,6 @@
 {
   "name": "@typexs/ng-router-menu",
-  "version": "15.0.0-rc1",
+  "version": "15.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {

@@ -1,6 +1,6 @@
 {
   "name": "@typexs/distributed-storage",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "",
   "main": "index",
   "browser": "browser",
@@ -30,10 +30,10 @@
     "@typexs/roles-api": "^3.0.1"
   },
   "devDependencies": {
-    "@typexs/base": "^3.0.2",
-    "@typexs/pipelines": "^3.0.2",
-    "@typexs/server": "^3.0.2",
-    "@typexs/testing": "^3.0.2"
+    "@typexs/base": "^3.0.3",
+    "@typexs/pipelines": "^3.0.3",
+    "@typexs/server": "^3.0.3",
+    "@typexs/testing": "^3.0.3"
   },
   "peerDependencies": {
     "@typexs/base": ">=3.0.0",

@@ -1,6 +1,6 @@
 {
   "name": "@typexs/ng-theme-base",
-  "version": "15.0.0-rc1",
+  "version": "15.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -39,9 +39,9 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.0.0",
-    "@typexs/base-ng": "^15.0.0-rc1",
-    "@typexs/forms-ng": "^15.0.0-rc1",
-    "@typexs/ng-router-menu": "^15.0.0-rc1",
+    "@typexs/base-ng": "^15.0.0",
+    "@typexs/forms-ng": "^15.0.0",
+    "@typexs/ng-router-menu": "^15.0.0",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.0.1",
     "perfect-scrollbar": "^1.5.1"
