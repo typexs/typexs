@@ -1,6 +1,5 @@
 import * as http from 'http';
-
-import { ClassLoader, Inject, Injector, Log, MatchUtils, MetaArgs, RuntimeLoader, TodoException } from '@typexs/base';
+import { ClassLoader, Inject, Injector, Log, MatchUtils, MetaArgs, RuntimeLoader, StringOrFunction, TodoException } from '@typexs/base';
 import { Action, getMetadataArgsStorage, useContainer } from 'routing-controllers';
 import { Server } from './../server/Server';
 import { IFrameworkSupport } from './frameworks/IFrameworkSupport';
@@ -122,7 +121,7 @@ export class WebServer extends Server implements IServer {
 
         if (!isEmpty(routing.controllers)) {
           if (isString(routing.controllers[0])) {
-            const clz = ClassLoader.importClassesFromAny(routing.controllers);
+            const clz = ClassLoader.importClassesFromAny(routing.controllers as StringOrFunction[]);
             controllerClasses = controllerClasses.concat(clz);
           }
         }
@@ -175,7 +174,7 @@ export class WebServer extends Server implements IServer {
   private loadFramework() {
     if (!this.framework) {
       if (this.options().framework) {
-        this.framework = (FrameworkSupportFactory.get(this.options().framework));
+        this.framework = (FrameworkSupportFactory.get(this.options().framework as StringOrFunction));
       } else {
         throw new Error('framework not present!');
       }

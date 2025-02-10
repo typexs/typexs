@@ -63,7 +63,7 @@ describe('component: AbstractQueryComponent', () => {
 
   it('should have a datatable instance in component', () => {
     expect(component.datatable).not.toBeUndefined();
-    expect(component.datatable).toBeInstanceOf(DatatableComponent);
+    expect(component.datatable).toBeInstanceOf(DatatableComponent as any);
   });
 
 });

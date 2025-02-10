@@ -397,7 +397,7 @@ export class Bootstrap {
     let bootstraps = this.getModulBootstraps();
     bootstraps = filter(bootstraps, a => isFunction(a['shutdown']));
     for (const bootstrap of bootstraps) {
-      Log.debug('onShutdown of ' + ClassesLoader.getModulName(bootstrap.constructor));
+      Log.debug('onShutdown of ' + ClassesLoader.getModulName(bootstrap.constructor as any));
       try {
         await (<IShutdown>bootstrap).shutdown();
       } catch (e) {

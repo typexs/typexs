@@ -97,7 +97,7 @@ describe('component: DatatableComponent', () => {
       expect(demo).not.toBeNull();
       expect(demo.child).not.toBeNull();
       expect(demo.child).not.toBeUndefined();
-      expect(demo.child).toBeInstanceOf(DatatableComponent);
+      expect(demo.child).toBeInstanceOf(DatatableComponent as any);
 
     });
 
@@ -132,7 +132,7 @@ describe('component: DatatableComponent', () => {
       expect(demo.child).not.toBeUndefined();
       expect(demo.child.child).not.toBeNull();
       expect(demo.child.child).not.toBeUndefined();
-      expect(demo.child.child).toBeInstanceOf(DatatableComponent);
+      expect(demo.child.child).toBeInstanceOf(DatatableComponent as any);
     });
 
   });
@@ -178,7 +178,7 @@ describe('component: DatatableComponent', () => {
       expect(demo.child).not.toBeUndefined();
       expect(demo.child.child).not.toBeNull();
       expect(demo.child.child).not.toBeUndefined();
-      expect(demo.child.child).toBeInstanceOf(DatatableComponent);
+      expect(demo.child.child).toBeInstanceOf(DatatableComponent as any);
 
 
     });

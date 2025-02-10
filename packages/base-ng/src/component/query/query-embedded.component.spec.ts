@@ -37,7 +37,8 @@ const getTestBedConfig = () => {
   return {
     imports: [
       BrowserTestingModule,
-      RouterTestingModule
+      RouterTestingModule,
+      FormsModule
     ],
     declarations: [
       AbstractGridComponent,
@@ -117,7 +118,7 @@ describe('component: QueryEmbeddedComponent', () => {
     it('should have a datatable instance on component', () => {
       expect(component.datatable).not.toBeUndefined();
       expect(component.datatable).not.toBeNull();
-      expect(component.datatable).toBeInstanceOf(DatatableComponent);
+      expect(component.datatable).toBeInstanceOf(DatatableComponent as any);
     });
 
 

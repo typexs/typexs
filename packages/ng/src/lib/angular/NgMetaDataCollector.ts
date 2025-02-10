@@ -25,8 +25,8 @@ export class NgMetaDataCollector {
     const clazzes = this.loader.getClasses(C_NG_MODUL);
     this._ngModules = [];
     for (const clazz of clazzes) {
-      const source = ClassesLoader.getSource(clazz);
-      const modul = ClassesLoader.getModulName(clazz);
+      const source = ClassesLoader.getSource(clazz as any);
+      const modul = ClassesLoader.getModulName(clazz as any);
 
       const ngModule: INgModuleDef = {
         module: modul,

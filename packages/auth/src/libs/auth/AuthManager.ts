@@ -94,8 +94,8 @@ export class AuthManager {
       if (authAdapter.type) {
         const def: IAdapterDef = {
           className: cls.name,
-          filepath: ClassesLoader.getSource(cls),
-          moduleName: ClassesLoader.getModulName(cls),
+          filepath: ClassesLoader.getSource(cls as any),
+          moduleName: ClassesLoader.getModulName(cls as any),
           name: authAdapter.type
         };
 

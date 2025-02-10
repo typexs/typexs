@@ -1,6 +1,6 @@
 {
   "name": "@typexs/ng-admin-ui",
-  "version": "14.0.1",
+  "version": "15.0.0-rc1",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -35,25 +35,25 @@
     "@angular/core": "v15-lts",
     "@angular/router": "v15-lts",
     "@typexs/base": ">=3.0.0",
-    "@typexs/base-ng": ">=14.0.0",
-    "@typexs/forms-ng": ">=14.0.0",
-    "@typexs/ng": ">=14.0.0",
-    "@typexs/ng-router-menu": ">=14.0.0",
-    "@typexs/ng-theme-base": ">=14.0.0",
+    "@typexs/base-ng": ">=15.0.0-rc1",
+    "@typexs/forms-ng": ">=15.0.0-rc1",
+    "@typexs/ng": ">=15.0.0-rc1",
+    "@typexs/ng-router-menu": ">=15.0.0-rc1",
+    "@typexs/ng-theme-base": ">=15.0.0-rc1",
     "@typexs/server": ">=3.0.0",
-    "@typexs/storage-ng": ">=14.0.0",
-    "@typexs/tasks-ng": ">=14.0.0"
+    "@typexs/storage-ng": ">=15.0.0-rc1",
+    "@typexs/tasks-ng": ">=15.0.0-rc1"
   },
   "devDependencies": {
     "@typexs/base": "^3.0.2",
-    "@typexs/base-ng": "^14.0.1",
-    "@typexs/forms-ng": "^14.0.1",
-    "@typexs/ng": "^14.0.1",
-    "@typexs/ng-router-menu": "^14.0.1",
-    "@typexs/ng-theme-base": "^14.0.0",
+    "@typexs/base-ng": "^15.0.0-rc1",
+    "@typexs/forms-ng": "^15.0.0-rc1",
+    "@typexs/ng": "^15.0.0-rc1",
+    "@typexs/ng-router-menu": "^15.0.0-rc1",
+    "@typexs/ng-theme-base": "^15.0.0-rc1",
     "@typexs/server": "^3.0.2",
-    "@typexs/storage-ng": "^14.0.1",
-    "@typexs/tasks-ng": "^14.0.1",
+    "@typexs/storage-ng": "^15.0.0-rc1",
+    "@typexs/tasks-ng": "^15.0.0-rc1",
     "rxjs": "~7.5.0"
   },
   "publishConfig": {
