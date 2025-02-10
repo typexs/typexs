@@ -3,9 +3,9 @@ body, html {
   height: 100%;
 }
 
-@import "~node_modules/bootstrap/scss/bootstrap";
-@import "~animate.css/animate.css";
-@import "~perfect-scrollbar/css/perfect-scrollbar.css";
+@import "animate.css/animate.css";
+@import "bootstrap/scss/bootstrap";
+@import "perfect-scrollbar/css/perfect-scrollbar.css";
 @import "icons-pct.css";
 
 $fa-font-path: '/assets/fonts/';
@@ -14,13 +14,13 @@ $fa-font-path: '/assets/fonts/';
 //@import "~node_modules/@fortawesome/fontawesome-free/scss/brands";
 //@import "~node_modules/@fortawesome/fontawesome-free/scss/solid";
 
-@import "~ag-grid-community/dist/styles/ag-grid.css";
-@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
+@import "ag-grid-community/dist/styles/ag-grid.css";
+@import "ag-grid-community/dist/styles/ag-theme-balham.css";
 
-@import "~prismjs/themes/prism.css";
-@import "~prismjs/plugins/toolbar/prism-toolbar.css";
-@import "~prismjs/plugins/line-numbers/prism-line-numbers.css";
-@import "~prismjs/themes/prism-okaidia.css";
+@import "prismjs/themes/prism.css";
+@import "prismjs/plugins/toolbar/prism-toolbar.css";
+@import "prismjs/plugins/line-numbers/prism-line-numbers.css";
+@import "prismjs/themes/prism-okaidia.css";
 
 
 /**  =====================
@@ -31,5 +31,5 @@ $fa-font-path: '/assets/fonts/';
 
 
 $theme-font-size: 1rem;
-@import "~@typexs/ng-theme-base/styles/theme-admin";
+@import "@typexs/ng-theme-base/styles/theme-admin";
 

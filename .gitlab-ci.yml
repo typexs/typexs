@@ -52,6 +52,25 @@ pages:
         - packages/*/docs/**
         - packages/*/docs/**/*
 
+
+test build:
+  stage: test
+  script:
+    - npm ci
+    - npm run build
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG == null'
+      changes:
+        - .gitlab-ci.yml
+        - package.json
+        - package-lock.json
+        - packages/*/src/**
+        - packages/*/src/**/*
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_TAG =~ /^v/'
+
+
+
+
 test:
   image: thinkbaer/ubuntu-docker-node-chrome:u2204_n22
   stage: test
@@ -103,10 +122,6 @@ test:
         - .gitlab-ci.yml
         - package.json
         - package-lock.json
-        - src/**
-        - src/**/*
-        - test/**
-        - test/**/*
         - packages/*/src/**
         - packages/*/src/**/*
         - packages/*/test/**

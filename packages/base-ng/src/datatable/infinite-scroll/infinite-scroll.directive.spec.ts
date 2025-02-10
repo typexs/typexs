@@ -495,7 +495,7 @@ describe('directive: InfiniteScrollDirective', () => {
       directive.onItemsChange();
       const se = directive.getScrollElement() as Window;
       const elem = directive.getElement() as HTMLElement;
-      expect(se).toBeInstanceOf(Window);
+      expect(se).toBeInstanceOf(Window as any);
 
       // @ts-ignore
       expect(se !== elem).toBeTrue();
@@ -551,7 +551,7 @@ describe('directive: InfiniteScrollDirective', () => {
       directive.onItemsChange();
       const se = directive.getScrollElement() as Window;
       const elem = directive.getElement() as HTMLElement;
-      expect(se).toBeInstanceOf(Window);
+      expect(se).toBeInstanceOf(Window as any);
       // @ts-ignore
       expect(se !== elem).toBeTrue();
       // console.log(JSON.stringify(elem.getBoundingClientRect()));
@@ -1143,7 +1143,7 @@ describe('directive: InfiniteScrollDirective', () => {
           fixture.detectChanges();
           let se = directive.getScrollElement() as any;
           expect(se !== el).toBeTrue();
-          expect(se).toBeInstanceOf(Window);
+          expect(se).toBeInstanceOf(Window as any);
           scrollTo(se, { top: 0, left: 0 });
           directive.onItemsChange();
           se = (se as Window).document.documentElement;
@@ -1168,7 +1168,7 @@ describe('directive: InfiniteScrollDirective', () => {
           directive.onItemsChange();
           se = (se as Window).document.documentElement as HTMLElement;
 
-          const size = directive['getViewBox'](se);
+          const size = directive['getViewBox'](se as any);
           expect(size.top).toEqual(400);
           if(size.bottom === 841){
             expect(size.bottom).toEqual(841);

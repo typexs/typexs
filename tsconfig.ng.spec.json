@@ -1,11 +1,15 @@
 {
   "extends": "./tsconfig.ng.paths",
   "compilerOptions": {
-    "target": "es2017",
-    "module": "es2020",
+    "target": "ES2022",
+    "module": "ES2022",
     "lib": [
       "es2020",
       "dom"
     ]
-  }
+  },
+  "include": [
+    "src/**/*.spec.ts",
+    "src/**/*.d.ts"
+  ]
 }

@@ -70,7 +70,7 @@ class FactorySpec {
 
     }
 
-    const web = r.get(ServerTmplX);
+    const web = r.get(ServerTmplX as any);
     expect(web instanceof ServerTmplX).to.be.true;
   }
 
@@ -134,12 +134,12 @@ class FactorySpec {
 
     }
 
-    expect(ServerFactory.checkType(ServerTmplY)).to.be.true;
+    expect(ServerFactory.checkType(ServerTmplY as any)).to.be.true;
 
     class NoServerTmpl {
     }
 
-    expect(ServerFactory.checkType(NoServerTmpl)).to.be.false;
+    expect(ServerFactory.checkType(NoServerTmpl as any)).to.be.false;
   }
 
 }

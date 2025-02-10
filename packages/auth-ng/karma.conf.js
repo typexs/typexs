@@ -25,7 +25,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, '../../coverage/auth-ng'),
+      dir: require('path').join(__dirname, '../../coverage/distributed-storage-ng'),
       subdir: '.',
       reporters: [
         { type: 'html' },
@@ -44,6 +44,7 @@ module.exports = function (config) {
         flags: ['--no-sandbox']
       }
     },
+
     singleRun: false,
     restartOnFileChange: true
   });

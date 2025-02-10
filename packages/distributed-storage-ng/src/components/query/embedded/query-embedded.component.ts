@@ -21,8 +21,8 @@ import { AbstractQueryComponent } from '@typexs/base-ng';
 export class DistributedStorageQueryEmbeddedComponent
   extends AbstractQueryComponent {
 
-  @Input()
-  entityName: string;
+  // @Input()
+  // entityName: string;
 
   @Input()
   options: IDSOptions = DEFAULT_DS_OPTIONS;

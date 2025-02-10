@@ -597,19 +597,19 @@ export class AbstractGridComponent implements IGridApi, OnInit, OnDestroy {
   setNodeData(nodes: any[], boundaries?: IIndexSpan) {
     const dn = this._nodes; // etDataNodes();
     if (XS_P_$COUNT in nodes) {
-      this.setMaxRows(nodes[XS_P_$COUNT]);
+      this.setMaxRows(nodes[XS_P_$COUNT] as number);
     } else {
       this.setMaxRows(nodes.length);
     }
     let boundariesPassed = typeof boundaries !== 'undefined';
     boundaries = boundaries || {};
     if (XS_P_$OFFSET in nodes && XS_P_$LIMIT in nodes) {
-      boundaries.start = nodes[XS_P_$OFFSET];
-      boundaries.end = nodes[XS_P_$LIMIT] - 1;
-      boundaries.range = nodes[XS_P_$LIMIT];
+      boundaries.start = nodes[XS_P_$OFFSET] as number;
+      boundaries.end = (nodes[XS_P_$LIMIT]  as number) - 1;
+      boundaries.range = nodes[XS_P_$LIMIT] as number;
       boundariesPassed = true;
     } else if (XS_P_$LIMIT in nodes) {
-      this.setLimit(nodes[XS_P_$LIMIT]);
+      this.setLimit(nodes[XS_P_$LIMIT] as number);
     } else if (this.options && this.options.limit) {
       this.setLimit(this.options.limit);
     }

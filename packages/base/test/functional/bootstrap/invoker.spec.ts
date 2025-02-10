@@ -1,7 +1,6 @@
 import * as path from 'path';
 import {suite, test} from '@testdeck/mocha';
 import {expect} from 'chai';
-
 import {Bootstrap} from '../../../src/Bootstrap';
 import {Config} from '@allgemein/config';
 import {RuntimeLoader} from '../../../src/base/RuntimeLoader';
