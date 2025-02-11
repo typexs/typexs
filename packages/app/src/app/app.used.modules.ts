@@ -29,7 +29,7 @@ export const APP_MODULES: Array<Type<any> | ModuleWithProviders<any> | any[]> = 
   AdminModule,
   FormsModule.forRoot(),
   BaseAdminThemeModule,
-  AgGridModule.withComponents(),
+  AgGridModule,
   RouterModule.forRoot(APP_ROUTES),
   StorageModule,
   EntityModule,

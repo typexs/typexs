@@ -104,7 +104,6 @@ export class NavigatorService {
           entry = new NavEntry();
           this.entries.push(entry);
           entry.parse(route);
-
         }
       } else {
         entry.merge(route);

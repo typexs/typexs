@@ -37,10 +37,6 @@ export class ObjectWithSelection {
     FormComponent,
     SelectComponent
   ],
-  entryComponents: [
-    FormComponent,
-    SelectComponent
-  ],
   providers: [
     // FormService
   ]

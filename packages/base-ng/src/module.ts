@@ -117,18 +117,6 @@ const COMPONENTS = [
 
 @NgModule({
   declarations: COMPONENTS,
-  entryComponents: [
-    JsonComponent,
-    ListViewComponent,
-    SimpleTableComponent,
-    SimpleTableCellComponent,
-    SimpleTableCellValueComponent,
-    SimpleTableCellEntityReferenceRendererComponent,
-    SimpleTableCellObjectReferenceRendererComponent,
-    SimpleTableCellEntityOperationsRendererComponent,
-    SimpleTableCellRouterLinkRendererComponent,
-    QueryEmbeddedComponent
-  ],
   imports: [
     CommonModule,
     RouterModule,

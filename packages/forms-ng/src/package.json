@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/forms-ng",
-  "version": "15.0.0",
+  "version": "16.0.0-rc1",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -32,20 +32,20 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@angular/common": "v15-lts",
-    "@angular/core": "v15-lts",
-    "@angular/forms": "v15-lts",
-    "@angular/router": "v15-lts",
-    "@typexs/base-ng": ">=15.0.0-rc1",
+    "@angular/common": "v16-lts",
+    "@angular/core": "v16-lts",
+    "@angular/forms": "v16-lts",
+    "@angular/router": "v16-lts",
+    "@typexs/base-ng": ">=16.0.0-rc1",
     "@typexs/forms": ">=3.0.0"
   },
   "devDependencies": {
     "@typexs/base": "^3.0.3",
-    "@typexs/base-ng": "^15.0.0",
+    "@typexs/base-ng": "^16.0.0-rc1",
     "@typexs/forms": "^3.0.3"
   },
   "publishConfig": {
-    "tag": "v15-lts"
+    "tag": "v16-lts"
   },
   "gitHead": "a845caa5b33bf3e91c285565671b774d1f61fa4a"
 }

@@ -1,6 +1,6 @@
 {
   "name": "@typexs/ng",
-  "version": "15.0.0",
+  "version": "16.0.0-rc1",
   "description": "Angular for typexs",
   "main": "index",
   "browser": "browser",
@@ -43,7 +43,7 @@
     "@typexs/base": ">=3.0.0"
   },
   "publishConfig": {
-    "tag": "v15-lts"
+    "tag": "v16-lts"
   },
   "gitHead": "a845caa5b33bf3e91c285565671b774d1f61fa4a"
 }

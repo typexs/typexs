@@ -175,19 +175,23 @@ export class PropertyRef extends DefaultPropertyRef {
   // }
 
 
-  isOutOfSize(x: number): boolean {
-    if (this.cardinality === 0) {
-      return false;
-    }
-    if (this.cardinality < x) {
-      return true;
-    }
-    return false;
-  }
+  // isOutOfSize(x: number): boolean {
+  //   if (this.cardinality === 0) {
+  //     return false;
+  //   }
+  //   if (this.cardinality < x) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
 
   isCollection(): boolean {
-    return this.cardinality === 0 || this.cardinality > 1;
+    if (isNumber(this.cardinality)) {
+      return this.cardinality === 0 || this.cardinality > 1;
+    } else {
+      return this.cardinality.max === 0 || this.cardinality.max > 1;
+    }
   }
 
   get dataType() {
