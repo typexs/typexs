@@ -51,7 +51,7 @@ export class NavEntry {
     if(!route.data){
       route.data = {};
     }
-    route.data.navId = this.id;
+    (route as any).navId = this.id;
     this.path = route.path;
     this.paths = this.path.split('/');
     const fixedPath = [];
@@ -109,7 +109,7 @@ export class NavEntry {
   merge(route: Route) {
     if (isLazyLoading(route)) {
       this.route = assign(this.route, route);
-      route.data.navId = this.id;
+      (route as any).navId = this.id;
     }
   }
 
