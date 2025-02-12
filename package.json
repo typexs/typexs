@@ -10,7 +10,7 @@
     "clean:build": "npx lerna run clean:build",
     "test": "npx lerna run test --concurrency=1",
     "__build": "npm run clean:build && npx lerna run build --concurrency=1",
-    "build": "npm run clean:build && for i in `npx lerna list --toposort`; do npx lerna run build --scope=$i; done",
+    "build": "npm run clean:build && for i in `npx lerna list --toposort`; do npx lerna run build --scope=$i; if [ $? -eq 1 ]; then exit $?; fi; done",
     "job:changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && docker run --volume $PWD:/data -it pandoc/core -t asciidoc -f markdown CHANGELOG.md > docs/modules/ROOT/pages/changelog.adoc && git add CHANGELOG.md docs/modules/ROOT/pages/changelog.adoc",
     "packages:publish": "npx lerna publish from-package",
     "packages:version": "./scripts/version.sh",

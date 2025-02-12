@@ -94,8 +94,8 @@ export class TasksExecutionComponent implements OnInit {
 
   execute() {
     this.waiting = true;
-    const parameters = {};
-     Object.keys(this.parameters).forEach((k: string) => {
+    const parameters: any = {};
+    Object.keys(this.parameters).forEach((k: string) => {
       if (!isNull(this.parameters[k])) {
         parameters[k] = this.parameters[k];
       }

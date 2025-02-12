@@ -8,10 +8,9 @@ import {
   API_CTRL_SYSTEM_RUNTIME_NODE,
   API_CTRL_SYSTEM_RUNTIME_NODES,
   API_CTRL_SYSTEM_RUNTIME_REMOTE_INFOS,
-  // API_CTRL_SYSTEM_STORAGES,
   API_CTRL_SYSTEM_WORKERS
 } from '@typexs/server/libs/Constants';
-import { IModule, IStorageRefOptions, ITypexsOptions } from '@typexs/base';
+import { IModule, ITypexsOptions } from '@typexs/base';
 import { SystemNodeInfo } from '@typexs/base/entities/SystemNodeInfo';
 import { IWorkerInfo } from '@typexs/base/libs/worker/IWorkerInfo';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
@@ -37,6 +36,9 @@ export class SystemInfoService {
   nodesCount: number = 0;
 
   timetable: { [k: string]: number } = {};
+
+  // fix TS7053
+  [key: string]: any;
 
 
   constructor(private backendClientService: BackendService) {
@@ -124,12 +126,12 @@ export class SystemInfoService {
 
   getNode() {
     if (this.offsetReached('node')) {
-      this.callNodeInfo().subscribe((info) => {
+      this.callNodeInfo().subscribe((info: SystemNodeInfo & { _active_?: boolean }) => {
         if (info) {
           info.started_at = new Date(info.started_at);
           info.updated_at = new Date(info.updated_at);
           this.node$.next(info);
-          info['_active_'] = true;
+          info._active_ = true;
           remove(this.allNodes, x => x.key === info.key);
           this.allNodes.push(info);
           this.allNodes = orderBy(this.allNodes, ['_active_', 'key'], ['asc', 'asc']) as any;
@@ -154,7 +156,7 @@ export class SystemInfoService {
             x.updated_at = new Date(x.updated_at);
           });
           this.nodes$.next(info);
-          remove(this.allNodes, x => !x['_active_']);
+          remove(this.allNodes, (x: SystemNodeInfo & { _active_?: boolean }) => !x._active_);
           this.allNodes.push(...info);
           this.allNodes = orderBy(this.allNodes, ['_active_', 'key'], ['asc', 'asc']) as any;
           this.nodesCount = this.allNodes.length;

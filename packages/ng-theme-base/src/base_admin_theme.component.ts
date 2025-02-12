@@ -98,8 +98,8 @@ export class BaseAdminThemeComponent implements OnInit, OnDestroy {
       this.cdRef.detectChanges();
     });
     subs.log = this.appStateService.getLogService().subscribe(this.onLogMessage.bind(this));
-    if (this.appStateService.getBackendClient()['getActiveCount']) {
-      subs.count = this.appStateService.getBackendClient()['getActiveCount']().subscribe((x: number) => {
+    if ((this.appStateService.getBackendClient() as any)['getActiveCount']) {
+      subs.count = (this.appStateService.getBackendClient() as any)['getActiveCount']().subscribe((x: number) => {
         this.requestCount = x;
         this.cdRef.detectChanges();
       });

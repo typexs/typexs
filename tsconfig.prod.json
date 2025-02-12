@@ -24,7 +24,6 @@
     "stripInternal": true,
     "noImplicitAny": true,
     "skipLibCheck": true,
-    "suppressImplicitAnyIndexErrors": true,
     "baseUrl": "./"
   },
   "compileOnSave": true

@@ -20,7 +20,7 @@ export class AuthTokenInterceptor implements HttpInterceptor {
       const token = provider.getStoredToken();
       if (token && isString(token) && !isEmpty(token)) {
         const tokenKey = provider.getTokenKey();
-        const setHeaders = {};
+        const setHeaders: any = {};
         setHeaders[tokenKey] = token;
         provider.setToken(token);
         request = request.clone({

@@ -112,7 +112,6 @@
       }
     }
   },
-  "defaultProject": "app",
   "schematics": {
     "@schematics/angular:class": {
       "spec": false

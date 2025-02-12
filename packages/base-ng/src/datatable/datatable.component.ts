@@ -59,6 +59,9 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
 
   componentRef: ComponentRef<AbstractGridComponent>;
 
+  // fix TS7053 problems
+  [key: string]: any;
+
   get maxRows() {
     return this._initCache['maxRows'];
   }
@@ -164,7 +167,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
       }
     } else {
       if (this.ref() && this.getGridComponent()) {
-        const instance = this.getGridComponent();
+        const instance = this.getGridComponent() as AbstractGridComponent & any;
         for (const key of  Object.keys(changes)) {
           instance[key] = changes[key].currentValue;
           if (instance[key + 'Change'] && instance[key + 'Change'] instanceof EventEmitter) {
@@ -208,7 +211,7 @@ export class DatatableComponent extends AbstractGridComponent implements OnInit,
     // TODO how to pass passing through input parameters
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
-    const instance = this.getGridComponent();
+    const instance = this.getGridComponent() as AbstractGridComponent & any;
     for (const prop of passInputs) {
       // const propDesc = Object.getOwnPropertyDescriptor(this, prop);
       // if (propDesc) {

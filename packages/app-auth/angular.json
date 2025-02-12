@@ -112,7 +112,6 @@
       }
     }
   },
-  "defaultProject": "app-auth",
   "schematics": {
     "@schematics/angular:class": {
       "spec": false

@@ -21,4 +21,7 @@ export interface IQueryParams {
    * Passing datatable record limit
    */
   limit?: number;
+
+  // fix TS7053
+  [key:string]: any;
 }

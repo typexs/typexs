@@ -76,14 +76,14 @@ export class EntityViewPageComponent implements OnInit {
     this.name = name;
     this.id = id;
 
-    const opts = {};
+    const opts: any = {};
     this.entityRef = this.resolver.getEntityRef(this.name, this.resolverOptions);
     if (!this.entityRef) {
       throw new Error('Entity reference not found.');
     }
     const dynamic = this.entityRef.getOptions(C_FLEXIBLE);
     if (dynamic === true) {
-      opts['raw'] = true;
+      opts.raw = true;
     }
 
     try {
