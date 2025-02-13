@@ -29,7 +29,6 @@ const COMPONENTS = [
     BaseAdminThemeModule,
     StorageModule
   ],
-  entryComponents: [],
   exports: COMPONENTS,
   providers: []
   // schemas: [CUSTOM_ELEMENTS_SCHEMA]

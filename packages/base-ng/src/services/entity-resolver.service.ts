@@ -127,7 +127,7 @@ export class EntityResolverService {
 
   getIdKeysFor(obj: any, opts?: IEntityResolveOptions) {
     const predefinedIdKeys: { key: string; optional: boolean }[] = get(opts, 'idKeys', []);
-    const retPre = {};
+    const retPre: any = {};
     let optional = true;
     if (!isEmpty(predefinedIdKeys)) {
       for (const key of predefinedIdKeys) {
@@ -159,7 +159,7 @@ export class EntityResolverService {
 
     const idProps = entityRef.getPropertyRefs().filter(x => x.isIdentifier());
     const fn = (obj: any) => {
-      const ret = {};
+      const ret: any = {};
       idProps.forEach(x => {
         ret[x.name] = x.get(obj);
       });

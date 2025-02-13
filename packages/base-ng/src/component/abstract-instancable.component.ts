@@ -26,6 +26,9 @@ export class AbstractInstancableComponent<T> extends AbstractComponent implement
 
   _components: ComponentRef<any>[] = [];
 
+  // Fix TS7053
+  [key: string]: any;
+
 
   getInstance(): T {
     return this._instance;
@@ -52,7 +55,7 @@ export class AbstractInstancableComponent<T> extends AbstractComponent implement
    * @param context = C_DEFAULT
    */
   buildComponentForObject(content: any, context: string = C_DEFAULT) {
-    context = this[MTHD_getViewContext] ? this[MTHD_getViewContext]() : content;
+    context = (this as any)[MTHD_getViewContext] ? (this as any)[MTHD_getViewContext]() : content;
     const obj = this.getComponentRegistry().getComponentForObject(content, context);
     if (obj && obj.component) {
       return this.buildComponent(obj.component as any, content);
@@ -84,7 +87,7 @@ export class AbstractInstancableComponent<T> extends AbstractComponent implement
     const ID = INC++;
     Object.defineProperty(ref, C_ID, { value: ID, enumerable: true });
     this._components.push(ref);
-    ref.onDestroy(() => remove(this._components, r => r[C_ID] === ID));
+    ref.onDestroy(() => remove(this._components, (r: any) => r[C_ID] === ID));
     return ref;
   }
 
@@ -92,7 +95,7 @@ export class AbstractInstancableComponent<T> extends AbstractComponent implement
   buildComponent(component: ClassType<IInstanceableComponent<T>>, content: any) {
     if (this.getViewContainerRef()) {
       const compRef = this.createComponentView(component);
-      const instance = <IInstanceableComponent<T>>compRef.instance;
+      const instance = <IInstanceableComponent<T>>compRef.instance as IInstanceableComponent<T> & any;
       let metadata: { [k: string]: any } = null;
       // eslint-disable-next-line no-prototype-builtins
       if (instance.constructor.hasOwnProperty(PROP_METADATA)) {
@@ -128,8 +131,8 @@ export class AbstractInstancableComponent<T> extends AbstractComponent implement
       }
 
 
-      const passthrough = this.getPassthrough();
-      for (const prop of  Object.keys(passthrough)) {
+      const passthrough = this.getPassthrough() as any;
+      for (const prop of Object.keys(passthrough)) {
         Object.defineProperty(instance, prop, { value: passthrough[prop] });
       }
 
@@ -150,7 +153,7 @@ export class AbstractInstancableComponent<T> extends AbstractComponent implement
         const refs = instance.build(content);
 
         if (metadata) {
-          for (const key of  Object.keys(metadata)) {
+          for (const key of Object.keys(metadata)) {
             const v = metadata[key];
             if (!isEmpty(v)) {
 

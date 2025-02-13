@@ -269,8 +269,8 @@ export abstract class AbstractQueryService implements IQueringService {
           type: METATYPE_PROPERTY,
           fn: function(key: string, data: any, options: IParseOptions) {
             // passing all properties
-            const r = {};
-             Object.keys(data)
+            const r: any = {};
+            Object.keys(data)
               .filter(k => !(['type', 'metaType', 'propertyName', 'properties'].includes(k) || k.startsWith('$')))
               .map(x => r[x] = data[x]);
             return r;

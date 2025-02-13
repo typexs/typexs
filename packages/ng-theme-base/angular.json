@@ -38,7 +38,5 @@
         }
       }
     }
-  },
-  "defaultProject": "ng-theme-base"
-
+  }
 }

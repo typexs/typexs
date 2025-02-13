@@ -137,9 +137,9 @@ export class ViewDataComponent<T> extends AbstractInstancableComponent<T> implem
     const context = this[MTHD_getViewContext] ? this[MTHD_getViewContext]() : C_DEFAULT;
     const obj = this.getComponentRegistry().getComponentForObject(content, context);
     if (obj && obj.component) {
-      if (!isNull(this.viewModes) && isFunction(obj.component[STATIC_VAR_supportedViewModes])) {
+      if (!isNull(this.viewModes) && isFunction((obj.component as any)[STATIC_VAR_supportedViewModes])) {
         // check if static method supportedViewModes is present
-        const viewModes: string[] = obj.component[STATIC_VAR_supportedViewModes].call(null);
+        const viewModes: string[] = (obj.component as any)[STATIC_VAR_supportedViewModes].call(null);
         if (!isEmpty(viewModes)) {
           viewModes.forEach(x => {
             this.addViewMode(obj, x);

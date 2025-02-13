@@ -1,6 +1,6 @@
-import {defaults} from 'lodash';
-import {ILogLevel} from '@allgemein/logging';
-import {ILoggerOptions} from './ILoggerOptions';
+import { defaults } from 'lodash';
+import { ILogLevel } from '@allgemein/logging';
+import { ILoggerOptions } from './ILoggerOptions';
 
 
 export type LOGLEVEL = 'trace' | 'debug' | 'info' | 'warn' | 'error';
@@ -8,16 +8,17 @@ export type LOGLEVEL = 'trace' | 'debug' | 'info' | 'warn' | 'error';
 let level = 0;
 export const LOGLEVELS: ILogLevel[] =
   [
-    {name: 'trace', nr: level++},
-    {name: 'debug', nr: level++},
-    {name: 'info', nr: level++},
-    {name: 'warn', nr: level++},
-    {name: 'error', nr: level++},
+    { name: 'trace', nr: level++ },
+    { name: 'debug', nr: level++ },
+    { name: 'info', nr: level++ },
+    { name: 'warn', nr: level++ },
+    { name: 'error', nr: level++ }
   ];
 
 
 export class Log {
 
+  static [index: string]: any;
 
   static getOptions() {
     let data: ILoggerOptions = null;
@@ -29,7 +30,7 @@ export class Log {
     if (!data) {
       data = {} as any;
     }
-    defaults(data, {enable: false, level: 'warn'});
+    defaults(data, { enable: false, level: 'warn' });
     return data;
   }
 
@@ -50,7 +51,7 @@ export class Log {
           if (['trace', 'debug', 'info'].includes(entry.name)) {
             Log[entry.name] = console.log.bind(console);
           } else {
-            Log[entry.name] = console[entry.name].bind(console);
+            Log[entry.name] = (console as any)[entry.name].bind(console);
           }
 
         } else {

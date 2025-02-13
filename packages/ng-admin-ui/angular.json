@@ -37,7 +37,5 @@
         }
       }
     }
-  },
-  "defaultProject": "ng-admin-ui"
-
+  }
 }

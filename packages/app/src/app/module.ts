@@ -90,16 +90,6 @@ import { DatatableOptionsComponent } from './components/grids/datatable-options/
     ListViewDemoComponent,
     DatatableOptionsComponent
   ],
-  entryComponents: [
-    ...FORM_COMPONENTS,
-    SearchResultComponent,
-    SearchEntryComponent,
-    ViewParentComponent,
-    AgGridWrapperComponent,
-    PersonComponent,
-    BookComponent,
-    BuildSimpleItemComponent
-  ],
   imports: APP_MODULES,
   providers: [
     OptionsService,

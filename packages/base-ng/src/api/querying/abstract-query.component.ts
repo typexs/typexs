@@ -344,7 +344,7 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
    * @param fallback
    * @private
    */
-  private _prepareParam(api: IGridApi, override: IParamsOverride = {}, sourceKey: string, fallback?: any) {
+  private _prepareParam(api: IGridApi, override: IParamsOverride & any = {}, sourceKey: string, fallback?: any) {
     let _d = null;
     if (typeof override[sourceKey] === 'number' && !isNaN(override[sourceKey])) {
       _d = override[sourceKey];
@@ -386,9 +386,9 @@ export class AbstractQueryComponent implements OnInit, OnChanges, IQueryComponen
 
   applyParams(api: IGridApi, filterQuery: any[]) {
     if (!isEmpty(api?.params?.filters)) {
-       Object.keys(api.params.filters).map(k => {
+      Object.keys(api.params.filters).map(k => {
         try {
-          const d = {};
+          const d: any = {};
           d[k] = api.params.filters[k];
           if (api.params.filters[k] instanceof ExprDesc) {
             d[k] = api.params.filters[k].toJson();

@@ -49,4 +49,6 @@ export interface IHttpRequestOptions {
   responseType?: 'json';
 
   withCredentials?: boolean;
+
+  surpressErrors?: any;
 }

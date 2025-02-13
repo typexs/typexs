@@ -307,10 +307,10 @@ export class HttpBackendService implements IBackendClientService {
         }
 
         if (isBoolean(options.surpressErrors)) {
-          opts['surpressErrors'] = options.surpressErrors;
+          opts.surpressErrors = options.surpressErrors;
         }
 
-        (this[method](opts) as Observable<T>).subscribe(
+        ((this as any)[method](opts) as Observable<T>).subscribe(
           x => {
             ret.next(x);
           },
@@ -398,7 +398,7 @@ export class HttpBackendService implements IBackendClientService {
   private handleRequest<T>(method: string, reqOptions: IHttpRequestOptions): Observable<T> {
     const logging = has(reqOptions, 'logging') ? reqOptions.logging : true;
     const surpressErrors = has(reqOptions, 'surpressErrors') ? reqOptions['surpressErrors'] : false;
-    const client = this.getHttpClient();
+    const client = this.getHttpClient() as HttpClient & any;
 
     Log.debug('handle request ' + method + ' ' + reqOptions.url);
     let observable: Observable<T> = null;

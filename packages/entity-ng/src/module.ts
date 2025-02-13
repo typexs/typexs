@@ -36,9 +36,6 @@ const PROVIDERS = [
     EntityStructComponent,
     EntityQueryEmbeddedComponent
   ],
-  entryComponents: [
-    EntityQueryEmbeddedComponent
-  ],
   imports: [
     CommonModule,
     BaseModule,

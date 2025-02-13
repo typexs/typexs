@@ -18,7 +18,6 @@ import { AbstractFormComponent } from './component/AbstractFormComponent';
     NgFormsModule,
     BaseModule
   ],
-  entryComponents: FORM_COMPONENTS,
   exports: FORM_COMPONENTS,
   providers: [
     FormService

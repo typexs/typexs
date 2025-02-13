@@ -1,6 +1,6 @@
 {
   "name": "@typexs/ng-router-menu",
-  "version": "15.0.0",
+  "version": "16.0.0-rc1",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -31,21 +31,21 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@angular/common": "v15-lts",
-    "@angular/core": "v15-lts",
-    "@angular/platform-browser": "v15-lts",
-    "@angular/router": "v15-lts",
-    "rxjs": "~7.5.0"
+    "@angular/common": "v16-lts",
+    "@angular/core": "v16-lts",
+    "@angular/platform-browser": "v16-lts",
+    "@angular/router": "v16-lts",
+    "rxjs": "~7.8.0"
   },
   "devDependencies": {
-    "@angular/common": "v15-lts",
-    "@angular/core": "v15-lts",
-    "@angular/platform-browser": "v15-lts",
-    "@angular/router": "v15-lts",
-    "rxjs": "~7.5.0"
+    "@angular/common": "v16-lts",
+    "@angular/core": "v16-lts",
+    "@angular/platform-browser": "v16-lts",
+    "@angular/router": "v16-lts",
+    "rxjs": "~7.8.0"
   },
   "publishConfig": {
-    "tag": "v15-lts"
+    "tag": "v16-lts"
   },
   "gitHead": "a845caa5b33bf3e91c285565671b774d1f61fa4a"
 }

@@ -97,7 +97,7 @@ export class UserLoginComponent implements OnInit, OnDestroy {
               for (const error of state.errors) {
                 keys(error.constraints).forEach(k => {
                   this.formMessage.publish({
-                    type: <any>MessageType[error.type.toUpperCase()],
+                    type: <any>(MessageType as any)[error.type.toUpperCase()],
                     content: error.constraints[k],
                     topic: null
                   });

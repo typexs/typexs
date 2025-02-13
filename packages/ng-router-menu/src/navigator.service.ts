@@ -84,7 +84,7 @@ export class NavigatorService {
 
   readRoutes(config: Routes, parent: NavEntry = null) {
     for (const route of config) {
-      let entry = find(this.entries, e => e.id === route['navId']);
+      let entry = find(this.entries, e => e.id === (route as any).navId);
       if (!entry) {
         const _isRedirect = isRedirect(route);
         const _hasComponent = hasComponent(route);
@@ -104,7 +104,6 @@ export class NavigatorService {
           entry = new NavEntry();
           this.entries.push(entry);
           entry.parse(route);
-
         }
       } else {
         entry.merge(route);

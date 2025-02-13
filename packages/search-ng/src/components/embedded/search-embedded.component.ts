@@ -212,7 +212,7 @@ export class SearchEmbeddedComponent extends AbstractQueryComponent {
     const _results = super._processQueryResults(results);
     if (has(results, '$facets')) {
       // results['$facets'];
-      for (const f of results['$facets']) {
+      for (const f of (results as any)['$facets']) {
         const entry = this.facets.find(x => x.name === f.name);
         entry.results = f.values ? f.values : [];
         this.selectedFacets.filter((x: any) => x.name === f.name).forEach(x => {
