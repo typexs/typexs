@@ -1,7 +1,6 @@
 import { suite, test } from '@testdeck/mocha';
 import * as path from 'path';
-import * as fsExtra from 'fs-extra';
-
+import { copyFile } from 'node:fs/promises';
 import { Bootstrap } from '@typexs/base';
 import { Config } from '@allgemein/config';
 import { TestHelper } from '@typexs/testing';
@@ -33,10 +32,10 @@ class MessagingSpec {
       PlatformUtils.mkdir(REMOTE_LOG_DIR + '/logs');
     }
 
-    await fsExtra.copy(
+    await copyFile(
       __dirname + '/fake_app/files/taskmonitor-abcdef-fake_app.log',
       LOCAL_LOG_DIR + '/logs/taskmonitor-abcdef-fake_app.log');
-    await fsExtra.copy(
+    await copyFile(
       __dirname + '/fake_app/files/taskmonitor-abcdef-remote_fakeapp01.log',
       REMOTE_LOG_DIR + '/logs/taskmonitor-abcdef-remote_fakeapp01.log');
 
@@ -61,7 +60,7 @@ class MessagingSpec {
         },
         modules: <any>{
           paths: TestHelper.includePaths(['base', 'tasks']),
-          disableCache: true,
+          disableCache: true
           // include: [
           //   '**/@typexs{,/base,/tasks}'
           // ]

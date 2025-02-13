@@ -6,8 +6,8 @@
   "browser": "browser",
   "scripts": {
     "clean": "npm run clean:build && npm run clean:modules",
-    "clean:build": "rm -rf ../build",
-    "clean:modules": "rm -rf node_modules ../node_modules",
+    "clean:build": "node ../../../scripts/clean.js build",
+    "clean:modules": "node ../../../scripts/clean.js modules",
     "build": "node ../../../scripts/build.js"
   },
   "directories": {
