@@ -1,13 +1,13 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/auth-ng",
-  "version": "16.0.0-rc1",
+  "version": "17.0.0-rc1",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
     "clean": "npm run clean:build && npm run clean:modules",
-    "clean:build": "rm -rf ../build",
-    "clean:modules": "rm -rf node_modules ../node_modules ../.angular",
+    "clean:build": "node ../../../scripts/clean.js build",
+    "clean:modules": "node ../../../scripts/clean.js modules",
     "test": "ng test --code-coverage=true --watch=false",
     "build": "ng build"
   },
@@ -32,36 +32,36 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs#readme",
   "peerDependencies": {
-    "@angular/common": "v16-lts",
-    "@angular/core": "v16-lts",
-    "@angular/forms": "v16-lts",
-    "@angular/router": "v16-lts",
+    "@angular/common": "v17-lts",
+    "@angular/core": "v17-lts",
+    "@angular/forms": "v17-lts",
+    "@angular/router": "v17-lts",
     "@typexs/auth": ">=3.0.0",
-    "@typexs/base-ng": ">=16.0.0-rc1",
-    "@typexs/entity-ng": ">=16.0.0-rc1",
-    "@typexs/forms-ng": ">=16.0.0-rc1",
+    "@typexs/base-ng": ">=17.0.0-rc1",
+    "@typexs/entity-ng": ">=17.0.0-rc1",
+    "@typexs/forms-ng": ">=17.0.0-rc1",
     "@typexs/generic": ">=3.0.0",
-    "@typexs/ng": ">=16.0.0-rc1",
-    "@typexs/ng-theme-base": ">=16.0.0-rc1",
+    "@typexs/ng": ">=17.0.0-rc1",
+    "@typexs/ng-theme-base": ">=17.0.0-rc1",
     "@typexs/roles-api": ">=3.0.0"
   },
   "dependencies": {
-    "@typexs/base-ng": "^16.0.0-rc1",
-    "@typexs/ng-theme-base": "^16.0.0-rc1"
+    "@typexs/base-ng": "^17.0.0-rc1",
+    "@typexs/ng-theme-base": "^17.0.0-rc1"
   },
   "devDependencies": {
     "@typexs/auth": "^3.0.3",
-    "@typexs/base-ng": "^16.0.0-rc1",
-    "@typexs/entity-ng": "^16.0.0-rc1",
-    "@typexs/forms-ng": "^16.0.0-rc1",
-    "@typexs/ng": "^16.0.0-rc1",
-    "@typexs/ng-theme-base": "^16.0.0-rc1",
+    "@typexs/base-ng": "^17.0.0-rc1",
+    "@typexs/entity-ng": "^17.0.0-rc1",
+    "@typexs/forms-ng": "^17.0.0-rc1",
+    "@typexs/ng": "^17.0.0-rc1",
+    "@typexs/ng-theme-base": "^17.0.0-rc1",
     "@typexs/roles": "^3.0.3",
     "@typexs/roles-api": "^3.0.1",
     "@typexs/server": "^3.0.3"
   },
   "publishConfig": {
-    "tag": "v16-lts"
+    "tag": "v17-lts"
   },
   "gitHead": "a845caa5b33bf3e91c285565671b774d1f61fa4a"
 }

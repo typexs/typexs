@@ -1,13 +1,13 @@
 {
   "name": "@typexs/ng",
-  "version": "16.0.0-rc1",
+  "version": "17.0.0-rc1",
   "description": "Angular for typexs",
   "main": "index",
   "browser": "browser",
   "scripts": {
     "clean": "npm run clean:build && npm run clean:modules",
-    "clean:build": "rm -rf ../build",
-    "clean:modules": "rm -rf node_modules ../node_modules",
+    "clean:build": "node ../../../scripts/clean.js build",
+    "clean:modules": "node ../../../scripts/clean.js modules",
     "test": "nyc mocha ../test/{**,**/**,**/**/**}/*.spec.ts",
     "posttest": "nyc report --reporter=json",
     "build": "node ../../../scripts/build.js"
@@ -43,7 +43,7 @@
     "@typexs/base": ">=3.0.0"
   },
   "publishConfig": {
-    "tag": "v16-lts"
+    "tag": "v17-lts"
   },
   "gitHead": "a845caa5b33bf3e91c285565671b774d1f61fa4a"
 }
