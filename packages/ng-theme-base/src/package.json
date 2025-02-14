@@ -1,6 +1,6 @@
 {
   "name": "@typexs/ng-theme-base",
-  "version": "17.0.0",
+  "version": "18.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -32,22 +32,22 @@
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
     "@fortawesome/fontawesome-free": "^5.0.0",
-    "@typexs/ng-router-menu": ">=17.0.0",
+    "@typexs/ng-router-menu": ">=18.0.0",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.0.0",
     "perfect-scrollbar": "^1.5.1"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.0.0",
-    "@typexs/base-ng": "^17.0.0",
-    "@typexs/forms-ng": "^17.0.0",
-    "@typexs/ng-router-menu": "^17.0.0",
+    "@typexs/base-ng": "^18.0.0",
+    "@typexs/forms-ng": "^18.0.0",
+    "@typexs/ng-router-menu": "^18.0.0",
     "animate.css": "^4.1.1",
     "bootstrap": "^5.0.1",
     "perfect-scrollbar": "^1.5.1"
   },
   "publishConfig": {
-    "tag": "v17-lts"
+    "tag": "v18-lts"
   },
   "exports": {
     "./styles/theme-admin": {

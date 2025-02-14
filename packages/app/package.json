@@ -1,18 +1,18 @@
 {
   "name": "app",
-  "version": "17.0.0",
+  "version": "18.0.0",
   "devDependencies": {
     "@typexs/base": "^2.3.0-dev.0",
-    "@typexs/base-ng": "^17.0.0",
-    "@typexs/storage-ng": "^17.0.0",
-    "@typexs/search-ng": "^17.0.0",
+    "@typexs/base-ng": "^18.0.0",
+    "@typexs/storage-ng": "^18.0.0",
+    "@typexs/search-ng": "^18.0.0",
     "@typexs/storage": "^2.3.0",
-    "@typexs/forms-ng": "^17.0.0",
+    "@typexs/forms-ng": "^18.0.0",
     "@typexs/forms": "^2.3.0",
     "@typexs/entity": "^2.3.0",
-    "@typexs/entity-ng": "^17.0.0",
-    "@typexs/distributed-storage-ng": "^17.0.0",
-    "@typexs/tasks-ng": "^17.0.0"
+    "@typexs/entity-ng": "^18.0.0",
+    "@typexs/distributed-storage-ng": "^18.0.0",
+    "@typexs/tasks-ng": "^18.0.0"
   },
   "dependencies": {},
   "private": true
