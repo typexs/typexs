@@ -36,7 +36,7 @@
     "@angular/core": "v17-lts",
     "@angular/forms": "v17-lts",
     "@angular/router": "v17-lts",
-    "@typexs/base-ng": ">=17.0.0-rc1",
+    "@typexs/base-ng": ">=17.0.0",
     "@typexs/forms": ">=3.0.0"
   },
   "devDependencies": {

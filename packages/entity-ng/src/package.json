@@ -37,11 +37,11 @@
     "@angular/forms": "v17-lts",
     "@angular/router": "v17-lts",
     "@typexs/base": ">=3.0.0",
-    "@typexs/base-ng": ">=17.0.0-rc1",
+    "@typexs/base-ng": ">=17.0.0",
     "@typexs/entity": ">=3.0.0",
     "@typexs/forms": ">=3.0.0",
-    "@typexs/forms-ng": ">=17.0.0-rc1",
-    "@typexs/ng": ">=17.0.0-rc1"
+    "@typexs/forms-ng": ">=17.0.0",
+    "@typexs/ng": ">=17.0.0"
   },
   "dependencies": {
     "@typexs/base-ng": "^17.0.0",
@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@typexs/base": "^3.0.4",
-    "@typexs/base-ng": "^17.0.0-rc1",
+    "@typexs/base-ng": "^17.0.0",
     "@typexs/entity": "^3.0.4",
     "@typexs/forms": "^3.0.4",
     "@typexs/forms-ng": "^17.0.0",
