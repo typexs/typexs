@@ -1,3 +1,19 @@
+=== https://gitlab.com/typexs/typexs/compare/v3.0.3...v3.0.4[3.0.4] (2025-02-14)
+
+==== Bug Fixes
+
+* minor fixes
+(https://gitlab.com/typexs/typexs/commit/93c1c781f3de091c9c18a33dda48bafa7103fd99[93c1c78])
+* ts build errors
+(https://gitlab.com/typexs/typexs/commit/b0413257e6ee91575f3739197b41f6eeb8b8e9de[b041325])
+
+==== Features
+
+* upgrade ng from 15 to 16
+(https://gitlab.com/typexs/typexs/commit/a08d0642a998f8fbaf0d47cd643aa93d902972df[a08d064])
+* upgrade ng from 16 to 17
+(https://gitlab.com/typexs/typexs/commit/81748096c9fee218a3c12092af2a778b44a373cc[8174809])
+
 === https://gitlab.com/typexs/typexs/compare/v3.0.2...v3.0.3[3.0.3] (2025-02-10)
 
 === https://gitlab.com/typexs/typexs/compare/v3.0.1...v3.0.2[3.0.2] (2025-02-04)
