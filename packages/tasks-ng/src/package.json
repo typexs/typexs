@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/tasks-ng",
-  "version": "17.0.0-rc1",
+  "version": "17.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -32,18 +32,18 @@
     "@typexs/tasks": ">=3.0.0"
   },
   "dependencies": {
-    "@typexs/base-ng": "^17.0.0-rc1"
+    "@typexs/base-ng": "^17.0.0"
   },
   "devDependencies": {
     "@angular/common": "v17-lts",
     "@angular/core": "v17-lts",
     "@angular/forms": "v17-lts",
     "@angular/router": "v17-lts",
-    "@typexs/base": "^3.0.3",
+    "@typexs/base": "^3.0.4",
     "@typexs/base-ng": "^17.0.0-rc1",
-    "@typexs/forms-ng": "^17.0.0-rc1",
-    "@typexs/server": "^3.0.3",
-    "@typexs/tasks": "^3.0.3",
+    "@typexs/forms-ng": "^17.0.0",
+    "@typexs/server": "^3.0.4",
+    "@typexs/tasks": "^3.0.4",
     "rxjs": "~7.8.0"
   },
   "publishConfig": {

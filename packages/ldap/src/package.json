@@ -1,6 +1,6 @@
 {
   "name": "@typexs/ldap",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "LDAP storage for typexs",
   "main": "index",
   "browser": "browser",
@@ -33,14 +33,14 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs",
   "dependencies": {
-    "@typexs/roles-api": "^3.0.1",
+    "@typexs/roles-api": "^3.0.2",
     "ldapjs": "~2.3.3"
   },
   "devDependencies": {
     "@types/ldapjs": "~2.2.5",
-    "@typexs/base": "^3.0.3",
-    "@typexs/pipelines": "^3.0.3",
-    "@typexs/testing": "^3.0.3"
+    "@typexs/base": "^3.0.4",
+    "@typexs/pipelines": "^3.0.4",
+    "@typexs/testing": "^3.0.4"
   },
   "peerDependencies": {
     "@typexs/base": ">=3.0.0",

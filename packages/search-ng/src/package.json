@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/search-ng",
-  "version": "17.0.0-rc1",
+  "version": "17.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -35,15 +35,15 @@
     "@typexs/storage-ng": ">=17.0.0-rc1"
   },
   "dependencies": {
-    "@typexs/base-ng": "^17.0.0-rc1",
-    "@typexs/ng-theme-base": "^17.0.0-rc1"
+    "@typexs/base-ng": "^17.0.0",
+    "@typexs/ng-theme-base": "^17.0.0"
   },
   "devDependencies": {
     "@typexs/base-ng": "^17.0.0-rc1",
-    "@typexs/forms-ng": "^17.0.0-rc1",
+    "@typexs/forms-ng": "^17.0.0",
     "@typexs/ng-theme-base": ">=17.0.0-rc1",
-    "@typexs/search": "^3.0.3",
-    "@typexs/storage-ng": "^17.0.0-rc1"
+    "@typexs/search": "^3.0.4",
+    "@typexs/storage-ng": "^17.0.0"
   },
   "publishConfig": {
     "tag": "v17-lts"

@@ -1,7 +1,7 @@
 {
   "$schema": "../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/base-ng",
-  "version": "17.0.0-rc1",
+  "version": "17.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -41,9 +41,9 @@
     "@typexs/server": ">=3.0.0"
   },
   "devDependencies": {
-    "@typexs/base": "^3.0.3",
-    "@typexs/ng": "^17.0.0-rc1",
-    "@typexs/server": "^3.0.3"
+    "@typexs/base": "^3.0.4",
+    "@typexs/ng": "^17.0.0",
+    "@typexs/server": "^3.0.4"
   },
   "publishConfig": {
     "tag": "v17-lts"

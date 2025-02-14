@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/storage-ng",
-  "version": "17.0.0-rc1",
+  "version": "17.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -44,12 +44,12 @@
     "@angular/core": "v17-lts",
     "@angular/forms": "v17-lts",
     "@angular/router": "v17-lts",
-    "@typexs/base": "^3.0.3",
-    "@typexs/base-ng": "^17.0.0-rc1",
-    "@typexs/forms": "^3.0.3",
-    "@typexs/forms-ng": "^17.0.0-rc1",
-    "@typexs/ng": "^17.0.0-rc1",
-    "@typexs/storage": "^3.0.3"
+    "@typexs/base": "^3.0.4",
+    "@typexs/base-ng": "^17.0.0",
+    "@typexs/forms": "^3.0.4",
+    "@typexs/forms-ng": "^17.0.0",
+    "@typexs/ng": "^17.0.0",
+    "@typexs/storage": "^3.0.4"
   },
   "publishConfig": {
     "tag": "v17-lts"

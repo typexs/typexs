@@ -1,6 +1,6 @@
 {
   "name": "@typexs/forms",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "Forms for typexs",
   "main": "index",
   "browser": "browser",
@@ -32,10 +32,10 @@
   },
   "homepage": "https://gitlab.com/typexs/typexs",
   "dependencies": {
-    "@typexs/base": "^3.0.3"
+    "@typexs/base": "^3.0.4"
   },
   "devDependencies": {
-    "@typexs/testing": "^3.0.3"
+    "@typexs/testing": "^3.0.4"
   },
   "typexs": {
     "name": "forms"

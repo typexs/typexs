@@ -1,6 +1,6 @@
 {
   "name": "@typexs/ng-admin-ui",
-  "version": "17.0.0-rc1",
+  "version": "17.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -45,15 +45,15 @@
     "@typexs/tasks-ng": ">=17.0.0-rc1"
   },
   "devDependencies": {
-    "@typexs/base": "^3.0.3",
-    "@typexs/base-ng": "^17.0.0-rc1",
-    "@typexs/forms-ng": "^17.0.0-rc1",
-    "@typexs/ng": "^17.0.0-rc1",
-    "@typexs/ng-router-menu": "^17.0.0-rc1",
-    "@typexs/ng-theme-base": "^17.0.0-rc1",
-    "@typexs/server": "^3.0.3",
-    "@typexs/storage-ng": "^17.0.0-rc1",
-    "@typexs/tasks-ng": "^17.0.0-rc1",
+    "@typexs/base": "^3.0.4",
+    "@typexs/base-ng": "^17.0.0",
+    "@typexs/forms-ng": "^17.0.0",
+    "@typexs/ng": "^17.0.0",
+    "@typexs/ng-router-menu": "^17.0.0",
+    "@typexs/ng-theme-base": "^17.0.0",
+    "@typexs/server": "^3.0.4",
+    "@typexs/storage-ng": "^17.0.0",
+    "@typexs/tasks-ng": "^17.0.0",
     "rxjs": "~7.8.0"
   },
   "publishConfig": {
