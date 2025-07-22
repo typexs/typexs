@@ -1,7 +1,7 @@
 {
   "$schema": "../../../node_modules/ng-packagr/package.schema.json",
   "name": "@typexs/entity-ng",
-  "version": "17.0.0",
+  "version": "18.0.0",
   "description": "Angular for typexs",
   "main": "public_api",
   "scripts": {
@@ -32,31 +32,31 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@angular/common": "v17-lts",
-    "@angular/core": "v17-lts",
-    "@angular/forms": "v17-lts",
-    "@angular/router": "v17-lts",
+    "@angular/common": "v18-lts",
+    "@angular/core": "v18-lts",
+    "@angular/forms": "v18-lts",
+    "@angular/router": "v18-lts",
     "@typexs/base": ">=3.0.0",
-    "@typexs/base-ng": ">=17.0.0",
+    "@typexs/base-ng": ">=18.0.0",
     "@typexs/entity": ">=3.0.0",
     "@typexs/forms": ">=3.0.0",
-    "@typexs/forms-ng": ">=17.0.0",
-    "@typexs/ng": ">=17.0.0"
+    "@typexs/forms-ng": ">=18.0.0",
+    "@typexs/ng": ">=18.0.0"
   },
   "dependencies": {
-    "@typexs/base-ng": "^17.0.0",
-    "@typexs/ng-theme-base": "^17.0.0"
+    "@typexs/base-ng": "^18.0.0",
+    "@typexs/ng-theme-base": "^18.0.0"
   },
   "devDependencies": {
     "@typexs/base": "^3.0.4",
-    "@typexs/base-ng": "^17.0.0",
+    "@typexs/base-ng": "^18.0.0",
     "@typexs/entity": "^3.0.4",
     "@typexs/forms": "^3.0.4",
-    "@typexs/forms-ng": "^17.0.0",
-    "@typexs/ng": "^17.0.0"
+    "@typexs/forms-ng": "^18.0.0",
+    "@typexs/ng": "^18.0.0"
   },
   "publishConfig": {
-    "tag": "v17-lts"
+    "tag": "v18-lts"
   },
   "gitHead": "5d0bb922e18e7c5ead52d5f7452eef516c4364c0"
 }
