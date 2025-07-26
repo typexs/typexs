@@ -32,10 +32,10 @@
   },
   "homepage": "https://gitlab.com/typexs/ng#readme",
   "peerDependencies": {
-    "@angular/common": "v18-lts",
-    "@angular/core": "v18-lts",
-    "@angular/forms": "v18-lts",
-    "@angular/router": "v18-lts",
+    "@angular/common": "v19-lts",
+    "@angular/core": "v19-lts",
+    "@angular/forms": "v19-lts",
+    "@angular/router": "v19-lts",
     "@typexs/base": ">=3.0.0",
     "@typexs/base-ng": ">=18.0.0",
     "@typexs/entity": ">=3.0.0",
@@ -56,7 +56,7 @@
     "@typexs/ng": "^18.0.0"
   },
   "publishConfig": {
-    "tag": "v18-lts"
+    "tag": "v19-lts"
   },
   "gitHead": "5d0bb922e18e7c5ead52d5f7452eef516c4364c0"
 }
